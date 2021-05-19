@@ -1,0 +1,120 @@
+#!/usr/bin/env raku
+use v6;
+use lib 'raku';
+use util;
+use typemap;
+use grammar;
+#use Grammar::Tracer;
+
+our grammar Translator does ParserRules {
+    rule TOP {
+        <.ws>
+        [ 
+            | <struct-member-declarations>
+            | <default-ctor>
+            | <op-convert-function-header>
+            | <constructor-definition-header>
+            | <op-mul-function-header>
+            | <op-xor-function-header>
+            | <op-bitand-function-header>
+            | <op-bitor-function-header>
+            | <op-eq-function-header>
+            | <op-lt-function-header>
+            | <op-div-eq-function-header>
+            | <class-constructor-declaration>
+            | <function-declaration>
+            | <hashing-function>
+            | <op-add-function-header>
+            | <op-add-eq-function-header>
+            | <op-bitor-assign-function-header>
+            | <op-bitand-assign-function-header>
+            | <op-div-function-header>
+            | <op-mul-eq-function-header>
+            | <op-negate-function-header>
+            | <op-sub-function-header>
+            | <op-sub-eq-function-header>
+            | <freestanding-template-function-header>
+            | <op-index-function-header>
+            | <op-ostream-function-header>
+            | <static-constants>
+            | <function-local-declarations>
+        ]
+    }
+}
+
+our sub get-hook($hookname) {
+
+    #key matches grammar rules
+    #will return one of these values
+    my %dispatch = %(
+
+        default-ctor                          => { use default;          &translate-default-ctor },
+        hashing-function                      => { use hasher;           &translate-hasher },
+        op-add-eq-function-header             => { use op_add;           &translate-op-add-eq },
+        op-bitor-assign-function-header       => { use op_bitor;         &translate-op-bitor-assign },
+        op-bitand-assign-function-header      => { use op_bitand;        &translate-op-bitand-assign },
+        op-add-function-header                => { use op_add;           &translate-op-add },
+        function-declaration                  => { use function;         &translate-function },
+        constructor-definition-header         => { use constructor;      &translate-ctor },
+        op-div-function-header                => { use op_div;           &translate-op-div },
+        op-div-eq-function-header             => { use op_div_eq;        &translate-op-div-eq },
+        op-eq-function-header                 => { use op_eq;            &translate-op-eq },
+        op-lt-function-header                 => { use op_eq;            &translate-op-lt },
+        op-index-function-header              => { use op_index;         &translate-op-index },
+        op-xor-function-header                => { use op_xor;           &translate-op-xor },
+        op-bitand-function-header             => { use op_bitand;        &translate-op-bitand },
+        op-bitor-function-header              => { use op_bitor;         &translate-op-bitor },
+        op-mul-function-header                => { use op_mul;           &translate-op-mul },
+        op-mul-eq-function-header             => { use op_mul_eq;        &translate-op-mul-eq },
+        op-negate-function-header             => { use op_negate;        &translate-op-negate },
+        op-sub-function-header                => { use op_sub;           &translate-op-sub },
+        op-sub-eq-function-header             => { use op_sub_eq;        &translate-op-sub-eq },
+        freestanding-template-function-header => { use template;         &translate-freestanding-template-function },
+        op-ostream-function-header            => { use ostream;          &translate-op-ostream },
+        op-convert-function-header            => { use op_convert;       &translate-op-convert },
+        static-constants                      => { use static_const;     &translate-static-const },
+        function-local-declarations           => { use function-locals;  &translate-function-locals },
+        struct-member-declarations            => { use struct_members;   &translate-struct-member-declarations },
+    );
+
+    %dispatch{$hookname}()
+}
+
+our sub do_main($chop, $class, &get-hook) {
+
+    my $in = $*IN.slurp.chomp;
+
+    my ($head, $body) = get_parts($in, $chop);
+
+    my $match     = Translator.parse($head);
+
+    my $hookname  = $match.keys[0].Str;
+    my &hook      = &get-hook($hookname);
+
+    my $submatch = $match{$hookname};
+
+    if $submatch {
+
+        say &hook($submatch, $body, $class);
+
+    } else {
+
+        say "could not parse submatch";
+    }
+}
+
+sub MAIN(:$chop = False, :$class = Nil) { 
+
+    #this makes it so we don't have to recompile 
+    #every time we want to change the typemap
+    my %*typemap = %typemap;
+
+    #add whitelisted types to typemap
+    #a whitelisted type is the same in Rust as it is in c++
+    for "raku/whitelist.txt".IO.slurp.lines {
+        %*typemap{$_} = $_;
+    }
+
+    do_main($chop, $class, &get-hook); 
+}
+
