@@ -1,217 +1,199 @@
-our sub get-is-unique($ident)        { $ident<nonvector-identifier><unique-ptr>:exists }
-our sub get-is-c10-optional($ident)  { $ident<nonvector-identifier><c10-optional>:exists }
-our sub get-is-list($ident)          { $ident<nonvector-identifier><std-list>:exists }
-our sub get-is-shared($ident)        { $ident<nonvector-identifier><shared-ptr>:exists }
-our sub get-is-template($ident)      { $ident<nonvector-identifier><template-identifier>:exists }
-our sub get-is-set($ident)           { $ident<nonvector-identifier><std-set>:exists }
-our sub get-is-deque($ident)         { $ident<nonvector-identifier><std-deque>:exists }
-our sub get-is-bit-set($ident)       { $ident<nonvector-identifier><bit-set>:exists }
-our sub get-is-unordered-set($ident) { $ident<nonvector-identifier><unordered-set>:exists }
-our sub get-is-unordered-map($ident) { $ident<nonvector-identifier><unordered-map>:exists }
-our sub get-is-pair($ident)          { $ident<nonvector-identifier><std-pair>:exists }
+sub is-unique($type)           { $type<unique-ptr>:exists }
+sub is-c10-optional($type)     { $type<c10-optional>:exists }
+sub is-list($type)             { $type<std-list>:exists }
+sub is-shared($type)           { $type<shared-ptr>:exists }
+sub is-generic-template($type) { $type<template-identifier>:exists }
+sub is-set($type)              { $type<std-set>:exists }
+sub is-deque($type)            { $type<std-deque>:exists }
+sub is-bit-set($type)          { $type<bit-set>:exists }
+sub is-unordered-set($type)    { $type<unordered-set>:exists }
+sub is-unordered-map($type)    { $type<unordered-map>:exists }
+sub is-pair($type)             { $type<std-pair>:exists }
+sub is-tuple($type)            { $type<std-tuple>:exists }
+sub is-vector($type)           { $type<std-vector>:exists }
+sub is-atomic($type)           { $type<std-atomic>:exists }
+sub is-queue($type)            { $type<std-queue>:exists }
 
-our sub vectorize-rtype($rtype-base, $vector-levels is rw) {
+my %mini-typemap = %(
+    'unique-ptr'    => 'Box',
+    'std-list'      => 'LinkedList',
+    'std-set'       => 'HashSet',
+    'std-pair'      => '( _x_ )',
+    'std-tuple'     => '( _x_ )',
+    'shared-ptr'    => 'Arc',
+    'std-deque'     => 'VecDeque',
+    'c10-optional'  => 'Option',
+    'bit-set'       => 'BitSet',
+    'unordered-set' => 'HashSet',
+    'unordered-map' => 'HashMap',
+    'std-vector'    => 'Vec',
+    'std-atomic'    => 'Atomic',
+    'std-queue'    => 'SegQueue',
+);
 
-    my $result = $rtype-base;
-
-    while $vector-levels > 0 {
-        $vector-levels -= 1;
-        $result = "Vec<{$result}>";
-    }
-
-    $result;
+sub extract-unique($type) {
+    'unique-ptr',
+    ($type<unique-ptr><type>)
 }
 
-our sub get-vector-levels($ident is rw) {
+sub extract-atomic($type) {
+    'std-atomic',
+    ($type<std-atomic><type>)
+}
 
-    my $vector-levels = 0;
+sub extract-queue($type) {
+    'std-queue',
+    ($type<std-queue><type>)
+}
 
-    while $ident<vectorized-identifier>:exists {
-        $vector-levels++;
-        $ident = $ident<vectorized-identifier><maybe-vectorized-identifier>;
-    }
+sub extract-list($type) {
+    'std-list',
+    ($type<std-list><type>)
+}
 
-    $vector-levels
+sub extract-set($type) {
+    'std-set',
+    ($type<std-set><type>)
+}
+
+sub extract-pair($type) {
+    'std-pair',
+    |(
+        $type<std-pair><type>[0],
+        $type<std-pair><type>[1]
+    )
+}
+
+sub extract-tuple($type) {
+    my $len = $type<std-tuple><type>.elems;
+
+    my @children = do for 0..$len {
+        $type<std-tuple><type>[$_]
+    };
+
+    'std-tuple', |@children
+}
+
+sub extract-vector($type) {
+
+    'std-vector', ( $type<std-vector><type> )
+}
+
+sub extract-generic-template($type) {
+    my $template-parent = $type<template-identifier><identifier>.Str;
+
+    my $len = $type<template-identifier><type>.elems;
+
+    my @children = do for 0..($len - 1) {
+        $type<template-identifier><type>[$_]
+    };
+    
+    $template-parent, |@children
+}
+
+sub extract-shared($type) {
+    'shared-ptr',
+    ($type<shared-ptr><type>)
+}
+
+sub extract-deque($type) {
+    'std-deque',
+    ($type<std-deque><type>)
+}
+
+sub extract-c10-optional($type) {
+    'c10-optional',
+    ($type<c10-optional><type>)
+}
+
+sub extract-bit-set($type) {
+    'bit-set',
+    ($type<bit-set><type>)
+}
+
+sub extract-unordered-set($type) {
+    'unordered-set',
+    ($type<unordered-set><type>)
+}
+
+sub extract-unordered-map($type) {
+    'unordered-map',
+    |(
+        $type<unordered-map><type>[0],
+        $type<unordered-map><type>[1]
+    )
+}
+
+sub extract-default($type) {
+    $type.Str, |()
 }
 
 our class TypeInfo {
 
-    has Str  $.cpp-type         is required;
-    has Str  $.template-parent  is required;
-    has Int  $.vector-levels    is required;
-    has Bool $.is-unique        is required;
-    has Bool $.is-list          is required;
-    has Bool $.is-set           is required;
-    has Bool $.is-pair          is required;
-    has Bool $.is-shared        is required;
-    has Bool $.is-deque         is required;
-    has Bool $.is-bit-set       is required;
-    has Bool $.is-c10-optional  is required;
-    has Bool $.is-unordered-set is required;
-    has Bool $.is-unordered-map is required;
-    has Bool $.is-template      is required;
-    has Str  $.pairing = Nil; 
+    has Str  $.cpp-parent     is required;
+    has      @.cpp-children   is required;
 
     method vectorized-rtype {
 
-        my $rtype-base = %*typemap{$!cpp-type};
+        my $outer = 
+        %mini-typemap{$!cpp-parent} // %*typemap{$!cpp-parent};
 
-        if $!is-unique {
-            $rtype-base = "Box<{$rtype-base}>";
+        my @inner;
+
+        for @!cpp-children -> $type {
+            if $type {
+                my $child-type-info = populate-typeinfo($type);
+
+                @inner.push: $child-type-info.vectorized-rtype();
+            }
         }
+        my $if-pair  = @inner.elems > 0 ?? "({@inner.join(',')})" !! "";
+        my $if-other = @inner.elems > 0 ?? "{$outer}<{@inner.join(',')}>" !! $outer;
 
-        if $!is-list {
-            $rtype-base = "LinkedList<{$rtype-base}>";
-        }
+        my $base = is-pair-or-tuple($!cpp-parent) ?? $if-pair !! $if-other;
 
-        if $!is-set {
-            $rtype-base = "HashSet<{$rtype-base}>";
-        }
-
-        if $!is-deque {
-            $rtype-base = "VecDeque<{$rtype-base}>";
-        }
-
-        if $!is-c10-optional {
-            $rtype-base = "Option<{$rtype-base}>";
-        }
-
-        if $!is-bit-set {
-            $rtype-base = "BitSet<{$rtype-base}>";
-        }
-
-        if $!is-unordered-set {
-            $rtype-base = "HashSet<{$rtype-base}>";
-        }
-
-        if $!is-unordered-map {
-            my $p1 = %*typemap{$!cpp-type};
-            my $p2 = %*typemap{$!pairing};
-            say $!cpp-type;
-            say $!pairing;
-            exit;
-            $rtype-base = "HashMap<{$p1}, {$p2}>";
-        }
-
-        if $!is-template {
-            my $rtype-parent = %*typemap{$!template-parent};
-            $rtype-base = "{$rtype-parent}<{$rtype-base}>";
-        }
-
-        if $!is-pair {
-            my $p1 = %*typemap{$!cpp-type};
-            my $p2 = %*typemap{$!pairing};
-            $rtype-base = "($p1, $p2)";
-        }
-
-        if $!is-shared {
-            $rtype-base = "Arc<{$rtype-base}>";
-        }
-
-        vectorize-rtype($rtype-base, $!vector-levels)
+        $base
     }
 }
 
-our sub populate-typeinfo($ident is rw) {
+sub is-pair-or-tuple($x) {
+    my $pair  = $x ~~ 'std-pair';
+    my $tuple = $x ~~ 'std-tuple';
+    $pair or $tuple
+}
 
-    my $vector-levels = get-vector-levels($ident);
+our sub populate-typeinfo($type) {
 
-    my Bool $is-unique        = get-is-unique($ident);
-    my Bool $is-list          = get-is-list($ident);
-    my Bool $is-set           = get-is-set($ident);
-    my Bool $is-pair          = get-is-pair($ident);
-    my Bool $is-shared        = get-is-shared($ident);
-    my Bool $is-deque         = get-is-deque($ident);
-    my Bool $is-bit-set       = get-is-bit-set($ident);
-    my Bool $is-c10-optional  = get-is-c10-optional($ident);
-    my Bool $is-unordered-set = get-is-unordered-set($ident);
-    my Bool $is-unordered-map = get-is-unordered-map($ident);
-    my Bool $is-template      = get-is-template($ident);
+    my $cpp-parent   = "";
+    my @cpp-children = ();
 
-    my $pairing         = "";
-    my $template-parent = "";
-
-    my @one-hot = [
-        ($is-unique, {
-
-        })
-
-    ];
-
-    my $cpp-type = do given (
-        $is-unique, 
-        $is-list, 
-        $is-set, 
-        $is-pair, 
-        $is-shared, 
-        $is-deque,
-        $is-c10-optional,
-        $is-bit-set,
-        $is-unordered-set,
-        $is-template,
-        $is-unordered-map,
-        ) {
-
-        when (:so, :not, :not, :not, :not, :not, :not, :not, :not, :not, :not) {
-            $ident<nonvector-identifier><unique-ptr><nonvector-identifier>.Str
+    for [
+        (is-vector($type),           &extract-vector),
+        (is-unique($type),           &extract-unique),
+        (is-list($type),             &extract-list),
+        (is-set($type),              &extract-set),
+        (is-pair($type),             &extract-pair),
+        (is-tuple($type),            &extract-tuple),
+        (is-shared($type),           &extract-shared),
+        (is-deque($type),            &extract-deque),
+        (is-c10-optional($type),     &extract-c10-optional),
+        (is-bit-set($type),          &extract-bit-set),
+        (is-unordered-set($type),    &extract-unordered-set),
+        (is-generic-template($type), &extract-generic-template), 
+        (is-atomic($type),           &extract-atomic), 
+        (is-unordered-map($type),    &extract-unordered-map),
+        (is-queue($type),            &extract-queue),
+        (1,                          &extract-default),
+    ] 
+    -> ($gate, &sub) {
+        if $gate {
+            ($cpp-parent, @cpp-children) = &sub($type);
+            last;
         }
-        when (:not, :so, :not, :not, :not, :not, :not, :not, :not, :not, :not) {
-            $ident<nonvector-identifier><std-list><nonvector-identifier>.Str
-        }
-        when (:not, :not, :so, :not, :not, :not, :not, :not, :not, :not, :not) {
-            $ident<nonvector-identifier><std-set><nonvector-identifier>.Str
-        }
-        when (:not, :not, :not, :so, :not, :not, :not, :not, :not, :not, :not) {
-            $pairing = 
-            $ident<nonvector-identifier><std-pair><nonvector-identifier>[1].Str;
-            $ident<nonvector-identifier><std-pair><nonvector-identifier>[0].Str
-        }
-        when (:not, :not, :not, :not, :so, :not, :not, :not, :not, :not, :not) {
-            $ident<nonvector-identifier><shared-ptr><nonvector-identifier>.Str
-        }
-        when (:not, :not, :not, :not, :not, :so, :not, :not, :not, :not, :not) {
-            $ident<nonvector-identifier><std-deque><nonvector-identifier>.Str
-        }
-        when (:not, :not, :not, :not, :not, :not, :so, :not, :not, :not, :not) {
-            $ident<nonvector-identifier><c10-optional><nonvector-identifier>.Str
-        }
-        when (:not, :not, :not, :not, :not, :not, :not, :so, :not, :not, :not) {
-            $ident<nonvector-identifier><bit-set><nonvector-identifier>.Str
-        }
-        when (:not, :not, :not, :not, :not, :not, :not, :not, :so, :not, :not) {
-            $ident<nonvector-identifier><unordered-set><nonvector-identifier>.Str
-        }
-        when (:not, :not, :not, :not, :not, :not, :not, :not, :not, :so, :not) {
-            $template-parent = $ident<nonvector-identifier><template-identifier><identifier>.Str;
-            $ident<nonvector-identifier><template-identifier><nonvector-identifier>.Str
-        }
-        when (:not, :not, :not, :not, :not, :not, :not, :not, :not, :not, :so) {
-            my $ty0 = $ident<nonvector-identifier><unordered-map><type>[0].Str.trim;
-            my $ty1 = $ident<nonvector-identifier><unordered-map><type>[1].Str.trim;
-            $pairing = $ty1;
-            $ty0
-        }
-        when (:not, :not, :not, :not, :not, :not, :not, :not, :not, :not, :not) {
-            $ident<nonvector-identifier>.Str
-        }
-        default { die "unreachable"; }
-    };
+    }
 
     TypeInfo.new(
-        cpp-type         => $cpp-type,
-        template-parent  => $template-parent,
-        vector-levels    => $vector-levels,
-        is-unique        => $is-unique,
-        is-c10-optional  => $is-c10-optional,
-        is-list          => $is-list,
-        is-set           => $is-set,
-        is-pair          => $is-pair,
-        is-shared        => $is-shared,
-        is-deque         => $is-deque,
-        is-bit-set       => $is-bit-set,
-        is-unordered-set => $is-unordered-set,
-        is-unordered-map => $is-unordered-map,
-        is-template      => $is-template,
-        pairing          => $pairing,
+        cpp-parent          => $cpp-parent,
+        cpp-children        => @cpp-children,
     )
 }

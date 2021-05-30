@@ -9,7 +9,7 @@ does Sigils
 does FunctionHeader {
 
     token template-identifier {
-        <identifier> '<' <nonvector-identifier> '>'
+        <identifier> '<' [<type>+ %% "," ] '>'
     }
 
     token value  { <.identifier> | <.numeric> }
@@ -26,6 +26,31 @@ does FunctionHeader {
 
     rule static_const {
         <static> <const> <type> <name> '=' <static_const_rhs> ';' <line-comment>?
+    }
+
+    #does not contain a closing bracket
+    #this one may be somehwat ad-hoc
+    #it is just to easily parse the rust 
+    #struct skeleton out of the somewhat bulky
+    #c++ class header
+    rule ctor-header {
+        <template-prefix>? 
+        [<class> | <struct>] 
+        <type> <final>? <class-inheritance> '{'
+        [<public> ':']?
+        [<use-operator-context-functions> ';']?
+        [<use-dispatch-helper> ';']?
+    }
+
+    token use-operator-context-functions {
+        'USE_OPERATOR_CONTEXT_FUNCTIONS'
+    }
+    token use-dispatch-helper {
+        'USE_DISPATCH_HELPER'
+    }
+
+    rule class-inheritance {
+        ':' [<public> | <private>] <type>
     }
 
     rule static-constants {
@@ -63,19 +88,6 @@ does FunctionHeader {
         <[A..Z a..z _]> <[A..Z a..z 0..9 _ : < > ]>*
     }
 
-    rule vectorized-identifier {
-        [ 'std::' ]? 'vector<' <maybe-vectorized-identifier> '>'
-    }
-
-    token maybe-vectorized-identifier {
-        | <nonvector-identifier> 
-        | <vectorized-identifier>
-    }
-
-    token type {
-        <maybe-vectorized-identifier>
-    }
-
     token name {
         <.identifier>
     }
@@ -101,7 +113,7 @@ does FunctionHeader {
 
     rule template-arg {
         [ 'template' '<' 'class' '>']?
-        [<class> | <typename>]? 
+        [<class> | <typename> | <type>]? 
         <name> 
     }
 
@@ -185,16 +197,29 @@ does FunctionHeader {
     }
 
     rule struct-member-declaration {
+        :sigspace
         <line-comment>*
-        <struct>? <type> [<ref> | <ptr>]?  <name> ';'
+        <struct>? <const>? <type> [<ref> | <ptr>]?  <name> [ 
+            | '=' <default-value> 
+            | '{' <default-value> '}'
+        ]? 
+        :!sigspace
+        ';' 
+        [\h* <line-comment>]?
+        :sigspace
+        <.ws>
+    }
+    rule destructor {
+        '~' <type> '(' ')' <override>?
     }
 
     rule struct-member-declarations {
+        :sigspace
         <struct-member-declaration>+
     }
 
     rule function-local-type-suffix {
-        [<ref> | <ptr>]?  <name> <array-specifier>? 
+       [<ref> | <ptr>]?  <name> <array-specifier>? 
     }
 
     rule function-local-declaration {

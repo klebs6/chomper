@@ -1,11 +1,19 @@
 our role Types {
 
     token unique-ptr {
-        [ 'std::' ]? 'unique_ptr' '<' <nonvector-identifier> '>'
+        [ 'std::' ]? 'unique_ptr' '<' <type> '>'
     }
 
     token unordered-set {
-        [ 'std::' ]? 'unordered_set' '<' <nonvector-identifier> '>'
+        [ 'std::' ]? 'unordered_set' '<' <type> '>'
+    }
+
+    token std-atomic {
+        [ 'std::' ]? 'atomic' '<' <type> '>'
+    }
+
+    token std-queue {
+        [ 'std::' ]? 'queue' '<' <type> '>'
     }
 
     rule unordered-map {
@@ -19,37 +27,45 @@ our role Types {
     }
 
     token bit-set {
-        [ 'std::' ]? 'bitset' '<' <nonvector-identifier> '>'
+        [ 'std::' ]? 'bitset' '<' <type> '>'
+    }
+
+    token std-vector {
+        [ 'std::' ]? 'vector' '<' <type> '>'
+    }
+
+    token std-tuple {
+        [ 'std::' ]? 'tuple' '<' [<type>+ %% ', '] '>'
     }
 
     token c10-optional {
-        [ 'c10::' ]? 'optional' '<' <nonvector-identifier> '>'
+        [ 'c10::' ]? 'optional' '<' <type> '>'
     }
 
     token std-deque {
-        [ 'std::' ]? 'deque' '<' <nonvector-identifier> '>'
+        [ 'std::' ]? 'deque' '<' <type> '>'
     }
 
     token std-list {
-        [ 'std::' ]? 'list' '<' <nonvector-identifier> '>'
+        [ 'std::' ]? 'list' '<' <type> '>'
     }
 
     token shared-ptr {
-        [ 'std::' ]? 'shared_ptr' '<' <nonvector-identifier> '>'
+        [ 'std::' ]? 'shared_ptr' '<' <type> '>'
     }
 
     rule std-pair {
         [ 'std::' ]? 'pair' '<' 
-        <nonvector-identifier> ',' 
-        <nonvector-identifier> 
+        <type> ',' 
+        <type> 
         '>'
     }
 
     token std-set {
-        [ 'std::' ]? 'set' '<' <nonvector-identifier> '>'
+        [ 'std::' ]? 'set' '<' <type> '>'
     }
 
-    token nonvector-identifier {
+    token type {
         [
             | 'std::'
             | 'zx::'
@@ -65,42 +81,46 @@ our role Types {
             | <bit-set>
             | <c10-optional>
             | <shared-ptr>
+            | <std-atomic>
             | <std-pair>
+            | <std-tuple>
+            | <std-vector>
+            | <std-queue>
             | <std-list>
             | <std-deque>
             | <std-set>
             | <.identifier>
-            | 'std::regex'
-            | 'std::type_info'
-            | 'c10::OperatorHandle'
-            | 'torch::jit::Stack'
-            | 'TfToken::HashSet'
             | 'DoubleToStringConverter::DtoaMode'
-            | 'Vector<const char>'
-            | 'Vector<char>'
-            | 'set<string>'
-            | 'std::ostream'
-            | 'std::istream'
-            | 'std::thread::id'
             | 'TfDebug::_Node'
-            | 'std::string'
+            | 'TfToken::HashSet'
+            | 'Vector<char>'
+            | 'Vector<const char>'
+            | 'atomic<bool>'
+            | 'cv::Mat'
+            | 'c10::OperatorHandle'
             | 'google::protobuf::MessageLite'
             | 'google::protobuf::RepeatedField'
-            | 'kVmapMaxTensorDims'
-            | 'kVmapNumLevels'
-            | 'std::atomic<bool>'
+            | 'itensor::descriptor'
+            | 'itensor::dims'
+            | 'set<string>'
             | 'atomic<bool>'
-            | 'unsigned short'
-            | 'unsigned int'
-            | 'unsigned char'
-            | 'unsigned long'
-            | 'unsigned long long'
-            | 'unsigned long long int'
-            | 'tbb::spin_mutex::scoped_lock'
+            | 'thread::id'
             | 'tbb::spin_mutex'
+            | 'tbb::spin_mutex::scoped_lock'
             | 'tbb::task_group'
+            | 'torch::jit::Stack'
+            | 'unsigned char'
+            | 'unsigned int'
+            | 'unsigned long long int'
+            | 'unsigned long long'
+            | 'unsigned long'
+            | 'unsigned short'
+            | 'ideep::tensor'
+            | 'ideep::scale_t'
+            | 'ideep::tensor::dims'
+            | 'ideep::convolution_forward_params'
+            | 'ideep::tensor::descriptor'
             | <template-identifier>
         ]
     }
 }
-

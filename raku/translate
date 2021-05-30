@@ -1,6 +1,6 @@
 #!/usr/bin/env raku
 use v6;
-use lib 'raku';
+use lib '/Users/kleb/bethesda/work/repo/translator/raku';
 use util;
 use typemap;
 use grammar;
@@ -38,6 +38,8 @@ our grammar Translator does ParserRules {
             | <op-ostream-function-header>
             | <static-constants>
             | <function-local-declarations>
+            | <destructor>
+            | <ctor-header>
         ]
     }
 }
@@ -75,6 +77,8 @@ our sub get-hook($hookname) {
         static-constants                      => { use static_const;     &translate-static-const },
         function-local-declarations           => { use function-locals;  &translate-function-locals },
         struct-member-declarations            => { use struct_members;   &translate-struct-member-declarations },
+        destructor                            => { use destructor;       &translate-destructor },
+        ctor-header                           => { use ctor_header;     &translate-ctor-header },
     );
 
     %dispatch{$hookname}()
@@ -111,7 +115,7 @@ sub MAIN(:$chop = False, :$class = Nil) {
 
     #add whitelisted types to typemap
     #a whitelisted type is the same in Rust as it is in c++
-    for "raku/whitelist.txt".IO.slurp.lines {
+    for "/Users/kleb/bethesda/work/repo/translator/raku/whitelist.txt".IO.slurp.lines {
         %*typemap{$_} = $_;
     }
 

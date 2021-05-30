@@ -1,5 +1,8 @@
 our role Keywords {
     token class      { 'class' }
+    token final      { 'final' }
+    token public     { 'public' }
+    token private    { 'private' }
     token struct     { 'struct' }
     token friend     { 'friend' }
     token typename   { 'typename' }

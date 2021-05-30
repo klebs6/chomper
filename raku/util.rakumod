@@ -49,11 +49,17 @@ our sub extract_comments($m) {
 }
 
 our sub snake-case($name) {
+
     my $result = $name;
+
     $result ~~ s:g/<?after <[a..z]>> (<[A..Z]> ** 1) <?before <[a..z]>>/_{$0.lc}/; 
     $result ~~ s:g/<?after <[a..z]>> (<[A..Z 0..9]> ** 2..*) <?before <[a..z]>>/_{$0.lc}/; 
     $result ~~ s:g/<wb> (<[A..Z 0..9]>)/{$0.lc}/; 
     $result ~~ s:g/<?after _> (<[A..Z]>) ** 1 <?before <[a..z]>>/{$0.lc}/;
+
+    #trim trailing underscores
+    $result ~~ s:g/ _* $//;
+
     $result
 }
 
@@ -137,9 +143,7 @@ our sub get-rust-arg($arg, $compute_const = True ) {
 
     my $name = snake-case($arg<name>.trim);
 
-    my $ident = $arg<type><maybe-vectorized-identifier>;
-
-    my TypeInfo $info = populate-typeinfo($ident);
+    my TypeInfo $info = populate-typeinfo($arg<type>);
 
     my $vectorized-rtype = $info.vectorized-rtype;
 
@@ -177,9 +181,7 @@ our sub get-rust-arg($arg, $compute_const = True ) {
 our sub get-roperand($header, $idx) {
     my $operand = $header<args><arg>[$idx];
 
-    my $ident = $operand<type><maybe-vectorized-identifier>;
-
-    my TypeInfo $info = populate-typeinfo($ident);
+    my TypeInfo $info = populate-typeinfo($operand<type>);
 
     $info.vectorized-rtype
 }
@@ -449,7 +451,13 @@ our sub get-rtemplate-args-list($template-header) {
     my @result = [];
 
     for $template-args<template-arg> {
-        @result.push: $_<name>.Str;
+
+        if $_<type>:exists {
+            @result.push: "const {$_<name>.Str}: {%*typemap{$_<type>.Str}}";
+
+        } else {
+            @result.push: $_<name>.Str;
+        }
     }
 
     @result
@@ -481,7 +489,7 @@ our sub get-rfunction-name($template-header) {
     my $old     = $template-header<function-name><identifier>.Str;
     my $new     = snake-case($old);
     my $mapping = $priv ?? "_$old $new" !! "$old $new";
-    spurt "raku/function-mappings", "$mapping\n", :append;
+    spurt "/Users/kleb/bethesda/work/repo/translator/raku/function-mappings", "$mapping\n", :append;
     $new
 }
 
@@ -543,9 +551,8 @@ our sub get-rust-return-type($decl, :$augment = True) {
 
     my $ref   = $rt<ref>:exists;
     my $ptr   = $rt<ptr>:exists;
-    my $ident = $rt<type><maybe-vectorized-identifier>;
 
-    my TypeInfo $info = populate-typeinfo($ident);
+    my TypeInfo $info = populate-typeinfo($rt<type>);
 
     my $vectorized-rtype = $info.vectorized-rtype;
 
