@@ -22,6 +22,7 @@ does FunctionHeader {
         | 'WORK_API'  | 'WORK_LOCAL'
         | 'TRACE_API' | 'TRACE_LOCAL'
         | 'TORCH_API' 
+        | 'C10_EXPORT' 
     }
 
     rule static_const {

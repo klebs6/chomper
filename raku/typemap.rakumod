@@ -550,6 +550,16 @@ our %typemap =
     'legacy_pthreadpool_function_3d_tiled_t' => 'LegacyPThreadPoolFunction3DTiled',
     'legacy_pthreadpool_function_4d_tiled_t' => 'LegacyPThreadPoolFunction4DTiled',
     'qnnp_operator_t'                        => 'QnnpOperator',
+    'std::condition_variable'                => 'std::sync::Condvar',
+    'std::thread'                            => 'std::thread',
+    'TensorProto::DataType'                  => 'TensorProto::DataType',
+    'RefPtr'                                 => 'Rc',
+    'sigaction'                              => 'nix::sys::signal::SigAction',
+    '_Unwind_Reason_Code'                    => 'unwind::_Unwind_Reason_Code',
+    '_Unwind_Context'                        => 'unwind::_Unwind_Context',
+    '_Unwind_Action'                         => 'unwind::_Unwind_Action',
+    'int8_t'                                 => 'i8',
+    'ifstream'                               => 'std::fs::File',
 );
 
  our %defaultsmap = 

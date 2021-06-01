@@ -404,7 +404,8 @@ our sub rparse-template-header($template-header) {
         get-rinline($template-header),
         get-rust-return-type($template-header),
         get-rfunction-name($template-header),
-        get-rfunction-args-list($template-header)
+        get-rfunction-args-list($template-header),
+        get-maybe-self-args($template-header),
 }
 
 #we expect this sort of output in this order
@@ -440,8 +441,49 @@ our sub format-rust-template-args($rtemplate-args-list) {
     $rtemplate-args-list.join(", ")
 }
 
+#may want to move some of this into a separate subroutine because
+#it contains the column indenting logic which can be used in 
+#struct bodies (for example) too
 our sub format-rust-function-args($rfunction-args-list) {
-    $rfunction-args-list.join(",\n")
+
+    my @list = $rfunction-args-list.List;
+
+    if @list.elems eq 0 {
+        return "";
+    }
+
+    my $watermark = @list.reduce: sub ($a, $b) {
+
+        my $aval = $a ~~ Str ?? $a.chomp.trim.index(" ") // 0 !! $a;
+
+        my $bval = $b.chomp.trim.index(" ") // 0;
+
+        ($aval, $bval).max()
+    };
+
+    #this is janky why?
+    if $watermark ~~ Str {
+        $watermark = $watermark.chomp.trim.index(" ") // 0;
+    }
+
+    my @new = do for $rfunction-args-list.List {
+
+        #indent column2
+
+        my ($a, $b) = $_.split(" ");
+
+        my $len = $watermark - $a.chars;
+
+        my $pad = " " ~ (" " x $len);
+
+        $a ~ $pad ~ $b
+    };
+
+    if @list.elems > 2 {
+        "\n" ~ @new.join(",\n").indent(4)
+    } else {
+        @list.join(", ")
+    }
 }
 
 our sub get-rtemplate-args-list($template-header) {
