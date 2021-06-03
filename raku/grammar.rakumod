@@ -37,7 +37,7 @@ does FunctionHeader {
     rule ctor-header {
         <template-prefix>? 
         [<class> | <struct>] 
-        <type> <final>? <class-inheritance> '{'
+        <type> <final>? <class-inheritance>? '{'
         [<public> ':']?
         [<use-operator-context-functions> ';']?
         [<use-dispatch-helper> ';']?
@@ -78,7 +78,7 @@ does FunctionHeader {
     }
 
     token numeric {
-        <[ 0..9 ]>+ [ '.' <[ 0..9 ]>+ ]?
+        [ '+' | '-' ]? <[ 0..9 ]>+ [ '.' <[ 0..9 ]>+ ]?
     }
 
     token identifier {

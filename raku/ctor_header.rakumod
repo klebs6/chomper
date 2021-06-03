@@ -18,13 +18,18 @@ our sub translate-ctor-header( $submatch, $body, $rclass)
     if $directive  { $directive = "//{$directive.Str}"; }
     if $directive2 { $directive2 = "//{$directive2.Str}"; }
 
-    my $base-member = "base: {$submatch<class-inheritance><type>.Str},";
+    my $base-member = $submatch<class-inheritance>:exists ?? 
+    "base: {$submatch<class-inheritance><type>.Str}," !! "";
+
+    my $struct-body = qq:to/END/.chomp.trim;
+    $directive
+    $directive2
+    $base-member
+    END
 
     qq:to/END/
     pub struct $maybe-generic-type \{
-        $directive
-        $directive2
-        $base-member
+        $struct-body
     \}
     impl $maybe-generic-type \{
 

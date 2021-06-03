@@ -1,4 +1,6 @@
 use type-info;
+use snake-case;
+use indent-rust-named-type-list;
 
 our sub say-typemap {
     say %*typemap;
@@ -48,21 +50,6 @@ our sub extract_comments($m) {
     }
 }
 
-our sub snake-case($name) {
-
-    my $result = $name;
-
-    $result ~~ s:g/<?after <[a..z]>> (<[A..Z]> ** 1) <?before <[a..z]>>/_{$0.lc}/; 
-    $result ~~ s:g/<?after <[a..z]>> (<[A..Z 0..9]> ** 2..*) <?before <[a..z]>>/_{$0.lc}/; 
-    $result ~~ s:g/<wb> (<[A..Z 0..9]>)/{$0.lc}/; 
-    $result ~~ s:g/<?after _> (<[A..Z]>) ** 1 <?before <[a..z]>>/{$0.lc}/;
-
-    #trim trailing underscores
-    $result ~~ s:g/ _* $//;
-
-    $result
-}
-
 our sub get_rust_qualifier($arg) {
 
     my $const = 
@@ -80,53 +67,6 @@ our sub get_rust_qualifier($arg) {
     }
 }
 
-our sub get-arr-type($rtype, @dim_stack) {
-
-    my $builder = $rtype;
-
-    for @dim_stack {
-        $builder = "[{$builder}; {$_}]";
-    }
-
-    $builder
-}
-
-our sub get-rust-array-arg(
-        $name, 
-        $const, 
-        $ref, 
-        $ptr, 
-        $rtype, 
-        @dim_stack) 
-{
-
-    my $arr-type = get-arr-type($rtype, @dim_stack);
-
-    my $augmented = augment-rtype(
-        $arr-type, 
-        $const, 
-        $ref, 
-        $ptr
-    );
-
-    return "$name: $augmented";
-}
-
-our sub get-dim-stack($arg) {
-
-    my $arr = $arg<array-specifier>;
-
-    my @dim_stack = [];
-
-    if $arr {
-        for $arr<array-dimension> {
-            @dim_stack.push: $_.Str;
-        }
-    }
-
-    @dim_stack
-}
-
 our sub optionize-rtype($rtype-base, $option_levels is rw) {
 
     my $result = $rtype-base;
@@ -137,43 +77,6 @@ our sub optionize-rtype($rtype-base, $option_levels is rw) {
     }
 
     $result;
-}
-
-our sub get-rust-arg($arg, $compute_const = True ) {
-
-    my $name = snake-case($arg<name>.trim);
-
-    my TypeInfo $info = populate-typeinfo($arg<type>);
-
-    my $vectorized-rtype = $info.vectorized-rtype;
-
-    my $const  = $compute_const ?? 
-    (($arg<const> || $arg<const2>) !~~ Nil) !! False;
-
-    my $ref = $arg<ref>:exists;
-    my $ptr = $arg<ptr>:exists;
-
-    my @dim_stack = get-dim-stack($arg);
-
-    if @dim_stack.elems > 0 {
-        return get-rust-array-arg(
-            $name, 
-            $const, 
-            $ref, 
-            $ptr, 
-            $vectorized-rtype, 
-            @dim_stack);
-
-    } else {
-
-        my $augmented = augment-rtype(
-            $vectorized-rtype, 
-            $const, 
-            $ref, 
-            $ptr
-        );
-        return "$name: $augmented";
-    }
 }
 
 #TODO: eliminate some redundancy with 
@@ -402,7 +305,7 @@ our sub rparse-template-header($template-header) {
     get-rtemplate-args-list($template-header),
         get-rcomments-list($template-header),
         get-rinline($template-header),
-        get-rust-return-type($template-header),
+        get-return-string($template-header),
         get-rfunction-name($template-header),
         get-rfunction-args-list($template-header),
         get-maybe-self-args($template-header),
@@ -446,44 +349,7 @@ our sub format-rust-template-args($rtemplate-args-list) {
 #struct bodies (for example) too
 our sub format-rust-function-args($rfunction-args-list) {
 
-    my @list = $rfunction-args-list.List;
-
-    if @list.elems eq 0 {
-        return "";
-    }
-
-    my $watermark = @list.reduce: sub ($a, $b) {
-
-        my $aval = $a ~~ Str ?? $a.chomp.trim.index(" ") // 0 !! $a;
-
-        my $bval = $b.chomp.trim.index(" ") // 0;
-
-        ($aval, $bval).max()
-    };
-
-    #this is janky why?
-    if $watermark ~~ Str {
-        $watermark = $watermark.chomp.trim.index(" ") // 0;
-    }
-
-    my @new = do for $rfunction-args-list.List {
-
-        #indent column2
-
-        my ($a, $b) = $_.split(" ");
-
-        my $len = $watermark - $a.chars;
-
-        my $pad = " " ~ (" " x $len);
-
-        $a ~ $pad ~ $b
-    };
-
-    if @list.elems > 2 {
-        "\n" ~ @new.join(",\n").indent(4)
-    } else {
-        @list.join(", ")
-    }
+    indent-rust-named-type-list($rfunction-args-list.List)
 }
 
 our sub get-rtemplate-args-list($template-header) {
@@ -552,26 +418,6 @@ our sub get-rfunction-args-list($template-header) {
     }
 
     @result
-}
-
-our sub augment-rtype($vectorized-rtype, $const, $ref, $ptr) {
-
-    if $ref {
-
-        return $const 
-        ??  "&$vectorized-rtype" 
-        !!  "&mut $vectorized-rtype";
-    }
-
-    if $ptr {
-
-        return $const 
-        ??  "*const $vectorized-rtype" 
-        !!  "*mut $vectorized-rtype";
-    }
-
-    $vectorized-rtype
-
 }
 
 #decl must be something with a 

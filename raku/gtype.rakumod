@@ -8,6 +8,25 @@ our role Types {
         [ 'std::' ]? 'unordered_set' '<' <type> '>'
     }
 
+    token std-function {
+        [ 'std::' ]? 'function' 
+        '<' <std-function-return-type> '(' <std-function-args> ')' '>'
+    }
+    token void { 
+        'void'
+    }
+    token std-function-return-type {
+        | <void>
+        | <type>
+    }
+    token std-function-args {
+        | <void>
+        | <type-or-arg>+ %% ","
+    }
+    token type-or-arg {
+        <type> | <arg>
+    }
+
     token std-atomic {
         [ 'std::' ]? 'atomic' '<' <type> '>'
     }
@@ -71,6 +90,7 @@ our role Types {
             | 'zx::'
             | 'c10::'
             | 'at::'
+            | 'cv::'
             | 'tbb::'
             | 'google::'
         ]?
@@ -89,6 +109,7 @@ our role Types {
             | <std-list>
             | <std-deque>
             | <std-set>
+            | <std-function>
             | <.identifier>
             | 'DoubleToStringConverter::DtoaMode'
             | 'TfDebug::_Node'

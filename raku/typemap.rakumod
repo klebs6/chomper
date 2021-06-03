@@ -560,6 +560,15 @@ our %typemap =
     '_Unwind_Action'                         => 'unwind::_Unwind_Action',
     'int8_t'                                 => 'i8',
     'ifstream'                               => 'std::fs::File',
+    'LocalScope'                             => 'OnnxWhileOpLocalScope',
+    'OUT'                                    => 'Output',
+    'IN'                                     => 'Input',
+    'zmq_msg_t'                              => 'zmq_msg_t',
+    'Val_t'                                  => 'ValueT',
+    'Ind_t'                                  => 'IndexT',
+    'Context_t'                              => 'ContextT',
+    'CBLAS_TRANSPOSE'                        => 'cblas_sys::CBLAS_TRANSPOSE',
+    'rowWiseAdagradT'                        => 'RowWiseAdagradT',
 );
 
  our %defaultsmap = 

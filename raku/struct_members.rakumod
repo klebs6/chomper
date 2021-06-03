@@ -1,5 +1,6 @@
 use util;
 use typemap;
+use type-info;
 
 sub extract-struct-member-data($submatch, $mock = False) {
 
@@ -15,7 +16,6 @@ sub extract-struct-member-data($submatch, $mock = False) {
 
 our sub get-default($submatch) {
     $submatch<default-value>:exists ?? $submatch<default-value>.Str !! "";
-
 }
 
 our sub make-doc-comment($comment) {

@@ -1,6 +1,7 @@
 use util;
 use typemap;
 use type-info;
+use snake-case;
 
 sub get-default($vectorized-rtype) {
     given $vectorized-rtype {

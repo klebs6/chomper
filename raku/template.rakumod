@@ -5,7 +5,7 @@ our sub translate-freestanding-template-function($submatch, $body, $rclass) {
     my ( $rtemplate-args-list, 
             $rcomments-list,
             $rinline, 
-            $rreturn-type, 
+            $rreturn-string, 
             $rfunction-name, 
             $rfunction-args-list,
             $maybe-self-args) = 
@@ -20,7 +20,7 @@ our sub translate-freestanding-template-function($submatch, $body, $rclass) {
         qq:to/END/;
         impl $rclass \{
             $rcomment
-            {$rinline}pub fn {$rfunction-name}<{$rtemplate-args}>({$maybe-self-args}{$rfunction-args}) -> $rreturn-type \{
+            {$rinline}pub fn {$rfunction-name}<{$rtemplate-args}>({$maybe-self-args}{$rfunction-args}) $rreturn-string \{
                 todo!();
                 /*
                 {$body.trim.chomp.indent(4)}
@@ -33,7 +33,7 @@ our sub translate-freestanding-template-function($submatch, $body, $rclass) {
 
         qq:to/END/;
         $rcomment
-        {$rinline}pub fn {$rfunction-name}<{$rtemplate-args}>({$rfunction-args}) -> $rreturn-type \{
+        {$rinline}pub fn {$rfunction-name}<{$rtemplate-args}>({$rfunction-args}) $rreturn-string \{
             todo!();
             /*
             {$body.trim.chomp.indent(4)}

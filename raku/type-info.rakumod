@@ -1,3 +1,6 @@
+use snake-case;
+use indent-rust-named-type-list;
+
 sub is-unique($type)           { $type<unique-ptr>:exists }
 sub is-c10-optional($type)     { $type<c10-optional>:exists }
 sub is-list($type)             { $type<std-list>:exists }
@@ -13,6 +16,7 @@ sub is-tuple($type)            { $type<std-tuple>:exists }
 sub is-vector($type)           { $type<std-vector>:exists }
 sub is-atomic($type)           { $type<std-atomic>:exists }
 sub is-queue($type)            { $type<std-queue>:exists }
+sub is-function($type)         { $type<std-function>:exists }
 
 my %mini-typemap = %(
     'unique-ptr'    => 'Box',
@@ -28,7 +32,7 @@ my %mini-typemap = %(
     'unordered-map' => 'HashMap',
     'std-vector'    => 'Vec',
     'std-atomic'    => 'Atomic',
-    'std-queue'    => 'SegQueue',
+    'std-queue'     => 'SegQueue',
 );
 
 sub extract-unique($type) {
@@ -128,7 +132,64 @@ sub extract-default($type) {
     $type.Str, |()
 }
 
-our class TypeInfo {
+our class RustArg {
+    has $.type is required;
+    has $.name is required;
+}
+
+role TypeInfo {
+    method vectorized-rtype() { ... }    
+}
+
+our class FunctionTypeInfo does TypeInfo {
+
+    #these are match objects
+    has $.std-function-return-type is required;
+    has $.std-function-args        is required;
+
+    method vectorized-rtype {
+
+        my $rust-return-type = do if $!std-function-return-type<void>:exists {
+            "()"
+        } else {
+            populate-typeinfo($!std-function-return-type<type>).vectorized-rtype
+        };
+
+        my $count = 0;
+
+        my $rust-args = do if $!std-function-args<void>:exists {
+            ""
+        } else {
+
+            my $unnamed-count = 0;
+
+            my @rust-args = do for $!std-function-args<type-or-arg>.List {
+                if $_<type>:exists {
+                    my $rust-arg-name = "unnamed_$unnamed-count";
+                    my $rust-arg-type = populate-typeinfo($_<type>).vectorized-rtype;
+                    $unnamed-count += 1;
+                    "$rust-arg-name: $rust-arg-type"
+                } else {
+                    get-rust-arg($_<arg>)
+                }
+            };
+
+            $count = @rust-args.elems;
+
+            indent-rust-named-type-list(@rust-args)
+        };
+
+        if $count > 2 {
+            "fn($rust-args
+) -> $rust-return-type"
+        } else {
+            "fn($rust-args) -> $rust-return-type"
+        }
+
+    }
+}
+
+our class BasicTypeInfo does TypeInfo {
 
     has Str  $.cpp-parent     is required;
     has      @.cpp-children   is required;
@@ -167,6 +228,16 @@ our sub populate-typeinfo($type) {
     my $cpp-parent   = "";
     my @cpp-children = ();
 
+    if is-function($type) {
+
+        my $func = $type<std-function>;
+
+        return FunctionTypeInfo.new(
+            std-function-return-type => $func<std-function-return-type>,
+            std-function-args        => $func<std-function-args>,
+        );
+    }
+
     for [
         (is-vector($type),           &extract-vector),
         (is-unique($type),           &extract-unique),
@@ -192,8 +263,113 @@ our sub populate-typeinfo($type) {
         }
     }
 
-    TypeInfo.new(
+    BasicTypeInfo.new(
         cpp-parent          => $cpp-parent,
         cpp-children        => @cpp-children,
     )
 }
+
+our sub get-rust-arg($arg, $compute_const = True ) {
+
+    my $name = snake-case($arg<name>.trim);
+
+    my TypeInfo $info = populate-typeinfo($arg<type>);
+
+    my $vectorized-rtype = $info.vectorized-rtype;
+
+    my $const  = $compute_const ?? 
+    (($arg<const> || $arg<const2>) !~~ Nil) !! False;
+
+    my $ref = $arg<ref>:exists;
+    my $ptr = $arg<ptr>:exists;
+
+    my @dim_stack = get-dim-stack($arg);
+
+    if @dim_stack.elems > 0 {
+        return get-rust-array-arg(
+            $name, 
+            $const, 
+            $ref, 
+            $ptr, 
+            $vectorized-rtype, 
+            @dim_stack);
+
+    } else {
+
+        my $augmented = augment-rtype(
+            $vectorized-rtype, 
+            $const, 
+            $ref, 
+            $ptr
+        );
+        return "$name: $augmented";
+    }
+}
+
+our sub get-dim-stack($arg) {
+
+    my $arr = $arg<array-specifier>;
+
+    my @dim_stack = [];
+
+    if $arr {
+        for $arr<array-dimension> {
+            @dim_stack.push: $_.Str;
+        }
+    }
+
+    @dim_stack
+}
+
+our sub get-rust-array-arg(
+        $name, 
+        $const, 
+        $ref, 
+        $ptr, 
+        $rtype, 
+        @dim_stack) 
+{
+
+    my $arr-type = get-arr-type($rtype, @dim_stack);
+
+    my $augmented = augment-rtype(
+        $arr-type, 
+        $const, 
+        $ref, 
+        $ptr
+    );
+
+    return "$name: $augmented";
+}
+
+our sub augment-rtype($vectorized-rtype, $const, $ref, $ptr) {
+
+    if $ref {
+
+        return $const 
+        ??  "&$vectorized-rtype" 
+        !!  "&mut $vectorized-rtype";
+    }
+
+    if $ptr {
+
+        return $const 
+        ??  "*const $vectorized-rtype" 
+        !!  "*mut $vectorized-rtype";
+    }
+
+    $vectorized-rtype
+
+}
+
+our sub get-arr-type($rtype, @dim_stack) {
+
+    my $builder = $rtype;
+
+    for @dim_stack {
+        $builder = "[{$builder}; {$_}]";
+    }
+
+    $builder
+}
+
