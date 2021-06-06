@@ -9,7 +9,7 @@ does Sigils
 does FunctionHeader {
 
     token template-identifier {
-        <identifier> '<' [<type>+ %% "," ] '>'
+        <identifier> '<' [<type>+ %% ["," <.ws>?] ] '>'
     }
 
     token value  { <.identifier> | <.numeric> }
@@ -37,10 +37,19 @@ does FunctionHeader {
     rule ctor-header {
         <template-prefix>? 
         [<class> | <struct>] 
-        <type> <final>? <class-inheritance>? '{'
+        <type> 
+        <final>? 
+        <class-inheritance>? '{'
         [<public> ':']?
         [<use-operator-context-functions> ';']?
         [<use-dispatch-helper> ';']?
+    }
+    rule using-declaration {
+        | <.using> <lhs=type> '=' <rhs=type> ';'
+        | <.typedef> <rhs=type>  <lhs=type> ';'
+    }
+    rule using-declarations {
+        <using-declaration>+
     }
 
     token use-operator-context-functions {
@@ -78,7 +87,7 @@ does FunctionHeader {
     }
 
     token numeric {
-        [ '+' | '-' ]? <[ 0..9 ]>+ [ '.' <[ 0..9 ]>+ ]?
+        [ '+' | '-' ]? <[ 0..9 ]>+ [ '.' <[ 0..9 ]>+ ]? [ 'e' <.numeric> ]?
     }
 
     token identifier {

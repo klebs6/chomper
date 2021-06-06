@@ -1,16 +1,66 @@
 use util;
 use typemap;
 use type-info;
+use indent-rust-named-type-list;
 
-sub extract-struct-member-data($submatch, $mock = False) {
+our class RustStructMember {
 
-    if $mock {
-        "//test comment", "my_strings: Vec<String>", "17"
+    has $.name is required;
+    has $.type is required;
+    has $.default;
+    has @.comments;
 
-    }else {
-        get-rcomments-list($submatch),
-        get-rust-arg($submatch),
-        get-default($submatch),
+    method get-maybe-default-tag {
+        if $!default {
+            " // default = $!default\n"
+        } else {
+            ""
+        }
+    }
+
+    method get-doc-comments {
+
+        if @!comments {
+            my @doc-comments = do for @!comments {
+                make-doc-comment($_).chomp.trim
+            };
+            @doc-comments.join("\n") ~ "\n"
+        } else {
+            ""
+        }
+    }
+
+    method gist(:$column2-start-index = Nil) {
+
+        my $name-type = self.get-as-name-type;
+
+        $name-type = indent-column2(
+            $name-type, 
+            $column2-start-index
+        );
+
+        my $doc-comments = self.get-doc-comments;
+
+        my $maybe-default-tag = self.get-maybe-default-tag;
+
+        "{$doc-comments}{$name-type},{$maybe-default-tag}"
+    }
+
+    method get-as-name-type {
+        "$!name: $!type"
+    }
+}
+
+our class RustStructMembers {
+
+    has RustStructMember @.members;
+
+    method gist {
+        my @named-type-list = @!members>>.get-as-name-type;
+        my $watermark = get-watermark-from-rargs-list(@named-type-list);
+        do for @!members {
+            $_.gist(column2-start-index => $watermark)
+        }.join("")
     }
 }
 
@@ -22,36 +72,26 @@ our sub make-doc-comment($comment) {
     $comment.lines>>.subst(/\/ \/ <.ws>? <?before <-[/]> > /, "/// ")>>.trim.join("\n")
 }
 
-sub translate-struct-member-declaration ( $submatch ) {
-
-    my ($comment, $rust-arg, $default) = 
-    extract-struct-member-data($submatch);
-
-    $comment = make-doc-comment($comment).chomp.trim;
-
-    my $default-tag = $default ?? " // default = $default" !! "";
-
-    if $comment {
-        qq:to/END/.trim-trailing;
-
-        $comment
-        $rust-arg,$default-tag
-        END
-    } else {
-        qq:to/END/.chomp.trim;
-        $rust-arg,$default-tag
-        END
-    }
-}
-
 our sub translate-struct-member-declarations( $submatch, $body, $rclass) 
 {
-    my @items = do for 
+    my $writer = RustStructMembers.new(members => [ ]);
 
-    $submatch<struct-member-declaration> {
-        translate-struct-member-declaration($_)
-    };
+    for $submatch<struct-member-declaration>.List {
 
-    @items.join("\n").chomp.trim
+        my $comments = get-rcomments-list($_).split("\n")>>.chomp.trim;
+        my $default  = get-default($_);
+        my $arg      = get-rust-arg($_);
+        my $name = $arg.split(":")[0];
+        my $type = $arg.split(":")[1..*].join(" ");
+
+        $writer.members.push: RustStructMember.new(
+            name     => $name,
+            type     => $type,
+            comments => $comments,
+            default  => $default,
+        );
+    }
+
+    $writer.gist.indent(4)
 }
 

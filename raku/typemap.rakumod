@@ -569,6 +569,8 @@ our %typemap =
     'Context_t'                              => 'ContextT',
     'CBLAS_TRANSPOSE'                        => 'cblas_sys::CBLAS_TRANSPOSE',
     'rowWiseAdagradT'                        => 'RowWiseAdagradT',
+    'cudaEvent_t'                            => 'cuda::Event',
+    'atomic_flag'                            => 'AtomicBool',
 );
 
  our %defaultsmap = 

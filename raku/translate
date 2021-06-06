@@ -40,6 +40,7 @@ our grammar Translator does ParserRules {
             | <function-local-declarations>
             | <destructor>
             | <ctor-header>
+            | <using-declarations>
         ]
     }
 }
@@ -50,35 +51,36 @@ our sub get-hook($hookname) {
     #will return one of these values
     my %dispatch = %(
 
-        default-ctor                          => { use default;          &translate-default-ctor },
-        hashing-function                      => { use hasher;           &translate-hasher },
-        op-add-eq-function-header             => { use op_add;           &translate-op-add-eq },
-        op-bitor-assign-function-header       => { use op_bitor;         &translate-op-bitor-assign },
-        op-bitand-assign-function-header      => { use op_bitand;        &translate-op-bitand-assign },
-        op-add-function-header                => { use op_add;           &translate-op-add },
-        function-declaration                  => { use function;         &translate-function },
-        constructor-definition-header         => { use constructor;      &translate-ctor },
-        op-div-function-header                => { use op_div;           &translate-op-div },
-        op-div-eq-function-header             => { use op_div_eq;        &translate-op-div-eq },
-        op-eq-function-header                 => { use op_eq;            &translate-op-eq },
-        op-lt-function-header                 => { use op_eq;            &translate-op-lt },
-        op-index-function-header              => { use op_index;         &translate-op-index },
-        op-xor-function-header                => { use op_xor;           &translate-op-xor },
-        op-bitand-function-header             => { use op_bitand;        &translate-op-bitand },
-        op-bitor-function-header              => { use op_bitor;         &translate-op-bitor },
-        op-mul-function-header                => { use op_mul;           &translate-op-mul },
-        op-mul-eq-function-header             => { use op_mul_eq;        &translate-op-mul-eq },
-        op-negate-function-header             => { use op_negate;        &translate-op-negate },
-        op-sub-function-header                => { use op_sub;           &translate-op-sub },
-        op-sub-eq-function-header             => { use op_sub_eq;        &translate-op-sub-eq },
-        freestanding-template-function-header => { use template;         &translate-freestanding-template-function },
-        op-ostream-function-header            => { use ostream;          &translate-op-ostream },
-        op-convert-function-header            => { use op_convert;       &translate-op-convert },
-        static-constants                      => { use static_const;     &translate-static-const },
-        function-local-declarations           => { use function-locals;  &translate-function-locals },
-        struct-member-declarations            => { use struct_members;   &translate-struct-member-declarations },
-        destructor                            => { use destructor;       &translate-destructor },
-        ctor-header                           => { use ctor_header;     &translate-ctor-header },
+        default-ctor                          => { use default;            &translate-default-ctor },
+        hashing-function                      => { use hasher;             &translate-hasher },
+        op-add-eq-function-header             => { use op_add;             &translate-op-add-eq },
+        op-bitor-assign-function-header       => { use op_bitor;           &translate-op-bitor-assign },
+        op-bitand-assign-function-header      => { use op_bitand;          &translate-op-bitand-assign },
+        op-add-function-header                => { use op_add;             &translate-op-add },
+        function-declaration                  => { use function;           &translate-function },
+        constructor-definition-header         => { use constructor;        &translate-ctor },
+        op-div-function-header                => { use op_div;             &translate-op-div },
+        op-div-eq-function-header             => { use op_div_eq;          &translate-op-div-eq },
+        op-eq-function-header                 => { use op_eq;              &translate-op-eq },
+        op-lt-function-header                 => { use op_eq;              &translate-op-lt },
+        op-index-function-header              => { use op_index;           &translate-op-index },
+        op-xor-function-header                => { use op_xor;             &translate-op-xor },
+        op-bitand-function-header             => { use op_bitand;          &translate-op-bitand },
+        op-bitor-function-header              => { use op_bitor;           &translate-op-bitor },
+        op-mul-function-header                => { use op_mul;             &translate-op-mul },
+        op-mul-eq-function-header             => { use op_mul_eq;          &translate-op-mul-eq },
+        op-negate-function-header             => { use op_negate;          &translate-op-negate },
+        op-sub-function-header                => { use op_sub;             &translate-op-sub },
+        op-sub-eq-function-header             => { use op_sub_eq;          &translate-op-sub-eq },
+        freestanding-template-function-header => { use template;           &translate-freestanding-template-function },
+        op-ostream-function-header            => { use ostream;            &translate-op-ostream },
+        op-convert-function-header            => { use op_convert;         &translate-op-convert },
+        static-constants                      => { use static_const;       &translate-static-const },
+        function-local-declarations           => { use function-locals;    &translate-function-locals },
+        struct-member-declarations            => { use struct_members;     &translate-struct-member-declarations },
+        destructor                            => { use destructor;         &translate-destructor },
+        ctor-header                           => { use ctor_header;        &translate-ctor-header },
+        using-declarations                    => { use using_declarations; &translate-using-declarations },
     );
 
     %dispatch{$hookname}()

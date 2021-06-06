@@ -8,7 +8,7 @@ our role Types {
         [ 'std::' ]? 'unordered_set' '<' <type> '>'
     }
 
-    token std-function {
+    rule std-function {
         [ 'std::' ]? 'function' 
         '<' <std-function-return-type> '(' <std-function-args> ')' '>'
     }
@@ -19,7 +19,7 @@ our role Types {
         | <void>
         | <type>
     }
-    token std-function-args {
+    rule std-function-args {
         | <void>
         | <type-or-arg>+ %% ","
     }
@@ -85,65 +85,71 @@ our role Types {
     }
 
     token type {
-        [
-            | 'std::'
-            | 'zx::'
-            | 'c10::'
-            | 'at::'
-            | 'cv::'
-            | 'tbb::'
-            | 'google::'
-        ]?
-        [
-            | <unique-ptr>
-            | <unordered-set>
-            | <unordered-map>
-            | <bit-set>
-            | <c10-optional>
-            | <shared-ptr>
-            | <std-atomic>
-            | <std-pair>
-            | <std-tuple>
-            | <std-vector>
-            | <std-queue>
-            | <std-list>
-            | <std-deque>
-            | <std-set>
-            | <std-function>
-            | <.identifier>
-            | 'DoubleToStringConverter::DtoaMode'
-            | 'TfDebug::_Node'
-            | 'TfToken::HashSet'
-            | 'Vector<char>'
-            | 'Vector<const char>'
-            | 'atomic<bool>'
-            | 'cv::Mat'
-            | 'c10::OperatorHandle'
-            | 'TensorProto::DataType'
-            | 'google::protobuf::MessageLite'
-            | 'google::protobuf::RepeatedField'
-            | 'itensor::descriptor'
-            | 'itensor::dims'
-            | 'set<string>'
-            | 'atomic<bool>'
-            | 'thread::id'
-            | 'tbb::spin_mutex'
-            | 'tbb::spin_mutex::scoped_lock'
-            | 'tbb::task_group'
-            | 'torch::jit::Stack'
-            | 'unsigned char'
-            | 'unsigned int'
-            | 'unsigned long long int'
-            | 'unsigned long long'
-            | 'unsigned long'
-            | 'unsigned short'
-            | 'ideep::tensor'
-            | 'SignalHandler::Action'
-            | 'ideep::scale_t'
-            | 'ideep::tensor::dims'
-            | 'ideep::convolution_forward_params'
-            | 'ideep::tensor::descriptor'
-            | <template-identifier>
+        | <typename> <.ws> <parent=type> '::' <child=name>
+
+        | [
+            [
+                | 'std::'
+                | 'zx::'
+                | 'c10::'
+                | 'at::'
+                | 'cv::'
+                | 'cl::'
+                | 'tbb::'
+                | 'google::'
+                | 'nom::'
+            ]?
+            [
+                | <unique-ptr>
+                | <unordered-set>
+                | <unordered-map>
+                | <bit-set>
+                | <c10-optional>
+                | <shared-ptr>
+                | <std-atomic>
+                | <std-pair>
+                | <std-tuple>
+                | <std-vector>
+                | <std-queue>
+                | <std-list>
+                | <std-deque>
+                | <std-set>
+                | <std-function>
+                | <.identifier>
+                | 'DoubleToStringConverter::DtoaMode'
+                | 'TfDebug::_Node'
+                | 'TfToken::HashSet'
+                | 'Vector<char>'
+                | 'Vector<const char>'
+                | 'atomic<bool>'
+                | 'cv::Mat'
+                | 'c10::OperatorHandle'
+                | 'TensorProto::DataType'
+                | 'google::protobuf::MessageLite'
+                | 'google::protobuf::RepeatedField'
+                | 'itensor::descriptor'
+                | 'itensor::dims'
+                | 'set<string>'
+                | 'atomic<bool>'
+                | 'thread::id'
+                | 'tbb::spin_mutex'
+                | 'tbb::spin_mutex::scoped_lock'
+                | 'tbb::task_group'
+                | 'torch::jit::Stack'
+                | 'unsigned char'
+                | 'unsigned int'
+                | 'unsigned long long int'
+                | 'unsigned long long'
+                | 'unsigned long'
+                | 'unsigned short'
+                | 'ideep::tensor'
+                | 'SignalHandler::Action'
+                | 'ideep::scale_t'
+                | 'ideep::tensor::dims'
+                | 'ideep::convolution_forward_params'
+                | 'ideep::tensor::descriptor'
+                | <template-identifier>
+            ]
         ]
     }
 }

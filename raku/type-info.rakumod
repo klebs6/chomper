@@ -1,6 +1,33 @@
 use snake-case;
 use indent-rust-named-type-list;
 
+=begin comment
+class PtrLevel {
+    has $.const is required;
+}
+
+class RefLevel {
+    has $.const is required;
+}
+
+class ArrayLevel {
+    has $.length is required;
+}
+
+class Type {
+    has PtrLevel   @.ptr-stack = [];
+    has ArrayLevel @.arr-stack = [];
+    has RefLevel   @.ref-stack = [];
+    has $.const = True;
+    has $.cpp-base-type is required;
+}
+
+class Arg {
+    has Type $.type is required;
+    has $.name      is required;
+}
+=end comment
+
 sub is-unique($type)           { $type<unique-ptr>:exists }
 sub is-c10-optional($type)     { $type<c10-optional>:exists }
 sub is-list($type)             { $type<std-list>:exists }
@@ -31,6 +58,7 @@ my %mini-typemap = %(
     'unordered-set' => 'HashSet',
     'unordered-map' => 'HashMap',
     'std-vector'    => 'Vec',
+    'vector'        => 'Vec',
     'std-atomic'    => 'Atomic',
     'std-queue'     => 'SegQueue',
 );
@@ -129,7 +157,8 @@ sub extract-unordered-map($type) {
 }
 
 sub extract-default($type) {
-    $type.Str, |()
+        $type.Str, |()
+
 }
 
 our class RustArg {
@@ -139,6 +168,15 @@ our class RustArg {
 
 role TypeInfo {
     method vectorized-rtype() { ... }    
+}
+
+our class TemplateMemberAccessTypeInfo does TypeInfo {
+    has $.parent-template is required;
+    has $.child-typename  is required;
+
+    method vectorized-rtype {
+        "{$.parent-template}::{$.child-typename}"
+    }
 }
 
 our class FunctionTypeInfo does TypeInfo {
@@ -162,10 +200,11 @@ our class FunctionTypeInfo does TypeInfo {
         } else {
 
             my $unnamed-count = 0;
+            my $unnamed-prefix = "_u";
 
             my @rust-args = do for $!std-function-args<type-or-arg>.List {
                 if $_<type>:exists {
-                    my $rust-arg-name = "unnamed_$unnamed-count";
+                    my $rust-arg-name = "{$unnamed-prefix}{$unnamed-count}";
                     my $rust-arg-type = populate-typeinfo($_<type>).vectorized-rtype;
                     $unnamed-count += 1;
                     "$rust-arg-name: $rust-arg-type"
@@ -227,6 +266,13 @@ our sub populate-typeinfo($type) {
 
     my $cpp-parent   = "";
     my @cpp-children = ();
+
+    if $type<typename>:exists {
+        return TemplateMemberAccessTypeInfo.new(
+            parent-template => $type<parent>.Str,
+            child-typename  => $type<child>.Str,
+        );
+    }
 
     if is-function($type) {
 

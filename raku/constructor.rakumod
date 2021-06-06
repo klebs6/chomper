@@ -6,11 +6,13 @@ our sub translate-ctor($submatch, $body, $user_rclass) {
         $rtemplate-args, 
         $rclass-name-from-ns, 
         $rfunction-args-list, 
+        $roptional-initializers, 
         $rcomments-list ) =
         rparse-ctor-header($submatch);
 
     my $rcomment       = format-rust-comments($rcomments-list);
     my $rfunction-args = format-rust-function-args($rfunction-args-list);
+    my $optionals = format-option-defaults-initlist($roptional-initializers);
 
     my $rclass = 
     $rclass-name-from-ns ?? 
@@ -23,6 +25,7 @@ our sub translate-ctor($submatch, $body, $user_rclass) {
         impl $rclass \{
             $rcomment
             pub fn new<{$rtemplate-args.join(",")}>({$rfunction-args}) -> Self \{
+            {$optionals}
                 todo!();
                 /*
                 {$body.trim.chomp.indent(4)}
@@ -37,6 +40,7 @@ our sub translate-ctor($submatch, $body, $user_rclass) {
         impl $rclass \{
             $rcomment
             pub fn new({$rfunction-args}) -> Self \{
+            {$optionals}
                 todo!();
                 /*
                 {$body.trim.chomp.indent(4)}

@@ -2,6 +2,26 @@ use type-info;
 use snake-case;
 use indent-rust-named-type-list;
 
+our sub format-option-defaults-initlist($list) {
+
+    if $list {
+
+        my @list = $list.chomp.split("\n");
+        @list = do for @list -> $item is rw {
+            if $item.chars > 60 {
+                #long line
+                $item = $item.subst("=", "=\n        ")
+            }
+            $item.indent(4)
+        };
+        "\n" ~ @list.join("\n") ~ "\n"
+
+    } else {
+        ""
+    }
+}
+
+
 our sub say-typemap {
     say %*typemap;
 }
@@ -308,6 +328,7 @@ our sub rparse-template-header($template-header) {
         get-return-string($template-header),
         get-rfunction-name($template-header),
         get-rfunction-args-list($template-header),
+        get-option-defaults-initlist($template-header),
         get-maybe-self-args($template-header),
 }
 
@@ -324,6 +345,7 @@ our sub rparse-ctor-header($header) {
     get-template-args($header),
     get-rctor-function-name($header),
     get-rfunction-args-list($header<parenthesized-args>),
+    get-option-defaults-initlist($header<parenthesized-args>),
     get-rcomments-list($header)
 }
 

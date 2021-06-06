@@ -1,5 +1,7 @@
 our role Keywords {
     token class      { 'class' }
+    token using      { 'using' }
+    token typedef    { 'typedef' }
     token final      { 'final' }
     token public     { 'public' }
     token private    { 'private' }
