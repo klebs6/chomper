@@ -56,6 +56,7 @@ my %mini-typemap = %(
     'c10-optional'  => 'Option',
     'bit-set'       => 'BitSet',
     'unordered-set' => 'HashSet',
+    'unordered_set' => 'HashSet',
     'unordered-map' => 'HashMap',
     'std-vector'    => 'Vec',
     'vector'        => 'Vec',

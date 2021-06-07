@@ -4,6 +4,8 @@ our %typemap =
 
     #from USD
     'Byte'                              => 'u8',
+    'TensorList_t'                      => 'TensorList',
+    '__fp16'                            => 'f16',
     'qboolean'                          => 'bool',
     '_PerThreadData'                    => 'TraceCollectorPerThreadData',
     'JsWriter'                          => 'serde_json::Serializer',
