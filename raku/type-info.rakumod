@@ -47,11 +47,13 @@ sub is-function($type)         { $type<std-function>:exists }
 
 my %mini-typemap = %(
     'unique-ptr'    => 'Box',
+    'unique_ptr'    => 'Box',
     'std-list'      => 'LinkedList',
     'std-set'       => 'HashSet',
     'std-pair'      => '( _x_ )',
     'std-tuple'     => '( _x_ )',
     'shared-ptr'    => 'Arc',
+    'shared_ptr'    => 'Arc',
     'std-deque'     => 'VecDeque',
     'c10-optional'  => 'Option',
     'bit-set'       => 'BitSet',
@@ -316,19 +318,42 @@ our sub populate-typeinfo($type) {
     )
 }
 
+our sub get-rust-type($cpp-type) {
+
+    populate-typeinfo($cpp-type).vectorized-rtype 
+}
+
+our sub get-constness($arg) {
+    ($arg<const> || $arg<const2>) !~~ Nil
+}
+
+our sub get-refness($arg) {
+    $arg<ref>:exists
+}
+
+our sub get-ptrness($arg) {
+    $arg<ptr>:exists
+}
+
+our sub get-volatileness($arg) {
+    $arg<volatile>:exists
+}
+
 our sub get-rust-arg($arg, $compute_const = True ) {
 
     my $name = snake-case($arg<name>.trim);
+
 
     my TypeInfo $info = populate-typeinfo($arg<type>);
 
     my $vectorized-rtype = $info.vectorized-rtype;
 
     my $const  = $compute_const ?? 
-    (($arg<const> || $arg<const2>) !~~ Nil) !! False;
+    get-constness($arg) !! False;
 
-    my $ref = $arg<ref>:exists;
-    my $ptr = $arg<ptr>:exists;
+    my $ref = get-refness($arg);
+    my $ptr = get-ptrness($arg);
+    my $volatile = get-volatileness($arg);
 
     my @dim_stack = get-dim-stack($arg);
 
@@ -338,6 +363,7 @@ our sub get-rust-arg($arg, $compute_const = True ) {
             $const, 
             $ref, 
             $ptr, 
+            $volatile,
             $vectorized-rtype, 
             @dim_stack);
 
@@ -347,7 +373,8 @@ our sub get-rust-arg($arg, $compute_const = True ) {
             $vectorized-rtype, 
             $const, 
             $ref, 
-            $ptr
+            $ptr,
+            $volatile
         );
         return "$name: $augmented";
     }
@@ -373,6 +400,7 @@ our sub get-rust-array-arg(
         $const, 
         $ref, 
         $ptr, 
+        $volatile,
         $rtype, 
         @dim_stack) 
 {
@@ -383,30 +411,48 @@ our sub get-rust-array-arg(
         $arr-type, 
         $const, 
         $ref, 
-        $ptr
+        $ptr,
+        $volatile
     );
 
     return "$name: $augmented";
 }
 
-our sub augment-rtype($vectorized-rtype, $const, $ref, $ptr) {
+our sub augmented-rtype-from-qualified-cpp-type($qualified-type) {
+    my $rust-type = get-rust-type($qualified-type<type>);
+    my $const     = get-constness($qualified-type);
+    my $ref       = get-refness($qualified-type);
+    my $ptr       = get-ptrness($qualified-type);
+    my $volatile  = get-volatileness($qualified-type);
+    augment-rtype($rust-type, $const, $ref, $ptr, $volatile)
+}
+
+our sub augment-rtype($vectorized-rtype, $const, $ref, $ptr, $volatile) {
+
+    my $result;
 
     if $ref {
 
-        return $const 
+        $result = $const 
         ??  "&$vectorized-rtype" 
         !!  "&mut $vectorized-rtype";
-    }
 
-    if $ptr {
+    } elsif $ptr {
 
-        return $const 
+        $result = $const 
         ??  "*const $vectorized-rtype" 
         !!  "*mut $vectorized-rtype";
+
+    } else {
+        $result = $vectorized-rtype;
     }
 
-    $vectorized-rtype
+    if $volatile {
+        "Volatile<$result>"
 
+    } else {
+        "$result"
+    }
 }
 
 our sub get-arr-type($rtype, @dim_stack) {

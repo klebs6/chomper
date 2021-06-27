@@ -10,7 +10,7 @@ our sub remove-duplicate-segments($filename) {
     @builder.join("_") ~ ".$ext"
 
 }
-our sub snake-case($name) {
+our sub snake-case($name, $remove-dup = False) {
 
     my $result = $name;
 
@@ -30,6 +30,10 @@ our sub snake-case($name) {
     $result ~~ s:g/_(<[a..z]><[A..Z]>)_/_{$0.lc}_/;
     $result ~~ s:g/__/_/;
 
-    $result.lc
+    if $remove-dup {
+        remove-duplicate-segments($result.lc)
+    } else {
+        $result.lc
+    }
 }
 

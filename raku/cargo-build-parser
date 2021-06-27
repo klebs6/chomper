@@ -1,11 +1,11 @@
 #!/usr/bin/env raku
 use v6;
 
-=begin pod
+=begin comment
 this can parse the output of cargo build, when formatted as JSON (see cargo options)
 it is meant to indicate which use crate::X statements we need in each file
 it can be better
-=end
+=end comment
 
 use Data::Dump::Tree;
 use JSON::Name;

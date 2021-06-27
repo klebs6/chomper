@@ -2,6 +2,10 @@ use type-info;
 use snake-case;
 use indent-rust-named-type-list;
 
+our sub make-doc-comment($comment) {
+    $comment.lines>>.subst(/\/ \/ <.ws>? <?before <-[/]> > /, "/// ")>>.trim.join("\n")
+}
+
 our sub format-option-defaults-initlist($list) {
 
     if $list {
@@ -21,10 +25,10 @@ our sub format-option-defaults-initlist($list) {
     }
 }
 
-
 our sub say-typemap {
     say %*typemap;
 }
+
 our sub get-naked($rtype) {
     grammar Strip {
         rule TOP {
@@ -461,6 +465,7 @@ our sub get-rust-return-type($decl, :$augment = True) {
 
     my $ref   = $rt<ref>:exists;
     my $ptr   = $rt<ptr>:exists;
+    my $vol   = $rt<volatile>:exists;
 
     my TypeInfo $info = populate-typeinfo($rt<type>);
 
@@ -468,7 +473,7 @@ our sub get-rust-return-type($decl, :$augment = True) {
 
     if $augment {
         return augment-rtype(
-            $vectorized-rtype, $const, $ref, $ptr);
+            $vectorized-rtype, $const, $ref, $ptr, $vol);
 
     } else {
         return $vectorized-rtype;

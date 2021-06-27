@@ -4,6 +4,7 @@ use lib '/Users/kleb/bethesda/work/repo/translator/raku';
 use util;
 use typemap;
 use grammar;
+
 #use Grammar::Tracer;
 
 our grammar Translator does ParserRules {
@@ -11,6 +12,8 @@ our grammar Translator does ParserRules {
         <.ws>
         [ 
             | <struct-member-declarations>
+            | <abstract-function-declarations>
+            | <pound-define>
             | <default-ctor>
             | <op-convert-function-header>
             | <constructor-definition-header>
@@ -41,6 +44,7 @@ our grammar Translator does ParserRules {
             | <destructor>
             | <ctor-header>
             | <using-declarations>
+            | <typedef-fn-ptr>
         ]
     }
 }
@@ -78,9 +82,12 @@ our sub get-hook($hookname) {
         static-constants                      => { use static_const;       &translate-static-const },
         function-local-declarations           => { use function-locals;    &translate-function-locals },
         struct-member-declarations            => { use struct_members;     &translate-struct-member-declarations },
+        abstract-function-declarations        => { use abstract_functions; &translate-abstract-function-declarations },
         destructor                            => { use destructor;         &translate-destructor },
         ctor-header                           => { use ctor_header;        &translate-ctor-header },
         using-declarations                    => { use using_declarations; &translate-using-declarations },
+        typedef-fn-ptr                        => { use typedef_fn_ptr;     &translate-typedef-fn-ptr },
+        pound-define                          => { use pound_define;       &translate-pound-define },
     );
 
     %dispatch{$hookname}()

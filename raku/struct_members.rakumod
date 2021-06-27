@@ -12,7 +12,7 @@ our class RustStructMember {
 
     method get-maybe-default-tag {
         if $!default {
-            " // default = $!default\n"
+            " // default = $!default"
         } else {
             ""
         }
@@ -20,11 +20,11 @@ our class RustStructMember {
 
     method get-doc-comments {
 
-        if @!comments {
+        if @!comments.elems > 0 {
             my @doc-comments = do for @!comments {
                 make-doc-comment($_).chomp.trim
             };
-            @doc-comments.join("\n") ~ "\n"
+            @doc-comments.join("\n")
         } else {
             ""
         }
@@ -41,9 +41,13 @@ our class RustStructMember {
 
         my $doc-comments = self.get-doc-comments;
 
+        $doc-comments = $doc-comments ?? "\n" ~ $doc-comments ~ "\n" !! "";
+
         my $maybe-default-tag = self.get-maybe-default-tag;
 
-        "{$doc-comments}{$name-type},{$maybe-default-tag}"
+        my $maybe-sep = $doc-comments ?? "\n" !! "";
+
+        "{$doc-comments}{$name-type},{$maybe-default-tag}{$maybe-sep}"
     }
 
     method get-as-name-type {
@@ -60,16 +64,12 @@ our class RustStructMembers {
         my $watermark = get-watermark-from-rargs-list(@named-type-list);
         do for @!members {
             $_.gist(column2-start-index => $watermark)
-        }.join("")
+        }.join("\n")
     }
 }
 
 our sub get-default($submatch) {
     $submatch<default-value>:exists ?? $submatch<default-value>.Str !! "";
-}
-
-our sub make-doc-comment($comment) {
-    $comment.lines>>.subst(/\/ \/ <.ws>? <?before <-[/]> > /, "/// ")>>.trim.join("\n")
 }
 
 our sub translate-struct-member-declarations( $submatch, $body, $rclass) 
@@ -78,7 +78,7 @@ our sub translate-struct-member-declarations( $submatch, $body, $rclass)
 
     for $submatch<struct-member-declaration>.List {
 
-        my $comments = get-rcomments-list($_).split("\n")>>.chomp.trim;
+        my @comments = get-rcomments-list($_).split("\n")>>.chomp;
         my $default  = get-default($_);
         my $arg      = get-rust-arg($_);
         my $name = $arg.split(":")[0];
@@ -87,7 +87,7 @@ our sub translate-struct-member-declarations( $submatch, $body, $rclass)
         $writer.members.push: RustStructMember.new(
             name     => $name,
             type     => $type,
-            comments => $comments,
+            comments => @comments,
             default  => $default,
         );
     }

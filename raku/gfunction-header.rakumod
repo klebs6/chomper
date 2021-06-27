@@ -1,5 +1,4 @@
-our role FunctionHeader {
-
+our role FreestandingTemplateFunction {
     rule freestanding-template-function-header() {
         <line-comment>*
         <api-tag>? 
@@ -14,7 +13,9 @@ our role FunctionHeader {
         <noexcept>? 
         <override>?
     }
+}
 
+our role OpMulEq {
     rule op-mul-eq-function-header {
         <line-comment>* 
         <api-tag>?
@@ -25,6 +26,9 @@ our role FunctionHeader {
         'operator' '*=' '(' <args> ')'
     }
 
+}
+
+our role OpDivEq {
     rule op-div-eq-function-header {
         <line-comment>* 
         <api-tag>?
@@ -34,7 +38,9 @@ our role FunctionHeader {
         <namespace>?
         'operator' '/=' '(' <args> ')'
     }
+}
 
+our role OpIndexFunction {
     rule op-index-function-header {
         <line-comment>* 
         <api-tag>?
@@ -45,7 +51,9 @@ our role FunctionHeader {
         'operator' '[]' '(' <args> ')'
         <const>?
     }
+}
 
+our role OpAddEq {
     rule op-add-eq-function-header {
         <line-comment>* 
         <api-tag>?
@@ -55,7 +63,9 @@ our role FunctionHeader {
         <namespace>?
         'operator' '+=' '(' <args> ')'
     }
+}
 
+our role OpBitorAssign {
     rule op-bitor-assign-function-header {
         <line-comment>* 
         <api-tag>?
@@ -65,7 +75,9 @@ our role FunctionHeader {
         <namespace>?
         'operator' '|=' '(' <args> ')'
     }
+}
 
+our role OpBitandAssign {
     rule op-bitand-assign-function-header {
         <line-comment>* 
         <api-tag>?
@@ -75,7 +87,9 @@ our role FunctionHeader {
         <namespace>?
         'operator' '&=' '(' <args> ')'
     }
+}
 
+our role OpSubEq {
     rule op-sub-eq-function-header {
         <line-comment>* 
         <api-tag>?
@@ -85,7 +99,9 @@ our role FunctionHeader {
         <namespace>?
         'operator' '-=' '(' <args> ')'
     }
+}
 
+our role OpNegate {
     rule op-negate-function-header {
         <line-comment>* 
         <api-tag>?
@@ -96,7 +112,9 @@ our role FunctionHeader {
         'operator' '-' '(' ')'
         <const>?
     }
+}
 
+our role OpAdd {
     rule op-add-function-header {
         <line-comment>* 
         <api-tag>?
@@ -107,7 +125,9 @@ our role FunctionHeader {
         'operator' '+' '(' <args> ')'
         <const>?
     }
+}
 
+our role OpMul {
     rule op-mul-function-header {
         <line-comment>* 
         <api-tag>?
@@ -118,7 +138,9 @@ our role FunctionHeader {
         'operator' '*' '(' <args> ')'
         <const>?
     }
+}
 
+our role OpXor {
     rule op-xor-function-header {
         <line-comment>* 
         <api-tag>?
@@ -129,7 +151,9 @@ our role FunctionHeader {
         'operator' '^' '(' <args> ')'
         <const>?
     }
+}
 
+our role OpBitand {
     rule op-bitand-function-header {
         <line-comment>* 
         <api-tag>?
@@ -140,7 +164,9 @@ our role FunctionHeader {
         'operator' '&' '(' <args> ')'
         <const>?
     }
+}
 
+our role OpBitor {
     rule op-bitor-function-header {
         <line-comment>* 
         <api-tag>?
@@ -151,7 +177,9 @@ our role FunctionHeader {
         'operator' '|' '(' <args> ')'
         <const>?
     }
+}
 
+our role OpConvert {
     rule op-convert-function-header {
         <line-comment>* 
         <api-tag>?
@@ -159,7 +187,9 @@ our role FunctionHeader {
         'operator' <type> '(' <args> ')'
         <const>?
     }
+}
 
+our role OpDiv {
     rule op-div-function-header {
         <line-comment>* 
         <api-tag>?
@@ -170,6 +200,9 @@ our role FunctionHeader {
         'operator' '/' '(' <args> ')'
         <const>?
     }
+}
+
+our role OpSub {
 
     rule op-sub-function-header {
         <line-comment>* 
@@ -181,7 +214,9 @@ our role FunctionHeader {
         'operator' '-' '(' <args> ')'
         <const>?
     }
+}
 
+our role OpEq {
     rule op-eq-function-header {
         <line-comment>* 
         <api-tag>?
@@ -192,6 +227,9 @@ our role FunctionHeader {
         'operator' '==' '(' <args> ')'
         <const>?
     }
+}
+
+our role OpLt {
 
     rule op-lt-function-header {
         <line-comment>* 
@@ -203,10 +241,38 @@ our role FunctionHeader {
         'operator' '<' '(' <args> ')'
         <const>?
     }
+}
+
+our role OpOstream {
 
     rule op-ostream-function-header {
         <line-comment>* 
         ['std::']? 'ostream' '&'
         'operator' '<<' '(' <args> ')'
     }
+}
+
+our role FunctionHeader 
+does FreestandingTemplateFunction 
+does OpMulEq
+does OpMul
+does OpDivEq
+does OpIndexFunction
+does OpBitorAssign
+does OpBitor
+does OpBitandAssign
+does OpSubEq
+does OpNegate
+does OpAdd
+does OpAddEq
+does OpXor
+does OpBitand
+does OpConvert
+does OpDiv
+does OpSub
+does OpEq
+does OpLt
+does OpOstream
+{
+
 }

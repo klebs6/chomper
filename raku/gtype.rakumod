@@ -90,14 +90,19 @@ our role Types {
         | [
             [
                 | 'std::'
+                | 'onnx::'
                 | 'zx::'
                 | 'c10::'
                 | 'at::'
+                | 'fbgemm::'
                 | 'cv::'
                 | 'cl::'
                 | 'tbb::'
                 | 'google::'
                 | 'nom::'
+                | 'ktl::'
+                | 'bitmap::'
+                | 'hypervisor::'
             ]?
             [
                 | <unique-ptr>
@@ -148,6 +153,7 @@ our role Types {
                 | 'ideep::tensor::dims'
                 | 'ideep::convolution_forward_params'
                 | 'ideep::tensor::descriptor'
+                | 'hypervisor::GuestPhysicalAddressSpace'
                 | <template-identifier>
             ]
         ]

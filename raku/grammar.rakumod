@@ -51,6 +51,12 @@ does FunctionHeader {
     rule using-declarations {
         <using-declaration>+
     }
+    rule typedef-fn-ptr {
+        <.typedef> <rt=unnamed-arg> 
+        '(' '*' <name> ')'
+        '('<unnamed-args>')' 
+        ';'
+    }
 
     token use-operator-context-functions {
         'USE_OPERATOR_CONTEXT_FUNCTIONS'
@@ -79,7 +85,7 @@ does FunctionHeader {
     }
 
     rule return-type {
-        <const>? <type> <const2>? [<ref> | <ptr> ]?
+        <const>? <volatile>? <type> <const2>? [<ref> | <ptr> ]?
     }
 
     token namespace {
@@ -110,15 +116,65 @@ does FunctionHeader {
         [ <.identifier> | <.numeric> ]
     }
 
+    token macro-sig {
+        <macro-name> 
+        ['(' <macro-args> ')']? 
+    }
+
+    rule pound-define {
+        '#define' 
+        <macro-sig>
+        <macro-line>+
+    }
+
+    token macro-name {
+        <.name>
+    }
+
+    rule name-list {
+        <name>* %% ","
+    }
+
+    rule macro-args {
+        <name-list> <elipsis>?
+    }
+
+    token elipsis {
+        '...'
+    }
+
+    token macro-line {
+        | [\N* \ \n]
+        | [\N* <?before <macro-term>>]
+    }
+
+    token macro-term {
+        \n
+    }
+
+    token macro-terminator {
+        \ \n
+    }
+
     rule arg {
         <class>? 
         <const>? 
+        <volatile>?
         <type> 
         <const2>? 
         [<ref> | <ptr> ]? 
         <name> 
         <array-specifier>?
         [ '=' <default-value> ]?
+    }
+
+    rule unnamed-arg {
+        <class>? 
+        <const>? 
+        <type> 
+        <const2>? 
+        [<ref> | <ptr> ]? 
+        <array-specifier>?
     }
 
     rule template-arg {
@@ -131,8 +187,13 @@ does FunctionHeader {
         <.identifier> | <.numeric> | <.extended-identifier>
     }
 
-    rule args {
-        <arg>* % ','
+    regex args {
+        | 'void'
+        | [<arg>* % ',']
+    }
+
+    rule unnamed-args {
+        <unnamed-arg>* % ','
     }
 
     rule template-args {
@@ -206,10 +267,23 @@ does FunctionHeader {
         <line-comment>* <type> '()' .*
     }
 
+    rule abstract-function-declaration {
+        :sigspace
+        <line-comment>*
+        <virtual> <return-type> <name> '(' <args> ')' '=' '0' ';'
+    }
+
+    rule abstract-function-declarations {
+        <abstract-function-declaration>+
+    }
+
     rule struct-member-declaration {
         :sigspace
         <line-comment>*
-        <struct>? <const>? <type> [<ref> | <ptr>]?  <name> [ 
+        <struct>? <const>? <volatile>? <type> [<ref> | <ptr>]?  
+        <name> 
+        <array-specifier>?
+        [ 
             | '=' <default-value> 
             | '{' <default-value> '}'
         ]? 

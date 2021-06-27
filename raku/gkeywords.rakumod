@@ -1,5 +1,7 @@
 our role Keywords {
     token class      { 'class' }
+    token virtual    { 'virtual' }
+    token volatile   { 'volatile' }
     token using      { 'using' }
     token typedef    { 'typedef' }
     token final      { 'final' }
