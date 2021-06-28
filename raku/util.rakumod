@@ -80,10 +80,10 @@ our sub get_rust_qualifier($arg) {
     $arg<const>:exists 
         or $arg<const2>:exists;
 
-    if $const and $arg<ref>:exists {
+    if $const and $arg<ref>:exists and $arg<ref><double-ref>:!exists {
         $arg<ref>.Str
 
-    } elsif $arg<ref>:exists {
+    } elsif $arg<ref>:exists and $arg<ref><double-ref>:!exists {
         "{$arg<ref>.Str}mut "
 
     } else {
@@ -463,7 +463,7 @@ our sub get-rust-return-type($decl, :$augment = True) {
     my $const = 
     $rt<const>:exists or $rt<const2>:exists;
 
-    my $ref   = $rt<ref>:exists;
+    my $ref   = $rt<ref>:exists and $rt<ref><double-ref>:!exists;
     my $ptr   = $rt<ptr>:exists;
     my $vol   = $rt<volatile>:exists;
 

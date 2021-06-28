@@ -22,7 +22,13 @@ our role Keywords {
 }
 
 our role Sigils {
-    token ref        { '&' }
+    token ref { 
+        | '&' 
+        | <double-ref>
+    }
+    token double-ref { 
+        '&&'
+    }
     token mut        { 'mut' }
     token ptr        { '*' }
     token terminator { ';' }

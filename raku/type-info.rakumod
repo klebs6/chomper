@@ -328,7 +328,7 @@ our sub get-constness($arg) {
 }
 
 our sub get-refness($arg) {
-    $arg<ref>:exists
+    $arg<ref>:exists and $arg<ref><double-ref>:!exists
 }
 
 our sub get-ptrness($arg) {
@@ -342,7 +342,6 @@ our sub get-volatileness($arg) {
 our sub get-rust-arg($arg, $compute_const = True ) {
 
     my $name = snake-case($arg<name>.trim);
-
 
     my TypeInfo $info = populate-typeinfo($arg<type>);
 
