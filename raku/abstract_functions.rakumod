@@ -27,8 +27,9 @@ our class AbstractFunction {
     }
 
     method gist {
+        my $args = format-rust-function-args($!args);
         self.get-doc-comments 
-        ~ "\nfn {$!name}({$!args}){self.get-rt};\n"
+        ~ "\nfn {$!name}({$args}){self.get-rt};\n"
     }
 }
 

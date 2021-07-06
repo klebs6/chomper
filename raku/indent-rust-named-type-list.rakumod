@@ -19,6 +19,10 @@ our sub indent-rust-named-type-list(@list) {
 
 our sub get-watermark-from-rargs-list(@list) {
 
+    if @list.elems eq 0 {
+        return 0;
+    }
+
     my $watermark = @list.reduce: sub ($a, $b) {
 
         my $aval = $a ~~ Str ?? $a.chomp.trim.index(" ") // 0 !! $a;

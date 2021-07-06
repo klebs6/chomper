@@ -1,3 +1,9 @@
+
+our sub snake-to-camel($input) {
+    my $type-stripped = $input.subst(/_t$/, "");
+    $type-stripped.split("_")>>.tc.join("")
+}
+
 our sub remove-duplicate-segments($filename) {
     my ($name, $ext) = $filename.split(".");
 
@@ -32,8 +38,24 @@ our sub snake-case($name, $remove-dup = False) {
 
     if $remove-dup {
         remove-duplicate-segments($result.lc)
+
     } else {
-        $result.lc
+
+        #this call to avoid-keywords should probably go 
+        #somewhere else, but it is useful here
+        #
+        #alternatively, we should call a separate function
+        #everywhere snake-case is currently called
+        avoid-keywords($result.lc)
     }
 }
 
+our sub avoid-keywords($s) {
+
+    my %bad = %(
+        loop => "loop_",
+        type => "ty",
+    );
+
+    %bad{$s} // $s
+}

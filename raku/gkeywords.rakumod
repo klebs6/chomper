@@ -19,6 +19,7 @@ our role Keywords {
     token static     { 'static' }
     token inline     { 'inline' }
     token explicit   { 'explicit' }
+    token semicolon  { ';' }
 }
 
 our role Sigils {

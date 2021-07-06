@@ -23,10 +23,23 @@ does FunctionHeader {
         | 'TRACE_API' | 'TRACE_LOCAL'
         | 'TORCH_API' 
         | 'C10_EXPORT' 
+        | 'CAMERAUTIL_API' 
     }
 
     rule static_const {
         <static> <const> <type> <name> '=' <static_const_rhs> ';' <line-comment>?
+    }
+
+    rule constexpr-global-block {
+        <constexpr-global-item>+
+    }
+
+    rule constexpr-global-item {
+        <line-comment>*
+        <static>? <constexpr> <type> <name> '=' <until-semicolon> ';'
+    }
+    rule until-semicolon {
+        \N+ <?before ';'>
     }
 
     #does not contain a closing bracket
@@ -160,6 +173,7 @@ does FunctionHeader {
         <class>? 
         <const>? 
         <volatile>?
+        <struct>?
         <type> 
         <const2>? 
         [<ref> | <ptr> ]? 
@@ -171,6 +185,8 @@ does FunctionHeader {
     rule unnamed-arg {
         <class>? 
         <const>? 
+        <volatile>?
+        <struct>?
         <type> 
         <const2>? 
         [<ref> | <ptr> ]? 
@@ -190,6 +206,16 @@ does FunctionHeader {
     regex args {
         | 'void'
         | [<arg>* % ',']
+    }
+
+    regex maybe-unnamed-args {
+        | 'void'
+        | <maybe-unnamed-arg>* % ','
+    }
+
+    regex maybe-unnamed-arg {
+        | <unnamed-arg>
+        | <arg>
     }
 
     rule unnamed-args {
@@ -270,23 +296,46 @@ does FunctionHeader {
     rule abstract-function-declaration {
         :sigspace
         <line-comment>*
-        <virtual> <return-type> <name> '(' <args> ')' '=' '0' ';'
+        <virtual> <return-type> <name> '(' <args> ')' <const>? '=' '0' ';'
     }
 
     rule abstract-function-declarations {
         <abstract-function-declaration>+
     }
 
+    rule struct-member-declaration-name {
+        [
+            <name> 
+            <array-specifier>?
+            [ 
+                | '=' <default-value> 
+                | '{' <default-value> '}'
+            ]? 
+        ]
+    }
+    rule struct-member-declaration-nonfptr {
+        <struct>? 
+        <const>? 
+        <volatile>? 
+        <type> 
+        [<ref> | <ptr>]?  
+        [
+            <struct-member-declaration-name>+ %% ","
+        ]
+    }
+
+    rule function-ptr-type {
+        <return-type> '(' '*' <name> ')'
+        '(' <maybe-unnamed-args>  ')'
+    }
+
     rule struct-member-declaration {
         :sigspace
         <line-comment>*
-        <struct>? <const>? <volatile>? <type> [<ref> | <ptr>]?  
-        <name> 
-        <array-specifier>?
-        [ 
-            | '=' <default-value> 
-            | '{' <default-value> '}'
-        ]? 
+        [
+            | <struct-member-declaration-nonfptr>
+            | <function-ptr-type>
+        ]
         :!sigspace
         ';' 
         [\h* <line-comment>]?

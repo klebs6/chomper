@@ -45,6 +45,7 @@ our grammar Translator does ParserRules {
             | <ctor-header>
             | <using-declarations>
             | <typedef-fn-ptr>
+            | <constexpr-global-block>
         ]
     }
 }
@@ -88,6 +89,7 @@ our sub get-hook($hookname) {
         using-declarations                    => { use using_declarations; &translate-using-declarations },
         typedef-fn-ptr                        => { use typedef_fn_ptr;     &translate-typedef-fn-ptr },
         pound-define                          => { use pound_define;       &translate-pound-define },
+        constexpr-global-block                => { use constexpr_globals;       &translate-constexpr-global-block },
     );
 
     %dispatch{$hookname}()
@@ -126,6 +128,13 @@ sub MAIN(:$chop = False, :$class = Nil) {
     #a whitelisted type is the same in Rust as it is in c++
     for "/Users/kleb/bethesda/work/repo/translator/raku/whitelist.txt".IO.slurp.lines {
         %*typemap{$_} = $_;
+    }
+
+    for "/Users/kleb/bethesda/work/repo/translator/raku/text-typemap.txt".IO.slurp.lines {
+        my @tokens = $_.split(" ");
+        my $head = @tokens[0];
+        my $tail = @tokens[1..*].join(" ");
+        %*typemap{$head} = $tail;
     }
 
     do_main($chop, $class, &get-hook); 

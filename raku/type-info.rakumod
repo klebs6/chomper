@@ -339,49 +339,84 @@ our sub get-volatileness($arg) {
     $arg<volatile>:exists
 }
 
+our class TypeAux {
+    has Bool $.const    is required;
+    has Bool $.ref      is required;
+    has Bool $.ptr      is required;
+    has Bool $.volatile is required;
+    has @.dim_stack     is required;
+}
+
+our sub get-type-aux(Match $match, $compute_const = True) {
+
+    my Bool $const  = $compute_const ??  get-constness($match) !! False;
+
+    TypeAux.new(
+        const     => $const,
+        ref       => get-refness($match),
+        ptr       => get-ptrness($match),
+        volatile  => get-volatileness($match),
+        dim_stack => get-dim-stack($match),
+    )
+}
+
+our sub get-rust-arg-impl(
+    $name, 
+    TypeInfo $info, 
+    TypeAux $aux) {
+
+    my $vectorized-rtype = $info.vectorized-rtype;
+
+    if $aux.dim_stack.elems > 0 {
+        return get-rust-array-arg(
+            $name, 
+            $aux.const, 
+            $aux.ref, 
+            $aux.ptr, 
+            $aux.volatile,
+            $vectorized-rtype, 
+            $aux.dim_stack);
+
+    } else {
+
+        my $augmented = augment-rtype(
+            $vectorized-rtype, 
+            $aux.const, 
+            $aux.ref, 
+            $aux.ptr,
+            $aux.volatile
+        );
+        return "$name: $augmented";
+    }
+}
+
 our sub get-rust-arg($arg, $compute_const = True ) {
 
     my $name = snake-case($arg<name>.trim);
 
     my TypeInfo $info = populate-typeinfo($arg<type>);
 
-    my $vectorized-rtype = $info.vectorized-rtype;
+    my TypeAux  $aux  = get-type-aux($arg, $compute_const);
 
-    my $const  = $compute_const ?? 
-    get-constness($arg) !! False;
+    get-rust-arg-impl($name, $info, $aux)
+}
 
-    my $ref = get-refness($arg);
-    my $ptr = get-ptrness($arg);
-    my $volatile = get-volatileness($arg);
+our sub get-array-specifier($arg) {
 
-    my @dim_stack = get-dim-stack($arg);
+    #this is a brutal, temporary hack and will not scale
 
-    if @dim_stack.elems > 0 {
-        return get-rust-array-arg(
-            $name, 
-            $const, 
-            $ref, 
-            $ptr, 
-            $volatile,
-            $vectorized-rtype, 
-            @dim_stack);
+    if $arg<struct-member-declaration-name>:exists {
+
+        $arg<struct-member-declaration-name>.List[0]<array-specifier>
 
     } else {
-
-        my $augmented = augment-rtype(
-            $vectorized-rtype, 
-            $const, 
-            $ref, 
-            $ptr,
-            $volatile
-        );
-        return "$name: $augmented";
+        $arg<array-specifier>
     }
 }
 
 our sub get-dim-stack($arg) {
 
-    my $arr = $arg<array-specifier>;
+    my $arr = get-array-specifier($arg);
 
     my @dim_stack = [];
 
