@@ -161,12 +161,6 @@ sub extract-unordered-map($type) {
 
 sub extract-default($type) {
         $type.Str, |()
-
-}
-
-our class RustArg {
-    has $.type is required;
-    has $.name is required;
 }
 
 role TypeInfo {

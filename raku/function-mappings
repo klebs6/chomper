@@ -13932,3 +13932,11 @@ gfx_copyrect gfx_copyrect
 gfx_fillrect gfx_fillrect
 gfx_putpixel gfx_putpixel
 gfx_line gfx_line
+gfx_surface_blend gfx_surface_blend
+gfx_flush gfx_flush
+gfx_flush_rows gfx_flush_rows
+gfx_putchar gfx_putchar
+gfx_clear gfx_clear
+gfx_create_surface gfx_create_surface
+gfx_init_surface gfx_init_surface
+gfx_create_surface_from_display gfx_create_surface_from_display
