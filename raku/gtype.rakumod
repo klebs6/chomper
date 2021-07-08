@@ -8,22 +8,22 @@ our role Types {
         [ 'std::' ]? 'unordered_set' '<' <type> '>'
     }
 
-    rule std-function {
-        [ 'std::' ]? 'function' 
+    regex std-function {
+        [ 'std::' ]? ['function' | 'Function']
         '<' <std-function-return-type> '(' <std-function-args> ')' '>'
     }
     token void { 
         'void'
     }
-    token std-function-return-type {
+    regex std-function-return-type {
         | <void>
         | <type>
     }
-    rule std-function-args {
+    regex std-function-args {
         | <void>
         | <type-or-arg>+ %% ","
     }
-    token type-or-arg {
+    regex type-or-arg {
         <type> | <arg>
     }
 
@@ -92,6 +92,7 @@ our role Types {
                 | 'std::'
                 | 'onnx::'
                 | 'zx::'
+                | 'fit::'
                 | 'c10::'
                 | 'at::'
                 | 'fbgemm::'

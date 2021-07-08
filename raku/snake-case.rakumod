@@ -53,8 +53,11 @@ our sub snake-case($name, $remove-dup = False) {
 our sub avoid-keywords($s) {
 
     my %bad = %(
-        loop => "loop_",
-        type => "ty",
+        loop  => "loop_",
+        type  => "ty",
+        in    => "in_",
+        match => "match_",
+        impl  => "impl_",
     );
 
     %bad{$s} // $s

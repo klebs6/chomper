@@ -1,4 +1,5 @@
 use type-info;
+use snake-case;
 
 our role RustArg {
     method gist { ... }
@@ -25,7 +26,7 @@ our class RustNamedArg does RustArg {
     }
 
     method gist {
-        "{$!rname}: {$!rtype}"
+        "{snake-case($!rname)}: {$!rtype}"
     }
 }
 

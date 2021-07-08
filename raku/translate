@@ -95,30 +95,7 @@ our sub get-hook($hookname) {
     %dispatch{$hookname}()
 }
 
-our sub do_main($chop, $class, &get-hook) {
-
-    my $in = $*IN.slurp.chomp;
-
-    my ($head, $body) = get_parts($in, $chop);
-
-    my $match     = Translator.parse($head);
-
-    my $hookname  = $match.keys[0].Str;
-    my &hook      = &get-hook($hookname);
-
-    my $submatch = $match{$hookname};
-
-    if $submatch {
-
-        say &hook($submatch, $body, $class);
-
-    } else {
-
-        say "could not parse submatch";
-    }
-}
-
-sub MAIN(:$chop = False, :$class = Nil) { 
+sub MAIN(:$chop = False, :$class = Nil, :$de-semicolon = False) { 
 
     #this makes it so we don't have to recompile 
     #every time we want to change the typemap
@@ -137,6 +114,28 @@ sub MAIN(:$chop = False, :$class = Nil) {
         %*typemap{$head} = $tail;
     }
 
-    do_main($chop, $class, &get-hook); 
+    my $in = $*IN.slurp.chomp;
+
+    if $de-semicolon {
+        $in = $in.subst(rule { ';' $ }, '{ }');
+    }
+
+    my ($head, $body) = get_parts($in, $chop);
+
+    my $match     = Translator.parse($head);
+
+    my $hookname  = $match.keys[0].Str;
+    my &hook      = &get-hook($hookname);
+
+    my $submatch = $match{$hookname};
+
+    if $submatch {
+
+        say &hook($submatch, $body, $class);
+
+    } else {
+
+        say "could not parse submatch";
+    }
 }
 
