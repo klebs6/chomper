@@ -749,6 +749,8 @@ our %typemap =
     'connection'                               => 'Connection',
     'connection_t'                             => 'Connection',
     'tftp_session'                             => 'TftpSession',
-    'test_state'                             => 'TestState',
+    'test_state'                               => 'TestState',
+    'std::string_view'                         => '&str',
+    'std::byte'                                => 'u8',
 );
 

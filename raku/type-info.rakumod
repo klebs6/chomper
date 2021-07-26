@@ -326,7 +326,7 @@ our sub get-refness($arg) {
 }
 
 our sub get-ptrness($arg) {
-    $arg<ptr>:exists
+    $arg<ptr>.elems
 }
 
 our sub get-volatileness($arg) {
@@ -336,7 +336,7 @@ our sub get-volatileness($arg) {
 our class TypeAux {
     has Bool $.const    is required;
     has Bool $.ref      is required;
-    has Bool $.ptr      is required;
+    has Int $.ptr       is required; #number of levels of ptrness
     has Bool $.volatile is required;
     has @.dim_stack     is required;
 }
@@ -415,6 +415,7 @@ our sub get-dim-stack($arg) {
     my @dim_stack = [];
 
     if $arr {
+
         for $arr<array-dimension> {
             @dim_stack.push: $_.Str;
         }
@@ -467,9 +468,11 @@ our sub augment-rtype($vectorized-rtype, $const, $ref, $ptr, $volatile) {
 
     } elsif $ptr {
 
-        $result = $const 
-        ??  "*const $vectorized-rtype" 
-        !!  "*mut $vectorized-rtype";
+        my $tag = $const 
+        ??  "*const " x $ptr.Int
+        !!  "*mut "   x $ptr.Int;
+
+        $result = "{$tag.trim} $vectorized-rtype";
 
     } else {
         $result = $vectorized-rtype;

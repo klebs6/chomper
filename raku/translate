@@ -46,6 +46,8 @@ our grammar Translator does ParserRules {
             | <using-declarations>
             | <typedef-fn-ptr>
             | <constexpr-global-block>
+            | <operator-into-bool>
+            | <operator-indirect>
         ]
     }
 }
@@ -89,7 +91,9 @@ our sub get-hook($hookname) {
         using-declarations                    => { use using_declarations; &translate-using-declarations },
         typedef-fn-ptr                        => { use typedef_fn_ptr;     &translate-typedef-fn-ptr },
         pound-define                          => { use pound_define;       &translate-pound-define },
-        constexpr-global-block                => { use constexpr_globals;       &translate-constexpr-global-block },
+        constexpr-global-block                => { use constexpr_globals;  &translate-constexpr-global-block },
+        operator-into-bool                    => { use operator_into_bool; &translate-operator-into-bool },
+        operator-indirect                     => { use operator_indirect;  &translate-operator-indirect },
     );
 
     %dispatch{$hookname}()
@@ -138,4 +142,3 @@ sub MAIN(:$chop = False, :$class = Nil, :$de-semicolon = False) {
         say "could not parse submatch";
     }
 }
-

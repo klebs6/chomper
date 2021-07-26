@@ -2,6 +2,7 @@ use util;
 use typemap;
 use type-info;
 use args;
+use snake-case;
 use return-type;
 use indent-rust-named-type-list;
 
@@ -169,7 +170,7 @@ our sub translate-struct-member-declarations( $submatch, $body, $rclass)
                 my ($rname, $rtype) = get-rust-arg-name-type($name, $info, $aux);
 
                 $writer.members.push: RustStructMember.new(
-                    name     => $rname.subst(/_$/, ""), #trim trailing _
+                    name     => snake-case($rname.subst(/_$/, "")), #trim trailing _
                     type     => $rtype,
                     :@comments,
                     :$default,

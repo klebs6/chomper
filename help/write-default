@@ -1,0 +1,7 @@
+#!/usr/bin/env raku
+use v6;
+my $in = $*IN.slurp.chomp;
+say qq:to/END/;
+#[derive(Default)]
+$in
+END

@@ -14,7 +14,7 @@ our sub translate-static-const($submatch, $body, $rclass) {
         my $rtype = %*typemap{$type};
 
         my $rust = qq:to/END/.chomp.trim;
-        pub const {$name.uc}: $rtype = {$rhs}; {$comment.chomp.trim}
+        pub const {$name}: $rtype = {$rhs}; {$comment.chomp.trim}
         END
         @items.push: $rust;
     }

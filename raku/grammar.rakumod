@@ -8,8 +8,8 @@ does Keywords
 does Sigils
 does FunctionHeader {
 
-    token template-identifier {
-        <identifier> '<' [<type>+ %% ["," <.ws>?] ] '>'
+    regex template-identifier {
+        <identifier> '<' [[[<const> <.ws>]? <type>]+ %% ["," <.ws>?] ] '>'
     }
 
     token value  { <.identifier> | <.numeric> }
@@ -24,6 +24,7 @@ does FunctionHeader {
         | 'TORCH_API' 
         | 'C10_EXPORT' 
         | 'CAMERAUTIL_API' 
+        | 'USDRI_API' 
     }
 
     rule static_const {
@@ -98,7 +99,7 @@ does FunctionHeader {
     }
 
     rule return-type {
-        <const>? <volatile>? <type> <const2>? [<ref> | <ptr> ]?
+        <const>? <volatile>? <type> <const2>? [<ref> | <ptr>+ ]?
     }
 
     token namespace {
@@ -108,6 +109,10 @@ does FunctionHeader {
     token numeric {
         [ '+' | '-' ]? <[ 0..9 ]>+ [ '.' <[ 0..9 ]>+ ]? [ 'e' <.numeric> ]?
     }
+
+    token hexadecimal {
+         [ "0x" | '0X' ] <[ A..F a..f 0..9 ]>+     
+     }
 
     token identifier {
         <[A..Z a..z _]> <[A..Z a..z 0..9 _]>*
@@ -126,7 +131,7 @@ does FunctionHeader {
     }
 
     token array-dimension {
-        [ <.identifier> | <.numeric> ]
+        [ <.identifier> | <.numeric> | <.hexadecimal> ]
     }
 
     token macro-sig {
@@ -176,7 +181,7 @@ does FunctionHeader {
         <struct>?
         <type> 
         <const2>? 
-        [<ref> | <ptr> ]? 
+        [<ref> | <ptr>+ ]? 
         <name> 
         <array-specifier>?
         [ '=' <default-value> ]?
@@ -189,7 +194,7 @@ does FunctionHeader {
         <struct>?
         <type> 
         <const2>? 
-        [<ref> | <ptr> ]? 
+        [<ref> | <ptr>+ ]? 
         <array-specifier>?
     }
 
@@ -318,7 +323,7 @@ does FunctionHeader {
         <const>? 
         <volatile>? 
         <type> 
-        [<ref> | <ptr>]?  
+        [<ref> | <ptr>+]?  
         [
             <struct-member-declaration-name>+ %% ","
         ]
@@ -352,7 +357,7 @@ does FunctionHeader {
     }
 
     rule function-local-type-suffix {
-       [<ref> | <ptr>]?  <name> <array-specifier>? 
+       [<ref> | <ptr>+]?  <name> <array-specifier>? 
     }
 
     rule function-local-declaration {
@@ -369,6 +374,6 @@ does FunctionHeader {
 
 grammar NakedStripper does ParserRules {
     rule TOP {
-        <.ws> [<ref> | <ptr>]? <mut>? <identifier>
+        <.ws> [<ref> | <ptr>+]? <mut>? <identifier>
     }
 }

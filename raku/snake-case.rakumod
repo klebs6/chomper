@@ -46,8 +46,30 @@ our sub snake-case($name, $remove-dup = False) {
         #
         #alternatively, we should call a separate function
         #everywhere snake-case is currently called
-        avoid-keywords($result.lc)
+        avoid-keywords(avoid-hungarian($result.lc))
     }
+}
+
+our sub avoid-hungarian($in) {
+    my $out = $in.subst(/^m_/, "");
+    $out ~~ s/^f_//;
+    $out ~~ s/^i_//;
+    $out ~~ s/^b_//;
+    $out ~~ s/^p_//;
+    $out ~~ s/^c_//;
+    $out ~~ s/^s_//;
+    $out ~~ s/^n_//;
+    $out ~~ s/^v_//;
+
+    #this is done with regular type translations
+=begin comment
+    #"class", "struct", "enum", any others? any problems?
+    $out ~~ s/^C<?before <[A..Z]>>//;
+    $out ~~ s/^S<?before <[A..Z]>>//;
+    $out ~~ s/^E<?before <[A..Z]>>//;
+=end comment
+
+    $out
 }
 
 our sub avoid-keywords($s) {
@@ -58,6 +80,11 @@ our sub avoid-keywords($s) {
         in    => "in_",
         match => "match_",
         impl  => "impl_",
+        self  => "self_",
+        str   => "str_",
+        ref   => "ref_",
+        box   => "box_",
+        fn    => "fn_",
     );
 
     %bad{$s} // $s

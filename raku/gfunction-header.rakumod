@@ -127,6 +127,35 @@ our role OpAdd {
     }
 }
 
+our role OpIntoBool {
+    rule operator-into-bool {
+        <line-comment>* 
+        <api-tag>?
+        <friend>?
+        <inline>?
+        <explicit>?
+        'operator'
+        <return-type>
+        '(' ')'
+        <const>?
+    }
+}
+
+our role OpIndirect {
+    rule operator-indirect {
+        <line-comment>* 
+        <api-tag>?
+        <friend>?
+        <inline>?
+        <explicit>?
+        <return-type>
+        'operator'
+        '->'
+        '(' ')'
+        <const>?
+    }
+}
+
 our role OpMul {
     rule op-mul-function-header {
         <line-comment>* 
@@ -273,6 +302,8 @@ does OpSub
 does OpEq
 does OpLt
 does OpOstream
+does OpIntoBool
+does OpIndirect
 {
 
 }

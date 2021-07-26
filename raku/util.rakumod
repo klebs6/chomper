@@ -32,7 +32,7 @@ our sub say-typemap {
 our sub get-naked($rtype) {
     grammar Strip {
         rule TOP {
-            <.ws> [<ref> | <ptr> ]? <mut>? <ident>
+            <.ws> [<ref> | <ptr>+ ]? <mut>? <ident>
         }
         token ref { '&' }
         token ptr { '*' }
@@ -253,12 +253,18 @@ our sub rparse-operator-compare($header,$user_class) {
 }
 
 our sub rparse-operator($header,$user_class) {
-#rparse-operator-mock($header)
+    #rparse-operator-mock($header)
     get-rcomments-list($header),
     get-rinline($header),
     get-rust-return-type($header, augment => False),
     $user_class ?? $user_class             !! get-roperand($header,0),
     $user_class ?? get-roperand($header,0) !! get-roperand($header,1),
+}
+
+our sub rparse-operator-into-bool($header) {
+    get-rcomments-list($header),
+    get-rinline($header),
+    get-rust-return-type($header, augment => False),
 }
 
 our sub rparse-operator-index-mock($header) {
@@ -406,7 +412,7 @@ our sub get-rcomments-list($template-header) {
 }
 
 our sub get-rinline($template-header) {
-    $template-header<inline>:exists ??  '#[inline] ' !! ''
+    $template-header<inline>.elems > 0 ??  '#[inline] ' !! ''
 }
 
 our sub get-rconst($template-header) {
@@ -418,11 +424,20 @@ our sub get-rconst($template-header) {
     $const ??  True !! False 
 }
 
-our sub get-rfunction-name($template-header) {
+our sub get-rfunction-name($template-header, $default-prefix = "") {
+
+    my $prefix = "prefix".IO.e ?? "prefix".IO.slurp.chomp !! $default-prefix;
+
+    #allows us to toggle active status 
+    #in the prefix file itself
+    if $prefix.starts-with(".") {
+        $prefix = "";
+    }
+
     my $priv    = $template-header<function-name><priv>:exists;
     my $old     = $template-header<function-name><identifier>.Str;
-    my $new     = snake-case($old);
-    my $mapping = $priv ?? "_$old $new" !! "$old $new";
+    my $new     = "{$prefix}{snake-case($old)}";
+    my $mapping = $priv ?? "_{$old} $new" !! "{$old} $new";
     spurt "/Users/kleb/bethesda/work/repo/translator/raku/function-mappings", "$mapping\n", :append;
     $new
 }
@@ -464,7 +479,7 @@ our sub get-rust-return-type($decl, :$augment = True) {
     $rt<const>:exists or $rt<const2>:exists;
 
     my $ref   = $rt<ref>:exists and $rt<ref><double-ref>:!exists;
-    my $ptr   = $rt<ptr>:exists;
+    my $ptr   = $rt<ptr>.elems;
     my $vol   = $rt<volatile>:exists;
 
     my TypeInfo $info = populate-typeinfo($rt<type>);
@@ -473,7 +488,12 @@ our sub get-rust-return-type($decl, :$augment = True) {
 
     if $augment {
         return augment-rtype(
-            $vectorized-rtype, $const, $ref, $ptr, $vol);
+            $vectorized-rtype, 
+            $const, 
+            $ref, 
+            $ptr, 
+            $vol
+        );
 
     } else {
         return $vectorized-rtype;

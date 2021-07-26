@@ -1,0 +1,8 @@
+#!/usr/bin/env raku
+use v6;
+my $in = $*IN.slurp.chomp;
+say qq:to/END/;
+#[no_copy]
+$in
+END
+
