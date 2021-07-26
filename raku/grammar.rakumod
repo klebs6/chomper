@@ -60,7 +60,7 @@ does FunctionHeader {
     }
     rule using-declaration {
         | <.using> <lhs=type> '=' <rhs=type> ';'
-        | <.typedef> <rhs=type>  <lhs=type> ';'
+        | <.typedef> <rhs=unnamed-arg>  <lhs=type> ';'
     }
     rule using-declarations {
         <using-declaration>+
