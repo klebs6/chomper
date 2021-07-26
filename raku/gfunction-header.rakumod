@@ -141,6 +141,21 @@ our role OpIntoBool {
     }
 }
 
+our role OpNot {
+    rule operator-not {
+        <line-comment>* 
+        <api-tag>?
+        <friend>?
+        <inline>?
+        <explicit>?
+        <return-type>
+        'operator'
+        '!'
+        '(' ')'
+        <const>?
+    }
+}
+
 our role OpIndirect {
     rule operator-indirect {
         <line-comment>* 
@@ -304,6 +319,7 @@ does OpLt
 does OpOstream
 does OpIntoBool
 does OpIndirect
+does OpNot
 {
 
 }

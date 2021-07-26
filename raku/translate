@@ -48,6 +48,7 @@ our grammar Translator does ParserRules {
             | <constexpr-global-block>
             | <operator-into-bool>
             | <operator-indirect>
+            | <operator-not>
         ]
     }
 }
@@ -94,6 +95,7 @@ our sub get-hook($hookname) {
         constexpr-global-block                => { use constexpr_globals;  &translate-constexpr-global-block },
         operator-into-bool                    => { use operator_into_bool; &translate-operator-into-bool },
         operator-indirect                     => { use operator_indirect;  &translate-operator-indirect },
+        operator-not                          => { use operator_not;       &translate-operator-not },
     );
 
     %dispatch{$hookname}()
