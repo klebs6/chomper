@@ -1,5 +1,6 @@
 use util;
 use typemap;
+use type-info;
 
 our sub translate-ctor-header( $submatch, $body, $rclass) 
 {
@@ -18,18 +19,26 @@ our sub translate-ctor-header( $submatch, $body, $rclass)
     if $directive  { $directive = "//{$directive.Str}"; }
     if $directive2 { $directive2 = "//{$directive2.Str}"; }
 
-    my $base-member = $submatch<class-inheritance>:exists ?? 
-    "base: {$submatch<class-inheritance><type>.Str}," !! "";
+    my @bases;
+
+    if $submatch<class-inheritance>:exists {
+        my $idx = 0;
+        for $submatch<class-inheritance><type>.List {
+            my $rtype = populate-typeinfo($_).vectorized-rtype;
+            @bases.push: "base{$idx}: {$rtype.Str}," ;
+            $idx += 1;
+        }
+    }
 
     my $struct-body = qq:to/END/.chomp.trim;
     $directive
     $directive2
-    $base-member
+    {@bases.join("\n")}
     END
 
     qq:to/END/
     pub struct $maybe-generic-type \{
-        $struct-body
+    {$struct-body.indent(4)}
     \}
     impl $maybe-generic-type \{
 

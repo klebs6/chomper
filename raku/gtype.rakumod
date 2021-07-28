@@ -10,7 +10,8 @@ our role Types {
 
     regex std-function {
         [ 'std::' ]? ['function' | 'Function']
-        '<' <std-function-return-type> '(' <std-function-args> ')' '>'
+        '<' <.ws> <std-function-return-type> <.ws>
+        '(' <.ws> <std-function-args> <.ws> ')' <.ws> '>'
     }
     token void { 
         'void'
@@ -104,6 +105,7 @@ our role Types {
                 | 'ktl::'
                 | 'bitmap::'
                 | 'hypervisor::'
+                | 'boost::'
             ]?
             [
                 | <unique-ptr>

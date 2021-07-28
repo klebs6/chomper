@@ -79,8 +79,10 @@ does FunctionHeader {
         'USE_DISPATCH_HELPER'
     }
 
-    rule class-inheritance {
-        ':' [<public> | <private>] <type>
+    regex class-inheritance {
+        ':' 
+        <.ws> [<public> | <private>]? 
+        <.ws> [[<type> <.ws>]+ %% ["," <.ws>]]
     }
 
     rule static-constants {
