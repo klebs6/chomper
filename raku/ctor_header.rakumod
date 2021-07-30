@@ -22,10 +22,10 @@ our sub translate-ctor-header( $submatch, $body, $rclass)
     my @bases;
 
     if $submatch<class-inheritance>:exists {
-        my $idx = 0;
+        my $idx = 1;
         for $submatch<class-inheritance><type>.List {
             my $rtype = populate-typeinfo($_).vectorized-rtype;
-            @bases.push: "base{$idx}: {$rtype.Str}," ;
+            @bases.push: "base{$idx gt 1 ?? $idx !! ''}: {$rtype.Str}," ;
             $idx += 1;
         }
     }

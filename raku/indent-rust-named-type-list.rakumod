@@ -10,8 +10,8 @@ our sub indent-rust-named-type-list(@list) {
         indent-column2($_, $watermark)
     };
 
-    if @list.elems > 2 {
-        "\n" ~ @new.join(",\n").indent(4)
+    if @list.elems > 2 || @list.elems > 1 && @list.join(", ").chars > 16 {
+        "\n" ~ @new.join(",\n").indent(8)
     } else {
         @list.join(", ")
     }
