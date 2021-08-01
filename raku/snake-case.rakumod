@@ -35,6 +35,7 @@ our sub snake-case($name, $remove-dup = False) {
     #make lowercase two character sigils like uU cR dF
     $result ~~ s:g/_(<[a..z]><[A..Z]>)_/_{$0.lc}_/;
     $result ~~ s:g/__/_/;
+    $result ~~ s/^_//;
 
     if $remove-dup {
         remove-duplicate-segments($result.lc)
@@ -60,6 +61,7 @@ our sub avoid-hungarian($in) {
     $out ~~ s/^s_//;
     $out ~~ s/^n_//;
     $out ~~ s/^v_//;
+    $out ~~ s/^u_//;
 
     #this is done with regular type translations
 =begin comment
