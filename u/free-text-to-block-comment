@@ -1,0 +1,19 @@
+#!/usr/bin/env raku
+use v6;
+
+my $input = $*IN.slurp.chomp.trim;
+$input ~~ s/\/\*\*//;
+$input ~~ s/\*\///;
+$input = $input.chomp.trim;
+my @input = $input.lines;
+my $marker = @input.elems > 2 ?? "|" !! "";
+
+my @lines = do for @input {
+    "$marker {$_.chomp.trim}"
+};
+
+my $text = @lines.join("\n");
+
+say "/**
+$text
+*/";

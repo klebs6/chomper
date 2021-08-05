@@ -1,0 +1,11 @@
+#!/usr/bin/env raku
+
+use v6;
+use lib '../translator/raku';
+use clean-macro;
+
+my $macro = $*IN.slurp.chomp;
+
+say translate-macro($macro);
+
+

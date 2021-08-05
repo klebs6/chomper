@@ -1,5 +1,6 @@
 our role Keywords {
     token class      { 'class' }
+    token mutable    { 'mutable' }
     token virtual    { 'virtual' }
     token volatile   { 'volatile' }
     token using      { 'using' }

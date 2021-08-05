@@ -1,0 +1,51 @@
+#!/usr/bin/env raku
+use v6;
+
+my %typemap = %(
+
+    size_t   => 'usize',
+    isize_t  => 'isize',
+
+    uint8_t  => 'u8',
+    uint16_t => 'u16',
+    uint32_t => 'u32',
+    uint64_t => 'u64',
+
+    int8_t  => 'i8',
+    int16_t => 'i16',
+    int32_t => 'i32',
+    int64_t => 'i64',
+    char => 'u8',
+    bool => 'bool',
+);
+
+grammar EnumHeader {
+    rule TOP {
+        'enum' <.class>? <name> <repr-type>? '{'
+    }
+    token name { <.ident> }
+    token type { <.ident> }
+    token class { 'class' }
+    token ident { <[A..Z a..z 0..9 _]>+ }
+    rule repr-type { ':' <type> }
+}
+
+class EnumHeader::Actions {
+    method TOP($/) {
+        make qq:to/END/;
+        {$/<repr-type>.made // ""}
+        pub enum {$/<name>.made} \{
+        END
+    }
+    method repr-type($/) {
+        make "#[repr({$/<type>.made})]"
+    }
+    method type($/) {
+        make  %typemap{$/.Str}
+    }
+    method name($/) {
+        make $/.Str
+    }
+}
+
+say EnumHeader.parse($*IN.slurp, actions => EnumHeader::Actions.new).made;

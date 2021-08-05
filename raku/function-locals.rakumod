@@ -44,13 +44,14 @@ sub get-rust-decls($arg, $compute_const = True ) {
 
         if @dim_stack.elems > 0 {
 
-            @decls.push: "let mut {get-rust-array-arg(
-                $name, 
+            my $aarg = get-rust-array-arg(
                 $const, 
                 $ref, 
                 $ptr, 
                 $vectorized-rtype, 
-                @dim_stack)} = {get-arr-type($default, @dim_stack)}";
+                @dim_stack);
+
+            @decls.push: "let mut $name: $aarg = {get-arr-type($default, @dim_stack)}";
 
             } else {
 

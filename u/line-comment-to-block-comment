@@ -1,0 +1,60 @@
+#!/usr/bin/env raku
+use v6;
+
+#use Grammar::Tracer;
+
+grammar LineComments {
+
+    rule TOP {
+        <.ws>
+        <line-comment>+
+    }
+
+    token line-comment {
+        [ '//' | '///' ] <line-comment-body>
+    }
+
+    rule line-comment-body {
+        \N*
+    }
+
+}
+
+class LineComments::Actions {
+
+    method TOP($/) {
+        my @lines = $/<line-comment>>>.made;
+
+        #for short block comments, we don't use the leading pipe
+        if @lines.elems < 4 {
+            @lines = @lines>>.subst(regex {^ '|' }, "");
+        }
+
+        my $body = @lines.join("\n").trim-trailing;
+
+        make "/**\n" ~ $body.indent(2) ~ "\n  */";
+    }
+
+    method line-comment($/) {
+
+        make "|" ~ $/<line-comment-body>.Str.trim-trailing
+    }
+}
+
+sub MAIN(:$indent = False) {
+
+    my $x = LineComments.parse(
+        $*IN.slurp, 
+        actions => LineComments::Actions.new)
+        .made;
+
+    if $indent {
+
+        say $x.indent(4);
+
+    } else {
+
+        say $x;
+    }
+}
+

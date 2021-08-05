@@ -1,0 +1,10 @@
+#!/usr/bin/env raku
+use v6;
+my $input = $*IN.slurp.chomp;
+say qq:to/END/;
+lazy_static!\{
+    /*
+{$input.chomp.trim.indent(4)}
+    */
+\}
+END

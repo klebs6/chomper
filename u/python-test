@@ -1,0 +1,12 @@
+#!/usr/bin/env raku
+use v6;
+my $input = $*IN.slurp.chomp;
+say qq:to/END/;
+#[test] fn test_X() \{
+    todo!();
+    /*
+{$input.chomp.trim.indent(4)}
+    */
+\}
+END
+

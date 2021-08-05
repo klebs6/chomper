@@ -9,7 +9,7 @@ does Sigils
 does FunctionHeader {
 
     regex template-identifier {
-        <identifier> '<' [[[<const> <.ws>]? <type>]+ %% ["," <.ws>?] ] '>'
+        <identifier> '<' <.ws> [[<unnamed-arg>]+ %% ["," <.ws>?] ] <.ws> '>'
     }
 
     token value  { <.identifier> | <.numeric> }

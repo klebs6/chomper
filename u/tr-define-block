@@ -1,0 +1,165 @@
+#!/usr/bin/env raku
+use v6;
+use lib '../translator/raku';
+use snake-case;
+
+#use Grammar::Tracer;
+
+grammar DefineBlock {
+    rule TOP {
+        <define-stmt>+
+    }
+
+    rule define-stmt {
+        <line-comment>*
+        '#define' :s <macro-name> <macro-args>? <macro-body> <line-comment>*
+    }
+
+    rule line-comment {
+        | [ '//' | '///' ] <line-comment-body>
+        | :ratchet '/*' ~ '*/' <line-comment-body>
+    }
+
+    rule line-comment-body {
+        | \N+ <?before '*/'>
+        | \N+ 
+    }
+
+    token macro-name {
+        <.ident>
+    }
+
+    rule macro-args {
+        '(' <macro-arg-list> ')'
+    }
+
+    rule macro-arg-list {
+        <macro-arg>+ %% ','
+    }
+
+    token macro-arg {
+        <.ident>
+    }
+
+    token macro-body {
+        :ratchet
+        | <hex-literal>
+        | <int-literal>
+        | <parenthesized-expr>
+    }
+
+    token parenthesized-expr {
+        '(' ~ ')' .*?
+    }
+
+    rule ident {
+        <[A..Z a..z _ 0..9]>+
+    }
+
+    token hex-literal {
+        '0' [ 'x' | 'X' ] <hex-digit>+
+    }
+
+    token int-literal {
+        <int-digit>+
+    }
+
+    token hex-digit {
+        <[0..9 A..F a..f]>
+    }
+
+    token int-digit {
+        <[0..9]>
+    }
+}
+
+class DefineBlockActions {
+
+    method TOP($/) {
+        make $/<define-stmt>>>.made
+    }
+
+    method define-stmt-macro($/) {
+        make "\nmacro_rules! " ~ $/<macro-name>.made ~ qq:to/END/
+         \{
+            ({$/<macro-args>.made // ""}) => \{
+            {$/<macro-body>.made.chomp.indent(4).chomp}
+            \}
+        \}
+        END
+    }
+
+    method define-stmt-constant($/) {
+        my $name = $/<macro-name>.Str.trim;
+        my $body = $/<macro-body>.made.trim;
+        make "pub const $name: usize = $body;"
+    }
+
+    method define-stmt($/) {
+
+        my $key = $/<macro-body>.keys[0];
+
+        my $writeme = do given $key {
+            when 
+            "hex-literal" | 
+            "int-literal" | 
+            "parenthesized-expr" {
+                make self.define-stmt-constant($/)
+            }
+            default {
+                make self.define-stmt-macro($/)
+            }
+        };
+
+        if so $/<line-comment>.List.elems > 0 {
+            make "\n" ~ "{$/<line-comment>>>.made.join("\n")}" ~ "\n{$writeme.chomp}\n"
+
+        } else {
+            make "{$writeme.chomp}"
+        }
+    }
+
+    method line-comment($/) {
+        make '///' ~ $/<line-comment-body>.Str.chomp
+    }
+
+    method macro-name($/) {
+        make snake-case($/.Str)
+    }
+
+    method macro-args($/) {
+        make $/<macro-arg-list><macro-arg>>>.made.join(",")
+    }
+
+    method macro-arg($/) {
+        make "\${snake-case($/.Str)}:ident"
+    }
+
+    method macro-body($/) {
+        my $key = $/.keys[0];
+        given $key {
+            when 
+            'hex-literal' | 
+            'int-literal' {
+                make $/.Str.chomp
+            }
+            when 'parenthesized-expr' {
+                make strip-parens($/.Str.chomp)
+            }
+            default {
+                make $/.Str.chomp
+            }
+        }
+    }
+}
+
+our sub strip-parens($input) {
+    my $lidx = $input.indices("(")[0];
+    my $ridx = $input.indices(")")[*-1];
+    $input.substr($lidx + 1 .. $ridx - 1)
+
+}
+
+my $input = $*IN.slurp ~ "\n";
+
+.say for DefineBlock.parse($input, actions => DefineBlockActions.new).made;

@@ -86,78 +86,81 @@ our role Types {
     }
 
     token type {
-        | <typename> <.ws> <parent=type> '::' <child=name>
+        [<mutable> <.ws>]?
+        [
+            | <typename> <.ws> [<parent=type> '::']+ <child=name>
 
-        | [
-            [
-                | 'std::'
-                | 'onnx::'
-                | 'zx::'
-                | 'fit::'
-                | 'c10::'
-                | 'at::'
-                | 'fbgemm::'
-                | 'cv::'
-                | 'cl::'
-                | 'tbb::'
-                | 'google::'
-                | 'nom::'
-                | 'ktl::'
-                | 'bitmap::'
-                | 'hypervisor::'
-                | 'boost::'
-            ]?
-            [
-                | <unique-ptr>
-                | <unordered-set>
-                | <unordered-map>
-                | <bit-set>
-                | <c10-optional>
-                | <shared-ptr>
-                | <std-atomic>
-                | <std-pair>
-                | <std-tuple>
-                | <std-vector>
-                | <std-queue>
-                | <std-list>
-                | <std-deque>
-                | <std-set>
-                | <std-function>
-                | <.identifier>
-                | 'DoubleToStringConverter::DtoaMode'
-                | 'TfDebug::_Node'
-                | 'TfToken::HashSet'
-                | 'Vector<char>'
-                | 'Vector<const char>'
-                | 'atomic<bool>'
-                | 'cv::Mat'
-                | 'c10::OperatorHandle'
-                | 'TensorProto::DataType'
-                | 'google::protobuf::MessageLite'
-                | 'google::protobuf::RepeatedField'
-                | 'itensor::descriptor'
-                | 'itensor::dims'
-                | 'set<string>'
-                | 'atomic<bool>'
-                | 'thread::id'
-                | 'tbb::spin_mutex'
-                | 'tbb::spin_mutex::scoped_lock'
-                | 'tbb::task_group'
-                | 'torch::jit::Stack'
-                | 'unsigned char'
-                | 'unsigned int'
-                | 'unsigned long long int'
-                | 'unsigned long long'
-                | 'unsigned long'
-                | 'unsigned short'
-                | 'ideep::tensor'
-                | 'SignalHandler::Action'
-                | 'ideep::scale_t'
-                | 'ideep::tensor::dims'
-                | 'ideep::convolution_forward_params'
-                | 'ideep::tensor::descriptor'
-                | 'hypervisor::GuestPhysicalAddressSpace'
-                | <template-identifier>
+            | [
+                [
+                    | 'std::'
+                    | 'onnx::'
+                    | 'zx::'
+                    | 'fit::'
+                    | 'c10::'
+                    | 'at::'
+                    | 'fbgemm::'
+                    | 'cv::'
+                    | 'cl::'
+                    | 'tbb::'
+                    | 'google::'
+                    | 'nom::'
+                    | 'ktl::'
+                    | 'bitmap::'
+                    | 'hypervisor::'
+                    | 'boost::'
+                ]?
+                [
+                    | <unique-ptr>
+                    | <unordered-set>
+                    | <unordered-map>
+                    | <bit-set>
+                    | <c10-optional>
+                    | <shared-ptr>
+                    | <std-atomic>
+                    | <std-pair>
+                    | <std-tuple>
+                    | <std-vector>
+                    | <std-queue>
+                    | <std-list>
+                    | <std-deque>
+                    | <std-set>
+                    | <std-function>
+                    | <.identifier>
+                    | 'DoubleToStringConverter::DtoaMode'
+                    | 'TfDebug::_Node'
+                    | 'TfToken::HashSet'
+                    | 'Vector<char>'
+                    | 'Vector<const char>'
+                    | 'atomic<bool>'
+                    | 'cv::Mat'
+                    | 'c10::OperatorHandle'
+                    | 'TensorProto::DataType'
+                    | 'google::protobuf::MessageLite'
+                    | 'google::protobuf::RepeatedField'
+                    | 'itensor::descriptor'
+                    | 'itensor::dims'
+                    | 'set<string>'
+                    | 'atomic<bool>'
+                    | 'thread::id'
+                    | 'tbb::spin_mutex'
+                    | 'tbb::spin_mutex::scoped_lock'
+                    | 'tbb::task_group'
+                    | 'torch::jit::Stack'
+                    | 'unsigned char'
+                    | 'unsigned int'
+                    | 'unsigned long long int'
+                    | 'unsigned long long'
+                    | 'unsigned long'
+                    | 'unsigned short'
+                    | 'ideep::tensor'
+                    | 'SignalHandler::Action'
+                    | 'ideep::scale_t'
+                    | 'ideep::tensor::dims'
+                    | 'ideep::convolution_forward_params'
+                    | 'ideep::tensor::descriptor'
+                    | 'hypervisor::GuestPhysicalAddressSpace'
+                    | <template-identifier>
+                ]
             ]
         ]
     }

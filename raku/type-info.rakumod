@@ -1,32 +1,13 @@
 use snake-case;
 use indent-rust-named-type-list;
 
-=begin comment
-class PtrLevel {
-    has $.const is required;
+our class TypeAux {
+    has Bool $.const    is required;
+    has Bool $.ref      is required;
+    has Int $.ptr       is required; #number of levels of ptrness
+    has Bool $.volatile is required;
+    has @.dim_stack     is required;
 }
-
-class RefLevel {
-    has $.const is required;
-}
-
-class ArrayLevel {
-    has $.length is required;
-}
-
-class Type {
-    has PtrLevel   @.ptr-stack = [];
-    has ArrayLevel @.arr-stack = [];
-    has RefLevel   @.ref-stack = [];
-    has $.const = True;
-    has $.cpp-base-type is required;
-}
-
-class Arg {
-    has Type $.type is required;
-    has $.name      is required;
-}
-=end comment
 
 sub is-unique($type)           { $type<unique-ptr>:exists }
 sub is-c10-optional($type)     { $type<c10-optional>:exists }
@@ -117,10 +98,10 @@ sub extract-vector($type) {
 sub extract-generic-template($type) {
     my $template-parent = $type<template-identifier><identifier>.Str;
 
-    my $len = $type<template-identifier><type>.elems;
+    my $len = $type<template-identifier><unnamed-arg>.elems;
 
     my @children = do for 0..($len - 1) {
-        $type<template-identifier><type>[$_]
+        $type<template-identifier><unnamed-arg>[$_]
     };
     
     $template-parent, |@children
@@ -168,17 +149,20 @@ role TypeInfo {
 }
 
 our class TemplateMemberAccessTypeInfo does TypeInfo {
-    has $.parent-template is required;
-    has $.child-typename  is required;
+    has Bool $.mutable     is required;
+    has @.parent-templates is required;
+    has $.child-typename   is required;
 
     method vectorized-rtype {
-        "{$.parent-template}::{$.child-typename}"
+        my $result = "{@.parent-templates.join('::')}::{$.child-typename}";
+        maybe-wrap-ref-cell($!mutable, $result)
     }
 }
 
 our class FunctionTypeInfo does TypeInfo {
 
     #these are match objects
+    has Bool $.mutable             is required;
     has $.std-function-return-type is required;
     has $.std-function-args        is required;
 
@@ -215,18 +199,20 @@ our class FunctionTypeInfo does TypeInfo {
             indent-rust-named-type-list(@rust-args)
         };
 
-        if $count > 2 {
+        my $result = do if $count > 2 {
             "fn($rust-args
 ) -> $rust-return-type"
         } else {
             "fn($rust-args) -> $rust-return-type"
-        }
+        };
 
+        maybe-wrap-ref-cell($!mutable, $result)
     }
 }
 
 our class BasicTypeInfo does TypeInfo {
 
+    has Bool $.mutable        is required;
     has Str  $.cpp-parent     is required;
     has      @.cpp-children   is required;
 
@@ -237,11 +223,19 @@ our class BasicTypeInfo does TypeInfo {
 
         my @inner;
 
-        for @!cpp-children -> $type {
-            if $type {
-                my $child-type-info = populate-typeinfo($type);
+        for @!cpp-children -> $child {
+            if $child {
+                if $child<type>:exists {
 
-                @inner.push: $child-type-info.vectorized-rtype();
+                    my TypeInfo $info = populate-typeinfo($child<type>);
+                    my TypeAux  $aux  = get-type-aux($child);
+                    @inner.push: get-augmented-rust-type($info, $aux);
+
+                } else {
+                    my $child-type-info = populate-typeinfo($child);
+
+                    @inner.push: $child-type-info.vectorized-rtype();
+                }
             }
         }
         my $if-pair  = @inner.elems > 0 ?? "({@inner.join(',')})" !! "";
@@ -249,7 +243,7 @@ our class BasicTypeInfo does TypeInfo {
 
         my $base = is-pair-or-tuple($!cpp-parent) ?? $if-pair !! $if-other;
 
-        $base
+        maybe-wrap-ref-cell($!mutable, $base)
     }
 }
 
@@ -259,15 +253,26 @@ sub is-pair-or-tuple($x) {
     $pair or $tuple
 }
 
+our sub maybe-wrap-ref-cell($mutable, $result) {
+    if $mutable {
+        "RefCell<$result>"
+    } else {
+        $result
+    }
+}
+
 our sub populate-typeinfo($type) {
 
     my $cpp-parent   = "";
     my @cpp-children = ();
 
+    my Bool $mutable = $type<mutable>:exists;
+
     if $type<typename>:exists {
         return TemplateMemberAccessTypeInfo.new(
-            parent-template => $type<parent>.Str,
-            child-typename  => $type<child>.Str,
+            mutable          => $mutable,
+            parent-templates => $type<parent>.List,
+            child-typename   => $type<child>.Str,
         );
     }
 
@@ -276,6 +281,7 @@ our sub populate-typeinfo($type) {
         my $func = $type<std-function>;
 
         return FunctionTypeInfo.new(
+            mutable                  => $mutable,
             std-function-return-type => $func<std-function-return-type>,
             std-function-args        => $func<std-function-args>,
         );
@@ -307,6 +313,7 @@ our sub populate-typeinfo($type) {
     }
 
     BasicTypeInfo.new(
+        mutable             => $mutable,
         cpp-parent          => $cpp-parent,
         cpp-children        => @cpp-children,
     )
@@ -333,14 +340,6 @@ our sub get-volatileness($arg) {
     $arg<volatile>:exists
 }
 
-our class TypeAux {
-    has Bool $.const    is required;
-    has Bool $.ref      is required;
-    has Int $.ptr       is required; #number of levels of ptrness
-    has Bool $.volatile is required;
-    has @.dim_stack     is required;
-}
-
 our sub get-type-aux(Match $match, $compute_const = True) {
 
     my Bool $const  = $compute_const ??  get-constness($match) !! False;
@@ -361,26 +360,54 @@ our sub get-rust-arg-impl(
 
     my $vectorized-rtype = $info.vectorized-rtype;
 
-    if $aux.dim_stack.elems > 0 {
-        return get-rust-array-arg(
-            $name, 
+    my $augmented = do if $aux.dim_stack.elems > 0 {
+        get-rust-array-arg(
             $aux.const, 
             $aux.ref, 
             $aux.ptr, 
             $aux.volatile,
             $vectorized-rtype, 
-            $aux.dim_stack);
+            $aux.dim_stack)
 
     } else {
 
-        my $augmented = augment-rtype(
+        augment-rtype(
             $vectorized-rtype, 
             $aux.const, 
             $aux.ref, 
             $aux.ptr,
             $aux.volatile
-        );
-        return "$name: $augmented";
+        )
+    }
+
+    "$name: $augmented"
+}
+
+our sub get-augmented-rust-type(
+    TypeInfo $info, 
+    TypeAux $aux) {
+
+    my $vectorized-rtype = $info.vectorized-rtype;
+
+    if $aux.dim_stack.elems > 0 {
+
+        get-rust-array-arg(
+            $aux.const, 
+            $aux.ref, 
+            $aux.ptr, 
+            $aux.volatile,
+            $vectorized-rtype, 
+            $aux.dim_stack)
+
+    } else {
+
+        augment-rtype(
+            $vectorized-rtype, 
+            $aux.const, 
+            $aux.ref, 
+            $aux.ptr,
+            $aux.volatile
+        )
     }
 }
 
@@ -425,7 +452,6 @@ our sub get-dim-stack($arg) {
 }
 
 our sub get-rust-array-arg(
-        $name, 
         $const, 
         $ref, 
         $ptr, 
@@ -433,18 +459,15 @@ our sub get-rust-array-arg(
         $rtype, 
         @dim_stack) 
 {
-
     my $arr-type = get-arr-type($rtype, @dim_stack);
 
-    my $augmented = augment-rtype(
+    augment-rtype(
         $arr-type, 
         $const, 
         $ref, 
         $ptr,
         $volatile
-    );
-
-    return "$name: $augmented";
+    )
 }
 
 our sub augmented-rtype-from-qualified-cpp-type($qualified-type) {
