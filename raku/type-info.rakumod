@@ -224,20 +224,25 @@ our class BasicTypeInfo does TypeInfo {
         my @inner;
 
         for @!cpp-children -> $child {
+
             if $child {
+
                 if $child<type>:exists {
 
                     my TypeInfo $info = populate-typeinfo($child<type>);
                     my TypeAux  $aux  = get-type-aux($child);
+
                     @inner.push: get-augmented-rust-type($info, $aux);
 
                 } else {
+
                     my $child-type-info = populate-typeinfo($child);
 
                     @inner.push: $child-type-info.vectorized-rtype();
                 }
             }
         }
+        say "----------";
         my $if-pair  = @inner.elems > 0 ?? "({@inner.join(',')})" !! "";
         my $if-other = @inner.elems > 0 ?? "{$outer}<{@inner.join(',')}>" !! $outer;
 
@@ -471,6 +476,7 @@ our sub get-rust-array-arg(
 }
 
 our sub augmented-rtype-from-qualified-cpp-type($qualified-type) {
+
     my $rust-type = get-rust-type($qualified-type<type>);
     my $const     = get-constness($qualified-type);
     my $ref       = get-refness($qualified-type);
