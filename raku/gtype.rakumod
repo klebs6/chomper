@@ -1,5 +1,10 @@
 our role Types {
 
+    rule function-sig-type {
+        <return-type> 
+        '(' <maybe-unnamed-args>  ')'
+    }
+
     token unique-ptr {
         [ 'std::' ]? 'unique_ptr' '<' <type> '>'
     }
@@ -18,7 +23,7 @@ our role Types {
     }
     regex std-function-return-type {
         | <void>
-        | <type>
+        | <return-type>
     }
     regex std-function-args {
         | <void>
@@ -89,13 +94,13 @@ our role Types {
         [<mutable> <.ws>]?
         [
             | <typename> <.ws> [<parent=type> '::']+ <child=name>
-
             | [
                 [
                     | 'std::'
                     | 'onnx::'
                     | 'zx::'
                     | 'fit::'
+                    | 'math::'
                     | 'c10::'
                     | 'at::'
                     | 'fbgemm::'
@@ -110,20 +115,20 @@ our role Types {
                     | 'boost::'
                 ]?
                 [
-                    | <unique-ptr>
-                    | <unordered-set>
-                    | <unordered-map>
-                    | <bit-set>
-                    | <c10-optional>
-                    | <shared-ptr>
+                    #| <unique-ptr>
+                    #| <unordered-set>
+                    #| <unordered-map>
+                    #| <bit-set>
+                    #| <c10-optional>
+                    #| <shared-ptr>
                     | <std-atomic>
                     | <std-pair>
                     | <std-tuple>
-                    | <std-vector>
+                    #| <std-vector>
                     | <std-queue>
-                    | <std-list>
-                    | <std-deque>
-                    | <std-set>
+                    #| <std-list>
+                    #| <std-deque>
+                    #| <std-set>
                     | <std-function>
                     | <.identifier>
                     | 'DoubleToStringConverter::DtoaMode'

@@ -11,7 +11,7 @@ grammar LineComments {
     }
 
     token line-comment {
-        [ '//' | '///' ] <line-comment-body>
+        [ '//' | '///' ] [<.ws>? | <line-comment-body> ]
     }
 
     rule line-comment-body {
@@ -37,7 +37,14 @@ class LineComments::Actions {
 
     method line-comment($/) {
 
-        make "|" ~ $/<line-comment-body>.Str.trim-trailing
+        if $/<line-comment-body>:exists {
+
+            make "|" ~ $/<line-comment-body>.Str.trim-trailing
+
+        } else {
+
+            make "|" 
+        }
     }
 }
 
@@ -48,13 +55,15 @@ sub MAIN(:$indent = False) {
         actions => LineComments::Actions.new)
         .made;
 
-    if $indent {
+        if $x {
+            if $indent {
 
-        say $x.indent(4);
+                say $x.indent(4);
 
-    } else {
+            } else {
 
-        say $x;
-    }
+                say $x;
+            }
+        }
 }
 

@@ -2,17 +2,34 @@ use util;
 use typemap;
 use type-info;
 
+our sub remove-typename($type) {
+
+    if $type<typename>:exists {
+
+        my $parents = $type<parent>.List.join("::");
+        my $child = $type<child>.Str;
+        "{$parents}::{$child}"
+
+    } else {
+        $type
+    }
+}
+
 our sub translate-using-declarations( $submatch, $body, $rclass) 
 {
     my @rust-declarations = do for $submatch<using-declaration>.List -> $declaration {
 
         my $name  = $declaration<lhs>;
 
-        #could by <type> or <unnamed-arg>
+        #could by <type>, <function-sig-type> or <unnamed-arg>
         my $id  = $declaration<rhs>;
 
-        my $rtype = do if $id<type>:exists {
+        my $rtype = do if $id<typename>:exists {
+            remove-typename($id)
+
+        } elsif $id<type>:exists and not $id<type> ~~ "" {
             augmented-rtype-from-qualified-cpp-type($id)
+
         } else {
             populate-typeinfo($id).vectorized-rtype
         };

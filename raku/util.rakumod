@@ -119,15 +119,18 @@ our sub get-option-defaults-initlist($header) {
     my $idx = 0;
     for $header<args><arg> {
 
-        my $name = snake-case($_<name>.Str);
-        my $rtype = get-roperand($header,$idx);
+        if $_<function-ptr-type>:!exists {
 
-        if $_<default-value>:exists {
+            my $name = snake-case($_<name>.Str);
+            my $rtype = get-roperand($header,$idx);
 
-            my $default = $_<default-value>.Str;
+            if $_<default-value>:exists {
 
-            @defaults.push: 
-            "let $name: $rtype = {$name}.unwrap_or({$default});\n";
+                my $default = $_<default-value>.Str;
+
+                @defaults.push: 
+                "let $name: $rtype = {$name}.unwrap_or({$default});\n";
+            }
         }
 
         $idx += 1;
@@ -392,11 +395,27 @@ our sub get-rtemplate-args-list($template-header) {
 
     for $template-args<template-arg> {
 
+        my $prefix;
+
         if $_<type>:exists {
-            @result.push: "const {$_<name>.Str}: {%*typemap{$_<type>.Str}}";
+
+            $prefix = "const {$_<name>.Str}: {%*typemap{$_<type>.Str}}";
 
         } else {
-            @result.push: $_<name>.Str;
+
+            $prefix = $_<name>.Str;
+
+        }
+
+        if $_<default-value>:exists {
+
+            my $def = populate-typeinfo($_<default-value>).vectorized-rtype;
+
+            @result.push: "$prefix = $def";
+
+        } else {
+
+            @result.push: "$prefix";
         }
     }
 
@@ -481,6 +500,7 @@ our sub get-rust-return-type($decl, :$augment = True) {
     my $ref   = $rt<ref>:exists and $rt<ref><double-ref>:!exists;
     my $ptr   = $rt<ptr>.elems;
     my $vol   = $rt<volatile>:exists;
+    my Bool $ptr-ref = get-ptr-refness($rt);
 
     my TypeInfo $info = populate-typeinfo($rt<type>);
 
@@ -491,6 +511,7 @@ our sub get-rust-return-type($decl, :$augment = True) {
             $vectorized-rtype, 
             $const, 
             $ref, 
+            $ptr-ref,
             $ptr, 
             $vol
         );

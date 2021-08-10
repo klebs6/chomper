@@ -58,13 +58,18 @@ does FunctionHeader {
         [<use-operator-context-functions> ';']?
         [<use-dispatch-helper> ';']?
     }
+
+
     rule using-declaration {
         | <.using> <lhs=type> '=' <rhs=type> ';'
+        | <.using> <lhs=type> '=' <rhs=function-sig-type> ';'
         | <.typedef> <rhs=unnamed-arg>  <lhs=type> ';'
     }
+
     rule using-declarations {
         <using-declaration>+
     }
+
     rule typedef-fn-ptr {
         <.typedef> <rt=unnamed-arg> 
         '(' '*' <name> ')'
@@ -105,7 +110,7 @@ does FunctionHeader {
     }
 
     rule return-type {
-        <const>? <volatile>? <type> <const2>? [<ref> | <ptr>+ ]?
+        <const>? <volatile>? <type> <const2>? [<ref> | [<ptr>+ <ptr-ref>?] ]?
     }
 
     token namespace {
@@ -132,8 +137,13 @@ does FunctionHeader {
         <.identifier>
     }
 
+    token empty-array-specifier {
+        '[]'
+    }
+
     token array-specifier {
-        [ '[' <array-dimension> ']' ]+
+        | <empty-array-specifier>
+        | [ '[' <array-dimension> ']' ]+
     }
 
     token array-dimension {
@@ -181,16 +191,19 @@ does FunctionHeader {
     }
 
     rule arg {
-        <class>? 
-        <const>? 
-        <volatile>?
-        <struct>?
-        <type> 
-        <const2>? 
-        [<ref> | <ptr>+ ]? 
-        <name> 
-        <array-specifier>?
-        [ '=' <default-value> ]?
+        | <function-ptr-type>
+        | [
+            <class>? 
+            <const>? 
+            <volatile>?
+            <struct>?
+            <type> 
+            <const2>? 
+            [<ref> | [<ptr>+ <ptr-ref>?] ]? 
+            <name> 
+            <array-specifier>?
+            [ '=' <default-value> ]?
+        ]
     }
 
     rule unnamed-arg {
@@ -200,7 +213,7 @@ does FunctionHeader {
         <struct>?
         <type> 
         <const2>? 
-        [<ref> | <ptr>+ ]? 
+        [<ref> | [<ptr>+ <ptr-ref>?] ]? 
         <array-specifier>?
     }
 
@@ -208,12 +221,24 @@ does FunctionHeader {
         [ 'template' '<' 'class' '>']?
         [<class> | <typename> | <type>]? 
         <name> 
+        [ '=' <default-value=.type> ]?
     }
 
     rule default-value {
-        <.identifier> | <.numeric> | <.extended-identifier>
+        | <.identifier> 
+        | <.numeric> 
+        | <.extended-identifier> 
+        | <.quoted-string>
     }
 
+    token quoted-string {
+        \"  # opening quote
+        [
+            <-[ " \\ ]>  # regular character
+            | \\ .         # escape sequence
+        ]*
+        \" # closing quote
+    }
     regex args {
         | 'void'
         | [<arg>* % ',']
@@ -262,6 +287,7 @@ does FunctionHeader {
         <const>?
         <noexcept>?
         <override>?
+        <final>?
         <terminator>?  
         <line-comment>? 
     }
@@ -329,7 +355,8 @@ does FunctionHeader {
         <const>? 
         <volatile>? 
         <type> 
-        [<ref> | <ptr>+]?  
+        <const>? 
+        [<ref> | [<ptr>+ <ptr-ref>?] ]?  
         [
             <struct-member-declaration-name>+ %% ","
         ]
@@ -354,7 +381,9 @@ does FunctionHeader {
         <.ws>
     }
     rule destructor {
-        '~' <type> '(' ')' <override>?
+        '~' <type> '(' ')' 
+        <override>?
+        <final>?
     }
 
     rule struct-member-declarations {
@@ -363,7 +392,7 @@ does FunctionHeader {
     }
 
     rule function-local-type-suffix {
-       [<ref> | <ptr>+]?  <name> <array-specifier>? 
+       [<ref> | [<ptr>+ <ptr-ref>?] ]?  <name> <array-specifier>? 
     }
 
     rule function-local-declaration {
@@ -380,6 +409,6 @@ does FunctionHeader {
 
 grammar NakedStripper does ParserRules {
     rule TOP {
-        <.ws> [<ref> | <ptr>+]? <mut>? <identifier>
+        <.ws> [<ref> | [<ptr>+ <ptr-ref>?] ]? <mut>? <identifier>
     }
 }

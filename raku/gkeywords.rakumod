@@ -33,6 +33,7 @@ our role Sigils {
     }
     token mut        { 'mut' }
     token ptr        { '*' }
+    token ptr-ref    { '&' }
     token terminator { ';' }
     token priv       { '_' }
 }
