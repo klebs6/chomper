@@ -291,8 +291,60 @@ our role OpOstream {
 
     rule op-ostream-function-header {
         <line-comment>* 
+        <inline>?
         ['std::']? 'ostream' '&'
         'operator' '<<' '(' <args> ')'
+    }
+}
+
+#---------------------------------
+our role OpShlAssign {
+    rule op-shl-assign-function-header {
+        <line-comment>* 
+        <api-tag>?
+        <friend>?
+        <inline>?
+        <return-type>
+        <namespace>?
+        'operator' '<<=' '(' <args> ')'
+    }
+}
+
+our role OpShl {
+    rule op-shl-function-header {
+        <line-comment>* 
+        <api-tag>?
+        <friend>?
+        <inline>?
+        <return-type>
+        <namespace>?
+        'operator' '<<' '(' <args> ')'
+        <const>?
+    }
+}
+
+our role OpShrAssign {
+    rule op-shr-assign-function-header {
+        <line-comment>* 
+        <api-tag>?
+        <friend>?
+        <inline>?
+        <return-type>
+        <namespace>?
+        'operator' '>>=' '(' <args> ')'
+    }
+}
+
+our role OpShr {
+    rule op-shr-function-header {
+        <line-comment>* 
+        <api-tag>?
+        <friend>?
+        <inline>?
+        <return-type>
+        <namespace>?
+        'operator' '>>' '(' <args> ')'
+        <const>?
     }
 }
 
@@ -320,6 +372,10 @@ does OpOstream
 does OpIntoBool
 does OpIndirect
 does OpNot
+does OpShl
+does OpShr
+does OpShlAssign
+does OpShrAssign
 {
 
 }

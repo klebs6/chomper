@@ -49,6 +49,10 @@ our grammar Translator does ParserRules {
             | <operator-into-bool>
             | <operator-indirect>
             | <operator-not>
+            | <op-shl-function-header>
+            | <op-shl-assign-function-header>
+            | <op-shr-function-header>
+            | <op-shr-assign-function-header>
         ]
     }
 }
@@ -59,7 +63,7 @@ our sub get-hook($hookname) {
     #will return one of these values
     my %dispatch = %(
 
-        default-ctor                          => { use default;            &translate-default-ctor },
+        default-ctor                          => { use constructor;        &translate-default-ctor },
         hashing-function                      => { use hasher;             &translate-hasher },
         op-add-eq-function-header             => { use op_add;             &translate-op-add-eq },
         op-bitor-assign-function-header       => { use op_bitor;           &translate-op-bitor-assign },
@@ -96,6 +100,10 @@ our sub get-hook($hookname) {
         operator-into-bool                    => { use operator_into_bool; &translate-operator-into-bool },
         operator-indirect                     => { use operator_indirect;  &translate-operator-indirect },
         operator-not                          => { use operator_not;       &translate-operator-not },
+        op-shl-function-header                => { use op_shift;           &translate-op-shl },
+        op-shl-assign-function-header         => { use op_shift;           &translate-op-shl-assign },
+        op-shr-function-header                => { use op_shift;           &translate-op-shr },
+        op-shr-assign-function-header         => { use op_shift;           &translate-op-shr-assign },
     );
 
     %dispatch{$hookname}()

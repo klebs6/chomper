@@ -1,40 +1,55 @@
 use util;
+use typemap;
 use snake-case;
 
-our class ConstructorHeader {
+our class ConstructorFieldInitializer {
 
-    our class FieldInitializer {
+    has $.field-name is required;
+    has $.initializer is required;
 
-        has $.field-name is required;
-        has $.initializer is required;
-
-        our sub mock-empty {
-            ()
-        }
-
-        our sub mock {
-            (
-                FieldInitializer.new(
-                    field-name  => "data",
-                    initializer => "0",
-                ),
-                FieldInitializer.new(
-                    field-name  => "rows",
-                    initializer => "5",
-                ),
-            )
-        }
-        method gist {
-            "$!field-name\($!initializer\)"
-        }
+    our sub mock-empty {
+        ()
     }
+
+    our sub mock {
+        (
+            ConstructorFieldInitializer.new(
+                field-name  => "data",
+                initializer => "0",
+            ),
+            ConstructorFieldInitializer.new(
+                field-name  => "rows",
+                initializer => "5",
+            ),
+        )
+    }
+    method gist {
+        "$!field-name\($!initializer\)"
+    }
+}
+
+our class DefaultConstructor {
+    has $.function-name;
+    has @.comments;
+    has ConstructorFieldInitializer @.field-initializers;
+
+    our sub mock {
+        #we expect this sort of output in this order
+        DefaultConstructor.new(
+            comments => ('//here is a comment'), 
+            field-initializers => ConstructorFieldInitializer::mock(),
+        )
+    }
+}
+
+our class ConstructorHeader {
 
     has @.template-args;
     has $.function-name;
     has @.function-args-list;
     has @.option-defaults-initlist;
     has @.comments-list;
-    has FieldInitializer @.field-initializers;
+    has ConstructorFieldInitializer @.field-initializers;
 
     our sub mock {
         #we expect this sort of output in this order
@@ -44,38 +59,86 @@ our class ConstructorHeader {
             function-args-list       => ('x: i32', 'y: i16'),
             option-defaults-initlist => (),
             comments-list            => ('//here is a comment'),
-            field-initializers       => FieldInitializer::mock(),
+            field-initializers       => ConstructorFieldInitializer::mock(),
         )
     }
 }
 
-our sub get-rctor-field-initializers(Match $header) {
+our sub get-ctor-field-initializers(Match $header) {
 
-    #ConstructorHeader::FieldInitializer::mock()
+    #ConstructorFieldInitializer::mock()
 
     my $match = $header<constructor-initializers>;
 
     if $match {
         do for $match<constructor-initializer>.List {
-            ConstructorHeader::FieldInitializer.new(
+            ConstructorFieldInitializer.new(
                 field-name  => snake-case($_<field-name>.Str),
                 initializer => $_<field-body>,
             )
         }
     } else {
-        ConstructorHeader::FieldInitializer::mock-empty()
+        ConstructorFieldInitializer::mock-empty()
     }
 }
 
+#--------------------------------------------
+our sub translate-default-ctor($submatch, $body, $user_rclass) {
+
+    my $parsed = DefaultConstructor.new(
+
+        comments           => 
+        get-rcomments-list($submatch),
+
+        field-initializers => 
+        get-ctor-field-initializers($submatch),
+
+        function-name            => 
+        $submatch<type>.Str,
+    );
+
+    my $rcomment  = format-rust-comments($parsed.comments);
+
+    my $rclass = 
+    $parsed.function-name ?? 
+    $parsed.function-name !!
+    $user_rclass;
+
+    qq:to/END/;
+    impl Default for $rclass \{
+        $rcomment
+        fn default() -> Self \{
+            todo!();
+            /*
+            {$parsed.field-initializers ?? ":" ~ $parsed.field-initializers>>.gist.join(",") !! ""}
+            {$body.trim.chop.indent(4)}
+            */
+        \}
+    \}
+    END
+}
+
+#--------------------------------------------
 our sub translate-ctor($submatch, $body, $user_rclass) {
 
     my $parsed = ConstructorHeader.new(
-        template-args            => get-template-args($submatch) // (),
-        function-name            => get-rctor-function-name($submatch),
-        function-args-list       => get-rfunction-args-list($submatch<parenthesized-args>),
-        option-defaults-initlist => get-option-defaults-initlist($submatch<parenthesized-args>),
-        comments-list            => get-rcomments-list($submatch),
-        field-initializers       => get-rctor-field-initializers($submatch),
+        template-args            => 
+        get-template-args($submatch) // (),
+
+        function-name            => 
+        get-rctor-function-name($submatch),
+
+        function-args-list       => 
+        get-rfunction-args-list($submatch<parenthesized-args>),
+
+        option-defaults-initlist => 
+        get-option-defaults-initlist($submatch<parenthesized-args>),
+
+        comments-list            => 
+        get-rcomments-list($submatch),
+
+        field-initializers       => 
+        get-ctor-field-initializers($submatch),
     );
 
     my $rcomment       = format-rust-comments($parsed.comments-list);

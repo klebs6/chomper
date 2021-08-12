@@ -352,7 +352,8 @@ does FunctionHeader {
     }
 
     rule default-ctor {
-        <line-comment>* <type> '()' .*
+        <line-comment>* <type> '()' 
+        <constructor-initializers>? .*
     }
 
     rule abstract-function-declaration {

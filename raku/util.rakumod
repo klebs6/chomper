@@ -345,17 +345,6 @@ our sub rparse-template-header($template-header) {
         get-maybe-self-args($template-header),
 }
 
-
-
-#we expect this sort of output in this order
-our sub rparse-default-header-mock($ctor-header) {
-    ('//here is a comment'), 
-}
-
-our sub rparse-default-header($header) {
-    get-rcomments-list($header)
-}
-
 our sub format-rust-comments($rcomments-list) {
     $rcomments-list.join("\n")
 }

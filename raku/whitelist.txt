@@ -6212,3 +6212,11 @@ OtherDataType
 ConstRowData
 ValueType
 ConstRowBase
+SizeRange
+JacobiPreconditioner
+MatrixOperator
+IncompleteCholeskyPreconditioner
+TriangularMatrix
+ZYXIterator
+XYZIterator
+Promote
