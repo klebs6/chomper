@@ -340,9 +340,11 @@ sub is-pair-or-tuple($x) {
 
 our sub maybe-wrap-ref-cell($mutable, $result) {
 
+=begin comment
     if not $result {
         say Backtrace.new.Str;
     }
+=end comment
 
     if $mutable {
         "RefCell<$result>"

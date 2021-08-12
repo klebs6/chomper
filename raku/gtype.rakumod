@@ -93,7 +93,7 @@ our role Types {
     token type {
         [<mutable> <.ws>]?
         [
-            | <typename> <.ws> [<parent=type> '::']+ <child=name>
+            | <typename> <.ws> [<parent=type> '::'[<template> <.ws>]?]+ <child=name>
             | [
                 [
                     | 'std::'

@@ -239,6 +239,7 @@ does FunctionHeader {
         ]*
         \" # closing quote
     }
+
     regex args {
         | 'void'
         | [<arg>* % ',']
@@ -267,7 +268,17 @@ does FunctionHeader {
     }
 
     token function-name {
-        <namespace>? <priv>? <identifier>
+        | <namespace>? <priv>? <identifier>
+        | <function-name-operator-invoke>
+        | <function-name-operator-assign>
+    }
+
+    token function-name-operator-invoke {
+        'operator' '(' ')'
+    }
+
+    token function-name-operator-assign {
+        'operator' '='
     }
 
     rule trailing-elipsis {
@@ -314,6 +325,20 @@ does FunctionHeader {
         <namespace>? 
         <type> 
         <parenthesized-args> 
+        <constructor-initializers>?
+    }
+
+    rule constructor-initializers {
+        ':' 
+        <constructor-initializer>+ %% ","
+    }
+
+    rule constructor-initializer {
+        <field-name=.identifier> '(' ~ ')' 
+        <field-body=.until-newline>
+    }
+    regex until-newline {
+        \N+?
     }
 
     rule hashing-function {

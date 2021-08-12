@@ -345,22 +345,7 @@ our sub rparse-template-header($template-header) {
         get-maybe-self-args($template-header),
 }
 
-#we expect this sort of output in this order
-our sub rparse-ctor-header-mock($ctor-header) {
-    ('Scl', 'T'), #Nil,
-    'MyClass',
-    ('x: i32', 'y: i16'),
-    ('//here is a comment'), 
-}
 
-our sub rparse-ctor-header($header) {
-    #rparse-ctor-header-mock($header)
-    get-template-args($header),
-    get-rctor-function-name($header),
-    get-rfunction-args-list($header<parenthesized-args>),
-    get-option-defaults-initlist($header<parenthesized-args>),
-    get-rcomments-list($header)
-}
 
 #we expect this sort of output in this order
 our sub rparse-default-header-mock($ctor-header) {
@@ -451,6 +436,14 @@ our sub get-rfunction-name($template-header, $default-prefix = "") {
     #in the prefix file itself
     if $prefix.starts-with(".") {
         $prefix = "";
+    }
+
+    if $template-header<function-name><function-name-operator-invoke>:exists {
+        return "invoke";
+    }
+
+    if $template-header<function-name><function-name-operator-assign>:exists {
+        return "assign_from";
     }
 
     my $priv    = $template-header<function-name><priv>:exists;
