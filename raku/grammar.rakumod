@@ -225,10 +225,7 @@ does FunctionHeader {
     }
 
     rule default-value {
-        | <.identifier> 
-        | <.numeric> 
-        | <.extended-identifier> 
-        | <.quoted-string>
+        | <.constructor-initializer-body>
     }
 
     token quoted-string {
@@ -264,7 +261,7 @@ does FunctionHeader {
     }
 
     rule parenthesized-args {
-        '('  <args> ')'
+        '('  <maybe-unnamed-args> <trailing-elipsis>? ')'
     }
 
     token function-name {
@@ -294,7 +291,7 @@ does FunctionHeader {
         <constexpr>? 
         <return-type>?
         <function-name> 
-        '(' <args> <trailing-elipsis>?')' 
+        <parenthesized-args>
         <const>?
         <noexcept>?
         <override>?
@@ -308,7 +305,7 @@ does FunctionHeader {
         <api-tag>?
         <explicit>?
         <name>
-        '(' <args> ')' 
+        <parenthesized-args>
         <terminator>
     }
 
@@ -335,10 +332,21 @@ does FunctionHeader {
 
     rule constructor-initializer {
         <field-name=.identifier> '(' ~ ')' 
-        <field-body=.until-newline>
+        <field-body=.constructor-initializer-body>?
     }
-    regex until-newline {
-        \N+?
+    rule constructor-initializer-body {
+        [
+            | <.constructor-expression>
+            | <.identifier> 
+            | <.numeric> 
+            | <.extended-identifier> 
+            | <.quoted-string>
+        ]* %% [',' | '.' | '/' | '*']
+    }
+    rule constructor-expression {
+        <.name> '(' [
+            <constructor-initializer-body>* %% ","
+        ] ')'
     }
 
     rule hashing-function {
@@ -348,18 +356,20 @@ does FunctionHeader {
         <inline>?
         <return-type>
         'hash_value'
-        '(' <args> ')'
+        <parenthesized-args>
     }
 
     rule default-ctor {
         <line-comment>* <type> '()' 
-        <constructor-initializers>? .*
+        <constructor-initializers>? 
     }
 
     rule abstract-function-declaration {
         :sigspace
         <line-comment>*
-        <virtual> <return-type> <name> '(' <args> ')' <const>? '=' '0' ';'
+        <virtual> <return-type> <name> 
+        <parenthesized-args>
+        <const>? '=' '0' ';'
     }
 
     rule abstract-function-declarations {

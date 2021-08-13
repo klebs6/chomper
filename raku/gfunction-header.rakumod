@@ -9,7 +9,8 @@ our role FreestandingTemplateFunction {
         <constexpr>?
         <return-type> 
         <function-name> 
-        '(' <args> ')' <const>? 
+        <parenthesized-args>
+        <const>? 
         <noexcept>? 
         <override>?
     }
@@ -23,7 +24,8 @@ our role OpMulEq {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '*=' '(' <args> ')'
+        'operator' '*=' 
+        <parenthesized-args>
     }
 
 }
@@ -36,7 +38,8 @@ our role OpDivEq {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '/=' '(' <args> ')'
+        'operator' '/=' 
+        <parenthesized-args>
     }
 }
 
@@ -48,7 +51,8 @@ our role OpIndexFunction {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '[]' '(' <args> ')'
+        'operator' '[]' 
+        <parenthesized-args>
         <const>?
     }
 }
@@ -61,7 +65,8 @@ our role OpAddEq {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '+=' '(' <args> ')'
+        'operator' '+=' 
+        <parenthesized-args>
     }
 }
 
@@ -73,7 +78,8 @@ our role OpBitorAssign {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '|=' '(' <args> ')'
+        'operator' '|=' 
+        <parenthesized-args>
     }
 }
 
@@ -85,7 +91,8 @@ our role OpBitandAssign {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '&=' '(' <args> ')'
+        'operator' '&=' 
+        <parenthesized-args>
     }
 }
 
@@ -97,7 +104,8 @@ our role OpSubEq {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '-=' '(' <args> ')'
+        'operator' '-=' 
+        <parenthesized-args>
     }
 }
 
@@ -122,7 +130,8 @@ our role OpAdd {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '+' '(' <args> ')'
+        'operator' '+' 
+        <parenthesized-args>
         <const>?
     }
 }
@@ -179,7 +188,8 @@ our role OpMul {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '*' '(' <args> ')'
+        'operator' '*' 
+        <parenthesized-args>
         <const>?
     }
 }
@@ -192,7 +202,8 @@ our role OpXor {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '^' '(' <args> ')'
+        'operator' '^' 
+        <parenthesized-args>
         <const>?
     }
 }
@@ -205,7 +216,8 @@ our role OpBitand {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '&' '(' <args> ')'
+        'operator' '&' 
+        <parenthesized-args>
         <const>?
     }
 }
@@ -218,7 +230,8 @@ our role OpBitor {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '|' '(' <args> ')'
+        'operator' '|' 
+        <parenthesized-args>
         <const>?
     }
 }
@@ -228,7 +241,8 @@ our role OpConvert {
         <line-comment>* 
         <api-tag>?
         <inline>?
-        'operator' <type> '(' <args> ')'
+        'operator' <type> 
+        <parenthesized-args>
         <const>?
     }
 }
@@ -241,7 +255,8 @@ our role OpDiv {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '/' '(' <args> ')'
+        'operator' '/' 
+        <parenthesized-args>
         <const>?
     }
 }
@@ -255,7 +270,8 @@ our role OpSub {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '-' '(' <args> ')'
+        'operator' '-' 
+        <parenthesized-args>
         <const>?
     }
 }
@@ -268,7 +284,8 @@ our role OpEq {
         <inline>?
         'bool'
         <namespace>?
-        'operator' '==' '(' <args> ')'
+        'operator' '==' 
+        <parenthesized-args>
         <const>?
     }
 }
@@ -282,7 +299,8 @@ our role OpLt {
         <inline>?
         'bool'
         <namespace>?
-        'operator' '<' '(' <args> ')'
+        'operator' '<' 
+        <parenthesized-args>
         <const>?
     }
 }
@@ -293,7 +311,8 @@ our role OpOstream {
         <line-comment>* 
         <inline>?
         ['std::']? 'ostream' '&'
-        'operator' '<<' '(' <args> ')'
+        'operator' '<<' 
+        <parenthesized-args>
     }
 }
 
@@ -306,7 +325,8 @@ our role OpShlAssign {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '<<=' '(' <args> ')'
+        'operator' '<<=' 
+        <parenthesized-args>
     }
 }
 
@@ -318,7 +338,8 @@ our role OpShl {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '<<' '(' <args> ')'
+        'operator' '<<' 
+        <parenthesized-args>
         <const>?
     }
 }
@@ -331,7 +352,8 @@ our role OpShrAssign {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '>>=' '(' <args> ')'
+        'operator' '>>=' 
+        <parenthesized-args>
     }
 }
 
@@ -343,7 +365,8 @@ our role OpShr {
         <inline>?
         <return-type>
         <namespace>?
-        'operator' '>>' '(' <args> ')'
+        'operator' '>>' 
+        <parenthesized-args>
         <const>?
     }
 }

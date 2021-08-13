@@ -24,7 +24,7 @@ sub is-tuple($type)            { $type<std-tuple>:exists }
 sub is-vector($type)           { $type<std-vector>:exists }
 sub is-atomic($type)           { $type<std-atomic>:exists }
 sub is-queue($type)            { $type<std-queue>:exists }
-sub is-std-function($type)         { $type<std-function>:exists }
+sub is-std-function($type)     { $type<std-function>:exists }
 
 my %mini-typemap = %(
     'std-list'      => 'LinkedList',
@@ -183,37 +183,111 @@ our sub get-function-type-return-type(Match $type) {
     }
 }
 
-our sub get-rust-args(@maybe-unnamed-args) {
+our class ParenthesizedArgs {
 
-    my $unnamed-count  = 0;
-    my $unnamed-prefix = "_";
+    has @.maybe-unnamed-args;
+    has Bool $.trailing-elipsis = False;
 
-    sub unnamed($arg) {
-
-        my $rust-arg-name = "{$unnamed-prefix}{$unnamed-count}";
-
-        my TypeInfo $info = populate-typeinfo($arg<type>);
-        my TypeAux  $aux  = get-type-aux($arg);
-        my $rust-arg-type = get-augmented-rust-type($info, $aux);
-
-        $unnamed-count += 1;
-        "$rust-arg-name: $rust-arg-type"
+    submethod BUILD(Match :$parenthesized-args) {
+        @!maybe-unnamed-args = $parenthesized-args<maybe-unnamed-args><maybe-unnamed-arg>.List;
+        $!trailing-elipsis   = $parenthesized-args<trailing-elipsis>:exists;
     }
 
-    do for @maybe-unnamed-args {
+    method num-args {
 
-        if $_<type>:exists {
-            unnamed($_)
+        my $extra = $!trailing-elipsis ?? 1 !! 0;
 
-        } elsif $_<unnamed-arg>:exists {
-            #this branch looks like a bug somewhere upstream
-            unnamed($_<unnamed-arg>)
+        @!maybe-unnamed-args.elems + $extra
+    }
 
-        } else {
-            get-rust-arg($_<arg>)
+    method type-for-arg-at-index($idx) {
+
+        die "index OOB" if $idx ge self.num-args;
+
+        my @args = self.get-rust-args;
+
+        my $arg  = @args[$idx];
+
+        my $split = $arg.index(":");
+
+        $arg.substr($split + 1, *).trim
+    }
+
+    method get-option-defaults-initlist {
+
+        my @defaults = [];
+
+        my $idx = 0;
+
+        for @!maybe-unnamed-args {
+
+            if $_<arg>:exists {
+                if $_<arg><function-ptr-type>:!exists {
+
+                    my $name = snake-case($_<arg><name>.Str);
+                    my $rtype = self.type-for-arg-at-index($idx);
+
+                    if $_<arg><default-value>:exists {
+
+                        my $default = $_<arg><default-value>.Str;
+
+                        @defaults.push: 
+                        "let $name: $rtype = {$name}.unwrap_or({$default});\n";
+                    }
+                }
+            }
+
+            $idx += 1;
+        }
+
+        @defaults.join("")
+    }
+
+    method get-maybe-unnamed-args {
+
+        my $count  = 0;
+        my $unnamed-prefix = "_";
+
+        sub unnamed($arg) {
+
+            my $rust-arg-name = "{$unnamed-prefix}{$count}";
+
+            my TypeInfo $info = populate-typeinfo($arg<type>);
+            my TypeAux  $aux  = get-type-aux($arg);
+            my $rust-arg-type = get-augmented-rust-type($info, $aux);
+
+            $count += 1;
+            "$rust-arg-name: $rust-arg-type"
+        }
+
+        do for @!maybe-unnamed-args {
+
+            if $_<type>:exists {
+                unnamed($_)
+
+            } elsif $_<unnamed-arg>:exists {
+                #this branch looks like a bug somewhere upstream
+                unnamed($_<unnamed-arg>)
+
+            } else {
+                $count += 1;
+                get-rust-arg($_<arg>)
+            }
         }
     }
+
+    method get-rust-args {
+
+        my @result = self.get-maybe-unnamed-args;
+
+        if $!trailing-elipsis {
+            @result.push: 'args: &[&str]';
+        }
+
+        @result
+    }
 }
+
 
 our sub get-rust-args-from-function-like(Bool $void-body, @args) {
 
@@ -223,7 +297,10 @@ our sub get-rust-args-from-function-like(Bool $void-body, @args) {
         ""
     } else {
 
-        my @rust-args = get-rust-args( @args);
+        my @rust-args = ParenthesizedArgs.new(
+            maybe-unnamed-args => @args,
+            trailing-elipsis   => False,
+        ).get-rust-args;
 
         $arg-count = @rust-args.elems;
 

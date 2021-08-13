@@ -106,41 +106,21 @@ our sub optionize-rtype($rtype-base, $option_levels is rw) {
 #TODO: eliminate some redundancy with 
 # get-rust-return-type
 our sub get-roperand($header, $idx) {
-    my $operand = $header<args><arg>[$idx];
-
-    my TypeInfo $info = populate-typeinfo($operand<type>);
-
-    $info.vectorized-rtype
+    ParenthesizedArgs.new(
+        parenthesized-args => $header<parenthesized-args>
+    ).type-for-arg-at-index($idx)
 }
 
 our sub get-option-defaults-initlist($header) {
-    my @defaults = [];
-
-    my $idx = 0;
-    for $header<args><arg> {
-
-        if $_<function-ptr-type>:!exists {
-
-            my $name = snake-case($_<name>.Str);
-            my $rtype = get-roperand($header,$idx);
-
-            if $_<default-value>:exists {
-
-                my $default = $_<default-value>.Str;
-
-                @defaults.push: 
-                "let $name: $rtype = {$name}.unwrap_or({$default});\n";
-            }
-        }
-
-        $idx += 1;
-    }
-    @defaults.join("")
-
+    ParenthesizedArgs.new(
+        parenthesized-args => 
+        $header<parenthesized-args>
+    ).get-option-defaults-initlist;
 }
 
 our sub get-num-args($header) {
-    $header<args><arg>.elems
+    ParenthesizedArgs.new(
+        parenthesized-args => $header<parenthesized-args>).num-args
 }
 
 our sub get-maybe-self-args($header) {
@@ -221,21 +201,6 @@ our sub rparse-operator-mul($header, $user_class) {
     get-rcomments-list($header),
     get-rinline($header),
     get-rust-return-type($header, augment => False),
-    $user_class ?? $user_class             !! get-roperand($header,0),
-    $user_class ?? get-roperand($header,0) !! get-roperand($header,1),
-}
-
-our sub rparse-operator-eq-mock($header) {
-        ('//here is a comment'), 
-        '#[inline] ',
-        'f64',
-        'f32',
-}
-
-our sub rparse-operator-eq($header, $user_class) {
-    #rparse-operator-eq-mock($header)
-    get-rcomments-list($header),
-    get-rinline($header),
     $user_class ?? $user_class             !! get-roperand($header,0),
     $user_class ?? get-roperand($header,0) !! get-roperand($header,1),
 }
@@ -408,6 +373,10 @@ our sub get-rinline($template-header) {
     $template-header<inline>.elems > 0 ??  '#[inline] ' !! ''
 }
 
+our sub get-rinline-b(Match $m) {
+    $m<inline>.elems > 0 
+}
+
 our sub get-rconst($template-header) {
 
     my $const = 
@@ -449,17 +418,9 @@ our sub get-rctor-function-name($header) {
     !! ""
 }
 
-our sub get-rfunction-args-list($template-header) {
-    my @result = [];
-    for $template-header<args><arg> {
-        @result.push: get-rust-arg($_);
-    }
-
-    if $template-header<trailing-elipsis>:exists {
-        @result.push: 'args: &[&str]';
-    }
-
-    @result
+our sub get-rfunction-args-list(Match $header) {
+    ParenthesizedArgs.new(
+        parenthesized-args => $header<parenthesized-args>).get-rust-args
 }
 
 #decl must be something with a 

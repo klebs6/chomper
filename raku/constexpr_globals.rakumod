@@ -27,9 +27,39 @@ our sub insert-spaces-after-semicolon-up-to-high-watermark(
 
 }
 
-class Writer {
+our class ConstexprGlobalDef does GetDocComments {
+    has $.name is required;
+    has $.type is required;
+    has $.expr is required;
+    has @.comments;
 
-    has @.globals is required;
+    method gist {
+
+        my $doc-comments = self.get-doc-comments(@!comments).chomp;
+
+        $doc-comments ~
+        "pub const $.name: $.type = $.expr;"
+    }
+}
+
+our class ConstexprGlobals {
+
+    has ConstexprGlobalDef @.globals is required;
+
+    submethod BUILD(:$submatch) {
+
+        for $submatch<constexpr-global-item>.List {
+
+            my @comments = get-rcomments-list($_).split("\n")>>.chomp;
+
+            @!globals.push: ConstexprGlobalDef.new(
+                name     => $_<name>.Str,
+                type     => get-rust-type($_<type>),
+                expr     => $_<until-semicolon>.Str,
+                comments => @comments,
+            );
+        }
+    }
 
     method gist {
 
@@ -53,38 +83,9 @@ class Writer {
     }
 }
 
-
-class ConstexprGlobalDef does GetDocComments {
-    has $.name is required;
-    has $.type is required;
-    has $.expr is required;
-    has @.comments;
-
-    method gist {
-
-        my $doc-comments = self.get-doc-comments(@!comments).chomp;
-
-        $doc-comments ~
-        "pub const $.name: $.type = $.expr;"
-
-    }
-}
-
 our sub translate-constexpr-global-block($submatch, $body, $rclass) {
 
-    my $writer = Writer.new(globals => [ ]);
-
-    for $submatch<constexpr-global-item>.List {
-
-        my @comments = get-rcomments-list($_).split("\n")>>.chomp;
-
-        $writer.globals.push: ConstexprGlobalDef.new(
-            name     => $_<name>.Str,
-            type     => get-rust-type($_<type>),
-            expr     => $_<until-semicolon>.Str,
-            comments => @comments,
-        );
-    }
+    my $writer = ConstexprGlobals.new(globals => [ ]);
 
     $writer.gist
 }

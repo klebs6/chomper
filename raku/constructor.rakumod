@@ -24,7 +24,7 @@ our class ConstructorFieldInitializer {
         )
     }
     method gist {
-        "$!field-name\($!initializer\)"
+        ": $!field-name\($!initializer\),"
     }
 }
 
@@ -74,7 +74,7 @@ our sub get-ctor-field-initializers(Match $header) {
         do for $match<constructor-initializer>.List {
             ConstructorFieldInitializer.new(
                 field-name  => snake-case($_<field-name>.Str),
-                initializer => $_<field-body>,
+                initializer => $_<field-body> // "",
             )
         }
     } else {
@@ -99,6 +99,8 @@ our sub translate-default-ctor($submatch, $body, $user_rclass) {
 
     my $rcomment  = format-rust-comments($parsed.comments);
 
+    my $field-init-stmt = get-field-init-stmt($parsed.field-initializers);
+
     my $rclass = 
     $parsed.function-name ?? 
     $parsed.function-name !!
@@ -110,12 +112,17 @@ our sub translate-default-ctor($submatch, $body, $user_rclass) {
         fn default() -> Self \{
             todo!();
             /*
-            {$parsed.field-initializers ?? ":" ~ $parsed.field-initializers>>.gist.join(",") !! ""}
+    {$field-init-stmt}
             {$body.trim.chop.indent(4)}
             */
         \}
     \}
     END
+}
+
+our sub get-field-init-stmt($field-initializers) {
+    my $x = $field-initializers ?? $field-initializers>>.gist.join("\n") ~ "\n" !! "";
+    $x.chomp.trim.indent(8) ~ "\n"
 }
 
 #--------------------------------------------
@@ -129,10 +136,10 @@ our sub translate-ctor($submatch, $body, $user_rclass) {
         get-rctor-function-name($submatch),
 
         function-args-list       => 
-        get-rfunction-args-list($submatch<parenthesized-args>),
+        get-rfunction-args-list($submatch),
 
         option-defaults-initlist => 
-        get-option-defaults-initlist($submatch<parenthesized-args>),
+        get-option-defaults-initlist($submatch),
 
         comments-list            => 
         get-rcomments-list($submatch),
@@ -150,6 +157,8 @@ our sub translate-ctor($submatch, $body, $user_rclass) {
     $parsed.function-name !!
     $user_rclass;
 
+    my $field-init-stmt = get-field-init-stmt($parsed.field-initializers);
+
     if $parsed.template-args {
 
         qq:to/END/;
@@ -159,7 +168,7 @@ our sub translate-ctor($submatch, $body, $user_rclass) {
             {$optionals}
                 todo!();
                 /*
-                {$parsed.field-initializers ?? ":" ~ $parsed.field-initializers>>.gist.join(",") !! ""}
+        {$field-init-stmt}
                 {$body.trim.chomp.indent(4)}
                 */
             \}
@@ -175,7 +184,7 @@ our sub translate-ctor($submatch, $body, $user_rclass) {
             {$optionals}
                 todo!();
                 /*
-                {$parsed.field-initializers ?? ":" ~ $parsed.field-initializers>>.gist.join(",") !! ""}
+        {$field-init-stmt}
                 {$body.trim.chomp.indent(4)}
                 */
             \}
