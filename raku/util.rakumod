@@ -326,7 +326,7 @@ our sub format-rust-function-args($rfunction-args-list) {
     indent-rust-named-type-list($rfunction-args-list.List)
 }
 
-our sub get-rtemplate-args-list($template-header) {
+our sub get-rtemplate-args-list($template-header, :$write-default = True) {
 
     my $template-args = $template-header<template-args>;
 
@@ -346,7 +346,7 @@ our sub get-rtemplate-args-list($template-header) {
 
         }
 
-        if $_<default-value>:exists {
+        if $_<default-value>:exists and $write-default {
 
             my $def = populate-typeinfo($_<default-value>).vectorized-rtype;
 
@@ -476,7 +476,6 @@ our sub get_parts($in, $chop) {
     my ($head, $body) = do if $chop {
 
         chop_function_body($in)
-
 
     } else {
 

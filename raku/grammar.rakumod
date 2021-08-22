@@ -28,7 +28,10 @@ does FunctionHeader {
     }
 
     rule static_const {
-        <static> <const> <type> <name> '=' <static_const_rhs> ';' <line-comment>?
+        <static> 
+        [ <const> | <constexpr> ] 
+        <type> <name> '=' 
+        <static_const_rhs> ';' <line-comment>?
     }
 
     rule constexpr-global-block {
@@ -61,9 +64,11 @@ does FunctionHeader {
 
 
     rule using-declaration {
-        | <.using> <lhs=type> '=' <rhs=type> ';'
-        | <.using> <lhs=type> '=' <rhs=function-sig-type> ';'
-        | <.typedef> <rhs=unnamed-arg>  <lhs=type> ';'
+        [
+            | <.using> <lhs=type> '=' <rhs=type> ';'
+            | <.using> <lhs=type> '=' <rhs=function-sig-type> ';'
+            | <.typedef> <rhs=unnamed-arg>  <lhs=type> ';'
+        ] <line-comment>?
     }
 
     rule using-declarations {
@@ -118,7 +123,7 @@ does FunctionHeader {
     }
 
     token numeric {
-        [ '+' | '-' ]? <[ 0..9 ]>+ [ '.' <[ 0..9 ]>+ ]? [ 'e' <.numeric> ]?
+        [ '+' | '-' ]? <[ 0..9 ]>+ [ '.' <[ 0..9 ]>+ ]? [ 'e' <.numeric> ]? 
     }
 
     token hexadecimal {
@@ -131,6 +136,10 @@ does FunctionHeader {
 
     token extended-identifier {
         <[A..Z a..z _]> <[A..Z a..z 0..9 _ : < > ]>*
+    }
+
+    token namespaced-extended-identifier {
+        <extended-identifier>+ %% "::"
     }
 
     token name {
@@ -200,6 +209,7 @@ does FunctionHeader {
             <type> 
             <const2>? 
             [<ref> | [<ptr>+ <ptr-ref>?] ]? 
+            <const3>? 
             <name> 
             <array-specifier>?
             [ '=' <default-value> ]?
@@ -214,6 +224,7 @@ does FunctionHeader {
         <type> 
         <const2>? 
         [<ref> | [<ptr>+ <ptr-ref>?] ]? 
+        <const3>? 
         <array-specifier>?
     }
 
@@ -225,7 +236,12 @@ does FunctionHeader {
     }
 
     rule default-value {
-        | <.constructor-initializer-body>
+        | <.constructor-expression>
+        | <.identifier> 
+        | <.numeric> 
+        | <.extended-identifier> 
+        | <.namespaced-extended-identifier> 
+        | <.quoted-string>
     }
 
     token quoted-string {
@@ -335,16 +351,16 @@ does FunctionHeader {
         <field-body=.constructor-initializer-body>?
     }
     rule constructor-initializer-body {
-        [
+        '&'? [
             | <.constructor-expression>
             | <.identifier> 
             | <.numeric> 
             | <.extended-identifier> 
             | <.quoted-string>
-        ]* %% [',' | '.' | '/' | '*']
+        ]* %% [',' | '.' | '/' | '*' ]
     }
     rule constructor-expression {
-        <.name> '(' [
+        <.type> '(' [
             <constructor-initializer-body>* %% ","
         ] ')'
     }
@@ -369,7 +385,9 @@ does FunctionHeader {
         <line-comment>*
         <virtual> <return-type> <name> 
         <parenthesized-args>
-        <const>? '=' '0' ';'
+        <const>? 
+        <noexcept>? 
+        '=' '0' ';'
     }
 
     rule abstract-function-declarations {
@@ -393,6 +411,7 @@ does FunctionHeader {
         <type> 
         <const>? 
         [<ref> | [<ptr>+ <ptr-ref>?] ]?  
+        <const2>? 
         [
             <struct-member-declaration-name>+ %% ","
         ]

@@ -202,7 +202,8 @@ our class ParenthesizedArgs {
 
     method type-for-arg-at-index($idx) {
 
-        die "index OOB" if $idx ge self.num-args;
+        die "index $idx OOB, num-args: {self.num-args}" 
+        if $idx >= self.num-args;
 
         my @args = self.get-rust-args;
 
@@ -387,10 +388,17 @@ our class BasicTypeInfo does TypeInfo {
                 #if $child<type>:exists {
                 if not $child<type>.Str ~~ "" {
 
-                    my TypeInfo $info = populate-typeinfo($child<type>);
-                    my TypeAux  $aux  = get-type-aux($child);
+                    if $child<typename>:exists {
 
-                    @inner.push: get-augmented-rust-type($info, $aux);
+                        @inner.push: $child<type>.List.join("::");
+
+                    } else {
+                        my TypeInfo $info = populate-typeinfo($child<type>);
+                        my TypeAux  $aux  = get-type-aux($child);
+
+                        @inner.push: get-augmented-rust-type($info, $aux);
+
+                    }
 
                 } else {
 

@@ -17,6 +17,7 @@ our role Keywords {
     token override   { 'override' }
     token const      { 'const' }
     token const2     { 'const' }
+    token const3     { 'const' }
     token static     { 'static' }
     token inline     { 'inline' }
     token explicit   { 'explicit' }

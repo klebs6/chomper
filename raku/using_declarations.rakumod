@@ -19,7 +19,9 @@ our sub translate-using-declarations( $submatch, $body, $rclass)
 {
     my @rust-declarations = do for $submatch<using-declaration>.List -> $declaration {
 
-        my $name  = $declaration<lhs>;
+        my $name          = $declaration<lhs>;
+
+        my $maybe-comment = $declaration<line-comment> // "";
 
         #could by <type>, <function-sig-type> or <unnamed-arg>
         my $id  = $declaration<rhs>;
@@ -34,7 +36,7 @@ our sub translate-using-declarations( $submatch, $body, $rclass)
             populate-typeinfo($id).vectorized-rtype
         };
 
-        "pub type $name = $rtype;"
+        "pub type $name = $rtype;{$maybe-comment}"
     };
 
     @rust-declarations.join("\n")

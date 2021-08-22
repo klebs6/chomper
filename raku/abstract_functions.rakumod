@@ -6,6 +6,7 @@ use type-info;
 our class AbstractFunction {
 
     has @.comments;
+    has Bool $.const is required;
     has $.rt;
     has $.name is required;
     has $.args;
@@ -27,9 +28,17 @@ our class AbstractFunction {
     }
 
     method gist {
+
         my $args = format-rust-function-args($!args);
+
+        my $tag = do if $args.chomp.trim {
+            $.const ?? "&self, " !! "&mut self, ";
+        } else {
+            $.const ?? "&self" !! "&mut self";
+        };
+
         self.get-doc-comments 
-        ~ "\nfn {$!name}({$args}){self.get-rt};\n"
+        ~ "\nfn {$!name}({$tag}{$args}){self.get-rt};\n"
     }
 }
 
@@ -51,6 +60,7 @@ our sub translate-abstract-function-declarations(
 
         $writer.declarations.push: AbstractFunction.new(
             comments => get-rcomments-list($_).split("\n")>>.chomp,
+            const    => $_<const>:exists,
             name     => snake-case($_<name>.Str),
             args     => get-rfunction-args-list($_),
             rt       => get-rust-return-type($_),

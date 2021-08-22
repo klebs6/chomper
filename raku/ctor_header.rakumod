@@ -2,16 +2,22 @@ use util;
 use typemap;
 use type-info;
 
+our sub get-generic-type($submatch, :$write-default ) {
+    my $type = $submatch<type>.Str;
+    if $submatch<template-prefix>:exists {
+        my $rtemplate-args = get-rtemplate-args-list($submatch<template-prefix>, :$write-default);
+        $type = $type ~ '<' ~ $rtemplate-args.join(",") ~ '>';
+    }
+    $type
+}
+
 our sub translate-ctor-header( $submatch, $body, $rclass) 
 {
-    my $maybe-generic-type = do {
-        my $type = $submatch<type>.Str;
-        if $submatch<template-prefix>:exists {
-            my $rtemplate-args = get-rtemplate-args-list($submatch<template-prefix>);
-            $type = $type ~ '<' ~ $rtemplate-args.join(",") ~ '>';
-        }
-        $type
-    };
+    my $maybe-generic-type = 
+    get-generic-type($submatch, write-default => True );
+
+    my $maybe-generic-type-nodefault = 
+    get-generic-type($submatch, write-default => False );
 
     my $directive  = $submatch<use-operator-context-functions> // "";
     my $directive2 = $submatch<use-dispatch-helper> // "";
@@ -40,7 +46,7 @@ our sub translate-ctor-header( $submatch, $body, $rclass)
     pub struct $maybe-generic-type \{
     {$struct-body.indent(4)}
     \}
-    impl $maybe-generic-type \{
+    impl $maybe-generic-type-nodefault \{
 
     \}
     END

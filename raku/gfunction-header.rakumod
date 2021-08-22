@@ -309,6 +309,7 @@ our role OpOstream {
 
     rule op-ostream-function-header {
         <line-comment>* 
+        [<template> '<' <template-args> '>']?
         <inline>?
         ['std::']? 'ostream' '&'
         'operator' '<<' 
