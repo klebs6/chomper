@@ -156,7 +156,27 @@ does FunctionHeader {
     }
 
     token array-dimension {
-        [ <.identifier> | <.numeric> | <.hexadecimal> ]
+        [ 
+            | <.expression> 
+            | <.identifier> 
+            | <.numeric> 
+            | <.hexadecimal> 
+        ]
+    }
+    rule expression {
+        [ 
+            | <.identifier>
+            | <.numeric>
+            | <.hexadecimal>
+        ]+ %% <.expression-separator>
+    }
+    token expression-separator {
+        | '+'
+        | '*'
+        | '-'
+        | '/'
+        | '>>'
+        | '<<'
     }
 
     token macro-sig {

@@ -1,5 +1,6 @@
 our role Keywords {
     token class      { 'class' }
+    token enum_       { 'enum' }
     token mutable    { 'mutable' }
     token virtual    { 'virtual' }
     token volatile   { 'volatile' }
@@ -19,7 +20,10 @@ our role Keywords {
     token const2     { 'const' }
     token const3     { 'const' }
     token static     { 'static' }
-    token inline     { 'inline' }
+    token inline     { 
+        | 'inline' 
+        | 'ILINE'
+    }
     token explicit   { 'explicit' }
     token semicolon  { ';' }
 }

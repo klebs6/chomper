@@ -188,7 +188,15 @@ our class ParenthesizedArgs {
     has @.maybe-unnamed-args;
     has Bool $.trailing-elipsis = False;
 
-    submethod BUILD(Match :$parenthesized-args) {
+    multi submethod BUILD(
+        :@!maybe-unnamed-args!,
+        :$!trailing-elipsis!
+    ) {
+        #binding takes care of attribute
+        #assignment
+    }
+
+    multi submethod BUILD(Match :$parenthesized-args!) {
         @!maybe-unnamed-args = $parenthesized-args<maybe-unnamed-args><maybe-unnamed-arg>.List;
         $!trailing-elipsis   = $parenthesized-args<trailing-elipsis>:exists;
     }
@@ -275,6 +283,17 @@ our class ParenthesizedArgs {
                 get-rust-arg($_<arg>)
             }
         }
+
+=begin comment
+        if $! {
+            say "try extract maybe-unnamed-args failed with $!";
+            say "maybe-unnamed-args: {@!maybe-unnamed-args.raku}";
+            $!.throw;
+
+        } else {
+            return $result;
+        }
+=end comment
     }
 
     method get-rust-args {
@@ -298,10 +317,13 @@ our sub get-rust-args-from-function-like(Bool $void-body, @args) {
         ""
     } else {
 
-        my @rust-args = ParenthesizedArgs.new(
+        #TODO: wtf is going on with construction
+        my $p-args = ParenthesizedArgs.new(
             maybe-unnamed-args => @args,
-            trailing-elipsis   => False,
-        ).get-rust-args;
+            trailing-elipsis   =>  False,
+        );
+
+        my @rust-args = $p-args.get-rust-args;
 
         $arg-count = @rust-args.elems;
 
@@ -555,6 +577,7 @@ our sub get-type-aux-default( ) {
         const     => False,
         ref       => False,
         ptr       => 0,
+        ptr-ref   => False,
         volatile  => False,
         dim_stack => [],
     )
@@ -650,6 +673,10 @@ our sub get-rust-function-ptr-arg($arg, $compute_const = True ) {
 }
 
 our sub get-rust-arg($arg, $compute_const = True ) {
+
+    if not $arg {
+        say "get-rust-arg called with invalid arg";
+    }
 
     if $arg<function-ptr-type>:exists {
         return get-rust-function-ptr-arg($arg, $compute_const);

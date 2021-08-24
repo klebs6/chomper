@@ -17,7 +17,6 @@ grammar LineComments {
     rule line-comment-body {
         \N*
     }
-
 }
 
 class LineComments::Actions {
