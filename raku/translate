@@ -109,7 +109,10 @@ our sub get-hook($hookname) {
     %dispatch{$hookname}()
 }
 
-sub MAIN(:$chop = False, :$class = Nil, :$de-semicolon = False) { 
+sub MAIN(
+    :$chop = False, 
+    :$class = Nil, 
+    :$de-semicolon = False) { 
 
     #this makes it so we don't have to recompile 
     #every time we want to change the typemap

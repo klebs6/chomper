@@ -2,10 +2,66 @@ use util;
 use typemap;
 use type-info;
 
+#use Grammar::Tracer;
+
+#config
+my $strip-hungarian                      = True;
+my $store-properly-formatted-struct-name = True;
+my $map-hungarian-to-non                 = True;
+
+grammar HungarianStruct {
+
+    rule TOP {
+        <.ws> <hungarian-ident>
+    }
+
+    token hungarian-ident {
+        <hungarian-prefix> <camel-case-ident>
+    }
+
+   token hungarian-prefix {
+        | 'S'
+        | 'C'
+        | 'E'
+        | 'T'
+    }
+
+    token camel-case-ident {
+        <camel-case-segment>+
+    }
+
+    token camel-case-segment {
+        <[A..Z]> <[a..z]>*
+    }
+}
+
 our sub get-generic-type($submatch, :$write-default ) {
+
     my $type = $submatch<type>.Str;
+
+    my $h = HungarianStruct.parse($type);
+
+    if $h && $strip-hungarian {
+
+        my $non-hungarian = $h<hungarian-ident><camel-case-ident>.Str;
+
+        if $map-hungarian-to-non {
+            spurt "/Users/kleb/bethesda/work/repo/translator/raku/text-typemap.txt", "$type $non-hungarian\n", :append;
+        }
+
+        if $store-properly-formatted-struct-name {
+            spurt "/Users/kleb/bethesda/work/repo/translator/raku/whitelist.txt", "$non-hungarian\n", :append;
+        }
+
+        $type     = $non-hungarian;
+    }
+
     if $submatch<template-prefix>:exists {
-        my $rtemplate-args = get-rtemplate-args-list($submatch<template-prefix>, :$write-default);
+        my $rtemplate-args 
+        = get-rtemplate-args-list(
+            $submatch<template-prefix>, 
+            :$write-default
+        );
         $type = $type ~ '<' ~ $rtemplate-args.join(",") ~ '>';
     }
     $type

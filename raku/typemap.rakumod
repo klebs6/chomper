@@ -17,6 +17,9 @@ our %typemap =
     #'const_iterator' => '*const TraceEvent',
 
     #from USD
+    'signed short'                      => 'i16',
+    'signed int'                        => 'i32',
+    'signed char'                       => 'i8',
     'Byte'                              => 'u8',
     'TensorList_t'                      => 'TensorList',
     '__fp16'                            => 'f16',

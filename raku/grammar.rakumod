@@ -123,7 +123,7 @@ does FunctionHeader {
     }
 
     token numeric {
-        [ '+' | '-' ]? <[ 0..9 ]>+ [ '.' <[ 0..9 ]>+ ]? [ 'e' <.numeric> ]? 
+        [ '+' | '-' | '~' ]? <[ 0..9 ]>+ [ '.' <[ 0..9 ]>+ ]? [ 'e' <.numeric> ]? 
     }
 
     token hexadecimal {
