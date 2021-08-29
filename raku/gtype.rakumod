@@ -16,7 +16,7 @@ our role Types {
     regex std-function {
         [ 'std::' ]? ['function' | 'Function']
         '<' <.ws> <std-function-return-type> <.ws>
-        '(' <.ws> <std-function-args> <.ws> ')' <.ws> '>'
+        <parenthesized-args> <.ws> '>'
     }
     token void { 
         'void'

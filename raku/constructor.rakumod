@@ -103,7 +103,7 @@ our sub translate-default-ctor($submatch, $body, $user_rclass) {
 
     my $rclass = 
     $parsed.function-name ?? 
-    $parsed.function-name !!
+    %*typemap{$parsed.function-name} !!
     $user_rclass;
 
     qq:to/END/;

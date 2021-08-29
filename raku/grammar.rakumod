@@ -221,6 +221,7 @@ does FunctionHeader {
 
     rule arg {
         | <function-ptr-type>
+        | [ <std-function> <name> ]
         | [
             <class>? 
             <const>? 
@@ -284,8 +285,8 @@ does FunctionHeader {
     }
 
     regex maybe-unnamed-arg {
-        | <unnamed-arg>
-        | <arg>
+        || <arg>
+        || <unnamed-arg>
     }
 
     rule unnamed-args {
@@ -297,7 +298,8 @@ does FunctionHeader {
     }
 
     rule parenthesized-args {
-        '('  <maybe-unnamed-args> <trailing-elipsis>? ')'
+        | '(' <void> ')'
+        | '('  <maybe-unnamed-args> <trailing-elipsis>? ')'
     }
 
     token function-name {

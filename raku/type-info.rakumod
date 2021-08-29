@@ -183,6 +183,12 @@ our sub get-function-type-return-type(Match $type) {
     }
 }
 
+our sub is-standard-arg($arg) {
+    $arg<function-ptr-type>:!exists
+        and
+    $arg<std-function>:!exists
+}
+
 our class ParenthesizedArgs {
 
     has @.maybe-unnamed-args;
@@ -222,6 +228,7 @@ our class ParenthesizedArgs {
         $arg.substr($split + 1, *).trim
     }
 
+
     method get-option-defaults-initlist {
 
         my @defaults = [];
@@ -231,7 +238,8 @@ our class ParenthesizedArgs {
         for @!maybe-unnamed-args {
 
             if $_<arg>:exists {
-                if $_<arg><function-ptr-type>:!exists {
+
+                if is-standard-arg($_<arg>) {
 
                     my $name = snake-case($_<arg><name>.Str);
                     my $rtype = self.type-for-arg-at-index($idx);
@@ -269,7 +277,7 @@ our class ParenthesizedArgs {
             "$rust-arg-name: $rust-arg-type"
         }
 
-        do for @!maybe-unnamed-args {
+        do for @!maybe-unnamed-args.List {
 
             if $_<type>:exists {
                 unnamed($_)
@@ -283,17 +291,6 @@ our class ParenthesizedArgs {
                 get-rust-arg($_<arg>)
             }
         }
-
-=begin comment
-        if $! {
-            say "try extract maybe-unnamed-args failed with $!";
-            say "maybe-unnamed-args: {@!maybe-unnamed-args.raku}";
-            $!.throw;
-
-        } else {
-            return $result;
-        }
-=end comment
     }
 
     method get-rust-args {
@@ -362,17 +359,20 @@ our class FunctionTypeInfo does TypeInfo {
     #these are match objects
     has Bool $.mutable             is required;
     has $.std-function-return-type is required;
-    has $.std-function-args        is required;
+    has $.parenthesized-args       is required;
 
     method get-return-type {
-        get-function-type-return-type($!std-function-return-type)
+        if $!std-function-return-type {
+
+            get-function-type-return-type($!std-function-return-type)
+        } else {
+            "()"
+        }
     }
 
     method get-rust-args {
-
-        my $void-body = $!std-function-args<void>:exists;
-        my @args = $!std-function-args<type-or-arg>.List;
-
+        my $void-body = $!parenthesized-args<void>:exists;
+        my @args = $!parenthesized-args<maybe-unnamed-args><maybe-unnamed-arg>.List;
         get-rust-args-from-function-like($void-body, @args)
     }
 
@@ -480,10 +480,12 @@ our sub populate-typeinfo($type) {
 
         my $func = $type<std-function>;
 
+        my $parenthesized-args = $func<parenthesized-args>;
+
         return FunctionTypeInfo.new(
             mutable                  => $mutable,
             std-function-return-type => $func<std-function-return-type><return-type>,
-            std-function-args        => $func<std-function-args>,
+            parenthesized-args       => $func<parenthesized-args>,
         );
     }
 
@@ -672,6 +674,17 @@ our sub get-rust-function-ptr-arg($arg, $compute_const = True ) {
     get-rust-arg-impl($name, $info, $aux)
 }
 
+our sub get-rust-std-function-arg($arg, $compute_const = True ) {
+
+    my $name = snake-case($arg<name>.trim);
+
+    my TypeInfo $info = populate-typeinfo($arg);
+
+    my TypeAux  $aux  = get-type-aux-default();
+
+    get-rust-arg-impl($name, $info, $aux)
+}
+
 our sub get-rust-arg($arg, $compute_const = True ) {
 
     if not $arg {
@@ -680,6 +693,10 @@ our sub get-rust-arg($arg, $compute_const = True ) {
 
     if $arg<function-ptr-type>:exists {
         return get-rust-function-ptr-arg($arg, $compute_const);
+    } 
+
+    if $arg<std-function>:exists {
+        return get-rust-std-function-arg($arg, $compute_const);
     } 
 
     my $name = snake-case($arg<name>.trim);
