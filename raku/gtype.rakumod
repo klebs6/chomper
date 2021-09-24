@@ -98,11 +98,16 @@ our role Types {
             | [
                 [
                     | 'std::'
+                    | 'ssl::'
+                    | 'aux::'
+                    | 'tcp::'
+                    | 'udp::'
                     | 'onnx::'
                     | 'zx::'
                     | 'fit::'
                     | 'math::'
                     | 'c10::'
+                    | 'gles::'
                     | 'at::'
                     | 'fbgemm::'
                     | 'cv::'

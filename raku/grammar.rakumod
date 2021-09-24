@@ -122,8 +122,18 @@ does FunctionHeader {
         <identifier> '::'
     }
 
+    token numeric-value {
+        [ '+' | '-' | '~' ]? <[ 0..9 ]>+ [ '.' <[ 0..9 ]>+ ]? [ 'e' <.numeric-value> ]? 
+    }
+
+    token numeric-suffix {
+        | 'f'
+        | 'u'
+        | 'U'
+    }
+
     token numeric {
-        [ '+' | '-' | '~' ]? <[ 0..9 ]>+ [ '.' <[ 0..9 ]>+ ]? [ 'e' <.numeric> ]? 
+        <numeric-value> <numeric-suffix>? 
     }
 
     token hexadecimal {
@@ -174,6 +184,7 @@ does FunctionHeader {
         | '+'
         | '*'
         | '-'
+        | '|'
         | '/'
         | '>>'
         | '<<'
@@ -260,9 +271,12 @@ does FunctionHeader {
         | <.constructor-expression>
         | <.identifier> 
         | <.numeric> 
+        | <.expression> 
+        | <.hexadecimal> 
         | <.extended-identifier> 
         | <.namespaced-extended-identifier> 
         | <.quoted-string>
+        | '{}'
     }
 
     token quoted-string {

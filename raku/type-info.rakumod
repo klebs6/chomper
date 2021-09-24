@@ -31,6 +31,7 @@ my %mini-typemap = %(
     'std-set'       => 'HashSet',
     'std-pair'      => '( _x_ )',
     'std-tuple'     => '( _x_ )',
+    'tuple'         => '( _x_ )',
     'shared-ptr'    => 'Arc',
     'shared_ptr'    => 'Arc',
     'std-deque'     => 'VecDeque',
@@ -399,7 +400,7 @@ our class BasicTypeInfo does TypeInfo {
     method vectorized-rtype {
 
         my $outer = 
-        %mini-typemap{$!cpp-parent} // %*typemap{$!cpp-parent};
+        %mini-typemap{$!cpp-parent} // %*typemap{$!cpp-parent} ;
 
         my @inner;
 

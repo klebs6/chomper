@@ -3,6 +3,7 @@ use v6;
 use lib '/Users/kleb/bethesda/work/repo/translator/raku';
 use util;
 use typemap;
+use snake-case;
 use grammar;
 
 #use Grammar::Tracer;
@@ -109,6 +110,10 @@ our sub get-hook($hookname) {
     %dispatch{$hookname}()
 }
 
+sub success-cleanup() {
+    sort-uniq-snake-case-file()
+}
+
 sub MAIN(
     :$chop = False, 
     :$class = Nil, 
@@ -149,6 +154,8 @@ sub MAIN(
     if $submatch {
 
         say &hook($submatch, $body, $class);
+
+        success-cleanup();
 
     } else {
 

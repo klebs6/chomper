@@ -1,3 +1,11 @@
+our $snake-case-file = 
+"/Users/kleb/bethesda/work/repo/translator/raku/snake-cased.txt";
+
+our sub sort-uniq-snake-case-file {
+
+    my @uniq = qqx/sort $snake-case-file | uniq/;
+    spurt $snake-case-file, "{@uniq.join('')}\n";
+}
 
 our sub snake-to-camel($input) {
     my $type-stripped = $input.subst(/_t$/, "");
@@ -17,6 +25,7 @@ our sub remove-duplicate-segments($filename) {
 
 }
 our sub snake-case($name, $remove-dup = False) {
+    my $input = $name;
 
     my $result = $name;
 
@@ -37,7 +46,7 @@ our sub snake-case($name, $remove-dup = False) {
     $result ~~ s:g/__/_/;
     $result ~~ s/^_//;
 
-    if $remove-dup {
+    my $output = do if $remove-dup {
         remove-duplicate-segments($result.lc)
 
     } else {
@@ -48,7 +57,13 @@ our sub snake-case($name, $remove-dup = False) {
         #alternatively, we should call a separate function
         #everywhere snake-case is currently called
         avoid-keywords(avoid-hungarian($result.lc))
+    };
+
+    if $input.trim ne $output.trim {
+        spurt $snake-case-file, "$input $output\n", :append;
     }
+
+    $output
 }
 
 our sub avoid-hungarian($in) {
@@ -56,10 +71,11 @@ our sub avoid-hungarian($in) {
     $out ~~ s/^f_//;
     $out ~~ s/^i_//;
     $out ~~ s/^b_//;
+    $out ~~ s/^e_//;
     $out ~~ s/^p_//;
     $out ~~ s/^c_//;
     $out ~~ s/^s_//;
-    $out ~~ s/^n_//;
+    #$out ~~ s/^n_//;
     $out ~~ s/^v_//;
     $out ~~ s/^u_//;
 

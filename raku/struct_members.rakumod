@@ -5,6 +5,7 @@ use args;
 use snake-case;
 use return-type;
 use indent-rust-named-type-list;
+use line-comment-to-block-comment;
 
 our class RustStructFnMember {
 
@@ -81,7 +82,9 @@ our class RustStructMember {
             my @doc-comments = do for @!comments {
                 make-doc-comment($_).chomp.trim
             };
-            @doc-comments.join("\n")
+            line-comment-to-block-comment(
+                @doc-comments.join("\n")
+            )
         } else {
             ""
         }

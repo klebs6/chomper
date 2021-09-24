@@ -1,13 +1,25 @@
 use util;
 use typemap;
 use type-info;
+use snake-case;
 
 #use Grammar::Tracer;
 
+sub cwd-is-cryengine {
+    #only need to pull hungarian prefixes off
+    #cryengine structs
+    $*CWD.Str.split("/")[*-1] ~~ "cry-rs"
+}
+
 #config
-my $strip-hungarian                      = True;
-my $store-properly-formatted-struct-name = True;
-my $map-hungarian-to-non                 = True;
+my Bool $strip-hungarian                      = cwd-is-cryengine();
+my Bool $store-properly-formatted-struct-name = True;
+my Bool $map-hungarian-to-non                 = True;
+my Bool $translate-base-type                  = True;
+
+#usually want this to be false
+my Bool $add-mod              = False;
+
 
 grammar HungarianStruct {
 
@@ -56,6 +68,10 @@ our sub get-generic-type($submatch, :$write-default ) {
         $type     = $non-hungarian;
     }
 
+    if $translate-base-type {
+        $type = populate-typeinfo($type).vectorized-rtype;
+    }
+
     if $submatch<template-prefix>:exists {
         my $rtemplate-args 
         = get-rtemplate-args-list(
@@ -98,14 +114,29 @@ our sub translate-ctor-header( $submatch, $body, $rclass)
     {@bases.join("\n")}
     END
 
-    qq:to/END/
-    pub struct $maybe-generic-type \{
-    {$struct-body.indent(4)}
-    \}
-    impl $maybe-generic-type-nodefault \{
+    if $add-mod {
 
-    \}
-    END
+        qq:to/END/
+        pub struct $maybe-generic-type \{
+        {$struct-body.indent(4)}
+        \}
+        pub mod {snake-case($maybe-generic-type)} \{
+
+        \}
+        impl $maybe-generic-type-nodefault \{
+
+        \}
+        END
+    } else {
+        qq:to/END/
+        pub struct $maybe-generic-type \{
+        {$struct-body.indent(4)}
+        \}
+        impl $maybe-generic-type-nodefault \{
+
+        \}
+        END
+    }
 
 }
 
