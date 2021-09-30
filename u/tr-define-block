@@ -61,7 +61,7 @@ grammar DefineBlock {
     }
 
     token int-literal {
-        <int-digit>+
+        ['-']? <int-digit>+
     }
 
     token hex-digit {

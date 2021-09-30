@@ -18,6 +18,8 @@ our %typemap =
 
     #from USD
     'signed short'                      => 'i16',
+    'signed long'                       => 'i32',
+    'signed long long'                  => 'i64',
     'signed int'                        => 'i32',
     'signed char'                       => 'i8',
     'Byte'                              => 'u8',

@@ -1,10 +1,12 @@
 use gtype;
 use gkeywords;
 use gfunction-header;
+use block-comment;
 
 our role ParserRules 
 does Types
 does Keywords
+does BlockCommentRole
 does Sigils
 does FunctionHeader {
 
@@ -25,6 +27,13 @@ does FunctionHeader {
         | 'C10_EXPORT' 
         | 'CAMERAUTIL_API' 
         | 'USDRI_API' 
+    }
+
+    token ifdef  { '#ifdef' | '#if' }
+    token ifndef { '#ifndef' }
+
+    rule simple-ifdef {
+        [<ifdef> | <ifndef>] <identifier>
     }
 
     rule static_const {
@@ -460,7 +469,7 @@ does FunctionHeader {
 
     rule struct-member-declaration {
         :sigspace
-        <line-comment>*
+        [<line-comment>* | <block-comment>]
         [
             | <struct-member-declaration-nonfptr>
             | <function-ptr-type>

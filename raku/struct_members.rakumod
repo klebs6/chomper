@@ -1,4 +1,6 @@
 use util;
+use reformat-block-comment;
+use block-comment;
 use typemap;
 use type-info;
 use args;
@@ -67,6 +69,7 @@ our class RustStructMember {
     has $.type is required;
     has $.default;
     has @.comments;
+    has $.block-comment;
 
     method get-maybe-default-tag {
         if $!default {
@@ -77,6 +80,10 @@ our class RustStructMember {
     }
 
     method get-doc-comments {
+
+        if $!block-comment {
+            return reformat-block-comment($!block-comment);
+        }
 
         if @!comments.elems > 0 {
             my @doc-comments = do for @!comments {
@@ -146,6 +153,8 @@ our sub translate-struct-member-declarations( $submatch, $body, $rclass)
 
     for $submatch<struct-member-declaration>.List {
 
+        my $block-comment = $_<block-comment>;
+
         my @comments = get-rcomments-list($_).split("\n")>>.chomp;
 
         if $_<function-ptr-type>:exists {
@@ -175,6 +184,7 @@ our sub translate-struct-member-declarations( $submatch, $body, $rclass)
                 $writer.members.push: RustStructMember.new(
                     name     => snake-case($rname.subst(/_$/, "")), #trim trailing _
                     type     => $rtype,
+                    :$block-comment,
                     :@comments,
                     :$default,
                     :$idx,

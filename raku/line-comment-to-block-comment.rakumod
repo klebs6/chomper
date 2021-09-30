@@ -60,5 +60,8 @@ our sub line-comment-to-block-comment($text, :$indent = False) {
 
             $x
         }
+
+    } else {
+        ""
     }
 }

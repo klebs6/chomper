@@ -12,6 +12,7 @@ our grammar Translator does ParserRules {
     rule TOP {
         <.ws>
         [ 
+            | <simple-ifdef>
             | <struct-member-declarations>
             | <abstract-function-declarations>
             | <pound-define>
@@ -65,6 +66,7 @@ our sub get-hook($hookname) {
     my %dispatch = %(
 
         default-ctor                          => { use constructor;        &translate-default-ctor },
+        simple-ifdef                          => { use simple_ifdef;        &translate-simple-ifdef },
         hashing-function                      => { use hasher;             &translate-hasher },
         op-add-eq-function-header             => { use op_add;             &translate-op-add-eq },
         op-bitor-assign-function-header       => { use op_bitor;           &translate-op-bitor-assign },

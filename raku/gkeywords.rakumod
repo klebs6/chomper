@@ -22,6 +22,7 @@ our role Keywords {
     token static     { 'static' }
     token inline     { 
         | 'inline' 
+        | 'forcedinline' 
         | 'ILINE'
     }
     token explicit   { 'explicit' }
