@@ -36,7 +36,7 @@ our class RustStructFnMember {
             match => $function-ptr-type<return-type>
         );
 
-        $!name = $function-ptr-type<name>.Str;
+        $!name = snake-case($function-ptr-type<name>.Str);
 
         my $unnamed-idx = 0;
 

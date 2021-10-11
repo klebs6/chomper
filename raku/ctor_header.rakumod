@@ -47,6 +47,20 @@ grammar HungarianStruct {
     }
 }
 
+our sub is-camel-case($type) {
+    my $camel-seg = regex { <[A..Z]> <[a..z]>* };
+    my $camel     = regex { $camel-seg+ };
+    $type ~~ $camel
+}
+
+our sub whitelist($type) {
+    spurt "/Users/kleb/bethesda/work/repo/translator/raku/whitelist.txt", "$type\n", :append;
+}
+
+our sub text-typemap($t1, $t2) {
+    spurt "/Users/kleb/bethesda/work/repo/translator/raku/text-typemap.txt", "$t1 $t2\n", :append;
+}
+
 our sub get-generic-type($submatch, :$write-default ) {
 
     my $type = $submatch<type>.Str;
@@ -58,18 +72,22 @@ our sub get-generic-type($submatch, :$write-default ) {
         my $non-hungarian = $h<hungarian-ident><camel-case-ident>.Str;
 
         if $map-hungarian-to-non {
-            spurt "/Users/kleb/bethesda/work/repo/translator/raku/text-typemap.txt", "$type $non-hungarian\n", :append;
+            text-typemap($type, $non-hungarian);
         }
 
         if $store-properly-formatted-struct-name {
-            spurt "/Users/kleb/bethesda/work/repo/translator/raku/whitelist.txt", "$non-hungarian\n", :append;
+            whitelist($non-hungarian);
         }
 
         $type     = $non-hungarian;
     }
 
     if $translate-base-type {
-        $type = populate-typeinfo($type).vectorized-rtype;
+        if not is-camel-case($type) {
+            $type = populate-typeinfo($type).vectorized-rtype;
+        } else {
+            whitelist($type);
+        }
     }
 
     if $submatch<template-prefix>:exists {

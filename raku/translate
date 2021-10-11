@@ -3,61 +3,8 @@ use v6;
 use lib '/Users/kleb/bethesda/work/repo/translator/raku';
 use util;
 use typemap;
+use translator;
 use snake-case;
-use grammar;
-
-#use Grammar::Tracer;
-
-our grammar Translator does ParserRules {
-    rule TOP {
-        <.ws>
-        [ 
-            | <simple-ifdef>
-            | <struct-member-declarations>
-            | <abstract-function-declarations>
-            | <pound-define>
-            | <default-ctor>
-            | <op-convert-function-header>
-            | <constructor-definition-header>
-            | <op-mul-function-header>
-            | <op-xor-function-header>
-            | <op-bitand-function-header>
-            | <op-bitor-function-header>
-            | <op-eq-function-header>
-            | <op-lt-function-header>
-            | <op-div-eq-function-header>
-            | <class-constructor-declaration>
-            | <function-declaration>
-            | <hashing-function>
-            | <op-add-function-header>
-            | <op-add-eq-function-header>
-            | <op-bitor-assign-function-header>
-            | <op-bitand-assign-function-header>
-            | <op-div-function-header>
-            | <op-mul-eq-function-header>
-            | <op-negate-function-header>
-            | <op-sub-function-header>
-            | <op-sub-eq-function-header>
-            | <freestanding-template-function-header>
-            | <op-index-function-header>
-            | <op-ostream-function-header>
-            | <static-constants>
-            | <function-local-declarations>
-            | <destructor>
-            | <ctor-header>
-            | <using-declarations>
-            | <typedef-fn-ptr>
-            | <constexpr-global-block>
-            | <operator-into-bool>
-            | <operator-indirect>
-            | <operator-not>
-            | <op-shl-function-header>
-            | <op-shl-assign-function-header>
-            | <op-shr-function-header>
-            | <op-shr-assign-function-header>
-        ]
-    }
-}
 
 our sub get-hook($hookname) {
 
@@ -146,7 +93,8 @@ sub MAIN(
 
     my ($head, $body) = get_parts($in, $chop);
 
-    my $match     = Translator.parse($head);
+    my $match     
+    = Translator.parse($head);
 
     my $hookname  = $match.keys[0].Str;
     my &hook      = &get-hook($hookname);

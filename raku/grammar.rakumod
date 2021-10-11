@@ -1,6 +1,7 @@
 use gtype;
 use gkeywords;
 use gfunction-header;
+use gsimple-ifdef;
 use block-comment;
 
 our role ParserRules 
@@ -8,6 +9,7 @@ does Types
 does Keywords
 does BlockCommentRole
 does Sigils
+does SimpleIfdef
 does FunctionHeader {
 
     regex template-identifier {
@@ -15,9 +17,35 @@ does FunctionHeader {
     }
 
     token value  { <.identifier> | <.numeric> }
-    rule static_const_rhs  { <-[  ; ]>+ }
 
-    token api-tag {
+    rule static_const_rhs  { 
+        | <braced-array-literal>
+        | <default-value>
+    }
+
+    rule braced-array-literal {
+        <braced-array-literal-tree>
+    }
+
+    rule braced-array-literal-tree {
+        | <braced-array-literal-leaf>
+        | <braced-array-literal-leaf-list>
+        | <braced-array-literal-leaf-list-list>
+    }
+
+    rule braced-array-literal-leaf {
+        '{' [ <default-value>+ %% "," ] '}'
+    }
+
+    rule braced-array-literal-leaf-list {
+        '{' [ <braced-array-literal-leaf>+ %% "," ] '}'
+    }
+
+    rule braced-array-literal-leaf-list-list {
+        '{' [ <braced-array-literal-leaf-list>+ %% "," ] '}'
+    }
+
+   token api-tag {
         | 'GF_API'    | 'GF_LOCAL'
         | 'TF_API'    | 'TF_LOCAL'
         | 'ARCH_API'  | 'ARCH_LOCAL'
@@ -29,17 +57,11 @@ does FunctionHeader {
         | 'USDRI_API' 
     }
 
-    token ifdef  { '#ifdef' | '#if' }
-    token ifndef { '#ifndef' }
-
-    rule simple-ifdef {
-        [<ifdef> | <ifndef>] <identifier>
-    }
-
+    #---------------------------------------------
     rule static_const {
         <static> 
         [ <const> | <constexpr> ] 
-        <type> <name> '=' 
+        <type> <name> <array-specifier>? '=' 
         <static_const_rhs> ';' <line-comment>?
     }
 
@@ -285,7 +307,12 @@ does FunctionHeader {
         | <.extended-identifier> 
         | <.namespaced-extended-identifier> 
         | <.quoted-string>
+        | <identifier-cast-as-uarg>
         | '{}'
+    }
+
+    token identifier-cast-as-uarg {
+        '(' <unnamed-arg> ')' <identifier>
     }
 
     token quoted-string {
@@ -476,7 +503,7 @@ does FunctionHeader {
         ]
         :!sigspace
         ';' 
-        [\h* <line-comment>]?
+        [\h* [<line-comment> | <block-comment>]]?
         :sigspace
         <.ws>
     }

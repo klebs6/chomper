@@ -1,0 +1,46 @@
+#!/usr/bin/env raku
+use v6;
+
+sub find-first-column($text) {
+
+    my @lines = $text.split("\n");
+
+    my $cur   = Inf;
+
+    for @lines -> $line {
+
+        my $trimmed = $line.trim;
+
+        my $idx = do if $trimmed {
+
+            my $first = $trimmed[0];
+
+            $line.index($first)
+
+        } else {
+
+            $cur
+
+        };
+
+        $cur = ($cur, $idx).min;
+    }
+
+    $cur
+}
+
+sub MAIN(:$indent = False) {
+    my $text = $*IN.slurp;
+    my $col  = find-first-column($text);
+    my @lines = $text.lines;
+
+    for @lines -> $line is rw {
+        if $col < $line.chars {
+            $line.substr-rw($col, 0) = "| ";
+        } else {
+            $line = " " x $col ~ "|";
+        }
+    }
+    say @lines.join("\n");
+
+}

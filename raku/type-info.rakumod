@@ -8,6 +8,16 @@ our class TypeAux {
     has Int $.ptr       is required; #number of levels of ptrness
     has Bool $.volatile is required;
     has @.dim_stack     is required;
+
+    method as-cast {
+        augment-rtype-noarg(
+            $!const, 
+            $!ref, 
+            $!ptr-ref, 
+            $!ptr,
+            $!volatile
+        )
+    }
 }
 
 sub is-c10-optional($type)     { $type<c10-optional>:exists }
@@ -567,7 +577,8 @@ our sub get-ptr-refness($arg) {
 }
 
 our sub get-ptrness($arg) {
-    $arg<ptr>.elems
+    #$arg<ptr>.elems
+    $arg<ptr> ?? $arg<ptr>.elems !! 0
 }
 
 our sub get-volatileness($arg) {
@@ -809,6 +820,45 @@ our sub augment-rtype(
 
     } else {
         $result = $vectorized-rtype;
+    }
+
+    if $volatile {
+        "Volatile<$result>"
+
+    } else {
+        "$result"
+    }
+}
+
+our sub augment-rtype-noarg(
+    $const, 
+    $ref, 
+    $ptr-ref, 
+    $ptr, 
+    $volatile) {
+
+    my $result;
+
+    if $ref {
+
+        $result = $const 
+        ??  "&" 
+        !!  "&mut ";
+
+    } elsif $ptr {
+
+        my $tag = $const 
+        ??  "*const " x $ptr.Int
+        !!  "*mut "   x $ptr.Int;
+
+        if $ptr-ref {
+            $tag = "&mut $tag";
+        }
+
+        $result = "{$tag.trim} ";
+
+    } else {
+        $result = "";
     }
 
     if $volatile {

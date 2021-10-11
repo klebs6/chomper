@@ -1,33 +1,16 @@
 use util;
+use type-info;
+use operators;
 
 our sub translate-op-add($submatch, $body, $rclass) {
 
-    my ( $rcomments-list,
-            $rinline, 
-            $rtype, 
-            $roperand,
-            $rfunction-args-list) = 
-        rparse-operator($submatch, $rclass);
+    my $op-add = OperatorAdd.new(
+        :$submatch, 
+        :$body, 
+        :$rclass
+    );
 
-    my $rcomment       = format-rust-comments($rcomments-list);
-    my $rfunction-args = format-rust-function-args($rfunction-args-list);
-
-    $roperand = get-naked($roperand);
-
-    qq:to/END/;
-    impl Add<&{$roperand}> for $rtype \{
-
-        type Output = Self;
-
-        $rcomment
-        {$rinline}fn add(self, other: &$roperand) -> Self::Output \{
-            todo!();
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
-        \}
-    \}
-    END
+    $op-add.gist
 }
 
 our sub translate-op-add-eq($submatch, $body, $rclass) {

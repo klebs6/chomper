@@ -1,0 +1,679 @@
+#!/usr/bin/env raku
+use v6;
+
+class LineBreak { }
+
+sub bye {
+    say "goodbye"; 
+    exit;
+}
+
+our sub format-textwidth(Str $text, Int $approx-width) {
+
+    my @lines = $text.split("\n");
+
+    my @out = do for @lines -> $line {
+        my $input = $line.chomp.split("\n").join(" ");
+
+        my @words = $input.words;
+        my $count = 0;
+        my @result;
+        my @cur;
+
+        for @words {
+            if $count < $approx-width {
+                @cur.push: $_;
+                $count += $_.chars;
+            } else {
+                @result.push: @cur.join(" ");
+                @cur = [];
+                $count = 0;
+                redo;
+            }
+        }
+        @result.push: @cur.join(" ");
+        @result.join("\n")
+    };
+
+    @out.join("\n\n")
+}
+
+our sub remove-comment-tokens($in) {
+
+    my $opener = $in.substr(0,5) ~~ /\/\*\*/ ?? '/**' !! '/*';
+    my $offset = $opener ~~ '/**' ?? 4 !! 3;
+    my $closer = '*/';
+
+    my $delim  = '*' ;
+    my $delim2 = '|' ;
+
+    my $lidx   = $in.indices($opener)[0];
+    my $ridx   = $in.indices($closer)[*-1];
+    my $body   = $in.substr($lidx + $offset .. $ridx - 1);
+
+    my @lines  = $body.split("\n");
+
+    my @stripped = do for @lines {
+        #TODO: resolve!
+        #my $line = $_.trim;
+        my $line = $_;
+
+        my $margin = get-left-margin($line);
+
+        my $trimmed = $_.trim;
+
+        if $trimmed.starts-with($delim) or $trimmed.starts-with($delim2) {
+            $trimmed = $trimmed.substr(1 .. *);
+        }
+        #say "trimmed: $trimmed";
+
+        "{' ' x $margin}$trimmed"
+    };
+
+    @stripped.join("\n") ~ "\n"
+}
+
+grammar ArmnnComment::Grammar {
+
+    rule TOP {
+        <.ws> <armnn-comment>
+    }
+
+    regex armnn-comment {
+        <line>+
+    }
+
+    regex line {
+        || <brief-stmt>   \n
+        || <code-stmt>    \n
+        || <param-stmt>   \n
+        || <return-stmt>  \n
+        || <note-stmt>    \n
+        || <warning-stmt> \n
+        || <basic-text>   \n
+        || <empty-line>
+    }
+    regex empty-line {
+        \s+
+    }
+    regex basic-text {
+        \N+
+    }
+    regex until-newline {
+        \N+
+    }
+    token ident {
+        | <[A..Z a..z 0..9 _]>+
+        | '...'
+    }
+    regex in-out-core {
+            | 'in'
+            | 'out'
+            | 'in,out'
+            | 'in, out'
+    }
+    regex in-out {
+        '[' <in-out-core> ']'
+    }
+    regex note-opener {
+        | <.marker> <.kw-note> 
+        | 'Note that'
+        | 'note that'
+        | 'Note:'
+        | 'NOTE:'
+    }
+    regex note-stmt {
+        <.note-opener>
+        <.ws> <description=.until-newline>
+    }
+    regex warning-stmt {
+        <.marker> <.kw-warning> 
+        <.ws> <description=.until-newline>
+    }
+    regex code-stmt {
+        <.marker> <.kw-code>
+        <description=code-text> <.marker> <.kw-endcode>
+    }
+    regex code-text {
+        .*?
+    }
+    regex param-stmt {
+        <.marker> <.kw-param> <in-out>? 
+        <.ws> <param-name=.ident> 
+        <.ws> <description=.until-newline>
+    }
+    regex return-stmt {
+        <.marker> <.kw-return>  
+        <.ws> <description=.until-newline>
+    }
+
+    regex brief-stmt {
+        <.marker> <.kw-brief>  
+        <.ws> <description=.until-newline>
+    }
+
+    token kw-code    { 'code' }
+    token kw-endcode { 'endcode' }
+
+    token kw-return {
+        | 'return'
+        | 'returns'
+    }
+
+    token kw-param {
+        | 'param'
+        | 'tparam'
+    }
+
+    token kw-warning {
+        | 'warning'
+    }
+
+    token kw-note {
+        | 'note'
+    }
+    token kw-brief {
+        | 'brief'
+    }
+
+    token marker {
+        | '@'
+        | '\\'
+    }
+}
+
+sub get-tail-comment(@tail) {
+    #`(TODO: probably remove redundancy with
+    get-body)
+
+    my $block = do for @tail {
+        if $_ ~~ LineBreak {
+            "\n"
+        } else {
+
+            #`(this is for text behind CodeExample
+            we want to keep this in bounds)
+
+            $_.chomp.trim
+        }
+    }.join(" ").chomp;
+
+    format-textwidth(maximally-shift-toward-left-margin($block), 30)
+}
+
+sub get-body($header, @tail, $approx-text-width) {
+
+    if $approx-text-width {
+
+        @tail.prepend: $header<description>.chomp.trim;
+
+        my $res = do for @tail {
+            if $_ ~~ LineBreak {
+                "\n"
+            } else {
+                $_.chomp.trim
+            }
+        }.join(" ").chomp;
+
+        format-textwidth(
+            maximally-shift-toward-left-margin($res), 
+            $approx-text-width
+        )
+
+    } else { #CodeExample
+
+        my $code = maximally-shift-toward-left-margin(
+            $header<description>.chomp
+        ).chomp.trim;
+
+        my $comment = get-tail-comment(@tail);
+
+        qq:to/END/;
+        $code
+        $comment
+        END
+    }
+}
+
+sub get-left-margin(Str $line) {
+    my $first = $line.comb(/\S/, 1).Str;
+    $line.index($first)
+}
+
+sub maximally-shift-toward-left-margin($text) {
+
+    my @lines   = $text.lines;
+    my $cur-min = Inf;
+
+    for @lines -> $line {
+
+        if $line.chomp.trim {
+
+            #`{
+                has meaningful text (more than just
+                whitespace)
+            }
+
+            $cur-min = [$cur-min, get-left-margin($line)].min;
+        } 
+    }
+
+    do for @lines {
+
+        if $cur-min < $_.chars {
+            $_.substr($cur-min, *)
+        } else {
+            $_
+        }
+
+    }.join("\n")
+}
+
+class ParseData {
+
+    class Param {
+        #`(represents parsed information concerning 
+        parameters)
+
+        has Match $.header is rw;
+        has @.tail is rw;
+
+        method format($approx-text-width) {
+
+            my $in-out = $!header<in-out><in-out-core>;
+
+            my $name   = $!header<param-name>.Str;
+
+            my $header = do if $in-out {
+                "@param\[{$in-out.Str.trim}\] $name"
+            } else {
+                "@param $name"
+            };
+
+            my $body   = get-body($.header, @.tail, $approx-text-width);
+
+            qq:to/END/.chomp.trim;
+            $header
+
+            $body
+            END
+        }
+    }
+
+    class Ret {
+        #`(represents parsed information concerning
+        return values)
+
+        has Match $.header is rw;
+        has @.tail is rw;
+
+        method format($approx-text-width) {
+            my $header = "@return";
+            my $body   = get-body($.header, @.tail, $approx-text-width);
+
+            qq:to/END/.chomp.trim;
+            $header
+
+            $body
+            END
+        }
+    }
+
+    class Brief {
+        #`(represents parsed information concerning
+        the brief description)
+
+        has Match $.header is rw;
+        has @.tail is rw;
+
+        method format($approx-text-width) {
+            my $header = "@brief";
+            my $body   = get-body($.header, @.tail, $approx-text-width);
+
+            qq:to/END/.chomp.trim;
+            $header
+
+            $body
+            END
+        }
+    }
+
+    class Note {
+        #`(represents parsed information concerning
+        any notes)
+
+        has Match $.header is rw;
+        has @.tail is rw;
+
+        method format($approx-text-width) {
+            my $header = "@note";
+            my $body   = get-body($.header, @.tail, $approx-text-width);
+
+            qq:to/END/.chomp.trim;
+            $header
+
+            $body
+            END
+        }
+    }
+
+    class Warning {
+        #`(represents parsed information concerning
+        any warnings)
+
+        has Match $.header is rw;
+        has @.tail is rw;
+
+        method format($approx-text-width) {
+            my $header = "@warning";
+            my $body   = get-body($.header, @.tail, $approx-text-width);
+
+            qq:to/END/.chomp.trim;
+            $header
+
+            $body
+            END
+        }
+    }
+
+    class CodeExample {
+        #`(represents parsed information concerning
+        code examples)
+
+        has Match $.header is rw;
+        has @.tail is rw;
+
+        method format-no-width() {
+            my $header = "@code";
+            my $body   = get-body($.header, @.tail, Nil);
+
+            qq:to/END/.chomp.trim;
+            $header
+
+            $body
+            END
+        }
+    }
+
+    submethod BUILD(Match :$armnn-comment) {
+
+        my @lines = $armnn-comment<line>.List;
+
+        enum ParseState <Header Params CodeExamples Returns Briefs Notes Warnings>;
+
+        my ParseState $state = Header;
+
+        my $cur-item = Nil;
+
+        sub maybe-update-state($line) {
+            if $line<param-stmt>:exists {
+                $state = Params;
+                return True;
+            }
+
+            if $line<note-stmt>:exists {
+                $state = Notes;
+                return True;
+            }
+
+            if $line<code-stmt>:exists {
+                $state = CodeExamples;
+                return True;
+            }
+
+            if $line<warning-stmt>:exists {
+                $state = Warnings;
+                return True;
+            }
+
+            if $line<return-stmt>:exists {
+                $state = Returns;
+                return True;
+            }
+
+            if $line<brief-stmt>:exists {
+                $state = Briefs;
+                return True;
+            }
+
+            return False;
+        }
+
+        sub flush-cur-item {
+            if $cur-item {
+                given $cur-item {
+
+                    when ParseData::Param {
+                        @!params.push: $cur-item;
+                    }
+                    when ParseData::Note {
+                        @!notes.push: $cur-item;
+                    }
+                    when ParseData::CodeExample {
+                        @!code-examples.push: $cur-item;
+                    }
+                    when ParseData::Warning {
+                        @!warnings.push: $cur-item;
+                    }
+                    when ParseData::Ret {
+                        @!returns.push: $cur-item;
+                    }
+                    when ParseData::Brief {
+                        @!briefs.push: $cur-item;
+                    }
+                }
+                $cur-item = Nil;
+            }
+        }
+
+        sub new-cur-item($state, $line) {
+
+            if $cur-item {
+                die "cur-item already set!";
+            }
+
+            my $res;
+
+            given $state {
+                when Header { 
+                    die "invalid control flow";
+                }
+                when Params {
+                    $res = ParseData::Param.new;
+                    $res.header = $line<param-stmt>;
+                }
+                when CodeExamples {
+                    $res = ParseData::CodeExample.new;
+                    $res.header = $line<code-stmt>;
+                }
+                when Notes {
+                    $res = ParseData::Note.new;
+                    $res.header = $line<note-stmt>;
+                }
+                when Warnings {
+                    $res = ParseData::Warning.new;
+                    $res.header = $line<warning-stmt>;
+                }
+                when Returns {
+                    $res = ParseData::Ret.new;
+                    $res.header = $line<return-stmt>;
+                }
+                when Briefs {
+                    $res = ParseData::Brief.new;
+                    $res.header = $line<brief-stmt>;
+                }
+            }
+
+            $res
+        }
+
+        for @lines -> $line {
+
+            my $updated = maybe-update-state($line);
+
+            if $updated {
+                flush-cur-item();
+                $cur-item = new-cur-item($state, $line);
+            }
+
+            if $line<basic-text>:exists {
+                if $state eq Header {
+                    @!header.push: $line<basic-text>.Str;
+                } else {
+                    $cur-item.tail.push: $line<basic-text>.Str;
+                }
+            }
+            if $line<empty-line>:exists {
+                if $state eq Header {
+                    @!header.push: LineBreak.new;
+                } else {
+                    $cur-item.tail.push: LineBreak.new;
+                }
+            }
+        }
+
+        flush-cur-item();
+    }
+
+    has @.header;
+    has Param       @.params;
+    has Ret         @.returns;
+    has Note        @.notes;
+    has CodeExample @.code-examples;
+    has Warning     @.warnings;
+    has Brief       @.briefs;
+
+    method header-line {
+
+        my @text;
+
+        for @!header -> $header-line {
+
+            if $header-line ~~ LineBreak {
+                @text.push: "\n";
+                next;
+            }
+
+            my $line = $header-line.trim-leading;
+
+            my $cond = $line.ends-with("\n\n ");
+
+            my $processed = $cond
+            ?? "{$line.chomp.trim}\n"
+            !! "{$line.chomp.trim} ";
+
+            @text.push: $processed;
+        }
+
+        @text.join(" ")
+    }
+
+    method format-params($approx-text-width) {
+        @!params>>.format($approx-text-width)
+    }
+
+    method format-returns($approx-text-width) {
+        @!returns>>.format($approx-text-width)
+    }
+
+    method format-code-examples-no-width() {
+        @!code-examples>>.format-no-width()
+    }
+
+    method format-briefs($approx-text-width) {
+        @!briefs>>.format($approx-text-width)
+    }
+
+    method format-notes($approx-text-width) {
+        @!notes>>.format($approx-text-width)
+    }
+
+    method format-warnings($approx-text-width) {
+        @!warnings>>.format($approx-text-width)
+    }
+
+    method format-text(@lines) {
+        qq:to/END/;
+        -----------
+        {@lines.join("\n----------\n")}
+        END
+    }
+
+    method formatted(:$approx-text-width) {
+
+        my $header  = format-textwidth(self.header-line, $approx-text-width);
+
+        my @notes         = self.format-notes($approx-text-width);
+        my @warnings      = self.format-warnings($approx-text-width);
+        my @params        = self.format-params($approx-text-width);
+        my @returns       = self.format-returns($approx-text-width);
+        my @code-examples = self.format-code-examples-no-width();
+        my @briefs        = self.format-briefs($approx-text-width);
+
+        my $params-text        = self.format-text(@params);
+        my $notes-text         = self.format-text(@notes);
+        my $warnings-text      = self.format-text(@warnings);
+        my $code-examples-text = self.format-text(@code-examples);
+        my $returns-text       = self.format-text(@returns);
+        my $briefs-text        = self.format-text(@briefs);
+
+        my $result  = qq:to/END/.chomp.trim;
+        $header
+
+        {@briefs.elems        ?? $briefs-text        !! ""}
+        {@notes.elems         ?? $notes-text         !! ""}
+        {@params.elems        ?? $params-text        !! ""}
+        {@warnings.elems      ?? $warnings-text      !! ""}
+        {@code-examples.elems ?? $code-examples-text !! ""}
+        {@returns.elems       ?? $returns-text       !! ""}
+        END
+
+        wrap-comment(remove-double-newlines($result))
+    }
+}
+
+sub remove-double-newlines($text is rw) {
+    $text ~~ s:g/\n\n\n/\n\n/;
+
+    #why do we do this several times?
+    $text ~~ s:g/\n\n\n/\n\n/;
+    $text ~~ s:g/\n\n\n/\n\n/;
+
+    $text
+}
+
+sub wrap-comment($text) {
+
+    my @builder;
+
+    @builder.push: "/**";
+
+    my @lines = $text.split("\n");
+
+    for @lines -> $line {
+        @builder.push: "  | $line";
+    }
+
+    @builder.push: "  |";
+    @builder.push: "  */";
+    @builder.join("\n")
+}
+
+sub MAIN(:$indent = False) {
+
+    my $in    = $*IN.slurp.chomp.trim;
+    my $text  = remove-comment-tokens($in);
+
+    my $match = 
+    ArmnnComment::Grammar.parse($text)<armnn-comment>;
+
+    my $res = ParseData.new(
+        armnn-comment => $match
+    ).formatted(approx-text-width => 30);
+
+    if $indent {
+        say $res.indent(4);
+    } else {
+        say $res;
+    }
+}
