@@ -101,6 +101,10 @@ our class SimpleIfdef::Actions {
         make $/<identifier>.made;
     }
 
+    method ifdef-term:sym<negated-term>($/) {
+        make "not({$/<ifdef-term>.made})"
+    }
+
     method ifdef-infix:sym<&&>($/)  { make Operator.new(~$<sym>, 1) }
     method ifdef-infix:sym<||>($/)  { make Operator.new(~$<sym>, 2) }
 

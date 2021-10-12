@@ -298,7 +298,7 @@ does FunctionHeader {
         [ '=' <default-value=.type> ]?
     }
 
-    rule default-value {
+    rule default-value-atom {
         | <.constructor-expression>
         | <.identifier> 
         | <.numeric> 
@@ -309,6 +309,20 @@ does FunctionHeader {
         | <.quoted-string>
         | <identifier-cast-as-uarg>
         | '{}'
+
+    }
+
+    rule maybe-braced-default-value-atom-list {
+        || '{' [<.default-value-atom>+ %% ","] '}'
+        || <.default-value-atom>+ %% ","
+    }
+
+    rule braced-default-value {
+        '{' <default-value> '}'
+    }
+
+    rule default-value {
+        <.maybe-braced-default-value-atom-list>
     }
 
     token identifier-cast-as-uarg {
@@ -472,7 +486,7 @@ does FunctionHeader {
             <array-specifier>?
             [ 
                 | '=' <default-value> 
-                | '{' <default-value> '}'
+                | <braced-default-value>
             ]? 
         ]
     }
@@ -491,7 +505,7 @@ does FunctionHeader {
 
     rule function-ptr-type {
         <return-type> '(' '*' <name> ')'
-        '(' <maybe-unnamed-args>  ')'
+        <parenthesized-args>
     }
 
     rule struct-member-declaration {

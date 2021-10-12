@@ -33,7 +33,7 @@ our sub get-hook($hookname) {
         op-mul-eq-function-header             => { use op_mul_eq;          &translate-op-mul-eq },
         op-negate-function-header             => { use op_negate;          &translate-op-negate },
         op-sub-function-header                => { use op_sub;             &translate-op-sub },
-        op-sub-eq-function-header             => { use op_sub_eq;          &translate-op-sub-eq },
+        op-sub-eq-function-header             => { use op_sub;             &translate-op-sub-eq },
         freestanding-template-function-header => { use template;           &translate-freestanding-template-function },
         op-ostream-function-header            => { use ostream;            &translate-op-ostream },
         op-convert-function-header            => { use op_convert;         &translate-op-convert },

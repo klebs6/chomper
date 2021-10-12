@@ -276,6 +276,11 @@ our class ParenthesizedArgs {
         my $count  = 0;
         my $unnamed-prefix = "_";
 
+        #is this a hack?
+        if not @!maybe-unnamed-args[0] {
+            return [];
+        }
+
         sub unnamed($arg) {
 
             my $rust-arg-name = "{$unnamed-prefix}{$count}";
@@ -341,11 +346,19 @@ our sub get-rust-args-from-function-like(Bool $void-body, @args) {
     ($arg-count, $rust-args)
 }
 
+our sub get-rust-args-from-parenthesized(Bool $void-body, ParenthesizedArgs $args) {
+    if $void-body or $args.num-args eq 0 {
+        (0, "")
+    } else {
+        ($args.num-args, $args.get-rust-args())
+    }
+}
+
 our class FunctionPtrTypeInfo does TypeInfo {
 
     has Bool $.mutable       is required;
     has $.return-type        is required;
-    has $.maybe-unnamed-args is required;
+    has ParenthesizedArgs $.parenthesized-args is required;
 
     method get-return-type {
         get-function-type-return-type($!return-type)
@@ -353,11 +366,8 @@ our class FunctionPtrTypeInfo does TypeInfo {
 
     method get-rust-args {
 
-        my $void-body = $!maybe-unnamed-args<void>:exists;
-        my @args = $!maybe-unnamed-args<maybe-unnamed-arg>.List;
-
-        get-rust-args-from-function-like($void-body, @args)
-
+        my $void-body = $!parenthesized-args<void>:exists;
+        get-rust-args-from-parenthesized($void-body, $!parenthesized-args)
     }
 
     method vectorized-rtype {
@@ -370,7 +380,7 @@ our class FunctionTypeInfo does TypeInfo {
     #these are match objects
     has Bool $.mutable             is required;
     has $.std-function-return-type is required;
-    has $.parenthesized-args       is required;
+    has ParenthesizedArgs $.parenthesized-args       is required;
 
     method get-return-type {
         if $!std-function-return-type {
@@ -383,8 +393,7 @@ our class FunctionTypeInfo does TypeInfo {
 
     method get-rust-args {
         my $void-body = $!parenthesized-args<void>:exists;
-        my @args = $!parenthesized-args<maybe-unnamed-args><maybe-unnamed-arg>.List;
-        get-rust-args-from-function-like($void-body, @args)
+        get-rust-args-from-parenthesized($void-body, $!parenthesized-args)
     }
 
     method vectorized-rtype {
@@ -393,11 +402,18 @@ our class FunctionTypeInfo does TypeInfo {
 }
 
 our sub format-function-type-result($rust-args, Int $arg-count, $rust-return-type) {
+
+    my $wm = get-watermark-from-rargs-list($rust-args.List);
+
+    my $indented = indent-rust-named-type-list($rust-args.List).trim;
+
     if $arg-count > 2 {
-        "fn($rust-args
+        "fn(
+        $indented
 ) -> $rust-return-type"
     } else {
-        "fn($rust-args) -> $rust-return-type"
+        my $joined-args = $rust-args.List.join(", ");
+        "fn($joined-args) -> $rust-return-type"
     }
 }
 
@@ -496,7 +512,9 @@ our sub populate-typeinfo($type) {
         return FunctionTypeInfo.new(
             mutable                  => $mutable,
             std-function-return-type => $func<std-function-return-type><return-type>,
-            parenthesized-args       => $func<parenthesized-args>,
+            parenthesized-args       => ParenthesizedArgs.new(
+                parenthesized-args => $func<parenthesized-args>
+            ),
         );
     }
 
@@ -507,7 +525,9 @@ our sub populate-typeinfo($type) {
         return FunctionPtrTypeInfo.new(
             mutable            => $mutable,
             return-type        => $func<return-type>,
-            maybe-unnamed-args => $func<maybe-unnamed-args>,
+            parenthesized-args => ParenthesizedArgs.new(
+                parenthesized-args => $func<parenthesized-args>
+            ),
         );
     }
 
@@ -521,7 +541,9 @@ our sub populate-typeinfo($type) {
         return FunctionPtrTypeInfo.new(
             mutable            => $mutable,
             return-type        => $func<return-type>,
-            maybe-unnamed-args => $func<maybe-unnamed-args>,
+            parenthesized-args => ParenthesizedArgs.new(
+                parenthesized-args => $func<parenthesized-args>
+            ),
         );
     }
 
@@ -700,6 +722,7 @@ our sub get-rust-std-function-arg($arg, $compute_const = True ) {
 our sub get-rust-arg($arg, $compute_const = True ) {
 
     if not $arg {
+        say Backtrace.new.Str;
         say "get-rust-arg called with invalid arg";
     }
 

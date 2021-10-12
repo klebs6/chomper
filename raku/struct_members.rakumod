@@ -11,17 +11,23 @@ use line-comment-to-block-comment;
 
 our class RustStructFnMember {
 
-    has                $.idx         is required;
-    has RustReturnType $.return-type is required;
-    has                $.name        is required;
-    has RustArg        @.maybe-unnamed-args;
+    has $.idx  is required;
+    has $.name is required;
+    has $.type is required;
 
     method gist(:$column2-start-index = Nil) {
 
         indent-column2(
+            "$!name: $!type,\n",
+            $column2-start-index
+        )
+
+=begin comment
+        indent-column2(
             "$!name: fn({@!maybe-unnamed-args>>.gist.join(', ')}) -> {$!return-type.gist},",
             $column2-start-index
         )
+=end comment
     }
 
     method get-as-name-type {
@@ -29,15 +35,12 @@ our class RustStructFnMember {
     }
 
     submethod BUILD(:$idx, :$function-ptr-type) {
-
-        $!idx = $idx;
-
-        $!return-type = RustReturnType.new(
-            match => $function-ptr-type<return-type>
-        );
-
+        $!type = populate-typeinfo($function-ptr-type).vectorized-rtype;
+        $!idx  = $idx;
         $!name = snake-case($function-ptr-type<name>.Str);
+        return;
 
+=begin comment
         my $unnamed-idx = 0;
 
         for $function-ptr-type<maybe-unnamed-args><maybe-unnamed-arg>.List {
@@ -59,21 +62,30 @@ our class RustStructFnMember {
 
             }
         }
+=end comment
     }
 }
 
 our class RustStructMember {
 
-    has $.name is required;
-    has $.idx is required;
-    has $.type is required;
+    has $.name        is required;
+    has $.idx         is required;
+    has $.type        is required;
     has $.default;
     has @.comments;
     has $.block-comment;
 
+    #this is janky. we shouldn't need this
+    has Bool $.braced is required;
+
     method get-maybe-default-tag {
         if $!default {
-            " // default = $!default"
+            if $!braced {
+                " // default = \{ $!default \}"
+            } else {
+                " // default = $!default"
+
+            }
         } else {
             ""
         }
@@ -141,8 +153,19 @@ our class RustStructMembers {
     }
 }
 
-our sub get-default($submatch) {
-    $submatch<default-value>:exists ?? $submatch<default-value>.Str !! "";
+our sub default-value-is-braced($submatch) {
+    $submatch<braced-default-value>:exists
+}
+
+our sub get-default-value($submatch) {
+
+    if $submatch<braced-default-value>:exists {
+        $submatch<braced-default-value><default-value>.Str
+    } elsif $submatch<default-value>:exists {
+        $submatch<default-value>.Str
+    } else {
+        ""
+    }
 }
 
 our sub translate-struct-member-declarations( $submatch, $body, $rclass) 
@@ -177,13 +200,16 @@ our sub translate-struct-member-declarations( $submatch, $body, $rclass)
             for @names {
 
                 my $name    = $_<name>;
-                my $default = $_<default-value>;
+                my $default = get-default-value($_);
+                my Bool $braced = default-value-is-braced($_);
+
 
                 my ($rname, $rtype) = get-rust-arg-name-type($name, $info, $aux);
 
                 $writer.members.push: RustStructMember.new(
                     name     => snake-case($rname.subst(/_$/, "")), #trim trailing _
                     type     => $rtype,
+                    :$braced,
                     :$block-comment,
                     :@comments,
                     :$default,

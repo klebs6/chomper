@@ -27,6 +27,10 @@ our role SimpleIfdef {
         '(' ~ ')' <ifdef-expression>
     }
 
+    rule ifdef-term:sym<negated-term> {
+        '!' <ifdef-term>
+    }
+
     rule simple-ifdef {
         [<ifdef> | <ifndef>] <ifdef-expression>
     }

@@ -4895,3 +4895,13 @@ signature_B_PS signature_b_ps
 shared_mutex SharedMutex
 BOOL bool
 LONGLONG u64
+function_ Function
+steady_clock_duration SteadyClockDuration
+steady_clock SteadyClock
+sockaddr_in6 SockAddrIn6
+sockaddr_in6 libc::sockaddr_in6
+curl_slist CurlSlist
+curl_version_info_data CurlVersionInfoData
+curl_version_info CurlVersionInfo
+Boolean bool
+Cmn_Bool bool

@@ -1,98 +1,107 @@
 use util;
 use grammar;
+use comments;
+use type-info;
 
-our class OperatorCompare {
+our role OperatorCompare does CanGetDocComments {
 
-    has @.comments;
+    has ParenthesizedArgs $.args;
+    has $.namespace;
+    has $.body;
     has Bool $.inline;
-    has      $.op0,
-    has      $.op1,
+    has Bool $.op-eq;
 
-    submethod BUILD(Match :$submatch, Str :$user-class) {
+    submethod BUILD(Match :$submatch, Str :$user-class, Str :$body) {
 
-        @!comments = 
-        get-rcomments-list($submatch);
+        self.init-can-get-doc-comments(:$submatch);
+        $!inline        = get-rinline-b($submatch);
 
-        $!inline   = 
-        get-rinline-b($submatch);
+        $!args          = ParenthesizedArgs.new(
+            parenthesized-args => $submatch<parenthesized-args>,
+        );
 
-        $!op0      = $user-class 
+        $!namespace = ($user-class and $user-class !~~ "X")  
         ?? $user-class 
-        !! get-roperand($submatch,0);
+        !! ~$submatch<namespace><identifier>;
 
-        $!op1 = $user-class 
-        ?? get-roperand($submatch,0) 
-        !! get-roperand($submatch,1);
-
-        $!op1 = get-naked($!op1);
+        $!body   = $body;
     }
 
     method maybe-inline {
         $!inline ?? "#[inline] " !! ""
     }
 
-    method format-comment {
-        format-rust-comments(@!comments)
+    method get-rhs {
+        get-naked(
+            $!args.type-for-arg-at-index(0)
+        )
     }
+}
 
-    method translate-op-ord($body) {
+our class OperatorEq does OperatorCompare {
+
+    method gist {
+
+        my  $rhs = self.get-rhs();
 
         qq:to/END/;
-        impl Ord<{$!op1}> for $!op0 \{
-            {self.format-comment}
-            {self.maybe-inline}fn cmp(&self, other: &$!op1) -> Ordering \{
+        impl PartialEq<{$rhs}> for $!namespace \{
+            {self.get-doc-comments}
+            {self.maybe-inline}fn eq(&self, other: &$rhs) -> bool \{
                 todo!();
                 /*
-                {$body.trim.chomp.indent(4)}
+                {$!body.trim.chomp.indent(4)}
                 */
             \}
         \}
 
-        impl PartialOrd<{$!op1}> for $!op0 \{
-            {self.maybe-inline}fn partial_cmp(&self, other: &$!op1) -> Option<Ordering> \{
-                Some(self.cmp(other))
-            \}
-        \}
-        END
-    }
-
-    method translate-partial-eq($body) {
-
-        qq:to/END/;
-        impl PartialEq<{$!op1}> for $!op0 \{
-            {self.format-comment}
-            {self.maybe-inline}fn eq(&self, other: &$!op1) -> bool \{
-                todo!();
-                /*
-                {$body.trim.chomp.indent(4)}
-                */
-            \}
-        \}
-
-        {if $!op0 ~~ $!op1 {
-            "impl Eq for $!op0 \{\}"
+        {if $!namespace ~~ $rhs {
+            "impl Eq for $!namespace \{\}"
         }else {
             ""
         }}
         END
     }
+}
 
-    our sub mock {
-        OperatorCompare.new(
-            comments => ('//here is a comment'), 
-            inline   => True,
-            op0      => 'f64',
-            op1      => 'f32',
-        )
+our class OperatorOrd does OperatorCompare {
+
+    method gist {
+
+        my  $rhs = self.get-rhs();
+
+        qq:to/END/;
+        impl Ord<{$rhs}> for $!namespace \{
+            {self.get-doc-comments}
+            {self.maybe-inline}fn cmp(&self, other: &$rhs) -> Ordering \{
+                todo!();
+                /*
+                {$!body.trim.chomp.indent(4)}
+                */
+            \}
+        \}
+
+        impl PartialOrd<{$rhs}> for $!namespace \{
+            {self.maybe-inline}fn partial_cmp(&self, other: &$rhs) -> Option<Ordering> \{
+                Some(self.cmp(other))
+            \}
+        \}
+        END
     }
 }
 
 our sub translate-op-eq($submatch, $body, $rclass) {
-    my $parsed = OperatorCompare.new(:$submatch, user-class => $rclass);
-    $parsed.translate-partial-eq($body)
+    OperatorEq.new(
+        :$submatch, 
+        user-class => $rclass,
+        :$body
+    ).gist
 }
 
 our sub translate-op-lt($submatch, $body, $rclass) {
-    my $parsed = OperatorCompare.new(:$submatch, user-class => $rclass);
-    $parsed.translate-op-ord($body)
+    OperatorOrd.new(
+        :$submatch, 
+        user-class => $rclass,
+        :$body
+    ).gist
 }
