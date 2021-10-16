@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 
 our sub translate-op-mul-eq($submatch, $body, $rclass) {
 
@@ -16,10 +17,7 @@ our sub translate-op-mul-eq($submatch, $body, $rclass) {
     impl MulAssign<{$roperand}> for $rtype \{
         $rcomment
         {$rinline}fn mul_assign(&mut self, {$rfunction-args-list}) \{
-            todo!();
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
+            {wrap-body-todo($body)}
         \}
     \}
     END

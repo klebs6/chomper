@@ -1,4 +1,5 @@
 use util;
+use doxy-comment;
 use reformat-block-comment;
 use block-comment;
 use typemap;
@@ -21,13 +22,6 @@ our class RustStructFnMember {
             "$!name: $!type,\n",
             $column2-start-index
         )
-
-=begin comment
-        indent-column2(
-            "$!name: fn({@!maybe-unnamed-args>>.gist.join(', ')}) -> {$!return-type.gist},",
-            $column2-start-index
-        )
-=end comment
     }
 
     method get-as-name-type {
@@ -38,31 +32,6 @@ our class RustStructFnMember {
         $!type = populate-typeinfo($function-ptr-type).vectorized-rtype;
         $!idx  = $idx;
         $!name = snake-case($function-ptr-type<name>.Str);
-        return;
-
-=begin comment
-        my $unnamed-idx = 0;
-
-        for $function-ptr-type<maybe-unnamed-args><maybe-unnamed-arg>.List {
-
-            if $_<unnamed-arg>:exists {
-
-                @!maybe-unnamed-args.push: RustUnnamedArg.new(
-                    idx         => $unnamed-idx,
-                    unnamed-arg => $_<unnamed-arg>
-                );
-
-                $unnamed-idx += 1;
-
-            } elsif $_<arg>:exists {
-
-                @!maybe-unnamed-args.push: RustNamedArg.new(
-                    named-arg => $_<arg>
-                );
-
-            }
-        }
-=end comment
     }
 }
 
@@ -94,7 +63,8 @@ our class RustStructMember {
     method get-doc-comments {
 
         if $!block-comment {
-            return reformat-block-comment($!block-comment);
+            #return reformat-block-comment($!block-comment);
+            return parse-doxy-comment($!block-comment.Str);
         }
 
         if @!comments.elems > 0 {
@@ -195,7 +165,6 @@ our sub translate-struct-member-declarations( $submatch, $body, $rclass)
             my @names    = $d<struct-member-declaration-name>.List;
 
             my TypeInfo $info = populate-typeinfo($type);
-            my TypeAux  $aux  = get-type-aux($d);
 
             for @names {
 
@@ -203,6 +172,7 @@ our sub translate-struct-member-declarations( $submatch, $body, $rclass)
                 my $default = get-default-value($_);
                 my Bool $braced = default-value-is-braced($_);
 
+                my TypeAux  $aux  = get-type-aux($_);
 
                 my ($rname, $rtype) = get-rust-arg-name-type($name, $info, $aux);
 

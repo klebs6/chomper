@@ -1,7 +1,9 @@
 use util;
 use typemap;
+use snake-case;
 use type-info;
 use textwidth;
+use align-column;
 
 sub switch-brackets($tree is rw, $nextL = "[", $nextR = "]") {
     $tree ~~ s:g/\{/$nextL/;
@@ -239,8 +241,10 @@ our sub translate-static-const-rhs(Match $static_const) {
             match => $rhs<braced-array-literal>
         ).gist
 
+    } elsif $rhs<braced-default-value>:exists {
+        $rhs<braced-default-value><default-value>.Str
     } else {
-        $rhs.Str
+        $rhs<default-value>.Str
     }
 }
 
@@ -252,8 +256,8 @@ our sub translate-static-const($submatch, $body, $rclass) {
 
         my Bool $has-array-specifier = $_<array-specifier>:exists;
 
-        my $type     = $_<type>.Str;
-        my $name     = $_<name>.Str;
+        my $type     = $_<type>;
+        my $name     = snake-case($_<name>.Str);
         my $rhs      = translate-static-const-rhs($_);
         my $comment  = $_<line-comment>:exists ?? "// {$_<line-comment><line-comment-text>.Str}" !! "";
 
@@ -268,5 +272,8 @@ our sub translate-static-const($submatch, $body, $rclass) {
         END
         @items.push: $rust;
     }
-    @items.join("\n\n").chomp.trim
+
+    my $result = @items.join("\n").chomp.trim;
+
+    align-columns($result, 3)
 }

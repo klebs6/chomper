@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 
 our sub translate-op-shift($submatch, $body, $rclass, :$left) {
 
@@ -19,10 +20,7 @@ our sub translate-op-shift($submatch, $body, $rclass, :$left) {
 
         $rcomment
         {$rinline}fn {$sigil.lc}(self, rhs: $roperand1) -> Self::Output \{
-            todo!();
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
+            {wrap-body-todo($body)}
         \}
     \}
     END
@@ -45,10 +43,7 @@ our sub translate-op-shift-assign($submatch, $body, $rclass, :$left) {
     impl {$sigil}Assign<{$roperand}> for $rtype \{
         $rcomment
         {$rinline}fn {$sigil.lc}_assign(&mut self, {$rfunction-args-list}) \{
-            todo!();
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
+            {wrap-body-todo($body)}
         \}
     \}
     END

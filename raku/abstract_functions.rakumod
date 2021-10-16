@@ -2,10 +2,12 @@ use util;
 use snake-case;
 use typemap;
 use type-info;
+use doxy-comment;
 
 our class AbstractFunction {
 
     has @.comments;
+    has $.block-comment;
     has Bool $.const is required;
     has $.rt;
     has $.name is required;
@@ -16,6 +18,11 @@ our class AbstractFunction {
     }
 
     method get-doc-comments {
+
+        if $!block-comment {
+            #return reformat-block-comment($!block-comment);
+            return parse-doxy-comment($!block-comment.Str);
+        }
 
         if @!comments.elems > 0 {
             my @doc-comments = do for @!comments {
@@ -58,12 +65,15 @@ our sub translate-abstract-function-declarations(
 
     for $submatch<abstract-function-declaration>.List {
 
+        my $block-comment = $_<block-comment>;
+
         $writer.declarations.push: AbstractFunction.new(
             comments => get-rcomments-list($_).split("\n")>>.chomp,
             const    => $_<const>:exists,
             name     => snake-case($_<name>.Str),
             args     => get-rfunction-args-list($_),
             rt       => get-rust-return-type($_),
+            :$block-comment,
         );
     }
 

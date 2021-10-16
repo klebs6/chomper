@@ -1,7 +1,7 @@
 #!/usr/bin/env raku
 use v6;
 my $in = $*IN.slurp.chomp;
-say qq:to/END/;
+say qq:to/END/.chomp;
 #[no_copy]
 $in
 END

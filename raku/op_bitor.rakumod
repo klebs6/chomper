@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 
 our sub translate-op-bitor($submatch, $body, $rclass) {
 
@@ -17,10 +18,7 @@ our sub translate-op-bitor($submatch, $body, $rclass) {
 
         $rcomment
         {$rinline}fn bitor(self, other: $roperand1) -> Self::Output \{
-            todo!();
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
+            {wrap-body-todo($body)}
         \}
     \}
     END
@@ -41,10 +39,7 @@ our sub translate-op-bitor-assign($submatch, $body, $rclass) {
     impl BitOrAssign<{$roperand}> for $rtype \{
         $rcomment
         {$rinline}fn bitor_assign(&mut self, {$rfunction-args-list}) \{
-            todo!();
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
+            {wrap-body-todo($body)}
         \}
     \}
     END

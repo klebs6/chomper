@@ -370,7 +370,16 @@ our sub get-rcomments-list($template-header) {
 }
 
 our sub get-rinline($template-header) {
-    $template-header<inline>.elems > 0 ??  '#[inline] ' !! ''
+    my $inline = $template-header<inline>;
+    if $inline.elems > 0 {
+        if $inline[0]<inline-force>:exists {
+            "#[inline(always)] "
+        } else {
+            "#[inline] "
+        }
+    } else {
+        ''
+    }
 }
 
 our sub get-rinline-b(Match $m) {
@@ -398,6 +407,22 @@ our sub get-rfunction-name($template-header, $default-prefix = "") {
 
     if $template-header<function-name><function-name-operator-invoke>:exists {
         return "invoke";
+    }
+
+    if $template-header<function-name><function-name-operator-prefix-increment>:exists {
+        return "prefix_increment";
+    }
+
+    if $template-header<function-name><function-name-operator-prefix-decrement>:exists {
+        return "prefix_decrement";
+    }
+
+    if $template-header<function-name><function-name-operator-postfix-increment>:exists {
+        return "postfix_increment";
+    }
+
+    if $template-header<function-name><function-name-operator-postfix-decrement>:exists {
+        return "postfix_decrement";
     }
 
     if $template-header<function-name><function-name-operator-assign>:exists {

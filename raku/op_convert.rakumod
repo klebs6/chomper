@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 
 our sub translate-op-convert($submatch, $body, $rclass) {
 
@@ -14,10 +15,7 @@ our sub translate-op-convert($submatch, $body, $rclass) {
 
         $rcomment
         {$rinline}fn from(other: $rtype) -> Self \{
-            todo!();
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
+            {wrap-body-todo($body)}
         \}
     \}
     END

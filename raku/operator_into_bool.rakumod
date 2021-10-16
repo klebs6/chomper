@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 
 our sub translate-operator-into-bool($submatch, $body, $rclass) {
 
@@ -16,10 +17,7 @@ our sub translate-operator-into-bool($submatch, $body, $rclass) {
 
         $rcomment
         {$rinline}fn into(self) -> $rtype \{
-            todo!();
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
+            {wrap-body-todo($body)}
         \}
     \}
     END

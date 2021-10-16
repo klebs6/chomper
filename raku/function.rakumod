@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 
 our sub translate-function($submatch, $body, $rclass) {
 
@@ -22,10 +23,7 @@ our sub translate-function($submatch, $body, $rclass) {
             $rcomment
             {$rinline}pub fn {$rfunction-name}({$rmaybe-self-args}{$rfunction-args}) $return-string \{
                 {$roptional-initializers}
-                todo!();
-                /*
-                {$body.trim.chomp.indent(4)}
-                */
+                {wrap-body-todo($body)}
             \}
         \}
         END
@@ -35,12 +33,8 @@ our sub translate-function($submatch, $body, $rclass) {
         $rcomment
         {$rinline}pub fn {$rfunction-name}({$rfunction-args}) $return-string \{
             {$roptional-initializers}
-            todo!();
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
+            {wrap-body-todo($body)}
         \}
         END
     }
-
 }

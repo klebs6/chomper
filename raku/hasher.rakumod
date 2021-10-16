@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 
 our sub translate-hasher($submatch, $body, $rclass) {
 
@@ -13,10 +14,7 @@ our sub translate-hasher($submatch, $body, $rclass) {
     $rcomment
     impl Hash for $roperand0 \{
         {$rinline}fn hash<H: Hasher>(&self, state: &mut H) \{
-            /*
-            todo!();
-            {$body.trim.chomp.indent(4)}
-            */
+            {wrap-body-todo($body)}
         \}
     \}
     END

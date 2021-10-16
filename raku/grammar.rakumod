@@ -19,8 +19,9 @@ does FunctionHeader {
     token value  { <.identifier> | <.numeric> }
 
     rule static_const_rhs  { 
-        | <braced-array-literal>
-        | <default-value>
+        | '=' <braced-array-literal>
+        | '=' <default-value>
+        | <braced-default-value>
     }
 
     rule braced-array-literal {
@@ -61,8 +62,9 @@ does FunctionHeader {
     rule static_const {
         <static> 
         [ <const> | <constexpr> ] 
-        <type> <name> <array-specifier>? '=' 
-        <static_const_rhs> ';' <line-comment>?
+        <type> <name> <array-specifier>? 
+        <static_const_rhs>
+        ';' <line-comment>?
     }
 
     rule constexpr-global-block {
@@ -273,7 +275,10 @@ does FunctionHeader {
             <const2>? 
             [<ref> | [<ptr>+ <ptr-ref>?] ]? 
             <const3>? 
-            <name> 
+            [
+                | <name> 
+                | '/*' <name>  '*/'
+            ]
             <array-specifier>?
             [ '=' <default-value> ]?
         ]
@@ -299,26 +304,25 @@ does FunctionHeader {
     }
 
     rule default-value-atom {
-        | <.constructor-expression>
-        | <.identifier> 
-        | <.numeric> 
-        | <.expression> 
-        | <.hexadecimal> 
-        | <.extended-identifier> 
-        | <.namespaced-extended-identifier> 
-        | <.quoted-string>
-        | <identifier-cast-as-uarg>
-        | '{}'
-
+        || <.expression> 
+        || <.constructor-expression>
+        || <.identifier> 
+        || <.numeric> 
+        || <.hexadecimal> 
+        || <.extended-identifier> 
+        || <.namespaced-extended-identifier> 
+        || <.quoted-string>
+        || <identifier-cast-as-uarg>
+        || '{}'
     }
 
     rule maybe-braced-default-value-atom-list {
+        || <.default-value-atom>
         || '{' [<.default-value-atom>+ %% ","] '}'
-        || <.default-value-atom>+ %% ","
     }
 
     rule braced-default-value {
-        '{' <default-value> '}'
+        '{' [<default-value=default-value-atom>+ %% ","] '}'
     }
 
     rule default-value {
@@ -329,13 +333,23 @@ does FunctionHeader {
         '(' <unnamed-arg> ')' <identifier>
     }
 
+    token opening-quote {
+        | \"
+        | "'"
+    }
+
+    token closing-quote {
+        | \"
+        | "'"
+    }
+
     token quoted-string {
-        \"  # opening quote
+        <.opening-quote>
         [
-            <-[ " \\ ]>  # regular character
+            <-[ ' " \\ ]>  # regular character
             | \\ .         # escape sequence
         ]*
-        \" # closing quote
+        <.closing-quote>
     }
 
     regex args {
@@ -368,8 +382,12 @@ does FunctionHeader {
 
     token function-name {
         | <namespace>? <priv>? <identifier>
-        | <function-name-operator-invoke>
-        | <function-name-operator-assign>
+        | <namespace>? <function-name-operator-invoke>
+        | <namespace>? <function-name-operator-assign>
+        | <namespace>? <function-name-operator-prefix-increment>
+        | <namespace>? <function-name-operator-prefix-decrement>
+        | <namespace>? <function-name-operator-postfix-increment>
+        | <namespace>? <function-name-operator-postfix-decrement>
     }
 
     token function-name-operator-invoke {
@@ -378,6 +396,19 @@ does FunctionHeader {
 
     token function-name-operator-assign {
         'operator' '='
+    }
+
+    rule function-name-operator-prefix-increment {
+        'operator' '++'
+    }
+    rule function-name-operator-postfix-increment {
+        'operator' '++' <?before '(int)'>
+    }
+    rule function-name-operator-prefix-decrement {
+        'operator' '--'
+    }
+    rule function-name-operator-postfix-decrement {
+        'operator' '--' <?before '(int)'>
     }
 
     rule trailing-elipsis {
@@ -468,7 +499,7 @@ does FunctionHeader {
 
     rule abstract-function-declaration {
         :sigspace
-        <line-comment>*
+        [<line-comment> | <block-comment>]*
         <virtual> <return-type> <name> 
         <parenthesized-args>
         <const>? 

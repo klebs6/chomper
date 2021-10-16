@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 use typemap;
 use snake-case;
 
@@ -110,11 +111,7 @@ our sub translate-default-ctor($submatch, $body, $user_rclass) {
     impl Default for $rclass \{
         $rcomment
         fn default() -> Self \{
-            todo!();
-            /*
-    {$field-init-stmt}
-            {$body.trim.chop.indent(4)}
-            */
+            {wrap-body-todo($body, preamble => $field-init-stmt)}
         \}
     \}
     END
@@ -165,12 +162,8 @@ our sub translate-ctor($submatch, $body, $user_rclass) {
         impl $rclass \{
             $rcomment
             pub fn new<{$parsed.template-args.join(",")}>({$rfunction-args}) -> Self \{
-            {$optionals}
-                todo!();
-                /*
-        {$field-init-stmt}
-                {$body.trim.chomp.indent(4)}
-                */
+            {$optionals.trim.chomp.indent(4)}
+                {wrap-body-todo($body, preamble => $field-init-stmt)}
             \}
         \}
         END
@@ -181,12 +174,8 @@ our sub translate-ctor($submatch, $body, $user_rclass) {
         impl $rclass \{
             $rcomment
             pub fn new({$rfunction-args}) -> Self \{
-            {$optionals}
-                todo!();
-                /*
-        {$field-init-stmt}
-                {$body.trim.chomp.indent(4)}
-                */
+            {$optionals.trim.chomp.indent(4)}
+                {wrap-body-todo($body, preamble => $field-init-stmt)}
             \}
         \}
         END

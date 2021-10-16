@@ -4905,3 +4905,7 @@ curl_version_info_data CurlVersionInfoData
 curl_version_info CurlVersionInfo
 Boolean bool
 Cmn_Bool bool
+pointer_sized_int PointerSizedInt
+Float f32
+jboolean bool
+jfloat f32

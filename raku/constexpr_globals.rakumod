@@ -1,4 +1,5 @@
 use util;
+use snake-case;
 use typemap;
 use type-info;
 use comments;
@@ -38,7 +39,7 @@ our class ConstexprGlobalDef does GetDocComments {
         my $doc-comments = self.get-doc-comments(@!comments).chomp;
 
         $doc-comments ~
-        "pub const $.name: $.type = $.expr;"
+        "pub const {snake-case($.name)}: $.type = $.expr;"
     }
 }
 
@@ -46,7 +47,7 @@ our class ConstexprGlobals {
 
     has ConstexprGlobalDef @.globals is required;
 
-    submethod BUILD(:$submatch) {
+    submethod BUILD(Match:D :$submatch) {
 
         for $submatch<constexpr-global-item>.List {
 
@@ -85,7 +86,9 @@ our class ConstexprGlobals {
 
 our sub translate-constexpr-global-block($submatch, $body, $rclass) {
 
-    my $writer = ConstexprGlobals.new(globals => [ ]);
+    my $writer = ConstexprGlobals.new(
+        :$submatch
+    );
 
     $writer.gist
 }

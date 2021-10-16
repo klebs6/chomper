@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 
 our sub translate-op-index($submatch, $body, $rclass) {
 
@@ -20,10 +21,7 @@ our sub translate-op-index($submatch, $body, $rclass) {
             type Output = $rtype;
             $rcomment
             {$rinline}fn index(&self, {$rfunction-args-list}) -> &Self::Output \{
-                todo!();
-                /*
-                {$body.trim.chomp.indent(4)}
-                */
+                {wrap-body-todo($body)}
             \}
         \}
         END
@@ -32,10 +30,7 @@ our sub translate-op-index($submatch, $body, $rclass) {
         impl IndexMut<{$roperand1}> for $roperand0 \{
             $rcomment
             {$rinline}fn index_mut(&mut self, {$rfunction-args-list}) -> &mut Self::Output \{
-                todo!();
-                /*
-                {$body.trim.chomp.indent(4)}
-                */
+                {wrap-body-todo($body)}
             \}
         \}
         END

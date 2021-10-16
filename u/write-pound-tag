@@ -4,7 +4,7 @@ use v6;
 my $tag = @*ARGS[0];
 
 my $in = $*IN.slurp.chomp;
-say qq:to/END/;
+say qq:to/END/.chomp;
 #[$tag]
 $in
 END

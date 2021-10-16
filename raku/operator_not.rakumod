@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 
 sub rparse-operator-not($submatch) {
 
@@ -22,10 +23,7 @@ our sub translate-operator-not($submatch, $body, $rclass) {
 
         $rcomment
         {$rinline}fn not(self) -> Self::Output \{
-            todo!();
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
+            {wrap-body-todo($body)}
         \}
     \}
     END

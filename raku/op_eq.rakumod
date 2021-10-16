@@ -2,6 +2,7 @@ use util;
 use grammar;
 use comments;
 use type-info;
+use wrap-body-todo;
 
 our role OperatorCompare does CanGetDocComments {
 
@@ -48,10 +49,7 @@ our class OperatorEq does OperatorCompare {
         impl PartialEq<{$rhs}> for $!namespace \{
             {self.get-doc-comments}
             {self.maybe-inline}fn eq(&self, other: &$rhs) -> bool \{
-                todo!();
-                /*
-                {$!body.trim.chomp.indent(4)}
-                */
+                {wrap-body-todo($!body)}
             \}
         \}
 
@@ -74,10 +72,7 @@ our class OperatorOrd does OperatorCompare {
         impl Ord<{$rhs}> for $!namespace \{
             {self.get-doc-comments}
             {self.maybe-inline}fn cmp(&self, other: &$rhs) -> Ordering \{
-                todo!();
-                /*
-                {$!body.trim.chomp.indent(4)}
-                */
+                {wrap-body-todo($!body)}
             \}
         \}
 

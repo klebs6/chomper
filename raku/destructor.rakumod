@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 use typemap;
 
 our sub translate-destructor( $submatch, $body, $rclass) 
@@ -7,8 +8,7 @@ our sub translate-destructor( $submatch, $body, $rclass)
     qq:to/END/;
     impl Drop for $type \{
         fn drop(&mut self) \{
-            todo!();
-            /* {$body.indent(4)} */
+            {wrap-body-todo($body)}
         \}
     \}
     END

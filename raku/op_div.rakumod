@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 
 our sub translate-op-div($submatch, $body, $rclass) {
 
@@ -18,10 +19,7 @@ our sub translate-op-div($submatch, $body, $rclass) {
 
         $rcomment
         {$rinline}fn div(self, other: $roperand1) -> Self::Output \{
-            todo!();
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
+            {wrap-body-todo($body)}
         \}
     \}
     END

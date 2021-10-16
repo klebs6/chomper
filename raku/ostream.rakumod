@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 
 our sub translate-op-ostream(
     $submatch, 
@@ -14,10 +15,7 @@ our sub translate-op-ostream(
     impl fmt::Display for $rtype \{
         $rcomment
         fn fmt\(&self, f\: &mut fmt\:\:Formatter<'_>\) -> fmt\:\:Result \{
-            todo!\(\);
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
+            {wrap-body-todo($body)}
         \}
     \}
     END

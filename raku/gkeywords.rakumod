@@ -20,10 +20,16 @@ our role Keywords {
     token const2     { 'const' }
     token const3     { 'const' }
     token static     { 'static' }
-    token inline     { 
+    token inline-noforce {
         | 'inline' 
-        | 'forcedinline' 
         | 'ILINE'
+    }
+    token inline-force {
+        | 'forcedinline' 
+    }
+    token inline     { 
+        | <inline-noforce>
+        | <inline-force>
     }
     token explicit   { 'explicit' }
     token semicolon  { ';' }

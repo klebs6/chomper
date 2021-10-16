@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 
 sub rparse-operator-indirect($submatch) {
 
@@ -22,10 +23,7 @@ our sub translate-operator-indirect($submatch, $body, $rclass) {
 
         $rcomment
         {$rinline}fn deref(self) -> &Self::Target \{
-            todo!();
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
+            {wrap-body-todo($body)}
         \}
     \}
     END

@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 
 our sub translate-freestanding-template-function($submatch, $body, $rclass) {
 
@@ -24,11 +25,8 @@ our sub translate-freestanding-template-function($submatch, $body, $rclass) {
         impl $rclass \{
             $rcomment
             {$rinline}pub fn {$rfunction-name}<{$rtemplate-args}>({$maybe-self-args}{$rfunction-args}) $rreturn-string \{
-            {$optionals}
-                todo!();
-                /*
-                {$body.trim.chomp.indent(4)}
-                */
+            {$optionals.trim.chomp.indent(4)}
+                {wrap-body-todo($body)}
             \}
         \}
         END
@@ -38,11 +36,8 @@ our sub translate-freestanding-template-function($submatch, $body, $rclass) {
         qq:to/END/;
         $rcomment
         {$rinline}pub fn {$rfunction-name}<{$rtemplate-args}>({$rfunction-args}) $rreturn-string \{
-        {$optionals}
-            todo!();
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
+        {$optionals.trim.chomp.indent(4)}
+            {wrap-body-todo($body)}
         \}
         END
     }

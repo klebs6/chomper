@@ -1,4 +1,5 @@
 use util;
+use wrap-body-todo;
 
 our sub translate-op-negate($submatch, $body, $rclass) {
 
@@ -15,10 +16,7 @@ our sub translate-op-negate($submatch, $body, $rclass) {
 
         $rcomment
         {$rinline}fn neg(self) -> Self::Output \{
-            todo!();
-            /*
-            {$body.trim.chomp.indent(4)}
-            */
+            {wrap-body-todo($body)}
         \}
     \}
     END

@@ -1,0 +1,1 @@
+our class LineBreak { }

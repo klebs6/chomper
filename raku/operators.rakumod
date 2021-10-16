@@ -4,6 +4,7 @@ use util;
 use type-info;
 use comments;
 use line-comment-to-block-comment;
+use wrap-body-todo;
 
 our role Operator does CanGetDocComments {
 
@@ -11,8 +12,6 @@ our role Operator does CanGetDocComments {
     has $.trait  is required;
     has $.fn     is required;
 
-    has Str $.line-comment;
-    has Str $.block-comment;
     has Bool $.inline = False;
     has Str  $.out is required;
     has ParenthesizedArgs $.args is required;
@@ -27,8 +26,7 @@ our role Operator does CanGetDocComments {
         :$trait,
         :$fn) {
 
-        $!line-comment  = format-rust-comments(get-rcomments-list($submatch));
-        $!block-comment = ~$submatch<block-comment>;
+            self.init-can-get-doc-comments(:$submatch);
         $!inline        = so get-rinline($submatch);
         $!out           = get-rust-return-type($submatch, augment => False);
         $!args          = ParenthesizedArgs.new(
@@ -58,10 +56,7 @@ our role Operator does CanGetDocComments {
             {$assign ?? "" !! "type Output = $!out;"}
             {self.get-doc-comments}
             {$rinline}fn {$fn}($self, other: &$rhs) -> Self::Output \{
-                todo!();
-                /*
-                {$!body.trim.chomp.indent(4)}
-                */
+                {wrap-body-todo($!body)}
             \}
         \}
         END

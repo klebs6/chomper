@@ -144,11 +144,7 @@ sub extract-unordered-map($type) {
     )
 }
 
-sub extract-default($type) {
-
-    if not $type {
-        say Backtrace.new.Str;
-    }
+sub extract-default(Match:D $type) {
 
     $type.Str, |()
 }
@@ -490,6 +486,11 @@ our sub maybe-wrap-ref-cell($mutable, $result) {
 
 our sub populate-typeinfo($type) {
 
+    if not $type {
+        say Backtrace.new.Str;
+        die "populate-typeinfo called with invalid type";
+    }
+
     my $cpp-parent   = "";
     my @cpp-children = ();
 
@@ -582,7 +583,7 @@ our sub populate-typeinfo($type) {
     )
 }
 
-our sub get-rust-type($cpp-type) {
+our sub get-rust-type(Match:D $cpp-type) {
     populate-typeinfo($cpp-type).vectorized-rtype 
 }
 
