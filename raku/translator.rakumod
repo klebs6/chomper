@@ -1,3 +1,5 @@
+#use Grammar::Tracer;
+
 use grammar;
 
 our grammar Translator does ParserRules {

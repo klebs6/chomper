@@ -1,6 +1,10 @@
 #!/usr/bin/env raku
 use v6;
+
+#use Grammar::Tracer;
+
 use lib '/Users/kleb/bethesda/work/repo/translator/raku';
+
 use util;
 use typemap;
 use translator;

@@ -20,6 +20,25 @@ our class TypeAux {
     }
 }
 
+our sub merge-type-aux(TypeAux $a1, TypeAux $a2) {
+
+    #how should we do this? 
+    #
+    #this so far only happens in the case where we
+    #have multiple struct members on a given
+    #declaration line
+    #
+    #in this case, I use a1 as the *parent*
+
+    TypeAux.new:
+        const     => $a1.const    || $a2.const,
+        ref       => $a1.ref      || $a2.ref,
+        ptr-ref   => $a1.ptr-ref  || $a2.ptr-ref,
+        ptr       => $a1.ptr + $a2.ptr,
+        volatile  => $a1.volatile || $a2.volatile,
+        dim_stack => $a2.dim_stack
+}
+
 sub is-c10-optional($type)     { $type<c10-optional>:exists }
 sub is-list($type)             { $type<std-list>:exists }
 sub is-shared($type)           { $type<shared-ptr>:exists }
@@ -782,6 +801,8 @@ our sub get-dim-stack($arg) {
     @dim_stack
 }
 
+#this function has been modified
+#and needs to be checked
 our sub get-rust-array-arg(
         $const, 
         $ref, 
@@ -791,16 +812,50 @@ our sub get-rust-array-arg(
         $rtype, 
         @dim_stack) 
 {
-    my $arr-type = get-arr-type($rtype, @dim_stack);
+    #my $arr-type = get-arr-type($rtype, @dim_stack);
 
-    augment-rtype(
-        $arr-type, 
-        $const, 
-        $ref, 
-        $ptr-ref,
-        $ptr,
-        $volatile
-    )
+    my $builder   = $rtype;
+
+    my $augmented = False;
+
+    if $ptr {
+
+        $builder = augment-rtype(
+            $builder, 
+            $const, 
+            $ref, 
+            $ptr-ref,
+            $ptr,
+            $volatile
+        );
+        $augmented = True;
+    }
+
+    if @dim_stack[0] ~~ JustASlice {
+
+        $builder = "&\[{$builder}\]";
+
+    } else {
+
+        for @dim_stack {
+            $builder = "[{$builder}; {$_}]";
+        }
+    }
+
+    my $arr-type = $builder;
+
+    if not $augmented {
+        augment-rtype(
+            $arr-type, 
+            $const, 
+            $ref, 
+            $ptr-ref,
+            $ptr,
+            $volatile
+        )
+    } else {
+        $builder
+    }
 }
 
 our sub augmented-rtype-from-qualified-cpp-type($qualified-type) {
@@ -910,4 +965,3 @@ our sub get-arr-type($rtype, @dim_stack) {
 
     $builder
 }
-

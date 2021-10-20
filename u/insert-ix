@@ -1,0 +1,4 @@
+#!/usr/bin/env raku
+use v6;
+say "ix!();\n\n{$*IN.slurp}";
+

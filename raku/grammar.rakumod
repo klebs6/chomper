@@ -62,8 +62,12 @@ does FunctionHeader {
     rule static_const {
         <static> 
         [ <const> | <constexpr> ] 
-        <type> <name> <array-specifier>? 
-        <static_const_rhs>
+
+        #
+        <arg>
+        #<type> <name> <array-specifier>? 
+        #<static_const_rhs>
+
         ';' <line-comment>?
     }
 

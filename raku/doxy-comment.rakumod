@@ -101,6 +101,7 @@ our grammar DoxyComment::Grammar {
     token kw-return {
         | 'return'
         | 'returns'
+        | 'retval'
     }
 
     token kw-param {

@@ -166,13 +166,23 @@ our sub translate-struct-member-declarations( $submatch, $body, $rclass)
 
             my TypeInfo $info = populate-typeinfo($type);
 
+            #wow what a bogus c/c++ parse when we
+            #have multiple names in a declaration
+            #
+            #there might be a handful of structs
+            #with incorrect members because of
+            #this...
+            #
+            #perhaps i will need to flag them
+            my TypeAux  $paux  = get-type-aux($d);
+
             for @names {
 
                 my $name    = $_<name>;
                 my $default = get-default-value($_);
                 my Bool $braced = default-value-is-braced($_);
 
-                my TypeAux  $aux  = get-type-aux($_);
+                my TypeAux  $aux  = merge-type-aux($paux,get-type-aux($_));
 
                 my ($rname, $rtype) = get-rust-arg-name-type($name, $info, $aux);
 

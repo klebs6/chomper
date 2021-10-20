@@ -1,4 +1,5 @@
 use util;
+use snake-case;
 use typemap;
 use type-info;
 use indent-rust-named-type-list;
@@ -29,7 +30,7 @@ sub get-rust-macro-args($submatch) {
 
 our sub translate-pound-define($submatch is rw, $body, $rclass) {
 
-    my $rust-macro-name = $submatch<macro-sig><macro-name>.lc;
+    my $rust-macro-name = snake-case($submatch<macro-sig><macro-name>.Str);
     my $rust-macro-args = get-rust-macro-args($submatch);
     my $rust-macro-body = get-rust-macro-body($submatch);
 
