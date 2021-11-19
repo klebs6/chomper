@@ -1,17 +1,12 @@
 use util;
+use locations;
+use case;
 use typemap;
 use type-info;
 use snake-case;
+use hungarian;
 
 #use Grammar::Tracer;
-
-sub current-project-needs-strip-hungarian {
-    #only need to pull hungarian prefixes off
-    #cryengine structs
-    my $cry     = $*CWD.Str.split("/")[*-1] ~~ "cry-rs";
-    my $bitcoin = $*CWD.Str.split("/")[*-1] ~~ "bitcoin-rs";
-    $cry or $bitcoin
-}
 
 #config
 my Bool $strip-hungarian                      = current-project-needs-strip-hungarian();
@@ -21,46 +16,6 @@ my Bool $translate-base-type                  = True;
 
 #usually want this to be false
 my Bool $add-mod              = False;
-
-grammar HungarianStruct {
-
-    rule TOP {
-        <.ws> <hungarian-ident>
-    }
-
-    token hungarian-ident {
-        <hungarian-prefix> <camel-case-ident>
-    }
-
-   token hungarian-prefix {
-        | 'S'
-        | 'C'
-        | 'E'
-        | 'T'
-    }
-
-    token camel-case-ident {
-        <camel-case-segment>+
-    }
-
-    token camel-case-segment {
-        <[A..Z]> <[a..z]>*
-    }
-}
-
-our sub is-camel-case($type) {
-    my $camel-seg = regex { <[A..Z]> <[a..z]>* };
-    my $camel     = regex { $camel-seg+ };
-    $type ~~ $camel
-}
-
-our sub whitelist($type) {
-    spurt "/Users/kleb/bethesda/work/repo/translator/raku/whitelist.txt", "$type\n", :append;
-}
-
-our sub text-typemap($t1, $t2) {
-    spurt "/Users/kleb/bethesda/work/repo/translator/raku/text-typemap.txt", "$t1 $t2\n", :append;
-}
 
 our sub get-generic-type($submatch, :$write-default ) {
 
@@ -156,6 +111,4 @@ our sub translate-ctor-header( $submatch, $body, $rclass)
         \}
         END
     }
-
 }
-

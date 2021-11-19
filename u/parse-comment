@@ -1,8 +1,5 @@
 #!/usr/bin/env raku
-use v6;
-#use Grammar::Tracer;
 
-use lib '../translator/raku';
 use doxy-comment;
 
 sub MAIN(:$indent = False) {

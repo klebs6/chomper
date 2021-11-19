@@ -1,0 +1,16 @@
+#!/usr/bin/env raku
+use time;
+use git;
+
+sub MAIN {
+
+    my $dt          = last-midnight.Str.split(":")[0..1].join(":");
+    my $hash        = git-hash-before-date($dt);
+    my $nlines      = git-diff-lines($hash);
+    my $commit-time = git-commit-time($hash);
+
+    say "hash:        $hash";
+    say "commit time: $commit-time";
+    say "nlines:      $nlines";
+}
+

@@ -1,6 +1,5 @@
 #!/usr/bin/env raku
 
-use lib '../translator/raku';
 use util;
 use snake-case;
 use ident-token;

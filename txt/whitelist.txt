@@ -19083,3 +19083,7 @@ SemaphoreGrant
 BlobLogHeader
 BlobLogHeader
 ExpirationRange
+BlobLogFooter
+BlobLogFooter
+BlobLogRecord
+BlobLogRecord

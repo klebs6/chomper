@@ -16,4 +16,3 @@ our class RustReturnType {
         $!rtype
     }
 }
-

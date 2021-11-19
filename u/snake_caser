@@ -1,5 +1,3 @@
 #!/usr/bin/env raku
-use v6;
-use lib 'raku';
 use util;
 say snake-case($*IN.slurp.trim);

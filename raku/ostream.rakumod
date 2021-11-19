@@ -19,6 +19,4 @@ our sub translate-op-ostream(
         \}
     \}
     END
-
 }
-

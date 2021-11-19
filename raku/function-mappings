@@ -121005,3 +121005,17 @@ main main
 CheckBlobCRC check_blobcrc
 DecodeHeaderFrom decode_header_from
 EncodeHeaderTo encode_header_to
+EncodeTo encode_to
+DecodeFrom decode_from
+EncodeTo encode_to
+DecodeFrom decode_from
+CalculateAdjustmentForRecordHeader calculate_adjustment_for_record_header
+record_size record_size
+EncodeHeaderTo encode_header_to
+DecodeHeaderFrom decode_header_from
+CheckBlobCRC check_blobcrc
+IsValidBlobOffset is_valid_blob_offset
+EncodeTo encode_to
+DecodeFrom decode_from
+EncodeTo encode_to
+DecodeFrom decode_from

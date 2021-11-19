@@ -1,5 +1,4 @@
 #!/usr/bin/env raku
-use v6;
 
 sub get-with-offset(Str $curfile, Str $curdir, Int $offset) {
     my @files = $curdir.IO.dir.sort;

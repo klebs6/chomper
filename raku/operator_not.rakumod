@@ -28,6 +28,3 @@ our sub translate-operator-not($submatch, $body, $rclass) {
     \}
     END
 }
-
-
-

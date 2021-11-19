@@ -17,3 +17,15 @@ our sub segment-remove-duplicates($name) {
     @builder.join("_")
 }
 
+our sub remove-duplicate-segments($filename, :$marker = /_/, :$sep = "_") {
+    my ($name, $ext) = $filename.split(".");
+
+    my @segs = $name.split($marker);
+    my @builder = [];
+
+    for @segs {
+        @builder.push: $_ if not @builder.grep($_);
+    }
+    @builder.join($sep) ~ ".$ext"
+
+}

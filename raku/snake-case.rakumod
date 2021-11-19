@@ -1,29 +1,9 @@
-our $snake-case-file = 
-"/Users/kleb/bethesda/work/repo/translator/raku/snake-cased.txt";
+use avoid-keywords;
+use hungarian;
+use case;
+use segment-remove-duplicates;
+use locations;
 
-our sub sort-uniq-snake-case-file {
-
-    my @uniq = qqx/sort $snake-case-file | uniq/;
-    spurt $snake-case-file, "{@uniq.join('')}\n";
-}
-
-our sub snake-to-camel($input) {
-    my $type-stripped = $input.subst(/_t$/, "");
-    $type-stripped.split("_")>>.tc.join("")
-}
-
-our sub remove-duplicate-segments($filename, :$marker = /_/, :$sep = "_") {
-    my ($name, $ext) = $filename.split(".");
-
-    my @segs = $name.split($marker);
-    my @builder = [];
-
-    for @segs {
-        @builder.push: $_ if not @builder.grep($_);
-    }
-    @builder.join($sep) ~ ".$ext"
-
-}
 our sub snake-case($name, $remove-dup = False) {
     my $input = $name;
 
@@ -64,59 +44,7 @@ our sub snake-case($name, $remove-dup = False) {
         avoid-keywords(avoid-hungarian($result.lc))
     };
 
-    if $input.trim ne $output.trim {
-        spurt $snake-case-file, "$input $output\n", :append;
-    }
+    maybe-update-snake-case-file(:$input,:$output);
 
     $output
-}
-
-our sub avoid-hungarian($in) {
-    my $out = $in.subst(/^m_/, "");
-    $out ~~ s/^f_//;
-    $out ~~ s/^i_//;
-    $out ~~ s/^b_2/b2/;
-    $out ~~ s/^b_//;
-    $out ~~ s/^e_//;
-    $out ~~ s/^p_//;
-    $out ~~ s/^c_//;
-    $out ~~ s/^s_//;
-    #$out ~~ s/^n_//;
-    $out ~~ s/^v_//;
-    $out ~~ s/^u_//;
-
-    #this is done with regular type translations
-    #"class", "struct", "enum", any others? any problems?
-    $out ~~ s/^C<?before <[A..Z]>>//;
-=begin comment
-    $out ~~ s/^S<?before <[A..Z]>>//;
-    $out ~~ s/^E<?before <[A..Z]>>//;
-=end comment
-
-    $out
-}
-
-our sub avoid-keywords($s) {
-
-    my %bad = %(
-        loop  => "loop_",
-        type  => "ty",
-        in    => "in_",
-        match => "match_",
-        impl  => "impl_",
-        self  => "self_",
-        str   => "str_",
-        ref   => "ref_",
-        box   => "box_",
-        fn    => "fn_",
-        pub   => "pub_",
-        where => "where_",
-        as    => "as_",
-        async => "async_",
-        yield => "yield_",
-        use   => "use_",
-        priv  => "priv_",
-    );
-
-    %bad{$s} // $s
 }

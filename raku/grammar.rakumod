@@ -6,6 +6,8 @@ use block-comment;
 use ident-token;
 use numeric-token;
 use quoted-string-token;
+use rule-braced-array-literal;
+use rule-line-comment;
 
 our role ParserRules 
 does Types
@@ -14,6 +16,8 @@ does BlockCommentRole
 does Sigils
 does SimpleIfdef
 does QuotedStringToken
+does BracedArrayLiteralRule
+does LineCommentRule
 does IdentToken
 does NumericToken
 does FunctionHeader {
@@ -28,28 +32,6 @@ does FunctionHeader {
         | '=' <braced-array-literal>
         | '=' <default-value>
         | <braced-default-value>
-    }
-
-    rule braced-array-literal {
-        <braced-array-literal-tree>
-    }
-
-    rule braced-array-literal-tree {
-        | <braced-array-literal-leaf>
-        | <braced-array-literal-leaf-list>
-        | <braced-array-literal-leaf-list-list>
-    }
-
-    rule braced-array-literal-leaf {
-        '{' [ <default-value>+ %% "," ] '}'
-    }
-
-    rule braced-array-literal-leaf-list {
-        '{' [ <braced-array-literal-leaf>+ %% "," ] '}'
-    }
-
-    rule braced-array-literal-leaf-list-list {
-        '{' [ <braced-array-literal-leaf-list>+ %% "," ] '}'
     }
 
    token api-tag {
@@ -144,17 +126,6 @@ does FunctionHeader {
 
     rule static-constants {
         <.ws> <static_const>+
-    }
-
-    rule line-comment-text {
-        \N+
-    }
-
-    rule line-comment {
-        '//' <line-comment-text>
-    }
-    rule maybe-comments {
-        <line-comment>*
     }
 
     rule return-type {

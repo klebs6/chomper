@@ -1,5 +1,5 @@
 #!/usr/bin/env raku
-use v6;
+
 my $in = $*IN.slurp;
 my $idx = $in.index("(");
 my $ridx = $in.rindex(")");
