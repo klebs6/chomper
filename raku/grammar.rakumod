@@ -3,6 +3,9 @@ use gkeywords;
 use gfunction-header;
 use gsimple-ifdef;
 use block-comment;
+use ident-token;
+use numeric-token;
+use quoted-string-token;
 
 our role ParserRules 
 does Types
@@ -10,6 +13,9 @@ does Keywords
 does BlockCommentRole
 does Sigils
 does SimpleIfdef
+does QuotedStringToken
+does IdentToken
+does NumericToken
 does FunctionHeader {
 
     regex template-identifier {
@@ -159,40 +165,6 @@ does FunctionHeader {
         <identifier> '::'
     }
 
-    token numeric-value {
-        [ '+' | '-' | '~' ]? <[ 0..9 ]>+ [ '.' <[ 0..9 ]>+ ]? [ 'e' <.numeric-value> ]? 
-    }
-
-    token numeric-suffix {
-        | 'f'
-        | 'u'
-        | 'U'
-    }
-
-    token numeric {
-        <numeric-value> <numeric-suffix>? 
-    }
-
-    token hexadecimal {
-         [ "0x" | '0X' ] <[ A..F a..f 0..9 ]>+     
-     }
-
-    token identifier {
-        <[A..Z a..z _]> <[A..Z a..z 0..9 _]>*
-    }
-
-    token extended-identifier {
-        <[A..Z a..z _]> <[A..Z a..z 0..9 _ : < > ]>*
-    }
-
-    token namespaced-extended-identifier {
-        <extended-identifier>+ %% "::"
-    }
-
-    token name {
-        <.identifier>
-    }
-
     token empty-array-specifier {
         '[]'
     }
@@ -235,7 +207,7 @@ does FunctionHeader {
     rule pound-define {
         '#define' 
         <macro-sig>
-        <macro-line>+
+        <macro-line>*
     }
 
     token macro-name {
@@ -314,6 +286,7 @@ does FunctionHeader {
         || <.numeric> 
         || <.hexadecimal> 
         || <.extended-identifier> 
+        || <.braced-array-literal> 
         || <.namespaced-extended-identifier> 
         || <.quoted-string>
         || <identifier-cast-as-uarg>
@@ -335,25 +308,6 @@ does FunctionHeader {
 
     token identifier-cast-as-uarg {
         '(' <unnamed-arg> ')' <identifier>
-    }
-
-    token opening-quote {
-        | \"
-        | "'"
-    }
-
-    token closing-quote {
-        | \"
-        | "'"
-    }
-
-    token quoted-string {
-        <.opening-quote>
-        [
-            <-[ ' " \\ ]>  # regular character
-            | \\ .         # escape sequence
-        ]*
-        <.closing-quote>
     }
 
     regex args {
@@ -427,6 +381,7 @@ does FunctionHeader {
         <inline>?
         <constexpr>? 
         <return-type>?
+        <plugin-api>?
         <function-name> 
         <parenthesized-args>
         <const>?
@@ -441,6 +396,7 @@ does FunctionHeader {
         <line-comment>*
         <api-tag>?
         <explicit>?
+        <plugin-api>?
         <name>
         <parenthesized-args>
         <terminator>
@@ -504,11 +460,18 @@ does FunctionHeader {
     rule abstract-function-declaration {
         :sigspace
         [<line-comment> | <block-comment>]*
-        <virtual> <return-type> <name> 
+        <virtual> 
+        <return-type> 
+        <plugin-api>? 
+        <name> 
         <parenthesized-args>
         <const>? 
         <noexcept>? 
         '=' '0' ';'
+    }
+    token plugin-api {
+        | 'PLUGIN_API'
+        | 'PLUG_API'
     }
 
     rule abstract-function-declarations {

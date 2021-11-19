@@ -3,12 +3,14 @@ use snake-case;
 use typemap;
 use type-info;
 use doxy-comment;
+use api;
 
 our class AbstractFunction {
 
     has @.comments;
     has $.block-comment;
     has Bool $.const is required;
+    has Bool $.api   is required;
     has $.rt;
     has $.name is required;
     has $.args;
@@ -34,6 +36,10 @@ our class AbstractFunction {
         }
     }
 
+    method get-api {
+        get-api-tag($!api)
+    }
+
     method gist {
 
         my $args = format-rust-function-args($!args);
@@ -45,7 +51,7 @@ our class AbstractFunction {
         };
 
         self.get-doc-comments 
-        ~ "\nfn {$!name}({$tag}{$args}){self.get-rt};\n"
+        ~ "\n{self.get-api}fn {$!name}({$tag}{$args}){self.get-rt};\n"
     }
 }
 
@@ -71,6 +77,7 @@ our sub translate-abstract-function-declarations(
             comments => get-rcomments-list($_).split("\n")>>.chomp,
             const    => $_<const>:exists,
             name     => snake-case($_<name>.Str),
+            api      => $_<plugin-api>:exists,
             args     => get-rfunction-args-list($_),
             rt       => get-rust-return-type($_),
             :$block-comment,

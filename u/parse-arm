@@ -1,0 +1,61 @@
+#!/usr/bin/env raku
+
+use JSON::Fast;
+use Data::Dump::Tree;
+
+my $spec32    = "../translator/u/ARMv8.6a.32.json";
+my $spec64    = "../translator/u/ARMv8.6a.json";
+
+sub build-arm-map($spec) {
+
+    my $arm-json = from-json($spec.IO.slurp);
+
+    my %arm-map;
+
+    my $g = grammar {
+        rule TOP {
+            <tok>+ %% "," 
+        }
+        token tok {
+            <[A..Z 0..9]>+ 
+        }
+    };
+
+    for $arm-json.List -> $item { 
+        my $match = $g.subparse($item<mnemonic>);
+        for $match<tok>.List -> $opcode {
+            if $opcode {
+                %arm-map{~$opcode.lc} = $item;
+            }
+        }
+    }
+
+    %arm-map
+}
+
+sub check($opcode, $spec) {
+    my %arm-map = build-arm-map($spec);
+    %arm-map{$opcode.lc}
+}
+
+sub dump-prefer64($opcode, $page64, $page32) {
+
+    if $page64 {
+        say "64 bit";
+        ddt $page64;
+    } elsif $page32 {
+        say "32 bit";
+        ddt $page32;
+    } else {
+        say "$opcode not found -- remember there is a possible json parse error";
+    }
+}
+
+multi sub MAIN($opcode) {
+
+    my $page64 = check($opcode, $spec64);
+    my $page32 = Nil;#check($opcode, $spec32);
+
+    dump-prefer64($opcode, $page64, $page32);
+}
+

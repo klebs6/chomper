@@ -1,4 +1,5 @@
 use util;
+use hungarian;
 use typemap;
 use snake-case;
 use type-info;
@@ -25,16 +26,27 @@ our sub translate-static-const-rhs(Match $static_const) {
 =end comment
 }
 
+our sub format-static-const-name($text) {
+    snake-case($text).uc.&remove-hungarian-constant-prefix;
+}
+
 our sub translate-static-const($submatch, $body, $rclass) {
 
     my @items = [];
 
+    my Bool $has-multiline-entry = False;
+
     for $submatch<static_const> {
+        my $nlines = $_.lines;
+
+        if $nlines > 1 {
+            $has-multiline-entry = True;
+        }
 
         my Bool $has-array-specifier = $_<array-specifier>:exists;
 
         my $type     = $_<arg><type>;
-        my $name     = snake-case($_<arg><name>.Str);
+        my $name     = format-static-const-name($_<arg><name>.Str);
         my $rhs      = translate-static-const-rhs($_);
         my $comment  = $_<line-comment>:exists ?? "// {$_<line-comment><line-comment-text>.Str}" !! "";
 
@@ -57,5 +69,9 @@ our sub translate-static-const($submatch, $body, $rclass) {
 
     my $result = @items.join("\n").chomp.trim;
 
-    align-columns($result, 3)
+    if $has-multiline-entry {
+        $result
+    } else {
+        align-columns($result, 3)
+    }
 }

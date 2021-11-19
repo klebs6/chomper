@@ -98,6 +98,7 @@ our role Types {
             | [
                 [
                     | 'std::'
+                    | 'fs::'
                     | 'ssl::'
                     | 'aux::'
                     | 'tcp::'

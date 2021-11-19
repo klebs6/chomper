@@ -1,0 +1,38 @@
+#!/usr/bin/env raku
+use v6;
+
+grammar MiniHeader {
+
+    rule TOP {
+        <.ws>
+        '/*'
+        <text=until-newline>
+        '*/'
+    }
+
+    regex until-newline {
+        \N+
+    }
+}
+
+class MiniHeaderActions {
+    method TOP($/) {
+
+        my $txt = $/<text>.Str;
+
+        my Int $target-len = 50;
+        my Int $space = $target-len - $txt.chars;
+        my Rat $pad = $space > 0 ?? $space / 2 !! 0;
+
+        my $sep = '-' x $pad.Int;
+        make "/* $sep $txt $sep */"
+    }
+}
+
+our sub add-sep-to-header($text) {
+    MiniHeader.parse($text, actions => MiniHeaderActions).made
+}
+
+sub MAIN {
+    say add-sep-to-header($*IN.slurp);
+}

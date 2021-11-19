@@ -1,6 +1,12 @@
 
 our sub wrap-body-todo($body, :$preamble = "") {
 
+=begin comment
+    if not $body.chomp.trim {
+        return "";
+    }
+=end comment
+
     my $wrapped = do if True or $body.chomp.trim {
 
         if $preamble {

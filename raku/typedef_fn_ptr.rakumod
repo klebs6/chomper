@@ -13,6 +13,3 @@ our sub translate-typedef-fn-ptr( $submatch, $body, $rclass)
 
     "pub type $name = fn({@unnamed-args.join(",")}){$rt ?? " -> $rt" !! ""};"
 }
-
-
-

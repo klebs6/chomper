@@ -1,0 +1,137 @@
+#!/usr/bin/env raku
+
+use lib '../translator/raku';
+use util;
+use snake-case;
+use ident-token;
+use segment-remove-duplicates;
+
+my $input = $*IN.slurp;
+
+my ($head, $body) = 
+chop_function_body($input);
+
+grammar Test does IdentToken {
+    rule TOP {
+        <.ws>
+        [
+            | <test>
+            | <test-fixture>
+            | <fuzz>
+            | <fuzz-with-initializer>
+        ]
+    }
+
+    rule fuzz {
+        [
+            | 'FUZZ_TARGET'
+        ]
+        <args>
+    }
+
+    rule fuzz-with-initializer {
+        [
+            | 'FUZZ_TARGET_INIT'
+        ]
+        <args>
+    }
+
+    rule test-fixture {
+        [
+            | 'BOOST_FIXTURE_TEST_CASE'
+        ]
+        <args>
+    }
+
+    rule test {
+        [
+            | 'TEST'
+            | 'TEST_F'
+            | 'TEST_P'
+            | 'TYPED_TEST_P'
+            | 'BOOST_AUTO_TEST_CASE'
+        ]
+        <args>
+    }
+
+    rule args {
+        '(' <n0=identifier> [',' <n1=identifier>]? ')'
+    }
+}
+
+class Test::Actions {
+
+    method TOP($/) {
+        make $/{$/.keys[0]}.made
+    }
+
+    method test($/) {
+        my $name = $/<args>.made;
+        make qq:to/END/;
+        #[test] fn $name\(\) \{
+            todo!();
+            /*
+            {$body.indent(4)}
+            */
+        \}
+        END
+    }
+
+    method test-fixture($/) {
+        my $name = $/<args>.made;
+        make qq:to/END/;
+        #[test] fn $name\(\) \{
+            todo!();
+            /*
+            {$body.indent(4)}
+            */
+        \}
+        END
+    }
+
+    method fuzz($/) {
+        my $name   = ~$/<args><n0>;
+
+        make qq:to/END/;
+        #[fuzz_test] fn $name\(\) \{
+            todo!();
+            /*
+            {$body.indent(4)}
+            */
+        \}
+        END
+    }
+
+    method fuzz-with-initializer($/) {
+        my $name   = ~$/<args><n0>;
+        my $initfn = ~$/<args><n1>;
+
+        make qq:to/END/;
+        #[fuzz_test(initializer = "$initfn")]
+        fn $name\(\) \{
+            todo!();
+            /*
+            {$body.indent(4)}
+            */
+        \}
+        END
+    }
+
+    method args($/) {
+        my $p = snake-case($/<n0>.Str);
+
+        my $name = do if $/<n1>:exists {
+            my $c = snake-case($/<n1>.Str);
+            "{$p}_{$c}"
+        } else {
+            "{$p}"
+        };
+        make segment-remove-duplicates($name)
+        .subst("_test_case", "")
+        .subst("db_test_", "")
+    }
+}
+
+sub MAIN {
+    say Test.parse($head, actions => Test::Actions).made
+}

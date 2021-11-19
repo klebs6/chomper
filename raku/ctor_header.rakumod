@@ -5,21 +5,22 @@ use snake-case;
 
 #use Grammar::Tracer;
 
-sub cwd-is-cryengine {
+sub current-project-needs-strip-hungarian {
     #only need to pull hungarian prefixes off
     #cryengine structs
-    $*CWD.Str.split("/")[*-1] ~~ "cry-rs"
+    my $cry     = $*CWD.Str.split("/")[*-1] ~~ "cry-rs";
+    my $bitcoin = $*CWD.Str.split("/")[*-1] ~~ "bitcoin-rs";
+    $cry or $bitcoin
 }
 
 #config
-my Bool $strip-hungarian                      = cwd-is-cryengine();
+my Bool $strip-hungarian                      = current-project-needs-strip-hungarian();
 my Bool $store-properly-formatted-struct-name = True;
 my Bool $map-hungarian-to-non                 = True;
 my Bool $translate-base-type                  = True;
 
 #usually want this to be false
 my Bool $add-mod              = False;
-
 
 grammar HungarianStruct {
 

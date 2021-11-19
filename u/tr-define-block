@@ -2,6 +2,7 @@
 use v6;
 use lib '../translator/raku';
 use snake-case;
+use line-comment-to-block-comment;
 
 #use Grammar::Tracer;
 
@@ -112,7 +113,7 @@ class DefineBlockActions {
         };
 
         if so $/<line-comment>.List.elems > 0 {
-            make "\n" ~ "{$/<line-comment>>>.made.join("\n")}" ~ "\n{$writeme.chomp}\n"
+            make "\n" ~ "{$/<line-comment>>>.made.join("\n")}" ~ "\n{$writeme.chomp}"
 
         } else {
             make "{$writeme.chomp}"
@@ -120,7 +121,7 @@ class DefineBlockActions {
     }
 
     method line-comment($/) {
-        make '///' ~ $/<line-comment-body>.Str.chomp
+        make line-comment-to-block-comment('///' ~ $/<line-comment-body>.Str.chomp)
     }
 
     method macro-name($/) {

@@ -5,7 +5,11 @@ use type-info;
 use indent-rust-named-type-list;
 
 sub get-rust-macro-body($submatch) {
-    $submatch<macro-line>.List>>.chomp>>.subst(/\\ $/, "").join("\n").chomp
+    if $submatch<macro-line>:exists {
+        $submatch<macro-line>.List>>.chomp>>.subst(/\\ $/, "").join("\n").chomp
+    } else {
+        Nil
+    }
 }
 
 sub get-rust-macro-args($submatch) {
@@ -34,13 +38,21 @@ our sub translate-pound-define($submatch is rw, $body, $rclass) {
     my $rust-macro-args = get-rust-macro-args($submatch);
     my $rust-macro-body = get-rust-macro-body($submatch);
 
-    qq:to/END/;
-    macro_rules! $rust-macro-name \{
-        ($rust-macro-args) => \{
-            /*
-            {$rust-macro-body.indent(8)}
-            */
+    if $rust-macro-body {
+        qq:to/END/;
+        macro_rules! $rust-macro-name \{
+            ($rust-macro-args) => \{
+                /*
+                {$rust-macro-body.indent(8)}
+                */
+            \}
         \}
-    \}
-    END
+        END
+
+    } else {
+
+        qq:to/END/.chomp;
+        macro_rules! $rust-macro-name \{ ($rust-macro-args) => \{ \} \}
+        END
+    }
 }

@@ -1,0 +1,31 @@
+#!/usr/bin/env raku
+use v6;
+
+sub get-with-offset(Str $curfile, Str $curdir, Int $offset) {
+    my @files = $curdir.IO.dir.sort;
+    my $idx = @files.first($curfile, :k) + $offset;
+    @files[$idx]
+}
+
+sub get-next(Str $curfile, Str $curdir) {
+    get-with-offset($curfile,$curdir,1)
+}
+
+sub get-prev(Str $curfile, Str $curdir) {
+    get-with-offset($curfile,$curdir,-1)
+}
+
+sub get-adj(Str $direction, Str $curfile, Str $curdir) {
+    given $direction.lc {
+        when "next" {
+            get-next($curfile,$curdir)
+        }
+        when "prev" {
+            get-prev($curfile,$curdir)
+        }
+    }
+}
+
+sub MAIN(Str $direction, Str $curfile, Str $curdir) {
+    say get-adj($direction,$curfile,$curdir).Str;
+}

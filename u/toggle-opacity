@@ -1,0 +1,26 @@
+#!/usr/bin/env raku
+use v6;
+use YAMLish;
+
+our $opacity-file = 
+%*ENV<HOME> ~ "/.config/alacritty/alacritty.yml";
+
+our sub toggle-opacity {
+
+    my $yaml = load-yaml($opacity-file.IO.slurp);
+
+    my $cur = $yaml<background_opacity>;
+
+    if $cur < 0.65 {
+        $yaml<background_opacity> = 0.75;
+    } else {
+        $yaml<background_opacity> = 0.50;
+    }
+
+    my $new-yaml = save-yaml($yaml);
+    $opacity-file.IO.spurt: $new-yaml;
+}
+
+sub MAIN {
+    toggle-opacity();
+}

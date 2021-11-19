@@ -39,7 +39,7 @@ our class ConstexprGlobalDef does GetDocComments {
         my $doc-comments = self.get-doc-comments(@!comments).chomp;
 
         $doc-comments ~
-        "pub const {snake-case($.name)}: $.type = $.expr;"
+        "pub const {snake-case($.name).uc}: $.type = $.expr;"
     }
 }
 

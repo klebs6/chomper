@@ -1,4 +1,5 @@
 use util;
+use api;
 use wrap-body-todo;
 
 our sub translate-freestanding-template-function($submatch, $body, $rclass) {
@@ -13,6 +14,8 @@ our sub translate-freestanding-template-function($submatch, $body, $rclass) {
             $maybe-self-args) = 
         rparse-template-header($submatch);
 
+    my Str $api = get-api-tag($submatch<plugin-api>:exists);
+
     my $rcomment       = format-rust-comments($rcomments-list);
     my $rtemplate-args = format-rust-template-args($rtemplate-args-list);
     my $rfunction-args = format-rust-function-args($rfunction-args-list);
@@ -24,6 +27,7 @@ our sub translate-freestanding-template-function($submatch, $body, $rclass) {
         qq:to/END/;
         impl $rclass \{
             $rcomment
+            $api
             {$rinline}pub fn {$rfunction-name}<{$rtemplate-args}>({$maybe-self-args}{$rfunction-args}) $rreturn-string \{
             {$optionals.trim.chomp.indent(4)}
                 {wrap-body-todo($body)}
@@ -35,6 +39,7 @@ our sub translate-freestanding-template-function($submatch, $body, $rclass) {
 
         qq:to/END/;
         $rcomment
+        $api
         {$rinline}pub fn {$rfunction-name}<{$rtemplate-args}>({$rfunction-args}) $rreturn-string \{
         {$optionals.trim.chomp.indent(4)}
             {wrap-body-todo($body)}

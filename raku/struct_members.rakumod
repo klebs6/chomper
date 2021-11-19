@@ -10,28 +10,73 @@ use return-type;
 use indent-rust-named-type-list;
 use line-comment-to-block-comment;
 
+sub format-comments(@comments) {
+
+    if @comments.elems eq 0 {
+        return "";
+    }
+
+    if @comments.elems eq 1 and @comments[0].trim ~~ "" {
+        return "";
+    }
+
+    @comments 
+
+    ==> map({
+        make-doc-comment($_).chomp.trim
+    })
+
+    ==> join("\n")
+
+    ==> line-comment-to-block-comment()
+
+    ==> parse-doxy-comment()
+}
+
 our class RustStructFnMember {
 
     has $.idx  is required;
     has $.name is required;
     has $.type is required;
 
+    has $.block-comment;
+    has @.comments;
+
+    method get-doc-comments {
+
+        if $!block-comment {
+            #return reformat-block-comment($!block-comment);
+            return parse-doxy-comment($!block-comment.Str);
+        }
+
+        format-comments(@!comments)
+    }
+
     method gist(:$column2-start-index = Nil) {
 
-        indent-column2(
+        my $doc-comments = self.get-doc-comments;
+
+        my $decl = indent-column2(
             "$!name: $!type,\n",
             $column2-start-index
-        )
+        );
+
+        qq:to/END/;
+        $doc-comments
+        $decl
+        END
     }
 
     method get-as-name-type {
         "$!name: x"
     }
 
-    submethod BUILD(:$idx, :$function-ptr-type) {
-        $!type = populate-typeinfo($function-ptr-type).vectorized-rtype;
-        $!idx  = $idx;
-        $!name = snake-case($function-ptr-type<name>.Str);
+    submethod BUILD(:$idx, :$function-ptr-type, :$block-comment, :@comments) {
+        $!block-comment = $block-comment;
+        @!comments      = @comments;
+        $!type          = populate-typeinfo($function-ptr-type).vectorized-rtype;
+        $!idx           = $idx;
+        $!name          = snake-case($function-ptr-type<name>.Str);
     }
 }
 
@@ -67,16 +112,7 @@ our class RustStructMember {
             return parse-doxy-comment($!block-comment.Str);
         }
 
-        if @!comments.elems > 0 {
-            my @doc-comments = do for @!comments {
-                make-doc-comment($_).chomp.trim
-            };
-            line-comment-to-block-comment(
-                @doc-comments.join("\n")
-            )
-        } else {
-            ""
-        }
+        format-comments(@!comments)
     }
 
     method gist(:$column2-start-index = Nil) {
@@ -154,6 +190,8 @@ our sub translate-struct-member-declarations( $submatch, $body, $rclass)
 
             $writer.fn-members.push: RustStructFnMember.new(
                 :$idx,
+                :$block-comment,
+                :@comments,
                 function-ptr-type => $_<function-ptr-type>,
             );
 
@@ -196,7 +234,6 @@ our sub translate-struct-member-declarations( $submatch, $body, $rclass)
                     :$idx,
                 );
             }
-
         }
 
         $idx += 1;

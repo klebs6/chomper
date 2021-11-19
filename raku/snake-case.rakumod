@@ -12,16 +12,16 @@ our sub snake-to-camel($input) {
     $type-stripped.split("_")>>.tc.join("")
 }
 
-our sub remove-duplicate-segments($filename) {
+our sub remove-duplicate-segments($filename, :$marker = /_/, :$sep = "_") {
     my ($name, $ext) = $filename.split(".");
 
-    my @segs = $name.split(/_/);
+    my @segs = $name.split($marker);
     my @builder = [];
 
     for @segs {
         @builder.push: $_ if not @builder.grep($_);
     }
-    @builder.join("_") ~ ".$ext"
+    @builder.join($sep) ~ ".$ext"
 
 }
 our sub snake-case($name, $remove-dup = False) {
@@ -86,9 +86,9 @@ our sub avoid-hungarian($in) {
     $out ~~ s/^u_//;
 
     #this is done with regular type translations
-=begin comment
     #"class", "struct", "enum", any others? any problems?
     $out ~~ s/^C<?before <[A..Z]>>//;
+=begin comment
     $out ~~ s/^S<?before <[A..Z]>>//;
     $out ~~ s/^E<?before <[A..Z]>>//;
 =end comment
@@ -109,6 +109,13 @@ our sub avoid-keywords($s) {
         ref   => "ref_",
         box   => "box_",
         fn    => "fn_",
+        pub   => "pub_",
+        where => "where_",
+        as    => "as_",
+        async => "async_",
+        yield => "yield_",
+        use   => "use_",
+        priv  => "priv_",
     );
 
     %bad{$s} // $s
