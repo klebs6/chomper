@@ -2,6 +2,9 @@ our sub avoid-keywords($s) {
 
     my %bad = %(
         loop  => "loop_",
+        try   => "try_",
+        move  => "move_",
+        copy  => "copy_",
         type  => "ty",
         in    => "in_",
         match => "match_",

@@ -6253,3 +6253,7 @@ CSemaphore Semaphore
 CSemaphore Semaphore
 CSemaphoreGrant SemaphoreGrant
 CSemaphoreGrant SemaphoreGrant
+direct_or_indirect DirectOrIndirect
+CHDChain HDChain
+nonce_function NonceFunction
+nonce_function_hardened NonceFunctionHardened

@@ -1,0 +1,19 @@
+#!/usr/bin/env raku
+use ix-bang;
+
+sub MAIN(Bool :$write) {
+
+    my @found = find-files-without-use-crate-star-below-ix-bang(source_dir => "bitcoin/src");
+
+    if @found.elems {
+        for @found {
+            if $write {
+                write-use-crate-star-below-ix-bang(filename => $_);
+            } else {
+                say $_;
+            }
+        }
+    } else {
+        say "no matching files found";
+    }
+}

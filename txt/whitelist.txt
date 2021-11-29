@@ -19087,3 +19087,13 @@ BlobLogFooter
 BlobLogFooter
 BlobLogRecord
 BlobLogRecord
+SharedBlobFileMetaData
+SharedBlobFileMetaData
+BlobFileMetaData
+BlobFileMetaData
+LinkedSsts
+WatchOnlySet
+WatchKeyMap
+CryptedKeyMap
+WalletBatch
+BenchmarkState

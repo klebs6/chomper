@@ -1,3 +1,4 @@
+
    png_calloc_supported
  largefile_source
  png_dll_export
@@ -1879,6 +1880,7 @@ CountBits count_bits
 CountCandidates count_candidates
 CountFiles count_files
 CountInFlight count_in_flight
+CountIter count_iter
 CountOrphans count_orphans
 CountPSBTUnsignedInputs count_psbt_unsigned_inputs
 CountSecondsDouble count_seconds_double
@@ -3398,6 +3400,7 @@ GetBerkeleyEnv get_berkeley_env
 GetBestBlock get_best_block
 GetBindAddress get_bind_address
 GetBlob get_blob
+GetBlobFileNumber get_blob_file_number
 GetBlobFileReader get_blob_file_reader
 GetBlobFileReader_CacheFull get_blob_file_reader_cache_full
 GetBlobFileReader_IOError get_blob_file_reader_io_error
@@ -3447,6 +3450,8 @@ GetChainman get_chainman
 GetChance get_chance
 GetChargeAndDeleter get_charge_and_deleter
 GetCheapHash get_cheap_hash
+GetChecksumMethod get_checksum_method
+GetChecksumValue get_checksum_value
 GetChildren get_children
 GetChildrenFileAttributes get_children_file_attributes
 GetChildrenIgnoresDotAndDotDot get_children_ignores_dot_and_dot_dot
@@ -3541,6 +3546,8 @@ GetFromBatchAndDBAfterMerge get_from_batch_and_db_after_merge
 GetFromHistoryTest get_from_history_test
 GetFromImmutableLayer get_from_immutable_layer
 GetFromVersions get_from_versions
+GetGarbageBlobBytes get_garbage_blob_bytes
+GetGarbageBlobCount get_garbage_blob_count
 GetGroup get_group
 GetHDChain get_hd_chain
 GetHash get_hash
@@ -3598,6 +3605,7 @@ GetLevel get_level
 GetLevel0Ordering get_level_0ordering
 GetLimit get_limit
 GetLinkedIPv4 get_linked_ipv4
+GetLinkedSsts get_linked_ssts
 GetLinuxSyscallName get_linux_syscall_name
 GetListenPort get_listen_port
 GetLiveBlobFiles get_live_blob_files
@@ -3765,6 +3773,7 @@ GetServicesNames get_services_names
 GetSetting get_setting
 GetSettingsList get_settings_list
 GetSettingsPath get_settings_path
+GetSharedMeta get_shared_meta
 GetSharedTx get_shared_tx
 GetShortID get_shortid
 GetSigOpCost get_sig_op_cost
@@ -3818,6 +3827,8 @@ GetTimeMicros get_time_micros
 GetTimeMillis get_time_millis
 GetTimeOffset get_time_offset
 GetTimeSeconds get_time_seconds
+GetTotalBlobBytes get_total_blob_bytes
+GetTotalBlobCount get_total_blob_count
 GetTotalBytesRecv get_total_bytes_recv
 GetTotalBytesSent get_total_bytes_sent
 GetTotalFee get_total_fee
@@ -10114,6 +10125,7 @@ ZADD_OUT_ADDED  zadd_out_added
 ZADD_OUT_NAN  zadd_out_nan 
 ZADD_OUT_NOP  zadd_out_nop 
 ZADD_OUT_UPDATED  zadd_out_updated 
+ZERO zero
 ZIPLIST_BYTES ziplist_bytes
 ZIPLIST_END_SIZE ziplist_end_size
 ZIPLIST_ENTRY_END ziplist_entry_end
@@ -12833,6 +12845,7 @@ fConnected connected
 fCountFailure count_failure
 fCreate create
 fDbEnvInit db_env_init
+fDecryptionThoroughlyChecked decryption_thoroughly_checked
 fDefault default
 fDefaultConsistencyChecks default_consistency_checks
 fDeterministic deterministic
@@ -14404,6 +14417,7 @@ hashLastUnknownBlock hash_last_unknown_block
 hashMerkleRoot hash_merkle_root
 hashName hash_name
 hashOutputs hash_outputs
+hashPrev hash_prev
 hashPrevBlock hash_prev_block
 hashPrevTx hash_prev_tx
 hashPrevouts hash_prevouts
@@ -16006,6 +16020,7 @@ m_handler_watch_only_changed handler_watch_only_changed
 m_has_signers has_signers
 m_hash hash
 m_hash_type hash_type
+m_hd_chain hd_chain
 m_hd_chains hd_chains
 m_headers_cache headers_cache
 m_headers_sync_timeout headers_sync_timeout
@@ -16024,10 +16039,12 @@ m_ignore_incoming_txs ignore_incoming_txs
 m_image_filename image_filename
 m_impl impl_
 m_in_active_chain in_active_chain
+m_inactive_hd_chains inactive_hd_chains
 m_inbound_onion inbound_onion
 m_include_partial_groups include_partial_groups
 m_include_unsafe_inputs include_unsafe_inputs
 m_index index
+m_index_to_reserved_key index_to_reserved_key
 m_init init
 m_initial_sync_finished initial_sync_finished
 m_inner inner
@@ -16110,6 +16127,7 @@ m_max_aps_fee max_aps_fee
 m_max_cached_index max_cached_index
 m_max_depth max_depth
 m_max_id_length max_id_length
+m_max_keypool_index max_keypool_index
 m_max_outbound max_outbound
 m_max_outbound_block_relay max_outbound_block_relay
 m_max_outbound_full_relay max_outbound_full_relay
@@ -16214,6 +16232,7 @@ m_pixmap_height pixmap_height
 m_pixmap_width pixmap_width
 m_platform_style platform_style
 m_pool pool
+m_pool_key_to_index pool_key_to_index
 m_pos pos
 m_pre_split pre_split
 m_prefer_evict prefer_evict
@@ -16280,6 +16299,7 @@ m_scanning_start scanning_start
 m_schedulerClient scheduler_client
 m_scope_id scope_id
 m_script script
+m_script_metadata script_metadata
 m_search_string search_string
 m_sections sections
 m_sent_getheaders sent_getheaders
@@ -16455,12 +16475,14 @@ mapBufferToBuses map_buffer_to_buses
 mapCheckpoints map_checkpoints
 mapCoins map_coins
 mapCommands map_commands
+mapCryptedKeys map_crypted_keys
 mapDeltas map_deltas
 mapEnd map_end
 mapFn map_fn
 mapInfo map_info
 mapInputs map_inputs
 mapKeyBirth map_key_birth
+mapKeyMetadata map_key_metadata
 mapKeys map_keys
 mapMasterKeys map_master_keys
 mapMemPoolTxs map_mem_pool_txs
@@ -16476,6 +16498,7 @@ mapTxSpends map_tx_spends
 mapValue map_value
 mapWallet map_wallet
 mapWalletViews map_wallet_views
+mapWatchKeys map_watch_keys
 map_prevout_scriptPubKeys map_prevout_script_pub_keys
 mappingManager mapping_manager
 mappingSet mapping_set
@@ -17057,6 +17080,7 @@ nTime n_time
 nTimeConnected n_time_connected
 nTimeExpire n_time_expire
 nTimeFirst n_time_first
+nTimeFirstKey n_time_first_key
 nTimeIn n_time_in
 nTimeLast n_time_last
 nTimeMax n_time_max
@@ -19626,6 +19650,7 @@ setEscapeKeyCancels set_escape_key_cancels
 setExclude set_exclude
 setExpect set_expect
 setExpire set_expire
+setExternalKeyPool set_external_key_pool
 setExtraFunctions set_extra_functions
 setFile set_file
 setFilesToPrune set_files_to_prune
@@ -19662,6 +19687,7 @@ setImage set_image
 setImageCacheSize set_image_cache_size
 setInfo set_info
 setInt set_int
+setInternalKeyPool set_internal_key_pool
 setInterpolationQuality set_interpolation_quality
 setInventoryTxToSend set_inventory_tx_to_send
 setIoMode set_io_mode
@@ -19868,6 +19894,7 @@ setWalletController set_wallet_controller
 setWalletEncrypted set_wallet_encrypted
 setWalletLocked set_wallet_locked
 setWalletModel set_wallet_model
+setWatchOnly set_watch_only
 setWatchOnlyFilter set_watch_only_filter
 setWindowActive set_window_active
 setWindowSize set_window_size
@@ -21630,3 +21657,4 @@ zzlLexValueLteMax zzl_lex_value_lte_max
 zzlNext zzl_next
 zzlPrev zzl_prev
 zzlStrtod zzl_strtod
+

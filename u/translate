@@ -4,6 +4,7 @@
 
 use util;
 use typemap;
+use locations;
 use translator;
 use snake-case;
 
@@ -75,11 +76,11 @@ sub MAIN(
 
     #add whitelisted types to typemap
     #a whitelisted type is the same in Rust as it is in c++
-    for "/Users/kleb/bethesda/work/repo/translator/raku/whitelist.txt".IO.slurp.lines {
+    for $whitelist-file.IO.slurp.lines {
         %*typemap{$_} = $_;
     }
 
-    for "/Users/kleb/bethesda/work/repo/translator/raku/text-typemap.txt".IO.slurp.lines {
+    for $text-typemap-file.IO.slurp.lines {
         my @tokens = $_.split(" ");
         my $head = @tokens[0];
         my $tail = @tokens[1..*].join(" ");
