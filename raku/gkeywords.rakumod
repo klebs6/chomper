@@ -1,6 +1,6 @@
 our role Keywords {
     token class      { 'class' }
-    token enum_       { 'enum' }
+    token enum_      { 'enum' }
     token mutable    { 'mutable' }
     token virtual    { 'virtual' }
     token volatile   { 'volatile' }

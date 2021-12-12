@@ -61,7 +61,7 @@ our sub insert-typename-before-valid-namespaces(Str $text, :@valid-namespaces) {
     my $in = $text;
 
     for @valid-namespaces -> $x {
-        $in ~~ s:g/<!after 'typename '>($x\:\:)/typename $0/;
+        $in ~~ s:g/<!after ['typename ' || '::' ]>($x\:\:)/typename $0/;
     }
 
     $in

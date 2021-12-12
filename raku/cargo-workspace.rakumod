@@ -1,15 +1,18 @@
 use Config::TOML;
 
+#----------------------------------------------
 our sub maybe-create-directory($name) {
     if not $name.IO.d {
         mkdir $name.IO;
     }
 }
 
+#----------------------------------------------
 our sub initialize-cargo-workspace($name) {
     shell "cd $name && cargo init --lib";
 }
 
+#----------------------------------------------
 our sub add-to-cargo-workspace($name) {
 
     my $workspace-toml = get-workspace-toml();
@@ -21,19 +24,23 @@ our sub add-to-cargo-workspace($name) {
     "Cargo.toml".IO.spurt: to-toml($workspace-toml);
 }
 
+#----------------------------------------------
 our sub imports-file($crate) {
     "$crate/src/imports.rs".IO
 }
 
+#----------------------------------------------
 our sub lib-file($crate) {
     "$crate/src/lib.rs".IO
 }
 
+#----------------------------------------------
 our sub sort-uniq(IO $file) {
     my @lines = $file.lines.sort.unique;
     $file.spurt: @lines.join("\n")
 }
 
+#----------------------------------------------
 our sub glob-import-from-crates($name, @crates) {
 
     my $imports-file = imports-file($name);
@@ -41,7 +48,7 @@ our sub glob-import-from-crates($name, @crates) {
     for @crates -> $crate {
 
         my $imports = qq:to/END/;
-        pub use {$crate}::*;
+        pub(crate) use {$crate}::*;
         END
 
         $imports-file.spurt: $imports, :append
@@ -50,6 +57,7 @@ our sub glob-import-from-crates($name, @crates) {
     sort-uniq($imports-file)
 }
 
+#----------------------------------------------
 our sub add-starter-lib-file-for-crate($name) {
     my $starter = q:to/END/;
     #![feature(test)]
@@ -77,6 +85,7 @@ our sub add-starter-lib-file-for-crate($name) {
     "$name/src/lib.rs".IO.spurt: $starter
 }
 
+#----------------------------------------------
 our sub add-workspace-crate(Str $name, :$write) {
 
     die "crate $name exists in workspace" 
@@ -87,10 +96,12 @@ our sub add-workspace-crate(Str $name, :$write) {
     initialize-cargo-workspace($name);
 }
 
+#----------------------------------------------
 our sub crate-exists-in-workspace($crate) {
     crates-exist-in-workspace([$crate])
 }
 
+#----------------------------------------------
 our sub get-workspace-toml {
 
     my $workspace-toml = from-toml("./Cargo.toml".IO.slurp);
@@ -100,6 +111,7 @@ our sub get-workspace-toml {
     $workspace-toml
 }
 
+#----------------------------------------------
 our sub crates-exist-in-workspace(@crates) {
 
     my $workspace-toml = get-workspace-toml();
@@ -113,13 +125,14 @@ our sub crates-exist-in-workspace(@crates) {
     True
 }
 
+#----------------------------------------------
 our sub add-workspace-crate-to-neighbor-cargo-toml(
     :$workspace-crate, 
     :$neighbor, 
     :$write)
 {
 
-    die if not crates-exist-in-workspace([$workspace-crate, $neighbor]);
+    die "crate DNE: $workspace-crate" if not crates-exist-in-workspace([$workspace-crate, $neighbor]);
 
     my $neighbor-cargo-toml-file = $neighbor ~ "/Cargo.toml";
     my $neighbor-cargo-toml      = from-toml($neighbor-cargo-toml-file.IO.slurp);
@@ -139,6 +152,7 @@ our sub add-workspace-crate-to-neighbor-cargo-toml(
     }
 }
 
+#----------------------------------------------
 our sub add-dependency-to-cargo-toml(
     :$cargo-toml, 
     :$dep, 
@@ -160,6 +174,7 @@ our sub add-dependency-to-cargo-toml(
     }
 }
 
+#----------------------------------------------
 our sub batch-add-dependency-to-cargo-toml(
     @crates, 
     :$dep, 
@@ -176,6 +191,7 @@ our sub batch-add-dependency-to-cargo-toml(
     }
 }
 
+#----------------------------------------------
 our sub batch-add-dependencies-to-cargo-toml(
     @crates, 
     :@deps, 

@@ -1,6 +1,5 @@
 our sub git-hash-before-date($dt) {
     my $hash = qqx/git rev-list -1 --before=\"{$dt}\" master/;
-
     $hash.chomp.substr(0,8)
 }
 
