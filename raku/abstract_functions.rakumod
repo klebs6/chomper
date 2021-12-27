@@ -1,8 +1,10 @@
 use util;
 use snake-case;
+use case;
 use typemap;
 use type-info;
 use doxy-comment;
+use line-comment-to-block-comment;
 use api;
 
 our class AbstractFunction {
@@ -30,7 +32,17 @@ our class AbstractFunction {
             my @doc-comments = do for @!comments {
                 make-doc-comment($_).chomp.trim
             };
-            @doc-comments.join("\n")
+
+            my $result = @doc-comments.join("\n");
+
+            if $result {
+                $result
+                ==> line-comment-to-block-comment()
+                ==> parse-doxy-comment()
+            } else {
+                ""
+            }
+
         } else {
             ""
         }
@@ -40,15 +52,39 @@ our class AbstractFunction {
         get-api-tag($!api)
     }
 
-    method gist {
-
-        my $args = format-rust-function-args($!args);
-
-        my $tag = do if $args.chomp.trim {
+    method get-self-tag($args) {
+        do if $args.chomp.trim {
             $.const ?? "&self, " !! "&mut self, ";
         } else {
             $.const ?? "&self" !! "&mut self";
-        };
+        }
+    }
+
+    method get-trait-name {
+        snake-to-camel($!name)
+    }
+
+    method separate-trait-gist {
+        my $args = format-rust-function-args($!args);
+
+        my $tag = self.get-self-tag($args);
+
+        my $trait-name = self.get-trait-name();
+
+        qq:to/END/
+        pub trait {$trait-name} \{
+
+            {self.get-doc-comments}
+            {self.get-api}fn {$!name}({$tag}{$args}){self.get-rt};
+        \}
+        END
+    }
+
+    method internal-abstract-function-gist {
+
+        my $args = format-rust-function-args($!args);
+
+        my $tag = self.get-self-tag($args);
 
         self.get-doc-comments 
         ~ "\n{self.get-api}fn {$!name}({$tag}{$args}){self.get-rt};\n"
@@ -59,8 +95,25 @@ our class AbstractFunctions {
 
     has AbstractFunction @.declarations;
 
-    method gist {
-        do for @!declarations { $_.gist() }.join("\n")
+    method internal-abstract-function-gist {
+        do for @!declarations { $_.internal-abstract-function-gist() }.join("\n")
+    }
+
+    method get-combo-interface {
+        my $sub-traits = @!declarations>>.get-trait-name.join("\n+ ");
+        qq:to/END/
+        pub trait Interface:
+        $sub-traits \{\}
+        END
+    }
+
+    method separate-trait-gist {
+        my $separate-traits = do for @!declarations { $_.separate-trait-gist() }.join("\n");
+        my $combo-interface = self.get-combo-interface();
+        qq:to/END/
+        $combo-interface
+        $separate-traits
+        END
     }
 }
 
@@ -84,6 +137,6 @@ our sub translate-abstract-function-declarations(
         );
     }
 
-    $writer.gist.indent(4)
+    $writer.separate-trait-gist.indent(4)
 }
 
