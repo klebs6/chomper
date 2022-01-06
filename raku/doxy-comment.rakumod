@@ -17,13 +17,14 @@ our grammar DoxyComment::Grammar {
     }
 
     regex line {
-        || <.ws> <brief-stmt>   \n
-        || <.ws> <code-stmt>    \n
-        || <.ws> <param-stmt>   \n
-        || <.ws> <return-stmt>  \n
-        || <.ws> <note-stmt>    \n
-        || <.ws> <warning-stmt> \n
-        || <basic-text>   \n
+        || <.ws> <brief-stmt>       \n
+        || <.ws> <code-stmt>        \n
+        || <.ws> <param-stmt>       \n
+        || <.ws> <deprecated-stmt>  \n
+        || <.ws> <return-stmt>      \n
+        || <.ws> <note-stmt>        \n
+        || <.ws> <warning-stmt>     \n
+        || <basic-text>             \n
         || <empty-line>
     }
     regex empty-line {
@@ -80,11 +81,18 @@ our grammar DoxyComment::Grammar {
     regex code-text {
         .*?
     }
+
     regex param-stmt {
         <.marker> <.kw-param> <in-out>? 
         <.ws> <param-name=.ident> 
         <.ws> <description=.until-newline>
     }
+
+    regex deprecated-stmt {
+        <.marker> <.kw-deprecated> 
+        <.ws> <description=.until-newline>
+    }
+
     regex return-stmt {
         <.marker> <.kw-return>  
         <.ws> <description=.until-newline>
@@ -107,6 +115,10 @@ our grammar DoxyComment::Grammar {
     token kw-param {
         | 'param'
         | 'tparam'
+    }
+
+    token kw-deprecated {
+        | 'deprecated'
     }
 
     token kw-warning {
@@ -249,6 +261,25 @@ our class DoxyComment {
         }
     }
 
+    class Deprecated {
+        #`(represents parsed information concerning
+        the deprecated description)
+
+        has Match $.header is rw;
+        has @.tail is rw;
+
+        method format($approx-text-width) {
+            my $header = "@deprecated";
+            my $body   = get-body($.header, @.tail, $approx-text-width);
+
+            qq:to/END/.chomp.trim;
+            $header
+
+            $body
+            END
+        }
+    }
+
     class Note {
         #`(represents parsed information concerning
         any notes)
@@ -310,7 +341,7 @@ our class DoxyComment {
 
         my @lines = $armnn-comment<line>.List;
 
-        enum ParseState <Header Params CodeExamples Returns Briefs Notes Warnings>;
+        enum ParseState <Header Params CodeExamples Returns Briefs Notes Warnings Deprecateds>;
 
         my ParseState $state = Header;
 
@@ -324,6 +355,11 @@ our class DoxyComment {
 
             if $line<note-stmt>:exists {
                 $state = Notes;
+                return True;
+            }
+
+            if $line<deprecated-stmt>:exists {
+                $state = Deprecateds;
                 return True;
             }
 
@@ -356,6 +392,9 @@ our class DoxyComment {
 
                     when DoxyComment::Param {
                         @!params.push: $cur-item;
+                    }
+                    when DoxyComment::Deprecated {
+                        @!deprecateds.push: $cur-item;
                     }
                     when DoxyComment::Note {
                         @!notes.push: $cur-item;
@@ -400,6 +439,10 @@ our class DoxyComment {
                 when Notes {
                     $res = DoxyComment::Note.new;
                     $res.header = $line<note-stmt>;
+                }
+                when Deprecateds {
+                    $res = DoxyComment::Deprecated.new;
+                    $res.header = $line<deprecated-stmt>;
                 }
                 when Warnings {
                     $res = DoxyComment::Warning.new;
@@ -456,14 +499,12 @@ our class DoxyComment {
 
     has @.header;
     has Param       @.params;
+    has Deprecated  @.deprecateds;
     has Ret         @.returns;
     has Note        @.notes;
     has CodeExample @.code-examples;
     has Warning     @.warnings;
     has Brief       @.briefs;
-
-
-
 
     method header-line {
 
@@ -506,6 +547,10 @@ our class DoxyComment {
         @!briefs>>.format($approx-text-width)
     }
 
+    method format-deprecateds($approx-text-width) {
+        @!deprecateds>>.format($approx-text-width)
+    }
+
     method format-notes($approx-text-width) {
         @!notes>>.format($approx-text-width)
     }
@@ -528,11 +573,13 @@ our class DoxyComment {
         my @notes         = self.format-notes($approx-text-width);
         my @warnings      = self.format-warnings($approx-text-width);
         my @params        = self.format-params($approx-text-width);
+        my @deprecateds   = self.format-deprecateds($approx-text-width);
         my @returns       = self.format-returns($approx-text-width);
         my @code-examples = self.format-code-examples-no-width();
         my @briefs        = self.format-briefs($approx-text-width);
 
         my $params-text        = self.format-text(@params);
+        my $deprecateds-text   = self.format-text(@deprecateds);
         my $notes-text         = self.format-text(@notes);
         my $warnings-text      = self.format-text(@warnings);
         my $code-examples-text = self.format-text(@code-examples);
@@ -545,6 +592,7 @@ our class DoxyComment {
         {@briefs.elems        ?? $briefs-text        !! ""}
         {@notes.elems         ?? $notes-text         !! ""}
         {@params.elems        ?? $params-text        !! ""}
+        {@deprecateds.elems   ?? $deprecateds-text   !! ""}
         {@warnings.elems      ?? $warnings-text      !! ""}
         {@code-examples.elems ?? $code-examples-text !! ""}
         {@returns.elems       ?? $returns-text       !! ""}

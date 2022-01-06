@@ -73,7 +73,7 @@ our sub remove-unwanted-tokens(Str $text, :@unwanted) {
     my $in = $text;
 
     for @unwanted -> $remove-me {
-        $in ~~ s:g/$remove-me//;
+        $in ~~ s:g/<.wb>$remove-me//;
     }
 
     $in

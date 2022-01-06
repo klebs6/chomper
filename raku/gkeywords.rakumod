@@ -24,11 +24,16 @@ our role Keywords {
         | 'inline' 
         | 'ILINE'
     }
+    token inline-never {
+        | 'XXH_NO_INLINE'
+    }
     token inline-force {
         | 'forcedinline' 
+        | 'XXH_FORCE_INLINE' 
     }
     token inline     { 
         | <inline-noforce>
+        | <inline-never>
         | <inline-force>
     }
     token explicit   { 'explicit' }

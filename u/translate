@@ -3,6 +3,11 @@
 #use Grammar::Tracer;
 
 use util;
+use comments;
+use doxy-comment;
+use reformat-block-comment;
+use block-comment;
+use line-comment-to-block-comment;
 use typemap;
 use locations;
 use translator;
@@ -15,7 +20,7 @@ our sub get-hook($hookname) {
     my %dispatch = %(
 
         default-ctor                          => { use constructor;        &translate-default-ctor },
-        simple-ifdef                          => { use simple_ifdef;        &translate-simple-ifdef },
+        simple-ifdef                          => { use simple_ifdef;       &translate-simple-ifdef },
         hashing-function                      => { use hasher;             &translate-hasher },
         op-add-eq-function-header             => { use op_add;             &translate-op-add-eq },
         op-bitor-assign-function-header       => { use op_bitor;           &translate-op-bitor-assign },
@@ -65,6 +70,10 @@ sub success-cleanup() {
     sort-uniq-snake-case-file()
 }
 
+sub maybe-extract-comment(Match $m) {
+    parse-doxy-comment(reformat-block-comment(~$m<block-comment>)).chomp.trim
+}
+
 sub MAIN(
     :$chop = False, 
     :$class = Nil, 
@@ -98,14 +107,22 @@ sub MAIN(
     my $match     
     = Translator.parse($head);
 
-    my $hookname  = $match.keys[0].Str;
+    my $hookname = ~$match<hook>.keys[0];
     my &hook      = &get-hook($hookname);
 
-    my $submatch = $match{$hookname};
+    my $comment = maybe-extract-comment($match);
+    my $submatch = $match<hook>{$hookname};
 
     if $submatch {
 
-        say &hook($submatch, $body, $class);
+        if $comment {
+            say qq:to/END/;
+            $comment
+            {&hook($submatch, $body, $class).trim}
+            END
+        } else {
+            say &hook($submatch, $body, $class);
+        }
 
         success-cleanup();
 

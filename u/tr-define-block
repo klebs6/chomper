@@ -1,6 +1,8 @@
 #!/usr/bin/env raku
 
 use snake-case;
+use reformat-block-comment;
+use doxy-comment;
 use line-comment-to-block-comment;
 
 #use Grammar::Tracer;
@@ -120,7 +122,7 @@ class DefineBlockActions {
     }
 
     method line-comment($/) {
-        make line-comment-to-block-comment('///' ~ $/<line-comment-body>.Str.chomp)
+        make parse-doxy-comment(line-comment-to-block-comment('///' ~ $/<line-comment-body>.Str.chomp))
     }
 
     method macro-name($/) {

@@ -374,6 +374,8 @@ our sub get-rinline($template-header) {
     if $inline.elems > 0 {
         if $inline[0]<inline-force>:exists {
             "#[inline(always)] "
+        } elsif $inline[0]<inline-never>:exists {
+            "#[inline(never)] "
         } else {
             "#[inline] "
         }

@@ -1,0 +1,11 @@
+#!/usr/bin/env raku
+use formula;
+
+sub MAIN {
+    my $in = $*IN.slurp;
+    my $ws = FormulaPNG::Workspace.new(
+        formula => $in.chomp.trim
+    );
+    $ws.run();
+    say $in.chomp;
+}
