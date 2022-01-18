@@ -1,7 +1,22 @@
 
+our sub is-screaming-snake-case($input) {
+    grammar Screamer {
+        token TOP { <segment>+ %% "_" }
+        token segment { <[A..Z 0..9]>+ }
+    }
+    so Screamer.parse($input)
+}
+
 our sub snake-to-camel($input) {
+
     my $type-stripped = $input.subst(/_t$/, "");
-    $type-stripped.split("_")>>.tc.join("")
+
+    if is-screaming-snake-case($type-stripped) {
+        screaming-snake-case-to-camel-case($type-stripped)
+
+    } else {
+        $type-stripped.split("_")>>.tc.join("")
+    }
 }
 
 our sub is-camel-case($type) {

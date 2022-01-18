@@ -13,3 +13,25 @@ our sub last-midnight {
         minute => 59,
     )
 }
+
+our sub today-at-three-am {
+
+    DateTime.new(
+        day    => DateTime.now.day,
+        year   => DateTime.now.year,
+        month  => DateTime.now.month,
+        hour   => 3,
+        minute => 0,
+    )
+}
+
+our sub yesterday-at-three-am {
+
+    DateTime.new(
+        day    => DateTime.now.day - 1,
+        year   => DateTime.now.year,
+        month  => DateTime.now.month,
+        hour   => 3,
+        minute => 0,
+    )
+}

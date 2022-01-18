@@ -7,9 +7,21 @@ our sub remove-hungarian-constant-prefix(Str $text) {
 our sub current-project-needs-strip-hungarian {
     #only need to pull hungarian prefixes off
     #cryengine structs
+    my $hungarian-projects = token {
+        | "h264-rs"
+        | "cry-rs"
+        | "bitcoin-rs"
+    };
+    so $*CWD.Str.split("/")[*-1] ~~ $hungarian-projects;
+
+=begin comment
+    #old version
+    my $h264    = $*CWD.Str.split("/")[*-1] ~~ "h264-rs";
     my $cry     = $*CWD.Str.split("/")[*-1] ~~ "cry-rs";
     my $bitcoin = $*CWD.Str.split("/")[*-1] ~~ "bitcoin-rs";
-    $cry or $bitcoin
+    $cry or $bitcoin or $h264
+=end comment
+
 }
 
 our sub avoid-hungarian($in) {

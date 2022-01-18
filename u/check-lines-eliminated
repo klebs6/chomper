@@ -4,7 +4,13 @@ use git;
 
 sub MAIN {
 
-    my $dt          = last-midnight.Str.split(":")[0..1].join(":");
+    my $dt = do if DateTime.now.hour > 5 {
+        today-at-three-am.Str.split(":")[0..1].join(":")
+    } else {
+        yesterday-at-three-am.Str.split(":")[0..1].join(":")
+        #last-midnight.Str.split(":")[0..1].join(":")
+    };
+
     my $hash        = git-hash-before-date($dt);
     my $nlines      = git-diff-lines($hash);
     my $commit-time = git-commit-time($hash);

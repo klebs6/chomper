@@ -6,6 +6,9 @@ our grammar Translator does ParserRules {
     rule hook {
         | <simple-ifdef>
         | <struct-member-declarations>
+        | <enum-member-declarations>
+        | <full-struct>
+        | <full-enum>
         | <abstract-function-declarations>
         | <pound-define>
         | <default-ctor>
@@ -38,7 +41,7 @@ our grammar Translator does ParserRules {
         | <destructor>
         | <ctor-header>
         | <using-declarations>
-        | <typedef-fn-ptr>
+        | <typedef-fn-ptrs>
         | <constexpr-global-block>
         | <operator-into-bool>
         | <operator-indirect>
@@ -55,4 +58,3 @@ our grammar Translator does ParserRules {
         <hook>
     }
 }
-

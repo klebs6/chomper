@@ -24,6 +24,8 @@ our grammar DoxyComment::Grammar {
         || <.ws> <return-stmt>      \n
         || <.ws> <note-stmt>        \n
         || <.ws> <warning-stmt>     \n
+        || <.ws> <description-stmt> \n
+        || <.ws> <date-stmt>        \n
         || <basic-text>             \n
         || <empty-line>
     }
@@ -69,6 +71,14 @@ our grammar DoxyComment::Grammar {
     }
     regex warning-stmt {
         <.marker> <.kw-warning> 
+        <.ws> <description=.until-newline>
+    }
+    regex description-stmt {
+        <.marker> <.kw-description> 
+        <.ws> <description=.until-newline>
+    }
+    regex date-stmt {
+        <.marker> <.kw-date> 
         <.ws> <description=.until-newline>
     }
     regex code-stmt {
@@ -123,6 +133,14 @@ our grammar DoxyComment::Grammar {
 
     token kw-warning {
         | 'warning'
+    }
+
+    token kw-description {
+        | 'description'
+    }
+
+    token kw-date {
+        | 'date'
     }
 
     token kw-note {
@@ -318,6 +336,44 @@ our class DoxyComment {
         }
     }
 
+    class Description {
+        #`(represents parsed information concerning
+        any descriptions)
+
+        has Match $.header is rw;
+        has @.tail is rw;
+
+        method format($approx-text-width) {
+            my $header = "@description";
+            my $body   = get-body($.header, @.tail, $approx-text-width);
+
+            qq:to/END/.chomp.trim;
+            $header
+
+            $body
+            END
+        }
+    }
+
+    class DateNote {
+        #`(represents parsed information concerning
+        any date note)
+
+        has Match $.header is rw;
+        has @.tail is rw;
+
+        method format($approx-text-width) {
+            my $header = "@date";
+            my $body   = get-body($.header, @.tail, $approx-text-width);
+
+            qq:to/END/.chomp.trim;
+            $header
+
+            $body
+            END
+        }
+    }
+
     class CodeExample {
         #`(represents parsed information concerning
         code examples)
@@ -341,7 +397,7 @@ our class DoxyComment {
 
         my @lines = $armnn-comment<line>.List;
 
-        enum ParseState <Header Params CodeExamples Returns Briefs Notes Warnings Deprecateds>;
+        enum ParseState <Header Params CodeExamples Returns Briefs Notes Warnings Descriptions Dates Deprecateds>;
 
         my ParseState $state = Header;
 
@@ -370,6 +426,16 @@ our class DoxyComment {
 
             if $line<warning-stmt>:exists {
                 $state = Warnings;
+                return True;
+            }
+
+            if $line<description-stmt>:exists {
+                $state = Descriptions;
+                return True;
+            }
+
+            if $line<date-stmt>:exists {
+                $state = Dates;
                 return True;
             }
 
@@ -404,6 +470,12 @@ our class DoxyComment {
                     }
                     when DoxyComment::Warning {
                         @!warnings.push: $cur-item;
+                    }
+                    when DoxyComment::Description {
+                        @!descriptions.push: $cur-item;
+                    }
+                    when DoxyComment::DateNote {
+                        @!dates.push: $cur-item;
                     }
                     when DoxyComment::Ret {
                         @!returns.push: $cur-item;
@@ -447,6 +519,14 @@ our class DoxyComment {
                 when Warnings {
                     $res = DoxyComment::Warning.new;
                     $res.header = $line<warning-stmt>;
+                }
+                when Descriptions {
+                    $res = DoxyComment::Description.new;
+                    $res.header = $line<description-stmt>;
+                }
+                when Dates {
+                    $res = DoxyComment::DateNote.new;
+                    $res.header = $line<date-stmt>;
                 }
                 when Returns {
                     $res = DoxyComment::Ret.new;
@@ -504,6 +584,8 @@ our class DoxyComment {
     has Note        @.notes;
     has CodeExample @.code-examples;
     has Warning     @.warnings;
+    has Description @.descriptions;
+    has DateNote    @.dates;
     has Brief       @.briefs;
 
     method header-line {
@@ -559,6 +641,14 @@ our class DoxyComment {
         @!warnings>>.format($approx-text-width)
     }
 
+    method format-descriptions($approx-text-width) {
+        @!descriptions>>.format($approx-text-width)
+    }
+
+    method format-date-notes($approx-text-width) {
+        @!dates>>.format($approx-text-width)
+    }
+
     method format-text(@lines) {
         qq:to/END/;
         -----------
@@ -572,6 +662,8 @@ our class DoxyComment {
 
         my @notes         = self.format-notes($approx-text-width);
         my @warnings      = self.format-warnings($approx-text-width);
+        my @descriptions  = self.format-descriptions($approx-text-width);
+        my @dates         = self.format-date-notes($approx-text-width);
         my @params        = self.format-params($approx-text-width);
         my @deprecateds   = self.format-deprecateds($approx-text-width);
         my @returns       = self.format-returns($approx-text-width);
@@ -582,6 +674,8 @@ our class DoxyComment {
         my $deprecateds-text   = self.format-text(@deprecateds);
         my $notes-text         = self.format-text(@notes);
         my $warnings-text      = self.format-text(@warnings);
+        my $descriptions-text  = self.format-text(@descriptions);
+        my $dates-text         = self.format-text(@dates);
         my $code-examples-text = self.format-text(@code-examples);
         my $returns-text       = self.format-text(@returns);
         my $briefs-text        = self.format-text(@briefs);
@@ -594,6 +688,8 @@ our class DoxyComment {
         {@params.elems        ?? $params-text        !! ""}
         {@deprecateds.elems   ?? $deprecateds-text   !! ""}
         {@warnings.elems      ?? $warnings-text      !! ""}
+        {@descriptions.elems  ?? $descriptions-text  !! ""}
+        {@dates.elems         ?? $dates-text         !! ""}
         {@code-examples.elems ?? $code-examples-text !! ""}
         {@returns.elems       ?? $returns-text       !! ""}
         END

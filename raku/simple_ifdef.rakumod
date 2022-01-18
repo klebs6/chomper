@@ -116,6 +116,6 @@ our sub translate-simple-ifdef( $submatch, $body, $rclass) {
     Translator.parse(
         $submatch.orig.trim.Str, 
         rule    => "simple-ifdef", 
-        actions => SimpleIfdef::Actions).made
+        actions => SimpleIfdef::Actions).made.chomp.trim
 
 }

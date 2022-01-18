@@ -9,7 +9,8 @@ our role Keywords {
     token final      { 'final' }
     token public     { 'public' }
     token private    { 'private' }
-    token struct     { 'struct' }
+    token struct     { 'struct' | 'enum' }
+    token enum       { 'enum' }
     token friend     { 'friend' }
     token typename   { 'typename' }
     token template   { 'template' }

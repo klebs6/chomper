@@ -159,9 +159,14 @@ our sub strip-parens($input) {
     my $lidx = $input.indices("(")[0];
     my $ridx = $input.indices(")")[*-1];
     $input.substr($lidx + 1 .. $ridx - 1)
-
 }
 
-my $input = $*IN.slurp ~ "\n";
+our sub translate-define-block {
+    my $input = $*IN.slurp ~ "\n";
 
-.say for DefineBlock.parse($input, actions => DefineBlockActions.new).made;
+    .say for DefineBlock.parse(
+        $input, 
+        actions => DefineBlockActions.new).made;
+}
+
+translate-define-block();

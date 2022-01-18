@@ -8,6 +8,7 @@ use numeric-token;
 use quoted-string-token;
 use rule-braced-array-literal;
 use rule-line-comment;
+#use Grammar::Tracer;
 
 our role ParserRules 
 does Types
@@ -22,11 +23,40 @@ does IdentToken
 does NumericToken
 does FunctionHeader {
 
+    rule func-tag {
+        | FUNC_ATTR_CONST
+        | FUNC_ATTR_ALWAYS_INLINE
+        | FUNC_ATTR_NONNULL_RET
+        | FUNC_ATTR_MALLOC
+        | FUNC_ATTR_UNUSED
+        | FUNC_ATTR_NORETURN
+        | FUNC_ATTR_NONNULL_ALL
+        | FUNC_ATTR_PURE
+        | FUNC_ATTR_WARN_UNUSED_RESULT
+        | FUNC_ATTR_NO_SANITIZE_UNDEFINED
+        | <func-nonnull-arg>
+    }
+
+    rule func-nonnull-arg {
+        | "FUNC_ATTR_NONNULL_ARG(" [<int-literal>+ %% ", "] ')'
+        | "FUNC_ATTR_ALLOC_SIZE(" [<int-literal>+ %% ", "] ')'
+        | "FUNC_ATTR_ALLOC_SIZE_PROD(" [<int-literal>+ %% ", "] ')'
+    }
+
+    rule func-tags {
+        <func-tag>+
+    }
+
     regex template-identifier {
         <identifier> '<' <.ws> [[<unnamed-arg>]+ %% ["," <.ws>?] ] <.ws> '>'
     }
 
-    token value  { <.identifier> | <.numeric> }
+    token value  { 
+        | <.identifier> 
+        | <.numeric> 
+        | <.int-literal> 
+        | <.hexadecimal> 
+    }
 
     rule static_const_rhs  { 
         | '=' <braced-array-literal>
@@ -103,8 +133,12 @@ does FunctionHeader {
     rule typedef-fn-ptr {
         <.typedef> <rt=unnamed-arg> 
         '(' '*' <name> ')'
-        '('<unnamed-args>')' 
+        <parenthesized-args>
         ';'
+    }
+
+    rule typedef-fn-ptrs {
+        <typedef-fn-ptr>+
     }
 
     token use-operator-context-functions {
@@ -344,24 +378,6 @@ does FunctionHeader {
         ',' '...' 
     }
 
-    rule function-declaration {
-        <line-comment>*
-        <api-tag>?  
-        <inline>? 
-        <static>? 
-        <inline>?
-        <constexpr>? 
-        <return-type>?
-        <plugin-api>?
-        <function-name> 
-        <parenthesized-args>
-        <const>?
-        <noexcept>?
-        <override>?
-        <final>?
-        <terminator>?  
-        <line-comment>? 
-    }
 
     rule class-constructor-declaration {
         <line-comment>*
@@ -472,6 +488,14 @@ does FunctionHeader {
         ]
     }
 
+    rule equals-int {
+        '=' <value>
+    }
+
+    rule enum-member-declaration-item {
+        <id=identifier> <equals-int>?
+    }
+
     rule function-ptr-type {
         <return-type> '(' '*' <name> ')'
         <parenthesized-args>
@@ -490,6 +514,20 @@ does FunctionHeader {
         :sigspace
         <.ws>
     }
+
+    rule enum-member-declaration {
+        :sigspace
+        [<line-comment>* | <block-comment>]
+        [
+            | <enum-member-declaration-item>
+        ]
+        :!sigspace
+        ','
+        [\h* [<line-comment> | <block-comment>]]?
+        :sigspace
+        <.ws>
+    }
+
     rule destructor {
         '~' <type> '(' ')' 
         <override>?
@@ -500,6 +538,43 @@ does FunctionHeader {
         :sigspace
         <struct-member-declaration>+
     }
+
+    rule enum-member-declarations {
+        :sigspace
+        <enum-member-declaration>+
+    }
+
+    #--------------------------
+    rule full-struct {
+        | <full-struct-v1>
+        | <full-struct-v2>
+    }
+
+    rule full-struct-v1 {
+        <typedef> <struct> '{'
+            <struct-member-declarations>
+        '}' <struct-name> ';'
+    }
+
+    rule full-struct-v2 {
+        <struct> <struct-name> '{'
+            <struct-member-declarations>
+        '}' ';'
+    }
+
+    #--------------------------
+    rule full-enum {
+        | <full-enum-v1>
+    }
+
+    rule full-enum-v1 {
+        <typedef> <enum> '{'
+            <enum-member-declarations>
+        '}' <enum-name> ';'
+    }
+
+    rule struct-name { <.identifier> }
+    rule enum-name   { <.identifier> }
 
     rule function-local-type-suffix {
        [<ref> | [<ptr>+ <ptr-ref>?] ]?  <name> <array-specifier>? 

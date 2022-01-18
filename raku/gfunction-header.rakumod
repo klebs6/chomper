@@ -1,6 +1,26 @@
+our role FunctionDeclaration {
+    rule function-declaration {
+        <api-tag>?  
+        <inline>? 
+        <static>? 
+        <inline>?
+        <constexpr>? 
+        <return-type>?
+        <plugin-api>?
+        <function-name> 
+        <parenthesized-args>
+        <func-tags>?
+        <const>?
+        <noexcept>?
+        <override>?
+        <final>?
+        <terminator>?  
+        <line-comment>? 
+    }
+}
+
 our role FreestandingTemplateFunction {
     rule freestanding-template-function-header() {
-        [<line-comment> | <block-comment>]* 
         <api-tag>? 
         <template> '<' <template-args> '>'
         <inline>?
@@ -10,6 +30,7 @@ our role FreestandingTemplateFunction {
         <return-type> 
         <function-name> 
         <parenthesized-args>
+        <func-tags>?
         <const>? 
         <noexcept>? 
         <override>?
@@ -18,7 +39,6 @@ our role FreestandingTemplateFunction {
 
 our role OpMulEq {
     rule op-mul-eq-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -32,7 +52,6 @@ our role OpMulEq {
 
 our role OpDivEq {
     rule op-div-eq-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -45,7 +64,6 @@ our role OpDivEq {
 
 our role OpIndexFunction {
     rule op-index-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -59,7 +77,6 @@ our role OpIndexFunction {
 
 our role OpAddEq {
     rule op-add-eq-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -72,7 +89,6 @@ our role OpAddEq {
 
 our role OpBitorAssign {
     rule op-bitor-assign-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -85,7 +101,6 @@ our role OpBitorAssign {
 
 our role OpBitandAssign {
     rule op-bitand-assign-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -98,7 +113,6 @@ our role OpBitandAssign {
 
 our role OpSubEq {
     rule op-sub-eq-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -111,7 +125,6 @@ our role OpSubEq {
 
 our role OpNegate {
     rule op-negate-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -124,7 +137,6 @@ our role OpNegate {
 
 our role OpAdd {
     rule op-add-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -138,7 +150,6 @@ our role OpAdd {
 
 our role OpIntoBool {
     rule operator-into-bool {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -152,7 +163,6 @@ our role OpIntoBool {
 
 our role OpNot {
     rule operator-not {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -167,7 +177,6 @@ our role OpNot {
 
 our role OpIndirect {
     rule operator-indirect {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -182,7 +191,6 @@ our role OpIndirect {
 
 our role OpMul {
     rule op-mul-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -196,7 +204,6 @@ our role OpMul {
 
 our role OpXor {
     rule op-xor-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -210,7 +217,6 @@ our role OpXor {
 
 our role OpBitand {
     rule op-bitand-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -224,7 +230,6 @@ our role OpBitand {
 
 our role OpBitor {
     rule op-bitor-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -238,7 +243,6 @@ our role OpBitor {
 
 our role OpConvert {
     rule op-convert-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <inline>?
         'operator' <type> 
@@ -249,7 +253,6 @@ our role OpConvert {
 
 our role OpDiv {
     rule op-div-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -264,7 +267,6 @@ our role OpDiv {
 our role OpSub {
 
     rule op-sub-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -278,7 +280,6 @@ our role OpSub {
 
 our role OpEq {
     rule op-eq-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -293,7 +294,6 @@ our role OpEq {
 our role OpLt {
 
     rule op-lt-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -308,7 +308,6 @@ our role OpLt {
 our role OpOstream {
 
     rule op-ostream-function-header {
-        [<line-comment> | <block-comment>]* 
         [<template> '<' <template-args> '>']?
         <inline>?
         ['std::']? 'ostream' '&'
@@ -320,7 +319,6 @@ our role OpOstream {
 #---------------------------------
 our role OpShlAssign {
     rule op-shl-assign-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -333,7 +331,6 @@ our role OpShlAssign {
 
 our role OpShl {
     rule op-shl-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -347,7 +344,6 @@ our role OpShl {
 
 our role OpShrAssign {
     rule op-shr-assign-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -360,7 +356,6 @@ our role OpShrAssign {
 
 our role OpShr {
     rule op-shr-function-header {
-        [<line-comment> | <block-comment>]* 
         <api-tag>?
         <friend>?
         <inline>?
@@ -373,6 +368,7 @@ our role OpShr {
 }
 
 our role FunctionHeader 
+does FunctionDeclaration
 does FreestandingTemplateFunction 
 does OpMulEq
 does OpMul

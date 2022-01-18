@@ -1,4 +1,5 @@
 use util;
+use doxy-comment;
 use reformat-block-comment;
 use block-comment;
 use line-comment-to-block-comment;
@@ -40,4 +41,27 @@ our role GetDocComments {
             ""
         }
     }
+}
+
+our sub format-comments(@comments) {
+
+    if @comments.elems eq 0 {
+        return "";
+    }
+
+    if @comments.elems eq 1 and @comments[0].trim ~~ "" {
+        return "";
+    }
+
+    @comments 
+
+    ==> map({
+        make-doc-comment($_).chomp.trim
+    })
+
+    ==> join("\n")
+
+    ==> line-comment-to-block-comment()
+
+    ==> parse-doxy-comment()
 }

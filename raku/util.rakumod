@@ -3,7 +3,7 @@ use snake-case;
 use indent-rust-named-type-list;
 
 our sub make-doc-comment($comment) {
-    $comment.lines>>.subst(/\/ \/ <.ws>? <?before <-[/]> > /, "/// ")>>.trim.join("\n")
+    $comment.lines>>.subst(/<!after <[/]>> \/ \/ <.ws>? <?before <-[/]> > /, "/// ")>>.trim.join("\n")
 }
 
 our sub format-option-defaults-initlist($list) {

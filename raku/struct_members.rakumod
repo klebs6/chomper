@@ -9,29 +9,7 @@ use snake-case;
 use return-type;
 use indent-rust-named-type-list;
 use line-comment-to-block-comment;
-
-sub format-comments(@comments) {
-
-    if @comments.elems eq 0 {
-        return "";
-    }
-
-    if @comments.elems eq 1 and @comments[0].trim ~~ "" {
-        return "";
-    }
-
-    @comments 
-
-    ==> map({
-        make-doc-comment($_).chomp.trim
-    })
-
-    ==> join("\n")
-
-    ==> line-comment-to-block-comment()
-
-    ==> parse-doxy-comment()
-}
+use comments;
 
 our class RustStructFnMember {
 

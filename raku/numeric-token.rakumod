@@ -1,5 +1,9 @@
 our role NumericToken {
 
+    token int-literal {
+        <[ 0..9 ]>+
+    }
+
     token numeric-value {
         [ '+' | '-' | '~' ]? 
         <[ 0..9 ]>+ 

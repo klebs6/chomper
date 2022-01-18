@@ -47,11 +47,14 @@ our sub get-hook($hookname) {
         static-constants                      => { use static_const;       &translate-static-const },
         function-local-declarations           => { use function-locals;    &translate-function-locals },
         struct-member-declarations            => { use struct_members;     &translate-struct-member-declarations },
+        enum-member-declarations              => { use enum_members;       &translate-enum-member-declarations },
+        full-struct                           => { use full_struct;        &translate-full-struct },
+        full-enum                             => { use full_enum;          &translate-full-enum },
         abstract-function-declarations        => { use abstract_functions; &translate-abstract-function-declarations },
         destructor                            => { use destructor;         &translate-destructor },
         ctor-header                           => { use ctor_header;        &translate-ctor-header },
         using-declarations                    => { use using_declarations; &translate-using-declarations },
-        typedef-fn-ptr                        => { use typedef_fn_ptr;     &translate-typedef-fn-ptr },
+        typedef-fn-ptrs                       => { use typedef_fn_ptr;     &translate-typedef-fn-ptrs },
         pound-define                          => { use pound_define;       &translate-pound-define },
         constexpr-global-block                => { use constexpr_globals;  &translate-constexpr-global-block },
         operator-into-bool                    => { use operator_into_bool; &translate-operator-into-bool },
@@ -71,7 +74,33 @@ sub success-cleanup() {
 }
 
 sub maybe-extract-comment(Match $m) {
-    parse-doxy-comment(reformat-block-comment(~$m<block-comment>)).chomp.trim
+    if $m<block-comment> {
+        return parse-doxy-comment(~$m<block-comment>).chomp.trim;
+    }
+
+    if $m<line-comment> {
+
+        my $line-comment  = format-rust-comments(get-rcomments-list($m));
+
+        return parse-doxy-comment(
+            line-comment-to-block-comment($line-comment)
+        ).chomp.trim;
+    }
+
+    return Nil;
+}
+
+sub maybe-extract-func-tags(Match $m) {
+
+    if $m<func-tags> {
+
+        do for $m<func-tags><func-tag>.List {
+            "#[{$_.Str.chomp.trim}]"
+        }.join("\n")
+
+    } else {
+        Nil
+    }
 }
 
 sub MAIN(
@@ -110,18 +139,39 @@ sub MAIN(
     my $hookname = ~$match<hook>.keys[0];
     my &hook      = &get-hook($hookname);
 
-    my $comment = maybe-extract-comment($match);
+    my $comment  = maybe-extract-comment($match);
     my $submatch = $match<hook>{$hookname};
+    my $tags     = maybe-extract-func-tags($submatch);
 
     if $submatch {
 
-        if $comment {
-            say qq:to/END/;
-            $comment
-            {&hook($submatch, $body, $class).trim}
-            END
-        } else {
-            say &hook($submatch, $body, $class);
+        given ($comment.WHAT, $tags.WHAT) {
+            when (Str, Str) {
+                say qq:to/END/;
+                $comment
+                $tags
+                {&hook($submatch, $body, $class)}
+                END
+            }
+            when (Str, Any) {
+                say qq:to/END/;
+                $comment
+                {&hook($submatch, $body, $class)}
+                END
+
+            }
+            when (Any, Str) {
+                say qq:to/END/;
+                $tags
+                {&hook($submatch, $body, $class)}
+                END
+
+            }
+            when (Any, Any) {
+                say qq:to/END/;
+                {&hook($submatch, $body, $class)}
+                END
+            }
         }
 
         success-cleanup();
