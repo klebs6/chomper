@@ -663,6 +663,7 @@ maxPayloadSize max_payload_size
 max_payload_size_ max_payload_size
 missingFrames missing_frames
 nHashStr n_hash_str
+nSize n_size
 nType n_type
 newLen new_len
 numberOfCores number_of_cores
