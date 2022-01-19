@@ -7794,3 +7794,4 @@ TagECInputCtx ECInputCtx
 SECInputCtx ECInputCtx
 CSliceBufferReallocatTest SliceBufferReallocatTest
 CSliceBufferReallocatTest SliceBufferReallocatTest
+expr_ast_node ExprAstNode

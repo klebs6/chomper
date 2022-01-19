@@ -1,6 +1,7 @@
 use gtype;
 use gkeywords;
 use gfunction-header;
+use gpython-function-header;
 use gsimple-ifdef;
 use block-comment;
 use ident-token;
@@ -21,6 +22,7 @@ does BracedArrayLiteralRule
 does LineCommentRule
 does IdentToken
 does NumericToken
+does PythonFunctionHeader
 does FunctionHeader {
 
     rule func-tag {

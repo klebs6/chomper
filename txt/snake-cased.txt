@@ -1,4 +1,7 @@
 
+ADD_IDENT add_ident
+ADD_OP_NODE add_op_node
+ADD_VALUE_IF_MISSING add_value_if_missing
 ALLOC_MEMORY alloc_memory
 ASSERT_MEMORY_FAIL2X assert_memory_fail2x
 ASSERT_MEMORY_FAIL3X assert_memory_fail3x
@@ -20,6 +23,7 @@ BsInfo bs_info
 BuildSceneChangeDetection build_scene_change_detection
 CALC_BI_STRIDE calc_bi_stride
 CALL call
+CAudioStreamTest audio_stream_test
 CHECK check
 CSceneChangeDetectorVideo scene_change_detector_video
 CavlcParamCal_ref cavlc_param_cal_ref
@@ -76,7 +80,12 @@ DoLineTest do_line_test
 DownsampleHalfAverage downsample_half_average
 Drain drain
 ENCODE_FRAME_NUM          encode_frame_num         
+ERROR_FROM_NODE_AND_MSG error_from_node_and_msg
+ERROR_FROM_TOKEN error_from_token
+ERROR_FROM_TOKEN_AND_MSG error_from_token_and_msg
 EXPAND_PIC_TEST_NUM  expand_pic_test_num 
+EXPR_OPT_SCOPE_LIST expr_opt_scope_list
+EXPR_VAR_SCOPE_LIST expr_var_scope_list
 EncDecFileParam enc_dec_file_param
 EncDecOneFrame enc_dec_one_frame
 EncFileParamToParamExt enc_file_param_to_param_ext
@@ -148,6 +157,8 @@ GomSampleSadExceptBackground gom_sample_sad_except_background
 H264_PADDING_LENGTH_CHROMA  h264_padding_length_chroma 
 H264_PADDING_LENGTH_LUMA  h264_padding_length_luma 
 HIGH_MOTION_BLOCK_THRESHOLD  high_motion_block_threshold 
+HL hl
+HL_CUR_TOKEN hl_cur_token
 IMAGE_VARY_SIZE  image_vary_size 
 IS_PARASET is_paraset
 IWelsTask wels_task
@@ -210,6 +221,7 @@ MAX_SAMPLE_WIDTH  max_sample_width
 MAX_WIDTH                 max_width                
 MAX_WIDTH                max_width               
 MAX_WIDTH  max_width 
+MAY_HAVE_NEXT_EXPR may_have_next_expr
 MBCOPYTEST_NUM  mbcopytest_num 
 MB_SIZE  mb_size 
 MCChromaAnchor mc_chroma_anchor
@@ -232,9 +244,12 @@ MockInputData mock_input_data
 MockPacketType mock_packet_type
 NAL_HEADER_BYTES  nal_header_bytes 
 NAL_TYPE  nal_type 
+NEW_NODE new_node
+NEW_NODE_WITH_CUR_POS new_node_with_cur_pos
 NEW_QUANT new_quant
 NUM_OF_POSSIBLE_RESOLUTION  num_of_possible_resolution 
 OPENH264_MAX_MB  openh264_max_mb 
+OP_MISSING op_missing
 OnTaskCancelled on_task_cancelled
 OnTaskExecuted on_task_executed
 OneCallingFunc one_calling_func
@@ -242,6 +257,8 @@ Open open
 PADDING_LENGTH padding_length
 PAYLOAD_SIZE  payload_size 
 PIXEL_STRIDE  pixel_stride 
+PNODE_P pnode_p
+POS_FROM_TOKEN pos_from_token
 PPS_NAL_TYPE  pps_nal_type 
 PREDDC preddc
 PREDDCLeft preddc_left
@@ -249,6 +266,9 @@ PREDDCNone preddc_none
 PREDDCTop preddc_top
 PREDH predh
 PREDV predv
+PSTACK pstack
+PSTACK_P pstack_p
+PTOKEN ptoken
 ParseBs parse_bs
 PixelAvgAnchor pixel_avg_anchor
 PixelSubWH pixel_subwh
@@ -268,6 +288,7 @@ Release release
 Reset reset
 Run run
 SCENE_CHANGE_MOTION_RATIO_LARGE_VIDEO    scene_change_motion_ratio_large_video   
+SELECT_FIGURE_BRACE_TYPE select_figure_brace_type
 SHA1CircularShift sha1circular_shift
 SHA1Input sha1input
 SHA1PadMessage sha1pad_message
@@ -275,6 +296,11 @@ SHA1ProcessMessageBlock sha1process_message_block
 SHA1Reset sha1reset
 SHA1Result sha1result
 SHA_DIGEST_LENGTH  sha_digest_length 
+SIGNALIZER_BUILD  signalizer_build 
+SIGNALIZER_MAJOR  signalizer_major 
+SIGNALIZER_MINOR  signalizer_minor 
+SIGNALIZER_VERSION_STRING  signalizer_version_string 
+SIGNALIZER_VST_VERSION_HEX  signalizer_vst_version_hex 
 SPS_NAL_TYPE  sps_nal_type 
 SUBSETSPS_NAL_TYPE  subsetsps_nal_type 
 ScrollDetectionWithMask scroll_detection_with_mask
@@ -424,7 +450,9 @@ bVCLLoss vcl_loss
 cTestList test_list
 callback_ callback
 capacity_ capacity
+change_D change_d
 codecSettings codec_settings
+compute_R compute_r
 copy copy_
 copyWithStartCode copy_with_start_code
 coreCount core_count
@@ -444,6 +472,7 @@ eReturn return
 eSceneChangeIdc scene_change_idc
 eSliceMode slice_mode
 eUsageType usage_type
+emulatedBufferSize emulated_buffer_size
 encToDecData enc_to_dec_data
 encToDecSliceData enc_to_dec_slice_data
 encoder_ encoder
@@ -764,6 +793,7 @@ p_SLostSim lost_sim
 p_dst dst
 p_nlhs nlhs
 p_y_data y_data
+parseSVG parsesvg
 pfBilateralLumaFilter8 pf_bilateral_luma_filter8
 pfEnc pf_enc
 pfGeneralRatioChroma pf_general_ratio_chroma
@@ -814,9 +844,13 @@ sTrace trace
 sVaaFunc vaa_func
 sVaaFuncs vaa_funcs
 sWelsPic wels_pic
+sampleRate sample_rate
 sliceSize slice_size
 start_time_ start_time
 stats_ stats
+str str_
+svgPath svg_path
+svgResourceName svg_resource_name
 t_ t
 type ty
 type_ ty

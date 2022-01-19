@@ -4,7 +4,7 @@ our role NumericToken {
         <[ 0..9 ]>+
     }
 
-    token numeric-value {
+    regex numeric-value {
         [ '+' | '-' | '~' ]? 
         <[ 0..9 ]>+ 
         [ '.' <[ 0..9 ]>* ]? 
