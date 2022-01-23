@@ -20,7 +20,7 @@ our sub get-hook($hookname) {
     my %dispatch = %(
 
         default-ctor                          => { use constructor;        &translate-default-ctor },
-        python-function-header                => { use python-function-header; &translate-python-function-header },
+        #python-function-header                => { use python-function-header; &translate-python-function-header },
         simple-ifdef                          => { use simple_ifdef;       &translate-simple-ifdef },
         hashing-function                      => { use hasher;             &translate-hasher },
         op-add-eq-function-header             => { use op_add;             &translate-op-add-eq },

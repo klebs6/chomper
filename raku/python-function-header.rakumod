@@ -91,9 +91,11 @@ our class PythonDocComment {
     has $.parsed;
 
     submethod TWEAK {
-        $!body   = ~$!python-doc-comment<python-doc-comment-body>;
-        $!parsed = 
-        DocCommentBodyParser.parse($!body)<doc-comment-body> // self.trace-parse-and-die();
+        if $!python-doc-comment {
+            $!body   = ~$!python-doc-comment<python-doc-comment-body>;
+            $!parsed = 
+            DocCommentBodyParser.parse($!body)<doc-comment-body> // self.trace-parse-and-die();
+        }
     }
 
     method trace-parse-and-die {
@@ -113,6 +115,7 @@ our class PythonDocComment {
     }
 
     method get-returns {
+        return [] if not self.valid();
         my @returns;
         my $sections = $!parsed<section>.List;
         my $returns-section = $sections.grep(*.keys[0].contains("returns"))>>.<returns-section>;
@@ -130,6 +133,7 @@ our class PythonDocComment {
     }
 
     method get-params {
+        return [] if not self.valid();
         my @params;
         my $sections = $!parsed<section>.List;
         my $params-section = $sections.grep(*.keys[0].contains("param"));

@@ -5,7 +5,7 @@ use grammar;
 our grammar Translator does ParserRules {
     rule hook {
         | <simple-ifdef>
-        | <python-function-header>
+        #| <python-function-header>
         | <struct-member-declarations>
         | <enum-member-declarations>
         | <full-struct>

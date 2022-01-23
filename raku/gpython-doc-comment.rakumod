@@ -104,8 +104,8 @@ does ParameterSection {
 
     token sentence-token {
         [
-            || <math-delimiter>
             || <word>
+            || <math-delimiter>
             || <numeric>
             || <parenthesized-text>
             || <bracketed-numeric>
@@ -144,11 +144,12 @@ does ParameterSection {
     }
 
     token word {
-        <[A..Z a..z \- _]>+
+        <[A..Z a..z \- _ 0..9]>+
     }
 
     rule paragraph {
-        <sentence>+
+        | <maybe-undelimited-sentence>
+        | <sentence>+
     }
 
     rule numeric-block {
@@ -162,5 +163,21 @@ does ParameterSection {
     rule references-section {
         <references-section-header>
         <references-specification>+
+    }
+}
+
+our role PythonDocComment {
+
+    regex python-doc-comment {
+        <python-doc-comment-delimiter>
+        <python-doc-comment-body>
+        <python-doc-comment-delimiter>
+    }
+
+    token python-doc-comment-delimiter {
+        '"""'
+    }
+    regex python-doc-comment-body {
+        .*
     }
 }
