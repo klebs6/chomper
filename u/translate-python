@@ -1,6 +1,7 @@
 #!/usr/bin/env raku
 use python-grammar;
 use Data::Dump::Tree;
+use Data::Dump;
 use python-to-rust-actions;
 
 class A does Python3ToRustActions {}
@@ -29,8 +30,11 @@ sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = True) {
 
 
     if $to-rust {
-        .say for $parsed.made;
-        #ddt $parsed.made;
+
+        for $parsed.made {
+            ddt $_, :nocolor;
+        }
+
     } else {
         say $parsed;
     }

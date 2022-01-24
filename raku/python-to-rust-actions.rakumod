@@ -1,3 +1,5 @@
+use python3-function-to-rust-stub;
+
 our class Continue {}
 our class PythonImportSkipMe {}
 our class Break {}
@@ -11,6 +13,15 @@ our class TernaryOperator {
 
 sub get-compound-comments($/) {
     [|$<COMMENT>>>.made, $<COMMENT_NONEWLINE>.made // Nil]
+}
+
+our sub is-test-fn-name($name is rw) {
+    $name = $name.subst(:g, /^_/, "");
+    $name.starts-with("test")
+}
+
+our role DeeperPython3ToRustActions {
+
 }
 
 our role Python3ToRustActions {
@@ -191,16 +202,152 @@ our role Python3ToRustActions {
         make $<funcdef>.made
     }
 
+
+    #------------------------------------
     method funcdef($/) {
+        my $name = $<NAME>.made;
+=begin comment
+        make python3-function-to-rust-stub(
+            name       => $name,
+            private    => $name.starts-with("_"),
+            is-test    => is-test-fn-name($name),
+            parameters => $<parameters>.made,
+            test       => $<test> // Nil,
+            suite      => $<suite>.Str
+        )
+=end comment
         make {
-            function => {
-                name       => $<NAME>.made,
-                private    => $<NAME>.made.starts-with("_"),
-                parameters => $<parameters>.made // Nil,
+            funcdef => {
+                name       => $name,
+                private    => $name.starts-with("_"),
+                is-test    => is-test-fn-name($name),
+                parameters => $<parameters>.made,
                 test       => $<test> // Nil,
-                suite      => $<suite>.made
+                suite      => $<suite>.Str
             }
         }
+    }
+
+    method parameters($/) {
+        make $/<parenthesized-typedarglist>.made
+    }
+
+    method parenthesized-typedarglist($/) {
+        make $/<typedargslist>.made
+    }
+
+    method typedargslist:sym<full>($/) {
+        make { 
+            typedargslist => {
+                basic-args => $<just-basic-args-with-trailing-comment>.made,
+                star-args  => $<star-args>.made,
+                kw-args    => $<kw-args>.made,
+            }
+        }
+    }
+
+    method typedargslist:sym<just-star-args>($/) {
+        make { 
+            typedargslist => {
+                star-args  => $<star-args>.made,
+            }
+        }
+    }
+
+    method typedargslist:sym<just-kwargs>($/) {
+        make { 
+            typedargslist => {
+                kw-args    => $<kw-args>.made,
+            }
+        }
+    }
+
+    method typedargslist:sym<just-basic>($/) {
+        make { 
+            typedargslist => {
+                basic-args => $<just-basic-args>.made,
+            }
+        }
+    }
+
+    method typedargslist:sym<basic-and-star-args>($/) {
+        make { 
+            typedargslist => {
+                basic-args => $<just-basic-args-with-trailing-comment>.made,
+                star-args  => $<star-args>.made,
+            }
+        }
+    }
+
+    method typedargslist:sym<basic-and-kwargs>($/) {
+        make { 
+            typedargslist => {
+                basic-args => $<just-basic-args-with-trailing-comment>.made,
+                kw-args    => $<kw-args>.made,
+            }
+        }
+    }
+
+    method typedargslist:sym<star-and-kwargs>($/) {
+        make { 
+            typedargslist => {
+                star-args  => $<star-args>.made,
+                kw-args    => $<kw-args>.made,
+            }
+        }
+    }
+
+    method augmented-tfpdef($/) {
+        make {
+            augmented-tfpdef => {
+                tfpdef => $<tfpdef>.made,
+                test   => $<test>.made // Nil,
+            }
+        }
+    }
+
+    method augmented-tfpdef-comma-maybe-comment($/) {
+        make {
+            comment => $<COMMENT>>>.made,
+            |$<augmented-tfpdef>.made,
+        }
+    }
+
+    method just-basic-args($/) {
+        make {
+            args => [ |$<augmented-tfpdef-comma-maybe-comment>>>.made, $<augmented-tfpdef>.made ],
+        }
+    }
+
+    method just-basic-args-with-trailing-comment($/) {
+        make {
+            args => [ |$<augmented-tfpdef-comma-maybe-comment>>>.made ],
+        }
+    }
+
+    method star-args($/) {
+        make {
+            star-args => [$<tfpdef>.made // Nil, |$<augmented-tfpdef>>>.made ],
+        }
+    }
+
+    method kwargs($/) {
+        make {
+            kwargs => $<tfpdef>.made,
+        }
+    }
+
+    method tfpdef($/) {
+        make {
+            tfpdef => {
+                name => $<NAME>.made,
+                test => $<test>.made // Nil,
+            }
+        }
+    }
+
+    method comma-maybe-comment($/) {
+        make $/<COMMENT>>>.made
     }
 
     method NAME($/) {
@@ -255,19 +402,87 @@ our role Python3ToRustActions {
     }
 
     method small-stmt:sym<expr-augassign>($/) {
-        make "expr-augassign"
+        make {
+            expr-augassign => {
+                lhs  => $<testlist-star-expr>.made,
+                op   => $<augassign>.made,
+                rhs  => $<expr-augassign-rhs>.made,
+            }
+        }
+    }
+
+    method augassign($/) {
+        make $/.Str
     }
 
     method small-stmt:sym<expr-equals>($/) {
-        make "expr-equals"
+        make {
+            expr-equals => {
+                lhs       => $<testlist-star-expr>.made,
+                rhs-stack => $<expr-equals-rhs>>>.made,
+            }
+        }
+    }
+
+    method expr-equals-rhs:sym<yield>($/) {
+        make $<yield-expr>.made
+    }
+
+    method expr-equals-rhs:sym<testlist-star-expr>($/) {
+        make $<testlist-star-expr>.made
+    }
+
+    method yield-expr($/) {
+        make {
+            yield-expr => {
+                arg => $<yield-arg>.made // Nil,
+            }
+        }
+    }
+
+    method yield-arg:sym<from>($/) {
+        make {
+            yield-arg-from => $<test>.made,
+        }
+    }
+
+    method yield-arg:sym<testlist>($/) {
+        make {
+            yield-arg-testlist => $<testlist>.made,
+        }
+    }
+
+    method testlist-star-expr($/) {
+        make {
+            testlist-star-expr => {
+                test-or-star-exprs => $<test-or-star-expr>>>.made,
+            }
+        }
     }
 
     method small-stmt:sym<return>($/) {
-        make "return"
+        make {
+            return => {
+                testlist => $<testlist>.made // Nil,
+            }
+        }
     }
 
     method small-stmt:sym<raise>($/) {
-        make "raise"
+        make {
+            raise => {
+                clause => $/<raise-clause>.made // Nil,
+            }
+        }
+    }
+
+    method raise-clause($/) {
+        make {
+            raise-clause => {
+                test => $/<test>[0].made,
+                from => $/<test>[1].made // Nil,
+            }
+        }
     }
 
     method small-stmt:sym<import-name>($/) {
@@ -303,7 +518,7 @@ our role Python3ToRustActions {
     }
 
     method small-stmt:sym<yield>($/) {
-        make "yield"
+        make $<yield-expr>.made
     }
 
     method small-stmt:sym<import-from>($/) {
@@ -311,11 +526,25 @@ our role Python3ToRustActions {
     }
 
     method small-stmt:sym<global>($/) {
-        make "global"
+        make {
+            global => {
+                names => $<NAME>>>.made
+            }
+        }
     }
 
     method small-stmt:sym<del>($/) {
-        make "del"
+        make {
+            del => {
+                exprlist => $<exprlist>.made
+            }
+        }
+    }
+
+    method exprlist($/) {
+        make {
+            exprs => $<star-expr>>>.made
+        }
     }
 
     #----------------------------------
@@ -333,7 +562,178 @@ our role Python3ToRustActions {
     }
 
     method or-test($/) {
-        make "or-test"
+        make {
+            or-test => {
+                operands => $<and-test>>>.made,
+                comments => $<COMMENT>>>.made,
+            }
+        }
+    }
+
+    method and-test($/) {
+        make {
+            and-test => {
+                operands => $<not-test>>>.made,
+                comments => $<COMMENT>>>.made,
+            }
+        }
+    }
+
+    method not-test($/) {
+        make {
+            not-test => {
+                not-count  => $/<NOT>.List.elems,
+                comparison => $<comparison>.made,
+            }
+        }
+    }
+
+    method comparison($/) {
+        make {
+            comparison => {
+                star-exprs => $/<star-expr>>>.made,
+                comp-ops   => $/<comp-op>>>.made,
+            }
+        }
+    }
+
+    method star-expr($/) {
+        make {
+            has-star => $/<STAR>:exists,
+            expr     => $<expr>.made,
+        }
+    }
+
+    method expr($/) {
+        make {
+            expr => {
+                operands => $/<xor-expr>>>.made,
+            }
+        }
+    }
+
+    method xor-expr($/) {
+        make {
+            xor-expr => {
+                operands => $/<and-expr>>>.made,
+            }
+        }
+    }
+
+    method and-expr($/) {
+        make {
+            and-expr => {
+                operands => $/<shift-expr>>>.made,
+            }
+        }
+    }
+
+    method shift-expr($/) {
+        make {
+            shift-expr => {
+                lhs   => $/<arith-expr>.made,
+                stack => $/<shift-arith-expr>>>.made,
+            }
+        }
+    }
+
+    method shift-arith-expr:sym<left>($/) {
+        make {
+            left-shift => {
+                arith-expr => $<arith-expr>.made,
+            }
+        }
+    }
+
+    method shift-arith-expr:sym<right>($/) {
+        make {
+            right-shift => {
+                arith-expr => $<arith-expr>.made,
+            }
+        }
+    }
+
+    method arith-expr($/) {
+        make {
+            arith-expr => {
+                lhs   => $/<term>.made,
+                stack => $/<plus-minus-term>>>.made,
+            }
+        }
+    }
+
+    method plus-minus-term:sym<plus>($/) {
+        make {
+            plus-term => $<term>.made,
+            comments  => $<COMMENT>>>.made,
+        }
+    }
+
+    method plus-minus-term:sym<minus>($/) {
+        make {
+            minus-term => $<term>.made,
+            comments   => $<COMMENT>>>.made,
+        }
+    }
+
+    method term($/) {
+        make {
+            term => {
+                base  => $<factor>.made,
+                stack => $<term-delimited-factor>>>.made,
+            }
+        }
+    }
+
+    method term-delimited-factor($/) {
+        make {
+            comments => $<COMMENT>>>.made,
+            delim    => $<term-delim>.Str,
+            factor   => $<factor>.made,
+        }
+    }
+
+    method factor($/) {
+        make {
+            factor => {
+                delim-stack => $<factor-delim>>>.Str,
+                power       => $<power>.made,
+            }
+        }
+    }
+
+    method power($/) {
+        make {
+            power => {
+                augmented-atom => $<augmented-atom>.made,
+                factor-stack   => $<factor>>>.made,
+            }
+        }
+    }
+
+    method augmented-atom($/) {
+        make {
+            augmented-atom => {
+                atom     => $<atom>.made,
+                trailers => $<trailer>>>.made,
+            }
+        }
+    }
+
+    method atom($/) {
+        make {
+            atom => $/
+        }
+    }
+
+    method trailer($/) {
+        make {
+            trailer => $/
+        }
+    }
+
+    method comp-op($/) {
+        make $/.Str
     }
 
     method test:sym<lambdef>($/) {
