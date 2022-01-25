@@ -1,0 +1,19 @@
+#!/usr/bin/env raku
+use python-grammar;
+use python-to-rust-actions;
+
+grammar G does Python3 { }
+
+use Grammar::Tracer;
+grammar GD does Python3 { }
+
+sub MAIN(:$debug = False, :$rule = Nil) {
+
+    my $in = $*IN.slurp;
+
+    if $rule {
+        say G.parse($in.chomp, rule => $rule) // GD.parse($in.chomp, rule => $rule);
+    } else {
+        say G.parse($in) // GD.parse($in)
+    }
+}
