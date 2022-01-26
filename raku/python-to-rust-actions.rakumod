@@ -1,64 +1,13 @@
 use python3-function-to-rust-stub;
+use python-to-rust-util;
 
-our class Continue {}
-our class PythonImportSkipMe {}
-our class Break {}
-our class Pass {}
-
-our class TernaryOperator {
-    has $.A    is required;
-    has $.cond is required;
-    has $.B    is required;
+our role Python3::NumberActions {
+    method number:sym<integer>($/) { make $/.Str }
+    method number:sym<float>($/)   { make $/.Str }
+    method number:sym<imag>($/)    { make $/.Str }
 }
 
-sub get-compound-comments($/) {
-    [|$<COMMENT>>>.made, $<COMMENT_NONEWLINE>.made // Nil]
-}
-
-our sub is-test-fn-name($name is rw) {
-    $name = $name.subst(:g, /^_/, "");
-    $name.starts-with("test")
-}
-
-our role DeeperPython3ToRustActions {
-
-}
-
-our role Python3ToRustActions {
-
-    method TOP ($/) {
-        make $<file-input>.made
-    }
-
-    #----------------------------------
-    method file-input($/) {
-        make $<file-input-item>>>.made
-    }
-
-    method file-input-item:sym<comment-newline>($/) {
-        make $<comment-newline>.made;
-    }
-
-    method comment-newline($/) {
-        make $<COMMENT_NONEWLINE>.made
-    }
-
-    method file-input-item:sym<stmt>($/) {
-        make $<stmt>.made;
-    }
-
-    #----------------------------------
-    method stmt:sym<compound>($/) {
-        make $<compound-stmt>.made;
-    }
-
-    method stmt:sym<simple>($/) {
-        make $<simple-suite>.made;
-    }
-
-    method stmt:sym<comment>($/) {
-        make $<COMMENT_NONEWLINE>.made;
-    }
+our role Python3::DecoratorActions {
 
     method compound-stmt:sym<decorated>($/) {
         make {
@@ -70,6 +19,9 @@ our role Python3ToRustActions {
     method decorators($/) {
         make $<decorator>>>.made
     }
+}
+
+our role Python3::IfStmtActions {
 
     method compound-stmt:sym<if>($/) {
         make {
@@ -92,6 +44,9 @@ our role Python3ToRustActions {
             }
         }
     }
+}
+
+our role Python3::ElseActions {
 
     method else-suite($/) {
         make {
@@ -101,6 +56,9 @@ our role Python3ToRustActions {
             }
         }
     }
+}
+
+our role Python3::CompoundStmtActions {
 
     method compound-stmt:sym<while>($/) {
         make {
@@ -124,6 +82,9 @@ our role Python3ToRustActions {
             }
         }
     }
+}
+
+our role Python3::TryStmtActions {
 
     method compound-stmt:sym<try>($/) {
         make { 
@@ -154,8 +115,6 @@ our role Python3ToRustActions {
         }
     }
 
-
-
     method except-clause-suite($/) {
         make {
             comments       => get-compound-comments($/),
@@ -169,6 +128,9 @@ our role Python3ToRustActions {
             suite          => $<suite>.made
         }
     }
+}
+
+our role Python3::WithStmtActions {
 
     method compound-stmt:sym<with>($/) {
         make {
@@ -186,7 +148,6 @@ our role Python3ToRustActions {
                 test => $<test>.made,
             }
         }
-
     }
 
     method with-item:sym<as>($/) {
@@ -197,13 +158,142 @@ our role Python3ToRustActions {
             }
         }
     }
+}
+
+our role Python3::StmtActions {
+
+    method stmt:sym<compound>($/) {
+        make $<compound-stmt>.made;
+    }
+
+    method stmt:sym<simple>($/) {
+        make $<simple-suite>.made;
+    }
+
+    method stmt:sym<comment>($/) {
+        make $<COMMENT_NONEWLINE>.made;
+    }
+}
+
+our role Python3::StringActions {
+
+    method strings($/) {
+        make $<string>>>.made
+    }
+
+    method string:sym<long-string>($/)  { make $<long-string>.made }
+    method string:sym<short-string>($/) { make $<short-string>.made }
+    method string:sym<long-bytes>($/)   { make $<long-bytes>.made }
+    method string:sym<short-bytes>($/)  { make $<short-bytes>.made }
+
+    method long-string($/)  { make $<LONG_STRING>.made }
+    method short-string($/) { make $<SHORT_STRING>.made }
+    method long-bytes($/)   { make $<LONG_BYTES>.made }
+    method short-bytes($/)  { make $<SHORT_BYTES>.made }
+
+    method LONG_STRING:sym<SINGLE_QUOTED>($/)  { make $<SINGLE_QUOTED_LONG_STRING>.made  }
+    method LONG_STRING:sym<DOUBLE_QUOTED>($/)  { make $<DOUBLE_QUOTED_LONG_STRING>.made  }
+    method SHORT_STRING:sym<SINGLE_QUOTED>($/) { make $<SINGLE_QUOTED_SHORT_STRING>.made }
+    method SHORT_STRING:sym<DOUBLE_QUOTED>($/) { make $<DOUBLE_QUOTED_SHORT_STRING>.made }
+    method LONG_BYTES:sym<SINGLE_QUOTED>($/)   { make $<SINGLE_QUOTED_LONG_BYTES>.made   }
+    method LONG_BYTES:sym<DOUBLE_QUOTED>($/)   { make $<DOUBLE_QUOTED_LONG_BYTES>.made   }
+    method SHORT_BYTES:sym<SINGLE_QUOTED>($/)  { make $<SINGLE_QUOTED_SHORT_BYTES>.made  }
+    method SHORT_BYTES:sym<DOUBLE_QUOTED>($/)  { make $<DOUBLE_QUOTED_SHORT_BYTES>.made  }
+
+    #-------
+    method DOUBLE_QUOTED_LONG_STRING($/) { make $<DOUBLE_QUOTED_LONG_STRING_BODY>.made }
+    method SINGLE_QUOTED_LONG_STRING($/) { make $<SINGLE_QUOTED_LONG_STRING_BODY>.made }
+
+    method DOUBLE_QUOTED_LONG_STRING_BODY($/) { make $/.Str }
+    method SINGLE_QUOTED_LONG_STRING_BODY($/) { make $/.Str }
+
+    method DOUBLE_QUOTED_SHORT_STRING($/) { make $<DOUBLE_QUOTED_SHORT_STRING_INNER>.Str }
+    method SINGLE_QUOTED_SHORT_STRING($/) { make $<SINGLE_QUOTED_SHORT_STRING_INNER>.Str }
+
+    method DOUBLE_QUOTED_SHORT_STRING_INNER($/) { make $/.Str }
+    method SINGLE_QUOTED_SHORT_STRING_INNER($/) { make $/.Str }
+
+    #-------
+    method DOUBLE_QUOTED_LONG_BYTES($/) { make $<LONG_BYTES_INNER>.Str }
+    method SINGLE_QUOTED_LONG_BYTES($/) { make $<LONG_BYTES_INNER>.Str }
+    method LONG_BYTES_INNER($/) { make $/.Str }
+
+    method DOUBLE_QUOTED_SHORT_BYTES($/) { make $<DOUBLE_QUOTED_SHORT_BYTES_INNER>.Str }
+    method SINGLE_QUOTED_SHORT_BYTES($/) { make $<SINGLE_QUOTED_SHORT_BYTES_INNER>.Str }
+    method DOUBLE_QUOTED_SHORT_BYTES_INNER($/) { make $/.Str }
+    method SINGLE_QUOTED_SHORT_BYTES_INNER($/) { make $/.Str }
+}
+
+our role Python3::AtomActions does Python3::StringActions {
+
+    method atom:sym<strings>($/) { 
+        make $<strings>.made 
+    }
+
+    method atom:sym<NONE>($/)    { make "NONE" }
+    method atom:sym<true>($/)    { make True }
+    method atom:sym<false>($/)   { make False }
+    method atom:sym<NAME>($/)    { make $<NAME>.made }
+
+    method atom:sym<parens>($/)  { 
+        make {
+            parens   => $<parens-atom>.made,
+            comments => $<COMMENT>>>.made,
+        }
+    }
+
+    method parens-atom($/) {
+        make "parens-atom"
+    }
+
+    method atom:sym<list>($/)  { 
+        make {
+            testlist_comp  => $<testlist_comp>.made,
+            comments       => $<COMMENT>>>.made,
+        }
+    }
+
+    method atom:sym<dict>($/)  { 
+        make {
+            dictorsetmaker => $<dictorsetmaker>.made,
+            comments       => $<COMMENT>>>.made,
+        }
+    }
+
+    method atom:sym<number>($/)  { 
+        make $<number>.made
+    }
+
+    method atom:sym<ellipsis>($/)  { 
+        make Ellipsis.new
+    }
+}
+
+our role Python3::CommentActions {
+
+    method comment-newline($/) {
+        make $<COMMENT_NONEWLINE>.made
+    }
+
+    method comma-maybe-comment($/) {
+        make $/<COMMENT>>>.made
+    }
+
+    method COMMENT_NONEWLINE($/) {
+        make { comment => $/.Str }
+    }
+
+    method COMMENT($/) {
+        make $<COMMENT_NONEWLINE>.made
+    }
+}
+
+our role Python3::FunctionActions {
 
     method compound-stmt:sym<func>($/) {
         make $<funcdef>.made
     }
 
-
-    #------------------------------------
     method funcdef($/) {
         my $name = $<NAME>.made;
 =begin comment
@@ -299,10 +389,8 @@ our role Python3ToRustActions {
 
     method augmented-tfpdef($/) {
         make {
-            augmented-tfpdef => {
-                tfpdef => $<tfpdef>.made,
-                test   => $<test>.made // Nil,
-            }
+            augmented-tfpdef => $<tfpdef>.made,
+            test             => $<test>.made // Nil,
         }
     }
 
@@ -345,14 +433,99 @@ our role Python3ToRustActions {
             }
         }
     }
+}
 
-    method comma-maybe-comment($/) {
-        make $/<COMMENT>>>.made
+our role Python3::ArglistActions {
+
+    method parenthesized-arglist($/) {
+        make $/<arglist>.made // Nil
     }
 
-    method NAME($/) {
-        make $/.Str
+    method arglist:sym<just-basic>($/) {
+        make { 
+            basic-args => [
+                |$<argument-comma-maybe-comment>>>.made,
+                $<argument>.made
+            ] 
+        }
     }
+
+    method arglist:sym<just-basic-with-trailing-comment>($/) {
+        make { 
+            basic-args => $<argument-comma-maybe-comment>>>.made
+        }
+    }
+
+    method arglist:sym<just-star-args>($/) {
+        make { 
+            star-args => [ $<test>.made ] 
+        }
+    }
+
+    method arglist:sym<just-star-args2>($/) {
+        make {
+            star-args => [
+                $<test-comma-maybe-comment>.made, 
+                |$<argument-comma-maybe-comment>>>.made,
+                $<argument>.made
+            ],
+        }
+    }
+
+    method arglist:sym<just-kwargs>($/) {
+        make {
+            kwargs => $<test>.made,
+        }
+    }
+
+    method arglist:sym<basic-and-star-arg>($/) {
+        make {
+            basic-args => $<argument-comma-maybe-comment>>>.made,
+            star-args  => [ $<test>.made ],
+        }
+    }
+
+    method arglist:sym<basic-and-star-arg-with-trailing-comma>($/) {
+        make {
+            basic-args => $<argument-comma-maybe-comment>>>.made,
+            star-args  => [ $<test-comma-maybe-comment>.made ],
+        }
+    }
+
+    method arglist:sym<basic-and-star-args>($/) {
+        make {
+            basic-args => $<basic>>>.made,
+            star-args  => [ 
+                $<test-comma-maybe-comment>.made,
+                $<star>>>.made
+            ],
+        }
+    }
+
+    method arglist:sym<basic-and-kwargs>($/) {
+        make {
+            basic-args => $<argument-comma-maybe-comment>>>.made,
+            kwargs     => $<test>.made,
+        }
+    }
+
+    method arglist:sym<star-and-kwargs>($/) {
+        make {
+            star-args => [$<test-comma-maybe-comment>.made, |$<argument-comma-maybe-comment>>>.made],
+            kwargs    => $<test>.made,
+        }
+    }
+
+    method arglist:sym<full>($/) {
+        make {
+            basic-args => $<basic>.made,
+            star-args  => [$<test-comma-maybe-comment>.made, |$<star>>>.made],
+            kwargs     => $<test>.made,
+        }
+    }
+}
+
+our role Python3::ClassdefActions {
 
     method compound-stmt:sym<class>($/) {
         make $<classdef>.made
@@ -362,13 +535,53 @@ our role Python3ToRustActions {
         make {
             class => {
                 name    => $<NAME>.made,
-                arglist => $/<parenthesized-arglist><arglist> // Nil,
+                arglist => $/<parenthesized-arglist>.made // Nil,
                 comment => $<COMMENT_NONEWLINE>.made // Nil,
                 suite   => $<suite>.made,
             }
         }
     }
+}
 
+our role Python3::ToRustActions 
+does Python3::NumberActions 
+does Python3::DecoratorActions 
+does Python3::IfStmtActions 
+does Python3::ElseActions 
+does Python3::CompoundStmtActions 
+does Python3::TryStmtActions 
+does Python3::WithStmtActions 
+does Python3::StmtActions 
+does Python3::AtomActions 
+does Python3::CommentActions 
+does Python3::FunctionActions 
+does Python3::ClassdefActions 
+does Python3::ArglistActions 
+does Python3::StringActions 
+{
+    method TOP ($/) {
+        make $<file-input>.made
+    }
+
+    #----------------------------------
+    method file-input($/) {
+        make $<file-input-item>>>.made
+    }
+
+    method file-input-item:sym<comment-newline>($/) {
+        make $<comment-newline>.made;
+    }
+
+    method file-input-item:sym<stmt>($/) {
+        make $<stmt>.made;
+    }
+
+    #----------------------------------
+    method NAME($/) {
+        make $/.Str
+    }
+
+    #-----------------------------------
     method suite:sym<simple>($/) {
         make $/<simple-suite>.made
     }
@@ -460,6 +673,14 @@ our role Python3ToRustActions {
         }
     }
 
+    method test-or-star-expr:sym<test>($/) {
+        make $<test>.made
+    }
+
+    method test-or-star-expr:sym<star-expr>($/) {
+        make $<star-expr>.made
+    }
+
     method small-stmt:sym<return>($/) {
         make {
             return => {
@@ -545,15 +766,6 @@ our role Python3ToRustActions {
         make {
             exprs => $<star-expr>>>.made
         }
-    }
-
-    #----------------------------------
-    method COMMENT_NONEWLINE($/) {
-        make { comment => $/.Str }
-    }
-
-    method COMMENT($/) {
-        make $<COMMENT_NONEWLINE>.made
     }
 
     #----------------------------------
@@ -704,25 +916,15 @@ our role Python3ToRustActions {
 
     method power($/) {
         make {
-            power => {
-                augmented-atom => $<augmented-atom>.made,
-                factor-stack   => $<factor>>>.made,
-            }
+            augmented-atom => $<augmented-atom>.made,
+            factor-stack   => $<factor>>>.made,
         }
     }
 
     method augmented-atom($/) {
         make {
-            augmented-atom => {
-                atom     => $<atom>.made,
-                trailers => $<trailer>>>.made,
-            }
-        }
-    }
-
-    method atom($/) {
-        make {
-            atom => $/
+            atom     => $<atom>.made,
+            trailers => $<trailer>>>.made,
         }
     }
 

@@ -140,26 +140,33 @@ our role Python3ShortBytes {
 
     regex SINGLE_QUOTED_SHORT_BYTES {
        "'"
+       <SINGLE_QUOTED_SHORT_BYTES_INNER>
+       "'"
+    }
+
+    regex SINGLE_QUOTED_SHORT_BYTES_INNER {
        [    
            || <SHORT_BYTES_CHAR_NO_SINGLE_QUOTE>
            || <BYTES_ESCAPE_SEQ>
        ]*
-       "'"
     }
 
     regex DOUBLE_QUOTED_SHORT_BYTES {
        '"'
+       <DOUBLE_QUOTED_SHORT_BYTES_INNER>
+       '"'
+    }
+
+    regex DOUBLE_QUOTED_SHORT_BYTES_INNER {
        [    
            || <SHORT_BYTES_CHAR_NO_DOUBLE_QUOTE>
            || <BYTES_ESCAPE_SEQ>
        ]*
-       '"'
     }
 
-    regex SHORT_BYTES {
-        | <SINGLE_QUOTED_SHORT_BYTES>
-        | <DOUBLE_QUOTED_SHORT_BYTES>
-    }
+    proto regex SHORT_BYTES { * }
+    regex SHORT_BYTES:sym<SINGLE_QUOTED> { <SINGLE_QUOTED_SHORT_BYTES> }
+    regex SHORT_BYTES:sym<DOUBLE_QUOTED> { <DOUBLE_QUOTED_SHORT_BYTES> }
 
     token SHORT_BYTES_CHAR_NO_SINGLE_QUOTE {
         || <[ \x[0000] .. \x[0009] ]>
@@ -181,17 +188,20 @@ our role Python3ShortBytes {
 our role Python3LongBytes {
 
     regex SINGLE_QUOTED_LONG_BYTES {
-        "'''" <LONG_BYTES_ITEM>*?  "'''"
+        "'''" <LONG_BYTES_INNER> "'''"
     }
 
     regex DOUBLE_QUOTED_LONG_BYTES {
-        '"""' <LONG_BYTES_ITEM>*?  '"""'
+        '"""' <LONG_BYTES_INNER> '"""'
     }
 
-    regex LONG_BYTES {
-        | <SINGLE_QUOTED_LONG_BYTES>
-        | <DOUBLE_QUOTED_LONG_BYTES>
+    regex LONG_BYTES_INNER {
+        <LONG_BYTES_ITEM>*? 
     }
+
+    proto regex LONG_BYTES { * }
+    regex LONG_BYTES:sym<SINGLE_QUOTED> { <SINGLE_QUOTED_LONG_BYTES> }
+    regex LONG_BYTES:sym<DOUBLE_QUOTED> { <DOUBLE_QUOTED_LONG_BYTES> }
 
     token LONG_BYTES_ITEM {
         | <BYTES_ESCAPE_SEQ>
@@ -208,42 +218,64 @@ our role Python3ShortString {
 
     regex SINGLE_QUOTED_SHORT_STRING {
          "'"
+         <SINGLE_QUOTED_SHORT_STRING_INNER>
+         "'"
+    }
+
+    regex SINGLE_QUOTED_SHORT_STRING_INNER {
          [   
              ||    <STRING_ESCAPE_SEQ>
              ||    <-[ \\ \r \n \' ]>
          ]*
-         "'"
     }
 
     regex DOUBLE_QUOTED_SHORT_STRING {
         '"'
+        <DOUBLE_QUOTED_SHORT_STRING_INNER>
+        '"'
+    }
+
+    regex DOUBLE_QUOTED_SHORT_STRING_INNER {
         [    
             ||    <STRING_ESCAPE_SEQ>
             ||    <-[ \\ \r \n " ]>
         ]*
-        '"'
     }
 
-    token SHORT_STRING {
-        || <SINGLE_QUOTED_SHORT_STRING>
-        || <DOUBLE_QUOTED_SHORT_STRING>
-    }
+    proto token SHORT_STRING { * }
+    token SHORT_STRING:sym<SINGLE_QUOTED> { <SINGLE_QUOTED_SHORT_STRING> }
+    token SHORT_STRING:sym<DOUBLE_QUOTED> { <DOUBLE_QUOTED_SHORT_STRING> }
 }
 
 our role Python3LongString {
 
-    token SINGLE_QUOTED_LONG_STRING {
-        "'''" <LONG_STRING_ITEM>*?  "'''"
+    regex SINGLE_QUOTED_LONG_STRING {
+        "'''" 
+        <SINGLE_QUOTED_LONG_STRING_BODY>
+        "'''"
     }
 
-    token DOUBLE_QUOTED_LONG_STRING {
-        '"""' <LONG_STRING_ITEM>*?  '"""'
+    regex SINGLE_QUOTED_LONG_STRING_BODY {
+        <?after "'''"> 
+        <LONG_STRING_ITEM>*? 
+        <?before "'''">
     }
 
-    token LONG_STRING {
-        || <SINGLE_QUOTED_LONG_STRING>
-        || <DOUBLE_QUOTED_LONG_STRING>
+    regex DOUBLE_QUOTED_LONG_STRING {
+        '"""' 
+        <DOUBLE_QUOTED_LONG_STRING_BODY>
+        '"""'
     }
+
+    regex DOUBLE_QUOTED_LONG_STRING_BODY {
+        <?after '"""'>
+        <LONG_STRING_ITEM>*? 
+        <?before '"""'>
+    }
+
+    proto token LONG_STRING { * }
+    token LONG_STRING:sym<SINGLE_QUOTED> { <SINGLE_QUOTED_LONG_STRING> }
+    token LONG_STRING:sym<DOUBLE_QUOTED> { <DOUBLE_QUOTED_LONG_STRING> }
 
     token LONG_STRING_ITEM {
         | <LONG_STRING_CHAR>
@@ -261,12 +293,12 @@ does Python3LongBytes
 does Python3ShortString
 does Python3LongString {
 
-    token string { 
-        || <long-string>
-        || <short-string>
-        || <long-bytes>
-        || <short-bytes>
-    }
+    proto token string { * }
+
+    token string:sym<long-string>  { <long-string> }
+    token string:sym<short-string> { <short-string> }
+    token string:sym<long-bytes>   { <long-bytes> }
+    token string:sym<short-bytes>  { <short-bytes> }
 
     token short-string { <string-prefix> <SHORT_STRING> }
     token long-string  { <string-prefix> <LONG_STRING> }
@@ -362,11 +394,10 @@ does Python3Digit
 does Python3Integer 
 does Python3Float {
 
-    token number {
-        | <integer>
-        | <FLOAT_NUMBER>
-        | <IMAG_NUMBER>
-    }
+    proto token number { * }
+    token number:sym<integer> { <integer> }
+    token number:sym<float>   { <FLOAT_NUMBER> }
+    token number:sym<imag>    { <IMAG_NUMBER> }
 
     token IMAG_NUMBER {
         [    
@@ -989,7 +1020,7 @@ does Python3Keywords {
 
     token decorator {
         <at-dotted-name>
-        [ <parenthesized-arglist> ]?
+        <parenthesized-arglist>?
         <COMMENT_NONEWLINE>? <NEWLINE>
     }
 
@@ -1052,13 +1083,9 @@ does Python3Keywords {
         <COMMA> <kwargs>
     }
 
-    rule typedargslist:sym<just-star-args> { <star-args> }
-    rule typedargslist:sym<just-kwargs>    { <kwargs> }
-    rule typedargslist:sym<just-basic>     { <just-basic-args> }
-
-    rule typedargslist:sym<basic-and-star-args> {
-        <just-basic-args-with-trailing-comment>
-        <star-args> 
+    rule typedargslist:sym<star-and-kwargs> {
+        <star-args>
+        <COMMA> <kwargs>
     }
 
     rule typedargslist:sym<basic-and-kwargs> {
@@ -1066,10 +1093,14 @@ does Python3Keywords {
         <kwargs>
     }
 
-    rule typedargslist:sym<star-and-kwargs> {
-        <star-args>
-        <COMMA> <kwargs>
+    rule typedargslist:sym<basic-and-star-args> {
+        <just-basic-args-with-trailing-comment>
+        <star-args> 
     }
+
+    rule typedargslist:sym<just-basic>     { <just-basic-args> }
+    rule typedargslist:sym<just-star-args> { <star-args> }
+    rule typedargslist:sym<just-kwargs>    { <kwargs> }
 
     #---------------------------------------
     rule tfpdef {
@@ -1232,7 +1263,7 @@ does Python3Keywords {
     rule compound-stmt:sym<class> { <classdef> }
 
     rule classdef {
-        <CLASS> <NAME> [ <parenthesized-arglist> ]?  <COLON> 
+        <CLASS> <NAME> <parenthesized-arglist>?  <COLON> 
         <COMMENT_NONEWLINE>?
         <suite>
     }
@@ -1369,10 +1400,10 @@ does Python3Keywords {
         <small-stmt> [ ';' <small-stmt> ]* ';'? 
     }
 
-    token test-or-star-expr {
-        || <test> 
-        || <star-expr>
-    }
+    #-------------------------
+    proto token test-or-star-expr { * }
+    token test-or-star-expr:sym<test>      { <test> }
+    token test-or-star-expr:sym<star-expr> { <star-expr> }
 
     rule testlist-star-expr {
        <test-or-star-expr>+ %% <COMMA>
@@ -1556,11 +1587,15 @@ does Python3Keywords {
     token atom:sym<true>     { <TRUE> }
     token atom:sym<false>    { <FALSE> }
     token atom:sym<NAME>     { <NAME> }
-    rule  atom:sym<parens>   { <OPEN_PAREN> <COMMENT>* [ <yield-expr> || <testlist_comp> ]?  <COMMENT>* <CLOSE_PAREN> }
+    rule  atom:sym<parens>   { <OPEN_PAREN> <COMMENT>* <parens-atom>?  <COMMENT>* <CLOSE_PAREN> }
     rule  atom:sym<list>     { <OPEN_BRACK> <COMMENT>* <testlist_comp>?  <COMMENT>* <CLOSE_BRACK> }
     rule  atom:sym<dict>     { <OPEN_BRACE> <COMMENT>* <dictorsetmaker>?  <COMMENT>* <CLOSE_BRACE> }
     token atom:sym<number>   { <number> }
     token atom:sym<ellipsis> { <ELLIPSIS> }
+
+    proto rule parens-atom { * }
+    rule parens-atom:sym<yield>         { <yield-expr> }
+    rule parens-atom:sym<testlist-comp> { <testlist_comp> }
 
     rule strings {
         <string>+ % \s 
@@ -1635,24 +1670,80 @@ does Python3Keywords {
         <argument> <comma-maybe-comment>
     }
 
-    rule arglist {
-        [ <argument-comma-comment> ]*
-        [   
-            || <argument> <comma-maybe-comment>?
-            || '*' <test> [ <comma-maybe-comment>  <argument> ]* [ <comma-maybe-comment> '**' <test> ]?
-            || '**' <test>
-        ]
+    proto rule arglist { * }
+
+    rule argument-comma-maybe-comment {
+        <argument> <comma-maybe-comment>
     }
 
-    rule argument {
-        || <test> '=' <test>
-        || <test> <comp-for>?
+    rule test-comma-maybe-comment {
+        <test> <comma-maybe-comment>  
     }
 
-    token comp-iter {
-        || <comp-for>
-        || <comp-if>
+    rule arglist:sym<just-basic> {
+        <argument-comma-maybe-comment>* <argument>
     }
+
+    rule arglist:sym<just-basic-with-trailing-comment> {
+        <argument-comma-maybe-comment>+
+    }
+
+    rule arglist:sym<just-star-args> {
+        '*' <test> 
+    }
+
+    rule arglist:sym<just-star-args2> {
+        '*' <test-comma-maybe-comment>
+        <argument-comma-maybe-comment>* 
+        <argument> 
+    }
+
+    rule arglist:sym<just-kwargs> {
+        '**' <test>
+    }
+
+    rule arglist:sym<basic-and-star-arg> {
+        <argument-comma-maybe-comment>+
+        '*' <test> 
+    }
+
+    rule arglist:sym<basic-and-star-arg-with-trailing-comma> {
+        <argument-comma-maybe-comment>+
+        '*' <test-comma-maybe-comment>  
+    }
+
+    rule arglist:sym<basic-and-star-args> {
+        <basic=argument-comma-maybe-comment>+
+        '*' <test-comma-maybe-comment>  
+        <star=argument-comma-maybe-comment>+
+    }
+
+    rule arglist:sym<basic-and-kwargs> {
+        <argument-comma-maybe-comment>+
+        '**' <test>
+    }
+
+    rule arglist:sym<star-and-kwargs> {
+        '*' <test-comma-maybe-comment>  
+        <argument-comma-maybe-comment>*  
+        '**' <test>
+    }
+
+    rule arglist:sym<full> {
+        <basic=argument-comma-maybe-comment>+
+        '*' <test-comma-maybe-comment>  
+        <star=argument-comma-maybe-comment>*  
+        '**' <test>
+    }
+
+    #----------------------------------
+    proto rule argument { * }
+    rule argument:sym<test>     { <test> '=' <test> }
+    rule argument:sym<comp-for> { <test> <comp-for>? }
+
+    proto token comp-iter { * }
+    token comp-iter:sym<for> { <comp-for> }
+    token comp-iter:sym<if>  { <comp-if> }
 
     rule comp-for {
         <FOR>

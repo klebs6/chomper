@@ -2,9 +2,10 @@
 use python-grammar;
 use Data::Dump::Tree;
 use Data::Dump;
+use JSON::Tiny;
 use python-to-rust-actions;
 
-class A does Python3ToRustActions {}
+class A does Python3::ToRustActions {}
 
 grammar G does Python3 { }
 
@@ -27,13 +28,10 @@ sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = True) {
     }
 
     my $parsed = G.parse($in, |%kwargs) // GD.parse($in, |%kwargs);
-
+    #say $parsed;
 
     if $to-rust {
-
-        for $parsed.made {
-            ddt $_, :nocolor;
-        }
+        say to-json($parsed.made);
 
     } else {
         say $parsed;
