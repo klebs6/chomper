@@ -1,3 +1,24 @@
+
+our role Python3::Test {}
+our role Python3::DecoratedItem {}
+
+our class Python3::Ellipsis {}
+
+our class Python3::BasicTest does Python3::Test {
+    has Hash $.or-test is required;
+}
+
+our class Python3::Lambdef does Python3::Test {
+#TODO
+
+}
+
+our class Python3::TernaryOperator does Python3::Test {
+    has $.A    is required;
+    has $.cond is required;
+    has $.B    is required;
+}
+
 our class Python3::Arglist {
     has $.basic-args;
     has $.star-args;
@@ -48,7 +69,8 @@ our class Python3::YieldExpr {
 
 #------------------------------------
 our role Python3::Stmt { }
-our role Python3::SmallStmt does Python3::Stmt { }
+our role Python3::SmallStmt    does Python3::Stmt { }
+our role Python3::CompoundStmt does Python3::Stmt { }
 
 our class Python3::Stmt::ExprEquals does Python3::SmallStmt {
     has $.lhs       is required;
@@ -66,7 +88,7 @@ our class Python3::Stmt::Return does Python3::SmallStmt {
 }
 
 our class Python3::RaiseClause does Python3::SmallStmt {
-    has $.test is required;
+    has Python3::Test $.test is required;
     has $.from;
 }
 
@@ -117,7 +139,7 @@ our class Python3::SimpleSuite does Python3::Suite does Python3::Stmt {
     has Python3::Comment   $.comment;
 }
 
-our class Python3::StmtWithComments {
+our class Python3::StmtWithComments does Python3::Stmt {
     has Python3::Stmt    $.stmt is required;
     has Python3::Comment @.comments is required;
 }
@@ -127,9 +149,67 @@ our class Python3::StmtSuite does Python3::Suite {
 }
 
 #---------------------------------------
-our class Python3::Classdef {
+our class Python3::Classdef 
+does Python3::CompoundStmt
+does Python3::DecoratedItem {
     has Str $.name is required;
     has Python3::Suite   $.suite is required;
     has Python3::Arglist $.args;
     has Python3::Comment $.comment;
+}
+
+our class Python3::TypedArgList {
+    has $.basic-args;
+    has $.star-args;
+    has $.kw-args;
+}
+
+our class Python3::Funcdef 
+does Python3::CompoundStmt 
+does Python3::DecoratedItem {
+    has Str  $.name    is required;
+    has Bool $.private is required;
+    has Bool $.is-test is required;
+
+    has Python3::TypedArgList 
+        $.parameters is required;
+
+    has Python3::Suite $.suite is required;
+    has Python3::Test  $.test;
+}
+
+#---------------------------------
+our class Python3::Stmt::Elif does Python3::Stmt {
+    has Python3::Comment @.comments;
+    has Python3::Test    $.test is required;
+    has Python3::Suite   $.suite is required;
+}
+
+our class Python3::Stmt::Else does Python3::Stmt {
+    has @.comments;
+    has Python3::Suite   $.suite is required;
+}
+
+our class Python3::Stmt::If does Python3::Stmt {
+    has Python3::Comment    $.comment;
+    has Python3::Test       $.test  is required;
+    has Python3::Suite      $.suite is required;
+    has Python3::Stmt::Elif @.elif-suites;
+    has Python3::Stmt::Else $.else-suite;
+}
+
+our class Python3::Decorator {
+    has Python3::DottedName $.name is required;
+    has Python3::Comment    $.comment;
+    has Python3::Arglist    $.arglist;
+}
+
+our class Python3::Decorated does Python3::CompoundStmt {
+    has Python3::Decorator     @.decorators is required;
+    has Python3::DecoratedItem $.decorated  is required;
+}
+
+our class Python3::Stmt::For does Python3::Stmt {
+    #TODO
+
 }

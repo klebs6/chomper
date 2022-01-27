@@ -1,6 +1,23 @@
 use python3-translate;
 use python3-model;
-use python-to-rust-util;
+
+our sub get-compound-comments($/) {
+
+    my $comments = $<COMMENT>>>.made;
+    my $last     = $<COMMENT_NONEWLINE>.made;
+
+    if $last {
+        $comments.push: $last
+    }
+
+    $comments
+}
+
+our sub is-test-fn-name($name) {
+    my $fn-name = $name.subst(:g, /^_/, "");
+    $fn-name.starts-with("test")
+}
+
 
 our role Python3::NumberActions {
     method number:sym<integer>($/) { make $/.Str }
@@ -11,51 +28,62 @@ our role Python3::NumberActions {
 our role Python3::DecoratorActions {
 
     method compound-stmt:sym<decorated>($/) {
-        make {
+        make Python3::Decorated.new(
             decorators => $/<decorators>.made,
             decorated  => $/<decorated-item>.made
-        }
+        )
     }
 
     method decorators($/) {
         make $<decorator>>>.made
+    }
+
+    method decorator($/) {
+        make Python3::Decorator.new(
+            name    => $<at-dotted-name>.made,
+            comment => $<COMMENT_NONEWLINE>.made // Nil,
+            arglist => $<parenthesized-arglist>.made // Nil,
+        )
+    }
+
+    method decorated-item:sym<class>($/) {
+        make $<classdef>.made
+    }
+
+    method decorated-item:sym<func>($/) {
+        make $<funcdef>.made
     }
 }
 
 our role Python3::IfStmtActions {
 
     method compound-stmt:sym<if>($/) {
-        make {
-            if => {
-                test        => $<test>.made,
-                comment     => $<COMMENT_NONEWLINE>.made // Nil,
-                suite       => $<suite>.made,
-                elif-suites => $<elif-suite>>>.made,
-                else-suite  => $<else-suite>.made // Nil,
-            }
-        }
+        make Python3::Stmt::If.new(
+            test        => $<test>.made,
+            comment     => $<COMMENT_NONEWLINE>.made // Nil,
+            suite       => $<suite>.made,
+            elif-suites => $<elif-suite>>>.made,
+            else-suite  => $<else-suite>.made // Nil,
+        )
     }
 
     method elif-suite($/) {
-        make {
-            elif => {
-                comments => get-compound-comments($/),
-                test     => $<test>.made,
-                suite    => $<suite>.made,
-            }
-        }
+        make Python3::Stmt::Elif.new(
+            comments => get-compound-comments($/),
+            test     => $<test>.made,
+            suite    => $<suite>.made,
+        )
     }
 }
 
 our role Python3::ElseActions {
 
     method else-suite($/) {
-        make {
-            else => {
-                comments => get-compound-comments($/),
-                suite    => $<suite>.made,
-            }
-        }
+        my $comments = get-compound-comments($/);
+        make Python3::Stmt::Else.new(
+            comments => $comments,
+            suite    => $<suite>.made,
+        )
     }
 }
 
@@ -266,7 +294,7 @@ our role Python3::AtomActions does Python3::StringActions {
     }
 
     method atom:sym<ellipsis>($/)  { 
-        make Ellipsis.new
+        make Python3::Ellipsis.new
     }
 }
 
@@ -298,27 +326,17 @@ our role Python3::FunctionActions {
     }
 
     method funcdef($/) {
+
         my $name = $<NAME>.made;
-=begin comment
-        make python3-function-to-rust-stub(
+
+        make Python3::Funcdef.new(
             name       => $name,
             private    => $name.starts-with("_"),
             is-test    => is-test-fn-name($name),
             parameters => $<parameters>.made,
             test       => $<test> // Nil,
-            suite      => $<suite>.Str
+            suite      => $<suite>.made
         )
-=end comment
-        make {
-            funcdef => {
-                name       => $name,
-                private    => $name.starts-with("_"),
-                is-test    => is-test-fn-name($name),
-                parameters => $<parameters>.made,
-                test       => $<test> // Nil,
-                suite      => $<suite>.Str
-            }
-        }
     }
 
     method parameters($/) {
@@ -330,64 +348,50 @@ our role Python3::FunctionActions {
     }
 
     method typedargslist:sym<full>($/) {
-        make { 
-            typedargslist => {
-                basic-args => $<just-basic-args-with-trailing-comment>.made,
-                star-args  => $<star-args>.made,
-                kw-args    => $<typedargslist-kwargs>.made,
-            }
-        }
+        make Python3::TypedArgList.new(
+            basic-args => $<just-basic-args-with-trailing-comment>.made,
+            star-args  => $<star-args>.made,
+            kw-args    => $<typedargslist-kwargs>.made,
+        )
     }
 
     method typedargslist:sym<just-star-args>($/) {
-        make { 
-            typedargslist => {
-                star-args  => $<star-args>.made,
-            }
-        }
+        make Python3::TypedArgList.new(
+            star-args  => $<star-args>.made,
+        )
     }
 
     method typedargslist:sym<just-kwargs>($/) {
-        make { 
-            typedargslist => {
-                kw-args    => $<typeargslist-kwargs>.made,
-            }
-        }
+        make Python3::TypedArgList.new(
+            kw-args    => $<typeargslist-kwargs>.made,
+        )
     }
 
     method typedargslist:sym<just-basic>($/) {
-        make { 
-            typedargslist => {
-                basic-args => $<just-basic-args>.made,
-            }
-        }
+        make Python3::TypedArgList.new(
+            basic-args => $<just-basic-args>.made,
+        )
     }
 
     method typedargslist:sym<basic-and-star-args>($/) {
-        make { 
-            typedargslist => {
-                basic-args => $<just-basic-args-with-trailing-comment>.made,
-                star-args  => $<star-args>.made,
-            }
-        }
+        make Python3::TypedArgList.new(
+            basic-args => $<just-basic-args-with-trailing-comment>.made,
+            star-args  => $<star-args>.made,
+        )
     }
 
     method typedargslist:sym<basic-and-kwargs>($/) {
-        make { 
-            typedargslist => {
-                basic-args => $<just-basic-args-with-trailing-comment>.made,
-                kw-args    => $<typedargslist-kwargs>.made,
-            }
-        }
+        make Python3::TypedArgList.new(
+            basic-args => $<just-basic-args-with-trailing-comment>.made,
+            kw-args    => $<typedargslist-kwargs>.made,
+        )
     }
 
     method typedargslist:sym<star-and-kwargs>($/) {
-        make { 
-            typedargslist => {
-                star-args  => $<star-args>.made,
-                kw-args    => $<typedargslist-kwargs>.made,
-            }
-        }
+        make Python3::TypedArgList.new(
+            star-args  => $<star-args>.made,
+            kw-args    => $<typedargslist-kwargs>.made,
+        )
     }
 
     method augmented-tfpdef($/) {
@@ -552,7 +556,129 @@ our role Python3::ClassdefActions {
     }
 }
 
+our role Python3::FileInputActions {
+
+    method file-input($/) {
+        make $<file-input-item>>>.made
+    }
+
+    method file-input-item:sym<comment-newline>($/) {
+        make $<comment-newline>.made;
+    }
+
+    method file-input-item:sym<stmt>($/) {
+        make $<stmt>.made;
+    }
+}
+
+our role Python3::SmallStmtActions {
+
+    method small-stmt:sym<expr-augassign>($/) {
+        make Python3::Stmt::ExprAugAssign.new(
+            lhs  => $<testlist-star-expr>.made,
+            op   => $<augassign>.made,
+            rhs  => $<expr-augassign-rhs>.made,
+        )
+    }
+
+    method small-stmt:sym<expr-equals>($/) {
+        make Python3::Stmt::ExprEquals.new(
+            lhs       => $<testlist-star-expr>.made,
+            rhs-stack => $<expr-equals-rhs>>>.made,
+        )
+    }
+
+    method small-stmt:sym<return>($/) {
+        make Python3::Stmt::Return.new(
+            testlist => $<testlist>.made // Nil,
+        )
+    }
+
+    method small-stmt:sym<raise>($/) {
+        make Python3::Stmt::Raise.new(
+            clause => $/<raise-clause>.made // Nil,
+        )
+    }
+
+
+    method small-stmt:sym<import-name>($/) {
+        make Python3::Stmt::ImportName.new(
+            names => $<dotted-as-names>.made
+        )
+    }
+
+    method small-stmt:sym<nonlocal>($/) {
+        make Python3::Stmt::Nonlocal.new(
+            names => $/<NAME>>>.made,
+        )
+    }
+
+    method small-stmt:sym<assert>($/) {
+        make Python3::Stmt::Assert.new(
+            tests => $/<test>>>.made,
+        )
+    }
+
+    method small-stmt:sym<pass>($/) {
+        make Python3::Stmt::Pass.new
+    }
+
+    method small-stmt:sym<break>($/) {
+        make Python3::Stmt::Break.new
+    }
+
+    method small-stmt:sym<continue>($/) {
+        make Python3::Stmt::Continue.new
+    }
+
+    method small-stmt:sym<yield>($/) {
+        make $<yield-expr>.made
+    }
+
+    method small-stmt:sym<import-from>($/) {
+        make $<import-from>.made
+    }
+
+    method small-stmt:sym<global>($/) {
+        make Python3::Stmt::Global.new(
+            names => $<NAME>>>.made
+        )
+    }
+
+    method small-stmt:sym<del>($/) {
+        make Python3::Stmt::Del.new(
+            exprs => $<exprlist>.made,
+        )
+    }
+}
+
+our role Python3::SuiteActions {
+
+    method suite:sym<simple>($/) {
+        make $/<simple-suite>.made
+    }
+
+    method suite:sym<stmt>($/) {
+        make $/<stmt-suite>.made
+    }
+
+    method stmt-suite($/) {
+        make Python3::StmtSuite.new(
+            stmts => $/<stmt-maybe-comments>>>.made
+        )
+    }
+    method simple-suite($/) {
+        make Python3::SimpleSuite.new(
+            stmts   => $<simple-stmt>.made,
+            comment => $<COMMENT>.made // Nil,
+        )
+    }
+}
+
 our role Python3::ToRustActions 
+does Python3::FileInputActions 
+does Python3::SmallStmtActions 
+does Python3::SuiteActions 
 does Python3::NumberActions 
 does Python3::DecoratorActions 
 does Python3::IfStmtActions 
@@ -572,37 +698,8 @@ does Python3::StringActions
         make $<file-input>.made
     }
 
-    #----------------------------------
-    method file-input($/) {
-        make $<file-input-item>>>.made
-    }
-
-    method file-input-item:sym<comment-newline>($/) {
-        make $<comment-newline>.made;
-    }
-
-    method file-input-item:sym<stmt>($/) {
-        make $<stmt>.made;
-    }
-
-    #----------------------------------
     method NAME($/) {
         make $/.Str
-    }
-
-    #-----------------------------------
-    method suite:sym<simple>($/) {
-        make $/<simple-suite>.made
-    }
-
-    method suite:sym<stmt>($/) {
-        make $/<stmt-suite>.made
-    }
-
-    method stmt-suite($/) {
-        make Python3::StmtSuite.new(
-            stmts => $/<stmt-maybe-comments>>>.made
-        )
     }
 
     method stmt-maybe-comments($/) {
@@ -612,34 +709,12 @@ does Python3::StringActions
         )
     }
 
-    method simple-suite($/) {
-        make Python3::SimpleSuite.new(
-            stmts   => $<simple-stmt>.made,
-            comment => $<COMMENT>.made // Nil,
-        )
-    }
-
     method simple-stmt($/) {
         make $/<small-stmt>>>.made
     }
 
-    method small-stmt:sym<expr-augassign>($/) {
-        make Python3::Stmt::ExprAugAssign.new(
-            lhs  => $<testlist-star-expr>.made,
-            op   => $<augassign>.made,
-            rhs  => $<expr-augassign-rhs>.made,
-        )
-    }
-
     method augassign($/) {
         make $/.Str
-    }
-
-    method small-stmt:sym<expr-equals>($/) {
-        make Python3::Stmt::ExprEquals.new(
-            lhs       => $<testlist-star-expr>.made,
-            rhs-stack => $<expr-equals-rhs>>>.made,
-        )
     }
 
     method expr-equals-rhs:sym<yield>($/) {
@@ -684,17 +759,6 @@ does Python3::StringActions
         make $<star-expr>.made
     }
 
-    method small-stmt:sym<return>($/) {
-        make Python3::Stmt::Return.new(
-            testlist => $<testlist>.made // Nil,
-        )
-    }
-
-    method small-stmt:sym<raise>($/) {
-        make Python3::Stmt::Raise.new(
-            clause => $/<raise-clause>.made // Nil,
-        )
-    }
 
     method raise-clause($/) {
         make Python3::RaiseClause.new(
@@ -720,43 +784,6 @@ does Python3::StringActions
         )
     }
 
-    method small-stmt:sym<import-name>($/) {
-        make Python3::Stmt::ImportName.new(
-            names => $<dotted-as-names>.made
-        )
-    }
-
-    method small-stmt:sym<nonlocal>($/) {
-        make Python3::Stmt::Nonlocal.new(
-            names => $/<NAME>>>.made,
-        )
-    }
-
-    method small-stmt:sym<assert>($/) {
-        make Python3::Stmt::Assert.new(
-            tests => $/<test>>>.made,
-        )
-    }
-
-    method small-stmt:sym<pass>($/) {
-        make Python3::Stmt::Pass.new
-    }
-
-    method small-stmt:sym<break>($/) {
-        make Python3::Stmt::Break.new
-    }
-
-    method small-stmt:sym<continue>($/) {
-        make Python3::Stmt::Continue.new
-    }
-
-    method small-stmt:sym<yield>($/) {
-        make $<yield-expr>.made
-    }
-
-    method small-stmt:sym<import-from>($/) {
-        make $<import-from>.made
-    }
 
     method import-from($/) {
         make Python3::Stmt::ImportFrom.new(
@@ -817,25 +844,15 @@ does Python3::StringActions
         )
     }
 
-    method small-stmt:sym<global>($/) {
-        make Python3::Stmt::Global.new(
-            names => $<NAME>>>.made
-        )
-    }
-
-    method small-stmt:sym<del>($/) {
-        make Python3::Stmt::Del.new(
-            exprs => $<exprlist>.made,
-        )
-    }
-
     method exprlist($/) {
         make $<star-expr>>>.made
     }
 
     #----------------------------------
     method test:sym<basic>($/) {
-        make $<or-test>.made
+        make Python3::BasicTest.new(
+            or-test => $<or-test>.made
+        )
     }
 
     method or-test($/) {
@@ -1008,11 +1025,13 @@ does Python3::StringActions
     }
 
     method lambdef($/) {
-        make "lambdef"
+        make Python3::Lambdef.new(
+            #TODO
+        )
     }
 
     method test:sym<ternary>($/) {
-        make TernaryOperator.new(
+        make Python3::TernaryOperator.new(
             A    => $/<or-test>[0].made,
             cond => $/<or-test>[1].made,
             B    => $/<test>.made,
