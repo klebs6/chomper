@@ -251,11 +251,11 @@ our role Python3LongString {
 
     regex SINGLE_QUOTED_LONG_STRING {
         "'''" 
-        <SINGLE_QUOTED_LONG_STRING_BODY>
+        <SINGLE_QUOTED_LONG_STRING_INNER>
         "'''"
     }
 
-    regex SINGLE_QUOTED_LONG_STRING_BODY {
+    regex SINGLE_QUOTED_LONG_STRING_INNER {
         <?after "'''"> 
         <LONG_STRING_ITEM>*? 
         <?before "'''">
@@ -263,11 +263,11 @@ our role Python3LongString {
 
     regex DOUBLE_QUOTED_LONG_STRING {
         '"""' 
-        <DOUBLE_QUOTED_LONG_STRING_BODY>
+        <DOUBLE_QUOTED_LONG_STRING_INNER>
         '"""'
     }
 
-    regex DOUBLE_QUOTED_LONG_STRING_BODY {
+    regex DOUBLE_QUOTED_LONG_STRING_INNER {
         <?after '"""'>
         <LONG_STRING_ITEM>*? 
         <?before '"""'>
@@ -416,7 +416,7 @@ our role Python3Name {
     }
 
     token dotted_name {
-        <NAME> [    <DOT> <NAME> ]*
+        <NAME> [ <DOT> <NAME> ]*
     }
 
     token ID_START {
@@ -1073,24 +1073,24 @@ does Python3Keywords {
         '*' <tfpdef>?  [ <COMMA> <augmented-tfpdef> ]*
     }
 
-    rule kwargs {
+    rule typedargslist-kwargs {
         '**' <tfpdef>
     }
 
     rule typedargslist:sym<full> {
         <just-basic-args-with-trailing-comment>
         <star-args> 
-        <COMMA> <kwargs>
+        <COMMA> <typedargslist-kwargs>
     }
 
     rule typedargslist:sym<star-and-kwargs> {
         <star-args>
-        <COMMA> <kwargs>
+        <COMMA> <typedargslist-kwargs>
     }
 
     rule typedargslist:sym<basic-and-kwargs> {
         <just-basic-args-with-trailing-comment>
-        <kwargs>
+        <typedargslist-kwargs>
     }
 
     rule typedargslist:sym<basic-and-star-args> {
@@ -1100,7 +1100,7 @@ does Python3Keywords {
 
     rule typedargslist:sym<just-basic>     { <just-basic-args> }
     rule typedargslist:sym<just-star-args> { <star-args> }
-    rule typedargslist:sym<just-kwargs>    { <kwargs> }
+    rule typedargslist:sym<just-kwargs>    { <typedargslist-kwargs> }
 
     #---------------------------------------
     rule tfpdef {
@@ -1130,10 +1130,13 @@ does Python3Keywords {
         <NAME>
     }
 
+    proto token import-dots { * }
+    token import-dots:sym<dot>  { <DOT> }
+    token import-dots:sym<dots> { '...' }
 
     token import-from-src {
-        | [ <DOT> | '...' ]* <dotted_name>
-        | [ <DOT> | '...' ]+
+        | <import-dots>* <dotted_name>
+        | <import-dots>+
     }
 
     proto token import-from-target { * }
@@ -1145,27 +1148,27 @@ does Python3Keywords {
         <OPEN_PAREN> <COMMENT_NONEWLINE>? <import-as-names> <CLOSE_PAREN>
     }
 
-    rule import_from {
+    rule import-from {
         <FROM>
         <import-from-src>
         <IMPORT>
         <import-from-target>
     }
 
-    rule import_as_name {
+    rule import-as-name {
         <NAME> [ <AS> <NAME> ]?
     }
 
-    rule dotted_as_name {
+    rule dotted-as-name {
         <dotted_name> [ <AS> <NAME> ]?
     }
 
     rule import-as-names {
-        <import_as_name>+ %% <COMMA>
+        <import-as-name>+ %% <COMMA>
     }
 
-    rule dotted_as_names {
-        <dotted_as_name> [ <COMMA> <dotted_as_name> ]*
+    rule dotted-as-names {
+        <dotted-as-name> [ <COMMA> <dotted-as-name> ]*
     }
 
     #------------------------------------------
@@ -1436,21 +1439,20 @@ does Python3Keywords {
 
     token small-stmt:sym<return>      { <RETURN> [\h+ <testlist>]? }
     token small-stmt:sym<raise>       { <RAISE> \h+ <raise-clause>?  }
-    token small-stmt:sym<import-name> { <IMPORT> \h+ <dotted_as_names> }
+    token small-stmt:sym<import-name> { <IMPORT> \h+ <dotted-as-names> }
     token small-stmt:sym<nonlocal>    { <NONLOCAL> \h+ <NAME> \h* [ <COMMA> \h+ <NAME> ]* }
     token small-stmt:sym<assert>      { <ASSERT> \h+  <test> \h* [ <COMMA> \h+ <test> ]? }
     token small-stmt:sym<pass>        { <PASS> }
     token small-stmt:sym<break>       { <BREAK> }
     token small-stmt:sym<contine>     { <CONTINUE> }
     token small-stmt:sym<yield>       { <yield-expr> }
-    token small-stmt:sym<import-from> { <import_from> }
+    token small-stmt:sym<import-from> { <import-from> }
     token small-stmt:sym<global>      { <GLOBAL> \h+  <NAME> \h* [ <COMMA> \h+ <NAME> ]* }
     token small-stmt:sym<del>         { <DEL> \h+ <exprlist> }
 
     token raise-clause {
         <test> \h+ [ <FROM> \h+ <test> ]? 
     }
-
 
     #<NEWLINE> <INDENT> <stmt>+ <DEDENT>
     token stmt-suite {
@@ -1699,12 +1701,20 @@ does Python3Keywords {
     }
 
     rule arglist:sym<just-kwargs> {
+        <arglist-kwargs>
+    }
+
+    token arglist-kwargs {
         '**' <test>
+    }
+
+    token star-arg {
+        '*' <test> 
     }
 
     rule arglist:sym<basic-and-star-arg> {
         <argument-comma-maybe-comment>+
-        '*' <test> 
+        <star-arg>
     }
 
     rule arglist:sym<basic-and-star-arg-with-trailing-comma> {
@@ -1720,20 +1730,20 @@ does Python3Keywords {
 
     rule arglist:sym<basic-and-kwargs> {
         <argument-comma-maybe-comment>+
-        '**' <test>
+        <arglist-kwargs>
     }
 
     rule arglist:sym<star-and-kwargs> {
         '*' <test-comma-maybe-comment>  
         <argument-comma-maybe-comment>*  
-        '**' <test>
+        <arglist-kwargs>
     }
 
     rule arglist:sym<full> {
         <basic=argument-comma-maybe-comment>+
         '*' <test-comma-maybe-comment>  
         <star=argument-comma-maybe-comment>*  
-        '**' <test>
+        <arglist-kwargs>
     }
 
     #----------------------------------

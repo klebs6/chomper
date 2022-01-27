@@ -14,8 +14,8 @@ our sub get-compound-comments($/) {
     [|$<COMMENT>>>.made, $<COMMENT_NONEWLINE>.made // Nil]
 }
 
-our sub is-test-fn-name($name is rw) {
-    $name = $name.subst(:g, /^_/, "");
-    $name.starts-with("test")
+our sub is-test-fn-name($name) {
+    my $fn-name = $name.subst(:g, /^_/, "");
+    $fn-name.starts-with("test")
 }
 

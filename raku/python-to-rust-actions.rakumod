@@ -1,4 +1,5 @@
-use python3-function-to-rust-stub;
+use python3-translate;
+use python3-model;
 use python-to-rust-util;
 
 our role Python3::NumberActions {
@@ -201,11 +202,11 @@ our role Python3::StringActions {
     method SHORT_BYTES:sym<DOUBLE_QUOTED>($/)  { make $<DOUBLE_QUOTED_SHORT_BYTES>.made  }
 
     #-------
-    method DOUBLE_QUOTED_LONG_STRING($/) { make $<DOUBLE_QUOTED_LONG_STRING_BODY>.made }
-    method SINGLE_QUOTED_LONG_STRING($/) { make $<SINGLE_QUOTED_LONG_STRING_BODY>.made }
+    method DOUBLE_QUOTED_LONG_STRING($/) { make $<DOUBLE_QUOTED_LONG_STRING_INNER>.made }
+    method SINGLE_QUOTED_LONG_STRING($/) { make $<SINGLE_QUOTED_LONG_STRING_INNER>.made }
 
-    method DOUBLE_QUOTED_LONG_STRING_BODY($/) { make $/.Str }
-    method SINGLE_QUOTED_LONG_STRING_BODY($/) { make $/.Str }
+    method DOUBLE_QUOTED_LONG_STRING_INNER($/) { make $/.Str }
+    method SINGLE_QUOTED_LONG_STRING_INNER($/) { make $/.Str }
 
     method DOUBLE_QUOTED_SHORT_STRING($/) { make $<DOUBLE_QUOTED_SHORT_STRING_INNER>.Str }
     method SINGLE_QUOTED_SHORT_STRING($/) { make $<SINGLE_QUOTED_SHORT_STRING_INNER>.Str }
@@ -280,7 +281,9 @@ our role Python3::CommentActions {
     }
 
     method COMMENT_NONEWLINE($/) {
-        make { comment => $/.Str }
+        make Python3::Comment.new(
+            text => $/.Str
+        )
     }
 
     method COMMENT($/) {
@@ -331,7 +334,7 @@ our role Python3::FunctionActions {
             typedargslist => {
                 basic-args => $<just-basic-args-with-trailing-comment>.made,
                 star-args  => $<star-args>.made,
-                kw-args    => $<kw-args>.made,
+                kw-args    => $<typedargslist-kwargs>.made,
             }
         }
     }
@@ -347,7 +350,7 @@ our role Python3::FunctionActions {
     method typedargslist:sym<just-kwargs>($/) {
         make { 
             typedargslist => {
-                kw-args    => $<kw-args>.made,
+                kw-args    => $<typeargslist-kwargs>.made,
             }
         }
     }
@@ -373,7 +376,7 @@ our role Python3::FunctionActions {
         make { 
             typedargslist => {
                 basic-args => $<just-basic-args-with-trailing-comment>.made,
-                kw-args    => $<kw-args>.made,
+                kw-args    => $<typedargslist-kwargs>.made,
             }
         }
     }
@@ -382,7 +385,7 @@ our role Python3::FunctionActions {
         make { 
             typedargslist => {
                 star-args  => $<star-args>.made,
-                kw-args    => $<kw-args>.made,
+                kw-args    => $<typedargslist-kwargs>.made,
             }
         }
     }
@@ -438,90 +441,98 @@ our role Python3::FunctionActions {
 our role Python3::ArglistActions {
 
     method parenthesized-arglist($/) {
-        make $/<arglist>.made // Nil
+        make $<arglist>.made // Nil
     }
 
     method arglist:sym<just-basic>($/) {
-        make { 
+        make Python3::Arglist.new(
             basic-args => [
                 |$<argument-comma-maybe-comment>>>.made,
                 $<argument>.made
             ] 
-        }
+        )
     }
 
     method arglist:sym<just-basic-with-trailing-comment>($/) {
-        make { 
+        make Python3::Arglist.new(
             basic-args => $<argument-comma-maybe-comment>>>.made
-        }
+        )
     }
 
     method arglist:sym<just-star-args>($/) {
-        make { 
+        make Python3::Arglist.new(
             star-args => [ $<test>.made ] 
-        }
+        )
     }
 
     method arglist:sym<just-star-args2>($/) {
-        make {
+        make Python3::Arglist.new(
             star-args => [
                 $<test-comma-maybe-comment>.made, 
                 |$<argument-comma-maybe-comment>>>.made,
                 $<argument>.made
             ],
-        }
+        )
     }
 
     method arglist:sym<just-kwargs>($/) {
-        make {
-            kwargs => $<test>.made,
-        }
+        make Python3::Arglist.new(
+            kwargs => $<arglist-kwargs>.made,
+        )
     }
 
     method arglist:sym<basic-and-star-arg>($/) {
-        make {
+        make Python3::Arglist.new(
             basic-args => $<argument-comma-maybe-comment>>>.made,
-            star-args  => [ $<test>.made ],
-        }
+            star-args  => [ $<star-arg>.made ],
+        )
+    }
+
+    method arglist-kwargs($/) {
+        make $<test>.made
+    }
+
+    method star-arg($/) {
+        make $<test>.made
     }
 
     method arglist:sym<basic-and-star-arg-with-trailing-comma>($/) {
-        make {
+        make Python3::Arglist.new(
             basic-args => $<argument-comma-maybe-comment>>>.made,
             star-args  => [ $<test-comma-maybe-comment>.made ],
-        }
+        )
     }
 
     method arglist:sym<basic-and-star-args>($/) {
-        make {
+        make Python3::Arglist.new(
             basic-args => $<basic>>>.made,
             star-args  => [ 
                 $<test-comma-maybe-comment>.made,
                 $<star>>>.made
             ],
-        }
+        )
     }
 
     method arglist:sym<basic-and-kwargs>($/) {
-        make {
+        make Python3::Arglist.new(
             basic-args => $<argument-comma-maybe-comment>>>.made,
-            kwargs     => $<test>.made,
-        }
+            kwargs     => $<arglist-kwargs>.made,
+        )
     }
 
     method arglist:sym<star-and-kwargs>($/) {
-        make {
+        make Python3::Arglist.new(
             star-args => [$<test-comma-maybe-comment>.made, |$<argument-comma-maybe-comment>>>.made],
-            kwargs    => $<test>.made,
-        }
+            kwargs    => $<arglist-kwargs>.made,
+        )
     }
 
     method arglist:sym<full>($/) {
-        make {
+        make Python3::Arglist.new(
             basic-args => $<basic>.made,
             star-args  => [$<test-comma-maybe-comment>.made, |$<star>>>.made],
-            kwargs     => $<test>.made,
-        }
+            kwargs     => $<arglist-kwargs>.made,
+        )
     }
 }
 
@@ -532,14 +543,12 @@ our role Python3::ClassdefActions {
     }
 
     method classdef($/) {
-        make {
-            class => {
-                name    => $<NAME>.made,
-                arglist => $/<parenthesized-arglist>.made // Nil,
-                comment => $<COMMENT_NONEWLINE>.made // Nil,
-                suite   => $<suite>.made,
-            }
-        }
+        make Python3::Classdef.new(
+            name    => $<NAME>.made,
+            arglist => $/<parenthesized-arglist>.made // Nil,
+            comment => $<COMMENT_NONEWLINE>.made      // Nil,
+            suite   => $<suite>.made,
+        )
     }
 }
 
@@ -591,23 +600,23 @@ does Python3::StringActions
     }
 
     method stmt-suite($/) {
-        make $/<stmt-maybe-comments>>>.made
+        make Python3::StmtSuite.new(
+            stmts => $/<stmt-maybe-comments>>>.made
+        )
     }
 
     method stmt-maybe-comments($/) {
-        make {
+        make Python3::StmtWithComments.new(
             stmt     => $<stmt>.made,
             comments => $<COMMENT>>>.made,
-        }
+        )
     }
 
     method simple-suite($/) {
-        make {
-            simple-stmt => {
-                list    => $<simple-stmt>.made,
-                comment => $<COMMENT>.made // Nil
-            }
-        }
+        make Python3::SimpleSuite.new(
+            stmts   => $<simple-stmt>.made,
+            comment => $<COMMENT>.made // Nil,
+        )
     }
 
     method simple-stmt($/) {
@@ -615,13 +624,11 @@ does Python3::StringActions
     }
 
     method small-stmt:sym<expr-augassign>($/) {
-        make {
-            expr-augassign => {
-                lhs  => $<testlist-star-expr>.made,
-                op   => $<augassign>.made,
-                rhs  => $<expr-augassign-rhs>.made,
-            }
-        }
+        make Python3::Stmt::ExprAugAssign.new(
+            lhs  => $<testlist-star-expr>.made,
+            op   => $<augassign>.made,
+            rhs  => $<expr-augassign-rhs>.made,
+        )
     }
 
     method augassign($/) {
@@ -629,12 +636,10 @@ does Python3::StringActions
     }
 
     method small-stmt:sym<expr-equals>($/) {
-        make {
-            expr-equals => {
-                lhs       => $<testlist-star-expr>.made,
-                rhs-stack => $<expr-equals-rhs>>>.made,
-            }
-        }
+        make Python3::Stmt::ExprEquals.new(
+            lhs       => $<testlist-star-expr>.made,
+            rhs-stack => $<expr-equals-rhs>>>.made,
+        )
     }
 
     method expr-equals-rhs:sym<yield>($/) {
@@ -646,23 +651,21 @@ does Python3::StringActions
     }
 
     method yield-expr($/) {
-        make {
-            yield-expr => {
-                arg => $<yield-arg>.made // Nil,
-            }
-        }
+        make Python3::YieldExpr.new(
+            arg => $<yield-arg>.made // Nil,
+        )
     }
 
     method yield-arg:sym<from>($/) {
-        make {
-            yield-arg-from => $<test>.made,
-        }
+        make Python3::YieldArg.new(
+            from => $<test>.made,
+        )
     }
 
     method yield-arg:sym<testlist>($/) {
-        make {
-            yield-arg-testlist => $<testlist>.made,
-        }
+        make Python3::YieldArg.new(
+            testlist => $<testlist>.made,
+        )
     }
 
     method testlist-star-expr($/) {
@@ -682,60 +685,69 @@ does Python3::StringActions
     }
 
     method small-stmt:sym<return>($/) {
-        make {
-            return => {
-                testlist => $<testlist>.made // Nil,
-            }
-        }
+        make Python3::Stmt::Return.new(
+            testlist => $<testlist>.made // Nil,
+        )
     }
 
     method small-stmt:sym<raise>($/) {
-        make {
-            raise => {
-                clause => $/<raise-clause>.made // Nil,
-            }
-        }
+        make Python3::Stmt::Raise.new(
+            clause => $/<raise-clause>.made // Nil,
+        )
     }
 
     method raise-clause($/) {
-        make {
-            raise-clause => {
-                test => $/<test>[0].made,
-                from => $/<test>[1].made // Nil,
-            }
-        }
+        make Python3::RaiseClause.new(
+            test => $/<test>[0].made,
+            from => $/<test>[1].made // Nil,
+        )
+    }
+
+    method dotted-as-names($/) {
+        make $<dotted-as-name>>>.made
+    }
+
+    method dotted-as-name($/) {
+        make Python3::DottedAsName.new(
+            name => $<dotted_name>.made,
+            as   => $<NAME>.made // Nil,
+        )
+    }
+
+    method dotted_name($/) {
+        make Python3::DottedName.new(
+            names => $<NAME>>>.made
+        )
     }
 
     method small-stmt:sym<import-name>($/) {
-        make PythonImportSkipMe.new
+        make Python3::Stmt::ImportName.new(
+            names => $<dotted-as-names>.made
+        )
     }
 
     method small-stmt:sym<nonlocal>($/) {
-        make {
-            nonlocal => {
-                names => $/<NAME>>>.made,
-            }
-        }
+        make Python3::Stmt::Nonlocal.new(
+            names => $/<NAME>>>.made,
+        )
     }
 
     method small-stmt:sym<assert>($/) {
-        make {
-            assert => {
-                tests => $/<test>>>.made,
-            }
-        }
+        make Python3::Stmt::Assert.new(
+            tests => $/<test>>>.made,
+        )
     }
 
     method small-stmt:sym<pass>($/) {
-        make Pass.new
+        make Python3::Stmt::Pass.new
     }
 
     method small-stmt:sym<break>($/) {
-        make Break.new
+        make Python3::Stmt::Break.new
     }
 
     method small-stmt:sym<continue>($/) {
-        make Continue.new
+        make Python3::Stmt::Continue.new
     }
 
     method small-stmt:sym<yield>($/) {
@@ -743,29 +755,82 @@ does Python3::StringActions
     }
 
     method small-stmt:sym<import-from>($/) {
-        make PythonImportSkipMe.new
+        make $<import-from>.made
+    }
+
+    method import-from($/) {
+        make Python3::Stmt::ImportFrom.new(
+            src    => $<import-from-src>.made,
+            target => $<import-from-target>.made,
+        )
+    }
+
+    method import-from-src($/) {
+        make Python3::ImportFromSrc.new(
+            dot-stack => $<import-dots>>>.made,
+            name      => $<dotted_name>.made // Nil,
+        )
+    }
+
+    method import-dots:sym<dot>($/) {
+        make Python3::ImportDots.new(
+            plural => False,
+        )
+    }
+
+    method import-dots:sym<dots>($/) {
+        make Python3::ImportDots.new(
+            plural => True,
+        )
+    }
+
+    method import-from-target:sym<*>($/) {
+        make Python3::ImportFromTarget.new(
+            glob => True,
+        )
+    }
+
+    method import-from-target:sym<parenthesized-import-as-names>($/) {
+        make Python3::ImportFromTarget.new(
+            glob    => False,
+            comment => $<parenthesized-import-as-names><COMMENT_NONEWLINE>.made // Nil,
+            names   => $<parenthesized-import-as-names><import-as-names>>>.made // Nil,
+        )
+    }
+
+    method import-from-target:sym<import-as-names>($/) {
+        make Python3::ImportFromTarget.new(
+            glob    => False,
+            comment => Nil,
+            names   => $<import-as-names>>>.made // Nil,
+        )
+    }
+
+    method import-as-names($/) {
+        make $<import-as-name>>>.made
+    }
+
+    method import-as-name($/) {
+        make Python3::ImportAsName.new(
+            name => $<NAME>[0].made,
+            as   => $<NAME>[1] ?? $<NAME>[1].made !! Nil,
+        )
     }
 
     method small-stmt:sym<global>($/) {
-        make {
-            global => {
-                names => $<NAME>>>.made
-            }
-        }
+        make Python3::Stmt::Global.new(
+            names => $<NAME>>>.made
+        )
     }
 
     method small-stmt:sym<del>($/) {
-        make {
-            del => {
-                exprlist => $<exprlist>.made
-            }
-        }
+        make Python3::Stmt::Del.new(
+            exprs => $<exprlist>.made,
+        )
     }
 
     method exprlist($/) {
-        make {
-            exprs => $<star-expr>>>.made
-        }
+        make $<star-expr>>>.made
     }
 
     #----------------------------------
