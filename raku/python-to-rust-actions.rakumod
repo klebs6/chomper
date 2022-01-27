@@ -90,39 +90,33 @@ our role Python3::ElseActions {
 our role Python3::CompoundStmtActions {
 
     method compound-stmt:sym<while>($/) {
-        make {
-            while => {
-                test     => $<test>.made,
-                comments => [$<COMMENT_NONEWLINE>.made // Nil],
-                suite    => $<suite>.made,
-                else-suite => $<else-suite>.made // Nil,
-            }
-        }
+        make Python3::Stmt::While.new(
+            test     => $<test>.made,
+            comments => [$<COMMENT_NONEWLINE>.made // Nil],
+            suite    => $<suite>.made,
+            else-suite => $<else-suite>.made // Nil,
+        )
     }
 
     method compound-stmt:sym<for>($/) {
-        make {
-            for => {
-                exprlist    => $<exprlist>.made,
-                testlist    => $<testlist>.made,
-                comment     => $<COMMENT_NONEWLINE>.made // Nil,
-                suite       => $<suite>.made,
-                else-suite  => $<else-suite>.made // Nil,
-            }
-        }
+        make Python3::Stmt::For.new(
+            exprlist    => $<exprlist>.made,
+            testlist    => $<testlist>.made,
+            comment     => $<COMMENT_NONEWLINE>.made // Nil,
+            suite       => $<suite>.made,
+            else-suite  => $<else-suite>.made // Nil,
+        )
     }
 }
 
 our role Python3::TryStmtActions {
 
     method compound-stmt:sym<try>($/) {
-        make { 
-            try-block => {
-                comment        => $/<COMMENT_NONEWLINE>.made // Nil,
-                suite          => $<suite>.made,
-                |$<try-control-suite>.made,
-            } 
-        }
+        make Python3::Stmt::Try.new(
+            comment        => $/<COMMENT_NONEWLINE>.made // Nil,
+            suite          => $<suite>.made,
+            |$<try-control-suite>.made,
+        )
     }
 
     method try-control-suite:sym<full>($/) {
@@ -130,62 +124,54 @@ our role Python3::TryStmtActions {
     }
 
     method try-control-suite:sym<finally>($/) {
-        make {
-            finally => $<finally-suite>.made
-        }
+        make $<finally-suite>.made
     }
 
     method try-block-except-suite($/) {
-        make {
+        make Python3::Stmt::ExceptSuite.new(
             comments       => $<COMMENT>>>.made,
             except-clauses => $<except-clause-suite>>>.made,
             else           => $<else-suite>.made // Nil,
             finally        => $<finally-suite>.made // Nil,
-        }
+        )
     }
 
     method except-clause-suite($/) {
-        make {
+        make Python3::Stmt::ExceptClauseSuite.new(
             comments       => get-compound-comments($/),
             suite          => $<suite>.made,
-        }
+        )
     }
 
     method finally-suite($/) {
-        make {
+        make Python3::Stmt::Finally.new(
             comments       => [|$<COMMENT>>>.made, $<COMMENT_NONEWLINE>.made // Nil],
             suite          => $<suite>.made
-        }
+        )
     }
 }
 
 our role Python3::WithStmtActions {
 
     method compound-stmt:sym<with>($/) {
-        make {
-            with => {
-                comments   => get-compound-comments($/),
-                with-items => $<with-item>>>.made,
-                suite      => $<suite>.made,
-            }
-        }
+        make Python3::Stmt::With.new(
+            comments   => get-compound-comments($/),
+            with-items => $<with-item>>>.made,
+            suite      => $<suite>.made,
+        )
     }
 
     method with-item:sym<basic>($/) {
-        make {
-            with-item-basic => {
-                test => $<test>.made,
-            }
-        }
+        make Python3::Stmt::WithItemBasic.new(
+            test => $<test>.made,
+        )
     }
 
     method with-item:sym<as>($/) {
-        make {
-            with-item-as => {
-                test => $<test>.made,
-                expr => $<expr>.made,
-            }
-        }
+        make Python3::Stmt::WithItemAs.new(
+            test => $<test>.made,
+            expr => $<expr>.made,
+        )
     }
 }
 
@@ -265,28 +251,32 @@ our role Python3::AtomActions does Python3::StringActions {
     method atom:sym<NAME>($/)    { make $<NAME>.made }
 
     method atom:sym<parens>($/)  { 
-        make {
-            parens   => $<parens-atom>.made,
+        make Python3::ParensAtom.new(
+            inner    => $<parens-atom>.made,
             comments => $<COMMENT>>>.made,
-        }
+        )
     }
 
-    method parens-atom($/) {
-        make "parens-atom"
+    method parens-atom:sym<yield>($/) {
+        make $<yield-expr>.made
+    }
+
+    method parens-atom:sym<testlist-comp>($/) {
+        make $<testlist_comp>.made
     }
 
     method atom:sym<list>($/)  { 
-        make {
+        make Python3::ListAtom.new(
             testlist_comp  => $<testlist_comp>.made,
             comments       => $<COMMENT>>>.made,
-        }
+        )
     }
 
     method atom:sym<dict>($/)  { 
-        make {
+        make Python3::DictAtom.new(
             dictorsetmaker => $<dictorsetmaker>.made,
             comments       => $<COMMENT>>>.made,
-        }
+        )
     }
 
     method atom:sym<number>($/)  { 
@@ -395,50 +385,42 @@ our role Python3::FunctionActions {
     }
 
     method augmented-tfpdef($/) {
-        make {
+        make Python3::AugmentedTfpdef.new(
             augmented-tfpdef => $<tfpdef>.made,
             test             => $<test>.made // Nil,
-        }
+        )
     }
 
     method augmented-tfpdef-comma-maybe-comment($/) {
-        make {
-            comment => $<COMMENT>>>.made,
-            |$<augmented-tfpdef>.made,
-        }
+        my $item = $<augmented-tfpdef>.made;
+        $item.comments = $<COMMENT>>>.made;
+        make $item
     }
 
     method just-basic-args($/) {
-        make {
-            args => [ |$<augmented-tfpdef-comma-maybe-comment>>>.made, $<augmented-tfpdef>.made ],
-        }
+        make [ 
+            |$<augmented-tfpdef-comma-maybe-comment>>>.made, 
+            $<augmented-tfpdef>.made 
+        ]
     }
 
     method just-basic-args-with-trailing-comment($/) {
-        make {
-            args => [ |$<augmented-tfpdef-comma-maybe-comment>>>.made ],
-        }
+        make $<augmented-tfpdef-comma-maybe-comment>>>.made 
     }
 
     method star-args($/) {
-        make {
-            star-args => [$<tfpdef>.made // Nil, |$<augmented-tfpdef>>>.made ],
-        }
+        make [ $<tfpdef>.made // Nil, |$<augmented-tfpdef>>>.made ]
     }
 
     method kwargs($/) {
-        make {
-            kwargs => $<tfpdef>.made,
-        }
+        make $<tfpdef>.made,
     }
 
     method tfpdef($/) {
-        make {
-            tfpdef => {
-                name => $<NAME>.made,
-                test => $<test>.made // Nil,
-            }
-        }
+        make Python3::Tfpdef.new(
+            name => $<NAME>.made,
+            test => $<test>.made // Nil,
+        )
     }
 }
 
@@ -744,11 +726,9 @@ does Python3::StringActions
     }
 
     method testlist-star-expr($/) {
-        make {
-            testlist-star-expr => {
-                test-or-star-exprs => $<test-or-star-expr>>>.made,
-            }
-        }
+        make Python3::TestlistStarExpr.new(
+            test-or-star-exprs => $<test-or-star-expr>>>.made,
+        )
     }
 
     method test-or-star-expr:sym<test>($/) {
@@ -856,168 +836,144 @@ does Python3::StringActions
     }
 
     method or-test($/) {
-        make {
-            or-test => {
-                operands => $<and-test>>>.made,
-                comments => $<COMMENT>>>.made,
-            }
-        }
+        make Python3::OrTest.new(
+            operands => $<and-test>>>.made,
+            comments => $<COMMENT>>>.made,
+        )
     }
 
     method and-test($/) {
-        make {
-            and-test => {
-                operands => $<not-test>>>.made,
-                comments => $<COMMENT>>>.made,
-            }
-        }
+        make Python3::AndTest.new(
+            operands => $<not-test>>>.made,
+            comments => $<COMMENT>>>.made,
+        )
     }
 
     method not-test($/) {
-        make {
-            not-test => {
-                not-count  => $/<NOT>.List.elems,
-                comparison => $<comparison>.made,
-            }
-        }
+        make Python3::NotTest.new(
+            not-count  => $/<NOT>.List.elems,
+            comparison => $<comparison>.made,
+        )
     }
 
     method comparison($/) {
-        make {
-            comparison => {
-                star-exprs => $/<star-expr>>>.made,
-                comp-ops   => $/<comp-op>>>.made,
-            }
-        }
+        make Python3::Comparison.new(
+            star-exprs => $/<star-expr>>>.made,
+            comp-ops   => $/<comp-op>>>.made,
+        )
     }
 
     method star-expr($/) {
-        make {
+        make Python3::StarExpr.new(
             has-star => $/<STAR>:exists,
             expr     => $<expr>.made,
-        }
+        )
     }
 
     method expr($/) {
-        make {
-            expr => {
-                operands => $/<xor-expr>>>.made,
-            }
-        }
+        make Python3::Expr.new(
+            operands => $/<xor-expr>>>.made,
+        )
     }
 
     method xor-expr($/) {
-        make {
-            xor-expr => {
-                operands => $/<and-expr>>>.made,
-            }
-        }
+        make Python3::XorExpr.new(
+            operands => $/<and-expr>>>.made,
+        )
     }
 
     method and-expr($/) {
-        make {
-            and-expr => {
-                operands => $/<shift-expr>>>.made,
-            }
-        }
+        make Python3::AndExpr.new(
+            operands => $/<shift-expr>>>.made,
+        )
     }
 
     method shift-expr($/) {
-        make {
-            shift-expr => {
-                lhs   => $/<arith-expr>.made,
-                stack => $/<shift-arith-expr>>>.made,
-            }
-        }
+        make Python3::ShiftExpr.new(
+            lhs   => $/<arith-expr>.made,
+            stack => $/<shift-arith-expr>>>.made,
+        )
     }
 
     method shift-arith-expr:sym<left>($/) {
-        make {
-            left-shift => {
-                arith-expr => $<arith-expr>.made,
-            }
-        }
+        make Python3::LeftShiftExpr.new(
+            arith-expr => $<arith-expr>.made,
+        )
     }
 
     method shift-arith-expr:sym<right>($/) {
-        make {
-            right-shift => {
-                arith-expr => $<arith-expr>.made,
-            }
-        }
+        make Python3::RightShiftExpr.new(
+            arith-expr => $<arith-expr>.made,
+        )
     }
 
     method arith-expr($/) {
-        make {
-            arith-expr => {
-                lhs   => $/<term>.made,
-                stack => $/<plus-minus-term>>>.made,
-            }
-        }
+        make Python3::ArithExpr.new(
+            lhs   => $/<term>.made,
+            stack => $/<plus-minus-term>>>.made,
+        )
     }
 
     method plus-minus-term:sym<plus>($/) {
-        make {
-            plus-term => $<term>.made,
+        make Python3::PlusTerm.new(
+            term      => $<term>.made,
             comments  => $<COMMENT>>>.made,
-        }
+        )
     }
 
     method plus-minus-term:sym<minus>($/) {
-        make {
-            minus-term => $<term>.made,
-            comments   => $<COMMENT>>>.made,
-        }
+        make Python3::MinusTerm.new(
+            term     => $<term>.made,
+            comments => $<COMMENT>>>.made,
+        )
     }
 
     method term($/) {
-        make {
-            term => {
-                base  => $<factor>.made,
-                stack => $<term-delimited-factor>>>.made,
-            }
-        }
+        make Python3::Term.new(
+            base  => $<factor>.made,
+            stack => $<term-delimited-factor>>>.made,
+        )
     }
 
     method term-delimited-factor($/) {
-        make {
+        make Python3::TermDelimitedFactor.new(
             comments => $<COMMENT>>>.made,
             delim    => $<term-delim>.Str,
             factor   => $<factor>.made,
-        }
+        )
     }
 
     method factor($/) {
-        make {
-            factor => {
-                delim-stack => $<factor-delim>>>.Str,
-                power       => $<power>.made,
-            }
-        }
+        make Python3::Factor.new(
+            delim-stack => $<factor-delim>>>.Str,
+            power       => $<power>.made,
+        )
     }
 
     method power($/) {
-        make {
+        make Python3::Power.new(
             augmented-atom => $<augmented-atom>.made,
             factor-stack   => $<factor>>>.made,
-        }
+        )
     }
 
     method augmented-atom($/) {
-        make {
+        make Python3::AugmentedAtom.new(
             atom     => $<atom>.made,
             trailers => $<trailer>>>.made,
-        }
+        )
     }
 
     method trailer($/) {
-        make {
+        make Python3::Trailer.new(
             trailer => $/
-        }
+        )
     }
 
     method comp-op($/) {
-        make $/.Str
+        make Python3::CompOp.new(
+            op => $/.Str
+        )
     }
 
     method test:sym<lambdef>($/) {
@@ -1026,7 +982,8 @@ does Python3::StringActions
 
     method lambdef($/) {
         make Python3::Lambdef.new(
-            #TODO
+            varargslist => $<varargslist>.made // Nil,
+            test        => $<test>.made,
         )
     }
 

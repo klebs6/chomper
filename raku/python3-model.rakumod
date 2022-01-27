@@ -5,8 +5,29 @@ our role Python3::DecoratedItem {}
 our class Python3::Ellipsis {}
 
 our class Python3::BasicTest does Python3::Test {
-    has Hash $.or-test is required;
+    has Python3::OrTest $.or-test is required;
 }
+
+our class Python3::OrTest does Python3::Test {
+    has Python3::AndTest  @.operands is requried;
+    has Python3::Comments @.comments;
+}
+
+our class Python3::AndTest does Python3::Test {
+    has Python3::NotTest  @.operands is requried;
+    has Python3::Comments @.comments;
+}
+
+our class Python3::NotTest does Python3::Test {
+    has Int $.not-count is required;
+    has Python3::Comparison $.comparison is required;
+}
+
+our class Python3::Comparison does Python3::Test {
+#TODO
+
+}
+
 
 our class Python3::Lambdef does Python3::Test {
 #TODO
