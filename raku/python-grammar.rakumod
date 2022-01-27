@@ -1589,26 +1589,33 @@ does Python3Keywords {
     token atom:sym<true>     { <TRUE> }
     token atom:sym<false>    { <FALSE> }
     token atom:sym<NAME>     { <NAME> }
-    rule  atom:sym<parens>   { <OPEN_PAREN> <COMMENT>* <parens-atom>?  <COMMENT>* <CLOSE_PAREN> }
-    rule  atom:sym<list>     { <OPEN_BRACK> <COMMENT>* <testlist_comp>?  <COMMENT>* <CLOSE_BRACK> }
+    rule  atom:sym<parens>   { <OPEN_PAREN> <COMMENT>* <parens-inner>?  <COMMENT>* <CLOSE_PAREN> }
+    rule  atom:sym<list>     { <OPEN_BRACK> <COMMENT>* <listmaker>?  <COMMENT>* <CLOSE_BRACK> }
     rule  atom:sym<dict>     { <OPEN_BRACE> <COMMENT>* <dictorsetmaker>?  <COMMENT>* <CLOSE_BRACE> }
     token atom:sym<number>   { <number> }
     token atom:sym<ellipsis> { <ELLIPSIS> }
 
-    proto rule parens-atom { * }
-    rule parens-atom:sym<yield>         { <yield-expr> }
-    rule parens-atom:sym<testlist-comp> { <testlist_comp> }
+    proto rule parens-inner { * }
+    rule parens-inner:sym<yield>     { <yield-expr> }
+    rule parens-inner:sym<listmaker> { <listmaker> }
 
     rule strings {
         <string>+ % \s 
     }
 
-    rule testlist_comp {
+    proto rule listmaker { * }
+
+    rule listmaker:sym<testlist> {
+        <test-comma-maybe-comment>* 
         <test>
-        [    
-            | <comp-for>
-            | [ <comma-maybe-comment> <test> ]* <comma-maybe-comment>?
-        ]
+    }
+
+    rule listmaker:sym<testlist-with-trailing-comma> {
+        <test-comma-maybe-comment>* 
+    }
+
+    rule listmaker:sym<list-comp> {
+        <test> <comp-for>
     }
 
     #-------------------------------
@@ -1641,19 +1648,31 @@ does Python3Keywords {
     }
 
     proto rule setmaker-item { * }
-    rule setmaker-item:sym<test>       { <test> }
-    rule setmaker-item:sym<stars-test> { '**' <test> }
+    rule setmaker-item:sym<test>       { <COMMENT>? <test> }
+    rule setmaker-item:sym<stars-test> { '**' <COMMENT>? <test> }
+
+    rule setmaker-item-comma-maybe-comment {
+        <setmaker-item> <comma-maybe-comment>
+    }
 
     rule dictmaker-item { <COMMENT>? <test> <COLON> <test> }
 
+    rule dictmaker-item-comma-maybe-comment { 
+        <dictmaker-item> <comma-maybe-comment>
+    }
+
     proto rule dictorsetmaker { * }
 
+    rule dictorsetmaker:sym<dict-comp> {
+        <dictmaker-item> <comp-for>
+    }
+
+    rule dictorsetmaker:sym<dict-with-comma-trailer> {
+        <dictmaker-item-comma-maybe-comment>*
+    }
+
     rule dictorsetmaker:sym<dict> {
-        <dictmaker-item>
-        [   
-            | <comp-for>
-            | [ <comma-maybe-comment> <dictmaker-item> ]* <comma-maybe-comment>?
-        ]
+        [<dictmaker-item-comma-maybe-comment>]* <dictmaker-item>
     }
 
     rule comma-maybe-comment {
@@ -1661,11 +1680,16 @@ does Python3Keywords {
     }
 
     rule dictorsetmaker:sym<set> {
+        <setmaker-item-comma-maybe-comment>* 
         <setmaker-item>
-        [   
-            | <comp-for>
-            | [ <comma-maybe-comment> <setmaker-item> ]* <comma-maybe-comment>?
-        ]
+    }
+
+    rule dictorsetmaker:sym<set-with-comma-trailer> {
+        <setmaker-item-comma-maybe-comment>* 
+    }
+
+    rule dictorsetmaker:sym<set-comp> {
+        <setmaker-item> <comp-for>
     }
 
     rule argument-comma-comment {

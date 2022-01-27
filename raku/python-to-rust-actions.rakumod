@@ -20,9 +20,9 @@ our sub is-test-fn-name($name) {
 
 
 our role Python3::NumberActions {
-    method number:sym<integer>($/) { make $/.Str }
-    method number:sym<float>($/)   { make $/.Str }
-    method number:sym<imag>($/)    { make $/.Str }
+    method number:sym<integer>($/) { make Python3::Integer.new(value => $/.Int } }
+    method number:sym<float>($/)   { make Python3::Float.new(value => $/.Num ) }
+    method number:sym<imag>($/)    { make Python3::Imaginary.new(value => $/.Complex ) }
 }
 
 our role Python3::DecoratorActions {
@@ -193,7 +193,7 @@ our role Python3::StmtActions {
 our role Python3::StringActions {
 
     method strings($/) {
-        make $<string>>>.made
+        make Python3::Strings.new( items => $<string>>>.made )
     }
 
     method string:sym<long-string>($/)  { make $<long-string>.made }
@@ -245,37 +245,155 @@ our role Python3::AtomActions does Python3::StringActions {
         make $<strings>.made 
     }
 
-    method atom:sym<NONE>($/)    { make "NONE" }
-    method atom:sym<true>($/)    { make True }
-    method atom:sym<false>($/)   { make False }
+    method atom:sym<NONE>($/)    { make Python3::None.new }
+    method atom:sym<true>($/)    { make Python3::True.new }
+    method atom:sym<false>($/)   { make Python3::False.new }
     method atom:sym<NAME>($/)    { make $<NAME>.made }
 
     method atom:sym<parens>($/)  { 
         make Python3::ParensAtom.new(
-            inner    => $<parens-atom>.made,
+            value    => $<parens-inner>.made,
             comments => $<COMMENT>>>.made,
         )
     }
 
-    method parens-atom:sym<yield>($/) {
+    method parens-inner:sym<yield>($/) {
         make $<yield-expr>.made
     }
 
-    method parens-atom:sym<testlist-comp>($/) {
-        make $<testlist_comp>.made
+    method parens-inner:sym<listmaker>($/) {
+        make $<listmaker>.made
     }
 
     method atom:sym<list>($/)  { 
         make Python3::ListAtom.new(
-            testlist_comp  => $<testlist_comp>.made,
-            comments       => $<COMMENT>>>.made,
+            value    => $<listmaker>.made,
+            comments => $<COMMENT>>>.made,
+        )
+    }
+
+    method test-comma-maybe-comment($/) {
+        make Python3::MaybeCommentedTest.new(
+            test    => $<test>.made
+            comment => $<comma-maybe-comment>.made
+        )
+    }
+
+    method listmaker:sym<testlist>($/) {
+        make Python3::TestList.new(
+            tests => [
+                |$<test-comma-maybe-comment>>>.made,
+                $<test>.made
+            ]
+        )
+    }
+
+    method listmaker:sym<testlist-with-trailing-comma>($/) {
+        make Python3::TestList.new(
+            tests => $<test-comma-maybe-comment>>>.made,
+        )
+    }
+
+    method listmaker:sym<list-comp>($/) {
+        make Python3::ListComp.new(
+            test => $<test>.made,
+            comp => $<comp-for>.made,
         )
     }
 
     method atom:sym<dict>($/)  { 
         make Python3::DictAtom.new(
-            dictorsetmaker => $<dictorsetmaker>.made,
-            comments       => $<COMMENT>>>.made,
+            value    => $<dictorsetmaker>.made,
+            comments => $<COMMENT>>>.made,
+        )
+    }
+
+    method dictorsetmaker:sym<dict>($/) {
+        make Python3::Dict.new(
+            items => [
+                |$<dictmaker-item-comma-maybe-comment>>>.made,
+                $<dictmaker-item>.made
+            ]
+        )
+    }
+
+    method dictorsetmaker:sym<dict-with-comma-trailer>($/) {
+        make Python3::Dict.new(
+            items => $<dictmaker-item-comma-maybe-comment>>>.made,
+        )
+    }
+
+    method dictorsetmaker:sym<dict-comp>($/) {
+        make Python3::DictComp.new(
+            item => $<dictmaker-item>.made,
+            comp => $<comp-for>.made,
+        )
+    }
+
+    method dictmaker-item($/) {
+        make Python3::DictMakerItem.new(
+            comments => [$<COMMENT>.made // Nil], 
+            K       => $<test>[0].made,
+            V       => $<test>[1].made,
+        )
+    }
+
+    method dictmaker-item-comma-maybe-comment($/) {
+        make Python3::DictMakerItem.new(
+            comments => [
+                $<dictmaker-item><COMMENT>.made // Nil, 
+                |$<comment-maybe-comment>.made
+            ],
+            K       => $<dictmaker-item><test>[0].made,
+            V       => $<dictmaker-item><test>[1].made,
+        )
+    }
+
+    method setmaker-item:sym<test>($/) {
+        make Python3::SetmakerItem.new(
+            has-stars => False,
+            comments  => [$<COMMENT>.made // Nil], 
+            K         => $<test>.made,
+        )
+    }
+
+    method setmaker-item:sym<stars-test>($/) {
+        make Python3::SetmakerItem.new(
+            has-stars => True,
+            comments  => [$<COMMENT>.made // Nil], 
+            K         => $<test>.made,
+        )
+    }
+
+    method setmaker-item-comma-maybe-comment($/) {
+        make Python3::SetmakerItem.new(
+            comments => [
+                $<setmaker-item><COMMENT>.made // Nil, 
+                |$<comment-maybe-comment>.made
+            ],
+            K  => $<setmaker-item><test>.made,
+        )
+    }
+
+    method dictorsetmaker:sym<set>($/) {
+        make Python3::Set.new(
+            items => [
+                |$<setmaker-item-comma-maybe-comment>>>.made,
+                $<setmaker-item>.made
+            ]
+        )
+    }
+
+    method dictorsetmaker:sym<set-with-comma-trailer>($/) {
+        make Python3::Set.new(
+            items => $<setmaker-item-comma-maybe-comment>>>.made,
+        )
+    }
+
+    method dictorsetmaker:sym<set-comp>($/) {
+        make Python3::SetComp.new(
+            item => $<setmaker-item>.made,
+            comp => $<comp-for>.made,
         )
     }
 
@@ -681,7 +799,7 @@ does Python3::StringActions
     }
 
     method NAME($/) {
-        make $/.Str
+        make Python3::Name.new(value => $/.Str)
     }
 
     method stmt-maybe-comments($/) {
