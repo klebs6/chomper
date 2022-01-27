@@ -58,7 +58,7 @@ our role Python3::DecoratorActions {
 our role Python3::IfStmtActions {
 
     method compound-stmt:sym<if>($/) {
-        make Python3::Stmt::If.new(
+        make Python3::If.new(
             test        => $<test>.made,
             comment     => $<COMMENT_NONEWLINE>.made // Nil,
             suite       => $<suite>.made,
@@ -68,7 +68,7 @@ our role Python3::IfStmtActions {
     }
 
     method elif-suite($/) {
-        make Python3::Stmt::Elif.new(
+        make Python3::Elif.new(
             comments => get-compound-comments($/),
             test     => $<test>.made,
             suite    => $<suite>.made,
@@ -80,7 +80,7 @@ our role Python3::ElseActions {
 
     method else-suite($/) {
         my $comments = get-compound-comments($/);
-        make Python3::Stmt::Else.new(
+        make Python3::Else.new(
             comments => $comments,
             suite    => $<suite>.made,
         )
@@ -90,21 +90,21 @@ our role Python3::ElseActions {
 our role Python3::CompoundStmtActions {
 
     method compound-stmt:sym<while>($/) {
-        make Python3::Stmt::While.new(
+        make Python3::While.new(
             test     => $<test>.made,
             comments => [$<COMMENT_NONEWLINE>.made // Nil],
             suite    => $<suite>.made,
-            else-suite => $<else-suite>.made // Nil,
+            else     => $<else-suite>.made // Nil,
         )
     }
 
     method compound-stmt:sym<for>($/) {
-        make Python3::Stmt::For.new(
+        make Python3::For.new(
             exprlist    => $<exprlist>.made,
             testlist    => $<testlist>.made,
             comment     => $<COMMENT_NONEWLINE>.made // Nil,
             suite       => $<suite>.made,
-            else-suite  => $<else-suite>.made // Nil,
+            else        => $<else-suite>.made // Nil,
         )
     }
 }
@@ -112,39 +112,39 @@ our role Python3::CompoundStmtActions {
 our role Python3::TryStmtActions {
 
     method compound-stmt:sym<try>($/) {
-        make Python3::Stmt::Try.new(
+        make Python3::Try.new(
             comment        => $/<COMMENT_NONEWLINE>.made // Nil,
             suite          => $<suite>.made,
-            |$<try-control-suite>.made,
+            control-suite  => $<try-control-suite>.made,
         )
     }
 
     method try-control-suite:sym<full>($/) {
-        make $<try-block-except-suite>.made
+        make $<except-suite>.made
     }
 
     method try-control-suite:sym<finally>($/) {
-        make $<finally-suite>.made
+        make $<finally>.made
     }
 
-    method try-block-except-suite($/) {
-        make Python3::Stmt::ExceptSuite.new(
-            comments       => $<COMMENT>>>.made,
-            except-clauses => $<except-clause-suite>>>.made,
-            else           => $<else-suite>.made // Nil,
-            finally        => $<finally-suite>.made // Nil,
+    method except-suite($/) {
+        make Python3::ExceptSuite.new(
+            comments  => $<COMMENT>>>.made,
+            clauses   => $<except-clause>>>.made,
+            else      => $<else-suite>.made // Nil,
+            finally   => $<finally>.made // Nil,
         )
     }
 
-    method except-clause-suite($/) {
-        make Python3::Stmt::ExceptClauseSuite.new(
+    method except-clause($/) {
+        make Python3::ExceptClause.new(
             comments       => get-compound-comments($/),
             suite          => $<suite>.made,
         )
     }
 
-    method finally-suite($/) {
-        make Python3::Stmt::Finally.new(
+    method finally($/) {
+        make Python3::Finally.new(
             comments       => [|$<COMMENT>>>.made, $<COMMENT_NONEWLINE>.made // Nil],
             suite          => $<suite>.made
         )
@@ -154,7 +154,7 @@ our role Python3::TryStmtActions {
 our role Python3::WithStmtActions {
 
     method compound-stmt:sym<with>($/) {
-        make Python3::Stmt::With.new(
+        make Python3::With.new(
             comments   => get-compound-comments($/),
             with-items => $<with-item>>>.made,
             suite      => $<suite>.made,
@@ -162,13 +162,13 @@ our role Python3::WithStmtActions {
     }
 
     method with-item:sym<basic>($/) {
-        make Python3::Stmt::WithItemBasic.new(
+        make Python3::WithItemBasic.new(
             test => $<test>.made,
         )
     }
 
     method with-item:sym<as>($/) {
-        make Python3::Stmt::WithItemAs.new(
+        make Python3::WithItemAs.new(
             test => $<test>.made,
             expr => $<expr>.made,
         )
@@ -237,6 +237,33 @@ our role Python3::StringActions {
     method SINGLE_QUOTED_SHORT_BYTES($/) { make $<SINGLE_QUOTED_SHORT_BYTES_INNER>.Str }
     method DOUBLE_QUOTED_SHORT_BYTES_INNER($/) { make $/.Str }
     method SINGLE_QUOTED_SHORT_BYTES_INNER($/) { make $/.Str }
+}
+
+our role Python3::CompActions {
+
+    method comp-iter:sym<for>($/) {
+        make $<comp-for>.made
+    }
+
+    method comp-iter:sym<if>($/) {
+        make $<comp-if>.made
+    }
+
+    method comp-for($/) {
+        make Python3::CompFor.new(
+            exprlist  => $<exprlist>.made,
+            or-test   => $<or-test>.made,
+            comp-iter => $<comp-iter>.made // Nil,
+        )
+    }
+
+    method comp-if($/) {
+        make Python3::CompIf.new(
+            test-nocond  => $<test-nocond>.made,
+            comp-iter    => $<comp-iter>.made // Nil,
+        )
+    }
+
 }
 
 our role Python3::AtomActions does Python3::StringActions {
@@ -656,6 +683,84 @@ our role Python3::ClassdefActions {
     }
 }
 
+our role Python3::VarArgsListActions {
+
+    method vfpdef-maybe-test($/) {
+        make Python3::VfpDef.new(
+            name => $<vfpdef>.made.name,
+            test => $<test>.made // Nil,
+        )
+    }
+
+    method varargslist-basic($/) {
+        make $<vfpdef-maybe-test>>>.made
+    }
+
+    method varargslist-star-args($/) {
+        make [
+            $<vfpdef>.made // Nil,
+            |$<vfpdef-maybe-test>>>.made
+        ]
+    }
+
+    method varargslist-kwargs($/) {
+        make $<vfpdef>.made
+    }
+
+    method vfpdef($/) {
+        make Python3::VfpDef.new(
+            name => $<NAME>.made,
+        )
+    }
+
+    method varargslist:sym<full>($/) {
+        make Python3::VarArgsList.new(
+            basic     => $<varargslist-basic>.made,
+            star-args => $<varargslist-star-args>.made,
+            kwargs    => $<varargslist-kwargs>.made,
+        )
+    }
+
+    method varargslist:sym<just-basic>($/) {
+        make Python3::VarArgsList.new(
+            basic     => $<varargslist-basic>.made,
+        )
+    }
+
+    method varargslist:sym<just-star-args>($/) {
+        make Python3::VarArgsList.new(
+            star-args => $<varargslist-star-args>.made,
+        )
+    }
+
+    method varargslist:sym<just-kwargs>($/) {
+        make Python3::VarArgsList.new(
+            kwargs    => $<varargslist-kwargs>.made,
+        )
+    }
+
+    method varargslist:sym<basic-and-star-args>($/) {
+        make Python3::VarArgsList.new(
+            basic     => $<varargslist-basic>.made,
+            star-args => $<varargslist-star-args>.made,
+        )
+    }
+
+    method varargslist:sym<basic-and-kwargs>($/) {
+        make Python3::VarArgsList.new(
+            basic     => $<varargslist-basic>.made,
+            kwargs    => $<varargslist-kwargs>.made,
+        )
+    }
+
+    method varargslist:sym<star-and-kwargs>($/) {
+        make Python3::VarArgsList.new(
+            star-args => $<varargslist-star-args>.made,
+            kwargs    => $<varargslist-kwargs>.made,
+        )
+    }
+}
+
 our role Python3::FileInputActions {
 
     method file-input($/) {
@@ -674,7 +779,7 @@ our role Python3::FileInputActions {
 our role Python3::SmallStmtActions {
 
     method small-stmt:sym<expr-augassign>($/) {
-        make Python3::Stmt::ExprAugAssign.new(
+        make Python3::ExprAugAssign.new(
             lhs  => $<testlist-star-expr>.made,
             op   => $<augassign>.made,
             rhs  => $<expr-augassign-rhs>.made,
@@ -682,53 +787,53 @@ our role Python3::SmallStmtActions {
     }
 
     method small-stmt:sym<expr-equals>($/) {
-        make Python3::Stmt::ExprEquals.new(
+        make Python3::ExprEquals.new(
             lhs       => $<testlist-star-expr>.made,
             rhs-stack => $<expr-equals-rhs>>>.made,
         )
     }
 
     method small-stmt:sym<return>($/) {
-        make Python3::Stmt::Return.new(
+        make Python3::Return.new(
             testlist => $<testlist>.made // Nil,
         )
     }
 
     method small-stmt:sym<raise>($/) {
-        make Python3::Stmt::Raise.new(
+        make Python3::Raise.new(
             clause => $/<raise-clause>.made // Nil,
         )
     }
 
 
     method small-stmt:sym<import-name>($/) {
-        make Python3::Stmt::ImportName.new(
+        make Python3::ImportName.new(
             names => $<dotted-as-names>.made
         )
     }
 
     method small-stmt:sym<nonlocal>($/) {
-        make Python3::Stmt::Nonlocal.new(
+        make Python3::Nonlocal.new(
             names => $/<NAME>>>.made,
         )
     }
 
     method small-stmt:sym<assert>($/) {
-        make Python3::Stmt::Assert.new(
+        make Python3::Assert.new(
             tests => $/<test>>>.made,
         )
     }
 
     method small-stmt:sym<pass>($/) {
-        make Python3::Stmt::Pass.new
+        make Python3::Pass.new
     }
 
     method small-stmt:sym<break>($/) {
-        make Python3::Stmt::Break.new
+        make Python3::Break.new
     }
 
     method small-stmt:sym<continue>($/) {
-        make Python3::Stmt::Continue.new
+        make Python3::Continue.new
     }
 
     method small-stmt:sym<yield>($/) {
@@ -740,13 +845,13 @@ our role Python3::SmallStmtActions {
     }
 
     method small-stmt:sym<global>($/) {
-        make Python3::Stmt::Global.new(
+        make Python3::Global.new(
             names => $<NAME>>>.made
         )
     }
 
     method small-stmt:sym<del>($/) {
-        make Python3::Stmt::Del.new(
+        make Python3::Del.new(
             exprs => $<exprlist>.made,
         )
     }
@@ -791,8 +896,10 @@ does Python3::AtomActions
 does Python3::CommentActions 
 does Python3::FunctionActions 
 does Python3::ClassdefActions 
+does Python3::CompActions 
 does Python3::ArglistActions 
 does Python3::StringActions 
+does Python3::VarArgsListActions 
 {
     method TOP ($/) {
         make $<file-input>.made
@@ -884,7 +991,7 @@ does Python3::StringActions
 
 
     method import-from($/) {
-        make Python3::Stmt::ImportFrom.new(
+        make Python3::ImportFrom.new(
             src    => $<import-from-src>.made,
             target => $<import-from-target>.made,
         )

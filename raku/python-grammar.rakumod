@@ -961,10 +961,75 @@ does Python3String
 does Python3Number
 does Python3Name { }
 
+our role Python3::Grammar::VarArgsList {
+
+    proto rule varargslist { * }
+
+    rule vfpdef-maybe-test {
+        <vfpdef> [ '=' <test> ]?
+    }
+
+    rule varargslist-basic {
+        <vfpdef-maybe-test> 
+        [ <COMMA> <vfpdef-maybe-test> ]*
+    }
+
+    rule varargslist-star-args {
+        '*' <vfpdef>? [ <COMMA> <vfpdef-maybe-test> ]*
+    }
+
+    rule varargslist-kwargs {
+        '**' <vfpdef>
+    }
+
+    rule varargslist:sym<full> {
+        <varargslist-basic>
+        <COMMA>
+        <varargslist-star-args>
+        <COMMA> 
+        <varargslist-kwargs>
+    }
+
+    rule varargslist:sym<just-basic> {
+        <varargslist-basic>
+        <COMMA>?
+    }
+
+    rule varargslist:sym<just-star-args> {
+        <varargslist-star-args>
+    }
+
+    rule varargslist:sym<just-kwargs> {
+        <varargslist-kwargs>
+    }
+
+    rule varargslist:sym<basic-and-star-args> {
+        <varargslist-basic>
+        <COMMA>
+        <varargslist-star-args>
+    }
+
+    rule varargslist:sym<basic-and-kwargs> {
+        <varargslist-basic>
+        <COMMA>
+        <varargslist-kwargs>
+    }
+
+    rule varargslist:sym<star-and-kwargs> {
+        <varargslist-star-args>
+        <COMMA> <varargslist-kwargs>
+    }
+
+    token vfpdef {
+        <NAME>
+    }
+}
+
 our role Python3 
 does Python3Operators
 does Python3Braces
 does Python3Literal
+does Python3::Grammar::VarArgsList
 does Python3Keywords {
 
     token ws { 
@@ -1107,28 +1172,6 @@ does Python3Keywords {
         <NAME> [ <COLON> <test> ]?
     }
 
-    rule varargslist {
-        ||    <vfpdef>
-            [ '=' <test> ]?
-            [ <COMMA> <vfpdef> [ '=' <test> ]?  ]*
-            [    ||    <COMMA>
-                    [    ||    '*'
-                            <vfpdef>?
-                            [  <COMMA> <vfpdef> [ '=' <test> ]?  ]*
-                            [ <COMMA> '**' <vfpdef> ]?
-                        ||    '**' <vfpdef>
-                    ]?
-            ]?
-        ||    '*'
-            <vfpdef>?
-            [ <COMMA> <vfpdef> [ '=' <test> ]?  ]*
-            [  <COMMA> '**' <vfpdef> ]?
-        ||    '**' <vfpdef>
-    }
-
-    token vfpdef {
-        <NAME>
-    }
 
     proto token import-dots { * }
     token import-dots:sym<dot>  { <DOT> }
@@ -1224,17 +1267,17 @@ does Python3Keywords {
 
     #------------------------
     proto token try-control-suite { * }
-    token try-control-suite:sym<full>    { <try-block-except-suite> }
-    token try-control-suite:sym<finally> { <finally-suite> }
+    token try-control-suite:sym<full>    { <except-suite> }
+    token try-control-suite:sym<finally> { <finally> }
 
-    rule try-block-except-suite {
+    rule except-suite {
         <COMMENT>*
-        <except-clause-suite>+
+        <except-clause>+
         <else-suite>?
-        <finally-suite>?
+        <finally>?
     }
 
-    rule except-clause-suite {
+    rule except-clause {
         <COMMENT>*
         <except_clause> <COLON> 
         <COMMENT_NONEWLINE>?
@@ -1248,7 +1291,7 @@ does Python3Keywords {
         <suite> 
     }
 
-    rule finally-suite {
+    rule finally {
         <COMMENT>*
         <FINALLY> <COLON> 
         <COMMENT_NONEWLINE>?
@@ -1603,6 +1646,7 @@ does Python3Keywords {
         <string>+ % \s 
     }
 
+    #-------------------------------
     proto rule listmaker { * }
 
     rule listmaker:sym<testlist> {
