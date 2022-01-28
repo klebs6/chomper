@@ -1460,15 +1460,15 @@ does Python3Keywords {
     proto token small-stmt { * }
 
     #--------------------
-    rule small-stmt:sym<expr-equals> {
-        <testlist-star-expr>
-        [ <ASSIGN> <expr-equals-rhs> ]*
-    }
-
     rule small-stmt:sym<expr-augassign> {
         <testlist-star-expr> 
         <augassign> 
         <expr-augassign-rhs> 
+    }
+
+    rule small-stmt:sym<expr-equals> {
+        <testlist-star-expr>
+        [ <ASSIGN> <expr-equals-rhs> ]*
     }
 
     #--------------------
@@ -1518,88 +1518,83 @@ does Python3Keywords {
         <stmt> <COMMENT>*
     }
 
-    proto token suite { * }
+    token suite {
+        | <simple-suite>
+        | <stmt-suite>
+    }
 
-    token suite:sym<simple> { <simple-suite> }
-    token suite:sym<stmt>   { <stmt-suite> }
+    rule test {
+        <COMMENT>*
+        [
+            | <or_test> [ <IF> <or_test> <ELSE> <test> ]?
+            | <lambdef>
+        ]
+    }
 
-    proto rule test { * }
-    rule test:sym<ternary> { <or-test> <IF> <or-test> <ELSE> <test> }
-    rule test:sym<basic>   { <or-test> }
-    rule test:sym<lambdef> { <lambdef> }
-
-    proto token test-nocond { * }
-    token test-nocond:sym<basic>   { <or-test> }
-    token test-nocond:sym<lambdef> { <lambdef_nocond> }
+    token test_nocond {
+        | <or_test>
+        | <lambdef_nocond>
+    }
 
     rule lambdef {
         <LAMBDA> <varargslist>?  <COLON> <test>
     }
 
     rule lambdef_nocond {
-        <LAMBDA> <varargslist>?  <COLON> <test-nocond>
+        <LAMBDA> <varargslist>?  <COLON> <test_nocond>
     }
 
-    rule or-test {
-        <and-test> [ <OR> <COMMENT>? <and-test> ]*
+    rule or_test {
+        <and_test> [ <OR> <and_test> ]*
     }
 
-    rule and-test {
-        <not-test> [  <AND> <COMMENT>? <not-test> ]*
+    rule and_test {
+        <not_test> [  <AND> <not_test> ]*
     }
 
-    rule not-test {
-        <NOT>* <comparison>
+    rule not_test {
+        || <NOT> <not_test>
+        || <comparison>
     }
 
     rule comparison {
-        <star-expr>+ %% <comp-op>
+        <star-expr> [ <comp-op> <star-expr> ]*
     }
 
     token star-expr {
-        <STAR>?  <expr>
+        '*'?  <expr>
     }
 
     rule expr {
-        <xor-expr> [  '|' <xor-expr> ]*
+        <xor_expr> [  '|' <xor_expr> ]*
     }
 
-    rule xor-expr {
-        <and-expr> [ '^' <and-expr> ]*
+    rule xor_expr {
+        <and_expr> [ '^' <and_expr> ]*
     }
 
-    rule and-expr {
-        <shift-expr> [ '&' <shift-expr> ]*
+    rule and_expr {
+        <shift_expr> [ '&' <shift_expr> ]*
     }
 
-    rule shift-expr {
-        <arith-expr>
-        <shift-arith-expr>*
+    rule shift_expr {
+        <arith_expr>
+        [   
+            || '<<' <arith_expr>
+            || '>>' <arith_expr>
+        ]*
     }
 
-    #-----------------------------
-    proto rule shift-arith-expr { * }
-    rule shift-arith-expr:sym<left>  { <LEFT_SHIFT>  <arith-expr> }
-    rule shift-arith-expr:sym<right> { <RIGHT_SHIFT> <arith-expr> }
-
-    #-----------------------------
-    rule arith-expr {
-        <term> <plus-minus-term>*
+    rule arith_expr {
+        <term>
+        [    
+            || '+' <term>
+            || '-' <term>
+        ]*
     }
-
-    proto rule plus-minus-term { * }
-    rule plus-minus-term:syn<plus>  { <COMMENT>* <PLUS> <COMMENT>*  <term> }
-    rule plus-minus-term:syn<minus> { <COMMENT>* <MINUS> <COMMENT>* <term> }
 
     rule term {
-        <factor> <term-delimited-factor>*
-    }
-
-    rule term-delimited-factor {
-        <COMMENT>* 
-        <term-delim> 
-        <COMMENT>*
-        <factor>
+        <factor>+ %% <term-delim>
     }
 
     proto token term-delim { * }
@@ -1629,7 +1624,7 @@ does Python3Keywords {
     token atom:sym<true>     { <TRUE> }
     token atom:sym<false>    { <FALSE> }
     token atom:sym<NAME>     { <NAME> }
-    rule  atom:sym<parens>   { <OPEN_PAREN> [ <yield_expr> || <testlist_comp> ]?  <CLOSE_PAREN> }
+    rule  atom:sym<parens>   { <OPEN_PAREN> [ <yield-expr> || <testlist_comp> ]?  <CLOSE_PAREN> }
     rule  atom:sym<list>     { <OPEN_BRACK> <testlist_comp>?  <CLOSE_BRACK> }
     rule  atom:sym<dict>     { <OPEN_BRACE> <dictorsetmaker>?  <CLOSE_BRACE> }
     token atom:sym<number>   { <number> }
@@ -1666,7 +1661,7 @@ does Python3Keywords {
     }
 
     rule exprlist {
-        <star_expr> [ <COMMA> <star_expr> ]* <COMMA>?
+        <star-expr> [ <COMMA> <star-expr> ]* <COMMA>?
     }
 
     rule testlist {
@@ -1733,7 +1728,7 @@ does Python3Keywords {
         <IF> <test_nocond> <comp_iter>?
     }
 
-    rule yield_expr {
+    rule yield-expr {
         <YIELD> <yield_arg>?
     }
 
