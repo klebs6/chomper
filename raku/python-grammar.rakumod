@@ -1518,10 +1518,9 @@ does Python3Keywords {
         <stmt> <COMMENT>*
     }
 
-    token suite {
-        | <simple-suite>
-        | <stmt-suite>
-    }
+    proto token suite { * }
+    token suite:sym<simple> { <simple-suite> }
+    token suite:sym<stmt>   { <stmt-suite> }
 
     rule test {
         <COMMENT>*
@@ -1531,10 +1530,9 @@ does Python3Keywords {
         ]
     }
 
-    token test_nocond {
-        | <or_test>
-        | <lambdef_nocond>
-    }
+    proto token test-nocond { * }
+    token test-nocond:sym<basic>   { <or-test> }
+    token test-nocond:sym<lambdef> { <lambdef_nocond> }
 
     rule lambdef {
         <LAMBDA> <varargslist>?  <COLON> <test>
