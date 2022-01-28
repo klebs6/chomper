@@ -1666,19 +1666,19 @@ does Python3Keywords {
     proto rule subscript { * }
 
     rule subscript:sym<slice> {
-        <test>?  <COLON> <test>?  <sliceop>?
+        <test>?  <COLON> <test>?  <slice-op>?
     }
 
     rule subscript:sym<test> {
         <test>
     }
 
-    token sliceop {
+    token slice-op {
         <COLON> <test>?
     }
 
     rule exprlist {
-        <star-expr> [ <COMMA> <star-expr> ]* <COMMA>?
+        <star-expr>+ %% <COMMA>
     }
 
     rule testlist {
