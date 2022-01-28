@@ -1,19 +1,38 @@
 #!/usr/bin/env raku
 use python-grammar;
+use Data::Dump::Tree;
+use Data::Dump;
+use JSON::Tiny;
 use python-to-rust-actions;
+
+class A does Python3::ToRustActions {}
 
 grammar G does Python3 { }
 
 use Grammar::Tracer;
 grammar GD does Python3 { }
 
-sub MAIN(:$debug = False, :$rule = Nil) {
+sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = False) {
 
     my $in = $*IN.slurp;
 
-    if $rule {
-        say G.parse($in.chomp, rule => $rule) // GD.parse($in.chomp, rule => $rule);
+    my %kwargs = %();
+
+    if $rule { 
+        %kwargs<rule> = $rule; 
+        $in = $in.chomp; 
+    }
+
+    if $to-rust { 
+        %kwargs<actions> = A.new 
+    }
+
+    my $parsed = G.parse($in, |%kwargs) // GD.parse($in, |%kwargs);
+
+    if $to-rust {
+        .say for $parsed.made;
+
     } else {
-        say G.parse($in) // GD.parse($in)
+        say $parsed;
     }
 }

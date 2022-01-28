@@ -1757,3 +1757,7 @@ xyMove xy_move
 zMove z_move
 zoomUsage zoom_usage
 
+_init__ init
+_init__ init
+_init__ init
+_init__ init
