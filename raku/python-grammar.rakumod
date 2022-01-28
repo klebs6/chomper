@@ -1598,13 +1598,13 @@ does Python3Keywords {
     token term-delim:sym<//> { <sym> }
     token term-delim:sym<@>  { <sym> }
 
-    rule factor {
-        || '+' <factor>
-        || '-' <factor>
-        || '~' <factor>
-        || <power>
-    }
+    proto rule factor { * }
+    rule factor:sym<prefix+> { '+' <factor> }
+    rule factor:sym<prefix-> { '-' <factor> }
+    rule factor:sym<prefix~> { '~' <factor> }
+    rule factor:sym<power>   { <power> }
 
+    # dont split this one
     rule power {
         <augmented-atom> [ '**' <factor> ]?
     }
@@ -1614,23 +1614,42 @@ does Python3Keywords {
     }
 
     proto rule atom { * }
+    rule  atom:sym<strings>  { <strings> }
     token atom:sym<NONE>     { <NONE> }
     token atom:sym<true>     { <TRUE> }
     token atom:sym<false>    { <FALSE> }
     token atom:sym<NAME>     { <NAME> }
-    rule  atom:sym<parens>   { <OPEN_PAREN> [ <yield-expr> || <testlist_comp> ]?  <CLOSE_PAREN> }
-    rule  atom:sym<list>     { <OPEN_BRACK> <testlist_comp>?  <CLOSE_BRACK> }
-    rule  atom:sym<dict>     { <OPEN_BRACE> <dictorsetmaker>?  <CLOSE_BRACE> }
     token atom:sym<number>   { <number> }
-    rule  atom:sym<strings>  { <string>+ % \s }
     token atom:sym<ellipsis> { <ELLIPSIS> }
+    rule  atom:sym<parens>   { <OPEN_PAREN> <COMMENT>* <parens-inner>?  <COMMENT>* \h* <CLOSE_PAREN> }
+    rule  atom:sym<list>     { <OPEN_BRACK> <COMMENT>* <listmaker>?  <COMMENT>* <CLOSE_BRACK> }
+    rule  atom:sym<dict>     { <OPEN_BRACE> <COMMENT>* <dictorsetmaker>?  <COMMENT>* <CLOSE_BRACE> }
 
-    rule testlist_comp {
+    proto rule parens-inner { * }
+    rule parens-inner:sym<yield>     { <yield-expr> }
+    rule parens-inner:sym<listmaker> { <listmaker> }
+
+    rule strings {
+        <string>+ % \s 
+    }
+
+    proto rule listmaker { * }
+
+    rule listmaker:sym<list-comp> {
+        <test> <comp-for>
+    }
+
+    rule listmaker:sym<testlist> {
+        <test-comma-maybe-comment>* 
         <test>
-        [    
-            | <comp-for>
-            | [ <comma-maybe-comment> <test> ]* <comma-maybe-comment>?
-        ]
+    }
+
+    rule listmaker:sym<testlist-with-trailing-comma> {
+        <test-comma-maybe-comment>* 
+     }
+
+    rule test-comma-maybe-comment {
+        <test> <comma-maybe-comment>  
     }
 
     #-------------------------------
