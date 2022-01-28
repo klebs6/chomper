@@ -1315,7 +1315,7 @@ does Python3Keywords {
     }
 
     proto rule with-item { * }
-    rule  with-item:sym<as>    { <test> <AS> <expr> }
+    rule  with-item:sym<as>    { <test> <AS> <or-expr> }
     rule  with-item:sym<basic> { <test> }
 
     rule except_clause {
@@ -1555,10 +1555,10 @@ does Python3Keywords {
     }
 
     token star-expr {
-        <STAR>?  <expr>
+        <STAR>?  <or-expr>
     }
 
-    rule expr {
+    rule or-expr {
         <xor-expr> [  '|' <xor-expr> ]*
     }
 
@@ -1586,10 +1586,6 @@ does Python3Keywords {
     rule arith-expr {
         <term> <arith-operand>*
     }
-
-    proto rule plus-minus-term { * }
-    rule plus-minus-term:syn<plus>  { <COMMENT>* <PLUS> <COMMENT>*  <term> }
-    rule plus-minus-term:syn<minus> { <COMMENT>* <MINUS> <COMMENT>* <term> }
 
     rule term {
         <factor> <term-operand>*

@@ -2,7 +2,7 @@
 use python-grammar;
 use Data::Dump::Tree;
 use Data::Dump;
-use JSON::Tiny;
+use JSON::Class;
 use python-to-rust-actions;
 
 class A does Python3::ToRustActions {}
@@ -12,7 +12,7 @@ grammar G does Python3 { }
 use Grammar::Tracer;
 grammar GD does Python3 { }
 
-sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = False) {
+sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = True) {
 
     my $in = $*IN.slurp;
 
@@ -30,7 +30,9 @@ sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = False) {
     my $parsed = G.parse($in, |%kwargs) // GD.parse($in, |%kwargs);
 
     if $to-rust {
-        .say for $parsed.made;
+        for $parsed.made {
+            say $_;
+        }
 
     } else {
         say $parsed;

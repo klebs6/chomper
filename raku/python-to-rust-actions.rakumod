@@ -1093,138 +1093,164 @@ does Python3::VarArgsListActions
     method star-expr($/) {
         make Python3::StarExpr.new(
             has-star => $/<STAR>:exists,
-            expr     => $<expr>.made,
+            or-expr     => $<expr>.made,
         )
     }
 
-    method expr($/) {
-        make Python3::Expr.new(
-            operands => $/<xor-expr>>>.made,
-        )
+    method or-expr($/) {
+
+        my $op-count = $/<xor-expr>.List.elems;
+
+        if $op-count ge 1 {
+            make Python3::OrExpr.new(
+                operands => $/<xor-expr>>>.made,
+            )
+        } else {
+            die if not $op-count eq 1;
+            make $<xor-expr>.made
+        }
     }
 
     method xor-expr($/) {
-        make Python3::XorExpr.new(
-            operands => $/<and-expr>>>.made,
-        )
+        my $op-count = $/<and-expr>.List.elems;
+
+        if $op-count ge 1 {
+            make Python3::XorExpr.new(
+                operands => $/<and-expr>>>.made,
+            )
+        } else {
+            die if not $op-count eq 1;
+            make $<and-expr>.made
+        }
     }
 
     method and-expr($/) {
-        make Python3::AndExpr.new(
-            operands => $/<shift-expr>>>.made,
-        )
+        my $op-count = $/<shift-expr>.List.elems;
+
+        if $op-count ge 1 {
+            make Python3::AndExpr.new(
+                operands => $/<shift-expr>>>.made,
+            )
+        } else {
+            die if not $op-count eq 1;
+            make $<shift-expr>.made
+        }
     }
 
     method shift-expr($/) {
-        make Python3::ShiftExpr.new(
-            lhs   => $/<arith-expr>.made,
-            stack => $/<shift-arith-expr>>>.made,
+        if $/<shift-operand>:exists {
+            make Python3::ShiftExpr.new(
+                lhs      => $/<arith-expr>.made,
+                operands => $/<shift-operand>>>.made,
+            )
+        } else {
+            make $<arith-expr>.made
+        }
+    }
+
+    method shift-operand:sym<left>($/) {
+        make Python3::LeftShiftOperand.new(
+            expr => $<arith-expr>.made,
         )
     }
 
-    method shift-arith-expr:sym<left>($/) {
-        make Python3::LeftShiftExpr.new(
-            arith-expr => $<arith-expr>.made,
-        )
-    }
-
-    method shift-arith-expr:sym<right>($/) {
-        make Python3::RightShiftExpr.new(
-            arith-expr => $<arith-expr>.made,
+    method shift-operand:sym<right>($/) {
+        make Python3::RightShiftOperand.new(
+            expr => $<arith-expr>.made,
         )
     }
 
     method arith-expr($/) {
-        make Python3::ArithExpr.new(
-            lhs   => $/<term>.made,
-            stack => $/<plus-minus-term>>>.made,
-        )
+        if $/<arith-operand>:exists {
+            make Python3::ArithExpr.new(
+                lhs      => $/<term>.made,
+                operands => $/<arith-operand>>>.made,
+            )
+        } else {
+            make $<term>.made
+        }
     }
 
-    method plus-minus-term:sym<plus>($/) {
-        make Python3::PlusTerm.new(
+    method arith-operand:sym<plus>($/) {
+        make Python3::PlusOperand.new(
             term      => $<term>.made,
-            comments  => $<COMMENT>>>.made,
         )
     }
 
-    method plus-minus-term:sym<minus>($/) {
-        make Python3::MinusTerm.new(
+    method arith-operand:sym<minus>($/) {
+        make Python3::MinusOperand.new(
             term     => $<term>.made,
-            comments => $<COMMENT>>>.made,
         )
     }
 
     method term($/) {
-        make Python3::Term.new(
-            base  => $<factor>.made,
-            stack => $<term-delimited-factor>>>.made,
-        )
-    }
-
-    method term-delimited-factor($/) {
-        make Python3::TermDelimitedFactor.new(
-            comments => $<COMMENT>>>.made,
-            delim    => $<term-delim>.made,
-            factor   => $<factor>.made,
-        )
-    }
-
-    method factor($/) {
-        make Python3::BaseFactor.new(
-            delim-stack => $<factor-delim>>>.made,
-            power       => $<power>.made,
-        )
-    }
-
-    method factor-delim($/) {
-        given $/.Str {
-            when "+" {
-                make Python3::TermDelim.new(
-                    value => "+"
-                )
-            }
-            when "-" {
-                make Python3::TermDelim.new(
-                    value => "-"
-                )
-            }
-            when "~" {
-                make Python3::TermDelim.new(
-                    value => "~"
-                )
-            }
+        if $/<term-operand>:exists {
+            make Python3::Term.new(
+                lhs      => $<factor>.made,
+                operands => $<term-operand>>>.made,
+            )
+        } else {
+            make $<factor>.made
         }
     }
 
-    method term-delim($/) {
-        given $/.Str {
-            when "*"  { make Python3::TermDelim.new( value => "*") }
-            when "/"  { make Python3::TermDelim.new( value => "/") }
-            when "%"  { make Python3::TermDelim.new( value => "%") }
-            when "//" { make Python3::TermDelim.new( value => "//") }
-            when "@"  { make Python3::TermDelim.new( value => "@") }
+    method term-operand:sym<*>($/) {
+        make Python3::StarOperand.new( factor => $<factor>.made )
+    }
+
+    method term-operand:sym</>($/) {
+        make Python3::DivOperand.new( factor => $<factor>.made )
+    }
+
+    method term-operand:sym<%>($/) {
+        make Python3::ModOperand.new( factor => $<factor>.made )
+    }
+
+    method term-operand:sym<//>($/) {
+        make Python3::DoubleDivOperand.new( factor => $<factor>.made )
+    }
+
+    method term-operand:sym<@>($/) {
+        make Python3::AtOperand.new( factor => $<factor>.made )
+    }
+
+    #--------------------------
+    method factor:sym<prefix+>($/) {
+        make Python3::PlusFactor.new( factor => $<factor>.made)
+    }
+
+    method factor:sym<prefix->($/) {
+        make Python3::MinusFactor.new( factor => $<factor>.made)
+    }
+
+    method factor:sym<prefix~>($/) {
+        make Python3::TildeFactor.new( factor => $<factor>.made)
+    }
+
+    method factor:sym<power>($/) {
+        make $<power>.made
+    }
+
+    method power($/) {
+        if $/<factor>:exists {
+            make Python3::Power.new(
+                base  => $<augmented-atom>.made,
+                power => $<factor>.made,
+            )
+        } else {
+            make $<augmented-atom>.made
         }
-    }
-
-    method power:sym<base>($/) {
-        make Python3::Power.new(
-            base => $<augmented-atom>.made,
-        )
-    }
-
-    method power:sym<base-and-factor>($/) {
-        make Python3::Power.new(
-            base  => $<augmented-atom>.made,
-            power => $<factor>.made,
-        )
     }
 
     method augmented-atom($/) {
-        make Python3::AugmentedAtom.new(
-            atom     => $<atom>.made,
-            trailers => $<trailer>>>.made,
-        )
+        if $/<trailer>:exists {
+            make Python3::AugmentedAtom.new(
+                atom     => $<atom>.made,
+                trailers => $<trailer>>>.made,
+            )
+        } else {
+            make $<atom>.made
+        }
     }
 
     method trailer:sym<dot-name>($/) {
