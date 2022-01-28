@@ -1091,7 +1091,6 @@ does Python3Keywords {
 
     regex parenthesized-arglist {
         <OPEN_PAREN> <arglist>? <CLOSE_PAREN>
-        #{ say $/; exit }
     }
 
     regex parenthesized-typedarglist {
@@ -1656,17 +1655,22 @@ does Python3Keywords {
     proto token trailer { * }
 
     token trailer:sym<dot-name>      { <DOT> <maybe-vertical-ws>? <NAME> }
-    rule  trailer:sym<subscriptlist> { <OPEN_BRACK> <subscriptlist> <.CLOSE_BRACK> }
-    rule  trailer:sym<arglist>       { <OPEN_PAREN> <arglist>? <CLOSE_PAREN> }
+    rule  trailer:sym<subscriptlist> { <OPEN_BRACK> <subscriptlist> <CLOSE_BRACK> }
+    rule  trailer:sym<arglist>       { <parenthesized-arglist> }
 
     #-------------------------------
     rule subscriptlist {
-        <subscript> [ <COMMA> <subscript> ]* <COMMA>?
+        <subscript>+ %% <COMMA>
     }
 
-    rule subscript {
-        || <test>?  <COLON> <test>?  <sliceop>?
-        || <test>
+    proto rule subscript { * }
+
+    rule subscript:sym<slice> {
+        <test>?  <COLON> <test>?  <sliceop>?
+    }
+
+    rule subscript:sym<test> {
+        <test>
     }
 
     token sliceop {
