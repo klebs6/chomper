@@ -1548,31 +1548,30 @@ does Python3Keywords {
     }
 
     rule not-test {
-        || <NOT> <not-test>
-        || <comparison>
+        <NOT>* <comparison>
     }
 
     rule comparison {
-        <star-expr> [ <comp-op> <star-expr> ]*
+        <star-expr>+ %% <comp-op>
     }
 
     token star-expr {
-        '*'?  <expr>
+        <STAR>?  <expr>
     }
 
     rule expr {
-        <xor_expr> [  '|' <xor_expr> ]*
+        <xor-expr> [  '|' <xor-expr> ]*
     }
 
-    rule xor_expr {
-        <and_expr> [ '^' <and_expr> ]*
+    rule xor-expr {
+        <and-expr> [ '^' <and-expr> ]*
     }
 
-    rule and_expr {
-        <shift_expr> [ '&' <shift_expr> ]*
+    rule and-expr {
+        <shift-expr> [ '&' <shift-expr> ]*
     }
 
-    rule shift_expr {
+    rule shift-expr {
         <arith_expr>
         [   
             || '<<' <arith_expr>
@@ -1629,7 +1628,7 @@ does Python3Keywords {
     rule testlist_comp {
         <test>
         [    
-            | <comp_for>
+            | <comp-for>
             | [ <comma-maybe-comment> <test> ]* <comma-maybe-comment>?
         ]
     }
@@ -1671,7 +1670,7 @@ does Python3Keywords {
     rule dictorsetmaker:sym<dict> {
         <dictmaker-item>
         [   
-            | <comp_for>
+            | <comp-for>
             | [ <comma-maybe-comment> <dictmaker-item> ]* <comma-maybe-comment>?
         ]
     }
@@ -1683,7 +1682,7 @@ does Python3Keywords {
     rule dictorsetmaker:sym<set> {
         <setmaker-item>
         [   
-            | <comp_for>
+            | <comp-for>
             | [ <comma-maybe-comment> <setmaker-item> ]* <comma-maybe-comment>?
         ]
     }
@@ -1701,34 +1700,37 @@ does Python3Keywords {
         ]
     }
 
-    rule argument {
-        || <test> '=' <test>
-        || <test> <comp_for>?
-    }
+    proto rule argument { * }
+    rule argument:sym<test>     { <test> '=' <test> }
+    rule argument:sym<comp-for> { <test> <comp-for>? }
 
-    token comp_iter {
-        || <comp_for>
-        || <comp_if>
-    }
+    proto token comp-iter { * }
+    token comp-iter:sym<for> { <comp-for> }
+    token comp-iter:sym<if>  { <comp-if> }
 
-    rule comp_for {
+    rule comp-for {
         <FOR>
         <exprlist>
         <IN>
         <or-test>
-        <comp_iter>?
+        <comp-iter>?
     }
 
-    rule comp_if {
-        <IF> <test-nocond> <comp_iter>?
+    rule comp-if {
+        <IF> <test-nocond> <comp-iter>?
     }
 
     rule yield-expr {
-        <YIELD> <yield_arg>?
+        <YIELD> <yield-arg>?
     }
 
-    rule yield_arg {
-        || <FROM> <test>
-        || <testlist>
+    proto rule yield-arg { * }
+
+    rule yield-arg:sym<from> {
+        <FROM> <test>
+    }
+
+    rule yield-arg:sym<testlist> {
+        <testlist>
     }
 }
