@@ -12,7 +12,7 @@ grammar G does Python3 { }
 use Grammar::Tracer;
 grammar GD does Python3 { }
 
-sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = True) {
+sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = False) {
 
     my $in = $*IN.slurp;
 
@@ -28,7 +28,6 @@ sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = True) {
     }
 
     my $parsed = G.parse($in, |%kwargs) // GD.parse($in, |%kwargs);
-    #say $parsed;
 
     if $to-rust {
         .say for $parsed.made;

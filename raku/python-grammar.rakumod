@@ -409,7 +409,7 @@ does Python3Float {
 }
 
 #-------------------------------------------------------------------
-our role Python3Name {
+our role Python3::Grammar::Name {
 
     token NAME {
         <ID_START> <ID_CONTINUE>*
@@ -959,7 +959,7 @@ our role Python3Name {
 our role Python3Literal 
 does Python3String
 does Python3Number
-does Python3Name { }
+does Python3::Grammar::Name { }
 
 our role Python3::Grammar::VarArgsList {
 
@@ -1089,11 +1089,12 @@ does Python3Keywords {
         <COMMENT_NONEWLINE>? <NEWLINE>
     }
 
-    rule parenthesized-arglist {
-        <OPEN_PAREN> <arglist>?  <CLOSE_PAREN>
+    regex parenthesized-arglist {
+        <OPEN_PAREN> <arglist>? <CLOSE_PAREN>
+        #{ say $/; exit }
     }
 
-    rule parenthesized-typedarglist {
+    regex parenthesized-typedarglist {
         <OPEN_PAREN> <typedargslist>?  <CLOSE_PAREN>
     }
 
@@ -1184,8 +1185,8 @@ does Python3Keywords {
 
     proto token import-from-target { * }
     token import-from-target:sym<*>                             { <STAR> }
-    token import-from-target:sym<parenthesized-import-as-names> { <parenthesized-import-as-names> }
     token import-from-target:sym<import-as-names>               { <import-as-names> }
+    token import-from-target:sym<parenthesized-import-as-names> { <parenthesized-import-as-names> }
 
     rule parenthesized-import-as-names {
         <OPEN_PAREN> <COMMENT_NONEWLINE>? <import-as-names> <CLOSE_PAREN>
@@ -1458,6 +1459,12 @@ does Python3Keywords {
     #------------------------------------------------
     proto token small-stmt { * }
 
+    #--------------------
+    rule small-stmt:sym<expr-equals> {
+        <testlist-star-expr>
+        [ <ASSIGN> <expr-equals-rhs> ]*
+    }
+
     rule small-stmt:sym<expr-augassign> {
         <testlist-star-expr> 
         <augassign> 
@@ -1473,12 +1480,6 @@ does Python3Keywords {
     proto token expr-equals-rhs { * }
     token expr-equals-rhs:sym<yield>              { <yield-expr> }
     token expr-equals-rhs:sym<testlist-star-expr> { <testlist-star-expr> }
-
-    #--------------------
-    rule small-stmt:sym<expr-equals> {
-        <testlist-star-expr>
-        [ <ASSIGN> <expr-equals-rhs> ]*
-    }
 
     token small-stmt:sym<return>      { <RETURN> [\h+ <testlist>]? }
     token small-stmt:sym<raise>       { <RAISE> \h+ <raise-clause>?  }
@@ -1583,8 +1584,7 @@ does Python3Keywords {
 
     #-----------------------------
     rule arith-expr {
-        <term>
-        <plus-minus-term>*
+        <term> <plus-minus-term>*
     }
 
     proto rule plus-minus-term { * }
@@ -1618,9 +1618,16 @@ does Python3Keywords {
         <factor-delim>* <power>
     }
 
-    rule power {
-        <augmented-atom> [ '**' <factor> ]?
+    proto rule power { * }
+
+    rule power:sym<base-and-factor> {
+        <augmented-atom> '**' <factor>
     }
+
+    rule power:sym<base> {
+        <augmented-atom>
+    }
+
 
     token augmented-atom {
         <atom> <trailer>*
@@ -1632,11 +1639,11 @@ does Python3Keywords {
     token atom:sym<true>     { <TRUE> }
     token atom:sym<false>    { <FALSE> }
     token atom:sym<NAME>     { <NAME> }
-    rule  atom:sym<parens>   { <OPEN_PAREN> <COMMENT>* <parens-inner>?  <COMMENT>* <CLOSE_PAREN> }
-    rule  atom:sym<list>     { <OPEN_BRACK> <COMMENT>* <listmaker>?  <COMMENT>* <CLOSE_BRACK> }
-    rule  atom:sym<dict>     { <OPEN_BRACE> <COMMENT>* <dictorsetmaker>?  <COMMENT>* <CLOSE_BRACE> }
     token atom:sym<number>   { <number> }
     token atom:sym<ellipsis> { <ELLIPSIS> }
+    rule  atom:sym<parens>   { <OPEN_PAREN> <COMMENT>* <parens-inner>?  <COMMENT>* \h* <CLOSE_PAREN> }
+    rule  atom:sym<list>     { <OPEN_BRACK> <COMMENT>* <listmaker>?  <COMMENT>* <CLOSE_BRACK> }
+    rule  atom:sym<dict>     { <OPEN_BRACE> <COMMENT>* <dictorsetmaker>?  <COMMENT>* <CLOSE_BRACE> }
 
     proto rule parens-inner { * }
     rule parens-inner:sym<yield>     { <yield-expr> }
@@ -1649,6 +1656,10 @@ does Python3Keywords {
     #-------------------------------
     proto rule listmaker { * }
 
+    rule listmaker:sym<list-comp> {
+        <test> <comp-for>
+    }
+
     rule listmaker:sym<testlist> {
         <test-comma-maybe-comment>* 
         <test>
@@ -1658,28 +1669,29 @@ does Python3Keywords {
         <test-comma-maybe-comment>* 
     }
 
-    rule listmaker:sym<list-comp> {
-        <test> <comp-for>
-    }
-
     #-------------------------------
     proto token trailer { * }
 
     token trailer:sym<dot-name>      { <DOT> <maybe-vertical-ws>? <NAME> }
-    rule  trailer:sym<subscriptlist> { <OPEN_BRACK> <subscriptlist> <.CLOSE_BRACK> }
-    rule  trailer:sym<arglist>       { <parenthesized-arglist> }
+    token trailer:sym<subscriptlist> { <OPEN_BRACK> <subscriptlist> <.CLOSE_BRACK> }
+    token trailer:sym<arglist>       { <parenthesized-arglist> }
 
     #-------------------------------
     rule subscriptlist {
-        <subscript> [ <COMMA> <subscript> ]* <COMMA>?
+        <subscript>+ %% <COMMA>
     }
 
-    rule subscript {
-        || <test>?  <COLON> <test>?  <sliceop>?
-        || <test>
+    proto rule subscript { * }
+
+    rule subscript:sym<test> {
+        <test>
     }
 
-    token sliceop {
+    rule subscript:sym<slice> {
+        <test>? <COLON> <test>? <slice-op>?
+    }
+
+    token slice-op {
         <COLON> <test>?
     }
 
