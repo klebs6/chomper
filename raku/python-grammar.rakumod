@@ -1570,32 +1570,33 @@ does Python3Keywords {
         <shift-expr> [ '&' <shift-expr> ]*
     }
 
+    proto rule shift-operand { * }
+    rule shift-operand:sym<left>  { '<<' <arith-expr> }
+    rule shift-operand:sym<right> { '>>' <arith-expr> }
+
     rule shift-expr {
-        <arith_expr>
-        [   
-            || '<<' <arith_expr>
-            || '>>' <arith_expr>
-        ]*
+        <arith-expr> <shift-operand>*
     }
 
-    rule arith_expr {
-        <term>
-        [    
-            || '+' <term>
-            || '-' <term>
-        ]*
+    #can put comments in here?
+    proto rule arith-operand { * }
+    rule arith-operand:sym<+> { '+' <term> }
+    rule arith-operand:sym<-> { '-' <term> }
+
+    rule arith-expr {
+        <term> <arith-operand>*
     }
 
     rule term {
-        <factor>+ %% <term-delim>
+        <factor> <term-operand>*
     }
 
-    proto token term-delim { * }
-    token term-delim:sym<*>  { <sym> }
-    token term-delim:sym</>  { <sym> }
-    token term-delim:sym<%>  { <sym> }
-    token term-delim:sym<//> { <sym> }
-    token term-delim:sym<@>  { <sym> }
+    proto rule term-operand { * }
+    rule term-operand:sym<*>  { <sym> <factor> }
+    rule term-operand:sym</>  { <sym> <factor> }
+    rule term-operand:sym<%>  { <sym> <factor> }
+    rule term-operand:sym<//> { <sym> <factor> }
+    rule term-operand:sym<@>  { <sym> <factor> }
 
     proto rule factor { * }
     rule factor:sym<prefix+> { '+' <factor> }
@@ -1682,45 +1683,120 @@ does Python3Keywords {
     }
 
     rule testlist {
-        <test> [ <COMMA> <test> ]* <COMMA>?
+        <test>+ %% <COMMA>
     }
 
-    rule setmaker-item  { <test> }
+    rule setmaker-item-comma-maybe-comment {
+        <setmaker-item> <comma-maybe-comment>
+    }
+
+    proto rule setmaker-item { * }
+    rule setmaker-item:sym<test>       { <COMMENT>? <test> }
+    rule setmaker-item:sym<stars-test> { '**' <COMMENT>? <test> }
+
+    rule dictmaker-item-comma-maybe-comment { 
+        <dictmaker-item> <comma-maybe-comment>
+    }
+
     rule dictmaker-item { <COMMENT>? <test> <COLON> <test> }
 
     proto rule dictorsetmaker { * }
 
     rule dictorsetmaker:sym<dict> {
-        <dictmaker-item>
-        [   
-            | <comp-for>
-            | [ <comma-maybe-comment> <dictmaker-item> ]* <comma-maybe-comment>?
-        ]
+        [<dictmaker-item-comma-maybe-comment>]* <dictmaker-item>
+    }
+
+    rule dictorsetmaker:sym<dict-comp> {
+        <dictmaker-item> <comp-for>
+    }
+
+    rule dictorsetmaker:sym<dict-with-comma-trailer> {
+        <dictmaker-item-comma-maybe-comment>*
     }
 
     rule comma-maybe-comment {
-        <COMMA> <COMMENT>?
+        <COMMA> <COMMENT>*
     }
 
     rule dictorsetmaker:sym<set> {
+        <setmaker-item-comma-maybe-comment>* 
         <setmaker-item>
-        [   
-            | <comp-for>
-            | [ <comma-maybe-comment> <setmaker-item> ]* <comma-maybe-comment>?
-        ]
+    }
+
+    rule dictorsetmaker:sym<set-with-comma-trailer> {
+        <setmaker-item-comma-maybe-comment>* 
+    }
+
+    rule dictorsetmaker:sym<set-comp> {
+        <setmaker-item> <comp-for>
     }
 
     rule argument-comma-comment {
         <argument> <comma-maybe-comment>
     }
 
-    rule arglist {
-        [ <argument-comma-comment> ]*
-        [   
-            || <argument> <comma-maybe-comment>?
-            || '*' <test> [ <COMMA>  <argument> ]* [ <COMMA> '**' <test> ]?
-            || '**' <test>
-        ]
+    rule argument-comma-maybe-comment {
+        <argument> <comma-maybe-comment>
+    }
+
+    proto rule arglist { * }
+
+    token arglist-kwargs {
+        '**' <test>
+    }
+
+    token star-arg {
+        '*' <test> 
+    }
+
+    rule arglist:sym<just-basic> {
+        <argument-comma-maybe-comment>* <argument>
+    }
+
+    rule arglist:sym<just-basic-with-trailing-comment> {
+        <argument-comma-maybe-comment>+
+    }
+
+    rule arglist:sym<just-star-args> {
+        '*' <test> 
+    }
+
+    rule arglist:sym<just-kwargs> {
+        <arglist-kwargs>
+    }
+
+    rule arglist:sym<basic-and-star-arg> {
+        <argument-comma-maybe-comment>+
+        <star-arg>
+    }
+
+    rule arglist:sym<basic-and-star-arg-with-trailing-comma> {
+        <argument-comma-maybe-comment>+
+        '*' <test-comma-maybe-comment>  
+    }
+
+   rule arglist:sym<basic-and-star-args> {
+        <basic=argument-comma-maybe-comment>+
+        '*' <test-comma-maybe-comment>  
+        <star=argument-comma-maybe-comment>+
+    }
+
+    rule arglist:sym<basic-and-kwargs> {
+        <argument-comma-maybe-comment>+
+        <arglist-kwargs>
+    }
+
+    rule arglist:sym<star-and-kwargs> {
+        '*' <test-comma-maybe-comment>  
+        <argument-comma-maybe-comment>*  
+        <arglist-kwargs>
+    }
+
+    rule arglist:sym<full> {
+        <basic=argument-comma-maybe-comment>+
+        '*' <test-comma-maybe-comment>  
+        <star=argument-comma-maybe-comment>*  
+        <arglist-kwargs>
     }
 
     proto rule argument { * }
