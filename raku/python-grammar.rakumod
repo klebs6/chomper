@@ -1699,10 +1699,6 @@ does Python3Keywords {
     rule setmaker-item:sym<test>       { <COMMENT>? <test> }
     rule setmaker-item:sym<stars-test> { '**' <COMMENT>? <test> }
 
-    rule dictmaker-item-comma-maybe-comment { 
-        <dictmaker-item> <comma-maybe-comment>
-    }
-
     rule dictmaker-item { <COMMENT>? <test> <COLON> <test> }
 
     rule dictmaker-item-comma-maybe-comment { 
@@ -1710,14 +1706,6 @@ does Python3Keywords {
     }
 
     proto rule dictorsetmaker { * }
-
-    rule dictorsetmaker:sym<dict-comp> {
-        <dictmaker-item> <comp-for>
-    }
-
-    rule dictorsetmaker:sym<dict-with-comma-trailer> {
-        <dictmaker-item-comma-maybe-comment>*
-    }
 
     rule dictorsetmaker:sym<dict> {
         [<dictmaker-item-comma-maybe-comment>]* <dictmaker-item>
