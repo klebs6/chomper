@@ -1522,13 +1522,10 @@ does Python3Keywords {
     token suite:sym<simple> { <simple-suite> }
     token suite:sym<stmt>   { <stmt-suite> }
 
-    rule test {
-        <COMMENT>*
-        [
-            | <or_test> [ <IF> <or_test> <ELSE> <test> ]?
-            | <lambdef>
-        ]
-    }
+    proto rule test { * }
+    rule test:sym<basic>   { <or-test> <!before <IF>>}
+    rule test:sym<lambdef> { <lambdef> }
+    rule test:sym<ternary> { <or-test> <IF> <or-test> <ELSE> <test> }
 
     proto token test-nocond { * }
     token test-nocond:sym<basic>   { <or-test> }
@@ -1539,19 +1536,19 @@ does Python3Keywords {
     }
 
     rule lambdef_nocond {
-        <LAMBDA> <varargslist>?  <COLON> <test_nocond>
+        <LAMBDA> <varargslist>?  <COLON> <test-nocond>
     }
 
-    rule or_test {
-        <and_test> [ <OR> <and_test> ]*
+    rule or-test {
+        <and-test> [ <OR> <and-test> ]*
     }
 
-    rule and_test {
-        <not_test> [  <AND> <not_test> ]*
+    rule and-test {
+        <not-test> [  <AND> <not-test> ]*
     }
 
-    rule not_test {
-        || <NOT> <not_test>
+    rule not-test {
+        || <NOT> <not-test>
         || <comparison>
     }
 
@@ -1718,12 +1715,12 @@ does Python3Keywords {
         <FOR>
         <exprlist>
         <IN>
-        <or_test>
+        <or-test>
         <comp_iter>?
     }
 
     rule comp_if {
-        <IF> <test_nocond> <comp_iter>?
+        <IF> <test-nocond> <comp_iter>?
     }
 
     rule yield-expr {
