@@ -684,8 +684,10 @@ our class Python3::TypedArgList  {
     method count( --> Int ) {
         my $num-basic = @.basic-args.elems;
         my $num-star  = @.star-args.elems;
-        my $num-kw    = $.kw-args !~~ Nil;
-        $num-basic + $num-star + $num-kw
+        my $num-kw    = $.kw-args ?? 1 !! 0;
+        my $count = $num-basic + $num-star + $num-kw;
+
+        $count
     }
 }
 

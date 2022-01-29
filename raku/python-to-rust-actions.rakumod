@@ -10,7 +10,7 @@ our sub get-compound-comments($/) {
         $comments.push: $last
     }
 
-    $comments
+    $comments.List
 }
 
 our sub is-test-fn-name($name) {
@@ -497,6 +497,10 @@ our role Python3::FunctionActions {
         make $/<typedargslist>.made
     }
 
+    method typedargslist-kwargs($/) {
+        make $<tfpdef>.made
+    }
+
     method typedargslist:sym<full>($/) {
         make Python3::TypedArgList.new(
             basic-args => $<just-basic-args-with-trailing-comment>.made,
@@ -507,12 +511,16 @@ our role Python3::FunctionActions {
 
     method typedargslist:sym<just-star-args>($/) {
         make Python3::TypedArgList.new(
+            basic-args => [],
             star-args  => $<star-args>.made,
+            kw-args    => Nil,
         )
     }
 
     method typedargslist:sym<just-kwargs>($/) {
         make Python3::TypedArgList.new(
+            basic-args => [],
+            star-args  => [],
             kw-args    => $<typeargslist-kwargs>.made,
         )
     }
@@ -520,6 +528,8 @@ our role Python3::FunctionActions {
     method typedargslist:sym<just-basic>($/) {
         make Python3::TypedArgList.new(
             basic-args => $<just-basic-args>.made,
+            star-args  => [],
+            kw-args    => Nil,
         )
     }
 
@@ -527,18 +537,21 @@ our role Python3::FunctionActions {
         make Python3::TypedArgList.new(
             basic-args => $<just-basic-args-with-trailing-comment>.made,
             star-args  => $<star-args>.made,
+            kw-args    => Nil,
         )
     }
 
     method typedargslist:sym<basic-and-kwargs>($/) {
         make Python3::TypedArgList.new(
             basic-args => $<just-basic-args-with-trailing-comment>.made,
+            star-args  => [],
             kw-args    => $<typedargslist-kwargs>.made,
         )
     }
 
     method typedargslist:sym<star-and-kwargs>($/) {
         make Python3::TypedArgList.new(
+            basic-args => [],
             star-args  => $<star-args>.made,
             kw-args    => $<typedargslist-kwargs>.made,
         )
