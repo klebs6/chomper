@@ -464,7 +464,22 @@ our role Python3::FunctionActions {
 
         my $name = $<NAME>.made;
 
-        make Python3::Funcdef.new(
+        my $key = $name.value.chomp.trim;
+
+        my %dunder-map = %(
+            __init__ => Python3::DunderFunc::Init,
+            __repr__ => Python3::DunderFunc::Repr,
+            __add__  => Python3::DunderFunc::Add,
+            __sub__  => Python3::DunderFunc::Sub,
+            __mul__  => Python3::DunderFunc::Mul,
+            __div__  => Python3::DunderFunc::Div,
+        );
+
+        my $exists = $key (<) %dunder-map.keys;
+
+        my $cls = $exists ?? %dunder-map{$name.value} !! Python3::FuncDef;
+
+        make $cls.new(
             name       => $name,
             private    => $name.value.starts-with("_"),
             is-test    => is-test-fn-name($name),
@@ -554,7 +569,21 @@ our role Python3::FunctionActions {
     }
 
     method star-args($/) {
-        make [ $<tfpdef>.made // Nil, |$<augmented-tfpdef>>>.made ]
+
+        my $first = $<tfpdef>.made // Nil;
+
+        make do if $first {
+            [ 
+                Python3::AugmentedTfpdef.new(
+                    tfpdef => $first, 
+                    test   => Nil,
+                ),
+                |$<augmented-tfpdef>>>.made 
+            ]
+
+        } else {
+            $<augmented-tfpdef>>>.made 
+        }
     }
 
     method kwargs($/) {
@@ -795,9 +824,10 @@ our role Python3::SmallStmtActions {
     }
 
     method small-stmt:sym<expr-equals>($/) {
+        my $rhs = $<expr-equals-rhs>>>.made;
         make Python3::ExprEquals.new(
             lhs       => $<testlist-star-expr>.made,
-            rhs-stack => $<expr-equals-rhs>>>.made,
+            rhs-stack => $rhs,
         )
     }
 
@@ -880,6 +910,7 @@ our role Python3::SuiteActions {
             stmts => $/<stmt-maybe-comments>>>.made
         )
     }
+
     method simple-suite($/) {
         make Python3::SimpleSuite.new(
             stmts   => $<simple-stmt>.made,
@@ -959,9 +990,13 @@ does Python3::VarArgsListActions
     }
 
     method testlist-star-expr($/) {
-        make Python3::TestListStarExpr.new(
-            test-or-star-exprs => $<test-or-star-expr>>>.made,
-        )
+        if $/<test-or-star-expr>.List.elems gt 1 {
+            make Python3::TestListStarExpr.new(
+                test-or-star-exprs => $<test-or-star-expr>>>.made,
+            )
+        } else {
+            make $<test-or-star-expr>[0].made
+        }
     }
 
     method test-or-star-expr:sym<test>($/) {
@@ -1124,57 +1159,54 @@ does Python3::VarArgsListActions
     }
 
     method star-expr($/) {
-        make Python3::StarExpr.new(
-            has-star => $/<STAR>:exists,
-            or-expr  => $<or-expr>.made,
-        )
-    }
-
-    method or-expr($/) {
-
-        my $op-count = $/<xor-expr>.List.elems;
-
-        if $op-count ge 1 {
-            make Python3::OrExpr.new(
-                operands => $/<xor-expr>>>.made,
+        if $/<STAR>:exists {
+            make Python3::StarExpr.new(
+                has-star => True,
+                or-expr  => $<or-expr>.made,
             )
         } else {
-            die if not $op-count eq 1;
-            make $<xor-expr>[0].made
+            make $<or-expr>.made
         }
     }
 
-    method xor-expr($/) {
-        my $op-count = $/<and-expr>.List.elems;
+    method or-expr($/) {
+        make Python3::OrExpr.new(
+            operands => $<xor-expr>>>.made,
+        )
+    }
 
-        if $op-count ge 1 {
+    method xor-expr($/) {
+        my $ops = $<and-expr>>>.made;
+
+        if $ops.elems gt 1 {
             make Python3::XorExpr.new(
-                operands => $/<and-expr>>>.made,
+                operands => $ops,
             )
         } else {
-            die if not $op-count eq 1;
-            make $<and-expr>[0].made
+            make $ops[0]
         }
     }
 
     method and-expr($/) {
-        my $op-count = $/<shift-expr>.List.elems;
+        my $ops = $<shift-expr>>>.made;
 
-        if $op-count ge 1 {
+        if $ops.elems gt 1 {
             make Python3::AndExpr.new(
-                operands => $<shift-expr>>>.made,
+                operands => $ops,
             )
         } else {
-            die if not $op-count eq 1;
-            make $<shift-expr>[0].made
+            make $ops[0]
         }
     }
 
     method shift-expr($/) {
-        if $/<shift-operand>.List.elems gt 0 {
+
+        my $ops = $<shift-operand>>>.made;
+
+        if $ops.List.elems gt 0 {
             make Python3::ShiftExpr.new(
                 lhs      => $/<arith-expr>.made,
-                operands => $/<shift-operand>>>.made,
+                operands => $ops,
             )
         } else {
             make $<arith-expr>.made
@@ -1265,7 +1297,7 @@ does Python3::VarArgsListActions
     }
 
     method power($/) {
-        if $<factor>.List.elems gt 0 {
+        if $<factor>.made {
             make Python3::Power.new(
                 base  => $<augmented-atom>.made,
                 power => $<factor>.made,

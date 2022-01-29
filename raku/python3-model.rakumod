@@ -1,9 +1,20 @@
-use JSON::Class;
+use snake-case;
 
+our role Python3::IFuncDef    {  }
+
+our class Python3::FuncDef        { ... } # fwd declare
+our role Python3::IDunderFunc     { ... } # fwd declare
+our class Python3::Tfpdef          { ... } # fwd declare
+our class Python3::AugmentedTfpdef { ... } # fwd declare
+
+#----------------
 our role Python3::ISubscript      
 { }
 
+our role Python3::ITestListStarExpr  {}
+
 our role Python3::ITestOrStarExpr 
+does Python3::ITestListStarExpr
 { }
 
 our role Python3::ITest
@@ -13,35 +24,6 @@ does Python3::ITestOrStarExpr { }
 our role Python3::ITestNoCond     
 { }
 
-our role Python3::IOrExpr         
-{ }
-
-our role Python3::IXorExpr
-does Python3::IOrExpr { }
-
-our role Python3::IAndExpr
-does Python3::IXorExpr { }
-
-our role Python3::IShiftExpr
-does Python3::IAndExpr { }
-
-our role Python3::IArithExpr
-does Python3::IShiftExpr { }
-
-our role Python3::ITerm
-does Python3::IArithExpr { }
-
-our role Python3::IFactor
-does Python3::ITerm { }
-
-our role Python3::IPower
-does Python3::IFactor { }
-
-our role Python3::IAugmentedAtom
-does Python3::IPower { }
-
-our role Python3::IAtom
-does Python3::IAugmentedAtom { }
 
 our role Python3::IDecoratedItem  
 { }
@@ -80,7 +62,11 @@ our role Python3::CompIter
 { }
 
 our role Python3::Suite           
-{ }
+{ 
+    method toplevel-standard-python-functions { ... }
+    method toplevel-dunder-functions { ... }
+    method toplevel-python-functions { ... }
+}
 
 our role Python3::TryControlSuite 
 { }
@@ -103,6 +89,38 @@ does Python3::INotTest {}
 
 our role Python3::IStarExpr 
 does Python3::IComparison {}
+
+our role Python3::IOrExpr         
+does Python3::IStarExpr
+{ }
+
+our role Python3::IXorExpr
+does Python3::IOrExpr { }
+
+our role Python3::IAndExpr
+does Python3::IXorExpr { }
+
+our role Python3::IShiftExpr
+does Python3::IAndExpr { }
+
+our role Python3::IArithExpr
+does Python3::IShiftExpr { }
+
+our role Python3::ITerm
+does Python3::IArithExpr { }
+
+our role Python3::IFactor
+does Python3::ITerm { }
+
+our role Python3::IPower
+does Python3::IFactor { }
+
+our role Python3::IAugmentedAtom
+does Python3::IPower { }
+
+our role Python3::IAtom
+does Python3::IAugmentedAtom { }
+
 
 #-----------------------------
 our class Python3::Comment  {
@@ -228,7 +246,9 @@ our class Python3::XorExpr does Python3::IXorExpr  {
     has Python3::IAndExpr @.operands is required;
 }
 
-our class Python3::OrExpr does Python3::IOrExpr  {
+our class Python3::OrExpr 
+does Python3::ITest
+does Python3::IOrExpr  {
     has Python3::IXorExpr @.operands is required;
 }
 
@@ -239,7 +259,9 @@ does Python3::ITestOrStarExpr  {
     has Python3::IOrExpr $.or-expr  is required;
 }
 
-our class Python3::TestListStarExpr  {
+our class Python3::TestListStarExpr  
+does Python3::ITestListStarExpr
+{
     has Python3::ITestOrStarExpr @.test-or-star-exprs is required;
 }
 
@@ -494,6 +516,10 @@ our class Python3::Del does Python3::ISmallStmt  {
 our class Python3::SimpleSuite does Python3::Suite does Python3::IStmt  {
     has Python3::ISmallStmt @.stmts is required;
     has Python3::Comment    $.comment;
+
+    method toplevel-standard-python-functions { [] }
+    method toplevel-dunder-functions { [] }
+    method toplevel-python-functions { [] }
 }
 
 our class Python3::StmtWithComments does Python3::IStmt  {
@@ -503,6 +529,18 @@ our class Python3::StmtWithComments does Python3::IStmt  {
 
 our class Python3::StmtSuite does Python3::Suite  {
     has Python3::StmtWithComments @.stmts is required;
+
+    method toplevel-python-functions {
+        @.stmts.List.grep({ $_.stmt ~~ Python3::IFuncDef }).map: { $_.stmt }
+    }
+
+    method toplevel-standard-python-functions {
+        @.stmts.List.grep({ $_.stmt ~~ Python3::FuncDef }).map: { $_.stmt }
+    }
+
+    method toplevel-dunder-functions {
+        @.stmts.List.grep({ $_.stmt ~~ Python3::IDunderFunc }).map: { $_.stmt }
+    }
 }
 
 #---------------------------------------
@@ -513,16 +551,148 @@ does Python3::IDecoratedItem  {
     has Python3::Suite   $.suite is required;
     has Python3::ArgList $.args;
     has Python3::Comment $.comment;
+
+    method rust-struct-name {
+        $.name.value
+    }
+    method rust-struct-name-as-module {
+        snake-case(self.rust-struct-name())
+    }
+
+    #TODO: might need to be more robust
+    method rust-comment-from-suite {
+
+        my $first-stmt = $.suite.stmts[0].stmt;
+
+        if $first-stmt ~~ Python3::SimpleSuite {
+
+            $first-stmt = $first-stmt.stmts[0];
+
+            if $first-stmt ~~ Python3::ExprEquals {
+                my $first-lhs-operand = $first-stmt.lhs.operands[0];
+                if $first-lhs-operand ~~ Python3::Strings {
+                    my $text = $first-lhs-operand.items.join("\n");
+                    return qq:to/END/;
+                    /*
+                    $text
+                    {self.toplevel-rust-comment}
+                    */
+                    END
+                } else {
+                    say "-------inner";
+                    say $first-lhs-operand;
+                    exit;
+                }
+            } else {
+                say "-------outer";
+                say $first-stmt;
+                exit;
+            }
+        }
+
+        ""
+    }
+
+    method toplevel-rust-comment {
+        if $.comment {
+            qq:to/END/
+                Note: comment on python class: {$.comment.text}
+            END
+        } else {
+            ""
+        }
+    }
+
+    method rust-struct-args {
+        "rust-struct-args"
+    }
+
+    method rust-struct-members-from-python-funcdefs {
+        "rust-struct-members-from-python-funcdefs"
+    }
+
+    method rust-module-members {
+        "rust-module-members"
+
+    }
+
+    method rust-module {
+        qq:to/END/
+        pub mod {self.rust-struct-name-as-module()} \{
+        {self.rust-module-members().indent(4)}
+        \}
+        END
+    }
+
+    method python-class-functions {
+        $.suite.toplevel-standard-python-functions()
+    }
+
+    method python-class-special-functions {
+        $.suite.toplevel-dunder-functions()
+    }
+
+    method rust-function-scaffolds {
+
+        my @scaffolds = do for self.python-class-functions().List -> $py-func {
+            $py-func.name.value
+        };
+
+        @scaffolds.join("\n")
+    }
+
+    method rust-special-functions {
+
+        my @scaffolds = do for self.python-class-special-functions().List -> $py-func {
+            $py-func.translate-special-function-to-rust()
+        };
+
+        @scaffolds.join("\n")
+    }
+
+    method rust-impl-block {
+        qq:to/END/
+        impl {self.rust-struct-name()} \{
+        {self.rust-function-scaffolds().indent(4)}
+        \}
+        END
+    }
+
+    method translate-to-rust {
+        qq:to/END/
+        {self.rust-comment-from-suite()}
+        pub struct {self.rust-struct-name} \{
+        {self.rust-struct-args().indent(4)}
+        {self.rust-struct-members-from-python-funcdefs().indent(4)}
+        \}
+        {self.rust-module()}
+        {self.rust-special-functions()}
+        {self.rust-impl-block()}
+        END
+    }
 }
 
 our class Python3::TypedArgList  {
-    has $.basic-args;
-    has $.star-args;
-    has $.kw-args;
+    has Python3::AugmentedTfpdef @.basic-args;
+    has Python3::AugmentedTfpdef @.star-args;
+    has Python3::Tfpdef $.kw-args;
+
+    method is-first-parameter-self( --> Bool ) {
+        @.basic-args[0].is-self();
+    }
+
+    method count( --> Int ) {
+        my $num-basic = @.basic-args.elems;
+        my $num-star  = @.star-args.elems;
+        my $num-kw    = $.kw-args !~~ Nil;
+        $num-basic + $num-star + $num-kw
+    }
 }
 
-our class Python3::Funcdef 
+#same members as FuncDef
+our role Python3::IDunderFunc 
 does Python3::ICompoundStmt 
+does Python3::IFuncDef
 does Python3::IDecoratedItem  {
     has Python3::Name  $.name is required;
     has Bool           $.private is required;
@@ -531,8 +701,83 @@ does Python3::IDecoratedItem  {
     has Python3::TypedArgList 
         $.parameters is required;
 
-    has Str $.suite is required;
+    has Python3::Suite $.suite is required;
     has Python3::ITest $.test;
+
+    method translate-special-function-to-rust { ... }
+}
+
+our class Python3::FuncDef 
+does Python3::ICompoundStmt 
+does Python3::IFuncDef
+does Python3::IDecoratedItem  {
+    has Python3::Name  $.name is required;
+    has Bool           $.private is required;
+    has Bool           $.is-test is required;
+
+    has Python3::TypedArgList 
+        $.parameters is required;
+
+    has Python3::Suite $.suite is required;
+    has Python3::ITest $.test;
+}
+
+our class Python3::DunderFunc::Init does Python3::IDunderFunc {
+
+    method translate-as-default-fn {
+        "TODO: __init__ --> default-fn"
+    }
+
+    method translate-as-from-fn {
+        "TODO: __init__ --> from-fn"
+    }
+
+    method translate-as-standard-new-fn {
+        "TODO: __init__ --> standard-new-fn"
+    }
+
+    method translate-dunder-init {
+
+        die if not $.parameters.is-first-parameter-self();
+
+        my $nargs = $.parameters.count();
+
+        given $nargs {
+            when 1 {
+                self.translate-as-default-fn()
+            }
+            when 2 {
+                self.translate-as-from-fn()
+            }
+            when 3..* {
+                self.translate-as-standard-new-fn()
+            }
+        }
+    }
+
+    method translate-special-function-to-rust {  
+        self.translate-dunder-init()
+    }
+}
+
+our class Python3::DunderFunc::Repr does Python3::IDunderFunc {
+    method translate-special-function-to-rust { ... }
+}
+
+our class Python3::DunderFunc::Add  does Python3::IDunderFunc {
+    method translate-special-function-to-rust { ... }
+}
+
+our class Python3::DunderFunc::Sub  does Python3::IDunderFunc {
+    method translate-special-function-to-rust { ... }
+}
+
+our class Python3::DunderFunc::Mul  does Python3::IDunderFunc {
+    method translate-special-function-to-rust { ... }
+}
+
+our class Python3::DunderFunc::Div  does Python3::IDunderFunc {
+    method translate-special-function-to-rust { ... }
 }
 
 #---------------------------------
@@ -630,5 +875,8 @@ our class Python3::AugmentedTfpdef  {
     has Python3::Tfpdef  $.tfpdef is required;
     has Python3::ITest   $.test ;
     has Python3::Comment @.comments;
+    method is-self( --> Bool ) {
+        $.tfpdef.name.value eq "self"
+    }
 }
 
