@@ -1551,7 +1551,11 @@ does Python3Keywords {
     }
 
     rule comparison {
-        <star-expr>+ %% <comp-op>
+        <star-expr> <comparison-operand>*
+    }
+
+    rule comparison-operand {
+        <comp-op> <star-expr>
     }
 
     token star-expr {

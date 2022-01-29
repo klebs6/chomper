@@ -31,7 +31,7 @@ sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = True) {
 
     if $to-rust {
         for $parsed.made {
-            say $_;
+            say $_.raku;
         }
 
     } else {

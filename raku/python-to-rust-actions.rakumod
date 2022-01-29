@@ -778,6 +778,14 @@ our role Python3::FileInputActions {
 
 our role Python3::SmallStmtActions {
 
+    method expr-augassign-rhs:sym<yield>($/) {
+        make $<yield>.made
+    }
+
+    method expr-augassign-rhs:sym<testlist>($/) {
+        make $<testlist>.made
+    }
+
     method small-stmt:sym<expr-augassign>($/) {
         make Python3::ExprAugAssign.new(
             lhs  => $<testlist-star-expr>.made,
@@ -1057,43 +1065,68 @@ does Python3::VarArgsListActions
 
     #----------------------------------
     method test:sym<basic>($/) {
-        make Python3::BasicTest.new(
-            or-test => $<or-test>.made
-        )
+        make $<or-test>.made
     }
 
     method or-test($/) {
-        make Python3::OrTest.new(
-            operands => $<and-test>>>.made,
-            comments => $<COMMENT>>>.made,
-        )
+        if $/<and-test>.List.elems gt 1 {
+            make Python3::OrTest.new(
+                operands => $<and-test>>>.made,
+            )
+        } else {
+            make $<and-test>[0].made
+        }
     }
 
     method and-test($/) {
-        make Python3::AndTest.new(
-            operands => $<not-test>>>.made,
-            comments => $<COMMENT>>>.made,
-        )
+        if $/<not-test>.List.elems gt 1 {
+            make Python3::AndTest.new(
+                operands => $<not-test>>>.made,
+            )
+        } else {
+            make $<not-test>[0].made
+        }
     }
 
     method not-test($/) {
-        make Python3::NotTest.new(
-            not-count  => $/<NOT>.List.elems,
-            comparison => $<comparison>.made,
+
+        my $not-count = $/<NOT>.List.elems;
+
+        if $not-count gt 0 {
+            make Python3::NotTest.new(
+                not-count  => $not-count,
+                comparison => $<comparison>.made,
+            )
+
+        } else {
+            make $<comparison>.made
+        }
+    }
+
+    method comparison-operand($/) {
+        make Python3::ComparisonOperand.new(
+            comp-op   => $<comp-op>.made,
+            star-expr => $<star-expr>.made,
         )
     }
 
     method comparison($/) {
-        make Python3::Comparison.new(
-            star-exprs => $/<star-expr>>>.made,
-            comp-ops   => $/<comp-op>>>.made,
-        )
+
+        if $/<comparison-operand>.List.elems gt 0 {
+            make Python3::Comparison.new(
+                base     => $<star-expr>.made,
+                operands => $<comparison-operand>>>.made,
+            )
+        } else {
+            make $<star-expr>.made
+        }
+
     }
 
     method star-expr($/) {
         make Python3::StarExpr.new(
             has-star => $/<STAR>:exists,
-            or-expr     => $<expr>.made,
+            or-expr  => $<or-expr>.made,
         )
     }
 
@@ -1107,7 +1140,7 @@ does Python3::VarArgsListActions
             )
         } else {
             die if not $op-count eq 1;
-            make $<xor-expr>.made
+            make $<xor-expr>[0].made
         }
     }
 
@@ -1120,7 +1153,7 @@ does Python3::VarArgsListActions
             )
         } else {
             die if not $op-count eq 1;
-            make $<and-expr>.made
+            make $<and-expr>[0].made
         }
     }
 
@@ -1129,16 +1162,16 @@ does Python3::VarArgsListActions
 
         if $op-count ge 1 {
             make Python3::AndExpr.new(
-                operands => $/<shift-expr>>>.made,
+                operands => $<shift-expr>>>.made,
             )
         } else {
             die if not $op-count eq 1;
-            make $<shift-expr>.made
+            make $<shift-expr>[0].made
         }
     }
 
     method shift-expr($/) {
-        if $/<shift-operand>:exists {
+        if $/<shift-operand>.List.elems gt 0 {
             make Python3::ShiftExpr.new(
                 lhs      => $/<arith-expr>.made,
                 operands => $/<shift-operand>>>.made,
@@ -1161,7 +1194,7 @@ does Python3::VarArgsListActions
     }
 
     method arith-expr($/) {
-        if $/<arith-operand>:exists {
+        if $/<arith-operand>.List.elems gt 0 {
             make Python3::ArithExpr.new(
                 lhs      => $/<term>.made,
                 operands => $/<arith-operand>>>.made,
@@ -1184,7 +1217,7 @@ does Python3::VarArgsListActions
     }
 
     method term($/) {
-        if $/<term-operand>:exists {
+        if $/<term-operand>.List.elems gt 0 {
             make Python3::Term.new(
                 lhs      => $<factor>.made,
                 operands => $<term-operand>>>.made,
@@ -1232,7 +1265,7 @@ does Python3::VarArgsListActions
     }
 
     method power($/) {
-        if $/<factor>:exists {
+        if $<factor>.List.elems gt 0 {
             make Python3::Power.new(
                 base  => $<augmented-atom>.made,
                 power => $<factor>.made,
@@ -1243,7 +1276,7 @@ does Python3::VarArgsListActions
     }
 
     method augmented-atom($/) {
-        if $/<trailer>:exists {
+        if $/<trailer>.List.elems gt 0 {
             make Python3::AugmentedAtom.new(
                 atom     => $<atom>.made,
                 trailers => $<trailer>>>.made,

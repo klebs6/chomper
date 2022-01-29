@@ -1,56 +1,108 @@
 use JSON::Class;
 
-our role Python3::ISubscript  { }
-our role Python3::ITestOrStarExpr  { }
+our role Python3::ISubscript      
+{ }
 
-our role Python3::ITest 
-does Python3::ISubscript 
-does Python3::ITestOrStarExpr
- {}
+our role Python3::ITestOrStarExpr 
+{ }
 
-our role Python3::ITestNoCond  {}
+our role Python3::ITest
+does Python3::ISubscript
+does Python3::ITestOrStarExpr { }
 
-our role Python3::IOrExpr  {}
+our role Python3::ITestNoCond     
+{ }
 
-our role Python3::IXorExpr 
-does Python3::IOrExpr  {}
+our role Python3::IOrExpr         
+{ }
 
-our role Python3::IAndExpr 
-does Python3::IXorExpr  {}
+our role Python3::IXorExpr
+does Python3::IOrExpr { }
 
-our role Python3::IShiftExpr 
-does Python3::IAndExpr  {}
+our role Python3::IAndExpr
+does Python3::IXorExpr { }
 
-our role Python3::IArithExpr 
-does Python3::IShiftExpr  {}
+our role Python3::IShiftExpr
+does Python3::IAndExpr { }
 
-our role Python3::ITerm 
-does Python3::IArithExpr  {}
+our role Python3::IArithExpr
+does Python3::IShiftExpr { }
 
-our role Python3::IFactor 
-does Python3::ITerm  {}
+our role Python3::ITerm
+does Python3::IArithExpr { }
 
-our role Python3::IPower 
-does Python3::IFactor  {}
+our role Python3::IFactor
+does Python3::ITerm { }
 
-our role Python3::IAugmentedAtom 
-does Python3::IPower  {}
+our role Python3::IPower
+does Python3::IFactor { }
 
-our role Python3::IAtom 
-does Python3::IAugmentedAtom  {}
+our role Python3::IAugmentedAtom
+does Python3::IPower { }
 
-our role Python3::IDecoratedItem  {}
-our role Python3::IArithOperand  {}
-our role Python3::ITermOperand  {}
-our role Python3::IDictOrSet  {}
-our role Python3::IParensInner  {}
-our role Python3::IListMaker does Python3::IParensInner  {}
+our role Python3::IAtom
+does Python3::IAugmentedAtom { }
 
-our role Python3::IStmt  { }
-our role Python3::ISmallStmt    does Python3::IStmt  { }
-our role Python3::ICompoundStmt does Python3::IStmt  { }
+our role Python3::IDecoratedItem  
+{ }
 
-our role Python3::ITrailer  { }
+our role Python3::IArithOperand   
+{ }
+
+our role Python3::ITermOperand    
+{ }
+
+our role Python3::IDictOrSet      
+{ }
+
+our role Python3::IParensInner    
+{ }
+
+our role Python3::IListMaker
+does Python3::IParensInner { }
+
+our role Python3::IStmt           
+{ }
+
+our role Python3::ISmallStmt
+does Python3::IStmt { }
+
+our role Python3::ICompoundStmt
+does Python3::IStmt { }
+
+our role Python3::ITrailer        
+{ }
+
+our role Python3::ShiftOperand    
+{ }
+
+our role Python3::CompIter        
+{ }
+
+our role Python3::Suite           
+{ }
+
+our role Python3::TryControlSuite 
+{ }
+
+our role Python3::WithItem        
+{ }
+
+our role Python3::IOrTest 
+does Python3::ITest 
+does Python3::ITestNoCond { }
+
+our role Python3::IAndTest 
+does Python3::IOrTest {}
+
+our role Python3::INotTest 
+does Python3::IAndTest {}
+
+our role Python3::IComparison 
+does Python3::INotTest {}
+
+our role Python3::IStarExpr 
+does Python3::IComparison {}
 
 #-----------------------------
 our class Python3::Comment  {
@@ -68,7 +120,6 @@ our class Python3::Float     does Python3::IAtom  { has Str $.value is required;
 our class Python3::Imaginary does Python3::IAtom  { has Str $.value is required; }
 
 #-----------------------------
-
 our class Python3::DotName does Python3::ITrailer  {
     has Python3::Name $.name is required;
 }
@@ -88,7 +139,6 @@ our class Python3::SubscriptList does Python3::ITrailer  {
 }
 
 #-----------------------------
-
 our class Python3::AugmentedAtom 
 does Python3::IAugmentedAtom  {
     has Python3::IAtom    $.atom is required;
@@ -154,7 +204,6 @@ our class Python3::ArithExpr does Python3::IArithExpr  {
     has Python3::IArithOperand @.operands is required;
 }
 
-our role Python3::ShiftOperand  { }
 
 our class Python3::LeftShiftOperand 
 does Python3::ShiftOperand  {
@@ -183,8 +232,10 @@ our class Python3::OrExpr does Python3::IOrExpr  {
     has Python3::IXorExpr @.operands is required;
 }
 
-our class Python3::StarExpr does Python3::ITestOrStarExpr  {
-    has Bool            $.has-star is required;
+our class Python3::StarExpr 
+does Python3::IStarExpr
+does Python3::ITestOrStarExpr  {
+    has Bool             $.has-star is required;
     has Python3::IOrExpr $.or-expr  is required;
 }
 
@@ -193,44 +244,47 @@ our class Python3::TestListStarExpr  {
 }
 
 our class Python3::ExprList  {
-    has Python3::StarExpr @.items is required;
+    has Python3::IStarExpr @.items is required;
 }
 
 our class Python3::CompOp  {
     has Str $.op is required;
 }
 
-our class Python3::Comparison does Python3::ITest  {
-    has Python3::StarExpr @.star-exprs is required;
-    has Python3::CompOp   @.comp-ops   is required;
+our class Python3::ComparisonOperand {
+    has Python3::CompOp   $.comp-op is required;
+    has Python3::IStarExpr $.star-expr is required;
 }
 
-our class Python3::NotTest does Python3::ITest  {
+our class Python3::Comparison 
+does Python3::IComparison
+does Python3::ITest {
+    has Python3::IStarExpr          $.base     is required;
+    has Python3::ComparisonOperand @.operands is required;
+}
+
+our class Python3::NotTest 
+does Python3::INotTest  {
     has Int $.not-count is required;
-    has Python3::Comparison $.comparison is required;
+    has Python3::IComparison $.comparison is required;
 }
 
-our class Python3::AndTest does Python3::ITest  {
-    has Python3::NotTest @.operands is required;
+our class Python3::AndTest 
+does Python3::IAndTest  
+{
+    has Python3::INotTest @.operands is required;
     has Python3::Comment @.comments;
 }
 
 our class Python3::OrTest 
-does Python3::ITest 
-does Python3::ITestNoCond
+does Python3::IOrTest 
  {
-    has Python3::AndTest @.operands is required;
+    has Python3::IAndTest @.operands is required;
     has Python3::Comment @.comments;
-}
-
-our class Python3::BasicTest does Python3::ITest  {
-    has Python3::OrTest $.or-test is required;
 }
 
 
 #-----------------------------
-our role Python3::CompIter  { }
-
 our class Python3::CompIf does Python3::CompIter  {
     has Python3::ITestNoCond $.test-nocond is required;
     has Python3::CompIter   $.comp-iter;
@@ -238,7 +292,7 @@ our class Python3::CompIf does Python3::CompIter  {
 
 our class Python3::CompFor does Python3::CompIter  {
     has Python3::ExprList $.exprlist is required;
-    has Python3::OrTest   $.or-test  is required;
+    has Python3::IOrTest   $.or-test  is required;
     has Python3::CompIter $.comp-iter;
 }
 
@@ -303,7 +357,6 @@ our class Python3::Set       does Python3::IDictOrSet  {
 }
 
 #----------------------------
-
 our class Python3::VfpDef  {
     has Python3::Name  $.name is required;
     has Python3::ITest $.test;
@@ -378,7 +431,6 @@ our class Python3::YieldExpr does Python3::IParensInner  {
 }
 
 #------------------------------------
-
 our class Python3::ExprEquals does Python3::ISmallStmt  {
     has $.lhs       is required;
     has @.rhs-stack is required;
@@ -439,8 +491,6 @@ our class Python3::Del does Python3::ISmallStmt  {
 }
 
 #---------------------------------------
-our role Python3::Suite  { }
-
 our class Python3::SimpleSuite does Python3::Suite does Python3::IStmt  {
     has Python3::ISmallStmt @.stmts is required;
     has Python3::Comment    $.comment;
@@ -481,7 +531,7 @@ does Python3::IDecoratedItem  {
     has Python3::TypedArgList 
         $.parameters is required;
 
-    has Python3::Suite $.suite is required;
+    has Str $.suite is required;
     has Python3::ITest $.test;
 }
 
@@ -532,8 +582,6 @@ our class Python3::While does Python3::ICompoundStmt  {
 }
 
 #-----------------------------
-our role Python3::TryControlSuite  {}
-
 our class Python3::ExceptClause  {
     has Python3::Comment @.comments;
     has Python3::Suite   $.suite is required;
@@ -558,14 +606,12 @@ our class Python3::Try does Python3::ICompoundStmt  {
 }
 
 #-----------------------------
-our role Python3::WithItem  { }
-
 our class Python3::WithItemBasic does Python3::WithItem  { 
     has Python3::ITest $.test is required;
 }
 
 our class Python3::WithItemAs    does Python3::WithItem  { 
-    has Python3::ITest  $.test is required;
+    has Python3::ITest   $.test is required;
     has Python3::IOrExpr $.or-expr is required;
 }
 
@@ -577,7 +623,7 @@ our class Python3::With does Python3::ICompoundStmt  {
 
 our class Python3::Tfpdef  {
     has Python3::Name  $.name is required;
-    has Python3::ITest $.test ;
+    has Python3::ITest $.test;
 }
 
 our class Python3::AugmentedTfpdef  {
@@ -585,3 +631,4 @@ our class Python3::AugmentedTfpdef  {
     has Python3::ITest   $.test ;
     has Python3::Comment @.comments;
 }
+
