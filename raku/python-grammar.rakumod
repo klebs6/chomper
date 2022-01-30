@@ -165,8 +165,8 @@ our role Python3ShortBytes {
     }
 
     proto regex SHORT_BYTES { * }
-    regex SHORT_BYTES:sym<SINGLE_QUOTED> { <SINGLE_QUOTED_SHORT_BYTES> }
-    regex SHORT_BYTES:sym<DOUBLE_QUOTED> { <DOUBLE_QUOTED_SHORT_BYTES> }
+    regex SHORT_BYTES:sym<single> { <SINGLE_QUOTED_SHORT_BYTES> }
+    regex SHORT_BYTES:sym<double> { <DOUBLE_QUOTED_SHORT_BYTES> }
 
     token SHORT_BYTES_CHAR_NO_SINGLE_QUOTE {
         || <[ \x[0000] .. \x[0009] ]>
@@ -187,6 +187,10 @@ our role Python3ShortBytes {
 
 our role Python3LongBytes {
 
+    proto regex LONG_BYTES { * }
+    regex LONG_BYTES:sym<single> { <.ws> <SINGLE_QUOTED_LONG_BYTES> <.ws> }
+    regex LONG_BYTES:sym<double> { <.ws> <DOUBLE_QUOTED_LONG_BYTES> <.ws> }
+
     regex SINGLE_QUOTED_LONG_BYTES {
         "'''" <LONG_BYTES_INNER> "'''"
     }
@@ -198,10 +202,6 @@ our role Python3LongBytes {
     regex LONG_BYTES_INNER {
         <LONG_BYTES_ITEM>*? 
     }
-
-    proto regex LONG_BYTES { * }
-    regex LONG_BYTES:sym<SINGLE_QUOTED> { <SINGLE_QUOTED_LONG_BYTES> }
-    regex LONG_BYTES:sym<DOUBLE_QUOTED> { <DOUBLE_QUOTED_LONG_BYTES> }
 
     token LONG_BYTES_ITEM {
         | <BYTES_ESCAPE_SEQ>
@@ -215,6 +215,10 @@ our role Python3LongBytes {
 }
 
 our role Python3ShortString {
+
+    proto regex SHORT_STRING { * }
+    regex SHORT_STRING:sym<single> { <.ws> <SINGLE_QUOTED_SHORT_STRING> <.ws> }
+    regex SHORT_STRING:sym<double> { <.ws> <DOUBLE_QUOTED_SHORT_STRING> <.ws> }
 
     regex SINGLE_QUOTED_SHORT_STRING {
          "'"
@@ -241,10 +245,6 @@ our role Python3ShortString {
             ||    <-[ \\ \r \n " ]>
         ]*
     }
-
-    proto token SHORT_STRING { * }
-    token SHORT_STRING:sym<SINGLE_QUOTED> { <SINGLE_QUOTED_SHORT_STRING> }
-    token SHORT_STRING:sym<DOUBLE_QUOTED> { <DOUBLE_QUOTED_SHORT_STRING> }
 }
 
 our role Python3LongString {
@@ -274,8 +274,8 @@ our role Python3LongString {
     }
 
     proto token LONG_STRING { * }
-    token LONG_STRING:sym<SINGLE_QUOTED> { <SINGLE_QUOTED_LONG_STRING> }
-    token LONG_STRING:sym<DOUBLE_QUOTED> { <DOUBLE_QUOTED_LONG_STRING> }
+    token LONG_STRING:sym<single> { <SINGLE_QUOTED_LONG_STRING> }
+    token LONG_STRING:sym<double> { <DOUBLE_QUOTED_LONG_STRING> }
 
     token LONG_STRING_ITEM {
         | <LONG_STRING_CHAR>
@@ -1635,7 +1635,7 @@ does Python3Keywords {
     rule parens-inner:sym<listmaker> { <listmaker> }
 
     rule strings {
-        <string>+ % \s 
+        <string> {$*opened++} <string>* {$*opened--}
     }
 
     proto rule listmaker { * }

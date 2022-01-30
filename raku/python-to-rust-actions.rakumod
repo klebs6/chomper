@@ -1,6 +1,5 @@
 use python3-translate;
 use python3-model;
-
 our sub get-compound-comments($/) {
 
     my $comments = $<COMMENT>>>.made;
@@ -90,9 +89,10 @@ our role Python3::ElseActions {
 our role Python3::CompoundStmtActions {
 
     method compound-stmt:sym<while>($/) {
+        my $comment = $<COMMENT_NONEWLINE>.made // Nil;
         make Python3::While.new(
             test     => $<test>.made,
-            comments => [$<COMMENT_NONEWLINE>.made // Nil],
+            comments => $comment ?? [$comment] !! [],
             suite    => $<suite>.made,
             else     => $<else-suite>.made // Nil,
         )
@@ -170,7 +170,7 @@ our role Python3::WithStmtActions {
     method with-item:sym<as>($/) {
         make Python3::WithItemAs.new(
             test => $<test>.made,
-            expr => $<expr>.made,
+            or-expr => $<expr>.made,
         )
     }
 }
@@ -206,14 +206,14 @@ our role Python3::StringActions {
     method long-bytes($/)   { make $<LONG_BYTES>.made }
     method short-bytes($/)  { make $<SHORT_BYTES>.made }
 
-    method LONG_STRING:sym<SINGLE_QUOTED>($/)  { make $<SINGLE_QUOTED_LONG_STRING>.made  }
-    method LONG_STRING:sym<DOUBLE_QUOTED>($/)  { make $<DOUBLE_QUOTED_LONG_STRING>.made  }
-    method SHORT_STRING:sym<SINGLE_QUOTED>($/) { make $<SINGLE_QUOTED_SHORT_STRING>.made }
-    method SHORT_STRING:sym<DOUBLE_QUOTED>($/) { make $<DOUBLE_QUOTED_SHORT_STRING>.made }
-    method LONG_BYTES:sym<SINGLE_QUOTED>($/)   { make $<SINGLE_QUOTED_LONG_BYTES>.made   }
-    method LONG_BYTES:sym<DOUBLE_QUOTED>($/)   { make $<DOUBLE_QUOTED_LONG_BYTES>.made   }
-    method SHORT_BYTES:sym<SINGLE_QUOTED>($/)  { make $<SINGLE_QUOTED_SHORT_BYTES>.made  }
-    method SHORT_BYTES:sym<DOUBLE_QUOTED>($/)  { make $<DOUBLE_QUOTED_SHORT_BYTES>.made  }
+    method LONG_STRING:sym<single>($/)  { make $<SINGLE_QUOTED_LONG_STRING>.made  }
+    method LONG_STRING:sym<double>($/)  { make $<DOUBLE_QUOTED_LONG_STRING>.made  }
+    method SHORT_STRING:sym<single>($/) { make $<SINGLE_QUOTED_SHORT_STRING>.made }
+    method SHORT_STRING:sym<double>($/) { make $<DOUBLE_QUOTED_SHORT_STRING>.made }
+    method LONG_BYTES:sym<single>($/)   { make $<SINGLE_QUOTED_LONG_BYTES>.made   }
+    method LONG_BYTES:sym<double>($/)   { make $<DOUBLE_QUOTED_LONG_BYTES>.made   }
+    method SHORT_BYTES:sym<single>($/)  { make $<SINGLE_QUOTED_SHORT_BYTES>.made  }
+    method SHORT_BYTES:sym<double>($/)  { make $<DOUBLE_QUOTED_SHORT_BYTES>.made  }
 
     #-------
     method DOUBLE_QUOTED_LONG_STRING($/) { make $<DOUBLE_QUOTED_LONG_STRING_INNER>.made }
@@ -494,7 +494,7 @@ our role Python3::FunctionActions {
     }
 
     method parenthesized-typedarglist($/) {
-        make $/<typedargslist>.made
+        make $/<typedargslist>.made // Nil
     }
 
     method typedargslist-kwargs($/) {
@@ -521,7 +521,7 @@ our role Python3::FunctionActions {
         make Python3::TypedArgList.new(
             basic-args => [],
             star-args  => [],
-            kw-args    => $<typeargslist-kwargs>.made,
+            kw-args    => $<typedargslist-kwargs>.made,
         )
     }
 
@@ -675,7 +675,7 @@ our role Python3::ArgListActions {
     method arglist:sym<just-star-args>($/) {
         make Python3::ArgList.new(
             basic-args => [],
-            star-args => [ $<test>.made ],
+            star-args => [ Python3::Argument.new(test => $<test>.made) ],
             kwargs    => [],
         )
     }
@@ -898,37 +898,43 @@ our role Python3::SmallStmtActions {
         make Python3::ExprEquals.new(
             lhs       => $<testlist-star-expr>.made,
             rhs-stack => $rhs,
+            text      => $/.Str,
         )
     }
 
     method small-stmt:sym<return>($/) {
         make Python3::Return.new(
             testlist => $<testlist>.made // Nil,
+            text     => $/.Str,
         )
     }
 
     method small-stmt:sym<raise>($/) {
         make Python3::Raise.new(
             clause => $<raise-clause>.made // Nil,
+            text   => $/.Str,
         )
     }
 
 
     method small-stmt:sym<import-name>($/) {
         make Python3::ImportName.new(
-            names => $<dotted-as-names>.made
+            names => $<dotted-as-names>.made,
+            text  => $/.Str,
         )
     }
 
     method small-stmt:sym<nonlocal>($/) {
         make Python3::Nonlocal.new(
             names => $/<NAME>>>.made,
+            text  => $/.Str,
         )
     }
 
     method small-stmt:sym<assert>($/) {
         make Python3::Assert.new(
             tests => $/<test>>>.made,
+            text  => $/.Str,
         )
     }
 
@@ -945,7 +951,10 @@ our role Python3::SmallStmtActions {
     }
 
     method small-stmt:sym<yield>($/) {
-        make $<yield-expr>.made
+        make Python3::Yield.new(
+            expr => $<yield-expr>.made,
+            text => $/.Str,
+        )
     }
 
     method small-stmt:sym<import-from>($/) {
@@ -954,13 +963,15 @@ our role Python3::SmallStmtActions {
 
     method small-stmt:sym<global>($/) {
         make Python3::Global.new(
-            names => $<NAME>>>.made
+            names => $<NAME>>>.made,
+            text  => $/.Str,
         )
     }
 
     method small-stmt:sym<del>($/) {
         make Python3::Del.new(
             exprs => $<exprlist>.made,
+            text  => $/.Str,
         )
     }
 }
@@ -1024,6 +1035,7 @@ does Python3::VarArgsListActions
         make Python3::StmtWithComments.new(
             stmt     => $<stmt>.made,
             comments => $<COMMENT>>>.made,
+            text     => $/.Str,
         )
     }
 
@@ -1110,6 +1122,7 @@ does Python3::VarArgsListActions
         make Python3::ImportFrom.new(
             src    => $<import-from-src>.made,
             target => $<import-from-target>.made,
+            text   => $/.Str,
         )
     }
 
@@ -1412,10 +1425,10 @@ does Python3::VarArgsListActions
     }
 
     method subscript:sym<slice>($/) {
-        make Python3::SubscriptList.new(
-            test0    => $<test>[0].made  // Nil,
-            test1    => $<test>[1].made  // Nil,
-            slice-op => $<slice-op>.made // Nil,
+        make Python3::Slice.new(
+            test0    => $<test>>>.made[0] // Nil,
+            test1    => $<test>>>.made[1] // Nil,
+            slice-op => $<slice-op>.made  // Nil,
         )
     }
 

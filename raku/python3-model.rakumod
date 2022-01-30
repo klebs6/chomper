@@ -1,6 +1,7 @@
 use snake-case;
-use indent-rust-named-type-list;
+use case;
 use wrap-body-todo;
+use indent-rust-named-type-list;
 
 our sub collapse-double-newlines($text) {
     $text.subst(:g, "\n\n","\n")
@@ -13,6 +14,23 @@ our sub convert-type-to-rust($type) {
     );
 
     %typemap{$type} // $type
+}
+
+our sub create-function(
+    Str :$comment,
+    Bool :$private,
+    Str  :$name,
+    Str  :$rust-args,
+    :$optional-initializers,
+    Str  :$body) {
+    qq:to/END/
+
+    {$comment}
+    {$private ?? "" !! "pub"} fn {$name}($rust-args) \{
+        {$optional-initializers}
+        {wrap-body-todo($body, python => True)}
+    \}
+    END
 }
 
 our role Python3::IFuncDef    {  }
@@ -148,9 +166,9 @@ our class Python3::Comment  {
 our class Python3::Strings   does Python3::IAtom  { has Str @.items is required; }
 our class Python3::Name      does Python3::IAtom  { has Str $.value is required; }
 our class Python3::Ellipsis  does Python3::IAtom  {}
-our class Python3::False     does Python3::IAtom  {}
-our class Python3::True      does Python3::IAtom  {}
-our class Python3::None      does Python3::IAtom  {}
+our class Python3::False     does Python3::IAtom  { has Str $.value = "false" }
+our class Python3::True      does Python3::IAtom  { has Str $.value = "true" }
+our class Python3::None      does Python3::IAtom  { has Str $.value = "None" }
 our class Python3::Integer   does Python3::IAtom  { has Str $.value is required; }
 our class Python3::Float     does Python3::IAtom  { has Str $.value is required; }
 our class Python3::Imaginary does Python3::IAtom  { has Str $.value is required; }
@@ -478,7 +496,7 @@ our class Python3::ImportDots  {
 }
 
 our class Python3::DottedName  {
-    has Str @.names is required;
+    has Python3::Name @.names is required;
 }
 
 our class Python3::DottedAsName  {
@@ -515,21 +533,27 @@ our class Python3::YieldExpr does Python3::IParensInner  {
 our class Python3::ExprEquals does Python3::ISmallStmt  {
     has $.lhs       is required;
     has @.rhs-stack is required;
+    has Str $.text is required;
 
     method is-assign-to-self( --> Bool ) {
         self.lhs.operands[0]
-
     }
+}
+
+our sub assign-item-to-lhs(:$lhs, :$item) {
+    "assignment, {:$lhs.gist}, {:$item.gist}"
 }
 
 our class Python3::ExprAugAssign does Python3::ISmallStmt  {
     has $.lhs is required;
     has $.op  is required;
     has $.rhs is required;
+    has Str $.text is required;
 }
 
 our class Python3::Return does Python3::ISmallStmt  {
     has Python3::TestList $.testlist;
+    has Str $.text is required;
 }
 
 our class Python3::RaiseClause does Python3::ISmallStmt  {
@@ -539,18 +563,22 @@ our class Python3::RaiseClause does Python3::ISmallStmt  {
 
 our class Python3::Raise does Python3::ISmallStmt  {
     has Python3::RaiseClause $.clause;
+    has Str $.text is required;
 }
 
 our class Python3::ImportName does Python3::ISmallStmt  {
     has Python3::DottedAsName @.names is required;
+    has Str $.text is required;
 }
 
 our class Python3::Nonlocal does Python3::ISmallStmt  {
     has Str @.names is required;
+    has Str $.text is required;
 }
 
 our class Python3::Assert does Python3::ISmallStmt  {
     has @.tests is required;
+    has Str $.text is required;
 }
 
 our class Python3::Pass     does Python3::ISmallStmt  { }
@@ -561,19 +589,23 @@ our class Python3::Continue does Python3::ISmallStmt  { }
 
 our class Python3::Yield does Python3::ISmallStmt  {
     has Python3::YieldExpr $.expr is required;
+    has Str $.text is required;
 }
 
 our class Python3::ImportFrom does Python3::ISmallStmt  {
     has Python3::ImportFromSrc    $.src    is required;
     has Python3::ImportFromTarget $.target is required;
+    has Str $.text is required;
 }
 
 our class Python3::Global does Python3::ISmallStmt  {
     has Str @.names is required;
+    has Str $.text is required;
 }
 
 our class Python3::Del does Python3::ISmallStmt  {
     has @.exprs is required;
+    has Str $.text is required;
 }
 
 #---------------------------------------
@@ -582,23 +614,32 @@ does Python3::Suite
 does Python3::IStmt  {
     has Python3::ISmallStmt @.stmts is required;
     has Python3::Comment    $.comment;
-    has Str $.text is required;
+    has Str $.text is required is rw;
 
     method toplevel-standard-python-functions { [] }
     method toplevel-python-test-functions { [] }
     method toplevel-dunder-functions { [] }
     method toplevel-python-functions { [] }
+
+    method recalculate-text {  
+        $.text = @.stmts>>.text.join("\n")
+    }
 }
 
 our class Python3::StmtWithComments 
 does Python3::IStmt  {
     has Python3::IStmt   $.stmt is required;
     has Python3::Comment @.comments is required;
+    has Str $.text is required;
 }
 
 our class Python3::StmtSuite does Python3::Suite  {
     has Python3::StmtWithComments @.stmts is required;
-    has Str $.text is required;
+    has Str $.text is required is rw;
+
+    method recalculate-text {  
+        $.text = @.stmts>>.text.join("")
+    }
 
     method toplevel-python-functions {
         @.stmts.List.grep({ $_.stmt ~~ Python3::IFuncDef }).map: { $_.stmt }
@@ -636,11 +677,39 @@ our class Python3::StmtSuite does Python3::Suite  {
 }
 
 #---------------------------------------
+#TODO: might need to be more robust
+our sub extract-rust-comment-from-suite($suite is rw, :$extra = "") {
+
+    my $first-stmt = $suite.stmts[0].stmt;
+
+    if $first-stmt ~~ Python3::SimpleSuite {
+
+        $first-stmt = $first-stmt.stmts[0];
+
+        if $first-stmt ~~ Python3::ExprEquals {
+            my $first-lhs-operand = $first-stmt.lhs.operands[0];
+            if $first-lhs-operand ~~ Python3::Strings {
+                my $text = $first-lhs-operand.items.join("\n");
+                $suite.stmts = $suite.stmts[1..*];
+                $suite.recalculate-text();
+                return qq:to/END/;
+                /**
+                $text
+                {$extra}
+                */
+                END
+            } 
+        } 
+    }
+
+    ""
+}
+
 our class Python3::Classdef 
 does Python3::ICompoundStmt
 does Python3::IDecoratedItem  {
     has Python3::Name    $.name is required;
-    has Python3::Suite   $.suite is required;
+    has Python3::Suite   $.suite is required is rw;
     has Python3::ArgList $.arglist;
     has Python3::Comment $.comment;
 
@@ -648,38 +717,8 @@ does Python3::IDecoratedItem  {
         $.name.value
     }
 
-    #TODO: might need to be more robust
     method rust-comment-from-suite {
-
-        my $first-stmt = $.suite.stmts[0].stmt;
-
-        if $first-stmt ~~ Python3::SimpleSuite {
-
-            $first-stmt = $first-stmt.stmts[0];
-
-            if $first-stmt ~~ Python3::ExprEquals {
-                my $first-lhs-operand = $first-stmt.lhs.operands[0];
-                if $first-lhs-operand ~~ Python3::Strings {
-                    my $text = $first-lhs-operand.items.join("\n");
-                    return qq:to/END/;
-                    /**
-                    $text
-                    {self.toplevel-rust-comment}
-                    */
-                    END
-                } else {
-                    say "-------inner";
-                    say $first-lhs-operand;
-                    die "BUG";
-                }
-            } else {
-                say "-------outer";
-                say $first-stmt;
-                die "BUG";
-            }
-        }
-
-        ""
+        extract-rust-comment-from-suite($.suite, extra => self.toplevel-rust-comment())
     }
 
     method toplevel-rust-comment {
@@ -797,32 +836,69 @@ does Python3::IDecoratedItem  {
         }
     }
 
-    method rust-impl-block {
+    method toplevel-stmts {
 
-        my @function-scaffolds = 
-        self.rust-function-scaffolds(); 
+        my @toplevel-assignments;
+        my @misc-class-stmts;
 
-        if @function-scaffolds.elems {
-            qq:to/END/
-            impl {self.rust-struct-name()} \{
-            {@function-scaffolds.join("\n").indent(4)}
+        do if $.suite ~~ Python3::StmtSuite {
+
+            #this will ignore Classdef and
+            #Funcdef, just taking SimpleSuite
+            do for $.suite.stmts.map: { .stmt } {
+                given $_ {
+                    when Python3::SimpleSuite {
+                        my $stmt = $_.stmts[0];
+                        if $stmt ~~ Python3::ExprEquals {
+                            @toplevel-assignments.push: $stmt;
+                        } else {
+                            unless $stmt ~~ Python3::Pass {
+                                @misc-class-stmts.push: $stmt;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        (@toplevel-assignments, @misc-class-stmts)
+    }
+
+    method rust-static-members {
+
+        my ($toplevel-assignments, $misc-class-stmts) = 
+        self.toplevel-stmts();
+
+        if $toplevel-assignments.List.elems {
+            qq:to/END/.chomp
+            lazy_static!\{
+
+                /*
+            {$toplevel-assignments.List>>.text.join("\n").indent(4)}
+                */
             \}
             END
         }
     }
 
-    method rust-static-members {
-        []
-    }
-
     method misc-class-stmts {
-        []
+        my ($toplevel-assignments, $misc-class-stmts) = self.toplevel-stmts();
+        if $misc-class-stmts.List.elems {
+            create-function(
+                comment               => "//this was toplevel code in the python class",
+                private               => False,
+                name                  => "class_single_initialization",
+                rust-args             => "",
+                optional-initializers => "",
+                body                  => $misc-class-stmts.List.map({ .text }).join("\n")
+            )
+        }
     }
 
     method translate-to-rust {
 
         my $rust-comment     = self.rust-comment-from-suite();
-        my $rust-struct-name = self.rust-struct-name();
+        my $rust-struct-name = snake-to-camel(self.rust-struct-name());
 
         my @rust-struct-args = [
             |self.rust-struct-args(),
@@ -830,11 +906,9 @@ does Python3::IDecoratedItem  {
         ];
 
         my @rust-member-function-scaffolds = self.rust-function-scaffolds();
-        my @rust-static-function-scaffolds = self.rust-static-members();
 
         my @rust-impls = [
             |@rust-member-function-scaffolds,
-            |@rust-static-function-scaffolds
         ];
 
         my @rust-special-functions = self.rust-special-functions();
@@ -889,11 +963,11 @@ does Python3::IDecoratedItem  {
         }
 
         sub format-static-members-for-module(@static-members) {
-            "static-members"
+            @static-members>>.gist.join("\n")
         }
 
         sub format-misc-class-stmts-for-module(@misc-class-stmts) {
-            "misc-stmts"
+            @misc-class-stmts>>.gist.join("\n")
         }
 
         sub create-rust-module(
@@ -935,6 +1009,7 @@ does Python3::IDecoratedItem  {
             ) {
             qq:to/END/
             impl $struct-name \{
+
             {@impls.join("\n").indent(4)}
             \}
             END
@@ -971,7 +1046,7 @@ does Python3::IDecoratedItem  {
         );
 
         #---------------------
-        my $result = qq:to/END/;
+        my $result = qq:to/END/.chomp;
         $struct-def
         $module
         $special-functions
@@ -996,6 +1071,7 @@ our class Python3::TypedArgList  {
     }
 
     method convert-to-rust {
+
         my @rust-args = [
             |do for @.basic-args { $_.as-rust() }
             |do for @.star-args  { $_.as-rust(star => True) }
@@ -1012,7 +1088,6 @@ our class Python3::TypedArgList  {
                 my $name    = $_.tfpdef.name.value;
 
                 "let {$_.as-rust(force-not-default => True)} = {$name}.unwrap_or($default);"
-            #"let {$_.as-rust() = {$_.tfpdef.name.value}.unwrap_or({default-get-str($_.default)});"
             }
         }
     }
@@ -1055,21 +1130,27 @@ does Python3::IDecoratedItem  {
     has Python3::TypedArgList 
         $.parameters is required;
 
-    has Python3::Suite $.suite is required;
+    has Python3::Suite $.suite is required is rw;
     has Python3::ITest $.test;
 
     method get-rust-scaffold {
 
-        my $optional-initializers = $.parameters.optional-initializers();
+        my $comment               = self.rust-comment-from-suite();
+        my $optional-initializers = $.parameters ?? $.parameters.optional-initializers() !! "";
         my $body                  = $.suite.text;
-        my $rust-args             = $.parameters.convert-to-rust();
+        my $rust-args             = $.parameters ?? $.parameters.convert-to-rust() !! "";
 
-        qq:to/END/
-        {$.private ?? "" !! "pub"} fn {snake-case($.name.value)}($rust-args) \{
-            {$optional-initializers}
-            {wrap-body-todo($body)}
-        \}
-        END
+        create-function(
+            :$comment,
+            :$.private,
+            name => snake-case($.name.value),
+            :$rust-args,
+            :$optional-initializers,
+            :$body)
+    }
+
+    method rust-comment-from-suite {
+        extract-rust-comment-from-suite($.suite)
     }
 }
 
@@ -1078,8 +1159,9 @@ our class Python3::DunderFunc::Init does Python3::IDunderFunc {
     method translate-as-default-fn($cls-name) {
         qq:to/END/
         impl Default for {$cls-name} \{
+
             fn default() -> Self \{
-                {wrap-body-todo($.suite.text)}
+                {wrap-body-todo($.suite.text, python => True)}
             \}
         \}
         END
@@ -1096,9 +1178,10 @@ our class Python3::DunderFunc::Init does Python3::IDunderFunc {
 
         qq:to/END/
         impl From<$src-type> for {$cls-name} \{
+
             fn from({$src-name}: $src-type) -> Self \{
                 $optional-initializers
-                {wrap-body-todo($.suite.text)}
+                {wrap-body-todo($.suite.text, python => True)}
             \}
         \}
         END
@@ -1248,7 +1331,7 @@ our sub pymodel-to-rust-type($x) {
         when Python3::True      { "bool" }
         when Python3::Float     { "f32" }
         when Python3::Imaginary { "Complex" }
-        when Python3::None      { "Option<PyObj>" }
+        when Python3::None      { "PyObj" }
         when Python3::Integer   { "i32" }
         when Python3::OrExpr    { pymodel-to-rust-type($_.operands[0]) }
         default                 { "PyObj" }
@@ -1327,6 +1410,7 @@ our sub do-rust-struct-members-from-python-funcdefs(Python3::Classdef $self) {
 
     my @funcdefs = $self.suite.toplevel-python-functions();
 
+    my $seen = SetHash.new;
     my @struct-members;
 
     sub get-member-name($augmented-atom) {
@@ -1341,7 +1425,11 @@ our sub do-rust-struct-members-from-python-funcdefs(Python3::Classdef $self) {
     sub process-self-atom($atom, $rhs) {
         my $name      = get-member-name($atom);
         my $rust-type = infer-rust-type($rhs);
-        @struct-members.push: "$name: $rust-type";
+
+        if $name !(elem) $seen {
+            $seen.set($name);
+            @struct-members.push: "$name: $rust-type";
+        }
     }
 
     multi sub handle(Python3::ISmallStmt $stmt) {
@@ -1349,15 +1437,22 @@ our sub do-rust-struct-members-from-python-funcdefs(Python3::Classdef $self) {
 
             #perhaps these two cases can be abstracted
             when Python3::ExprEquals {
-                if $_.lhs.operands.elems eq 1 {
-                    my $op0 = $_.lhs.operands[0];
-                    my $rhs = $_.rhs-stack[0];
-                    given $op0 {
-                        when Python3::AugmentedAtom {
-                            given $_.atom {
-                                when Python3::Name {
-                                    if $_.value ~~ "self" {
-                                        process-self-atom($op0, $rhs[0]);
+
+                my $expr-equals = $_;
+
+                #TODO: need handle testlist-star-expr
+
+                if $expr-equals.lhs.operands.elems eq 1 {
+                    my $op0 = $expr-equals.lhs.operands[0];
+                    my $rhs = $expr-equals.rhs-stack[0];
+                    if $rhs {
+                        given $op0 {
+                            when Python3::AugmentedAtom {
+                                given $_.atom {
+                                    when Python3::Name {
+                                        if $_.value ~~ "self" {
+                                            process-self-atom($op0, $rhs[0]);
+                                        }
                                     }
                                 }
                             }

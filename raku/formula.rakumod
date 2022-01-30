@@ -1,3 +1,4 @@
+use vbar;
 
 our class FormulaPNG::Workspace {
 
@@ -33,6 +34,12 @@ our class FormulaPNG::Workspace {
     method strip-eqn-delim {
 
         my $formula   = $!formula.chomp.trim;
+
+        #sometimes we parse the formula out of doc
+        #comments with leading bars
+        if each-line-has-leading-vbar($formula) {
+            $formula = $formula.subst(:g, rule { ^^ \| }, "");
+        }
 
         my $begin-eqn = '\begin{equation*}';
         my $end-eqn   = '\end{equation*}';

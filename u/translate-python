@@ -31,10 +31,16 @@ sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = True) {
 
     if $to-rust {
         for $parsed.made {
-            if $_ ~~ Python3::Classdef {
-                say $_.translate-to-rust;
-            } else {
-                say $_;
+            given $_ {
+                when Python3::Classdef {
+                    say $_.translate-to-rust;
+                }
+                when Python3::FuncDef {
+                    say $_.get-rust-scaffold;
+                }
+                default {
+                    say $_;
+                }
             }
         }
 
