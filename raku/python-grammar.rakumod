@@ -1481,7 +1481,7 @@ does Python3Keywords {
     token expr-equals-rhs:sym<testlist-star-expr> { <testlist-star-expr> }
 
     token small-stmt:sym<return>      { <RETURN> [\h+ <testlist>]? }
-    token small-stmt:sym<raise>       { <RAISE> \h+ <raise-clause>?  }
+    rule small-stmt:sym<raise>        { <RAISE> <raise-clause>?  }
     token small-stmt:sym<import-name> { <IMPORT> \h+ <dotted-as-names> }
     token small-stmt:sym<nonlocal>    { <NONLOCAL> \h+ <NAME> \h* [ <COMMA> \h+ <NAME> ]* }
     token small-stmt:sym<assert>      { <ASSERT> \h+  <test> \h* [ <COMMA> \h+ <test> ]? }
@@ -1493,8 +1493,8 @@ does Python3Keywords {
     token small-stmt:sym<global>      { <GLOBAL> \h+  <NAME> \h* [ <COMMA> \h+ <NAME> ]* }
     token small-stmt:sym<del>         { <DEL> \h+ <exprlist> }
 
-    token raise-clause {
-        <test> \h+ [ <FROM> \h+ <test> ]? 
+    rule raise-clause {
+        <test> [ <FROM> <test> ]? 
     }
 
     #<NEWLINE> <INDENT> <stmt>+ <DEDENT>
@@ -1734,10 +1734,6 @@ does Python3Keywords {
 
     rule dictorsetmaker:sym<set-comp> {
         <setmaker-item> <comp-for>
-    }
-
-    rule argument-comma-comment {
-        <argument> <comma-maybe-comment>
     }
 
     rule argument-comma-maybe-comment {

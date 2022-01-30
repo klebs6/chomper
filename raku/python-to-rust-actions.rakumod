@@ -498,7 +498,7 @@ our role Python3::FunctionActions {
     }
 
     method typedargslist-kwargs($/) {
-        make $<tfpdef>.made
+        make [ $<tfpdef>.made ]
     }
 
     method typedargslist:sym<full>($/) {
@@ -513,7 +513,7 @@ our role Python3::FunctionActions {
         make Python3::TypedArgList.new(
             basic-args => [],
             star-args  => $<star-args>.made,
-            kw-args    => Nil,
+            kw-args    => [],
         )
     }
 
@@ -529,7 +529,7 @@ our role Python3::FunctionActions {
         make Python3::TypedArgList.new(
             basic-args => $<just-basic-args>.made,
             star-args  => [],
-            kw-args    => Nil,
+            kw-args    => [],
         )
     }
 
@@ -537,7 +537,7 @@ our role Python3::FunctionActions {
         make Python3::TypedArgList.new(
             basic-args => $<just-basic-args-with-trailing-comment>.made,
             star-args  => $<star-args>.made,
-            kw-args    => Nil,
+            kw-args    => [],
         )
     }
 
@@ -617,40 +617,86 @@ our role Python3::ArgListActions {
         make $<arglist>.made // Nil
     }
 
+    method argument-comma-maybe-comment($/) {
+
+        my $maybe-comment = $<comma-maybe-comment>.made;
+
+        if $maybe-comment {
+            make Python3::CommentedArgument.new(
+                argument => $<argument>.made,
+                comments => $<comma-maybe-comment>.made,
+            )
+
+        } else {
+            make $<argument>.made
+        }
+    }
+
+    method argument:sym<test>($/) {
+        make Python3::DefaultArgument.new(
+            base    => $<test>[0].made,
+            default => $<test>[1].made,
+        )
+    }
+
+    method argument:sym<comp-for>($/) {
+        my $comp-for = $<comp-for>.made;
+        if $comp-for {
+            make Python3::CompForArgument.new(
+                test     => $<test>.made,
+                comp-for => $<comp-for>.made,
+            )
+        } else {
+            make Python3::Argument.new(
+                test => $<test>.made,
+            )
+        }
+    }
+
     method arglist:sym<just-basic>($/) {
         make Python3::ArgList.new(
             basic-args => [
                 |$<argument-comma-maybe-comment>>>.made,
                 $<argument>.made
-            ] 
+            ],
+            star-args => [],
+            kwargs    => [],
         )
     }
 
     method arglist:sym<just-basic-with-trailing-comment>($/) {
         make Python3::ArgList.new(
-            basic-args => $<argument-comma-maybe-comment>>>.made
+            basic-args => $<argument-comma-maybe-comment>>>.made,
+            star-args => [],
+            kwargs    => [],
         )
     }
 
     method arglist:sym<just-star-args>($/) {
         make Python3::ArgList.new(
-            star-args => [ $<test>.made ] 
+            basic-args => [],
+            star-args => [ $<test>.made ],
+            kwargs    => [],
         )
     }
 
     method arglist:sym<just-star-args2>($/) {
         make Python3::ArgList.new(
+            basic-args => [],
             star-args => [
                 $<test-comma-maybe-comment>.made, 
                 |$<argument-comma-maybe-comment>>>.made,
                 $<argument>.made
             ],
+            kwargs    => [],
         )
     }
 
     method arglist:sym<just-kwargs>($/) {
         make Python3::ArgList.new(
-            kwargs => $<arglist-kwargs>.made,
+            basic-args => [],
+            star-args  => [],
+            kwargs     => $<arglist-kwargs>.made,
         )
     }
 
@@ -658,6 +704,7 @@ our role Python3::ArgListActions {
         make Python3::ArgList.new(
             basic-args => $<argument-comma-maybe-comment>>>.made,
             star-args  => [ $<star-arg>.made ],
+            kwargs     => [],
         )
     }
 
@@ -673,6 +720,7 @@ our role Python3::ArgListActions {
         make Python3::ArgList.new(
             basic-args => $<argument-comma-maybe-comment>>>.made,
             star-args  => [ $<test-comma-maybe-comment>.made ],
+            kwargs     => [],
         )
     }
 
@@ -683,20 +731,23 @@ our role Python3::ArgListActions {
                 $<test-comma-maybe-comment>.made,
                 $<star>>>.made
             ],
+            kwargs     => [],
         )
     }
 
     method arglist:sym<basic-and-kwargs>($/) {
         make Python3::ArgList.new(
             basic-args => $<argument-comma-maybe-comment>>>.made,
+            star-args  => [],
             kwargs     => $<arglist-kwargs>.made,
         )
     }
 
     method arglist:sym<star-and-kwargs>($/) {
         make Python3::ArgList.new(
-            star-args => [$<test-comma-maybe-comment>.made, |$<argument-comma-maybe-comment>>>.made],
-            kwargs    => $<arglist-kwargs>.made,
+            basic-args => [],
+            star-args  => [$<test-comma-maybe-comment>.made, |$<argument-comma-maybe-comment>>>.made],
+            kwargs     => $<arglist-kwargs>.made,
         )
     }
 
@@ -718,7 +769,7 @@ our role Python3::ClassdefActions {
     method classdef($/) {
         make Python3::Classdef.new(
             name    => $<NAME>.made,
-            arglist => $/<parenthesized-arglist>.made // Nil,
+            arglist => $<parenthesized-arglist>.made // Nil,
             comment => $<COMMENT_NONEWLINE>.made      // Nil,
             suite   => $<suite>.made,
         )
@@ -852,7 +903,7 @@ our role Python3::SmallStmtActions {
 
     method small-stmt:sym<raise>($/) {
         make Python3::Raise.new(
-            clause => $/<raise-clause>.made // Nil,
+            clause => $<raise-clause>.made // Nil,
         )
     }
 
@@ -1022,9 +1073,10 @@ does Python3::VarArgsListActions
 
 
     method raise-clause($/) {
+        my $tests = $<test>>>.made;
         make Python3::RaiseClause.new(
-            test => $/<test>[0].made,
-            from => $/<test>[1].made // Nil,
+            test => $tests[0],
+            from => $tests[1] // Nil,
         )
     }
 

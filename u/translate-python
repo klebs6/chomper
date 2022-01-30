@@ -31,7 +31,11 @@ sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = True) {
 
     if $to-rust {
         for $parsed.made {
-            say $_.translate-to-rust;
+            if $_ ~~ Python3::Classdef {
+                say $_.translate-to-rust;
+            } else {
+                say $_;
+            }
         }
 
     } else {
