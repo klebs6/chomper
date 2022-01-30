@@ -879,6 +879,12 @@ our role Python3::SmallStmtActions {
         make $<testlist>.made
     }
 
+    method testlist($/) {
+        make Python3::TestList.new(
+            tests => $<test>>>.made
+        )
+    }
+
     method small-stmt:sym<expr-augassign>($/) {
         make Python3::ExprAugAssign.new(
             lhs  => $<testlist-star-expr>.made,

@@ -1182,7 +1182,7 @@ our class Python3::AugmentedTfpdef  {
     }
 }
 
-
+#----------------------------------------
 our sub do-rust-struct-members-from-python-funcdefs(Python3::Classdef $self) {
 
     my @funcdefs = $self.suite.toplevel-python-functions();
@@ -1207,26 +1207,42 @@ our sub do-rust-struct-members-from-python-funcdefs(Python3::Classdef $self) {
         }
     }
 
-    sub process-self-augmented-atom($augmented-atom, $rhs) {
-        my $name      = get-member-name($augmented-atom);
-        my $rust-type = infer-rust-type($rhs[0]);
+    sub process-self-atom($atom, $rhs) {
+        my $name      = get-member-name($atom);
+        my $rust-type = infer-rust-type($rhs);
         @struct-members.push: "$name: $rust-type";
     }
 
     multi sub handle(Python3::ISmallStmt $stmt) {
         given $stmt {
+
+            #perhaps these two cases can be abstracted
             when Python3::ExprEquals {
                 if $_.lhs.operands.elems eq 1 {
                     my $op0 = $_.lhs.operands[0];
                     my $rhs = $_.rhs-stack[0];
                     given $op0 {
                         when Python3::AugmentedAtom {
-                            say "op0: $op0";
                             given $_.atom {
                                 when Python3::Name {
                                     if $_.value ~~ "self" {
-                                        process-self-augmented-atom($op0, $rhs);
+                                        process-self-atom($op0, $rhs[0]);
                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            when Python3::ExprAugAssign {
+                my $op0 = $_.lhs.operands[0];
+                my $rhs = $_.rhs;
+                given $op0 {
+                    when Python3::AugmentedAtom {
+                        given $_.atom {
+                            when Python3::Name {
+                                if $_.value ~~ "self" {
+                                    process-self-atom($op0, $rhs.tests[0]);
                                 }
                             }
                         }
@@ -1314,8 +1330,6 @@ our sub do-rust-struct-members-from-python-funcdefs(Python3::Classdef $self) {
     }
 
     for @funcdefs.List -> $funcdef {
-        say "----------------------";
-        say $funcdef;
         for $funcdef.suite.stmts -> $stmt {
             handle($stmt);
         }
