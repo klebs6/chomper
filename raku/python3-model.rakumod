@@ -728,7 +728,7 @@ does Python3::IDecoratedItem  {
 
     method rust-struct-members-from-python-funcdefs {
         my @members = do-rust-struct-members-from-python-funcdefs(self);
-        self.format-type-list(@members)
+        @members
     }
 
     method rust-module-members( --> Array ) {
