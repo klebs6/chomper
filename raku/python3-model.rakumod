@@ -1,8 +1,18 @@
 use snake-case;
 use indent-rust-named-type-list;
+use wrap-body-todo;
 
 our sub collapse-double-newlines($text) {
     $text.subst(:g, "\n\n","\n")
+}
+
+our sub convert-type-to-rust($type) {
+
+    my %typemap = %(
+        float => "f32",
+    );
+
+    %typemap{$type} // $type
 }
 
 our role Python3::IFuncDef    {  }
@@ -572,6 +582,7 @@ does Python3::Suite
 does Python3::IStmt  {
     has Python3::ISmallStmt @.stmts is required;
     has Python3::Comment    $.comment;
+    has Str $.text is required;
 
     method toplevel-standard-python-functions { [] }
     method toplevel-python-test-functions { [] }
@@ -587,6 +598,7 @@ does Python3::IStmt  {
 
 our class Python3::StmtSuite does Python3::Suite  {
     has Python3::StmtWithComments @.stmts is required;
+    has Str $.text is required;
 
     method toplevel-python-functions {
         @.stmts.List.grep({ $_.stmt ~~ Python3::IFuncDef }).map: { $_.stmt }
@@ -635,9 +647,6 @@ does Python3::IDecoratedItem  {
     method rust-struct-name {
         $.name.value
     }
-    method rust-struct-name-as-module {
-        snake-case(self.rust-struct-name())
-    }
 
     #TODO: might need to be more robust
     method rust-comment-from-suite {
@@ -653,7 +662,7 @@ does Python3::IDecoratedItem  {
                 if $first-lhs-operand ~~ Python3::Strings {
                     my $text = $first-lhs-operand.items.join("\n");
                     return qq:to/END/;
-                    /*
+                    /**
                     $text
                     {self.toplevel-rust-comment}
                     */
@@ -768,7 +777,7 @@ does Python3::IDecoratedItem  {
 
         do for self.python-class-functions().List 
         -> $py-func {
-            $py-func.name.value
+            $py-func.get-rust-scaffold()
         }
     }
 
@@ -784,7 +793,7 @@ does Python3::IDecoratedItem  {
 
         do for self.python-class-special-functions().List 
         -> $py-func {
-            $py-func.translate-special-function-to-rust()
+            $py-func.translate-special-function-to-rust($.name.value)
         }
     }
 
@@ -908,7 +917,7 @@ does Python3::IDecoratedItem  {
         } 
 
         sub create-special($struct-name, $stmt) {
-            "special: $stmt"
+            $stmt
         }
 
         sub create-specials(
@@ -973,6 +982,10 @@ does Python3::IDecoratedItem  {
     }
 }
 
+our sub default-get-str($default) {
+    $default.operands[0].value
+}
+
 our class Python3::TypedArgList  {
     has Python3::AugmentedTfpdef @.basic-args;
     has Python3::AugmentedTfpdef @.star-args;
@@ -980,6 +993,28 @@ our class Python3::TypedArgList  {
 
     method is-first-parameter-self( --> Bool ) {
         @.basic-args[0].is-self();
+    }
+
+    method convert-to-rust {
+        my @rust-args = [
+            |do for @.basic-args { $_.as-rust() }
+            |do for @.star-args  { $_.as-rust(star => True) }
+            |do for @.kw-args    { $_.as-rust(kw   => True) }
+        ];
+        indent-rust-named-type-list(@rust-args)
+    }
+
+    method optional-initializers {
+        do for @.basic-args {
+
+            if $_.default {
+                my $default = default-get-str($_.default);
+                my $name    = $_.tfpdef.name.value;
+
+                "let {$_.as-rust(force-not-default => True)} = {$name}.unwrap_or($default);"
+            #"let {$_.as-rust() = {$_.tfpdef.name.value}.unwrap_or({default-get-str($_.default)});"
+            }
+        }
     }
 
     method count( --> Int ) {
@@ -1022,23 +1057,58 @@ does Python3::IDecoratedItem  {
 
     has Python3::Suite $.suite is required;
     has Python3::ITest $.test;
+
+    method get-rust-scaffold {
+
+        my $optional-initializers = $.parameters.optional-initializers();
+        my $body                  = $.suite.text;
+        my $rust-args             = $.parameters.convert-to-rust();
+
+        qq:to/END/
+        {$.private ?? "" !! "pub"} fn {snake-case($.name.value)}($rust-args) \{
+            {$optional-initializers}
+            {wrap-body-todo($body)}
+        \}
+        END
+    }
 }
 
 our class Python3::DunderFunc::Init does Python3::IDunderFunc {
 
-    method translate-as-default-fn {
-        "TODO: __init__ --> default-fn"
+    method translate-as-default-fn($cls-name) {
+        qq:to/END/
+        impl Default for {$cls-name} \{
+            fn default() -> Self \{
+                {wrap-body-todo($.suite.text)}
+            \}
+        \}
+        END
     }
 
-    method translate-as-from-fn {
-        "TODO: __init__ --> from-fn"
+    method translate-as-from-fn(
+        $cls-name, 
+        Python3::AugmentedTfpdef $src,
+        $optional-initializers) 
+    {
+        my ($src-name, $src-type) = $src.tfpdef.as-rust-name-type(
+            default => $src.default 
+        );
+
+        qq:to/END/
+        impl From<$src-type> for {$cls-name} \{
+            fn from({$src-name}: $src-type) -> Self \{
+                $optional-initializers
+                {wrap-body-todo($.suite.text)}
+            \}
+        \}
+        END
     }
 
-    method translate-as-standard-new-fn {
+    method translate-as-standard-new-fn($cls-name) {
         "TODO: __init__ --> standard-new-fn"
     }
 
-    method translate-dunder-init {
+    method translate-dunder-init($cls-name) {
 
         die if not $.parameters.is-first-parameter-self();
 
@@ -1046,40 +1116,42 @@ our class Python3::DunderFunc::Init does Python3::IDunderFunc {
 
         given $nargs {
             when 1 {
-                self.translate-as-default-fn()
+                self.translate-as-default-fn($cls-name)
             }
             when 2 {
-                self.translate-as-from-fn()
+                my $src = $.parameters.basic-args[1];
+                my $optional-initializers = $.parameters.optional-initializers();
+                self.translate-as-from-fn($cls-name, $src, $optional-initializers)
             }
             when 3..* {
-                self.translate-as-standard-new-fn()
+                self.translate-as-standard-new-fn($cls-name)
             }
         }
     }
 
-    method translate-special-function-to-rust {  
-        self.translate-dunder-init()
+    method translate-special-function-to-rust($cls-name) {  
+        self.translate-dunder-init($cls-name)
     }
 }
 
 our class Python3::DunderFunc::Repr does Python3::IDunderFunc {
-    method translate-special-function-to-rust { ... }
+    method translate-special-function-to-rust($cls-name) { ... }
 }
 
 our class Python3::DunderFunc::Add  does Python3::IDunderFunc {
-    method translate-special-function-to-rust { ... }
+    method translate-special-function-to-rust($cls-name) { ... }
 }
 
 our class Python3::DunderFunc::Sub  does Python3::IDunderFunc {
-    method translate-special-function-to-rust { ... }
+    method translate-special-function-to-rust($cls-name) { ... }
 }
 
 our class Python3::DunderFunc::Mul  does Python3::IDunderFunc {
-    method translate-special-function-to-rust { ... }
+    method translate-special-function-to-rust($cls-name) { ... }
 }
 
 our class Python3::DunderFunc::Div  does Python3::IDunderFunc {
-    method translate-special-function-to-rust { ... }
+    method translate-special-function-to-rust($cls-name) { ... }
 }
 
 #---------------------------------
@@ -1168,17 +1240,85 @@ our class Python3::With does Python3::ICompoundStmt  {
     has Python3::WithItem @.with-items is required;
 }
 
+our sub pymodel-to-rust-type($x) {
+    given $x {
+        when Python3::Name      { "PyObj" }
+        when Python3::Strings   { "String" }
+        when Python3::False     { "bool" }
+        when Python3::True      { "bool" }
+        when Python3::Float     { "f32" }
+        when Python3::Imaginary { "Complex" }
+        when Python3::None      { "Option<PyObj>" }
+        when Python3::Integer   { "i32" }
+        when Python3::OrExpr    { pymodel-to-rust-type($_.operands[0]) }
+        default                 { "PyObj" }
+    }
+}
+
 our class Python3::Tfpdef  {
     has Python3::Name  $.name is required;
-    has Python3::ITest $.test;
+    has Python3::ITest $.type;
+
+    method as-rust-name-type(:$default, Bool :$star, Bool :$kw ) {
+
+        if $star {
+            return [
+                $.name.value,
+                "&\[&PyObj\]"
+            ];
+        }
+
+        if $kw {
+            return [
+                $.name.value,
+                "HashMap<&str,PyObj>"
+            ];
+        }
+
+        my $type = do if so $.type {
+
+            convert-type-to-rust($.type)
+
+        } else {
+
+            $default 
+            ?? pymodel-to-rust-type($default)
+            !! 'PyObj'
+
+        };
+
+        [
+            $.name.value,
+            $type
+        ]
+    }
+
+    method as-rust(:$default = Nil, :$force-not-default, :$star = False, :$kw = False) {
+        my ($name, $type) = self.as-rust-name-type(:$default, :$star, :$kw);
+        $default && !$force-not-default
+        ??  "$name: Option<$type>"
+        !!  "$name: $type"
+    }
 }
 
 our class Python3::AugmentedTfpdef  {
+
     has Python3::Tfpdef  $.tfpdef is required;
-    has Python3::ITest   $.test ;
+    has Python3::ITest   $.default is required;
     has Python3::Comment @.comments;
+
     method is-self( --> Bool ) {
         $.tfpdef.name.value eq "self"
+    }
+
+    method as-rust( :$force-not-default = False, :$star = False, :$kw = False ) {
+        if self.is-self() {
+            "&mut self"
+        } else {
+            $.default
+            ?? $.tfpdef.as-rust(:$.default, :$force-not-default, :$star, :$kw)
+            !! $.tfpdef.as-rust(default => Nil, :$force-not-default, :$star, :$kw)
+        }
     }
 }
 
@@ -1193,18 +1333,9 @@ our sub do-rust-struct-members-from-python-funcdefs(Python3::Classdef $self) {
         $augmented-atom.trailers[0].name.value
     }
 
+
     sub infer-rust-type($rhs) {
-        given $rhs.operands[0] {
-            when Python3::Name      { "PyObj" }
-            when Python3::Strings   { "String" }
-            when Python3::False     { "bool" }
-            when Python3::True      { "bool" }
-            when Python3::Float     { "f32" }
-            when Python3::Imaginary { "Complex" }
-            when Python3::None      { "Option<PyObj>" }
-            when Python3::Integer   { "i32" }
-            default                 { "PyObj" }
-        }
+        pymodel-to-rust-type($rhs.operands[0])
     }
 
     sub process-self-atom($atom, $rhs) {

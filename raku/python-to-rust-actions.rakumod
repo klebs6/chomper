@@ -559,8 +559,8 @@ our role Python3::FunctionActions {
 
     method augmented-tfpdef($/) {
         make Python3::AugmentedTfpdef.new(
-            tfpdef => $<tfpdef>.made,
-            test   => $<test>.made // Nil,
+            tfpdef  => $<tfpdef>.made,
+            default => $<test>.made // Nil,
         )
     }
 
@@ -588,8 +588,8 @@ our role Python3::FunctionActions {
         make do if $first {
             [ 
                 Python3::AugmentedTfpdef.new(
-                    tfpdef => $first, 
-                    test   => Nil,
+                    tfpdef  => $first, 
+                    default => Nil,
                 ),
                 |$<augmented-tfpdef>>>.made 
             ]
@@ -606,7 +606,7 @@ our role Python3::FunctionActions {
     method tfpdef($/) {
         make Python3::Tfpdef.new(
             name => $<NAME>.made,
-            test => $<test>.made // Nil,
+            type => $<test>.made // Nil,
         )
     }
 }
@@ -977,7 +977,8 @@ our role Python3::SuiteActions {
 
     method stmt-suite($/) {
         make Python3::StmtSuite.new(
-            stmts => $/<stmt-maybe-comments>>>.made
+            stmts => $/<stmt-maybe-comments>>>.made,
+            text  => $/.Str,
         )
     }
 
@@ -985,6 +986,7 @@ our role Python3::SuiteActions {
         make Python3::SimpleSuite.new(
             stmts   => $<simple-stmt>.made,
             comment => $<COMMENT>.made // Nil,
+            text    => $/.Str,
         )
     }
 }
