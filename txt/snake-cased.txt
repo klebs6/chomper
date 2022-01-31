@@ -1824,3 +1824,4 @@ __enter__ enter
 __exit__ exit
 __enter__ enter
 __exit__ exit
+LimitedParamBenchmark limited_param_benchmark

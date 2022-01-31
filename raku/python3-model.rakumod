@@ -1,42 +1,15 @@
 use snake-case;
+use python-doc-comment;
+use doxy-comment;
+use create-rust;
+use formatting;
 use case;
 use wrap-body-todo;
 use indent-rust-named-type-list;
 
-our sub collapse-double-newlines($text) {
-    $text.subst(:g, "\n\n","\n")
-}
-
-our sub convert-type-to-rust($type) {
-
-    my %typemap = %(
-        float => "f32",
-    );
-
-    %typemap{$type} // $type
-}
-
-our sub create-function(
-    Str :$comment,
-    Bool :$private,
-    Str  :$name,
-    Str  :$rust-args,
-    :$optional-initializers,
-    Str  :$body) {
-    qq:to/END/
-
-    {$comment}
-    {$private ?? "" !! "pub"} fn {$name}($rust-args) \{
-        {$optional-initializers}
-        {wrap-body-todo($body, python => True)}
-    \}
-    END
-}
-
-our role Python3::IFuncDef    {  }
-
-our class Python3::FuncDef        { ... } # fwd declare
-our role Python3::IDunderFunc     { ... } # fwd declare
+our role Python3::IFuncDef         {  }
+our class Python3::FuncDef         { ... } # fwd declare
+our role Python3::IDunderFunc      { ... } # fwd declare
 our class Python3::Tfpdef          { ... } # fwd declare
 our class Python3::AugmentedTfpdef { ... } # fwd declare
 
@@ -538,6 +511,22 @@ our class Python3::ExprEquals does Python3::ISmallStmt  {
     method is-assign-to-self( --> Bool ) {
         self.lhs.operands[0]
     }
+
+    method doc-comment-text( --> Str ) {
+        $.lhs.operands[0].items.join("\n")
+    }
+
+    method is-doc-comment( --> Bool ) {
+        my Bool $only-lhs    = so self.rhs-stack;
+        my Bool $one-lhs-op  = self.lhs.operands.elems eq 1;
+        my $op0 = self.lhs.operands[0];
+        my Bool $lhs-is-strs = $op0 ~~ Python3::Strings;
+        so [
+            $only-lhs,
+            $one-lhs-op,
+            $lhs-is-strs,
+        ].all
+    }
 }
 
 our sub assign-item-to-lhs(:$lhs, :$item) {
@@ -692,11 +681,10 @@ our sub extract-rust-comment-from-suite($suite is rw, :$extra = "") {
                 my $text = $first-lhs-operand.items.join("\n");
                 $suite.stmts = $suite.stmts[1..*];
                 $suite.recalculate-text();
-                return qq:to/END/;
-                /**
+
+                return qq:to/END/.chomp;
                 $text
-                {$extra}
-                */
+                $extra
                 END
             } 
         } 
@@ -756,22 +744,15 @@ does Python3::IDecoratedItem  {
                         say $basic-arg.WHAT;
                         die "need to handle these eventually";
                     }
-
                 }
             }
 
             @rust-struct-args
+
         } else {
             []
         }
 
-    }
-
-    method format-type-list(@list) {
-        if @list.elems gt 0 {
-            my $text = indent-rust-named-type-list(@list);
-            $text.split("\n")>>.trim.join("\n")
-        } 
     }
 
     method rust-struct-members-from-python-funcdefs {
@@ -884,7 +865,8 @@ does Python3::IDecoratedItem  {
     method misc-class-stmts {
         my ($toplevel-assignments, $misc-class-stmts) = self.toplevel-stmts();
         if $misc-class-stmts.List.elems {
-            create-function(
+            create-rust-function(
+                python                => True,
                 comment               => "//this was toplevel code in the python class",
                 private               => False,
                 name                  => "class_single_initialization",
@@ -897,7 +879,7 @@ does Python3::IDecoratedItem  {
 
     method translate-to-rust {
 
-        my $rust-comment     = self.rust-comment-from-suite();
+        my $rust-comment     = parse-doxy-comment(self.rust-comment-from-suite());
         my $rust-struct-name = snake-to-camel(self.rust-struct-name());
 
         my @rust-struct-args = [
@@ -936,6 +918,10 @@ does Python3::IDecoratedItem  {
             @rust-misc-class-stmts.elems gt 0,
         ].any;
 
+        if not so [$need-module, $need-struct-def].any {
+            $need-struct-def = True;
+        }
+
         my Bool $attach-comment-to-module = !$need-struct-def && $need-module;
 
         my Bool $solo-test-module = so [
@@ -948,71 +934,6 @@ does Python3::IDecoratedItem  {
 
         if $need-impl-block {
             die if not $need-struct-def;
-        }
-
-        sub create-rust-struct-def(
-            :$comment,
-            :$struct-name,
-            :@struct-args) {
-            qq:to/END/
-            $comment
-            pub struct $struct-name \{
-            {self.format-type-list(@struct-args).indent(4)}
-            \}
-            END
-        }
-
-        sub format-static-members-for-module(@static-members) {
-            @static-members>>.gist.join("\n")
-        }
-
-        sub format-misc-class-stmts-for-module(@misc-class-stmts) {
-            @misc-class-stmts>>.gist.join("\n")
-        }
-
-        sub create-rust-module(
-            :$comment,
-            :$struct-name,
-            :@test-scaffolds,
-            :@misc-class-stmts,
-            :@static-members,
-            :$solo-test-module,
-            ) {
-
-            qq:to/END/
-            {$comment ?? $comment !! "" }
-            {$solo-test-module ?? "#[cfg(test)]" !! ""}
-            pub mod {snake-case($struct-name)} \{
-            {format-static-members-for-module(@static-members).indent(4)}
-            {format-misc-class-stmts-for-module(@misc-class-stmts).indent(4)}
-            {@test-scaffolds.join("\n").indent(4)}
-            \}
-            END
-        } 
-
-        sub create-special($struct-name, $stmt) {
-            $stmt
-        }
-
-        sub create-specials(
-            :$struct-name,
-            :@stmts
-            ) {
-            do for @stmts {
-                create-special($struct-name,$_)
-            }.join("\n")
-        }
-
-        sub create-rust-impl-block(
-            :$struct-name,
-            :@impls
-            ) {
-            qq:to/END/
-            impl $struct-name \{
-
-            {@impls.join("\n").indent(4)}
-            \}
-            END
         }
 
         #-----------------------------
@@ -1034,7 +955,7 @@ does Python3::IDecoratedItem  {
         );
 
         my $special-functions = !$need-specials ?? "" !!
-        create-specials(
+        create-rust-specials(
             struct-name  => $rust-struct-name,
             stmts        => @rust-special-functions,
         );
@@ -1135,15 +1056,20 @@ does Python3::IDecoratedItem  {
 
     method get-rust-scaffold {
 
-        my $comment               = self.rust-comment-from-suite();
+        my $comment        = self.rust-comment-from-suite();
+        my $parsed-comment = parse-python-doc-comment($comment);
+        my $return-value   = maybe-extract-return-value($parsed-comment);
+
         my $optional-initializers = $.parameters ?? $.parameters.optional-initializers() !! "";
         my $body                  = $.suite.text;
         my $rust-args             = $.parameters ?? $.parameters.convert-to-rust() !! "";
 
-        create-function(
-            :$comment,
+        create-rust-function(
+            comment => as-rust-comment($parsed-comment),
+            python => True,
             :$.private,
             name => snake-case($.name.value),
+            :$return-value,
             :$rust-args,
             :$optional-initializers,
             :$body)

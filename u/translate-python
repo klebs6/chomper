@@ -1,6 +1,8 @@
 #!/usr/bin/env raku
 use python-grammar;
 use Data::Dump::Tree;
+use formatting;
+use doxy-comment;
 use Data::Dump;
 use JSON::Class;
 use python-to-rust-actions;
@@ -38,12 +40,28 @@ sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = True) {
                 when Python3::FuncDef {
                     say $_.get-rust-scaffold;
                 }
+                when Python3::SimpleSuite {
+                    if $_.stmts.elems eq 1 {
+
+                        my $s0 = $_.stmts[0];
+
+                        if $s0 ~~ Python3::ExprEquals {
+
+                            if $s0.is-doc-comment() {
+                                my $c = $s0.doc-comment-text();
+                                $c = format-module-comment($c);
+                                $c = parse-doxy-comment($c);
+                                $c ~~ s:g/\/\*\*/\/\*\!/;
+                                say $c
+                            }
+                        }
+                    }
+                }
                 default {
                     say $_;
                 }
             }
         }
-
     } else {
         say $parsed;
     }
