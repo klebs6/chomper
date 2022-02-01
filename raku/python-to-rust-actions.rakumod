@@ -1,5 +1,19 @@
-use python3-translate;
-use python3-model;
+use python3-args;
+use python3-atom;
+use python3-class;
+use python3-comment;
+use python3-compound;
+use python3-comprehension;
+use python3-dunder-init;
+use python3-dunder;
+use python3-expr;
+use python3-func;
+use python3-lambdef;
+use python3-prelude;
+use python3-stmt;
+use python3-suite;
+use python3-varargs;
+
 our sub get-compound-comments($/) {
 
     my $comments = $<COMMENT>>>.made;
@@ -27,14 +41,29 @@ our role Python3::NumberActions {
 our role Python3::DecoratorActions {
 
     method compound-stmt:sym<decorated>($/) {
-        make Python3::Decorated.new(
-            decorators => $/<decorators>.made,
-            decorated  => $/<decorated-item>.made
-        )
+        my $item = $<decorated-item>.made;
+        given $item {
+            when Python3::Classdef {
+                make Python3::DecoratedClass.new(
+                    decorators => $<decorators>.made,
+                    decorated  => $item
+                )
+            }
+            when Python3::FuncDef {
+                make Python3::DecoratedFunction.new(
+                    decorators => $<decorators>.made,
+                    decorated  => $item
+                )
+            }
+        }
     }
 
     method decorators($/) {
         make $<decorator>>>.made
+    }
+
+    method at-dotted-name($/) {
+        make $<dotted-name>.made
     }
 
     method decorator($/) {
@@ -307,17 +336,17 @@ our role Python3::AtomActions does Python3::StringActions {
     }
 
     method listmaker:sym<testlist>($/) {
+
+        my $final-comments = $<comma-maybe-comment>.made // Nil;
+
         make Python3::TestList.new(
             tests => [
                 |$<test-comma-maybe-comment>>>.made,
-                $<test>.made
+                Python3::MaybeCommentedTest.new(
+                    test => $<test>.made,
+                    comment => $final-comments ?? $final-comments.List !! [],
+                )
             ]
-        )
-    }
-
-    method listmaker:sym<testlist-with-trailing-comma>($/) {
-        make Python3::TestList.new(
-            tests => $<test-comma-maybe-comment>>>.made,
         )
     }
 
@@ -339,14 +368,12 @@ our role Python3::AtomActions does Python3::StringActions {
         make Python3::Dict.new(
             items => [
                 |$<dictmaker-item-comma-maybe-comment>>>.made,
-                $<dictmaker-item>.made
+                Python3::DictMakerItem.new(
+                    comments => $<comma-maybe-comment>.made // Nil, 
+                    K        => $<dictmaker-item><test>[0].made,
+                    V        => $<dictmaker-item><test>[1].made,
+                )
             ]
-        )
-    }
-
-    method dictorsetmaker:sym<dict-with-comma-trailer>($/) {
-        make Python3::Dict.new(
-            items => $<dictmaker-item-comma-maybe-comment>>>.made,
         )
     }
 
@@ -358,10 +385,11 @@ our role Python3::AtomActions does Python3::StringActions {
     }
 
     method dictmaker-item($/) {
+        my $comment = $<COMMENT>.made // Nil;
         make Python3::DictMakerItem.new(
-            comments => [$<COMMENT>.made // Nil], 
-            K       => $<test>[0].made,
-            V       => $<test>[1].made,
+            comments => $comment ?? [$comment] !! [], 
+            K        => $<test>[0].made,
+            V        => $<test>[1].made,
         )
     }
 
@@ -503,7 +531,7 @@ our role Python3::FunctionActions {
 
     method typedargslist:sym<full>($/) {
         make Python3::TypedArgList.new(
-            basic-args => $<just-basic-args-with-trailing-comment>.made,
+            basic-args => $<just-basic-args>.made,
             star-args  => $<star-args>.made,
             kw-args    => $<typedargslist-kwargs>.made,
         )
@@ -535,7 +563,7 @@ our role Python3::FunctionActions {
 
     method typedargslist:sym<basic-and-star-args>($/) {
         make Python3::TypedArgList.new(
-            basic-args => $<just-basic-args-with-trailing-comment>.made,
+            basic-args => $<just-basic-args>.made,
             star-args  => $<star-args>.made,
             kw-args    => [],
         )
@@ -543,7 +571,7 @@ our role Python3::FunctionActions {
 
     method typedargslist:sym<basic-and-kwargs>($/) {
         make Python3::TypedArgList.new(
-            basic-args => $<just-basic-args-with-trailing-comment>.made,
+            basic-args => $<just-basic-args>.made,
             star-args  => [],
             kw-args    => $<typedargslist-kwargs>.made,
         )
@@ -571,14 +599,13 @@ our role Python3::FunctionActions {
     }
 
     method just-basic-args($/) {
+        my $final = $<augmented-tfpdef>.made;
+        $final.comments = $<comment-maybe-comment>.made // [];
+
         make [ 
             |$<augmented-tfpdef-comma-maybe-comment>>>.made, 
-            $<augmented-tfpdef>.made 
+            $final
         ]
-    }
-
-    method just-basic-args-with-trailing-comment($/) {
-        make $<augmented-tfpdef-comma-maybe-comment>>>.made 
     }
 
     method star-args($/) {
@@ -890,6 +917,7 @@ our role Python3::SmallStmtActions {
             lhs  => $<testlist-star-expr>.made,
             op   => $<augassign>.made,
             rhs  => $<expr-augassign-rhs>.made,
+            text => $/.Str,
         )
     }
 
@@ -1106,12 +1134,12 @@ does Python3::VarArgsListActions
 
     method dotted-as-name($/) {
         make Python3::DottedAsName.new(
-            name => $<dotted_name>.made,
+            name => $<dotted-name>.made,
             as   => $<NAME>.made // Nil,
         )
     }
 
-    method dotted_name($/) {
+    method dotted-name($/) {
         make Python3::DottedName.new(
             names => $<NAME>>>.made
         )
@@ -1129,7 +1157,7 @@ does Python3::VarArgsListActions
     method import-from-src($/) {
         make Python3::ImportFromSrc.new(
             dot-stack => $<import-dots>>>.made,
-            name      => $<dotted_name>.made // Nil,
+            name      => $<dotted-name>.made // Nil,
         )
     }
 
@@ -1245,9 +1273,9 @@ does Python3::VarArgsListActions
     }
 
     method star-expr($/) {
-        if $/<STAR>:exists {
+        if $/<STAR>.List.elems {
             make Python3::StarExpr.new(
-                has-star => True,
+                stars    => $/<STAR>.List.elems,
                 or-expr  => $<or-expr>.made,
             )
         } else {
@@ -1278,7 +1306,7 @@ does Python3::VarArgsListActions
 
         if $ops.elems gt 1 {
             make Python3::AndExpr.new(
-                operands => $ops,
+                operands => $ops.List,
             )
         } else {
             make $ops[0]

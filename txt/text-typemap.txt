@@ -7970,3 +7970,5 @@ EColliderModeLayer ColliderModeLayer
 EMovementControlMethod MovementControlMethod
 EMCMSlot MCMSlot
 SLandBobParams LandBobParams
+ipxint i32
+ipx_parameters IpxParameters

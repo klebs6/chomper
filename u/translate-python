@@ -1,11 +1,13 @@
 #!/usr/bin/env raku
-use python-grammar;
+use gpython3;
+use python3-class;
+use python-to-rust-actions;
+
 use Data::Dump::Tree;
 use formatting;
 use doxy-comment;
 use Data::Dump;
 use JSON::Class;
-use python-to-rust-actions;
 
 class A does Python3::ToRustActions {}
 
@@ -38,7 +40,7 @@ sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = True) {
                     say $_.translate-to-rust;
                 }
                 when Python3::FuncDef {
-                    say $_.get-rust-scaffold;
+                    say $_.get-rust-scaffold(python-decorators => []);
                 }
                 when Python3::SimpleSuite {
                     if $_.stmts.elems eq 1 {
