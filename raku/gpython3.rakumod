@@ -515,7 +515,9 @@ does Python3Keywords {
     }
 
     proto rule setmaker-item { * }
-    rule setmaker-item:sym<test>       { <COMMENT>? <test> }
+
+    #<COMMENT>? 
+    rule setmaker-item:sym<test>       { <test> }
     rule setmaker-item:sym<stars-test> { '**' <COMMENT>? <test> }
 
     rule dictmaker-item { <COMMENT>? <test> <COLON> <test> }

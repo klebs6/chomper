@@ -403,9 +403,11 @@ our role Python3::AtomActions does Python3::StringActions {
     }
 
     method setmaker-item:sym<test>($/) {
+        my $comment = $<COMMENT>.made // Nil;
+
         make Python3::SetMakerItem.new(
             has-stars => False,
-            comments  => [$<COMMENT>.made // Nil], 
+            comments  => $comment ?? [$comment] !! [], 
             K         => $<test>.made,
         )
     }

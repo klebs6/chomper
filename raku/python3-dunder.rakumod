@@ -18,17 +18,6 @@ does Python3::IFuncDef
     method translate-special-function-to-rust { ... }
 }
 
-
-our class Python3::DunderFunc::Repr does Python3::IDunderFunc {
-    method translate-special-function-to-rust($cls-name) { ... }
-}
-
-our class Python3::DunderFunc::Str does Python3::IDunderFunc {
-    method translate-special-function-to-rust($cls-name) { 
-
-    }
-}
-
 our class Python3::DunderFunc::Abs           does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::Add           does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::And           does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
@@ -67,7 +56,6 @@ our class Python3::DunderFunc::Ilshift       does Python3::IDunderFunc { method 
 our class Python3::DunderFunc::Imod          does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::Imul          does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::Index         does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
-our class Python3::DunderFunc::Init          does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::Instancecheck does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::Int           does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::Invert        does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
