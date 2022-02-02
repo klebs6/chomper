@@ -36,8 +36,21 @@ our class Python3::DunderFunc::Init does Python3::IDunderFunc {
         END
     }
 
-    method translate-as-standard-new-fn($cls-name) {
-        "TODO: __init__ --> standard-new-fn"
+    method translate-as-standard-new-fn($cls-name, $parameters) {
+
+        my $optional-initializers = $parameters.optional-initializers();
+        my $args                  = $parameters.convert-to-rust(no-self => True);
+
+        qq:to/END/
+        impl {$cls-name} \{
+
+            fn new({$args}) -> Self \{
+                $optional-initializers
+                {wrap-body-todo($.suite.text, python => True)}
+            \}
+        \}
+
+        END
     }
 
     method translate-dunder-init($cls-name) {
@@ -56,7 +69,7 @@ our class Python3::DunderFunc::Init does Python3::IDunderFunc {
                 self.translate-as-from-fn($cls-name, $src, $optional-initializers)
             }
             when 3..* {
-                self.translate-as-standard-new-fn($cls-name)
+                self.translate-as-standard-new-fn($cls-name,$.parameters)
             }
         }
     }

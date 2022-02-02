@@ -1,5 +1,6 @@
 use gpython3-keywords;
 use gpython3-name;
+use gpython3-indent;
 use gpython3-numeric;
 use gpython3-operators;
 use gpython3-strings;
@@ -20,6 +21,7 @@ does Python3Braces
 does Python3Literal
 does Python3::Grammar::VarArgsList
 does Python3::Grammar::TypedArgList
+does Python3::Grammar::Indent
 does Python3Keywords {
 
     token ws { 
@@ -39,117 +41,6 @@ does Python3Keywords {
         :my @*INDENTATION = (0,);
         <file-input>
     }
-
-    proto token SKIP { * }
-    token SKIP:sym<SPACES>       { <SPACES> }
-    token SKIP:sym<COMMENT>      { <COMMENT> }
-    token SKIP:sym<LINE_JOINING> { <LINE_JOINING> }
-
-    token SPACES {
-        <[ \h  \t ]>+
-    }
-
-    rule COMMENT {
-        <COMMENT_NONEWLINE> <NEWLINE>?
-    }
-
-    rule COMMENT_NONEWLINE {
-        <POUND> <-[ \r \n ]>* 
-    }
-
-    token LINE_JOINING {
-        '\\' <SPACES>?
-        <newline-token>
-    }
-
-    token newline-token {
-        || \r?  \n
-        || \r
-    }
-
-    token enter_scope { <?> { so $*debug and say "entering scope" } }
-    token leave_scope { <?> { so $*debug and say "leaving scope"  } }
-
-    token INDENT {
-        <?{ $*indents-needed > 0 }>
-        <.enter_scope>
-        { $*indents-needed--; }
-    }
-
-    token DEDENT {
-        <?{ $*dedents-needed > 0 }>
-        <.leave_scope>
-        { $*dedents-needed--; }
-    }
-
-    token NEWLINE {
-        <?{$*opened eq 0}>
-        [    
-            || ^ <SPACES>
-            || <newline-token>+ <SPACES>?
-        ]
-        { 
-            if not self.should-skip-indent($/) {
-                if $/<SPACES>:exists {
-                    my $indent = $/<SPACES>.Str.chars;
-                    self.handle-indentation($indent, $/) 
-                } else {
-                    self.handle-indentation(0, $/) 
-                }
-            }
-        }
-        [ <INDENT> | <DEDENT>* ]?
-    }
-
-    method peek-indent-stack {
-        @*INDENTATION.elems ?? @*INDENTATION[*-1] !! 0
-    }
-
-    method handle-indentation($indent,$/) {
-
-        my $previous = self.peek-indent-stack();
-
-        so $*debug and say "handle-indentation, prematch: \n{$/.prematch}\n--------indent: $indent, previous: $previous";
-
-        if $indent eq $previous {
-            return;
-
-        } elsif $indent > $previous {
-
-            @*INDENTATION.push: $indent;
-            $*indents-needed++;
-
-        } else {
-
-            # Possibly emit more than 1 DEDENT token.
-            while @*INDENTATION.elems > 0 and @*INDENTATION[*-1] > $indent {
-                @*INDENTATION.pop();
-                $*dedents-needed++;
-            }
-        }
-
-        so $*debug and say "handle-indentation finished, {@*INDENTATION}, indents-needed: {$*indents-needed}, dedents-needed: {$*dedents-needed}";
-    }
-
-    method on-blank-line($/) {
-        my $postmatch-line = $/.postmatch.Str.split("\n")[0];
-        my Bool $on-blank-line = not so $postmatch-line.chomp.trim;
-        if $on-blank-line {
-            so $*debug and say "on-blank-line, prematch:\n{$/.prematch}";;
-        }
-        $on-blank-line
-    }
-
-    method should-skip-indent($/) {
-        my Bool $opened = $*opened > 0;
-        my Bool $blank-line = self.on-blank-line($/);
-        my Bool $should-skip = $opened || $blank-line;
-        if $should-skip {
-            so $*debug and say "should-skip:\n{$/.prematch}";
-        }
-        $should-skip
-    }
-
 
     token single_input {
         <stmt>? <COMMENT>? <NEWLINE>
@@ -191,7 +82,9 @@ does Python3Keywords {
     }
 
     regex parenthesized-arglist {
-        <OPEN_PAREN> <arglist>? <CLOSE_PAREN>
+        <OPEN_PAREN> 
+        <arglist>? 
+        <CLOSE_PAREN>
     }
 
     token decorators {
@@ -452,9 +345,9 @@ does Python3Keywords {
     token suite:sym<stmt>   { <stmt-suite> }
 
     proto rule test { * }
-    token test:sym<basic>   { <or-test> }
+    rule test:sym<basic>   { <or-test> <!before <IF>>}
     rule test:sym<lambdef> { <lambdef> }
-    token test:sym<ternary> { <or-test> <.ws> <IF> <.ws> <or-test> <.ws> <ELSE> <.ws> <test> }
+    rule test:sym<ternary> { <or-test> <IF> <or-test> <ELSE> <test> }
 
     proto token test-nocond { * }
     token test-nocond:sym<basic>   { <or-test> }
@@ -521,8 +414,8 @@ does Python3Keywords {
         <term> <arith-operand>*
     }
 
-    token term {
-        <factor> [\h+ <term-operand>]*
+    rule term {
+        <factor> <term-operand>*
     }
 
     proto rule term-operand { * }
@@ -530,7 +423,7 @@ does Python3Keywords {
     rule term-operand:sym</>  { <sym> <factor> }
     rule term-operand:sym<%>  { <sym> <factor> }
     rule term-operand:sym<//> { <sym> <factor> }
-    rule term-operand:sym<@>  { <sym> <factor> }
+    rule term-operand:sym<@>  { <sym> \h+ <factor> }
 
     proto rule factor { * }
     rule factor:sym<prefix+> { '+' <factor> }
@@ -575,9 +468,9 @@ does Python3Keywords {
     }
 
     rule listmaker:sym<testlist> {
-        <test-comma-maybe-comment>* 
-        <test> <comma-maybe-comment>?
+        <test-comma-maybe-comment>* <test> <comma-maybe-comment>?
     }
+
 
     rule test-comma-maybe-comment {
         <test> <comma-maybe-comment>  
@@ -672,19 +565,10 @@ does Python3Keywords {
         '*' <test> 
     }
 
-    rule arglist:sym<just-basic> {
-        <argument-comma-maybe-comment>* <argument>
-    }
-
-    rule arglist:sym<just-basic-with-trailing-comment> {
-        <argument-comma-maybe-comment>+
-    }
-
-    rule arglist:sym<just-star-args> {
-        '*' <test> 
-    }
-
-    rule arglist:sym<just-kwargs> {
+    rule arglist:sym<full> {
+        <basic=argument-comma-maybe-comment>+
+        '*' <test-comma-maybe-comment>  
+        <star=argument-comma-maybe-comment>*  
         <arglist-kwargs>
     }
 
@@ -709,16 +593,31 @@ does Python3Keywords {
         <arglist-kwargs>
     }
 
+    rule arglist:sym<star-and-kwargs2> {
+        <star-arg>
+        <COMMA>
+        <arglist-kwargs>
+    }
+
     rule arglist:sym<star-and-kwargs> {
         '*' <test-comma-maybe-comment>  
         <argument-comma-maybe-comment>*  
         <arglist-kwargs>
     }
 
-    rule arglist:sym<full> {
-        <basic=argument-comma-maybe-comment>+
-        '*' <test-comma-maybe-comment>  
-        <star=argument-comma-maybe-comment>*  
+    rule arglist:sym<just-basic> {
+        <argument-comma-maybe-comment>* <argument>
+    }
+
+    rule arglist:sym<just-basic-with-trailing-comment> {
+        <argument-comma-maybe-comment>+
+    }
+
+    rule arglist:sym<just-star-args> {
+        '*' <test> 
+    }
+
+    rule arglist:sym<just-kwargs> {
         <arglist-kwargs>
     }
 

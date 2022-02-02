@@ -34,4 +34,3 @@ our sub remove-comment-tokens($in) {
 
     @stripped.join("\n") ~ "\n"
 }
-

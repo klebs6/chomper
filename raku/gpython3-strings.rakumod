@@ -1,4 +1,3 @@
-
 our role Python3ShortBytes {
 
     regex SINGLE_QUOTED_SHORT_BYTES {

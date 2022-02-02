@@ -54,11 +54,11 @@ our sub create-rust-function(
         $rust-args
     };
 
+    my $attrs = @rust-attrs.elems ?? @rust-attrs.join("\n") ~ "\n" !! "";
     my $text = qq:to/END/;
 
     {$comment}
-    {@rust-attrs.join("\n")}
-    {$prefix}fn {$name}($args) {$maybe-return-value}\{
+    {$attrs}{$prefix}fn {$name}($args) {$maybe-return-value}\{
         {$optional-initializers}
         {wrap-body-todo($body, :$python)}
     \}

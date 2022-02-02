@@ -62,6 +62,11 @@ does Python3::ICompoundStmt
                         my $name = $_.test.operands[0].value;
                         @rust-struct-args.push: "base{$idx++}: $name";
                     }
+                    when Python3::DefaultArgument {
+                        my $name    = $_.base.operands[0].value;
+                        my $default = $_.default.operands[0].value;
+                        @rust-struct-args.push: "base{$idx++}: $name /*default = $default*/";
+                    }
 
                     default {
                         say $basic-arg.WHAT;
@@ -467,11 +472,15 @@ our sub do-rust-struct-members-from-python-funcdefs(Python3::Classdef $self) {
     }
 
     multi sub handle(Python3::FuncDef $stmt) {
-        handle($stmt.stmt);
+        handle($stmt.suite);
+    }
+
+    multi sub handle(Python3::DecoratedFunction $stmt) {
+        handle($stmt.decorated.suite);
     }
 
     multi sub handle(Python3::Classdef $stmt) {
-        handle($stmt.stmt);
+        handle($stmt.suite);
     }
 
     multi sub handle(Python3::SimpleSuite $stmt) {

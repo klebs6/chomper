@@ -34,7 +34,7 @@ does Python3::IFuncDef
         my $body                  = $.suite.text;
         my $rust-args             = $.parameters ?? $.parameters.convert-to-rust() !! "";
 
-        my @rust-attrs     = $python-decorators.List>>.to-rust-attr;
+        my @rust-attrs            = $python-decorators.List>>.to-rust-attr;
 
         create-rust-function(
             comment => $rust-comment // "",

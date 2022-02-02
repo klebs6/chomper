@@ -109,9 +109,16 @@ our class Python3::AugmentedTfpdef {
         $.tfpdef.name.value eq "self"
     }
 
-    method as-rust( :$force-not-default = False, :$star = False, :$kw = False ) {
+    method as-rust( 
+        :$no-self           = False, 
+        :$force-not-default = False, 
+        :$star              = False, 
+        :$kw                = False ) 
+    {
         if self.is-self() {
-            "&mut self"
+            unless :$no-self {
+                "&mut self"
+            }
         } else {
             $.default
             ?? $.tfpdef.as-rust(:$.default, :$force-not-default, :$star, :$kw)
@@ -129,10 +136,10 @@ our class Python3::TypedArgList {
         @.basic-args[0].is-self();
     }
 
-    method convert-to-rust {
+    method convert-to-rust(Bool :$no-self = False) {
 
         my @rust-args = [
-            |do for @.basic-args { $_.as-rust() }
+            |do for @.basic-args { $_.as-rust(:$no-self) }
             |do for @.star-args  { $_.as-rust(star => True) }
             |do for @.kw-args    { $_.as-rust(kw   => True) }
         ];

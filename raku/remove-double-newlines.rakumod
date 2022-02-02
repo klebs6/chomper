@@ -1,4 +1,3 @@
-
 our sub remove-double-newlines($text is rw) {
     $text ~~ s:g/\n\n\n/\n\n/;
 
@@ -8,4 +7,3 @@ our sub remove-double-newlines($text is rw) {
 
     $text
 }
-

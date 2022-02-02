@@ -1,5 +1,4 @@
 use python3-args;
-use python3-atom;
 use python3-class;
 use python3-comment;
 use python3-compound;
@@ -336,7 +335,6 @@ our role Python3::AtomActions does Python3::StringActions {
     }
 
     method listmaker:sym<testlist>($/) {
-
         my $final-comments = $<comma-maybe-comment>.made // Nil;
 
         make Python3::TestList.new(
@@ -495,12 +493,100 @@ our role Python3::FunctionActions {
         my $key = $name.value.chomp.trim;
 
         my %dunder-map = %(
-            __init__ => Python3::DunderFunc::Init,
-            __repr__ => Python3::DunderFunc::Repr,
-            __add__  => Python3::DunderFunc::Add,
-            __sub__  => Python3::DunderFunc::Sub,
-            __mul__  => Python3::DunderFunc::Mul,
-            __div__  => Python3::DunderFunc::Div,
+
+            __abs__           => Python3::DunderFunc::Abs,
+            __add__           => Python3::DunderFunc::Add,
+            __and__           => Python3::DunderFunc::And,
+            __call__          => Python3::DunderFunc::Call,
+            __cmp__           => Python3::DunderFunc::Cmp,
+            __coerce__        => Python3::DunderFunc::Coerce,
+            __complex__       => Python3::DunderFunc::Complex,
+            __contains__      => Python3::DunderFunc::Contains,
+            __del__           => Python3::DunderFunc::Del,
+            __delattr__       => Python3::DunderFunc::Delattr,
+            __delete__        => Python3::DunderFunc::Delete,
+            __delitem__       => Python3::DunderFunc::Delitem,
+            __delslice__      => Python3::DunderFunc::Delslice,
+            __div__           => Python3::DunderFunc::Div,
+            __divmod__        => Python3::DunderFunc::Divmod,
+            __enter__         => Python3::DunderFunc::Enter,
+            __eq__            => Python3::DunderFunc::Eq,
+            __exit__          => Python3::DunderFunc::Exit,
+            __float__         => Python3::DunderFunc::Float,
+            __floordiv__      => Python3::DunderFunc::Floordiv,
+            __ge__            => Python3::DunderFunc::Ge,
+            __get__           => Python3::DunderFunc::Get,
+            __getattr__       => Python3::DunderFunc::Getattr,
+            __getattribute__  => Python3::DunderFunc::Getattribute,
+            __getitem__       => Python3::DunderFunc::Getitem,
+            __getslice__      => Python3::DunderFunc::Getslice,
+            __gt__            => Python3::DunderFunc::Gt,
+            __hash__          => Python3::DunderFunc::Hash,
+            __hex__           => Python3::DunderFunc::Hex,
+            __iadd__          => Python3::DunderFunc::Iadd,
+            __iand__          => Python3::DunderFunc::Iand,
+            __idiv__          => Python3::DunderFunc::Idiv,
+            __idivmod__       => Python3::DunderFunc::Idivmod,
+            __ifloordiv__     => Python3::DunderFunc::Ifloordiv,
+            __ilshift__       => Python3::DunderFunc::Ilshift,
+            __imod__          => Python3::DunderFunc::Imod,
+            __imul__          => Python3::DunderFunc::Imul,
+            __index__         => Python3::DunderFunc::Index,
+            __init__          => Python3::DunderFunc::Init,
+            __instancecheck__ => Python3::DunderFunc::Instancecheck,
+            __int__           => Python3::DunderFunc::Int,
+            __invert__        => Python3::DunderFunc::Invert,
+            __ior__           => Python3::DunderFunc::Ior,
+            __ipow__          => Python3::DunderFunc::Ipow,
+            __irshift__       => Python3::DunderFunc::Irshift,
+            __isub__          => Python3::DunderFunc::Isub,
+            __iter__          => Python3::DunderFunc::Iter,
+            __itruediv__      => Python3::DunderFunc::Itruediv,
+            __ixor__          => Python3::DunderFunc::Ixor,
+            __le__            => Python3::DunderFunc::Le,
+            __len__           => Python3::DunderFunc::Len,
+            __long__          => Python3::DunderFunc::Long,
+            __lshift__        => Python3::DunderFunc::Lshift,
+            __lt__            => Python3::DunderFunc::Lt,
+            __metaclass__     => Python3::DunderFunc::Metaclass,
+            __missing__       => Python3::DunderFunc::Missing,
+            __mod__           => Python3::DunderFunc::Mod,
+            __mul__           => Python3::DunderFunc::Mul,
+            __ne__            => Python3::DunderFunc::Ne,
+            __neg__           => Python3::DunderFunc::Neg,
+            __nonzero__       => Python3::DunderFunc::Nonzero,
+            __oct__           => Python3::DunderFunc::Oct,
+            __or__            => Python3::DunderFunc::Or,
+            __pos__           => Python3::DunderFunc::Pos,
+            __pow__           => Python3::DunderFunc::Pow,
+            __radd__          => Python3::DunderFunc::Radd,
+            __rand__          => Python3::DunderFunc::Rand,
+            __rcmp__          => Python3::DunderFunc::Rcmp,
+            __rdiv__          => Python3::DunderFunc::Rdiv,
+            __rdivmod__       => Python3::DunderFunc::Rdivmod,
+            __repr__          => Python3::DunderFunc::Repr,
+            __reversed__      => Python3::DunderFunc::Reversed,
+            __rfloordiv__     => Python3::DunderFunc::Rfloordiv,
+            __rlshift__       => Python3::DunderFunc::Rlshift,
+            __rmod__          => Python3::DunderFunc::Rmod,
+            __rmul__          => Python3::DunderFunc::Rmul,
+            __ror__           => Python3::DunderFunc::Ror,
+            __rpow__          => Python3::DunderFunc::Rpow,
+            __rrshift__       => Python3::DunderFunc::Rrshift,
+            __rshift__        => Python3::DunderFunc::Rshift,
+            __rsub__          => Python3::DunderFunc::Rsub,
+            __rtruediv__      => Python3::DunderFunc::Rtruediv,
+            __rxor__          => Python3::DunderFunc::Rxor,
+            __set__           => Python3::DunderFunc::Set,
+            __setattr__       => Python3::DunderFunc::Setattr,
+            __setitem__       => Python3::DunderFunc::Setitem,
+            __setslice__      => Python3::DunderFunc::Setslice,
+            __str__           => Python3::DunderFunc::Str,
+            __sub__           => Python3::DunderFunc::Sub,
+            __subclasscheck__ => Python3::DunderFunc::Subclasscheck,
+            __truediv__       => Python3::DunderFunc::Truediv,
+            __unicode__       => Python3::DunderFunc::Unicode,
+            __xor__           => Python3::DunderFunc::Xor,
         );
 
         my $exists = $key (<) %dunder-map.keys;
@@ -767,6 +853,19 @@ our role Python3::ArgListActions {
             basic-args => $<argument-comma-maybe-comment>>>.made,
             star-args  => [],
             kwargs     => $<arglist-kwargs>.made,
+        )
+    }
+
+
+    method arglist:sym<star-and-kwargs2>($/) {
+        make Python3::ArgList.new(
+            basic-args => [],
+            star-args  => Python3::Argument.new(
+                test => $<star-arg>.made
+            ),
+            kwargs     => Python3::Argument.new(
+                test => $<arglist-kwargs>.made
+            ),
         )
     }
 
