@@ -1,4 +1,7 @@
 use python3-func;
+use python3-suite;
+use python3-comment;
+use wrap-body-todo;
 
 #same members as FuncDef
 our role Python3::IDunderFunc 
@@ -12,8 +15,18 @@ does Python3::IFuncDef
     has Python3::TypedArgList 
         $.parameters is required;
 
-    has Python3::Suite $.suite is required;
+    has Python3::Suite $.suite is required is rw;
     has Python3::ITest $.test;
+
+    has $.comment        = extract-rust-comment-from-suite($!suite);
+    has $.parsed-comment = parse-python-doc-comment($!comment);
+
+    has $.param-typemap  = $!parsed-comment ~~ PythonDocComment 
+    ?? $!parsed-comment.extract-param-typemap()
+    !! {};
+
+    has $.rust-comment   = as-rust-comment($!parsed-comment,backup => $!comment);
+    has $.optional-initializers = $!parameters.optional-initializers(typemap => $!param-typemap);
 
     method translate-special-function-to-rust { ... }
 }
@@ -87,7 +100,20 @@ our class Python3::DunderFunc::Rand          does Python3::IDunderFunc { method 
 our class Python3::DunderFunc::Rcmp          does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::Rdiv          does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::Rdivmod       does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
-our class Python3::DunderFunc::Repr          does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
+our class Python3::DunderFunc::Repr          does Python3::IDunderFunc { 
+    method translate-special-function-to-rust($cls-name) {  
+        qq:to/END/
+        impl fmt::Debug for $cls-name \{
+            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result \{
+                $.optional-initializers
+                {wrap-body-todo($.suite.text)}
+            \}
+        \}
+
+        END
+    } 
+}
+
 our class Python3::DunderFunc::Reversed      does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::Rfloordiv     does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::Rlshift       does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
@@ -104,7 +130,20 @@ our class Python3::DunderFunc::Set           does Python3::IDunderFunc { method 
 our class Python3::DunderFunc::Setattr       does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::Setitem       does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::Setslice      does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
-our class Python3::DunderFunc::Str           does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
+our class Python3::DunderFunc::Str           does Python3::IDunderFunc { 
+    method translate-special-function-to-rust($cls-name) {  
+        qq:to/END/
+        impl fmt::Display for $cls-name \{
+            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result \{
+                $.optional-initializers
+                {wrap-body-todo($.suite.text)}
+            \}
+        \}
+
+        END
+    } 
+}
+
 our class Python3::DunderFunc::Sub           does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::Subclasscheck does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }
 our class Python3::DunderFunc::Truediv       does Python3::IDunderFunc { method translate-special-function-to-rust($cls-name) { ... } }

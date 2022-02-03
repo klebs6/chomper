@@ -23,35 +23,36 @@ does Python3::IFuncDef
     has Python3::Suite $.suite is required is rw;
     has Python3::ITest $.test;
 
+    #---------------------------
+    has $.comment        = extract-rust-comment-from-suite($!suite);
+    has $.parsed-comment = parse-python-doc-comment($!comment);
+    has $.return-value   = maybe-extract-return-value($!parsed-comment);
+
+    has $.param-typemap  = $!parsed-comment ~~ PythonDocComment 
+    ?? $!parsed-comment.extract-param-typemap()
+    !! {};
+
+    has $.rust-comment   = as-rust-comment($!parsed-comment,backup => $!comment);
+
+    has $.optional-initializers = $!parameters ?? $!parameters.optional-initializers(typemap => $!param-typemap) !! "";
+    has $.body                  = $!suite.text;
+    has $.rust-args             = $!parameters ?? $!parameters.convert-to-rust(typemap => $!param-typemap) !! "";
+
     method get-rust-scaffold(:$python-decorators) {
 
-        my $comment        = self.rust-comment-from-suite();
-        my $parsed-comment = parse-python-doc-comment($comment);
-        my $return-value   = maybe-extract-return-value($parsed-comment);
-        my $rust-comment   = as-rust-comment($parsed-comment,backup => $comment);
-
-        my $optional-initializers = $.parameters ?? $.parameters.optional-initializers() !! "";
-        my $body                  = $.suite.text;
-        my $rust-args             = $.parameters ?? $.parameters.convert-to-rust() !! "";
-
-        my @rust-attrs            = $python-decorators.List>>.to-rust-attr;
+        my @rust-attrs = $python-decorators.List>>.to-rust-attr;
 
         create-rust-function(
-            comment => $rust-comment // "",
-            python => True,
+            comment => $.rust-comment // "",
             :$.private,
             :@rust-attrs,
             :$.is-test,
             name => snake-case($.name.value),
-            :$return-value,
-            :$rust-args,
-            :$optional-initializers,
-            :$body
+            :$.return-value,
+            :$.rust-args,
+            :$.optional-initializers,
+            :$.body
         )
-    }
-
-    method rust-comment-from-suite {
-        extract-rust-comment-from-suite($.suite)
     }
 }
 

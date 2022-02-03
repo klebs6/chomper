@@ -32,9 +32,34 @@ does Python3::ICompoundStmt
         )
     }
 
+    method rust-toplevel-comments {
+        my (
+        $toplevel-assignments, 
+        $misc-class-stmts,
+        $toplevel-comments) = self.toplevel-stmts();
+        say $toplevel-comments.List;
+        exit;
+
+        my $text = do for $toplevel-comments.List {
+            $_.text.subst(/^'#'/,"") ~ "\n"
+        }.join("\n");
+
+        qq:to/END/
+        /*
+        $text
+        */
+        END
+    }
+
     method toplevel-rust-comment {
+
+        my $rust-toplevel-comment  = self.rust-toplevel-comments();
+        say $rust-toplevel-comment;
+        exit;
+
         if $.comment {
             qq:to/END/
+                Toplevel # comments: $rust-toplevel-comment 
                 Note: comment on python class: {$.comment.text}
             END
         } else {
@@ -156,20 +181,27 @@ does Python3::ICompoundStmt
 
         my @toplevel-assignments;
         my @misc-class-stmts;
+        my @toplevel-comments;
 
         do if $.suite ~~ Python3::StmtSuite {
+            @toplevel-comments = $.suite.comments;
 
             #this will ignore Classdef and
             #Funcdef, just taking SimpleSuite
-            do for $.suite.stmts.map: { .stmt } {
-                given $_ {
+            do for $.suite.stmts.List -> $stmt-with-comments {
+                say $stmt-with-comments;
+
+                my @comment = $stmt-with-comments.comments;
+                my $stmt    = $stmt-with-comments.stmt;
+
+                given $stmt {
                     when Python3::SimpleSuite {
-                        my $stmt = $_.stmts[0];
-                        if $stmt ~~ Python3::ExprEquals {
-                            @toplevel-assignments.push: $stmt;
+                        my $small-stmt = $_.stmts[0];
+                        if $small-stmt ~~ Python3::ExprEquals {
+                            @toplevel-assignments.push: $small-stmt;
                         } else {
                             unless $stmt ~~ Python3::Pass {
-                                @misc-class-stmts.push: $stmt;
+                                @misc-class-stmts.push: $small-stmt;
                             }
                         }
                     }
@@ -177,12 +209,16 @@ does Python3::ICompoundStmt
             }
         }
 
-        (@toplevel-assignments, @misc-class-stmts)
+        .say for (@toplevel-assignments, @misc-class-stmts, @toplevel-comments);
+        exit;
     }
 
     method rust-static-members {
 
-        my ($toplevel-assignments, $misc-class-stmts) = 
+        my (
+        $toplevel-assignments, 
+        $misc-class-stmts,
+        $toplevel-comments) = 
         self.toplevel-stmts();
 
         if $toplevel-assignments.List.elems {
@@ -198,7 +234,11 @@ does Python3::ICompoundStmt
     }
 
     method misc-class-stmts {
-        my ($toplevel-assignments, $misc-class-stmts) = self.toplevel-stmts();
+        my (
+        $toplevel-assignments, 
+        $misc-class-stmts,
+        $toplevel-comments) = self.toplevel-stmts();
+
         if $misc-class-stmts.List.elems {
             create-rust-function(
                 python                => True,
@@ -215,13 +255,14 @@ does Python3::ICompoundStmt
 
     method translate-to-rust {
 
-        my $comment        = self.rust-comment-from-suite();
-        my $parsed-comment = parse-python-doc-comment($comment);
-        my $rust-comment   = as-rust-comment($parsed-comment, backup => $comment);
+        my $comment                = self.rust-comment-from-suite();
+        my $parsed-comment         = parse-python-doc-comment($comment);
+        my $rust-comment           = as-rust-comment($parsed-comment, backup => $comment);
 
         if so !$rust-comment {
             $rust-comment = "//---------------------------";
         }
+
 
         my $rust-struct-name = snake-to-camel(self.rust-struct-name());
 

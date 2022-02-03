@@ -1117,8 +1117,9 @@ our role Python3::SuiteActions {
 
     method stmt-suite($/) {
         make Python3::StmtSuite.new(
-            stmts => $/<stmt-maybe-comments>>>.made,
-            text  => $/.Str,
+            comments => $<COMMENT>>>.made,
+            stmts    => $/<stmt-maybe-comments>>>.made,
+            text     => $/.Str,
         )
     }
 

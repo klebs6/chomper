@@ -1,14 +1,18 @@
 use python3-dunder;
+use python3-suite;
+use python3-comment;
 use wrap-body-todo;
 
 our class Python3::DunderFunc::Init does Python3::IDunderFunc {
 
     method translate-as-default-fn($cls-name) {
+
         qq:to/END/
+        {$.rust-comment // ""}
         impl Default for {$cls-name} \{
 
             fn default() -> Self \{
-                {wrap-body-todo($.suite.text, python => True)}
+                {wrap-body-todo($.suite.text)}
             \}
         \}
 
@@ -17,19 +21,28 @@ our class Python3::DunderFunc::Init does Python3::IDunderFunc {
 
     method translate-as-from-fn(
         $cls-name, 
-        Python3::AugmentedTfpdef $src,
-        $optional-initializers) 
+        Python3::AugmentedTfpdef $src) 
     {
         my ($src-name, $src-type) = $src.tfpdef.as-rust-name-type(
             default => $src.default 
         );
 
+        my $args = $.parameters.convert-to-rust(
+            no-self => True, 
+            typemap => $.param-typemap
+        );
+
+        if $.param-typemap{$src-name}:exists {
+            $src-type = $.param-typemap{$src-name};
+        }
+
         qq:to/END/
+        {$.rust-comment}
         impl From<$src-type> for {$cls-name} \{
 
-            fn from({$src-name}: $src-type) -> Self \{
-                $optional-initializers
-                {wrap-body-todo($.suite.text, python => True)}
+            fn from($args) -> Self \{
+                $.optional-initializers
+                {wrap-body-todo($.suite.text)}
             \}
         \}
 
@@ -38,15 +51,18 @@ our class Python3::DunderFunc::Init does Python3::IDunderFunc {
 
     method translate-as-standard-new-fn($cls-name, $parameters) {
 
-        my $optional-initializers = $parameters.optional-initializers();
-        my $args                  = $parameters.convert-to-rust(no-self => True);
+        my $args = $parameters.convert-to-rust(
+            no-self => True, 
+            typemap => $.param-typemap
+        );
 
         qq:to/END/
+        {$.rust-comment}
         impl {$cls-name} \{
 
             fn new({$args}) -> Self \{
-                $optional-initializers
-                {wrap-body-todo($.suite.text, python => True)}
+                $.optional-initializers
+                {wrap-body-todo($.suite.text)}
             \}
         \}
 
@@ -65,8 +81,7 @@ our class Python3::DunderFunc::Init does Python3::IDunderFunc {
             }
             when 2 {
                 my $src = $.parameters.basic-args[1];
-                my $optional-initializers = $.parameters.optional-initializers();
-                self.translate-as-from-fn($cls-name, $src, $optional-initializers)
+                self.translate-as-from-fn($cls-name, $src)
             }
             when 3..* {
                 self.translate-as-standard-new-fn($cls-name,$.parameters)
@@ -78,4 +93,3 @@ our class Python3::DunderFunc::Init does Python3::IDunderFunc {
         self.translate-dunder-init($cls-name)
     }
 }
-

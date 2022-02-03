@@ -423,7 +423,7 @@ does Python3Keywords {
     rule term-operand:sym</>  { <sym> <factor> }
     rule term-operand:sym<%>  { <sym> <factor> }
     rule term-operand:sym<//> { <sym> <factor> }
-    rule term-operand:sym<@>  { <sym> \h+ <factor> }
+    rule term-operand:sym<@>  { <sym> <factor> }
 
     proto rule factor { * }
     rule factor:sym<prefix+> { '+' <factor> }

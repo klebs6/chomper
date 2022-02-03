@@ -334,6 +334,7 @@ our class PythonDocComment {
     has Regex $!delim = rule { 
        | ^^ Returns \-+
        | ^^ Params  \-+
+       | ^^ Parameters  \-+
        | ^^ References  \-+
     };
 
@@ -377,6 +378,24 @@ our class PythonDocComment {
         }
     }
 
+    method extract-param-typemap {
+
+        my %map;
+
+        for @!blocks {
+            if $_ ~~ DocComment::ParameterSpecification {
+
+                my $type = convert-type-to-rust($_.type);
+
+                for $_.names.list -> $name {
+                    %map{$name} = $type;
+                }
+            }
+        }
+
+        %map
+    }
+
     method blocks-only-contains-prelude(--> Bool) {
         my $found-non-prelude = False;
 
@@ -412,7 +431,17 @@ our sub parse-python-doc-comment(Str $text) {
 our sub maybe-extract-return-value($parsed) {
     if $parsed {
         my @rvals = $parsed.extract-return-types();
-        @rvals.elems ??  as-tuple(@rvals) !! ""
+        given @rvals.elems {
+            when 0 {
+                ""
+            }
+            when 1 {
+                @rvals[0]
+            }
+            when 2..* {
+                as-tuple(@rvals)
+            }
+        }
     } else {
         ""
     }

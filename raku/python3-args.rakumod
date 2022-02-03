@@ -37,17 +37,6 @@ our class Python3::ArgList does Python3::ITrailer {
             @.kwargs,
         ].map: {.elems}
     }
-
-    method  {
-        my @basic-rust = do for @.basic-args {
-            my $rust-arg = $_.as-rust()
-        };
-
-        my @star-rust = do for @.basic-args {
-            my $rust-arg = $_.as-rust()
-        };
-
-    }
 }
 
 #-------------------------------------------
@@ -55,9 +44,11 @@ our class Python3::Tfpdef {
     has Python3::Name  $.name is required;
     has Python3::ITest $.type;
 
-    method as-rust-name-type(:$default, Bool :$star, Bool :$kw ) {
+    method as-rust-name-type(:%typemap, :$default, Bool :$star, Bool :$kw ) {
 
         my $rust-name = avoid-keywords($.name.value);
+
+        my $mapped-type = %typemap{$rust-name} // Nil;
 
         if $star {
             return [
@@ -85,14 +76,26 @@ our class Python3::Tfpdef {
 
         };
 
+        #TODO: do we want the mapped-type to
+        #override all? which precedence is best?
+        if $mapped-type {
+            $type = $mapped-type;
+        }
+
         [
             $rust-name,
             $type
         ]
     }
 
-    method as-rust(:$default = Nil, :$force-not-default, :$star = False, :$kw = False) {
-        my ($name, $type) = self.as-rust-name-type(:$default, :$star, :$kw);
+    method as-rust(
+        :%typemap, 
+        :$default = Nil, 
+        :$force-not-default, 
+        :$star = False, 
+        :$kw = False) {
+
+        my ($name, $type) = self.as-rust-name-type(:%typemap, :$default, :$star, :$kw);
         $default && !$force-not-default
         ??  "$name: Option<$type>"
         !!  "$name: $type"
@@ -110,6 +113,7 @@ our class Python3::AugmentedTfpdef {
     }
 
     method as-rust( 
+        :%typemap, 
         :$no-self           = False, 
         :$force-not-default = False, 
         :$star              = False, 
@@ -121,8 +125,8 @@ our class Python3::AugmentedTfpdef {
             }
         } else {
             $.default
-            ?? $.tfpdef.as-rust(:$.default, :$force-not-default, :$star, :$kw)
-            !! $.tfpdef.as-rust(default => Nil, :$force-not-default, :$star, :$kw)
+            ?? $.tfpdef.as-rust(:%typemap, :$.default, :$force-not-default, :$star, :$kw)
+            !! $.tfpdef.as-rust(:%typemap, default => Nil, :$force-not-default, :$star, :$kw)
         }
     }
 }
@@ -136,12 +140,12 @@ our class Python3::TypedArgList {
         @.basic-args[0].is-self();
     }
 
-    method convert-to-rust(Bool :$no-self = False) {
+    method convert-to-rust(Bool :$no-self = False, :%typemap) {
 
         my @rust-args = [
-            |do for @.basic-args { $_.as-rust(:$no-self) }
-            |do for @.star-args  { $_.as-rust(star => True) }
-            |do for @.kw-args    { $_.as-rust(kw   => True) }
+            |do for @.basic-args { $_.as-rust(:%typemap, :$no-self) }
+            |do for @.star-args  { $_.as-rust(:%typemap, star => True) }
+            |do for @.kw-args    { $_.as-rust(:%typemap, kw   => True) }
         ];
         indent-rust-named-type-list(@rust-args)
     }
@@ -159,14 +163,14 @@ our class Python3::TypedArgList {
         }
     }
 
-    method optional-initializers {
+    method optional-initializers(:%typemap) {
         do for @.basic-args {
 
             if $_.default {
                 my $default = self.default-get-str($_.default);
                 my $name    = $_.tfpdef.name.value;
 
-                "let {$_.as-rust(force-not-default => True)} = {$name}.unwrap_or($default);"
+                "let {$_.as-rust(:%typemap, force-not-default => True)} = {$name}.unwrap_or($default);"
             }
         }
     }

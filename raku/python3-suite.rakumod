@@ -16,6 +16,7 @@ does Python3::IStmt  {
 }
 
 our class Python3::StmtSuite does Python3::Suite  {
+    has Python3::Comment          @.comments;
     has Python3::StmtWithComments @.stmts is required;
     has Str $.text is required is rw;
 

@@ -17,9 +17,11 @@ our sub format-type-list(@list) {
 our sub convert-type-to-rust($type) {
 
     my %typemap = %(
-        float   => "f32",
-        ndarray => "NdArray",
-        dict    => "PyDict",
+        float    => "f32",
+        ndarray  => "NdArray",
+        dict     => "PyDict",
+        int      => "i32",
+        sequence => "Sequence",
     );
 
     %typemap{$type} // $type
@@ -37,7 +39,6 @@ our sub create-rust-function(
     Str   :$comment,
     Bool  :$private,
     Bool  :$is-test,
-    Bool  :$python,
     Str   :$name,
     Str   :$return-value,
     Str   :$rust-args,
@@ -60,7 +61,7 @@ our sub create-rust-function(
     {$comment}
     {$attrs}{$prefix}fn {$name}($args) {$maybe-return-value}\{
         {$optional-initializers}
-        {wrap-body-todo($body, :$python)}
+        {wrap-body-todo($body)}
     \}
     END
 
