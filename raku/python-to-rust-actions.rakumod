@@ -214,7 +214,7 @@ our role Python3::StmtActions {
     }
 
     method stmt:sym<comment>($/) {
-        make $<COMMENT_NONEWLINE>.made;
+        make $<COMMENT>.made;
     }
 }
 
@@ -1125,9 +1125,9 @@ our role Python3::SuiteActions {
 
     method simple-suite($/) {
         make Python3::SimpleSuite.new(
-            stmts   => $<simple-stmt>.made,
-            comment => $<COMMENT>.made // Nil,
-            text    => $/.Str,
+            stmts    => $<simple-stmt>.made,
+            comments => $<COMMENT>>>.made // Nil,
+            text     => $/.Str,
         )
     }
 }
@@ -1162,6 +1162,7 @@ does Python3::VarArgsListActions
     }
 
     method stmt-maybe-comments($/) {
+
         make Python3::StmtWithComments.new(
             stmt     => $<stmt>.made,
             comments => $<COMMENT>>>.made,

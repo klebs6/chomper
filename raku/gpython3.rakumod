@@ -259,10 +259,13 @@ does Python3Keywords {
     proto token stmt { * }
     rule stmt:sym<compound> { <compound-stmt> }
     rule stmt:sym<simple>   { <simple-suite> }
-    rule stmt:sym<comment>  { <COMMENT_NONEWLINE> }
+
+    #DANGER!
+    #rule stmt:sym<comment>  { <COMMENT_NONEWLINE> }
+    rule stmt:sym<comment>  { <COMMENT> }
 
     token simple-suite {
-        <simple-stmt> <COMMENT>? <NEWLINE>?
+        <simple-stmt> <COMMENT>* <NEWLINE>?
     }
 
     rule simple-stmt {
@@ -336,8 +339,8 @@ does Python3Keywords {
         }> <stmt-maybe-comments>]+ 
     }
 
-    token stmt-maybe-comments {
-        <stmt> <COMMENT>*
+    regex stmt-maybe-comments {
+        <stmt> [\h+ <COMMENT>]*
     }
 
     proto token suite { * }

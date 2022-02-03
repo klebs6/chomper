@@ -7,7 +7,7 @@ our class Python3::SimpleSuite
 does Python3::Suite 
 does Python3::IStmt  {
     has Python3::ISmallStmt @.stmts is required;
-    has Python3::Comment    $.comment;
+    has Python3::Comment    @.comments;
     has Str $.text is required is rw;
 
     method recalculate-text {  
@@ -33,6 +33,7 @@ our sub extract-rust-comment-from-suite($suite is rw, :$extra = "") {
 
     if $first-stmt ~~ Python3::SimpleSuite {
 
+        my $comments = $first-stmt.comments>>.text>>.subst(/^'#'/,"")>>.indent(8).join("\n");
         $first-stmt = $first-stmt.stmts[0];
 
         if $first-stmt ~~ Python3::ExprEquals {
@@ -50,6 +51,7 @@ our sub extract-rust-comment-from-suite($suite is rw, :$extra = "") {
                     return qq:to/END/.chomp;
                     $text
                     $extra
+                    $comments
                     END
                 } 
             }

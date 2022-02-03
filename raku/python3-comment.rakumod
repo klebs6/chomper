@@ -2,6 +2,7 @@ use formatting;
 use doxy-comment;
 use pyrust;
 use numeric-token;
+#use Grammar::Tracer;
 
 my $ex = qq:to/END/;
 Run code in a new Python process, and monitor peak
@@ -104,6 +105,44 @@ our role Grammar::ParametersSection {
     }
 }
 
+our role Grammar::AttributesSection {
+
+    rule attributes-section {
+        <.ws>
+        <attributes-section-header>
+        <attribute-specification>+
+    }
+
+    rule attributes-section-header {
+        || Attributes \-+
+    }
+
+    rule attribute-specification {
+        <attribute-names> ':' <attribute-type>
+        <attribute-descriptor>?
+    }
+
+    rule attribute-names {
+        <attribute-name>+ %% ","
+    }
+
+    token attribute-name {
+        <ident>
+    }
+
+    token attribute-type {
+        <.ident>
+    }
+
+    regex attribute-descriptor {
+        \N+ <?before \n>
+    }
+
+    rule attribute-description {
+        <.maybe-undelimited-sentence>+
+    }
+}
+
 our role Grammar::Prelude 
 does NumericToken
 {
@@ -116,17 +155,29 @@ does NumericToken
         [
             || <math-delimiter>
             || <word>
+            || <ellipsis>
             || <numeric>
             || <parenthesized-text>
+            || <backticked-text>
             || <bracketed-numeric>
         ]
         <sentence-token-delimiter>?
+    }
+
+    token ellipsis {
+        '...'
     }
 
     regex parenthesized-text {
         '('
         <text>
         ')'
+    }
+
+    regex backticked-text {
+        '``'
+        <text>
+        '``'
     }
 
     regex text {
@@ -142,6 +193,7 @@ does NumericToken
         | '`'
         | '\''
         | ':'
+        | ';'
     }
 
     token math-delimiter {
@@ -150,6 +202,8 @@ does NumericToken
         | '-'
         | '/'
         | '='
+        | '^'
+        | '|'
     }
 
     token word {
@@ -176,7 +230,7 @@ does NumericToken
     }
 
     rule paragraph {
-        <sentence>+
+        <maybe-undelimited-sentence>+
     }
 }
 
@@ -188,6 +242,7 @@ our grammar DocCommentGrammar
 does Grammar::ReturnValueSection
 does Grammar::ReferencesSection
 does Grammar::ParametersSection 
+does Grammar::AttributesSection 
 does Grammar::Prelude
 {
 
@@ -203,6 +258,10 @@ does Grammar::Prelude
 
     rule python3-doc-comment-section:sym<params> {
         <parameters-section>
+    }
+
+    rule python3-doc-comment-section:sym<attributes> {
+        <attributes-section>
     }
 
     rule python3-doc-comment-section:sym<references> {
@@ -336,6 +395,7 @@ our class PythonDocComment {
        | ^^ Params  \-+
        | ^^ Parameters  \-+
        | ^^ References  \-+
+       | ^^ Attributes  \-+
     };
 
     submethod TWEAK {
@@ -365,7 +425,10 @@ our class PythonDocComment {
     }
 
     method consume-block(Str $block) {
-        for DocCommentGrammar.parse($block, actions => DocComment::Actions.new).made {
+
+        my $parsed = DocCommentGrammar.parse($block, actions => DocComment::Actions.new);
+
+        for $parsed.made {
             @!blocks.push: $_;
         }
     }

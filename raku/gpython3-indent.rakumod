@@ -10,11 +10,11 @@ our role Python3::Grammar::Indent {
         <[ \h  \t ]>+
     }
 
-    rule COMMENT {
+    token COMMENT {
         <COMMENT_NONEWLINE> <NEWLINE>?
     }
 
-    rule COMMENT_NONEWLINE {
+    token COMMENT_NONEWLINE {
         <POUND> <-[ \r \n ]>* 
     }
 

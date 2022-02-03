@@ -1,4 +1,7 @@
-our class Python3::Comment  {
+our role Python3::IStmt           
+{ }
+
+our class Python3::Comment does Python3::IStmt {
     has Str $.text is required;
 }
 

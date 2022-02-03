@@ -37,29 +37,16 @@ does Python3::ICompoundStmt
         $toplevel-assignments, 
         $misc-class-stmts,
         $toplevel-comments) = self.toplevel-stmts();
-        say $toplevel-comments.List;
-        exit;
 
-        my $text = do for $toplevel-comments.List {
+        do for $toplevel-comments.List {
             $_.text.subst(/^'#'/,"") ~ "\n"
-        }.join("\n");
-
-        qq:to/END/
-        /*
-        $text
-        */
-        END
+        }.join("\n")
     }
 
     method toplevel-rust-comment {
 
-        my $rust-toplevel-comment  = self.rust-toplevel-comments();
-        say $rust-toplevel-comment;
-        exit;
-
         if $.comment {
             qq:to/END/
-                Toplevel # comments: $rust-toplevel-comment 
                 Note: comment on python class: {$.comment.text}
             END
         } else {
@@ -189,10 +176,16 @@ does Python3::ICompoundStmt
             #this will ignore Classdef and
             #Funcdef, just taking SimpleSuite
             do for $.suite.stmts.List -> $stmt-with-comments {
-                say $stmt-with-comments;
 
-                my @comment = $stmt-with-comments.comments;
-                my $stmt    = $stmt-with-comments.stmt;
+                my @comments = $stmt-with-comments.comments;
+
+                if @comments.elems {
+                    my $body = @comments>>.text.subst(/^'#'/,"").join("\n");
+                    my $comment  = "/*" ~ $body ~ "*/";
+                    @toplevel-assignments.push: $comment;
+                }
+
+                my $stmt     = $stmt-with-comments.stmt;
 
                 given $stmt {
                     when Python3::SimpleSuite {
@@ -205,12 +198,14 @@ does Python3::ICompoundStmt
                             }
                         }
                     }
+                    when Python3::Comment {
+                        @toplevel-assignments.push: $_;
+                    }
                 }
             }
         }
 
-        .say for (@toplevel-assignments, @misc-class-stmts, @toplevel-comments);
-        exit;
+        (@toplevel-assignments, @misc-class-stmts, @toplevel-comments)
     }
 
     method rust-static-members {
@@ -221,12 +216,29 @@ does Python3::ICompoundStmt
         $toplevel-comments) = 
         self.toplevel-stmts();
 
+        my @lines;
+
+        multi sub process(Python3::ExprEquals $x) {
+            $x.text
+        }
+
+        multi sub process(Python3::Comment $x) {
+            $x.text
+        }
+
+        for $toplevel-assignments.List {
+            my $text = process($_);
+            @lines.push: $text;
+        }
+
+        my $text = @lines.join("\n").indent(4);
+
         if $toplevel-assignments.List.elems {
             qq:to/END/.chomp
             lazy_static!\{
 
                 /*
-            {$toplevel-assignments.List>>.text.join("\n").indent(4)}
+            $text
                 */
             \}
             END
@@ -263,7 +275,6 @@ does Python3::ICompoundStmt
             $rust-comment = "//---------------------------";
         }
 
-
         my $rust-struct-name = snake-to-camel(self.rust-struct-name());
 
         my @rust-struct-args = [
@@ -281,9 +292,13 @@ does Python3::ICompoundStmt
 
         my @rust-test-scaffolds    = self.rust-test-scaffolds();
 
-        my @rust-static-members    = self.rust-static-members();
+        my @rust-static-members    = [
+            |self.rust-static-members(),
+        ];
 
-        my @rust-misc-class-stmts  = self.misc-class-stmts();
+        my @rust-misc-class-stmts  = [
+            |self.misc-class-stmts(),
+        ];
 
         #---------------------
         my Bool $need-impl-block = @rust-impls.elems gt 0;
@@ -533,6 +548,8 @@ our sub do-rust-struct-members-from-python-funcdefs(Python3::Classdef $self) {
     multi sub handle(Python3::StmtWithComments $stmt) {
         handle($stmt.stmt);
     }
+
+    multi sub handle(Python3::Comment $stmt) { }
 
     multi sub handle(Python3::StmtSuite $stmt) {
         for $stmt.stmts -> $child {

@@ -1,8 +1,5 @@
 use python3-prelude;
 
-our role Python3::IStmt           
-{ }
-
 our role Python3::ISmallStmt
 does Python3::IStmt { }
 
@@ -10,7 +7,7 @@ does Python3::IStmt { }
 our class Python3::StmtWithComments 
 does Python3::IStmt  {
     has Python3::IStmt   $.stmt is required;
-    has Python3::Comment @.comments is required;
+    has Python3::Comment @.comments;
     has Str $.text is required;
 }
 
