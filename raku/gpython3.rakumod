@@ -77,7 +77,7 @@ does Python3Keywords {
 
     token decorator {
         <at-dotted-name>
-        <parenthesized-arglist>?
+        <parenthesized-arglist>? \h*
         <COMMENT_NONEWLINE>? <NEWLINE>
     }
 

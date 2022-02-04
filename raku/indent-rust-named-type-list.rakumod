@@ -40,6 +40,47 @@ our sub get-watermark-from-rargs-list(@list) {
     $watermark
 }
 
+our sub align-first-equals(@stmts) {
+
+    my @indices = do for @stmts -> $stmt {
+        my $idx  = $stmt.index("=");
+        $idx
+    };
+
+    my $max = @indices.max;
+
+    for @stmts <-> $stmt {
+        my $idx  = $stmt.index("=");
+        my $diff = $max - $idx;
+        $stmt.substr-rw($idx - 1,0) = " " x $diff;
+    };
+
+    @stmts
+}
+
+our sub type-from-rust-let-statement($stmt) {
+    $stmt.split(":")[1].trim.split(" ")[0]
+}
+
+our sub rust-let-statements-align-type(@stmts) {
+
+    my @indices = do for @stmts -> $stmt {
+        my $type = type-from-rust-let-statement($stmt);
+        my $idx  = $stmt.index($type);
+        $idx
+    };
+
+    my $max = @indices.max;
+
+    for @stmts <-> $stmt {
+        my $type = type-from-rust-let-statement($stmt);
+        my $idx  = $stmt.index($type);
+        my $diff = $max - $idx;
+        $stmt.substr-rw($idx - 1,0) = " " x $diff;
+    };
+    align-first-equals(@stmts)
+}
+
 our sub indent-column2($text, $watermark) {
 
     #indent column2

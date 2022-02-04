@@ -127,6 +127,9 @@ our sub toplevel-python-test-functions(Python3::Suite $suite) {
                     when Python3::FuncDef {
                         so $_.is-test()
                     }
+                    when Python3::DecoratedFunction {
+                        so $_.decorated.is-test()
+                    }
                     default {
                         False
                     }

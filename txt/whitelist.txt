@@ -16579,3 +16579,16 @@ zx::process
 zx::profile ZxProfile
 zx::vmo
 }impl X {
+IActionController
+IAnimationDatabase
+QuatT
+RequestedEntityMovementType
+ICharacterInstance
+ISkeletonAnim
+ISkeletonPose
+ICharacterInstance
+ISkeletonAnim
+ISkeletonPose
+IPhysicalEntity
+IDebugHistoryManager
+IAnimationPoseAlignerPtr

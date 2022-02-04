@@ -309,6 +309,7 @@ our role Python3::AtomActions does Python3::StringActions {
         make Python3::ParensAtom.new(
             value    => $<parens-inner>.made,
             comments => $<COMMENT>>>.made,
+            text     => $/.Str,
         )
     }
 
@@ -324,6 +325,7 @@ our role Python3::AtomActions does Python3::StringActions {
         make Python3::ListAtom.new(
             value    => $<listmaker>.made,
             comments => $<COMMENT>>>.made,
+            text     => $/.Str,
         )
     }
 
@@ -776,6 +778,7 @@ our role Python3::ArgListActions {
             ],
             star-args => [],
             kwargs    => [],
+            text      => $/.Str,
         )
     }
 
@@ -784,6 +787,7 @@ our role Python3::ArgListActions {
             basic-args => $<argument-comma-maybe-comment>>>.made,
             star-args => [],
             kwargs    => [],
+            text      => $/.Str,
         )
     }
 
@@ -792,6 +796,7 @@ our role Python3::ArgListActions {
             basic-args => [],
             star-args => [ Python3::Argument.new(test => $<test>.made) ],
             kwargs    => [],
+            text      => $/.Str,
         )
     }
 
@@ -804,6 +809,7 @@ our role Python3::ArgListActions {
                 $<argument>.made
             ],
             kwargs    => [],
+            text      => $/.Str,
         )
     }
 
@@ -812,6 +818,7 @@ our role Python3::ArgListActions {
             basic-args => [],
             star-args  => [],
             kwargs     => $<arglist-kwargs>.made,
+            text      => $/.Str,
         )
     }
 
@@ -820,6 +827,7 @@ our role Python3::ArgListActions {
             basic-args => $<argument-comma-maybe-comment>>>.made,
             star-args  => [ $<star-arg>.made ],
             kwargs     => [],
+            text       => $/.Str,
         )
     }
 
@@ -836,6 +844,7 @@ our role Python3::ArgListActions {
             basic-args => $<argument-comma-maybe-comment>>>.made,
             star-args  => [ $<test-comma-maybe-comment>.made ],
             kwargs     => [],
+            text       => $/.Str,
         )
     }
 
@@ -847,6 +856,7 @@ our role Python3::ArgListActions {
                 $<star>>>.made
             ],
             kwargs     => [],
+            text       => $/.Str,
         )
     }
 
@@ -855,6 +865,7 @@ our role Python3::ArgListActions {
             basic-args => $<argument-comma-maybe-comment>>>.made,
             star-args  => [],
             kwargs     => $<arglist-kwargs>.made,
+            text       => $/.Str,
         )
     }
 
@@ -868,6 +879,7 @@ our role Python3::ArgListActions {
             kwargs     => Python3::Argument.new(
                 test => $<arglist-kwargs>.made
             ),
+            text       => $/.Str,
         )
     }
 
@@ -876,6 +888,7 @@ our role Python3::ArgListActions {
             basic-args => [],
             star-args  => [$<test-comma-maybe-comment>.made, |$<argument-comma-maybe-comment>>>.made],
             kwargs     => $<arglist-kwargs>.made,
+            text       => $/.Str,
         )
     }
 
@@ -884,6 +897,7 @@ our role Python3::ArgListActions {
             basic-args => $<basic>.made,
             star-args  => [$<test-comma-maybe-comment>.made, |$<star>>>.made],
             kwargs     => $<arglist-kwargs>.made,
+            text       => $/.Str,
         )
     }
 }
@@ -1389,6 +1403,7 @@ does Python3::VarArgsListActions
     method or-expr($/) {
         make Python3::OrExpr.new(
             operands => $<xor-expr>>>.made,
+            text     => $/.Str,
         )
     }
 
@@ -1529,6 +1544,7 @@ does Python3::VarArgsListActions
             make Python3::AugmentedAtom.new(
                 atom     => $<atom>.made,
                 trailers => $<trailer>>>.made,
+                text     => $/.Str,
             )
         } else {
             make $<atom>.made

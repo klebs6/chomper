@@ -92,7 +92,6 @@ does Python3::ICompoundStmt
         } else {
             []
         }
-
     }
 
     method rust-struct-members-from-python-funcdefs {
@@ -384,7 +383,11 @@ our class Python3::DecoratedClass does Python3::ICompoundStmt  {
 
 our sub do-rust-struct-members-from-python-funcdefs(Python3::Classdef $self) {
 
-    my @funcdefs = toplevel-python-functions($self.suite);
+    my @funcdefs = [
+        |toplevel-python-functions($self.suite),
+        |$self.python-class-special-functions(),
+        |$self.python-test-functions(),
+    ];
 
     my $seen = SetHash.new;
     my @struct-members;

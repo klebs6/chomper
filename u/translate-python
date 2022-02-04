@@ -42,6 +42,9 @@ sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = True) {
                 when Python3::FuncDef {
                     say $_.get-rust-scaffold(python-decorators => []);
                 }
+                when Python3::DecoratedFunction {
+                    say $_.get-rust-scaffold();
+                }
                 when Python3::SimpleSuite {
                     if $_.stmts.elems eq 1 {
 
@@ -60,7 +63,10 @@ sub MAIN(Bool :$debug = False, :$rule = Nil, :$to-rust = True) {
                     }
                 }
                 default {
-                    say $_;
+                    if $_ {
+                        say "-----------------[toplevel unparsed]";
+                        say $_.WHAT;
+                    }
                 }
             }
         }

@@ -41,7 +41,9 @@ our class Python3::DunderFunc::Init does Python3::IDunderFunc {
         impl From<$src-type> for {$cls-name} \{
 
             fn from($args) -> Self \{
-                $.optional-initializers
+
+        {$.optional-initializers.indent(8)}
+
                 {wrap-body-todo($.suite.text)}
             \}
         \}
@@ -61,7 +63,9 @@ our class Python3::DunderFunc::Init does Python3::IDunderFunc {
         impl {$cls-name} \{
 
             fn new({$args}) -> Self \{
-                $.optional-initializers
+
+        {$.optional-initializers.indent(8)}
+
                 {wrap-body-todo($.suite.text)}
             \}
         \}

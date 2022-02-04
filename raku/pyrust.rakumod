@@ -60,7 +60,9 @@ our sub create-rust-function(
 
     {$comment}
     {$attrs}{$prefix}fn {$name}($args) {$maybe-return-value}\{
-        {$optional-initializers}
+
+    {$optional-initializers.indent(4)}
+
         {wrap-body-todo($body)}
     \}
     END

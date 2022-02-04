@@ -25,7 +25,7 @@ does Python3::IFuncDef
     ?? $!parsed-comment.extract-param-typemap()
     !! {};
 
-    has $.rust-comment   = as-rust-comment($!parsed-comment,backup => $!comment);
+    has $.rust-comment   = as-rust-comment($!parsed-comment,backup => $!comment) // "";
     has $.optional-initializers = $!parameters.optional-initializers(typemap => $!param-typemap);
 
     method translate-special-function-to-rust { ... }
@@ -105,7 +105,9 @@ our class Python3::DunderFunc::Repr          does Python3::IDunderFunc {
         qq:to/END/
         impl fmt::Debug for $cls-name \{
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result \{
-                $.optional-initializers
+
+        {$.optional-initializers.indent(8)}
+
                 {wrap-body-todo($.suite.text)}
             \}
         \}
@@ -135,7 +137,9 @@ our class Python3::DunderFunc::Str           does Python3::IDunderFunc {
         qq:to/END/
         impl fmt::Display for $cls-name \{
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result \{
-                $.optional-initializers
+
+        {$.optional-initializers.indent(8)}
+
                 {wrap-body-todo($.suite.text)}
             \}
         \}

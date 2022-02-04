@@ -131,11 +131,13 @@ our class Python3::TestList does Python3::IListMaker  {
 our class Python3::ParensAtom does Python3::IAtom  {
     has Python3::IParensInner $.value is required;
     has Python3::Comment      @.comments;
+    has Str                   $.text is required;
 }
 
 our class Python3::ListAtom does Python3::IAtom  {
     has Python3::IListMaker $.value is required;
     has Python3::Comment    @.comments;
+    has Str                 $.text is required;
 }
 
 our class Python3::DictAtom does Python3::IAtom  {

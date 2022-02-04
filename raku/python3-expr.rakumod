@@ -13,6 +13,7 @@ our class Python3::AugmentedAtom
 does Python3::IAugmentedAtom  {
     has Python3::IAtom    $.atom is required;
     has Python3::ITrailer @.trailers is required;
+    has Str               $.text is required;
 }
 
 our class Python3::PlusFactor does Python3::IFactor  {
@@ -101,6 +102,7 @@ our class Python3::OrExpr
 does Python3::ITest
 does Python3::IOrExpr  {
     has Python3::IXorExpr @.operands is required;
+    has Str $.text is required;
 }
 
 our class Python3::StarExpr 

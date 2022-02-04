@@ -17,14 +17,37 @@ Duration in seconds (including Python startup time)
     Peak memory usage (rough estimate only) in bytes
 END
 
-our role Grammar::ReferencesSection {
+our role Grammar::CommentHeaders {
 
     rule references-section-header {
         References \-+
     }
 
+    rule returns-section-header {
+        Returns \-+
+    }
+
+    rule parameters-section-header {
+        || Params \-+
+        || Parameters \-+
+    }
+
+    rule attributes-section-header {
+        || Attributes \-+
+    }
+
+    rule any-header {
+        | <references-section-header>
+        | <returns-section-header>
+        | <parameters-section-header>
+        | <attributes-section-header>
+    }
+}
+
+our role Grammar::ReferencesSection {
+
     rule references-specification {
-        TODO
+        <paragraph>
     }
 
     rule references-section {
@@ -36,7 +59,7 @@ our role Grammar::ReferencesSection {
 our role Grammar::ReturnValueSection {
 
     rule returns-section {
-        Returns \-+
+        <returns-section-header>
         <returns-specification>+
     }
 
@@ -74,11 +97,6 @@ our role Grammar::ParametersSection {
         <parameter-specification>+
     }
 
-    rule parameters-section-header {
-        || Params \-+
-        || Parameters \-+
-    }
-
     rule parameter-specification {
         <parameter-names> ':' <parameter-type>
         <parameter-descriptor>?
@@ -99,10 +117,6 @@ our role Grammar::ParametersSection {
     regex parameter-descriptor {
         \N+ <?before \n>
     }
-
-    rule parameter-description {
-        <.maybe-undelimited-sentence>+
-    }
 }
 
 our role Grammar::AttributesSection {
@@ -111,10 +125,6 @@ our role Grammar::AttributesSection {
         <.ws>
         <attributes-section-header>
         <attribute-specification>+
-    }
-
-    rule attributes-section-header {
-        || Attributes \-+
     }
 
     rule attribute-specification {
@@ -146,68 +156,49 @@ our role Grammar::AttributesSection {
 our role Grammar::Prelude 
 does NumericToken
 {
-
-    token sentence-end-delim {
-        | '.'
-    }
-
     token sentence-token {
-        [
-            || <math-delimiter>
-            || <word>
-            || <ellipsis>
-            || <numeric>
-            || <parenthesized-text>
-            || <backticked-text>
-            || <bracketed-numeric>
-        ]
-        <sentence-token-delimiter>?
-    }
-
-    token ellipsis {
-        '...'
-    }
-
-    regex parenthesized-text {
-        '('
-        <text>
-        ')'
-    }
-
-    regex backticked-text {
-        '``'
-        <text>
-        '``'
+        || <word>
+        || <numeric>
+        || <sentence-token-delimiter>
     }
 
     regex text {
         .*?
     }
 
-    token bracketed-numeric {
-        '[' <numeric> ']' _?
-    }
-
     token sentence-token-delimiter {
         | ','
         | '`'
         | '\''
+        | '"'
         | ':'
+        | '...'
         | ';'
-    }
-
-    token math-delimiter {
         | '+'
+        | 'x'
         | '*'
+        | '**'
+        | '.'
         | '-'
         | '/'
         | '='
+        | '<='
+        | '>='
+        | '>'
+        | '<'
         | '^'
         | '|'
+        | '@'
+        | '?'
+        | '['
+        | ']'
+        | '('
+        | ')'
+        | '`'
     }
 
     token word {
-        <[A..Z a..z \- _]>+
+        <[A..Z a..z \- _ 0..9]>+
     }
 
 
@@ -220,17 +211,11 @@ does NumericToken
     }
 
     rule sentence {
-        [<sentence-token> <.ws>]+ 
-        <sentence-end-delim>
-    }
-
-    rule maybe-undelimited-sentence {
-        [<sentence-token> <.ws>]+ 
-        <sentence-end-delim>?
+        <sentence-token>+
     }
 
     rule paragraph {
-        <maybe-undelimited-sentence>+
+        <sentence>+
     }
 }
 
@@ -244,6 +229,7 @@ does Grammar::ReferencesSection
 does Grammar::ParametersSection 
 does Grammar::AttributesSection 
 does Grammar::Prelude
+does Grammar::CommentHeaders 
 {
 
     rule TOP {
@@ -269,6 +255,7 @@ does Grammar::Prelude
     }
 
     rule python3-doc-comment-section:sym<prelude> {
+        <!after <any-header>>
         [<paragraph> | <numeric-block>]+
     }
 }

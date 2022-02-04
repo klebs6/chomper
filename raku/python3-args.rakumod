@@ -25,10 +25,12 @@ our class Python3::CompForArgument does Python3::IArgument {
     has Python3::CompFor $.comp-for;
 }
 
+
 our class Python3::ArgList does Python3::ITrailer {
     has Python3::IArgument @.basic-args;
     has Python3::IArgument @.star-args;
     has Python3::IArgument @.kwargs;
+    has Str $.text;
 
     method count( --> Int) {
         [+] [
@@ -36,6 +38,133 @@ our class Python3::ArgList does Python3::ITrailer {
             @.star-args,
             @.kwargs,
         ].map: {.elems}
+    }
+
+    method format-for-decorator {
+
+        sub is-single-string($x) {
+            if $x ~~ Python3::Strings {
+                so $x.items.elems eq 1
+            } else {
+                False
+            }
+        }
+
+        multi sub get-as-str(Python3::Strings $arg)    { $arg.items>>.join("\n") }
+        multi sub get-as-str(Python3::ListAtom $arg)   { $arg.text }
+        multi sub get-as-str(Python3::ParensAtom $arg) { $arg.text }
+        multi sub get-as-str(Python3::Name $arg)       { $arg.value }
+        multi sub get-as-str(Python3::True $arg)       { "True" }
+        multi sub get-as-str(Python3::False $arg)      { "False" }
+
+        multi sub get-as-str(Python3::OrExpr $arg) { 
+            $arg.text
+        }
+
+        multi sub double-quoted(Python3::Strings $arg) {
+            "\"{$arg.items[0]}\""
+        }
+
+        multi sub double-quoted(Python3::ListAtom $arg) {
+            "\"{$arg.text}\""
+        }
+
+        multi sub double-quoted(Python3::ParensAtom $arg) {
+            "\"{$arg.text}\""
+        }
+
+        multi sub double-quoted(Python3::AugmentedAtom $arg) {
+            "\"{$arg.text}\""
+        }
+
+        multi sub double-quoted(Python3::Name $arg) {
+            "\"{$arg.value}\""
+        }
+
+        multi sub remove-quotes(Python3::Strings $arg) {
+            {$arg.items[0]}
+        }
+
+        multi sub walk(Python3::IAtom $arg, &fn) {
+            &fn($arg)
+        }
+
+        multi sub walk(Python3::AugmentedAtom $arg, &fn) {
+            &fn($arg)
+        }
+
+        multi sub walk(Python3::OrExpr $arg, &fn) {
+            walk($arg.operands[0], &fn)
+        }
+
+        multi sub walk(Python3::IArgument $arg, &fn) {
+            given $arg {
+                when Python3::CommentedArgument {
+                    walk($arg.argument, &fn)
+                }
+                when Python3::Argument {
+                    walk($arg.test, &fn)
+                }
+                when Python3::DefaultArgument {
+                    walk($arg.base, &fn)
+                }
+                when Python3::Strings {
+                    walk($arg, &fn)
+                }
+                default {
+                    False
+                }
+            }
+        }
+
+        sub maybe-get-default(Python3::IArgument $arg) {
+
+            given $arg {
+                when Python3::DefaultArgument {
+                    get-as-str($_.default)
+                }
+                default {
+                    Nil
+                }
+            }
+        }
+
+        if @.star-args.elems or @.kwargs.elems {
+            die "decorator arglist has unexpected items! possibly rethink this function";
+        }
+
+        given @.basic-args.elems {
+            when 0 {
+                ""
+            }
+            when 1 {
+                my $tag = walk(@.basic-args[0], &double-quoted);
+                "= $tag"
+            }
+            when 2 {
+                if walk(@.basic-args[0], &is-single-string) {
+                    my $tag    = walk(@.basic-args[0], &remove-quotes);
+                    my $target = walk(@.basic-args[1], &double-quoted);
+                    "($tag = $target)"
+                } else {
+                    "(" ~ do for @.basic-args {
+                        my $default     = maybe-get-default($_);
+                        my $default-tag = $default ?? " = $default" !! "";
+                        my $tag         = walk($_, &get-as-str);
+                        "$tag$default-tag"
+                    }.join(", ") ~ ")"
+                }
+            }
+            when 3 {
+                die "impl-me3";
+            }
+            when 4 {
+                die "impl-me4";
+            }
+            default {
+                die "decorator args: handle this case";
+            }
+        }
     }
 }
 
@@ -164,15 +293,18 @@ our class Python3::TypedArgList {
     }
 
     method optional-initializers(:%typemap) {
-        do for @.basic-args {
+        my @result;
+
+        for @.basic-args {
 
             if $_.default {
                 my $default = self.default-get-str($_.default);
                 my $name    = $_.tfpdef.name.value;
 
-                "let {$_.as-rust(:%typemap, force-not-default => True)} = {$name}.unwrap_or($default);"
+                @result.push: "let {$_.as-rust(:%typemap, force-not-default => True)} = {$name}.unwrap_or($default);";
             }
         }
+        rust-let-statements-align-type(@result).join("\n")
     }
 
     method count( --> Int ) {
