@@ -136,14 +136,13 @@ our role CPP14Keyword {
 
 our role CPP14Lexer does CPP14Keyword {
 
-    #-----------------------------
-    proto token IntegerLiteral { * }
-    token IntegerLiteral:sym<dec>    { <DecimalLiteral>     <Integersuffix>? }
-    token IntegerLiteral:sym<octal>  { <OctalLiteral>       <Integersuffix>? }
-    token IntegerLiteral:sym<hex>    { <HexadecimalLiteral> <Integersuffix>? }
-    token IntegerLiteral:sym<binary> { <BinaryLiteral>      <Integersuffix>? }
+    token IntegerLiteral {
+        ||  <DecimalLiteral> <Integersuffix>?
+        ||  <OctalLiteral> <Integersuffix>?
+        ||  <HexadecimalLiteral> <Integersuffix>?
+        ||  <BinaryLiteral> <Integersuffix>?
+    }
 
-    #-----------------------------
     token CharacterLiteral {
         ||  [   ||  'u'
                 ||  'U'
@@ -167,23 +166,30 @@ our role CPP14Lexer does CPP14Keyword {
         ]
     }
 
-    #--------------------------------
-    proto token BooleanLiteral { * }
-    token BooleanLiteral:sym<f> { <False_> }
-    token BooleanLiteral:sym<t> { <True_> }
+    token BooleanLiteral {
+        ||  <False_>
+        ||  <True_>
+    }
 
-    #--------------------------------
-    token PointerLiteral { <Nullptr> }
+    token PointerLiteral {
+        ||  <Nullptr>
+    }
 
-    #--------------------------------
-    proto token UserDefinedLiteral { * }
-    token UserDefinedLiteral:sym<int>   { <UserDefinedIntegerLiteral> }
-    token UserDefinedLiteral:sym<float> { <UserDefinedFloatingLiteral> }
-    token UserDefinedLiteral:sym<str>   { <UserDefinedStringLiteral> }
-    token UserDefinedLiteral:sym<char>  { <UserDefinedCharacterLiteral> }
+    token UserDefinedLiteral {
+        ||  <UserDefinedIntegerLiteral>
+        ||  <UserDefinedFloatingLiteral>
+        ||  <UserDefinedStringLiteral>
+        ||  <UserDefinedCharacterLiteral>
+    }
 
     token MultiLineMacro {
-        '#' [ <-[ \n ]>*?  '\\' '\r'?  '\n' ] <-[ \n ]>+
+        ||  '#'
+            [   ||  <-[ \n ]>*?
+                    '\\'
+                    '\r'?
+                    '\n'
+            ]
+            <-[ \n ]>+
     }
 
     token Directive {
@@ -425,13 +431,13 @@ our role CPP14Parser does CPP14Lexer {
         <declarationseq>?  $
     }
 
-    #-------------------------------
-    proto token primaryExpression { * }
-    token primaryExpression:sym<literal>            { <literal>+                            } 
-    token primaryExpression:sym<this>               { <This>                                } 
-    token primaryExpression:sym<parenthesized-expr> { <LeftParen> <expression> <RightParen> } 
-    token primaryExpression:sym<id-expr>            { <idExpression>                        } 
-    token primaryExpression:sym<lambda-expr>        { <lambdaExpression>                    } 
+    token primaryExpression {
+        ||  <literal>+
+        ||  <This>
+        ||  <LeftParen> <expression> <RightParen>
+        ||  <idExpression>
+        ||  <lambdaExpression>
+    }
 
     #-------------------------------
     proto regex idExpression { * }
@@ -456,17 +462,17 @@ our role CPP14Parser does CPP14Lexer {
 
     regex nestedNameSpecifierPrefix {
         [   
-            | <theTypeName>
-            | <namespaceName>
-            | <decltypeSpecifier>
+            |  <theTypeName>
+            |  <namespaceName>
+            |  <decltypeSpecifier>
         ]?
         <Doublecolon>
     }
 
     regex nestedNameSpecifierSuffix {
         [   
-            || <Identifier>
-            || <Template>? <simpleTemplateId>
+            ||  <Identifier>
+            ||  <Template>? <simpleTemplateId>
         ]
         <Doublecolon>
     }
@@ -643,17 +649,15 @@ our role CPP14Parser does CPP14Lexer {
         ||  <newExpression>
         ||  <deleteExpression>
     }
-
-    #---------------------------
-    proto rule unaryOperator { * }
-    rule unaryOperator:sym<or>    { <Or>    } 
-    rule unaryOperator:sym<star>  { <Star>  } 
-    rule unaryOperator:sym<and>   { <And>   } 
-    rule unaryOperator:sym<plus>  { <Plus>  } 
-    rule unaryOperator:sym<tilde> { <Tilde> } 
-    rule unaryOperator:sym<minus> { <Minus> } 
-    rule unaryOperator:sym<not>   { <Not>   } 
-
+    rule unaryOperator {
+        ||  <Or>
+        ||  <Star>
+        ||  <And>
+        ||  <Plus>
+        ||  <Tilde>
+        ||  <Minus>
+        ||  <Not>
+    }
     rule newExpression {
         ||  <Doublecolon>?
             <New>
@@ -666,54 +670,63 @@ our role CPP14Parser does CPP14Lexer {
             ]
             <newInitializer>?
     }
-
     rule newPlacement {
-        <LeftParen> <expressionList> <RightParen>
+        ||  <LeftParen>
+            <expressionList>
+            <RightParen>
     }
-
     rule newTypeId {
-        <typeSpecifierSeq> <newDeclarator>?
+        ||  <typeSpecifierSeq>
+            <newDeclarator>?
     }
-
     rule newDeclarator {
-        ||  <pointerOperator> <newDeclarator>?
+        ||  <pointerOperator>
+            <newDeclarator>?
         ||  <noPointerNewDeclarator>
     }
-
     rule noPointerNewDeclarator {
-        ||  <LeftBracket> <expression> <RightBracket> <attributeSpecifierSeq>?
-        ||  <noPointerNewDeclarator> <LeftBracket> <constantExpression> <RightBracket> <attributeSpecifierSeq>?
+        ||  <LeftBracket>
+            <expression>
+            <RightBracket>
+            <attributeSpecifierSeq>?
+        ||  <noPointerNewDeclarator>
+            <LeftBracket>
+            <constantExpression>
+            <RightBracket>
+            <attributeSpecifierSeq>?
     }
-
     rule newInitializer {
-        ||  <LeftParen> <expressionList>?  <RightParen>
+        ||  <LeftParen>
+            <expressionList>?
+            <RightParen>
         ||  <bracedInitList>
     }
-
     rule deleteExpression {
-        <Doublecolon>?
-        <Delete>
-        [ <LeftBracket> <RightBracket> ]?
-        <castExpression>
+        ||  <Doublecolon>?
+            <Delete>
+            [   ||  <LeftBracket>
+                    <RightBracket>
+            ]?
+            <castExpression>
     }
-
     rule noExceptExpression {
-        <Noexcept>
-        <LeftParen>
-        <expression>
-        <RightParen>
+        ||  <Noexcept>
+            <LeftParen>
+            <expression>
+            <RightParen>
     }
-
     rule castExpression {
         ||  <unaryExpression>
         ||  <LeftParen> <theTypeId> <RightParen> <castExpression>
     }
-
     rule pointerMemberExpression {
-        <castExpression>
-        [ [ <DotStar> || <ArrowStar> ] <castExpression> ]*
+        ||  <castExpression>
+            [   ||  [   ||  <DotStar>
+                        ||  <ArrowStar>
+                    ]
+                    <castExpression>
+            ]*
     }
-
     rule multiplicativeExpression {
         ||  <pointerMemberExpression>
             [   ||  [   ||  <Star>
@@ -768,13 +781,17 @@ our role CPP14Parser does CPP14Lexer {
                     <equalityExpression>
             ]*
     }
-
     rule exclusiveOrExpression {
-        <andExpression> [ <Caret> <andExpression> ]*
+        ||  <andExpression>
+            [   ||  <Caret>
+                    <andExpression>
+            ]*
     }
-
     rule inclusiveOrExpression {
-        <exclusiveOrExpression> [ <Or> <exclusiveOrExpression> ]*
+        ||  <exclusiveOrExpression>
+            [   ||  <Or>
+                    <exclusiveOrExpression>
+            ]*
     }
 
     rule logicalAndExpression {
@@ -848,29 +865,16 @@ our role CPP14Parser does CPP14Lexer {
     rule attributedStatementBody:sym<jump>       { <jumpStatement> }
     rule attributedStatementBody:sym<try>        { <tryBlock> }
 
-    #--------------------------------
-    proto rule labeledStatementLabel { * }
-
-    rule labeledStatementLabel:sym<identifier> {
+    rule labeledStatementLabel {
         <attributeSpecifierSeq>?
-        <Identifier>
+        [   
+            ||  <Identifier>
+            ||  <Case> <constantExpression>
+            ||  <Default>
+        ]
         <Colon>
     }
 
-    rule labeledStatementLabel:sym<case> {
-        <attributeSpecifierSeq>?
-        <Case> 
-        <constantExpression>
-        <Colon>
-    }
-
-    rule labeledStatementLabel:sym<default> {
-        <attributeSpecifierSeq>?
-        <Default>
-        <Colon>
-    }
-
-    #--------------------------------
     rule labeledStatement {
         <labeledStatementLabel>
         <statement>
@@ -962,120 +966,143 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-----------------------------
-    proto rule forInitStatement { * }
-    rule forInitStatement:sym<expr>   { <expressionStatement> }
-    rule forInitStatement:sym<simple> { <simpleDeclaration>   }
+    rule forInitStatement {
+        ||  <expressionStatement>
+        ||  <simpleDeclaration>
+    }
 
-    #-----------------------------
     rule forRangeDeclaration {
         <attributeSpecifierSeq>?
         <declSpecifierSeq>
         <declarator>
     }
 
-    #-----------------------------
-    proto rule forRangeInitializer { * }
-    rule forRangeInitializer:sym<expr>   { <expression> }
-    rule forRangeInitializer:sym<braced> { <bracedInitList> }
+    rule forRangeInitializer {
+        ||  <expression>
+        ||  <bracedInitList>
+    }
 
     rule jumpStatement {  
         <jumpStatementBody> <Semi>
     }
 
-    #-----------------------------
     proto rule jumpStatementBody { * }
-    rule jumpStatementBody:sym<break>    { <Break>                                        } 
-    rule jumpStatementBody:sym<continue> { <Continue>                                     } 
-    rule jumpStatementBody:sym<return>   { <Return> [ <expression> || <bracedInitList> ]? } 
-    rule jumpStatementBody:sym<goto>     { <Goto> <Identifier>                            } 
 
-    rule declarationseq { <declaration>+ }
+    rule jumpStatementBody:sym<break> { 
+        <Break>
+    }
 
-    #-----------------------------
-    proto rule declaration { * }
-    rule declaration:sym<block>                   { <blockDeclaration>       } 
-    rule declaration:sym<function>                { <functionDefinition>     } 
-    rule declaration:sym<template>                { <templateDeclaration>    } 
-    rule declaration:sym<explicit-instantiation>  { <explicitInstantiation>  } 
-    rule declaration:sym<explicit-specialization> { <explicitSpecialization> } 
-    rule declaration:sym<linkage>                 { <linkageSpecification>   } 
-    rule declaration:sym<namespace>               { <namespaceDefinition>    } 
-    rule declaration:sym<empty>                   { <emptyDeclaration>       } 
-    rule declaration:sym<attribute>               { <attributeDeclaration>   } 
+    rule jumpStatementBody:sym<continue> { 
+        <Continue>
+    }
 
-    #-----------------------------
-    proto rule blockDeclaration { * } 
-    rule blockDeclaration:sym<simple>          { <simpleDeclaration>        }
-    rule blockDeclaration:sym<asm>             { <asmDefinition>            }
-    rule blockDeclaration:sym<namespaceAlias>  { <namespaceAliasDefinition> }
-    rule blockDeclaration:sym<using-decl>      { <usingDeclaration>         }
-    rule blockDeclaration:sym<using-directive> { <usingDirective>           }
-    rule blockDeclaration:sym<staticAssert>    { <staticAssertDeclaration>  }
-    rule blockDeclaration:sym<alias>           { <aliasDeclaration>         }
-    rule blockDeclaration:sym<opaqueEnum>      { <opaqueEnumDeclaration>    }
+    rule jumpStatementBody:sym<return> { 
+        <Return> [ <expression> || <bracedInitList> ]?
+    }
+
+    rule jumpStatementBody:sym<goto> { 
+        <Goto> <Identifier>
+    }
+
+
+    rule declarationseq {
+        ||  <declaration>+
+    }
+
+    rule declaration {
+        ||  <blockDeclaration>
+        ||  <functionDefinition>
+        ||  <templateDeclaration>
+        ||  <explicitInstantiation>
+        ||  <explicitSpecialization>
+        ||  <linkageSpecification>
+        ||  <namespaceDefinition>
+        ||  <emptyDeclaration>
+        ||  <attributeDeclaration>
+    }
+
+    rule blockDeclaration {
+        ||  <simpleDeclaration>
+        ||  <asmDefinition>
+        ||  <namespaceAliasDefinition>
+        ||  <usingDeclaration>
+        ||  <usingDirective>
+        ||  <staticAssertDeclaration>
+        ||  <aliasDeclaration>
+        ||  <opaqueEnumDeclaration>
+    }
 
     rule aliasDeclaration {
-        <Using>
-        <Identifier>
-        <attributeSpecifierSeq>?
-        <Assign>
-        <theTypeId>
-        <Semi>
+        ||  <Using>
+            <Identifier>
+            <attributeSpecifierSeq>?
+            <Assign>
+            <theTypeId>
+            <Semi>
     }
 
     rule simpleDeclaration {
-        ||  <declSpecifierSeq>?  <initDeclaratorList>?  <Semi>
-        ||  <attributeSpecifierSeq> <declSpecifierSeq>?  <initDeclaratorList> <Semi>
+        ||  <declSpecifierSeq>?
+            <initDeclaratorList>?
+            <Semi>
+        ||  <attributeSpecifierSeq>
+            <declSpecifierSeq>?
+            <initDeclaratorList>
+            <Semi>
     }
 
     rule staticAssertDeclaration {
-        <Static_assert>
-        <LeftParen>
-        <constantExpression>
-        <Comma>
-        <StringLiteral>
-        <RightParen>
-        <Semi>
+        ||  <Static_assert>
+            <LeftParen>
+            <constantExpression>
+            <Comma>
+            <StringLiteral>
+            <RightParen>
+            <Semi>
     }
 
-    rule emptyDeclaration     { <Semi> }
-    rule attributeDeclaration { <attributeSpecifierSeq> <Semi> }
+    rule emptyDeclaration {
+        ||  <Semi>
+    }
 
-    #------------------------------------
-    proto rule declSpecifier { * } 
-    rule declSpecifier:sym<storageClassSpecifier> { <storageClassSpecifier> }
-    rule declSpecifier:sym<typeSpecifier>         { <typeSpecifier>         }
-    rule declSpecifier:sym<functionSpecifier>     { <functionSpecifier>     }
-    rule declSpecifier:sym<Friend>                { <Friend>                }
-    rule declSpecifier:sym<Typedef>               { <Typedef>               }
-    rule declSpecifier:sym<Constexpr>             { <Constexpr>             }
+    rule attributeDeclaration {
+        ||  <attributeSpecifierSeq>
+            <Semi>
+    }
 
-    #------------------------------------
+    rule declSpecifier {
+        ||  <storageClassSpecifier>
+        ||  <typeSpecifier>
+        ||  <functionSpecifier>
+        ||  <Friend>
+        ||  <Typedef>
+        ||  <Constexpr>
+    }
+
     rule declSpecifierSeq {
-        <declSpecifier>+?  <attributeSpecifierSeq>?
+        ||  <declSpecifier>+?
+            <attributeSpecifierSeq>?
     }
-
-    #------------------------------------
-    proto rule storageClassSpecifier { * }
-    rule storageClassSpecifier:sym<Register>     { <Register>     } 
-    rule storageClassSpecifier:sym<Static>       { <Static>       } 
-    rule storageClassSpecifier:sym<Thread_local> { <Thread_local> } 
-    rule storageClassSpecifier:sym<Extern>       { <Extern>       } 
-    rule storageClassSpecifier:sym<Mutable>      { <Mutable>      } 
-
-    #------------------------------------
-    proto rule functionSpecifier { * }
-    rule functionSpecifier:sym<Inline>   { <Inline>   } 
-    rule functionSpecifier:sym<Virtual>  { <Virtual>  } 
-    rule functionSpecifier:sym<Explicit> { <Explicit> } 
-
-    rule typedefName { <Identifier> }
-
-    proto rule typeSpecifier { * }
-    rule typeSpecifier:sym<trailingTypeSpecifier> { <trailingTypeSpecifier> } 
-    rule typeSpecifier:sym<classSpecifier>        { <classSpecifier>        } 
-    rule typeSpecifier:sym<enumSpecifier>         { <enumSpecifier>         } 
-
+    rule storageClassSpecifier {
+        ||  <Register>
+        ||  <Static>
+        ||  <Thread_local>
+        ||  <Extern>
+        ||  <Mutable>
+    }
+    rule functionSpecifier {
+        ||  <Inline>
+        ||  <Virtual>
+        ||  <Explicit>
+    }
+    rule typedefName {
+        ||  <Identifier>
+    }
+    rule typeSpecifier {
+        ||  <trailingTypeSpecifier>
+        ||  <classSpecifier>
+        ||  <enumSpecifier>
+    }
     rule trailingTypeSpecifier {
         ||  <simpleTypeSpecifier>
         ||  <elaboratedTypeSpecifier>
@@ -1217,7 +1244,7 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule originalNamespaceName {
-        <Identifier>
+        ||  <Identifier>
     }
 
     rule namespaceDefinition {
@@ -1232,19 +1259,20 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule namespaceAlias {
-        <Identifier>
+        ||  <Identifier>
     }
 
     rule namespaceAliasDefinition {
-        <Namespace>
-        <Identifier>
-        <Assign>
-        <qualifiednamespacespecifier>
-        <Semi>
+        ||  <Namespace>
+            <Identifier>
+            <Assign>
+            <qualifiednamespacespecifier>
+            <Semi>
     }
 
     rule qualifiednamespacespecifier {
-        <nestedNameSpecifier>? <namespaceName>
+        ||  <nestedNameSpecifier>?
+            <namespaceName>
     }
 
     rule usingDeclaration {
@@ -1259,22 +1287,20 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule usingDirective {
-        <attributeSpecifierSeq>?
-        <Using>
-        <Namespace>
-        <nestedNameSpecifier>?
-        <namespaceName>
-        <Semi>
+        ||  <attributeSpecifierSeq>?
+            <Using>
+            <Namespace>
+            <nestedNameSpecifier>?
+            <namespaceName>
+            <Semi>
     }
-
     rule asmDefinition {
-        <Asm>
-        <LeftParen>
-        <StringLiteral>
-        <RightParen>
-        <Semi>
+        ||  <Asm>
+            <LeftParen>
+            <StringLiteral>
+            <RightParen>
+            <Semi>
     }
-
     rule linkageSpecification {
         ||  <Extern>
             <StringLiteral>
@@ -1284,72 +1310,83 @@ our role CPP14Parser does CPP14Lexer {
                 ||  <declaration>
             ]
     }
-
     rule attributeSpecifierSeq {
-        <attributeSpecifier>+
+        ||  <attributeSpecifier>+
     }
-
     rule attributeSpecifier {
-        ||  <LeftBracket> <LeftBracket> <attributeList>?  <RightBracket> <RightBracket>
+        ||  <LeftBracket>
+            <LeftBracket>
+            <attributeList>?
+            <RightBracket>
+            <RightBracket>
         ||  <alignmentspecifier>
     }
-
     rule alignmentspecifier {
-        <Alignas>
-        <LeftParen>
-        [   
-            ||  <theTypeId>
-            ||  <constantExpression>
-        ]
-        <Ellipsis>?
-        <RightParen>
+        ||  <Alignas>
+            <LeftParen>
+            [   ||  <theTypeId>
+                ||  <constantExpression>
+            ]
+            <Ellipsis>?
+            <RightParen>
     }
-
     rule attributeList {
-        <attribute> [ <Comma> <attribute> ]* <Ellipsis>?
+        ||  <attribute>
+            [   ||  <Comma>
+                    <attribute>
+            ]*
+            <Ellipsis>?
     }
-
     rule attribute {
-        [ <attributeNamespace> <Doublecolon> ]?
-        <Identifier>
-        <attributeArgumentClause>?
+        ||  [   ||  <attributeNamespace>
+                    <Doublecolon>
+            ]?
+            <Identifier>
+            <attributeArgumentClause>?
     }
-
     rule attributeNamespace {
-        <Identifier>
+        ||  <Identifier>
     }
-
     rule attributeArgumentClause {
-        <LeftParen>
-        <balancedTokenSeq>?
-        <RightParen>
+        ||  <LeftParen>
+            <balancedTokenSeq>?
+            <RightParen>
     }
-
     rule balancedTokenSeq {
-        <balancedrule>+
+        ||  <balancedrule>+
     }
-
     rule balancedrule {
-        ||  <LeftParen> <balancedTokenSeq> <RightParen>
-        ||  <LeftBracket> <balancedTokenSeq> <RightBracket>
-        ||  <LeftBrace> <balancedTokenSeq> <RightBrace>
+        ||  <LeftParen>
+            <balancedTokenSeq>
+            <RightParen>
+        ||  <LeftBracket>
+            <balancedTokenSeq>
+            <RightBracket>
+        ||  <LeftBrace>
+            <balancedTokenSeq>
+            <RightBrace>
     }
-
     rule initDeclaratorList {
-        <initDeclarator> [ <Comma> <initDeclarator> ]*
+        ||  <initDeclarator>
+            [   ||  <Comma>
+                    <initDeclarator>
+            ]*
     }
-
     rule initDeclarator {
-        <declarator> <initializer>?
+        ||  <declarator>
+            <initializer>?
     }
-
     rule declarator {
         ||  <pointerDeclarator>
-        ||  <noPointerDeclarator> <parametersAndQualifiers> <trailingReturnType>
+        ||  <noPointerDeclarator>
+            <parametersAndQualifiers>
+            <trailingReturnType>
     }
-
     rule pointerDeclarator {
-        [ <pointerOperator> <Const>? ]* <noPointerDeclarator>
+        ||  [   ||  <pointerOperator>
+                    <Const>?
+            ]*
+            <noPointerDeclarator>
     }
 
     #------------------------------
@@ -1369,42 +1406,32 @@ our role CPP14Parser does CPP14Lexer {
 
     #------------------------------
     rule parametersAndQualifiers {
-        <LeftParen>
-        <parameterDeclarationClause>?
-        <RightParen>
-        <cvqualifierseq>?
-        <refqualifier>?
-        <exceptionSpecification>?
-        <attributeSpecifierSeq>?
+        ||  <LeftParen>
+            <parameterDeclarationClause>?
+            <RightParen>
+            <cvqualifierseq>?
+            <refqualifier>?
+            <exceptionSpecification>?
+            <attributeSpecifierSeq>?
     }
-
     rule trailingReturnType {
-        <Arrow>
-        <trailingTypeSpecifierSeq>
-        <abstractDeclarator>?
+        ||  <Arrow>
+            <trailingTypeSpecifierSeq>
+            <abstractDeclarator>?
     }
-
-    proto rule pointerOperator { * }
-
-    rule pointerOperator:sym<A> {
-        [   
-          ||  <And>
-          ||  <AndAnd>
-        ]
-        <attributeSpecifierSeq>?
+    rule pointerOperator {
+        ||  [   ||  <And>
+                ||  <AndAnd>
+            ]
+            <attributeSpecifierSeq>?
+        ||  <nestedNameSpecifier>?
+            <Star>
+            <attributeSpecifierSeq>?
+            <cvqualifierseq>?
     }
-
-    rule pointerOperator:sym<B> {
-        <nestedNameSpecifier>?
-        <Star>
-        <attributeSpecifierSeq>?
-        <cvqualifierseq>?
-    }
-
     rule cvqualifierseq {
-        <cvQualifier>+
+        ||  <cvQualifier>+
     }
-
     rule cvQualifier {
         ||  <Const>
         ||  <Volatile>
