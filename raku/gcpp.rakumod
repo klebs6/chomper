@@ -1066,51 +1066,54 @@ our role CPP14Parser does CPP14Lexer {
     rule declSpecifierSeq {
         <declSpecifier>+?  <attributeSpecifierSeq>?  
     }
-    rule storageClassSpecifier {
-        ||  <Register>
-        ||  <Static>
-        ||  <Thread_local>
-        ||  <Extern>
-        ||  <Mutable>
-    }
-    rule functionSpecifier {
-        ||  <Inline>
-        ||  <Virtual>
-        ||  <Explicit>
-    }
+
+    #---------------------------
+    proto rule storageClassSpecifier { * }
+    rule storageClassSpecifier:sym<Register>     { <Register>     } 
+    rule storageClassSpecifier:sym<Static>       { <Static>       } 
+    rule storageClassSpecifier:sym<Thread_local> { <Thread_local> } 
+    rule storageClassSpecifier:sym<Extern>       { <Extern>       } 
+    rule storageClassSpecifier:sym<Mutable>      { <Mutable>      } 
+
+    #---------------------------
+    proto rule functionSpecifier { * }
+    rule functionSpecifier:sym<inline>   { <Inline> }
+    rule functionSpecifier:sym<virtual>  { <Virtual> }
+    rule functionSpecifier:sym<explicit> { <Explicit> }
+
     rule typedefName {
-        ||  <Identifier>
+        <Identifier>
     }
-    rule typeSpecifier {
-        ||  <trailingTypeSpecifier> 
-        ||  <classSpecifier>
-        ||  <enumSpecifier>
-    }
-    rule trailingTypeSpecifier {
-        ||  <cvQualifier> 
-        ||  <simpleTypeSpecifier>
-        ||  <elaboratedTypeSpecifier>
-        ||  <typeNameSpecifier>
-    }
+
+    #---------------------------
+    proto rule typeSpecifier { * }
+    rule typeSpecifier:sym<trailingTypeSpecifier> { <trailingTypeSpecifier> }
+    rule typeSpecifier:sym<classSpecifier>        { <classSpecifier>        }
+    rule typeSpecifier:sym<enumSpecifier>         { <enumSpecifier>         }
+
+    #---------------------------
+    proto rule trailingTypeSpecifier { * }
+    rule trailingTypeSpecifier:sym<cv-qualifier> { <cvQualifier>             } 
+    rule trailingTypeSpecifier:sym<simple>       { <simpleTypeSpecifier>     } 
+    rule trailingTypeSpecifier:sym<elaborated>   { <elaboratedTypeSpecifier> } 
+    rule trailingTypeSpecifier:sym<typename>     { <typeNameSpecifier>       } 
+
+    #---------------------------
     rule typeSpecifierSeq {
-        ||  <typeSpecifier>+
-            <attributeSpecifierSeq>?
+        <typeSpecifier>+ <attributeSpecifierSeq>?
     }
 
     rule trailingTypeSpecifierSeq {
-        ||  <trailingTypeSpecifier>+
-            <attributeSpecifierSeq>?
+        <trailingTypeSpecifier>+ <attributeSpecifierSeq>?
     }
 
-    rule simpleTypeLengthModifier {
-        ||  <Short>
-        ||  <Long>
-    }
+    proto rule simpleTypeLengthModifier { * }
+    rule simpleTypeLengthModifier:sym<Short> { <Short> }
+    rule simpleTypeLengthModifier:sym<Long>  { <Long>  }
 
-    rule simpleTypeSignednessModifier {
-        ||  <Unsigned>
-        ||  <Signed>
-    }
+    proto rule simpleTypeSignednessModifier         { * }
+    rule simpleTypeSignednessModifier:sym<Unsigned> { <Unsigned> }
+    rule simpleTypeSignednessModifier:sym<Signed>   { <Signed> }
 
     rule simpleTypeSpecifier {
         ||  <nestedNameSpecifier>?  <theTypeName>
