@@ -1052,16 +1052,13 @@ our role CPP14Parser does CPP14Lexer {
             <Semi>
     }
 
-    rule declSpecifier {
-        [
-            ||  <storageClassSpecifier>
-            ||  <typeSpecifier> 
-            ||  <functionSpecifier>
-            ||  <Friend>
-            ||  <Typedef>
-            ||  <Constexpr>
-        ]
-    }
+    proto rule declSpecifier { * }
+    rule declSpecifier:sym<storageClassSpecifier> { <storageClassSpecifier> }
+    rule declSpecifier:sym<typeSpecifier>         { <typeSpecifier> }
+    rule declSpecifier:sym<functionSpecifier>     { <functionSpecifier> }
+    rule declSpecifier:sym<Friend>                { <Friend> }
+    rule declSpecifier:sym<Typedef>               { <Typedef> }
+    rule declSpecifier:sym<Constexpr>             { <Constexpr> }
 
     rule declSpecifierSeq {
         <declSpecifier>+?  <attributeSpecifierSeq>?  
