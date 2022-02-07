@@ -92,8 +92,8 @@ our role CPP14Keyword {
     token Or               { '|'                } 
     token Tilde            { '~'                } 
     token Assign           { '='                } 
-    token Less             { '<'                } 
-    token Greater          { '>'                } 
+    token Less             { '<'  <!before '='> } 
+    token Greater          { '>'  <!before '='> } 
     token PlusAssign       { '+='               } 
     token MinusAssign      { '-='               } 
     token StarAssign       { '*='               } 
@@ -422,6 +422,7 @@ our role CPP14Lexer does CPP14Keyword {
 
 our role CPP14Parser does CPP14Lexer {
 
+    #<statementSeq>
     rule TOP {
         <.ws> 
         <statementSeq>
@@ -651,6 +652,7 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #--------------------------------------
+=begin comment
     proto rule unaryOperator { * } 
     rule unaryOperator:sym<Or>    { <Or>    } 
     rule unaryOperator:sym<Star>  { <Star>  } 
@@ -659,6 +661,16 @@ our role CPP14Parser does CPP14Lexer {
     rule unaryOperator:sym<Tilde> { <Tilde> } 
     rule unaryOperator:sym<Minus> { <Minus> } 
     rule unaryOperator:sym<Not>   { <Not>   } 
+=end comment
+    rule unaryOperator {
+        ||  <Or>
+        ||  <Star>
+        ||  <And>
+        ||  <Plus>
+        ||  <Tilde>
+        ||  <Minus>
+        ||  <Not>
+    }
 
     #--------------------------------------
     rule newExpression {
@@ -771,12 +783,14 @@ our role CPP14Parser does CPP14Lexer {
     regex relationalExpression {
         <shiftExpression>
         [  
+            <.ws>
             [   
                 ||  <Less>
                 ||  <Greater>
                 ||  <LessEqual>
                 ||  <GreaterEqual>
             ]
+            <.ws>
             <shiftExpression>
         ]*
     }
@@ -928,16 +942,23 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-----------------------------
-    rule condition {
-        ||  <expression>
-        ||  <attributeSpecifierSeq>?
-            <declSpecifierSeq> 
-            <declarator>
-            [   
-                ||  <Assign> <initializerClause>
-                ||  <bracedInitList>
-            ]
+    proto rule condition { * }
+
+    rule condition:sym<expr> {
+        <expression>
     }
+
+=begin comment
+    rule condition:sym<decl> {
+        <attributeSpecifierSeq>?
+        <declSpecifierSeq> 
+        <declarator>
+        [   
+            ||  <Assign> <initializerClause>
+            ||  <bracedInitList>
+        ]
+    }
+=end comment
 
     #-----------------------------
     proto rule iterationStatement { * }
@@ -1119,39 +1140,40 @@ our role CPP14Parser does CPP14Lexer {
     rule simpleTypeSignednessModifier:sym<Unsigned> { <Unsigned> }
     rule simpleTypeSignednessModifier:sym<Signed>   { <Signed> }
 
-    token full-type-name {
+    rule full-type-name {
         <nestedNameSpecifier>? <theTypeName>
     }
 
-    token scoped-template-id {
+    rule scoped-template-id {
         <nestedNameSpecifier> <Template> <simpleTemplateId>
     }
 
-    token simple-int-type-specifier {
+    rule simple-int-type-specifier {
         <simpleTypeSignednessModifier>?  <simpleTypeLengthModifier>* <Int_>
     }
 
-    token simple-char-type-specifier {
+    rule simple-char-type-specifier {
         <simpleTypeSignednessModifier>?  <Char_>
     }
 
-    token simple-char16-type-specifier {
+    rule simple-char16-type-specifier {
         <simpleTypeSignednessModifier>?  <Char16>
     }
 
-    token simple-char32-type-specifier {
+    rule simple-char32-type-specifier {
         <simpleTypeSignednessModifier>?  <Char32>
     }
 
-    token simple-wchar-type-specifier {
+    rule simple-wchar-type-specifier {
         <simpleTypeSignednessModifier>?  <Wchar>
     }
 
-    token simple-double-type-specifier {
+    rule simple-double-type-specifier {
         <simpleTypeLengthModifier>?  <Double>
     }
 
-    rule simpleTypeSpecifier {
+    regex simpleTypeSpecifier {
+        | <simple-int-type-specifier>
         | <full-type-name>
         | <scoped-template-id>
         | <simpleTypeSignednessModifier>
@@ -1161,7 +1183,6 @@ our role CPP14Parser does CPP14Lexer {
         | <simple-char32-type-specifier>
         | <simple-wchar-type-specifier>
         | <Bool_>
-        | <simple-int-type-specifier>
         | <Float>
         | <simple-double-type-specifier>
         | <Void>
@@ -1469,9 +1490,9 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule abstractDeclarator {
-        | <pointerAbstractDeclarator>
-        | <noPointerAbstractDeclarator>? <parametersAndQualifiers> <trailingReturnType>
-        | <abstractPackDeclarator>
+        || <pointerAbstractDeclarator>
+        || <noPointerAbstractDeclarator>? <parametersAndQualifiers> <trailingReturnType>
+        || <abstractPackDeclarator>
     }
 
     #-------------------[x]
@@ -1831,9 +1852,9 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     token templateArgument {
-        | <theTypeId>
-        | <constantExpression>
-        | <idExpression>
+        || <theTypeId>
+        || <constantExpression>
+        || <idExpression>
     }
 
     rule typeNameSpecifier {
