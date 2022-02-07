@@ -966,9 +966,10 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-----------------------------
-    proto rule forInitStatement { * }
-    rule forInitStatement:sym<expressionStatement> { <expressionStatement> }
-    rule forInitStatement:sym<simpleDeclaration> { <simpleDeclaration> }
+    rule forInitStatement {
+        ||  <expressionStatement>
+        ||  <simpleDeclaration>
+    }
 
     rule forRangeDeclaration {
         <attributeSpecifierSeq>?
@@ -976,9 +977,10 @@ our role CPP14Parser does CPP14Lexer {
         <declarator>
     }
 
-    proto rule forRangeInitializer { * }
-    rule forRangeInitializer:sym<expression> { <expression> }
-    rule forRangeInitializer:sym<bracedInitList> { <bracedInitList> }
+    rule forRangeInitializer {
+        ||  <expression>
+        ||  <bracedInitList>
+    }
 
     rule jumpStatement {  
         <jumpStatementBody> <Semi>
@@ -1005,7 +1007,6 @@ our role CPP14Parser does CPP14Lexer {
     rule declaration:sym<emptyDeclaration>       { <emptyDeclaration>         } 
     rule declaration:sym<attributeDeclaration>   { <attributeDeclaration>     } 
 
-    #---------------------------
     proto rule blockDeclaration { * }
     rule blockDeclaration:sym<simple>            { <simpleDeclaration>        } 
     rule blockDeclaration:sym<asm>               { <asmDefinition>            } 
@@ -1025,85 +1026,86 @@ our role CPP14Parser does CPP14Lexer {
         <Semi>
     }
 
-    #---------------------------
-    proto rule simpleDeclaration { * }
-    rule simpleDeclaration:sym<basic>     { <declSpecifierSeq>?  <initDeclaratorList>?  <Semi> }
-    rule simpleDeclaration:sym<init-list> { <attributeSpecifierSeq> <declSpecifierSeq>?  <initDeclaratorList> <Semi> }
+    rule simpleDeclaration {
+        [
+            ||  <declSpecifierSeq>?  <initDeclaratorList>?  <Semi>
+            ||  <attributeSpecifierSeq> <declSpecifierSeq>?  <initDeclaratorList> <Semi>
+        ]
+    }
 
     rule staticAssertDeclaration {
-        <Static_assert>
-        <LeftParen>
-        <constantExpression>
-        <Comma>
-        <StringLiteral>
-        <RightParen>
-        <Semi>
+        ||  <Static_assert>
+            <LeftParen>
+            <constantExpression>
+            <Comma>
+            <StringLiteral>
+            <RightParen>
+            <Semi>
     }
 
     rule emptyDeclaration {
-        <Semi>
+        ||  <Semi>
     }
 
     rule attributeDeclaration {
-        <attributeSpecifierSeq> <Semi>
+        ||  <attributeSpecifierSeq>
+            <Semi>
     }
 
-    #---------------------------
-    proto rule declSpecifier { * }
-    rule declSpecifier:sym<storageClassSpecifier> { <storageClassSpecifier> }
-    rule declSpecifier:sym<typeSpecifier>         { <typeSpecifier> }
-    rule declSpecifier:sym<functionSpecifier>     { <functionSpecifier> }
-    rule declSpecifier:sym<Friend>                { <Friend> }
-    rule declSpecifier:sym<Typedef>               { <Typedef> }
-    rule declSpecifier:sym<Constexpr>             { <Constexpr> }
+    rule declSpecifier {
+        [
+            ||  <storageClassSpecifier>
+            ||  <typeSpecifier> 
+            ||  <functionSpecifier>
+            ||  <Friend>
+            ||  <Typedef>
+            ||  <Constexpr>
+        ]
+    }
 
     rule declSpecifierSeq {
         <declSpecifier>+?  <attributeSpecifierSeq>?  
     }
-
-    #---------------------------
-    proto rule storageClassSpecifier { * }
-    rule storageClassSpecifier:sym<Register>     { <Register>     } 
-    rule storageClassSpecifier:sym<Static>       { <Static>       } 
-    rule storageClassSpecifier:sym<Thread_local> { <Thread_local> } 
-    rule storageClassSpecifier:sym<Extern>       { <Extern>       } 
-    rule storageClassSpecifier:sym<Mutable>      { <Mutable>      } 
-
-    #---------------------------
-    proto rule functionSpecifier { * }
-    rule functionSpecifier:sym<inline>   { <Inline> }
-    rule functionSpecifier:sym<virtual>  { <Virtual> }
-    rule functionSpecifier:sym<explicit> { <Explicit> }
-
-    rule typedefName {
-        <Identifier>
+    rule storageClassSpecifier {
+        ||  <Register>
+        ||  <Static>
+        ||  <Thread_local>
+        ||  <Extern>
+        ||  <Mutable>
     }
-
-    #---------------------------
-    proto rule typeSpecifier { * }
-    rule typeSpecifier:sym<trailingTypeSpecifier> { <trailingTypeSpecifier> }
-    rule typeSpecifier:sym<classSpecifier>        { <classSpecifier>        }
-    rule typeSpecifier:sym<enumSpecifier>         { <enumSpecifier>         }
-
-    #---------------------------
-    proto rule trailingTypeSpecifier { * }
-    rule trailingTypeSpecifier:sym<cv-qualifier> { <cvQualifier>             } 
-    rule trailingTypeSpecifier:sym<simple>       { <simpleTypeSpecifier>     } 
-    rule trailingTypeSpecifier:sym<elaborated>   { <elaboratedTypeSpecifier> } 
-    rule trailingTypeSpecifier:sym<typename>     { <typeNameSpecifier>       } 
-
-    #---------------------------
+    rule functionSpecifier {
+        ||  <Inline>
+        ||  <Virtual>
+        ||  <Explicit>
+    }
+    rule typedefName {
+        ||  <Identifier>
+    }
+    rule typeSpecifier {
+        ||  <trailingTypeSpecifier> 
+        ||  <classSpecifier>
+        ||  <enumSpecifier>
+    }
+    rule trailingTypeSpecifier {
+        ||  <cvQualifier> 
+        ||  <simpleTypeSpecifier>
+        ||  <elaboratedTypeSpecifier>
+        ||  <typeNameSpecifier>
+    }
     rule typeSpecifierSeq {
-        <typeSpecifier>+ <attributeSpecifierSeq>?
+        ||  <typeSpecifier>+
+            <attributeSpecifierSeq>?
     }
 
     rule trailingTypeSpecifierSeq {
-        <trailingTypeSpecifier>+ <attributeSpecifierSeq>?
+        ||  <trailingTypeSpecifier>+
+            <attributeSpecifierSeq>?
     }
 
-    proto rule simpleTypeLengthModifier { * }
-    rule simpleTypeLengthModifier:sym<Short> { <Short> }
-    rule simpleTypeLengthModifier:sym<Long>  { <Long>  }
+    rule simpleTypeLengthModifier {
+        ||  <Short>
+        ||  <Long>
+    }
 
     proto rule simpleTypeSignednessModifier         { * }
     rule simpleTypeSignednessModifier:sym<Unsigned> { <Unsigned> }
