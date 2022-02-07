@@ -1,6 +1,4 @@
-
 our role CPP14Keyword {
-
     token Alignas          { 'alignas'          } 
     token Alignof          { 'alignof'          } 
     token Asm              { 'asm'              } 
@@ -1080,15 +1078,11 @@ our role CPP14Parser does CPP14Lexer {
 
     #---------------------------
     proto rule trailingTypeSpecifier { * }
+
+    rule trailingTypeSpecifier:sym<cv-qualifier> { <cvQualifier>  <simpleTypeSpecifier> }
     rule trailingTypeSpecifier:sym<simple>       { <simpleTypeSpecifier>     } 
     rule trailingTypeSpecifier:sym<elaborated>   { <elaboratedTypeSpecifier> } 
     rule trailingTypeSpecifier:sym<typename>     { <typeNameSpecifier>       } 
-
-    #TODO is this actually legal?
-    rule trailingTypeSpecifier:sym<cv-qualified-auto> { <cvQualifier> <Auto> } 
-
-    rule trailingTypeSpecifier:sym<cv-qualifier> { <cvQualifier>             } 
-
 
     #---------------------------
     rule typeSpecifierSeq {
@@ -1274,6 +1268,7 @@ our role CPP14Parser does CPP14Lexer {
             <namespaceName>
             <Semi>
     }
+
     rule asmDefinition {
         ||  <Asm>
             <LeftParen>
@@ -1281,6 +1276,7 @@ our role CPP14Parser does CPP14Lexer {
             <RightParen>
             <Semi>
     }
+
     rule linkageSpecification {
         ||  <Extern>
             <StringLiteral>
@@ -1290,9 +1286,11 @@ our role CPP14Parser does CPP14Lexer {
                 ||  <declaration>
             ]
     }
+
     rule attributeSpecifierSeq {
-        ||  <attributeSpecifier>+
+        <attributeSpecifier>+
     }
+
     rule attributeSpecifier {
         ||  <LeftBracket>
             <LeftBracket>
@@ -1301,6 +1299,7 @@ our role CPP14Parser does CPP14Lexer {
             <RightBracket>
         ||  <alignmentspecifier>
     }
+
     rule alignmentspecifier {
         ||  <Alignas>
             <LeftParen>
