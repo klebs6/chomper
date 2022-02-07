@@ -1066,13 +1066,13 @@ our role CPP14Parser does CPP14Lexer {
     rule declSpecifierSeq {
         <declSpecifier>+?  <attributeSpecifierSeq>?  
     }
-    rule storageClassSpecifier {
-        ||  <Register>
-        ||  <Static>
-        ||  <Thread_local>
-        ||  <Extern>
-        ||  <Mutable>
-    }
+    #---------------------------
+    proto rule storageClassSpecifier { * }
+    rule storageClassSpecifier:sym<Register>     { <Register>     } 
+    rule storageClassSpecifier:sym<Static>       { <Static>       } 
+    rule storageClassSpecifier:sym<Thread_local> { <Thread_local> } 
+    rule storageClassSpecifier:sym<Extern>       { <Extern>       } 
+    rule storageClassSpecifier:sym<Mutable>      { <Mutable>      } 
     #---------------------------
     proto rule functionSpecifier { * }
     rule functionSpecifier:sym<inline>   { <Inline> }
