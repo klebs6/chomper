@@ -79,7 +79,7 @@ our role CPP14Keyword {
     token LeftParen        { '('                } 
     token RightParen       { ')'                } 
     token LeftBracket      { '['                } 
-    token RightBracket     { '\]'               } 
+    token RightBracket     { ']'                } 
     token LeftBrace        { '{'                } 
     token RightBrace       { '}'                } 
     token Plus             { '+'                } 
@@ -915,7 +915,7 @@ our role CPP14Parser does CPP14Lexer {
     rule condition {
         ||  <expression>
         ||  <attributeSpecifierSeq>?
-            <declSpecifierSeq>
+            <declSpecifierSeq> 
             <declarator>
             [   
                 ||  <Assign> <initializerClause>
@@ -986,69 +986,51 @@ our role CPP14Parser does CPP14Lexer {
         <jumpStatementBody> <Semi>
     }
 
+    #-------------------------------
     proto rule jumpStatementBody { * }
+    rule jumpStatementBody:sym<break>    { <Break>                                        } 
+    rule jumpStatementBody:sym<continue> { <Continue>                                     } 
+    rule jumpStatementBody:sym<return>   { <Return> [ <expression> || <bracedInitList> ]? } 
+    rule jumpStatementBody:sym<goto>     { <Goto> <Identifier>                            } 
 
-    rule jumpStatementBody:sym<break> { 
-        <Break>
-    }
+    rule declarationseq { <declaration>+ }
 
-    rule jumpStatementBody:sym<continue> { 
-        <Continue>
-    }
+    #-------------------------------
+    proto rule declaration { * }
+    rule declaration:sym<blockDeclaration>       { <blockDeclaration>         } 
+    rule declaration:sym<functionDefinition>     { <functionDefinition>       } 
+    rule declaration:sym<templateDeclaration>    { <templateDeclaration>      } 
+    rule declaration:sym<explicitInstantiation>  { <explicitInstantiation>    } 
+    rule declaration:sym<explicitSpecialization> { <explicitSpecialization>   } 
+    rule declaration:sym<linkageSpecification>   { <linkageSpecification>     } 
+    rule declaration:sym<namespaceDefinition>    { <namespaceDefinition>      } 
+    rule declaration:sym<emptyDeclaration>       { <emptyDeclaration>         } 
+    rule declaration:sym<attributeDeclaration>   { <attributeDeclaration>     } 
 
-    rule jumpStatementBody:sym<return> { 
-        <Return> [ <expression> || <bracedInitList> ]?
-    }
-
-    rule jumpStatementBody:sym<goto> { 
-        <Goto> <Identifier>
-    }
-
-
-    rule declarationseq {
-        ||  <declaration>+
-    }
-
-    rule declaration {
-        ||  <blockDeclaration>
-        ||  <functionDefinition>
-        ||  <templateDeclaration>
-        ||  <explicitInstantiation>
-        ||  <explicitSpecialization>
-        ||  <linkageSpecification>
-        ||  <namespaceDefinition>
-        ||  <emptyDeclaration>
-        ||  <attributeDeclaration>
-    }
-
-    rule blockDeclaration {
-        ||  <simpleDeclaration>
-        ||  <asmDefinition>
-        ||  <namespaceAliasDefinition>
-        ||  <usingDeclaration>
-        ||  <usingDirective>
-        ||  <staticAssertDeclaration>
-        ||  <aliasDeclaration>
-        ||  <opaqueEnumDeclaration>
-    }
+    proto rule blockDeclaration { * }
+    rule blockDeclaration:sym<simple>            { <simpleDeclaration>        } 
+    rule blockDeclaration:sym<asm>               { <asmDefinition>            } 
+    rule blockDeclaration:sym<namespace-alias>   { <namespaceAliasDefinition> } 
+    rule blockDeclaration:sym<using-decl>        { <usingDeclaration>         } 
+    rule blockDeclaration:sym<using-directive>   { <usingDirective>           } 
+    rule blockDeclaration:sym<static-assert>     { <staticAssertDeclaration>  } 
+    rule blockDeclaration:sym<alias>             { <aliasDeclaration>         } 
+    rule blockDeclaration:sym<opaque-enum-decl>  { <opaqueEnumDeclaration>    } 
 
     rule aliasDeclaration {
-        ||  <Using>
-            <Identifier>
-            <attributeSpecifierSeq>?
-            <Assign>
-            <theTypeId>
-            <Semi>
+        <Using>
+        <Identifier>
+        <attributeSpecifierSeq>?
+        <Assign>
+        <theTypeId>
+        <Semi>
     }
 
     rule simpleDeclaration {
-        ||  <declSpecifierSeq>?
-            <initDeclaratorList>?
-            <Semi>
-        ||  <attributeSpecifierSeq>
-            <declSpecifierSeq>?
-            <initDeclaratorList>
-            <Semi>
+        [
+            ||  <declSpecifierSeq>?  <initDeclaratorList>?  <Semi>
+            ||  <attributeSpecifierSeq> <declSpecifierSeq>?  <initDeclaratorList> <Semi>
+        ]
     }
 
     rule staticAssertDeclaration {
@@ -1071,17 +1053,18 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule declSpecifier {
-        ||  <storageClassSpecifier>
-        ||  <typeSpecifier>
-        ||  <functionSpecifier>
-        ||  <Friend>
-        ||  <Typedef>
-        ||  <Constexpr>
+        [
+            ||  <storageClassSpecifier>
+            ||  <typeSpecifier> 
+            ||  <functionSpecifier>
+            ||  <Friend>
+            ||  <Typedef>
+            ||  <Constexpr>
+        ]
     }
 
     rule declSpecifierSeq {
-        ||  <declSpecifier>+?
-            <attributeSpecifierSeq>?
+        <declSpecifier>+?  <attributeSpecifierSeq>?  
     }
     rule storageClassSpecifier {
         ||  <Register>
@@ -1099,15 +1082,15 @@ our role CPP14Parser does CPP14Lexer {
         ||  <Identifier>
     }
     rule typeSpecifier {
-        ||  <trailingTypeSpecifier>
+        ||  <trailingTypeSpecifier> 
         ||  <classSpecifier>
         ||  <enumSpecifier>
     }
     rule trailingTypeSpecifier {
+        ||  <cvQualifier> 
         ||  <simpleTypeSpecifier>
         ||  <elaboratedTypeSpecifier>
         ||  <typeNameSpecifier>
-        ||  <cvQualifier>
     }
     rule typeSpecifierSeq {
         ||  <typeSpecifier>+
@@ -1147,20 +1130,22 @@ our role CPP14Parser does CPP14Lexer {
         ||  <decltypeSpecifier>
     }
 
-    rule theTypeName {
-        ||  <className>
-        ||  <enumName>
-        ||  <typedefName>
-        ||  <simpleTemplateId>
-    }
+    #------------------------------
+    proto rule theTypeName                   { * }
+    rule theTypeName:sym<class>              { <className> }
+    rule theTypeName:sym<enum>               { <enumName> }
+    rule theTypeName:sym<typedef>            { <typedefName> }
+    rule theTypeName:sym<simple-template-id> { <simpleTemplateId> }
 
+    #------------------------------
     rule decltypeSpecifier {
-        ||  <Decltype>
-            <LeftParen>
-            [   ||  <expression>
-                ||  <Auto>
-            ]
-            <RightParen>
+        <Decltype>
+        <LeftParen>
+        [   
+            ||  <expression>
+            ||  <Auto>
+        ]
+        <RightParen>
     }
 
     rule elaboratedTypeSpecifier {
@@ -1179,7 +1164,7 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule enumName {
-        ||  <Identifier>
+        <Identifier>
     }
 
     rule enumSpecifier {
@@ -1348,45 +1333,34 @@ our role CPP14Parser does CPP14Lexer {
         ||  <Identifier>
     }
     rule attributeArgumentClause {
-        ||  <LeftParen>
-            <balancedTokenSeq>?
-            <RightParen>
+        <LeftParen> <balancedTokenSeq>?  <RightParen>
     }
+
     rule balancedTokenSeq {
-        ||  <balancedrule>+
+        <balancedrule>+
     }
+
     rule balancedrule {
-        ||  <LeftParen>
-            <balancedTokenSeq>
-            <RightParen>
-        ||  <LeftBracket>
-            <balancedTokenSeq>
-            <RightBracket>
-        ||  <LeftBrace>
-            <balancedTokenSeq>
-            <RightBrace>
+        ||  <LeftParen> <balancedTokenSeq> <RightParen>
+        ||  <LeftBracket> <balancedTokenSeq> <RightBracket>
+        ||  <LeftBrace> <balancedTokenSeq> <RightBrace>
     }
+
     rule initDeclaratorList {
-        ||  <initDeclarator>
-            [   ||  <Comma>
-                    <initDeclarator>
-            ]*
+        <initDeclarator> [ <Comma> <initDeclarator> ]*
     }
+
     rule initDeclarator {
-        ||  <declarator>
-            <initializer>?
+        <declarator> <initializer>?
     }
+
     rule declarator {
         ||  <pointerDeclarator>
-        ||  <noPointerDeclarator>
-            <parametersAndQualifiers>
-            <trailingReturnType>
+        ||  <noPointerDeclarator> <parametersAndQualifiers> <trailingReturnType>
     }
+
     rule pointerDeclarator {
-        ||  [   ||  <pointerOperator>
-                    <Const>?
-            ]*
-            <noPointerDeclarator>
+        [ <pointerOperator> <Const>? ]* <noPointerDeclarator>
     }
 
     #------------------------------
@@ -1429,13 +1403,14 @@ our role CPP14Parser does CPP14Lexer {
             <attributeSpecifierSeq>?
             <cvqualifierseq>?
     }
+
     rule cvqualifierseq {
-        ||  <cvQualifier>+
+        <cvQualifier>+
     }
-    rule cvQualifier {
-        ||  <Const>
-        ||  <Volatile>
-    }
+
+    proto rule cvQualifier { * }
+    rule cvQualifier:sym<const>    { <Const> }
+    rule cvQualifier:sym<volatile> { <Volatile> }
 
     rule refqualifier {
         ||  <And>
