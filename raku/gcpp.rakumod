@@ -966,10 +966,9 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-----------------------------
-    rule forInitStatement {
-        ||  <expressionStatement>
-        ||  <simpleDeclaration>
-    }
+    proto rule forInitStatement { * }
+    rule forInitStatement:sym<expressionStatement> { <expressionStatement> }
+    rule forInitStatement:sym<simpleDeclaration> { <simpleDeclaration> }
 
     rule forRangeDeclaration {
         <attributeSpecifierSeq>?
