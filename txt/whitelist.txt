@@ -16592,3 +16592,12 @@ ISkeletonPose
 IPhysicalEntity
 IDebugHistoryManager
 IAnimationPoseAlignerPtr
+HighsModelObject
+HighsDebugStatus
+HighsOptions
+SimplexBasis
+HighsLp
+HighsDebugStatus
+HighsDebugStatus
+HighsModelObject
+SimplexAlgorithm
