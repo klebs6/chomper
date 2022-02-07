@@ -976,10 +976,9 @@ our role CPP14Parser does CPP14Lexer {
         <declarator>
     }
 
-    rule forRangeInitializer {
-        ||  <expression>
-        ||  <bracedInitList>
-    }
+    proto rule forRangeInitializer { * }
+    rule forRangeInitializer:sym<expression> { <expression> }
+    rule forRangeInitializer:sym<bracedInitList> { <bracedInitList> }
 
     rule jumpStatement {  
         <jumpStatementBody> <Semi>
@@ -1025,12 +1024,10 @@ our role CPP14Parser does CPP14Lexer {
         <Semi>
     }
 
-    rule simpleDeclaration {
-        [
-            ||  <declSpecifierSeq>?  <initDeclaratorList>?  <Semi>
-            ||  <attributeSpecifierSeq> <declSpecifierSeq>?  <initDeclaratorList> <Semi>
-        ]
-    }
+    #---------------------------
+    proto rule simpleDeclaration { * }
+    rule simpleDeclaration:sym<basic>     { <declSpecifierSeq>?  <initDeclaratorList>?  <Semi> }
+    rule simpleDeclaration:sym<init-list> { <attributeSpecifierSeq> <declSpecifierSeq>?  <initDeclaratorList> <Semi> }
 
     rule staticAssertDeclaration {
         ||  <Static_assert>
