@@ -966,10 +966,9 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-----------------------------
-    rule forInitStatement {
-        ||  <expressionStatement>
-        ||  <simpleDeclaration>
-    }
+    proto rule forInitStatement { * }
+    rule forInitStatement:sym<expressionStatement> { <expressionStatement> }
+    rule forInitStatement:sym<simpleDeclaration> { <simpleDeclaration> }
 
     rule forRangeDeclaration {
         <attributeSpecifierSeq>?
@@ -977,10 +976,9 @@ our role CPP14Parser does CPP14Lexer {
         <declarator>
     }
 
-    rule forRangeInitializer {
-        ||  <expression>
-        ||  <bracedInitList>
-    }
+    proto rule forRangeInitializer { * }
+    rule forRangeInitializer:sym<expression> { <expression> }
+    rule forRangeInitializer:sym<bracedInitList> { <bracedInitList> }
 
     rule jumpStatement {  
         <jumpStatementBody> <Semi>
@@ -1007,6 +1005,7 @@ our role CPP14Parser does CPP14Lexer {
     rule declaration:sym<emptyDeclaration>       { <emptyDeclaration>         } 
     rule declaration:sym<attributeDeclaration>   { <attributeDeclaration>     } 
 
+    #---------------------------
     proto rule blockDeclaration { * }
     rule blockDeclaration:sym<simple>            { <simpleDeclaration>        } 
     rule blockDeclaration:sym<asm>               { <asmDefinition>            } 
@@ -1026,32 +1025,30 @@ our role CPP14Parser does CPP14Lexer {
         <Semi>
     }
 
-    rule simpleDeclaration {
-        [
-            ||  <declSpecifierSeq>?  <initDeclaratorList>?  <Semi>
-            ||  <attributeSpecifierSeq> <declSpecifierSeq>?  <initDeclaratorList> <Semi>
-        ]
-    }
+    #---------------------------
+    proto rule simpleDeclaration { * }
+    rule simpleDeclaration:sym<basic>     { <declSpecifierSeq>?  <initDeclaratorList>?  <Semi> }
+    rule simpleDeclaration:sym<init-list> { <attributeSpecifierSeq> <declSpecifierSeq>?  <initDeclaratorList> <Semi> }
 
     rule staticAssertDeclaration {
-        ||  <Static_assert>
-            <LeftParen>
-            <constantExpression>
-            <Comma>
-            <StringLiteral>
-            <RightParen>
-            <Semi>
+        <Static_assert>
+        <LeftParen>
+        <constantExpression>
+        <Comma>
+        <StringLiteral>
+        <RightParen>
+        <Semi>
     }
 
     rule emptyDeclaration {
-        ||  <Semi>
+        <Semi>
     }
 
     rule attributeDeclaration {
-        ||  <attributeSpecifierSeq>
-            <Semi>
+        <attributeSpecifierSeq> <Semi>
     }
 
+    #---------------------------
     proto rule declSpecifier { * }
     rule declSpecifier:sym<storageClassSpecifier> { <storageClassSpecifier> }
     rule declSpecifier:sym<typeSpecifier>         { <typeSpecifier> }

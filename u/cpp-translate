@@ -1,0 +1,11 @@
+#!/usr/bin/env raku
+use gcpp;
+
+grammar G does CPP14Parser {}
+
+use Grammar::Tracer;
+grammar GD does CPP14Parser {}
+
+my $in = $*IN.slurp.chomp;
+
+say G.parse($in) // GD.parse($in);
