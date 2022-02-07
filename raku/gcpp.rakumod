@@ -848,14 +848,13 @@ our role CPP14Parser does CPP14Lexer {
     #-----------------------------
     proto token statement { * }
 
-    token statement:sym<maybe-attributed> { <maybe-attributed-statement> }
-    token statement:sym<labeled>          { <labeledStatement> }
-    token statement:sym<declaration>      { <declarationStatement> }
-
-    rule maybe-attributed-statement {
+    token statement:sym<attributed> { 
         <attributeSpecifierSeq>?
         <attributedStatementBody>
     }
+
+    token statement:sym<labeled>          { <labeledStatement> }
+    token statement:sym<declaration>      { <declarationStatement> }
 
     proto rule attributedStatementBody { * }
     rule attributedStatementBody:sym<expression> { <expressionStatement> }
@@ -980,16 +979,12 @@ our role CPP14Parser does CPP14Lexer {
     rule forRangeInitializer:sym<expression> { <expression> }
     rule forRangeInitializer:sym<bracedInitList> { <bracedInitList> }
 
-    rule jumpStatement {  
-        <jumpStatementBody> <Semi>
-    }
-
     #-------------------------------
-    proto rule jumpStatementBody { * }
-    rule jumpStatementBody:sym<break>    { <Break>                                        } 
-    rule jumpStatementBody:sym<continue> { <Continue>                                     } 
-    rule jumpStatementBody:sym<return>   { <Return> [ <expression> || <bracedInitList> ]? } 
-    rule jumpStatementBody:sym<goto>     { <Goto> <Identifier>                            } 
+    proto rule jumpStatement { * }
+    rule jumpStatement:sym<break>    { <Break>                                        <Semi> } 
+    rule jumpStatement:sym<continue> { <Continue>                                     <Semi> } 
+    rule jumpStatement:sym<return>   { <Return> [ <expression> || <bracedInitList> ]? <Semi> } 
+    rule jumpStatement:sym<goto>     { <Goto> <Identifier>                            <Semi> } 
 
     rule declarationseq { <declaration>+ }
 
@@ -1030,13 +1025,13 @@ our role CPP14Parser does CPP14Lexer {
     rule simpleDeclaration:sym<init-list> { <attributeSpecifierSeq> <declSpecifierSeq>?  <initDeclaratorList> <Semi> }
 
     rule staticAssertDeclaration {
-        ||  <Static_assert>
-            <LeftParen>
-            <constantExpression>
-            <Comma>
-            <StringLiteral>
-            <RightParen>
-            <Semi>
+        <Static_assert>
+        <LeftParen>
+        <constantExpression>
+        <Comma>
+        <StringLiteral>
+        <RightParen>
+        <Semi>
     }
 
     rule emptyDeclaration {
@@ -1085,10 +1080,16 @@ our role CPP14Parser does CPP14Lexer {
 
     #---------------------------
     proto rule trailingTypeSpecifier { * }
-    rule trailingTypeSpecifier:sym<cv-qualifier> { <cvQualifier>             } 
     rule trailingTypeSpecifier:sym<simple>       { <simpleTypeSpecifier>     } 
     rule trailingTypeSpecifier:sym<elaborated>   { <elaboratedTypeSpecifier> } 
     rule trailingTypeSpecifier:sym<typename>     { <typeNameSpecifier>       } 
+
+    #TODO is this actually legal?
+    rule trailingTypeSpecifier:sym<cv-qualified-auto> { <cvQualifier> <Auto> } 
+
+    rule trailingTypeSpecifier:sym<cv-qualifier> { <cvQualifier>             } 
+
+
     #---------------------------
     rule typeSpecifierSeq {
         <typeSpecifier>+ <attributeSpecifierSeq>?
@@ -1882,13 +1883,12 @@ our role CPP14Parser does CPP14Lexer {
     token theOperator:sym<Parens>           { <LeftParen> <RightParen>                  } 
     token theOperator:sym<Brak>             { <LeftBracket> <RightBracket>              } 
 
-    token literal {
-        ||  <IntegerLiteral>
-        ||  <CharacterLiteral>
-        ||  <FloatingLiteral>
-        ||  <StringLiteral>
-        ||  <BooleanLiteral>
-        ||  <PointerLiteral>
-        ||  <UserDefinedLiteral>
-    }
+    proto token literal { * }
+    token literal:sym<int>          { <IntegerLiteral> }
+    token literal:sym<char>         { <CharacterLiteral> }
+    token literal:sym<float>        { <FloatingLiteral> }
+    token literal:sym<str>          { <StringLiteral> }
+    token literal:sym<bool>         { <BooleanLiteral> }
+    token literal:sym<ptr>          { <PointerLiteral> }
+    token literal:sym<user-defined> { <UserDefinedLiteral> }
 }
