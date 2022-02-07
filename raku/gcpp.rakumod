@@ -424,8 +424,7 @@ our role CPP14Parser does CPP14Lexer {
 
     rule TOP {
         <.ws> 
-        #<statementSeq>
-        <theTypeName>
+        <statementSeq>
     }
 
     token translationUnit {
@@ -1098,8 +1097,7 @@ our role CPP14Parser does CPP14Lexer {
 
     #---------------------------
     proto rule trailingTypeSpecifier { * }
-
-    rule trailingTypeSpecifier:sym<cv-qualifier> { <cvQualifier>  <simpleTypeSpecifier> }
+    rule trailingTypeSpecifier:sym<cv-qualifier> { <cvQualifier> <simpleTypeSpecifier> }
     rule trailingTypeSpecifier:sym<simple>       { <simpleTypeSpecifier>     } 
     rule trailingTypeSpecifier:sym<elaborated>   { <elaboratedTypeSpecifier> } 
     rule trailingTypeSpecifier:sym<typename>     { <typeNameSpecifier>       } 
@@ -1173,10 +1171,10 @@ our role CPP14Parser does CPP14Lexer {
 
     #------------------------------
     proto rule theTypeName                   { * }
+    rule theTypeName:sym<simple-template-id> { <simpleTemplateId> }
     rule theTypeName:sym<class>              { <className> }
     rule theTypeName:sym<enum>               { <enumName> }
     rule theTypeName:sym<typedef>            { <typedefName> }
-    rule theTypeName:sym<simple-template-id> { <simpleTemplateId> }
 
     #------------------------------
     rule decltypeSpecifier {
@@ -1471,48 +1469,67 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule abstractDeclarator {
-        ||  <pointerAbstractDeclarator>
-        ||  <noPointerAbstractDeclarator>?  <parametersAndQualifiers> <trailingReturnType>
-        ||  <abstractPackDeclarator>
+        | <pointerAbstractDeclarator>
+        | <noPointerAbstractDeclarator>? <parametersAndQualifiers> <trailingReturnType>
+        | <abstractPackDeclarator>
     }
 
+    #-------------------[x]
     rule pointerAbstractDeclarator {
-        ||  <noPointerAbstractDeclarator>
-        ||  <pointerOperator>+ <noPointerAbstractDeclarator>?
+        | <noPointerAbstractDeclarator>
+        | <pointerOperator>+ <noPointerAbstractDeclarator>?
     }
+
+    #-------------------[x]
+    proto rule noPointerAbstractDeclaratorBase { * }
 
     rule noPointerAbstractDeclarator {
-        ||  <noPointerAbstractDeclarator>
-            [   ||  <parametersAndQualifiers>
-                ||  <noPointerAbstractDeclarator>
-                    <LeftBracket>
-                    <constantExpression>?
-                    <RightBracket>
-                    <attributeSpecifierSeq>?
-            ]
-        ||  <parametersAndQualifiers>
-        ||  <LeftBracket>
-            <constantExpression>?
-            <RightBracket>
-            <attributeSpecifierSeq>?
-        ||  <LeftParen>
-            <pointerAbstractDeclarator>
-            <RightParen>
+        <noPointerAbstractDeclaratorBase>
+        [   
+            ||  <parametersAndQualifiers>
+            ||  <noPointerAbstractDeclarator> <noPointerAbstractDeclaratorBracketedBase>
+        ]*
+    }
+
+    rule noPointerAbstractDeclaratorBase:sym<basic> {
+        <parametersAndQualifiers>
+    }
+
+    rule noPointerAbstractDeclaratorBase:sym<bracketed> {
+        <noPointerAbstractDeclaratorBracketedBase>
+    }
+
+    rule noPointerAbstractDeclaratorBase:sym<parenthesized> {
+        <LeftParen> <pointerAbstractDeclarator> <RightParen>
+    }
+
+    rule noPointerAbstractDeclaratorBracketedBase {
+        <LeftBracket> <constantExpression>?  <RightBracket> <attributeSpecifierSeq>?
     }
 
     rule abstractPackDeclarator {
-        <pointerOperator>* <noPointerAbstractPackDeclarator>
+        <pointerOperator>* 
+        <noPointerAbstractPackDeclarator>
+    }
+
+    #-------------------[x]
+    rule noPointerAbstractPackDeclaratorBasic {
+        <parametersAndQualifiers>
+    }
+
+    rule noPointerAbstractPackDeclaratorBrackets {
+        <LeftBracket> 
+        <constantExpression>?  
+        <RightBracket> 
+        <attributeSpecifierSeq>?
     }
 
     rule noPointerAbstractPackDeclarator {
-        ||  <noPointerAbstractPackDeclarator>
-            [   ||  <parametersAndQualifiers>
-                ||  <LeftBracket>
-                    <constantExpression>?
-                    <RightBracket>
-                    <attributeSpecifierSeq>?
-            ]
-        ||  <Ellipsis>
+        <Ellipsis>
+        [
+            | <noPointerAbstractPackDeclaratorBasic>
+            | <noPointerAbstractPackDeclaratorBrackets>
+        ]*
     }
 
     rule parameterDeclarationClause {
@@ -1788,7 +1805,7 @@ our role CPP14Parser does CPP14Lexer {
             ]
     }
 
-    token simpleTemplateId {
+    rule simpleTemplateId {
         <templateName>
         <Less>
         <templateArgumentList>?
