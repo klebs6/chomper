@@ -1102,10 +1102,9 @@ our role CPP14Parser does CPP14Lexer {
             <attributeSpecifierSeq>?
     }
 
-    rule simpleTypeLengthModifier {
-        ||  <Short>
-        ||  <Long>
-    }
+    proto rule simpleTypeLengthModifier { * }
+    rule simpleTypeLengthModifier:sym<Short> { <Short> }
+    rule simpleTypeLengthModifier:sym<Long>  { <Long>  }
 
     proto rule simpleTypeSignednessModifier         { * }
     rule simpleTypeSignednessModifier:sym<Unsigned> { <Unsigned> }
