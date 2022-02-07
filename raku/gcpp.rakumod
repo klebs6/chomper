@@ -1073,33 +1073,33 @@ our role CPP14Parser does CPP14Lexer {
         ||  <Extern>
         ||  <Mutable>
     }
-    rule functionSpecifier {
-        ||  <Inline>
-        ||  <Virtual>
-        ||  <Explicit>
-    }
+    #---------------------------
+    proto rule functionSpecifier { * }
+    rule functionSpecifier:sym<inline>   { <Inline> }
+    rule functionSpecifier:sym<virtual>  { <Virtual> }
+    rule functionSpecifier:sym<explicit> { <Explicit> }
     rule typedefName {
         ||  <Identifier>
     }
-    rule typeSpecifier {
-        ||  <trailingTypeSpecifier> 
-        ||  <classSpecifier>
-        ||  <enumSpecifier>
-    }
-    rule trailingTypeSpecifier {
-        ||  <cvQualifier> 
-        ||  <simpleTypeSpecifier>
-        ||  <elaboratedTypeSpecifier>
-        ||  <typeNameSpecifier>
-    }
+    #---------------------------
+    proto rule typeSpecifier { * }
+    rule typeSpecifier:sym<trailingTypeSpecifier> { <trailingTypeSpecifier> }
+    rule typeSpecifier:sym<classSpecifier>        { <classSpecifier>        }
+    rule typeSpecifier:sym<enumSpecifier>         { <enumSpecifier>         }
+
+    #---------------------------
+    proto rule trailingTypeSpecifier { * }
+    rule trailingTypeSpecifier:sym<cv-qualifier> { <cvQualifier>             } 
+    rule trailingTypeSpecifier:sym<simple>       { <simpleTypeSpecifier>     } 
+    rule trailingTypeSpecifier:sym<elaborated>   { <elaboratedTypeSpecifier> } 
+    rule trailingTypeSpecifier:sym<typename>     { <typeNameSpecifier>       } 
+    #---------------------------
     rule typeSpecifierSeq {
-        ||  <typeSpecifier>+
-            <attributeSpecifierSeq>?
+        <typeSpecifier>+ <attributeSpecifierSeq>?
     }
 
     rule trailingTypeSpecifierSeq {
-        ||  <trailingTypeSpecifier>+
-            <attributeSpecifierSeq>?
+        <trailingTypeSpecifier>+ <attributeSpecifierSeq>?
     }
 
     proto rule simpleTypeLengthModifier { * }
