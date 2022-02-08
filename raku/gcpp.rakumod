@@ -89,7 +89,7 @@ our role CPP14Keyword {
     token Mod              { '%'                } 
     token Caret            { '^'                } 
     token And              { '&' <!before '&'>  } 
-    token Or               { '|'                } 
+    token Or               { '|' <!before '|'>  } 
     token Tilde            { '~'                } 
     token Assign           { '='                } 
     token Less             { '<'  <!before '='> } 
@@ -426,6 +426,7 @@ our role CPP14Parser does CPP14Lexer {
     rule TOP {
         <.ws> 
         <statementSeq>
+        #<logicalOrExpression>
     }
 
     token translationUnit {
@@ -735,8 +736,7 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule castExpression {
-        ||  <unaryExpression>
-        ||  <LeftParen> <theTypeId> <RightParen> <castExpression>
+        [ <LeftParen> <theTypeId> <RightParen> ]* <unaryExpression>
     }
 
     rule pointerMemberExpression {
@@ -948,7 +948,6 @@ our role CPP14Parser does CPP14Lexer {
         <expression>
     }
 
-=begin comment
     rule condition:sym<decl> {
         <attributeSpecifierSeq>?
         <declSpecifierSeq> 
@@ -958,7 +957,6 @@ our role CPP14Parser does CPP14Lexer {
             ||  <bracedInitList>
         ]
     }
-=end comment
 
     #-----------------------------
     proto rule iterationStatement { * }
