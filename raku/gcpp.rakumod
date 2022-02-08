@@ -158,12 +158,16 @@ our role CPP14Lexer does CPP14Keyword {
         ||  <Digitsequence> <Exponentpart> <Floatingsuffix>?
     }
 
-    token StringLiteral {
+    token StringLiteralItem {
         <Encodingprefix>?
         [   
             ||  <Rawstring>
             ||  '"' <Schar>* '"'
         ]
+    }
+
+    token StringLiteral {
+        <StringLiteralItem> [<.ws> <StringLiteralItem>]*
     }
 
     token BooleanLiteral {
@@ -175,12 +179,11 @@ our role CPP14Lexer does CPP14Keyword {
         ||  <Nullptr>
     }
 
-    token UserDefinedLiteral {
-        ||  <UserDefinedIntegerLiteral>
-        ||  <UserDefinedFloatingLiteral>
-        ||  <UserDefinedStringLiteral>
-        ||  <UserDefinedCharacterLiteral>
-    }
+    proto token UserDefinedLiteral { * }
+    token UserDefinedLiteral:syn<int>   { <UserDefinedIntegerLiteral> }
+    token UserDefinedLiteral:sym<float> { <UserDefinedFloatingLiteral> }
+    token UserDefinedLiteral:sym<str>   { <UserDefinedStringLiteral> }
+    token UserDefinedLiteral:sym<char>  { <UserDefinedCharacterLiteral> }
 
     token MultiLineMacro {
         ||  '#'
@@ -389,11 +392,11 @@ our role CPP14Lexer does CPP14Keyword {
     }
 
     token UserDefinedStringLiteral {
-        ||  <StringLiteral> <Udsuffix>
+        <StringLiteral> <Udsuffix>
     }
 
     token UserDefinedCharacterLiteral {
-        ||  <CharacterLiteral> <Udsuffix>
+        <CharacterLiteral> <Udsuffix>
     }
 
     token Udsuffix {
@@ -426,7 +429,7 @@ our role CPP14Parser does CPP14Lexer {
     rule TOP {
         <.ws> 
         <statementSeq>
-        #<logicalOrExpression>
+        #<postfixExpression>
     }
 
     token translationUnit {
@@ -537,10 +540,14 @@ our role CPP14Parser does CPP14Lexer {
 
     proto rule postfixExpressionTail { * }
 
-    rule postfixExpressionTail:sym<bracket> {
+    rule bracketTail {
         <LeftBracket> 
-        [  <expression> ||  <bracedInitList> ] 
+        [ <expression> || <bracedInitList> ] 
         <RightBracket>
+    }
+
+    rule postfixExpressionTail:sym<bracket> {
+        <bracketTail>
     }
 
     rule postfixExpressionTail:sym<parens> { 
@@ -562,26 +569,15 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-------------------------------------
-    proto rule postfixExpressionBody { * }
-
-    rule postfixExpressionBody:sym<primary> { 
-        <primaryExpression>
+    #needs to stay like this for some reason..
+    token postfixExpressionBody {  
+        || <postfixExpressionList>
+        || <postfixExpressionCast>
+        || <postfixExpressionTypeid>
+        || <primaryExpression>
     }
 
-    rule postfixExpressionBody:sym<post-list> { 
-
-        [
-            ||  <simpleTypeSpecifier> 
-            ||  <typeNameSpecifier>
-        ]
-
-        [   
-            ||  <LeftParen> <expressionList>?  <RightParen> 
-            ||  <bracedInitList>
-        ]
-    }
-
-    rule postfixExpressionBody:sym<cast> { 
+    rule postfixExpressionCast {
         [ 
             || <Dynamic_cast> 
             || <Static_cast> 
@@ -596,11 +592,26 @@ our role CPP14Parser does CPP14Lexer {
         <RightParen>
     }
 
-    rule postfixExpressionBody:sym<typeid> {
+    rule postfixExpressionTypeid {
         <typeIdOfTheTypeId> 
         <LeftParen> 
         [ <expression> ||  <theTypeId>] 
         <RightParen>
+    }
+
+    token postListHead {
+        || <simpleTypeSpecifier> 
+        || <typeNameSpecifier>
+    }
+
+    token postListTail {
+        || <LeftParen> <expressionList>?  <RightParen> 
+        || <bracedInitList>
+    }
+
+    token postfixExpressionList {
+        <postListHead>
+        <postListTail>
     }
 
     #-------------------------------------
@@ -715,8 +726,8 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule newInitializer {
-        ||  <LeftParen> <expressionList>?  <RightParen>
-        ||  <bracedInitList>
+        || <LeftParen> <expressionList>?  <RightParen>
+        || <bracedInitList>
     }
 
     rule deleteExpression {
@@ -834,16 +845,16 @@ our role CPP14Parser does CPP14Lexer {
 
     proto rule assignmentExpression { * }
 
+    rule assignmentExpression:sym<throw> {  
+        <throwExpression>
+    }
+
     rule assignmentExpression:sym<basic> {  
         <logicalOrExpression> <assignmentOperator> <initializerClause>
     }
 
     rule assignmentExpression:sym<conditional> {  
         <conditionalExpression>
-    }
-
-    rule assignmentExpression:sym<throw> {  
-        <throwExpression>
     }
 
     proto token assignmentOperator { * }
@@ -953,8 +964,8 @@ our role CPP14Parser does CPP14Lexer {
         <declSpecifierSeq> 
         <declarator>
         [   
-            ||  <Assign> <initializerClause>
-            ||  <bracedInitList>
+          || <Assign> <initializerClause>
+          || <bracedInitList>
         ]
     }
 
@@ -1012,7 +1023,7 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     proto rule forRangeInitializer { * }
-    rule forRangeInitializer:sym<expression> { <expression> }
+    rule forRangeInitializer:sym<expression>     { <expression> }
     rule forRangeInitializer:sym<bracedInitList> { <bracedInitList> }
 
     #-------------------------------
@@ -1071,23 +1082,20 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule emptyDeclaration {
-        ||  <Semi>
+        <Semi>
     }
 
     rule attributeDeclaration {
-        ||  <attributeSpecifierSeq>
-            <Semi>
+        <attributeSpecifierSeq> <Semi>
     }
 
     rule declSpecifier {
-        [
-            ||  <storageClassSpecifier>
-            ||  <typeSpecifier> 
-            ||  <functionSpecifier>
-            ||  <Friend>
-            ||  <Typedef>
-            ||  <Constexpr>
-        ]
+        ||  <storageClassSpecifier>
+        ||  <typeSpecifier> 
+        ||  <functionSpecifier>
+        ||  <Friend>
+        ||  <Typedef>
+        ||  <Constexpr>
     }
 
     rule declSpecifierSeq {
@@ -1226,12 +1234,10 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule enumSpecifier {
-        ||  <enumHead>
-            <LeftBrace>
-            [   ||  <enumeratorList>
-                    <Comma>?
-            ]?
-            <RightBrace>
+        <enumHead>
+        <LeftBrace>
+        [ <enumeratorList> <Comma>?  ]?
+        <RightBrace>
     }
 
     rule enumHead {
@@ -1290,14 +1296,15 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule namespaceDefinition {
-        ||  <Inline>?
-            <Namespace>
-            [   ||  <Identifier>
-                ||  <originalNamespaceName>
-            ]?
-            <LeftBrace>
-            <namespaceBody=declarationseq>?
-            <RightBrace>
+        <Inline>?
+        <Namespace>
+        [   
+            ||  <Identifier>
+            ||  <originalNamespaceName>
+        ]?
+        <LeftBrace>
+        <namespaceBody=declarationseq>?
+        <RightBrace>
     }
 
     rule namespaceAlias {
@@ -1338,21 +1345,20 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule asmDefinition {
-        ||  <Asm>
-            <LeftParen>
-            <StringLiteral>
-            <RightParen>
-            <Semi>
+        <Asm>
+        <LeftParen>
+        <StringLiteral>
+        <RightParen>
+        <Semi>
     }
 
     rule linkageSpecification {
-        ||  <Extern>
-            <StringLiteral>
-            [   ||  <LeftBrace>
-                    <declarationseq>?
-                    <RightBrace>
-                ||  <declaration>
-            ]
+        <Extern>
+        <StringLiteral>
+        [   
+            ||  <LeftBrace> <declarationseq>?  <RightBrace>
+            ||  <declaration>
+        ]
     }
 
     rule attributeSpecifierSeq {
@@ -1597,13 +1603,13 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule braceOrEqualInitializer {
-        ||  <Assign> <initializerClause>
-        ||  <bracedInitList>
+        || <Assign> <initializerClause>
+        || <bracedInitList>
     }
 
     rule initializerClause {
-        ||  <assignmentExpression>
-        ||  <bracedInitList>
+        || <assignmentExpression>
+        || <bracedInitList>
     }
 
     rule initializerList {
@@ -1760,12 +1766,11 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule memInitializer {
-        ||  <meminitializerid>
-            [   ||  <LeftParen>
-                    <expressionList>?
-                    <RightParen>
-                ||  <bracedInitList>
-            ]
+        <meminitializerid>
+        [   
+            ||  <LeftParen> <expressionList>?  <RightParen>
+            ||  <bracedInitList>
+        ]
     }
 
     rule meminitializerid {
@@ -1778,11 +1783,11 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule literalOperatorId {
-        ||  <Operator>
-            [   ||  <StringLiteral>
-                    <Identifier>
-                ||  <UserDefinedStringLiteral>
-            ]
+        <Operator>
+        [   
+          ||<StringLiteral> <Identifier>
+          || <UserDefinedStringLiteral>
+        ]
     }
 
     rule templateDeclaration {
@@ -1979,7 +1984,10 @@ our role CPP14Parser does CPP14Lexer {
     token literal:sym<int>          { <IntegerLiteral> }
     token literal:sym<char>         { <CharacterLiteral> }
     token literal:sym<float>        { <FloatingLiteral> }
-    token literal:sym<str>          { <StringLiteral> }
+
+    #Note: are we allowed to have many strings in a row?
+    token literal:sym<str>          { <StringLiteral> } 
+
     token literal:sym<bool>         { <BooleanLiteral> }
     token literal:sym<ptr>          { <PointerLiteral> }
     token literal:sym<user-defined> { <UserDefinedLiteral> }
