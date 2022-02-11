@@ -1,0 +1,12 @@
+#!/usr/bin/env raku
+use antlr-grammar;
+
+my $translator = "/Users/kleb/bethesda/work/repo/translator";
+my $in         = $translator ~ "/u/json.g4";
+my $out        = $translator ~ "/raku/gjson.rakumod";
+
+my $g         = ANTLR4::Grammar.new;
+
+my $json  = $g.file-to-string($in);
+
+spurt $out, $json;

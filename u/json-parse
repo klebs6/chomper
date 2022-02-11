@@ -1,0 +1,17 @@
+#!/usr/bin/env raku
+use gjson;
+
+grammar G does JSON::Grammar {
+    rule TOP { <.ws> <json> }
+}
+
+use Grammar::Tracer;
+
+grammar GD does JSON::Grammar {
+    rule TOP { <.ws> <json> }
+}
+
+my $in = $*IN.slurp;
+
+say G.parse($in) // GD.parse($in);
+

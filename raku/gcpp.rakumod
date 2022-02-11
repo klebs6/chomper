@@ -116,7 +116,7 @@ our role CPP14Keyword {
     token Question         { '?'                } 
     token Colon            { ':'                } 
     token Doublecolon      { '::'               } 
-    token Semi             { ';'                } 
+    rule Semi              { ';' <comment>?     }
     token Dot              { '.'                } 
     token DotStar          { '.*'               } 
     token Ellipsis         { '...'              } 
@@ -429,7 +429,7 @@ our role CPP14Parser does CPP14Lexer {
     rule TOP {
         <.ws> 
         <statementSeq>
-        #<postfixExpression>
+        #<simpleDeclaration>
     }
 
     token translationUnit {
@@ -570,7 +570,11 @@ our role CPP14Parser does CPP14Lexer {
 
     #-------------------------------------
     #needs to stay like this for some reason..
-    token postfixExpressionBody {  
+    #ie, cant be made proto without breaking some
+    #parses, for example:
+    #
+    # uint8_t{format}
+    token postfixExpressionBody { 
         || <postfixExpressionList>
         || <postfixExpressionCast>
         || <postfixExpressionTypeid>
@@ -1068,8 +1072,8 @@ our role CPP14Parser does CPP14Lexer {
 
     #---------------------------
     proto rule simpleDeclaration { * }
-    rule simpleDeclaration:sym<basic>     { <declSpecifierSeq>?  <initDeclaratorList>?  <Semi> }
-    rule simpleDeclaration:sym<init-list> { <attributeSpecifierSeq> <declSpecifierSeq>?  <initDeclaratorList> <Semi> }
+    rule simpleDeclaration:sym<basic>     { <declSpecifierSeq>? <initDeclaratorList>? <Semi> }
+    rule simpleDeclaration:sym<init-list> { <attributeSpecifierSeq> <declSpecifierSeq>? <initDeclaratorList> <Semi> }
 
     rule staticAssertDeclaration {
         <Static_assert>
@@ -1089,17 +1093,17 @@ our role CPP14Parser does CPP14Lexer {
         <attributeSpecifierSeq> <Semi>
     }
 
-    rule declSpecifier {
-        ||  <storageClassSpecifier>
-        ||  <typeSpecifier> 
-        ||  <functionSpecifier>
-        ||  <Friend>
-        ||  <Typedef>
-        ||  <Constexpr>
+    token declSpecifier {
+        || <storageClassSpecifier>
+        || <typeSpecifier> 
+        || <functionSpecifier>
+        || <Friend>
+        || <Typedef>
+        || <Constexpr>
     }
 
-    rule declSpecifierSeq {
-        <declSpecifier>+?  <attributeSpecifierSeq>?  
+    regex declSpecifierSeq {
+        <declSpecifier> [<.ws> <declSpecifier>]*?  <attributeSpecifierSeq>?  
     }
     #---------------------------
     proto rule storageClassSpecifier { * }
@@ -1572,15 +1576,15 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule parameterDeclaration {
-        ||  <attributeSpecifierSeq>?
-            <declSpecifierSeq>
-            [   ||  [   ||  <declarator>
-                        ||  <abstractDeclarator>?
-                    ]
-                    [   ||  <Assign>
-                            <initializerClause>
-                    ]?
+        <attributeSpecifierSeq>?
+        <declSpecifierSeq>
+        [  
+            [   
+                ||  <declarator>
+                ||  <abstractDeclarator>?
             ]
+            [ <Assign> <initializerClause> ]?
+        ]
     }
 
     rule functionDefinition {
@@ -1608,8 +1612,11 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule initializerClause {
-        || <assignmentExpression>
-        || <bracedInitList>
+        <comment>?
+        [
+            || <assignmentExpression>
+            || <bracedInitList>
+        ]
     }
 
     rule initializerList {
@@ -1669,13 +1676,13 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule memberdeclaration {
-        ||  <attributeSpecifierSeq>?  <declSpecifierSeq>?  <memberDeclaratorList>?  <Semi>
-        ||  <functionDefinition>
-        ||  <usingDeclaration>
-        ||  <staticAssertDeclaration>
-        ||  <templateDeclaration>
-        ||  <aliasDeclaration>
-        ||  <emptyDeclaration>
+        || <attributeSpecifierSeq>?  <declSpecifierSeq>?  <memberDeclaratorList>?  <Semi>
+        || <functionDefinition>
+        || <usingDeclaration>
+        || <staticAssertDeclaration>
+        || <templateDeclaration>
+        || <aliasDeclaration>
+        || <emptyDeclaration>
     }
 
     rule memberDeclaratorList {
