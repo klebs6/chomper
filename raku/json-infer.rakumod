@@ -22,53 +22,16 @@ class Type {
     has Class   $.of-class   is rw;
 }
 
-role Classes {
-
-    has @.classes is rw;
-
-    method add-classes(Mu:D $object) {
-
-        if $object.does($?ROLE) {
-
-            for $object.classes -> $class {
-                if !?@!classes.grep({$class.name eq $_.name}) {
-                    @!classes.push($class);
-                }
-            }
-        }
-
-        if $object ~~ Class {
-            @!classes.push($object);
-        }
-    }
-}
-
-role Types {
-
-    has @.types is rw;
-
-    method  add-types(Mu:D $object ) {
-
-        if $object.does($?ROLE) {
-
-            for $object.types -> $type {
-                @!types.push($type);
-            }
-        }
-
-        if $object ~~ Type {
-            @!types.push($object);
-        }
-    }
-}
-
-class Class does Classes does Types {
+class Class {
 
     has Bool      $.inner-class  = False;
     has Bool      $.kebab        = False;
     has Str       $.name       is rw;
     has Bool      $.top-level  is rw = False;
     has Attribute %.attributes is rw;
+
+    has @.classes is rw;
+    has @.types   is rw;
 
     method new-from-data(
         :$class-name, 
@@ -130,6 +93,30 @@ class Class does Classes does Types {
         }
     }
 
+    method add-classes(Mu:D $object) {
+
+        for $object.classes -> $class {
+            if !?@!classes.grep({$class.name eq $_.name}) {
+                @!classes.push($class);
+            }
+        }
+
+        if $object ~~ Class { 
+            @!classes.push($object); 
+        }
+    }
+
+    method  add-types(Mu:D $object ) {
+
+        for $object.types -> $type {
+            @!types.push($type);
+        }
+
+        if $object ~~ Type {
+            @!types.push($object);
+        }
+    }
+
     multi method make-class(Int $level  = 0 --> Str ) {
         my $indent = "    " x $level;
         my Str $ret;
@@ -154,7 +141,7 @@ class Class does Classes does Types {
     }
 }
 
-class Attribute does Classes does Types {
+class Attribute {
 
     has Str $.name      is rw;
     has Str $.raku-name is rw;
@@ -166,6 +153,9 @@ class Attribute does Classes does Types {
     has Str $.type-constraint  is rw;
     has Str $.class            is rw;
     has Str $.child-class-name is rw;
+
+    has @.classes is rw;
+    has @.types   is rw;
 
     method new-from-value(
         Str $name, 
@@ -211,26 +201,25 @@ class Attribute does Classes does Types {
     }
 
     method process-object(:$parent, :$value) {
-        if $value ~~ List {
+        my %data = do if $value ~~ List {
 
-            given $parent {
+            do given $parent {
                 when /inputs/ {
                     my $first = $value.list[0];
                     my $name  = $first[0];
                     my $body  = $first[1];
 
-                    my $obj = Class.new-from-data(
-                        class-name  => "Input", 
-                        content     => $body, 
-                        inner-class => True, 
-                        :$!kebab
-                    );
+                    %( class-name  => "Input", 
+                       content     => $body )
+                }
+                when /inner_list/ {
 
-                    self.add-classes($obj);
-                    self.add-types($obj);
+                    my $first = $value.list[0];
+                    my $name  = $first[0];
+                    my $body  = $first[1];
 
-                    $obj
-
+                    %( class-name  => "InnerList", 
+                       content     => $body )
                 }
                 when /args/ {
 
@@ -238,17 +227,8 @@ class Attribute does Classes does Types {
                     my $name  = $first.keys[0];
                     my $body  = $first{$name};
 
-                    my $obj = Class.new-from-data(
-                        class-name  => "Arg", 
-                        content     => $body, 
-                        inner-class => True, 
-                        :$!kebab
-                    );
-
-                    self.add-classes($obj);
-                    self.add-types($obj);
-
-                    $obj
+                    %( class-name  => "Arg", 
+                       content     => $body )
                 }
                 when /where_predicates/ {
 
@@ -256,17 +236,8 @@ class Attribute does Classes does Types {
                     my $name  = $first.keys[0];
                     my $body  = $first{$name};
 
-                    my $obj = Class.new-from-data(
-                        class-name  => "WherePredicate", 
-                        content     => $body, 
-                        inner-class => True, 
-                        :$!kebab
-                    );
-
-                    self.add-classes($obj);
-                    self.add-types($obj);
-
-                    $obj
+                    %( class-name  => "WherePredicate", 
+                       content     => $body )
 
                 }
                 when /params/ {
@@ -275,17 +246,8 @@ class Attribute does Classes does Types {
                     my $name  = $first<name>;
                     my $body  = $first<kinds>;
 
-                    my $obj = Class.new-from-data(
-                        class-name  => "Param", 
-                        content     => $body, 
-                        inner-class => True, 
-                        :$!kebab
-                    );
-
-                    self.add-classes($obj);
-                    self.add-types($obj);
-
-                    $obj
+                    %(class-name  => "Param", 
+                        content   => $body )
 
                 }
                 when /bounds/ {
@@ -294,18 +256,8 @@ class Attribute does Classes does Types {
                     my $name  = $first.keys[0];
                     my $body  = $first{$name};
 
-                    my $obj = Class.new-from-data(
-                        class-name  => "Bound", 
-                        content     => $body, 
-                        inner-class => True, 
-                        :$!kebab
-                    );
-
-                    self.add-classes($obj);
-                    self.add-types($obj);
-
-                    $obj
-
+                    %( class-name  => "Bound", 
+                       content     => $body )
                 }
                 default {
                     say "parent: $parent";
@@ -315,16 +267,33 @@ class Attribute does Classes does Types {
             }
 
         } else {
-            my $obj = Class.new-from-data(
-                class-name  => self.child-class-name(), 
-                content     => $value, 
-                inner-class => True, 
-                :$!kebab
-            );
+            %( class-name  => self.child-class-name(), 
+               content     => $value )
+        };
 
-            self.add-classes($obj);
-            self.add-types($obj);
-            $obj;
+        my $obj = Class.new-from-data(
+            class-name  => %data<class-name>, 
+            content     => %data<content>, 
+            inner-class => True, 
+            :$!kebab
+        );
+
+        self.add-classes($obj);
+        self.add-types($obj);
+        $obj;
+    }
+
+    method add-classes(Mu:D $object) {
+
+        if $object ~~ Class {
+            @!classes.push($object);
+        }
+    }
+
+    method add-types(Mu:D $object ) {
+
+        if $object ~~ Type {
+            @!types.push($object);
         }
     }
 
