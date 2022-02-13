@@ -379,12 +379,11 @@ our role CPP14Lexer does CPP14Keyword {
             '"'
     }
 
-    token UserDefinedIntegerLiteral {
-        ||  <DecimalLiteral> <Udsuffix>
-        ||  <OctalLiteral> <Udsuffix>
-        ||  <HexadecimalLiteral> <Udsuffix>
-        ||  <BinaryLiteral> <Udsuffix>
-    }
+    proto token UserDefinedIntegerLiteral { * }
+    token UserDefinedIntegerLiteral:sym<dec> { <DecimalLiteral> <Udsuffix> }
+    token UserDefinedIntegerLiteral:sym<oct> { <OctalLiteral> <Udsuffix> }
+    token UserDefinedIntegerLiteral:sym<hex> { <HexadecimalLiteral> <Udsuffix> }
+    token UserDefinedIntegerLiteral:sym<bin> { <BinaryLiteral> <Udsuffix> }
 
     token UserDefinedFloatingLiteral {
         ||  <Fractionalconstant> <Exponentpart>?  <Udsuffix>
@@ -435,17 +434,6 @@ our role CPP14Parser does CPP14Lexer {
     token translationUnit {
         <declarationseq>?  $
     }
-
-
-=begin comment
-    token primaryExpression {
-        ||  <literal>+
-        ||  <This>
-        ||  <LeftParen> <expression> <RightParen>
-        ||  <idExpression>
-        ||  <lambdaExpression>
-    }
-=end comment
 
     proto token primaryExpression { * }
     token primaryExpression:sym<literal> { <literal>+ }
