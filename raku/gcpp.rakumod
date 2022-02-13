@@ -469,15 +469,29 @@ our role CPP14Parser does CPP14Lexer {
         <unqualifiedId>
     }
 
-    regex nestedNameSpecifierPrefix {
-        [   
-            |  <theTypeName>
-            |  <namespaceName>
-            |  <decltypeSpecifier>
-        ]?
+    #-------------------------------
+    proto regex nestedNameSpecifierPrefix { * }
+
+    regex nestedNameSpecifierPrefix:sym<null> {
         <Doublecolon>
     }
 
+    regex nestedNameSpecifierPrefix:sym<type> {
+        <theTypeName>
+        <Doublecolon>
+    }
+
+    regex nestedNameSpecifierPrefix:sym<ns> {
+        <namespaceName>
+        <Doublecolon>
+    }
+
+    regex nestedNameSpecifierPrefix:sym<decl> {
+        <decltypeSpecifier>
+        <Doublecolon>
+    }
+
+    #-------------------------------
     regex nestedNameSpecifierSuffix {
         [   
             |  <Identifier>
