@@ -583,12 +583,14 @@ our role CPP14Parser does CPP14Lexer {
         <RightParen>
     }
 
-    rule postfixExpressionTail:sym<indirection> { 
+    rule postfixExpressionTail:sym<indirection-id> { 
         [ <Dot> ||  <Arrow> ]
-        [   
-            ||  <Template>?  <idExpression> 
-            ||  <pseudoDestructorName> 
-        ]
+        <Template>?  <idExpression> 
+    }
+
+    rule postfixExpressionTail:sym<indirection-pseudo-dtor> { 
+        [ <Dot> ||  <Arrow> ]
+        <pseudoDestructorName> 
     }
 
     rule postfixExpressionTail:sym<pp-mm> { 
