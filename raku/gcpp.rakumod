@@ -292,41 +292,42 @@ our role CPP14Lexer does CPP14Keyword {
     token Longlongsuffix:sym<ll> { 'll' }
     token Longlongsuffix:sym<LL> { 'LL' }
 
-    token Cchar {
-        ||  <-[ \' \\ \r \n ]>
-        ||  <Escapesequence>
-        ||  <Universalcharactername>
-    }
+    #------------------------------
+    proto token Cchar { * }
+    token Cchar:sym<basic>     { <-[ \' \\ \r \n ]> }
+    token Cchar:sym<escape>    { <Escapesequence> }
+    token Cchar:sym<universal> { <Universalcharactername> }
 
+    #------------------------------
     proto token Escapesequence { * }
     token Escapesequence:sym<simple> { <Simpleescapesequence> }
     token Escapesequence:sym<octal>  { <Octalescapesequence> }
     token Escapesequence:sym<hex>    { <Hexadecimalescapesequence> }
 
-    token Simpleescapesequence {
-        ||  '\\\''
-        ||  '\\"'
-        ||  '\\?'
-        ||  '\\\\'
-        ||  '\\a'
-        ||  '\\b'
-        ||  '\\f'
-        ||  '\\n'
-        ||  '\\r'
-        ||  [ '\\'
-              [   
-                  ||  '\r' '\n'?
-                  ||  '\n'
-              ]
-            ]
-        ||  '\\t'
-        ||  '\\v'
+    #------------------------------
+    proto token Simpleescapesequence { * }
+    token Simpleescapesequence:sym<slash>        { '\\\'' }
+    token Simpleescapesequence:sym<quote>        { '\\"' }
+    token Simpleescapesequence:sym<question>     { '\\?' }
+    token Simpleescapesequence:sym<double-slash> { '\\\\' }
+    token Simpleescapesequence:sym<a>            { '\\a' }
+    token Simpleescapesequence:sym<b>            { '\\b' }
+    token Simpleescapesequence:sym<f>            { '\\f' }
+    token Simpleescapesequence:sym<n>            { '\\n' }
+    token Simpleescapesequence:sym<r>            { '\\r' }
+    token Simpleescapesequence:sym<t>            { '\\t' }
+    token Simpleescapesequence:sym<v>            { '\\v' }
+    token Simpleescapesequence:sym<rn-n> {
+        '\\'
+        [   
+            ||  '\r' '\n'?
+            ||  '\n'
+        ]
     }
 
+    #------------------------------
     token Octalescapesequence {
-        ||  '\\' <OCTALDIGIT>
-        ||  '\\' <OCTALDIGIT> <OCTALDIGIT>
-        ||  '\\' <OCTALDIGIT> <OCTALDIGIT> <OCTALDIGIT>
+        '\\' [<OCTALDIGIT> ** 1..3]
     }
 
     token Hexadecimalescapesequence {
