@@ -136,28 +136,34 @@ our role CPP14Keyword {
 
 our role CPP14Lexer does CPP14Keyword {
 
-    token IntegerLiteral {
-        ||  <DecimalLiteral> <Integersuffix>?
-        ||  <OctalLiteral> <Integersuffix>?
-        ||  <HexadecimalLiteral> <Integersuffix>?
-        ||  <BinaryLiteral> <Integersuffix>?
+    proto token IntegerLiteral { * }
+    token IntegerLiteral:sym<dec> { <DecimalLiteral>     <Integersuffix>? }
+    token IntegerLiteral:sym<oct> { <OctalLiteral>       <Integersuffix>? }
+    token IntegerLiteral:sym<hex> { <HexadecimalLiteral> <Integersuffix>? }
+    token IntegerLiteral:sym<bin> { <BinaryLiteral>      <Integersuffix>? }
+
+    token CharacterLiteralPrefix {
+        ||  'u'
+        ||  'U'
+        ||  'L'
     }
 
     token CharacterLiteral {
-        ||  [   ||  'u'
-                ||  'U'
-                ||  'L'
-            ]?
-            '\''
-            <Cchar>+
-            '\''
+        <CharacterLiteralPrefix>? '\'' <Cchar>+ '\''
     }
 
-    token FloatingLiteral {
-        ||  <Fractionalconstant> <Exponentpart>?  <Floatingsuffix>?
-        ||  <Digitsequence> <Exponentpart> <Floatingsuffix>?
+    #------------------------
+    proto token FloatingLiteral { * }
+
+    token FloatingLiteral:sym<frac> {
+        <Fractionalconstant> <Exponentpart>?  <Floatingsuffix>?
     }
 
+    token FloatingLiteral:sym<digit> {
+        <Digitsequence> <Exponentpart> <Floatingsuffix>?
+    }
+
+    #------------------------
     token StringLiteralItem {
         <Encodingprefix>?
         [   
