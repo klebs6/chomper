@@ -213,11 +213,10 @@ our role CPP14Lexer does CPP14Keyword {
         || <Universalcharactername>
     }
 
-    token IdentifierContinue {
-        || <DIGIT>
-        || <NONDIGIT>
-        || <Universalcharactername>
-    }
+    proto token IdentifierContinue { * }
+    token IdentifierContinue:sym<digit>    { <DIGIT> }
+    token IdentifierContinue:sym<nondigit> { <NONDIGIT> }
+    token IdentifierContinue:sym<ucn>      { <Universalcharactername> }
 
     token Identifier {
         <IdentifierStart>
