@@ -7,5 +7,5 @@ our sub cpp-translate($in) {
     use Grammar::Tracer;
     grammar GD does CPP14Parser {}
 
-    G.parse($in) // GD.parse($in)
+    G.parse($in) // do { say "Bad $in"; GD.parse($in) }
 }

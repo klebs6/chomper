@@ -120,7 +120,4 @@ our sub pop-first-from-todo(:$file, :$start, :$end) {
     say "        " ~ ~$stmt;
     say "        " ~ wrap-body-todo($ws.rust-todo-block.body.split(~$stmt)[1]);
     $ws.write-session();
-
-    #exit;
-    #test-rustif($crate, $file, $start, $end);
 }
