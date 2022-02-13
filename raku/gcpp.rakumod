@@ -519,34 +519,37 @@ our role CPP14Parser does CPP14Lexer {
         <LeftBracket> <lambdaCapture>?  <RightBracket>
     }
 
-    rule lambdaCapture {
-        ||  <captureList>
-        ||  <captureDefault> [ <Comma> <captureList> ]?
-    }
+    #-------------------------------
+    proto rule lambdaCapture { * }
+    rule lambdaCapture:sym<list> { <captureList> }
+    rule lambdaCapture:sym<def>  { <captureDefault> [ <Comma> <captureList> ]? }
 
-    rule captureDefault {
-        ||  <And>
-        ||  <Assign>
-    }
+    #-------------------------------
+    proto rule captureDefault { * }
+    rule captureDefault:sym<and>    { <And> }
+    rule captureDefault:sym<Assign> { <Assign> }
 
+    #-------------------------------
     rule captureList {
         <capture> [ <Comma> <capture> ]* <Ellipsis>?
     }
 
-    rule capture {
-        ||  <simpleCapture>
-        ||  <initcapture>
-    }
+    #-------------------------------
+    proto rule capture { * }
+    rule capture:sym<simple> { <simpleCapture> }
+    rule capture:sym<init>   { <initcapture> }
 
-    rule simpleCapture {
-        ||  <And>?  <Identifier>
-        ||  <This>
-    }
+    #-------------------------------
+    proto rule simpleCapture { * }
+    rule simpleCapture:sym<id>   { <And>? <Identifier> }
+    rule simpleCapture:sym<this> { <This> }
 
+    #-------------------------------
     rule initcapture {
         <And>?  <Identifier> <initializer>
     }
 
+    #-------------------------------
     rule lambdaDeclarator {
         <LeftParen>
         <parameterDeclarationClause>?
