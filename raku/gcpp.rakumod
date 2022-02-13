@@ -429,7 +429,7 @@ our role CPP14Parser does CPP14Lexer {
     rule TOP {
         <.ws> 
         <statementSeq>
-        #<simpleDeclaration>
+        #<statement>
     }
 
     token translationUnit {
@@ -645,6 +645,7 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule unaryExpression {
+        ||  <newExpression>
         ||  <postfixExpression>
         ||  [   ||  <PlusPlus>
                 ||  <MinusMinus>
@@ -663,12 +664,10 @@ our role CPP14Parser does CPP14Lexer {
             ]
         ||  <Alignof> <LeftParen> <theTypeId> <RightParen>
         ||  <noExceptExpression>
-        ||  <newExpression>
         ||  <deleteExpression>
     }
 
     #--------------------------------------
-=begin comment
     proto rule unaryOperator { * } 
     rule unaryOperator:sym<Or>    { <Or>    } 
     rule unaryOperator:sym<Star>  { <Star>  } 
@@ -677,7 +676,7 @@ our role CPP14Parser does CPP14Lexer {
     rule unaryOperator:sym<Tilde> { <Tilde> } 
     rule unaryOperator:sym<Minus> { <Minus> } 
     rule unaryOperator:sym<Not>   { <Not>   } 
-=end comment
+=begin comment
     rule unaryOperator {
         ||  <Or>
         ||  <Star>
@@ -687,19 +686,18 @@ our role CPP14Parser does CPP14Lexer {
         ||  <Minus>
         ||  <Not>
     }
+=end comment
 
     #--------------------------------------
     rule newExpression {
-        ||  <Doublecolon>?
-            <New>
-            <newPlacement>?
-            [   ||  <newTypeId>
-                ||  [   ||  <LeftParen>
-                            <theTypeId>
-                            <RightParen>
-                    ]
-            ]
-            <newInitializer>?
+        <Doublecolon>?
+        <New>
+        <newPlacement>?
+        [   
+          ||  <newTypeId>
+          ||  [ <LeftParen> <theTypeId> <RightParen> ]
+        ]
+        <newInitializer>?
     }
 
     rule newPlacement {
@@ -713,20 +711,26 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule newDeclarator {
-        ||  <pointerOperator> <newDeclarator>?
-        ||  <noPointerNewDeclarator>
+        <pointerOperator>* 
+        <noPointerNewDeclarator>?
     }
 
+    #applied a transfomation on this rule to
+    #prevent infinite loops
+    #
+    #if we get any bugs downstream come back to
+    #this
     rule noPointerNewDeclarator {
-        ||  <LeftBracket>
-            <expression>
-            <RightBracket>
-            <attributeSpecifierSeq>?
-        ||  <noPointerNewDeclarator>
+        <LeftBracket>
+        <expression>
+        <RightBracket>
+        <attributeSpecifierSeq>?
+        [
             <LeftBracket>
             <constantExpression>
             <RightBracket>
             <attributeSpecifierSeq>?
+        ]*
     }
 
     rule newInitializer {
@@ -755,12 +759,14 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule pointerMemberExpression {
-        ||  <castExpression>
-            [   ||  [   ||  <DotStar>
-                        ||  <ArrowStar>
-                    ]
-                    <castExpression>
-            ]*
+        <castExpression>
+        [
+            [   
+                ||  <DotStar>
+                ||  <ArrowStar>
+            ]
+            <castExpression>
+        ]*
     }
 
     rule multiplicativeExpression {
@@ -949,7 +955,7 @@ our role CPP14Parser does CPP14Lexer {
         <condition>
         <RightParen>
         <statement>
-        [ <Else> <statement> ]?
+        [ <comment>? <Else> <statement> ]?
     }
 
     rule selectionStatement:sym<switch> {  
