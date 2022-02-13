@@ -683,28 +683,32 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-------------------------------------
-    rule unaryExpression {
-        ||  <newExpression>
-        ||  <postfixExpression>
-        ||  [   ||  <PlusPlus>
-                ||  <MinusMinus>
-                ||  <unaryOperator>
-                ||  <Sizeof>
-            ]
-            <unaryExpression>
-        ||  <Sizeof>
-            [   ||  <LeftParen>
-                    <theTypeId>
-                    <RightParen>
-                ||  <Ellipsis>
-                    <LeftParen>
-                    <Identifier>
-                    <RightParen>
-            ]
-        ||  <Alignof> <LeftParen> <theTypeId> <RightParen>
-        ||  <noExceptExpression>
-        ||  <deleteExpression>
+    proto rule unaryExpression { * }
+    rule unaryExpression:sym<new>      { <newExpression> }
+    rule unaryExpression:sym<postfix>  { <postfixExpression> }
+    rule unaryExpression:sym<pp>       { <PlusPlus> <unaryExpression> }
+    rule unaryExpression:sym<mm>       { <MinusMinus> <unaryExpression> }
+    rule unaryExpression:sym<unary-op> { <unaryOperator> <unaryExpression> }
+    rule unaryExpression:sym<sizeof>   { <Sizeof> <unaryExpression> }
+
+    rule unaryExpression:sym<sizeof-typeid> {
+        <Sizeof>
+        <LeftParen>
+        <theTypeId>
+        <RightParen>
     }
+
+    rule unaryExpression:sym<sizeof-ids> {
+        <Sizeof>
+        <Ellipsis>
+        <LeftParen>
+        <Identifier>
+        <RightParen>
+    }
+
+    rule unaryExpression:sym<alignof>  { <Alignof> <LeftParen> <theTypeId> <RightParen> }
+    rule unaryExpression:sym<noexcept> { <noExceptExpression> }
+    rule unaryExpression:sym<delete>   { <deleteExpression> }
 
     #--------------------------------------
     proto rule unaryOperator { * } 
