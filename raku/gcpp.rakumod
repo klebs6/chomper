@@ -436,6 +436,8 @@ our role CPP14Parser does CPP14Lexer {
         <declarationseq>?  $
     }
 
+
+=begin comment
     token primaryExpression {
         ||  <literal>+
         ||  <This>
@@ -443,6 +445,14 @@ our role CPP14Parser does CPP14Lexer {
         ||  <idExpression>
         ||  <lambdaExpression>
     }
+=end comment
+
+    proto token primaryExpression { * }
+    token primaryExpression:sym<literal> { <literal>+ }
+    token primaryExpression:sym<this>    { <This> }
+    token primaryExpression:sym<expr>    { <LeftParen> <expression> <RightParen> }
+    token primaryExpression:sym<id>      { <idExpression> }
+    token primaryExpression:sym<lambda>  { <lambdaExpression> }
 
     #-------------------------------
     proto regex idExpression { * }
@@ -676,17 +686,6 @@ our role CPP14Parser does CPP14Lexer {
     rule unaryOperator:sym<Tilde> { <Tilde> } 
     rule unaryOperator:sym<Minus> { <Minus> } 
     rule unaryOperator:sym<Not>   { <Not>   } 
-=begin comment
-    rule unaryOperator {
-        ||  <Or>
-        ||  <Star>
-        ||  <And>
-        ||  <Plus>
-        ||  <Tilde>
-        ||  <Minus>
-        ||  <Not>
-    }
-=end comment
 
     #--------------------------------------
     rule newExpression {

@@ -2609,4 +2609,5 @@ sub test-some($n) {
     }
 }
 
-test-some(20);
+test-all();
+#test-some(20);

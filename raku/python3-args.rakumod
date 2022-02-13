@@ -25,7 +25,6 @@ our class Python3::CompForArgument does Python3::IArgument {
     has Python3::CompFor $.comp-for;
 }
 
-
 our class Python3::ArgList does Python3::ITrailer {
     has Python3::IArgument @.basic-args;
     has Python3::IArgument @.star-args;
