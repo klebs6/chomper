@@ -1,0 +1,6 @@
+#!/usr/bin/env raku
+use feedback;
+
+sub MAIN(:$file, :$start, :$end) {
+    pop-first-from-todo(:$file, :$start, :$end);
+}

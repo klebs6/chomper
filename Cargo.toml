@@ -3,6 +3,15 @@ name = "translator"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+crate-type = ["cdylib"]
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+#rustdoc-json-types-fork = "*"
+rustdoc-types           = "*"
+serde_json              = "*"
+libc                    = "*"
+lazy_static             = "*"
+static_assertions       = "*"

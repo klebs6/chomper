@@ -4,4 +4,6 @@ raku/.precomp/*
 # Added by cargo
 
 /target
+/vendor
+/.cargo
 Cargo.lock

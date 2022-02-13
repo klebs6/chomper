@@ -1,16 +1,7 @@
 #!/usr/bin/env raku
-use gcpp;
-
-grammar G does CPP14Parser {}
-
-use Grammar::Tracer;
-grammar GD does CPP14Parser {}
-
-my $bc = $CPP14Lexer::BlockComment;
-my $lc = $CPP14Lexer::LineComment;
+use cpp-translate;
 
 my $in = $*IN.slurp.chomp;
-#say $in.indices($bc);
-#exit;
 
-say G.parse($in) // GD.parse($in);
+say cpp-translate($in);
+
