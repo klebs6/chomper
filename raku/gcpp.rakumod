@@ -634,15 +634,15 @@ our role CPP14Parser does CPP14Lexer {
         <RightParen>
     }
 
-    token postListHead {
-        || <simpleTypeSpecifier> 
-        || <typeNameSpecifier>
-    }
+    #---------------------
+    proto token postListHead { * }
+    token postListHead:sym<simple>    { <simpleTypeSpecifier> }
+    token postListHead:sym<type-name> { <typeNameSpecifier> }
 
-    token postListTail {
-        || <LeftParen> <expressionList>?  <RightParen> 
-        || <bracedInitList>
-    }
+    #---------------------
+    proto token postListTail { * }
+    token postListTail:sym<parenthesized> { <LeftParen> <expressionList>?  <RightParen> }
+    token postListTail:sym<braced>        { <bracedInitList> }
 
     token postfixExpressionList {
         <postListHead>
@@ -658,23 +658,31 @@ our role CPP14Parser does CPP14Lexer {
         <initializerList>
     }
 
-    rule pseudoDestructorName {
-        ||  <nestedNameSpecifier>?
-            [   ||  <theTypeName>
-                    <Doublecolon>
-            ]?
-            <Tilde>
-            <theTypeName>
-        ||  <nestedNameSpecifier>
-            <Template>
-            <simpleTemplateId>
-            <Doublecolon>
-            <Tilde>
-            <theTypeName>
-        ||  <Tilde>
-            <decltypeSpecifier>
+    #-------------------------------------
+    proto rule pseudoDestructorName { * }
+
+    rule pseudoDestructorName:sym<basic> {
+        <nestedNameSpecifier>?
+        [ <theTypeName> <Doublecolon> ]?
+        <Tilde>
+        <theTypeName>
     }
 
+    rule pseudoDestructorName:sym<template> {
+        <nestedNameSpecifier>
+        <Template>
+        <simpleTemplateId>
+        <Doublecolon>
+        <Tilde>
+        <theTypeName>
+    }
+
+    rule pseudoDestructorName:sym<decltype> {
+        <Tilde>
+        <decltypeSpecifier>
+    }
+
+    #-------------------------------------
     rule unaryExpression {
         ||  <newExpression>
         ||  <postfixExpression>
