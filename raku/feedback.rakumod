@@ -1,5 +1,7 @@
 use Data::Dump::Tree;
+use JSON::Class;
 use NativeCall;
+use String::CRC32;
 
 use crates;
 use cargo;
@@ -8,6 +10,12 @@ use infer-rustdoc;
 use todo-block;
 use rust-ffi;
 use cpp-translate;
+
+our $session-file = "./translate.session";
+
+our class Session does JSON::Class {
+    has $.active-checksum is rw;
+}
 
 our class Feedback::Workspace {
 
@@ -21,6 +29,7 @@ our class Feedback::Workspace {
     has LineRange $.rust-fn-range;
     has Str       $.rust-fn-text;
     has TodoBlock $.rust-todo-block;
+    has Session   $.session;
 
     method get-rust-fn-text {
 
@@ -32,10 +41,45 @@ our class Feedback::Workspace {
     }
 
     method get-todo-block {
+
         my $idx       = $!rust-fn-text.index("todo!");
         my $until-end = $!rust-fn-text.substr($idx,*);
 
         TodoBlock::Grammar.subparse($until-end, actions => TodoBlock::Actions.new).made
+    }
+
+    method maybe-resume-session {
+
+        if $session-file.IO.e {
+
+            $!session = Session.from-json($session-file.IO.slurp);
+
+        } else {
+
+            $!session = Session.new;
+        }
+    }
+
+    method session-checksum-changed returns Bool {
+
+        my $crc          = String::CRC32::crc32($!file-text);
+
+        if $!session.active-checksum {
+
+            my Bool $changed = so $!session.active-checksum ne $crc;
+
+            if $changed {
+                $!session.active-checksum = $crc;
+            }
+
+            $changed
+
+        } else {
+
+            $!session.active-checksum = $crc;
+
+            True
+        }
     }
 
     submethod BUILD(:$file, :$start, :$end) {
@@ -43,8 +87,14 @@ our class Feedback::Workspace {
         $!start           = $start;
         $!end             = $end;
         $!active-crate    = $!file.split("/")[0];
-        generate-single-rustdoc-db($!active-crate);
         $!file-text       = $!file.IO.slurp;
+
+        self.maybe-resume-session();
+
+        if self.session-checksum-changed() {
+            generate-single-rustdoc-db($!active-crate);
+        }
+
         $!visual-range    = $*IN.slurp;
         $!rust-fn-name    = get-rust-fn($!active-crate, $!file, $!start, $!end);
         $!rust-fn-range   = get-rust-fn-range($!active-crate, $!file, $!start, $!end);
@@ -52,18 +102,25 @@ our class Feedback::Workspace {
         $!rust-todo-block = self.get-todo-block();
         $!file-text       = "";
     }
+
+    method write-session {
+        spurt $session-file, $!session.to-json()
+    }
+
+    method get-first-stmt {
+        my $body = self.rust-todo-block.body;
+        cpp-translate($body)<statementSeq><statement>.List[0]
+    }
 }
 
 our sub pop-first-from-todo(:$file, :$start, :$end) {
-    my $w = Feedback::Workspace.new(:$file, :$start, :$end);
-    ddt $w;
-    exit;
-    my $body = $w.rust-todo-block.body;
-    my $stmt = cpp-translate($body)<statementSeq><statement>.List[0];
-    say "        " ~ ~$stmt;
-    say "        " ~ wrap-body-todo($w.rust-todo-block.body.split(~$stmt)[1]);
+    my $ws   = Feedback::Workspace.new(:$file, :$start, :$end);
+    my $stmt = $ws.get-first-stmt();
 
-    exit;
+    say "        " ~ ~$stmt;
+    say "        " ~ wrap-body-todo($ws.rust-todo-block.body.split(~$stmt)[1]);
+    $ws.write-session();
+
     #exit;
     #test-rustif($crate, $file, $start, $end);
 }
