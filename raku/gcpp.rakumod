@@ -610,13 +610,15 @@ our role CPP14Parser does CPP14Lexer {
         || <primaryExpression>
     }
 
+    #-------------------------------------
+    proto token cast-token { * }
+    token cast-token:sym<dyn>         { <Dynamic_cast> }
+    token cast-token:sym<static>      { <Static_cast> }
+    token cast-token:sym<reinterpret> { <Reinterpret_cast> }
+    token cast-token:sym<const>       { <Const_cast> }
+
     rule postfixExpressionCast {
-        [ 
-            || <Dynamic_cast> 
-            || <Static_cast> 
-            || <Reinterpret_cast> 
-            ||  <Const_cast>
-        ]
+        <cast-token>
         <Less> 
         <theTypeId> 
         <Greater> 
