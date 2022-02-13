@@ -358,17 +358,18 @@ our role CPP14Lexer does CPP14Keyword {
         <[ f l F L ]>
     }
 
+    #------------------
     proto token Encodingprefix { * }
     token Encodingprefix:sym<u8> { 'u8' }
     token Encodingprefix:sym<u>  { 'u' }
     token Encodingprefix:sym<U>  { 'U' }
     token Encodingprefix:sym<L>  { 'L' }
 
-    token Schar {
-        ||  <-[ " \\ \r \n ]>
-        ||  <Escapesequence>
-        ||  <Universalcharactername>
-    }
+    #------------------
+    proto token Schar { * }
+    token Schar:sym<basic>  { <-[ " \\ \r \n ]> }
+    token Schar:sym<escape> { <Escapesequence> }
+    token Schar:sym<ucn>    { <Universalcharactername> }
 
     token Rawstring {
         ||  'R"'
@@ -394,18 +395,14 @@ our role CPP14Lexer does CPP14Keyword {
     token UserDefinedIntegerLiteral:sym<hex> { <HexadecimalLiteral> <Udsuffix> }
     token UserDefinedIntegerLiteral:sym<bin> { <BinaryLiteral> <Udsuffix> }
 
-    token UserDefinedFloatingLiteral {
-        ||  <Fractionalconstant> <Exponentpart>?  <Udsuffix>
-        ||  <Digitsequence> <Exponentpart> <Udsuffix>
-    }
+    #-------------------
+    proto token UserDefinedFloatingLiteral { * }
+    token UserDefinedFloatingLiteral:sym<frac> { <Fractionalconstant> <Exponentpart>?  <Udsuffix> }
+    token UserDefinedFloatingLiteral:sym<digi> { <Digitsequence> <Exponentpart> <Udsuffix> }
 
-    token UserDefinedStringLiteral {
-        <StringLiteral> <Udsuffix>
-    }
-
-    token UserDefinedCharacterLiteral {
-        <CharacterLiteral> <Udsuffix>
-    }
+    #-------------------
+    token UserDefinedStringLiteral    { <StringLiteral> <Udsuffix> }
+    token UserDefinedCharacterLiteral { <CharacterLiteral> <Udsuffix> }
 
     token Udsuffix {
         <Identifier>
