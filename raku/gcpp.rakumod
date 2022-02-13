@@ -136,17 +136,18 @@ our role CPP14Keyword {
 
 our role CPP14Lexer does CPP14Keyword {
 
+    #--------------------
     proto token IntegerLiteral { * }
     token IntegerLiteral:sym<dec> { <DecimalLiteral>     <Integersuffix>? }
     token IntegerLiteral:sym<oct> { <OctalLiteral>       <Integersuffix>? }
     token IntegerLiteral:sym<hex> { <HexadecimalLiteral> <Integersuffix>? }
     token IntegerLiteral:sym<bin> { <BinaryLiteral>      <Integersuffix>? }
 
-    token CharacterLiteralPrefix {
-        ||  'u'
-        ||  'U'
-        ||  'L'
-    }
+    #--------------------
+    proto token CharacterLiteralPrefix { * }
+    token CharacterLiteralPrefix:sym<u> { 'u' }
+    token CharacterLiteralPrefix:sym<U> { 'U' }
+    token CharacterLiteralPrefix:sym<L> { 'L' }
 
     token CharacterLiteral {
         <CharacterLiteralPrefix>? '\'' <Cchar>+ '\''
@@ -176,6 +177,7 @@ our role CPP14Lexer does CPP14Keyword {
         <StringLiteralItem> [<.ws> <StringLiteralItem>]*
     }
 
+    #--------------------
     proto token BooleanLiteral { * }
     token BooleanLiteral:sym<f> { <False_> }
     token BooleanLiteral:sym<t> { <True_> }
@@ -184,6 +186,7 @@ our role CPP14Lexer does CPP14Keyword {
         <Nullptr>
     }
 
+    #--------------------
     proto token UserDefinedLiteral { * }
     token UserDefinedLiteral:syn<int>   { <UserDefinedIntegerLiteral> }
     token UserDefinedLiteral:sym<float> { <UserDefinedFloatingLiteral> }
@@ -268,13 +271,14 @@ our role CPP14Lexer does CPP14Keyword {
         <[ 0 1 ]>
     }
 
-    token Integersuffix {
-        ||  <Unsignedsuffix> <Longsuffix>?
-        ||  <Unsignedsuffix> <Longlongsuffix>?
-        ||  <Longsuffix>     <Unsignedsuffix>?
-        ||  <Longlongsuffix> <Unsignedsuffix>?
-    }
+    #------------------------------
+    proto token Integersuffix { * }
+    token Integersuffix:sym<ul>  { <Unsignedsuffix> <Longsuffix>? }
+    token Integersuffix:sym<ull> { <Unsignedsuffix> <Longlongsuffix>? }
+    token Integersuffix:sym<lu>  { <Longsuffix>     <Unsignedsuffix>? }
+    token Integersuffix:sym<llu> { <Longlongsuffix> <Unsignedsuffix>? }
 
+    #------------------------------
     token Unsignedsuffix {
         <[ u U ]>
     }
@@ -283,10 +287,10 @@ our role CPP14Lexer does CPP14Keyword {
         <[ l L ]>
     }
 
-    token Longlongsuffix {
-        ||  'll'
-        ||  'LL'
-    }
+    #------------------------------
+    proto token Longlongsuffix { * }
+    token Longlongsuffix:sym<ll> { 'll' }
+    token Longlongsuffix:sym<LL> { 'LL' }
 
     token Cchar {
         ||  <-[ \' \\ \r \n ]>
