@@ -492,14 +492,20 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-------------------------------
-    regex nestedNameSpecifierSuffix {
-        [   
-            |  <Identifier>
-            |  <Template>? <simpleTemplateId>
-        ]
+    proto regex nestedNameSpecifierSuffix { * }
+
+    regex nestedNameSpecifierSuffix:sym<id> {
+        <Identifier>
         <Doublecolon>
     }
 
+    regex nestedNameSpecifierSuffix:sym<template> {
+        <Template>? 
+        <simpleTemplateId>
+        <Doublecolon>
+    }
+
+    #-------------------------------
     regex nestedNameSpecifier {
         <nestedNameSpecifierPrefix> 
         <nestedNameSpecifierSuffix>*
