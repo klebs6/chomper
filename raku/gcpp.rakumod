@@ -170,13 +170,12 @@ our role CPP14Lexer does CPP14Keyword {
         <StringLiteralItem> [<.ws> <StringLiteralItem>]*
     }
 
-    token BooleanLiteral {
-        ||  <False_>
-        ||  <True_>
-    }
+    proto token BooleanLiteral { * }
+    token BooleanLiteral:sym<f> { <False_> }
+    token BooleanLiteral:sym<t> { <True_> }
 
     token PointerLiteral {
-        ||  <Nullptr>
+        <Nullptr>
     }
 
     proto token UserDefinedLiteral { * }
@@ -203,10 +202,9 @@ our role CPP14Lexer does CPP14Keyword {
         <HEXADECIMALDIGIT> ** 4
     }
 
-    token Universalcharactername {
-        || '\\u' <Hexquad>
-        || '\\U' <Hexquad> <Hexquad>
-    }
+    proto token Universalcharactername { * }
+    token Universalcharactername:sym<one> { '\\u' <Hexquad> }
+    token Universalcharactername:sym<two> { '\\U' <Hexquad> <Hexquad> }
 
     #-------------------
     proto token IdentifierStart { * }
