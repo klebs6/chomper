@@ -290,11 +290,10 @@ our role CPP14Lexer does CPP14Keyword {
         ||  <Universalcharactername>
     }
 
-    token Escapesequence {
-        ||  <Simpleescapesequence>
-        ||  <Octalescapesequence>
-        ||  <Hexadecimalescapesequence>
-    }
+    proto token Escapesequence { * }
+    token Escapesequence:sym<simple> { <Simpleescapesequence> }
+    token Escapesequence:sym<octal>  { <Octalescapesequence> }
+    token Escapesequence:sym<hex>    { <Hexadecimalescapesequence> }
 
     token Simpleescapesequence {
         ||  '\\\''
@@ -326,14 +325,16 @@ our role CPP14Lexer does CPP14Keyword {
         '\\x' <HEXADECIMALDIGIT>+
     }
 
-    token Fractionalconstant {
-        ||  <Digitsequence>?  '.' <Digitsequence>
-        ||  <Digitsequence> '.'
+    proto token Fractionalconstant { * }
+    token Fractionalconstant:sym<with-tail> { <Digitsequence>?  '.' <Digitsequence> }
+    token Fractionalconstant:sym<no-tail>   { <Digitsequence> '.' }
+
+    token ExponentpartPrefix {
+        'e' || 'E'
     }
 
     token Exponentpart {
-        ||  'e' <SIGN>?  <Digitsequence>
-        ||  'E' <SIGN>?  <Digitsequence>
+        <ExponentpartPrefix> <SIGN>?  <Digitsequence>
     }
 
     token SIGN {
@@ -348,12 +349,11 @@ our role CPP14Lexer does CPP14Keyword {
         <[ f l F L ]>
     }
 
-    token Encodingprefix {
-        ||  'u8'
-        ||  'u'
-        ||  'U'
-        ||  'L'
-    }
+    proto token Encodingprefix { * }
+    token Encodingprefix:sym<u8> { 'u8' }
+    token Encodingprefix:sym<u>  { 'u' }
+    token Encodingprefix:sym<U>  { 'U' }
+    token Encodingprefix:sym<L>  { 'L' }
 
     token Schar {
         ||  <-[ " \\ \r \n ]>
