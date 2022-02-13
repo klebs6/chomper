@@ -208,11 +208,12 @@ our role CPP14Lexer does CPP14Keyword {
         || '\\U' <Hexquad> <Hexquad>
     }
 
-    token IdentifierStart {
-        || <NONDIGIT>
-        || <Universalcharactername>
-    }
+    #-------------------
+    proto token IdentifierStart { * }
+    token IdentifierStart:sym<nondigit> { <NONDIGIT> }
+    token IdentifierStart:sym<ucn>      { <Universalcharactername> }
 
+    #-------------------
     proto token IdentifierContinue { * }
     token IdentifierContinue:sym<digit>    { <DIGIT> }
     token IdentifierContinue:sym<nondigit> { <NONDIGIT> }
