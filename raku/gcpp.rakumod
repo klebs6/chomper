@@ -1597,10 +1597,19 @@ our role CPP14Parser does CPP14Lexer {
         <typeSpecifierSeq> <abstractDeclarator>?
     }
 
-    rule abstractDeclarator {
-        || <pointerAbstractDeclarator>
-        || <noPointerAbstractDeclarator>? <parametersAndQualifiers> <trailingReturnType>
-        || <abstractPackDeclarator>
+    #-----------------------------
+    proto rule abstractDeclarator { * }
+
+    rule abstractDeclarator:sym<base> {
+        <pointerAbstractDeclarator>
+    }
+
+    rule abstractDeclarator:sym<aug> {
+        <noPointerAbstractDeclarator>? <parametersAndQualifiers> <trailingReturnType>
+    }
+
+    rule abstractDeclarator:Sym<abstract-pack> {
+        <abstractPackDeclarator>
     }
 
     #-------------------[x]
