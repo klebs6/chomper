@@ -1699,12 +1699,26 @@ our role CPP14Parser does CPP14Lexer {
         <functionBody>
     }
 
-    rule functionBody {
-        ||  <constructorInitializer>?  <compoundStatement>
-        ||  <functionTryBlock>
-        ||  <Assign> [ <Default> || <Delete> ] <Semi>
+    #-----------------------------
+    proto rule functionBody { * }
+
+    rule functionBody:sym<compound> {
+        <constructorInitializer>?  <compoundStatement>
     }
 
+    rule functionBody:sym<try> {
+        <functionTryBlock>
+    }
+
+    rule functionBody:sym<assign-default> {
+        <Assign> <Default> <Semi>
+    }
+
+    rule functionBody:sym<assign-delete> {
+        <Assign> <Delete> <Semi>
+    }
+
+    #-----------------------------
     rule initializer {
         ||  <braceOrEqualInitializer>
         ||  <LeftParen> <expressionList> <RightParen>
