@@ -1618,15 +1618,23 @@ our role CPP14Parser does CPP14Lexer {
     rule pointerAbstractDeclarator:sym<ptr>    { <pointerOperator>+ <noPointerAbstractDeclarator>? }
 
     #-------------------[x]
-    proto rule noPointerAbstractDeclaratorBase { * }
+    proto rule noPointerAbstractDeclaratorBody { * }
+
+    rule noPointerAbstractDeclaratorBody:sym<base> {
+        <parametersAndQualifiers>
+    }
+
+    rule noPointerAbstractDeclaratorBody:sym<brack> {
+        <noPointerAbstractDeclarator> <noPointerAbstractDeclaratorBracketedBase>
+    }
 
     rule noPointerAbstractDeclarator {
         <noPointerAbstractDeclaratorBase>
-        [   
-            ||  <parametersAndQualifiers>
-            ||  <noPointerAbstractDeclarator> <noPointerAbstractDeclaratorBracketedBase>
-        ]*
+        <noPointerAbstractDeclaratorBody>*
     }
+
+    #-------------------[x]
+    proto rule noPointerAbstractDeclaratorBase { * }
 
     rule noPointerAbstractDeclaratorBase:sym<basic> {
         <parametersAndQualifiers>
