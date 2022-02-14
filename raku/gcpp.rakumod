@@ -1809,16 +1809,23 @@ our role CPP14Parser does CPP14Lexer {
         <memberSpecificationBase>+
     }
 
-    rule memberdeclaration {
-        || <attributeSpecifierSeq>?  <declSpecifierSeq>?  <memberDeclaratorList>?  <Semi>
-        || <functionDefinition>
-        || <usingDeclaration>
-        || <staticAssertDeclaration>
-        || <templateDeclaration>
-        || <aliasDeclaration>
-        || <emptyDeclaration>
+    #-----------------------------
+    proto rule memberdeclaration { * }
+
+    rule memberdeclaration:sym<basic> {
+        <attributeSpecifierSeq>?  
+        <declSpecifierSeq>?  
+        <memberDeclaratorList>?  
+        <Semi>
     }
 
+    rule memberdeclaration:sym<func>          { <functionDefinition> }
+    rule memberdeclaration:sym<using>         { <usingDeclaration> }
+    rule memberdeclaration:sym<static-assert> { <staticAssertDeclaration> }
+    rule memberdeclaration:sym<template>      { <templateDeclaration> }
+    rule memberdeclaration:sym<alias>         { <aliasDeclaration> }
+    rule memberdeclaration:sym<empty>         { <emptyDeclaration> }
+    #-----------------------------
     rule memberDeclaratorList {
         <memberDeclarator> [ <Comma> <memberDeclarator> ]*
     }
