@@ -1984,16 +1984,14 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule templateparameterList {
-        ||  <templateParameter>
-            [   ||  <Comma>
-                    <templateParameter>
-            ]*
+        <templateParameter>
+        [ <Comma> <templateParameter> ]*
     }
 
-    rule templateParameter {
-        ||  <typeParameter>
-        ||  <parameterDeclaration>
-    }
+    #-----------------------------
+    proto rule templateParameter { * }
+    rule templateParameter:sym<type>  { <typeParameter> }
+    rule templateParameter:sym<param> { <parameterDeclaration> }
 
     rule typeParameter {
         ||  [   ||  [   ||  <Template>
