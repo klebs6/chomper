@@ -1993,23 +1993,27 @@ our role CPP14Parser does CPP14Lexer {
     rule templateParameter:sym<type>  { <typeParameter> }
     rule templateParameter:sym<param> { <parameterDeclaration> }
 
+    #-----------------------------
+    proto rule typeParameterBase { * }
+
+    rule typeParameterBase:sym<basic> {
+       [ <Template> <Less> <templateparameterList> <Greater> ]? 
+       <Class_>
+    }
+
+    rule typeParameterBase:sym<typename> {
+       <Typename_>
+    }
+
+    #-----------------------------
+    proto rule typeParameterSuffix { * }
+    rule typeParameterSuffix:sym<maybe-ident>    { <Ellipsis>? <Identifier>? }
+    rule typeParameterSuffix:sym<assign-type-id> { <Identifier>? <Assign> <theTypeId> }
+
+    #-----------------------------
     rule typeParameter {
-        ||  [   ||  [   ||  <Template>
-                            <Less>
-                            <templateparameterList>
-                            <Greater>
-                    ]?
-                    <Class_>
-                ||  <Typename_>
-            ]
-            [   ||  [   ||  <Ellipsis>?
-                            <Identifier>?
-                    ]
-                ||  [   ||  <Identifier>?
-                            <Assign>
-                            <theTypeId>
-                    ]
-            ]
+        <typeParameterBase>
+        <typeParameterSuffix>
     }
 
     rule simpleTemplateId {
@@ -2037,12 +2041,13 @@ our role CPP14Parser does CPP14Lexer {
         <templateArgument> <Ellipsis>? [ <Comma> <templateArgument> <Ellipsis>? ]*
     }
 
-    token templateArgument {
-        || <theTypeId>
-        || <constantExpression>
-        || <idExpression>
-    }
+    #---------------------
+    proto token templateArgument { * }
+    token templateArgument:sym<type-id>    { <theTypeId> }
+    token templateArgument:sym<const-expr> { <constantExpression> }
+    token templateArgument:sym<id-expr>    { <idExpression> }
 
+    #---------------------
     rule typeNameSpecifier {
         <Typename_>
         <nestedNameSpecifier>
