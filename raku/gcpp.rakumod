@@ -769,18 +769,17 @@ our role CPP14Parser does CPP14Lexer {
         ]*
     }
 
-    rule newInitializer {
-        || <LeftParen> <expressionList>?  <RightParen>
-        || <bracedInitList>
-    }
+    #------------------------
+    proto rule newInitializer { * }
+    rule newInitializer:sym<expr-list> { <LeftParen> <expressionList>?  <RightParen> }
+    rule newInitializer:sym<braced> { <bracedInitList> }
 
+    #------------------------
     rule deleteExpression {
-        ||  <Doublecolon>?
-            <Delete>
-            [   ||  <LeftBracket>
-                    <RightBracket>
-            ]?
-            <castExpression>
+        <Doublecolon>?
+        <Delete>
+        [ <LeftBracket> <RightBracket> ]?
+        <castExpression>
     }
 
     rule noExceptExpression {
@@ -805,16 +804,21 @@ our role CPP14Parser does CPP14Lexer {
         ]*
     }
 
+    #-----------------
+    proto token multiplicativeOperator { * }
+    token multiplicativeOperator:sym<*> { <Star> }
+    token multiplicativeOperator:sym</> { <Div> }
+    token multiplicativeOperator:sym<%> { <Mod> }
+
     rule multiplicativeExpression {
-        ||  <pointerMemberExpression>
-            [   ||  [   ||  <Star>
-                        ||  <Div>
-                        ||  <Mod>
-                    ]
-                    <pointerMemberExpression>
-            ]*
+        <pointerMemberExpression>
+        [   
+            <multiplicativeOperator> 
+            <pointerMemberExpression>
+        ]*
     }
 
+    #-----------------
     rule additiveExpression {
         ||  <multiplicativeExpression>
             [   ||  [   ||  <Plus>
