@@ -1284,16 +1284,32 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #------------------------------
-    rule elaboratedTypeSpecifier {
-        ||  <classKey>
-            [   
-                ||  <attributeSpecifierSeq>? <nestedNameSpecifier>? <Identifier>
-                ||  <simpleTemplateId>
-                ||  <nestedNameSpecifier> <Template>? <simpleTemplateId>
-            ]
-        ||  <Enum> <nestedNameSpecifier>? <Identifier>
+    proto rule elaboratedTypeSpecifier { * }
+
+    rule elaboratedTypeSpecifier:sym<class-ident> {
+        <classKey>
+        <attributeSpecifierSeq>? 
+        <nestedNameSpecifier>? 
+        <Identifier>
     }
 
+    rule elaboratedTypeSpecifier:sym<class-template-id> {
+        <classKey>
+        <simpleTemplateId>
+    }
+
+    rule elaboratedTypeSpecifier:sym<class-nested-template-id> {
+        <classKey>
+        <nestedNameSpecifier> 
+        <Template>? 
+        <simpleTemplateId>
+    }
+
+    rule elaboratedTypeSpecifier:sym<enum> {
+        <Enum> <nestedNameSpecifier>? <Identifier>
+    }
+
+    #------------------------------
     rule enumName {
         <Identifier>
     }
@@ -1306,27 +1322,23 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule enumHead {
-        ||  <enumkey>
-            <attributeSpecifierSeq>?
-            [   ||  <nestedNameSpecifier>?
-                    <Identifier>
-            ]?
-            <enumbase>?
+        <enumkey>
+        <attributeSpecifierSeq>?
+        [ <nestedNameSpecifier>? <Identifier> ]?
+        <enumbase>?
     }
 
     rule opaqueEnumDeclaration {
-        ||  <enumkey>
-            <attributeSpecifierSeq>?
-            <Identifier>
-            <enumbase>?
-            <Semi>
+        <enumkey>
+        <attributeSpecifierSeq>?
+        <Identifier>
+        <enumbase>?
+        <Semi>
     }
 
     rule enumkey {
-        ||  <Enum>
-            [   ||  <Class_>
-                ||  <Struct>
-            ]?
+        <Enum>
+        [  <Class_> || <Struct> ]?
     }
 
     rule enumbase {
@@ -1334,21 +1346,17 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule enumeratorList {
-        ||  <enumeratorDefinition>
-            [   ||  <Comma>
-                    <enumeratorDefinition>
-            ]*
+        <enumeratorDefinition>
+        [ <Comma> <enumeratorDefinition> ]*
     }
 
     rule enumeratorDefinition {
-        ||  <enumerator>
-            [   ||  <Assign>
-                    <constantExpression>
-            ]?
+        <enumerator>
+        [ <Assign> <constantExpression> ]?
     }
 
     rule enumerator {
-        ||  <Identifier>
+        <Identifier>
     }
 
     rule namespaceName {
