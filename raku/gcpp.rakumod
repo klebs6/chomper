@@ -1364,38 +1364,42 @@ our role CPP14Parser does CPP14Lexer {
     rule namespaceName:sym<alias>    { <namespaceAlias> }
 
     rule originalNamespaceName {
-        ||  <Identifier>
+        <Identifier>
     }
 
+    #--------------------
+    proto rule namespaceTag { * }
+    rule namespaceTag:sym<ident> { <Identifier> }
+    rule namespaceTag:sym<ident> { <originalNamespaceName> }
+
+    #--------------------
     rule namespaceDefinition {
         <Inline>?
         <Namespace>
-        [   
-            ||  <Identifier>
-            ||  <originalNamespaceName>
-        ]?
+        <namespaceTag>?
         <LeftBrace>
         <namespaceBody=declarationseq>?
         <RightBrace>
     }
 
     rule namespaceAlias {
-        ||  <Identifier>
+        <Identifier>
     }
 
     rule namespaceAliasDefinition {
-        ||  <Namespace>
-            <Identifier>
-            <Assign>
-            <qualifiednamespacespecifier>
-            <Semi>
+        <Namespace>
+        <Identifier>
+        <Assign>
+        <qualifiednamespacespecifier>
+        <Semi>
     }
 
     rule qualifiednamespacespecifier {
-        ||  <nestedNameSpecifier>?
-            <namespaceName>
+        <nestedNameSpecifier>?
+        <namespaceName>
     }
 
+    #--------------------
     rule usingDeclaration {
         ||  <Using>
             [   ||  [   ||  <Typename_>?
