@@ -1246,23 +1246,23 @@ our role CPP14Parser does CPP14Lexer {
         <simpleTypeLengthModifier>?  <Double>
     }
 
-    regex simpleTypeSpecifier {
-        | <simple-int-type-specifier>
-        | <full-type-name>
-        | <scoped-template-id>
-        | <simpleTypeSignednessModifier>
-        | <simpleTypeSignednessModifier>?  <simpleTypeLengthModifier>+
-        | <simple-char-type-specifier>
-        | <simple-char16-type-specifier>
-        | <simple-char32-type-specifier>
-        | <simple-wchar-type-specifier>
-        | <Bool_>
-        | <Float>
-        | <simple-double-type-specifier>
-        | <Void>
-        | <Auto>
-        | <decltypeSpecifier>
-    }
+    #------------------------------
+    proto regex simpleTypeSpecifier { * }
+    regex simpleTypeSpecifier:sym<int>                   { <simple-int-type-specifier> }
+    regex simpleTypeSpecifier:sym<full>                  { <full-type-name> }
+    regex simpleTypeSpecifier:sym<scoped>                { <scoped-template-id> }
+    regex simpleTypeSpecifier:sym<signedness-mod>        { <simpleTypeSignednessModifier> }
+    regex simpleTypeSpecifier:sym<signedness-mod-length> { <simpleTypeSignednessModifier>?  <simpleTypeLengthModifier>+ }
+    regex simpleTypeSpecifier:sym<char>                  { <simple-char-type-specifier> }
+    regex simpleTypeSpecifier:sym<char16>                { <simple-char16-type-specifier> }
+    regex simpleTypeSpecifier:sym<char32>                { <simple-char32-type-specifier> }
+    regex simpleTypeSpecifier:sym<wchar>                 { <simple-wchar-type-specifier> }
+    regex simpleTypeSpecifier:sym<bool>                  { <Bool_> }
+    regex simpleTypeSpecifier:sym<float>                 { <Float> }
+    regex simpleTypeSpecifier:sym<double>                { <simple-double-type-specifier> }
+    regex simpleTypeSpecifier:sym<void>                  { <Void> }
+    regex simpleTypeSpecifier:sym<auto>                  { <Auto> }
+    regex simpleTypeSpecifier:sym<decltype>              { <decltypeSpecifier> }
 
     #------------------------------
     proto rule theTypeName                   { * }
