@@ -434,7 +434,7 @@ our role CPP14Parser does CPP14Lexer {
     rule TOP {
         <.ws> 
         <statementSeq>
-        #<statement>
+        #<unaryExpression>
     }
 
     token translationUnit {
@@ -683,22 +683,26 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-------------------------------------
-    proto rule unaryExpression { * }
-    rule unaryExpression:sym<new>      { <newExpression> }
-    rule unaryExpression:sym<postfix>  { <postfixExpression> }
-    rule unaryExpression:sym<pp>       { <PlusPlus> <unaryExpression> }
-    rule unaryExpression:sym<mm>       { <MinusMinus> <unaryExpression> }
-    rule unaryExpression:sym<unary-op> { <unaryOperator> <unaryExpression> }
-    rule unaryExpression:sym<sizeof>   { <Sizeof> <unaryExpression> }
+    rule unaryExpression { 
+        || <newExpression>
+        || <unaryExpressionCase>
+    }
 
-    rule unaryExpression:sym<sizeof-typeid> {
+    proto rule unaryExpressionCase { * }
+    rule unaryExpressionCase:sym<postfix>  { <postfixExpression> }
+    rule unaryExpressionCase:sym<pp>       { <PlusPlus> <unaryExpression> }
+    rule unaryExpressionCase:sym<mm>       { <MinusMinus> <unaryExpression> }
+    rule unaryExpressionCase:sym<unary-op> { <unaryOperator> <unaryExpression> }
+    rule unaryExpressionCase:sym<sizeof>   { <Sizeof> <unaryExpression> }
+
+    rule unaryExpressionCase:sym<sizeof-typeid> {
         <Sizeof>
         <LeftParen>
         <theTypeId>
         <RightParen>
     }
 
-    rule unaryExpression:sym<sizeof-ids> {
+    rule unaryExpressionCase:sym<sizeof-ids> {
         <Sizeof>
         <Ellipsis>
         <LeftParen>
@@ -706,9 +710,9 @@ our role CPP14Parser does CPP14Lexer {
         <RightParen>
     }
 
-    rule unaryExpression:sym<alignof>  { <Alignof> <LeftParen> <theTypeId> <RightParen> }
-    rule unaryExpression:sym<noexcept> { <noExceptExpression> }
-    rule unaryExpression:sym<delete>   { <deleteExpression> }
+    rule unaryExpressionCase:sym<alignof>  { <Alignof> <LeftParen> <theTypeId> <RightParen> }
+    rule unaryExpressionCase:sym<noexcept> { <noExceptExpression> }
+    rule unaryExpressionCase:sym<delete>   { <deleteExpression> }
 
     #--------------------------------------
     proto rule unaryOperator { * } 
