@@ -1612,12 +1612,12 @@ our role CPP14Parser does CPP14Lexer {
         <abstractPackDeclarator>
     }
 
-    #-------------------[x]
+    #-----------------------------
     proto rule pointerAbstractDeclarator { * }
     rule pointerAbstractDeclarator:sym<no-ptr> { <noPointerAbstractDeclarator> }
     rule pointerAbstractDeclarator:sym<ptr>    { <pointerOperator>+ <noPointerAbstractDeclarator>? }
 
-    #-------------------[x]
+    #-----------------------------
     proto rule noPointerAbstractDeclaratorBody { * }
 
     rule noPointerAbstractDeclaratorBody:sym<base> {
@@ -1633,20 +1633,11 @@ our role CPP14Parser does CPP14Lexer {
         <noPointerAbstractDeclaratorBody>*
     }
 
-    #-------------------[x]
+    #-----------------------------
     proto rule noPointerAbstractDeclaratorBase { * }
-
-    rule noPointerAbstractDeclaratorBase:sym<basic> {
-        <parametersAndQualifiers>
-    }
-
-    rule noPointerAbstractDeclaratorBase:sym<bracketed> {
-        <noPointerAbstractDeclaratorBracketedBase>
-    }
-
-    rule noPointerAbstractDeclaratorBase:sym<parenthesized> {
-        <LeftParen> <pointerAbstractDeclarator> <RightParen>
-    }
+    rule noPointerAbstractDeclaratorBase:sym<basic>         { <parametersAndQualifiers> }
+    rule noPointerAbstractDeclaratorBase:sym<bracketed>     { <noPointerAbstractDeclaratorBracketedBase> }
+    rule noPointerAbstractDeclaratorBase:sym<parenthesized> { <LeftParen> <pointerAbstractDeclarator> <RightParen> }
 
     rule noPointerAbstractDeclaratorBracketedBase {
         <LeftBracket> <constantExpression>?  <RightBracket> <attributeSpecifierSeq>?
@@ -1657,7 +1648,7 @@ our role CPP14Parser does CPP14Lexer {
         <noPointerAbstractPackDeclarator>
     }
 
-    #-------------------[x]
+    #-----------------------------
     rule noPointerAbstractPackDeclaratorBasic {
         <parametersAndQualifiers>
     }
@@ -1669,28 +1660,26 @@ our role CPP14Parser does CPP14Lexer {
         <attributeSpecifierSeq>?
     }
 
+    #-----------------------------
+    proto rule noPointerAbstractPackDeclaratorBody { * }
+    rule noPointerAbstractPackDeclaratorBody:sym<basic> { <noPointerAbstractPackDeclaratorBasic> }
+    rule noPointerAbstractPackDeclaratorBody:sym<brack> { <noPointerAbstractPackDeclaratorBrackets> }
+
+    #-----------------------------
     rule noPointerAbstractPackDeclarator {
         <Ellipsis>
-        [
-            | <noPointerAbstractPackDeclaratorBasic>
-            | <noPointerAbstractPackDeclaratorBrackets>
-        ]*
+        <noPointerAbstractPackDeclaratorBody>*
     }
 
     rule parameterDeclarationClause {
-        ||  <parameterDeclarationList>
-            [   ||  <Comma>?
-                    <Ellipsis>
-            ]?
+        <parameterDeclarationList> [ <Comma>? <Ellipsis> ]?
     }
 
     rule parameterDeclarationList {
-        ||  <parameterDeclaration>
-            [   ||  <Comma>
-                    <parameterDeclaration>
-            ]*
+        <parameterDeclaration> [ <Comma> <parameterDeclaration> ]*
     }
 
+    #-----------------------------
     rule parameterDeclaration {
         <attributeSpecifierSeq>?
         <declSpecifierSeq>
