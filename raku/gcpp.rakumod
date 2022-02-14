@@ -1931,14 +1931,12 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule memInitializerList {
-        ||  <memInitializer>
-            <Ellipsis>?
-            [   ||  <Comma>
-                    <memInitializer>
-                    <Ellipsis>?
-            ]*
+        <memInitializer>
+        <Ellipsis>?
+        [ <Comma> <memInitializer> <Ellipsis>? ]*
     }
 
+    #-----------------------------
     rule memInitializer {
         <meminitializerid>
         [   
@@ -2155,14 +2153,14 @@ our role CPP14Parser does CPP14Lexer {
     token theOperator:sym<Brak>             { <LeftBracket> <RightBracket>              } 
 
     proto token literal { * }
-    token literal:sym<int>          { <IntegerLiteral> }
-    token literal:sym<char>         { <CharacterLiteral> }
-    token literal:sym<float>        { <FloatingLiteral> }
+    token literal:sym<int>                  { <IntegerLiteral> }
+    token literal:sym<char>                 { <CharacterLiteral> }
+    token literal:sym<float>                { <FloatingLiteral> }
 
     #Note: are we allowed to have many strings in a row?
-    token literal:sym<str>          { <StringLiteral> } 
+    token literal:sym<str>                  { <StringLiteral> } 
 
-    token literal:sym<bool>         { <BooleanLiteral> }
-    token literal:sym<ptr>          { <PointerLiteral> }
-    token literal:sym<user-defined> { <UserDefinedLiteral> }
+    token literal:sym<bool>                 { <BooleanLiteral> }
+    token literal:sym<ptr>                  { <PointerLiteral> }
+    token literal:sym<user-defined>         { <UserDefinedLiteral> }
 }
