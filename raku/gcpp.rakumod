@@ -1825,23 +1825,34 @@ our role CPP14Parser does CPP14Lexer {
     rule memberdeclaration:sym<template>      { <templateDeclaration> }
     rule memberdeclaration:sym<alias>         { <aliasDeclaration> }
     rule memberdeclaration:sym<empty>         { <emptyDeclaration> }
+
     #-----------------------------
     rule memberDeclaratorList {
         <memberDeclarator> [ <Comma> <memberDeclarator> ]*
     }
 
-    rule memberDeclarator {
-        ||  <declarator>
-            [   ||  <virtualSpecifierSeq>?
-                    <pureSpecifier>?
-                ||  <braceOrEqualInitializer>?
-            ]
-        ||  <Identifier>?
-            <attributeSpecifierSeq>?
-            <Colon>
-            <constantExpression>
+    #-----------------------------
+    proto rule memberDeclarator { * }
+
+    rule memberDeclarator:sym<virt> {
+        <declarator>
+        <virtualSpecifierSeq>? 
+        <pureSpecifier>?
     }
 
+    rule memberDeclarator:sym<brace-or-eq> {
+        <declarator>
+        <braceOrEqualInitializer>?
+    }
+
+    rule memberDeclarator:sym<ident> {
+        <Identifier>?
+        <attributeSpecifierSeq>?
+        <Colon>
+        <constantExpression>
+    }
+
+    #-----------------------------
     rule virtualSpecifierSeq {
         <virtualSpecifier>+
     }
