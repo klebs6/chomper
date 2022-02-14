@@ -1023,14 +1023,17 @@ our role CPP14Parser does CPP14Lexer {
         <expression>
     }
 
+    #-----------------------------
+    proto rule condition-decl-tail { * }
+    rule condition-decl-tail:sym<assign-init> { <Assign> <initializerClause> }
+    rule condition-decl-tail:sym<braced-init> { <bracedInitList> }
+
+    #-----------------------------
     rule condition:sym<decl> {
         <attributeSpecifierSeq>?
         <declSpecifierSeq> 
         <declarator>
-        [   
-          || <Assign> <initializerClause>
-          || <bracedInitList>
-        ]
+        <condition-decl-tail>
     }
 
     #-----------------------------
