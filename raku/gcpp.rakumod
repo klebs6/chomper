@@ -1522,11 +1522,11 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #------------------------------
-    rule noPointerDeclaratorBase {
-        | <declaratorid> <attributeSpecifierSeq>?
-        | <LeftParen> <pointerDeclarator> <RightParen>
-    }
+    proto rule noPointerDeclaratorBase { * }
+    rule noPointerDeclaratorBase:sym<base>   { <declaratorid> <attributeSpecifierSeq>? }
+    rule noPointerDeclaratorBase:sym<parens> { <LeftParen> <pointerDeclarator> <RightParen> }
 
+    #------------------------------
     rule noPointerDeclarator {
         <noPointerDeclaratorBase>
         [   
