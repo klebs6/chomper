@@ -1369,8 +1369,8 @@ our role CPP14Parser does CPP14Lexer {
 
     #--------------------
     proto rule namespaceTag { * }
-    rule namespaceTag:sym<ident> { <Identifier> }
-    rule namespaceTag:sym<ident> { <originalNamespaceName> }
+    rule namespaceTag:sym<ident>   { <Identifier> }
+    rule namespaceTag:sym<ns-name> { <originalNamespaceName> }
 
     #--------------------
     rule namespaceDefinition {
