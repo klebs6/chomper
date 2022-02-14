@@ -1758,10 +1758,10 @@ our role CPP14Parser does CPP14Lexer {
         <LeftBrace> [ <initializerList> <Comma>? ]?  <RightBrace>
     }
 
-    rule className {
-        ||  <Identifier>
-        ||  <simpleTemplateId>
-    }
+    #-----------------------------
+    proto rule className { * }
+    rule className:sym<id>          { <Identifier> }
+    rule className:sym<template-id> { <simpleTemplateId> }
 
     rule classSpecifier {
         <classHead>
@@ -1770,20 +1770,23 @@ our role CPP14Parser does CPP14Lexer {
         <RightBrace>
     }
 
-    rule classHead {
-        ||  <classKey>
-            <attributeSpecifierSeq>?
-            [   ||  <classHeadName>
-                    <classVirtSpecifier>?
-            ]?
-            <baseClause>?
-        ||  <Union>
-            <attributeSpecifierSeq>?
-            [   ||  <classHeadName>
-                    <classVirtSpecifier>?
-            ]?
+    #-----------------------------
+    proto rule classHead { * }
+
+    rule classHead:sym<class> {
+        <classKey>
+        <attributeSpecifierSeq>?
+        [ <classHeadName> <classVirtSpecifier>? ]?
+        <baseClause>?
     }
 
+    rule classHead:sym<union> {
+        <Union>
+        <attributeSpecifierSeq>?
+        [ <classHeadName> <classVirtSpecifier>? ]?
+    }
+
+    #-----------------------------
     rule classHeadName {
         <nestedNameSpecifier>?  <className>
     }
@@ -1792,11 +1795,12 @@ our role CPP14Parser does CPP14Lexer {
         <Final>
     }
 
-    rule classKey {
-        ||  <Class_>
-        ||  <Struct>
-    }
+    #-----------------------------
+    proto rule classKey { * }
+    rule classKey:sym<class>  { <Class_> }
+    rule classKey:sym<struct> { <Struct> }
 
+    #-----------------------------
     rule memberSpecification {
         [   
            ||  <memberdeclaration>
