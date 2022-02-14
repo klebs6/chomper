@@ -2116,39 +2116,47 @@ our role CPP14Parser does CPP14Lexer {
         <compoundStatement>
     }
 
+    proto rule some-declarator { * }
+    rule some-declarator:sym<basic>    { <declarator> }
+    rule some-declarator:sym<abstract> { <abstractDeclarator> }
+
     #---------------------
-    rule exceptionDeclaration {
-        ||  <attributeSpecifierSeq>?
-            <typeSpecifierSeq>
-            [   
-                ||  <declarator>
-                ||  <abstractDeclarator>
-            ]?
-        ||  <Ellipsis>
+    proto rule exceptionDeclaration { * }
+
+    rule exceptionDeclaration:sym<basic> {
+        <attributeSpecifierSeq>?
+        <typeSpecifierSeq>
+        <some-declarator>?
+    }
+
+    rule exceptionDeclaration:sym<ellipsis> {
+        <Ellipsis>
     }
 
     rule throwExpression {
         <Throw> <assignmentExpression>?
     }
 
-    token exceptionSpecification {
-        || <dynamicExceptionSpecification>
-        || <noeExceptSpecification>
-    }
+    #---------------------
+    proto token exceptionSpecification { * }
+    token exceptionSpecification:sym<dynamic>  { <dynamicExceptionSpecification> }
+    token exceptionSpecification:sym<noexcept> { <noeExceptSpecification> }
 
+    #---------------------
     rule dynamicExceptionSpecification {
         <Throw> <LeftParen> <typeIdList>?  <RightParen>
     }
 
     rule typeIdList {
-         <theTypeId> <Ellipsis>?  [ <Comma> <theTypeId> <Ellipsis>? ]*
+         <theTypeId> <Ellipsis>? [ <Comma> <theTypeId> <Ellipsis>? ]*
     }
 
-    token noeExceptSpecification {
-        ||  <Noexcept> <LeftParen> <constantExpression> <RightParen>
-        ||  <Noexcept>
-    }
+    #---------------------
+    proto token noeExceptSpecification { * }
+    token noeExceptSpecification:sym<full>         { <Noexcept> <LeftParen> <constantExpression> <RightParen> }
+    token noeExceptSpecification:sym<keyword-only> { <Noexcept> }
 
+    #---------------------
     proto token theOperator { * }
     token theOperator:sym<New>              { <New> [ <LeftBracket> <RightBracket>]?    } 
     token theOperator:sym<Delete>           { <Delete> [ <LeftBracket> <RightBracket>]? } 
