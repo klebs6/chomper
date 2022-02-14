@@ -1400,24 +1400,25 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #--------------------
+    proto rule usingDeclarationPrefix { * }
+    rule usingDeclarationPrefix:sym<nested> { [ <Typename_>? <nestedNameSpecifier> ] }
+    rule usingDeclarationPrefix:sym<base>   { <Doublecolon> }
+
+    #--------------------
     rule usingDeclaration {
-        ||  <Using>
-            [   ||  [   ||  <Typename_>?
-                            <nestedNameSpecifier>
-                    ]
-                ||  <Doublecolon>
-            ]
-            <unqualifiedId>
-            <Semi>
+        <Using>
+        <usingDeclarationPrefix>
+        <unqualifiedId>
+        <Semi>
     }
 
     rule usingDirective {
-        ||  <attributeSpecifierSeq>?
-            <Using>
-            <Namespace>
-            <nestedNameSpecifier>?
-            <namespaceName>
-            <Semi>
+        <attributeSpecifierSeq>?
+        <Using>
+        <Namespace>
+        <nestedNameSpecifier>?
+        <namespaceName>
+        <Semi>
     }
 
     rule asmDefinition {
@@ -1428,54 +1429,66 @@ our role CPP14Parser does CPP14Lexer {
         <Semi>
     }
 
+    #--------------------
+    proto rule linkageSpecificationBody { * }
+    rule linkageSpecificationBody:sym<seq>  { <LeftBrace> <declarationseq>?  <RightBrace> }
+    rule linkageSpecificationBody:sym<decl> {  <declaration> }
+
     rule linkageSpecification {
         <Extern>
         <StringLiteral>
-        [   
-            ||  <LeftBrace> <declarationseq>?  <RightBrace>
-            ||  <declaration>
-        ]
+        <linkageSpecificationBody>
     }
 
     rule attributeSpecifierSeq {
         <attributeSpecifier>+
     }
 
-    rule attributeSpecifier {
-        ||  <LeftBracket>
-            <LeftBracket>
-            <attributeList>?
-            <RightBracket>
-            <RightBracket>
-        ||  <alignmentspecifier>
+    #--------------------
+    proto rule attributeSpecifier { * }
+
+    rule attributeSpecifier:sym<double-braced> {
+        <LeftBracket>
+        <LeftBracket>
+        <attributeList>?
+        <RightBracket>
+        <RightBracket>
     }
 
+    rule attributeSpecifier:sym<alignment> {
+        <alignmentspecifier>
+    }
+
+    #--------------------
+    proto rule alignmentspecifierbody { * }
+    rule alignmentspecifierbody:sym<type-id>    { <theTypeId> }
+    rule alignmentspecifierbody:sym<const-expr> { <constantExpression> }
+
+    #--------------------
     rule alignmentspecifier {
-        ||  <Alignas>
-            <LeftParen>
-            [   ||  <theTypeId>
-                ||  <constantExpression>
-            ]
-            <Ellipsis>?
-            <RightParen>
+        <Alignas>
+        <LeftParen>
+        <alignmentspecifierbody>
+        <Ellipsis>?
+        <RightParen>
     }
+
     rule attributeList {
-        ||  <attribute>
-            [   ||  <Comma>
-                    <attribute>
-            ]*
-            <Ellipsis>?
+        <attribute>
+        [ <Comma> <attribute> ]*
+        <Ellipsis>?
     }
+
     rule attribute {
-        ||  [   ||  <attributeNamespace>
-                    <Doublecolon>
-            ]?
-            <Identifier>
-            <attributeArgumentClause>?
+        [ <attributeNamespace> <Doublecolon> ]?
+        <Identifier>
+        <attributeArgumentClause>?
     }
+
     rule attributeNamespace {
-        ||  <Identifier>
+        <Identifier>
     }
+
     rule attributeArgumentClause {
         <LeftParen> <balancedTokenSeq>?  <RightParen>
     }
