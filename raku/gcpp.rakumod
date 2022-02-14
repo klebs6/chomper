@@ -1,230 +1,230 @@
 use Grammar::Tracer;
 
 our role CPP14Keyword {
-    token Alignas          { 'alignas'          } 
-    token Alignof          { 'alignof'          } 
-    token Asm              { 'asm'              } 
-    token Auto             { 'auto'             } 
-    token Bool_            { 'bool'             } 
-    token Break            { 'break'            } 
-    token Case             { 'case'             } 
-    token Catch            { 'catch'            } 
-    token Char_            { 'char'             } 
-    token Char16           { 'char16_t'         } 
-    token Char32           { 'char32_t'         } 
-    token Class_           { 'class'            } 
-    token Const            { 'const'            } 
-    token Constexpr        { 'constexpr'        } 
-    token Const_cast       { 'const_cast'       } 
-    token Continue         { 'continue'         } 
-    token Decltype         { 'decltype'         } 
-    token Default          { 'default'          } 
-    token Delete           { 'delete'           } 
-    token Do               { 'do'               } 
-    token Double           { 'double'           } 
-    token Dynamic_cast     { 'dynamic_cast'     } 
-    token Else             { 'else'             } 
-    token Enum             { 'enum'             } 
-    token Explicit         { 'explicit'         } 
-    token Export           { 'export'           } 
-    token Extern           { 'extern'           } 
-    token False_           { 'false'            } 
-    token Final            { 'final'            } 
-    token Float            { 'float'            } 
-    token For              { 'for'              } 
-    token Friend           { 'friend'           } 
-    token Goto             { 'goto'             } 
-    token If               { 'if'               } 
-    token Inline           { 'inline'           } 
-    token Int_             { 'int'              } 
-    token Long             { 'long'             } 
-    token Mutable          { 'mutable'          } 
-    token Namespace        { 'namespace'        } 
-    token New              { 'new'              } 
-    token Noexcept         { 'noexcept'         } 
-    token Nullptr          { 'nullptr'          } 
-    token Operator         { 'operator'         } 
-    token Override         { 'override'         } 
-    token Private          { 'private'          } 
-    token Protected        { 'protected'        } 
-    token Public           { 'public'           } 
-    token Register         { 'register'         } 
-    token Reinterpret_cast { 'reinterpret_cast' } 
-    token Return           { 'return'           } 
-    token Short            { 'short'            } 
-    token Signed           { 'signed'           } 
-    token Sizeof           { 'sizeof'           } 
-    token Static           { 'static'           } 
-    token Static_assert    { 'static_assert'    } 
-    token Static_cast      { 'static_cast'      } 
-    token Struct           { 'struct'           } 
-    token Switch           { 'switch'           } 
-    token Template         { 'template'         } 
-    token This             { 'this'             } 
-    token Thread_local     { 'thread_local'     } 
-    token Throw            { 'throw'            } 
-    token True_            { 'true'             } 
-    token Try              { 'try'              } 
-    token Typedef          { 'typedef'          } 
-    token Typeid_          { 'typeid'           } 
-    token Typename_        { 'typename'         } 
-    token Union            { 'union'            } 
-    token Unsigned         { 'unsigned'         } 
-    token Using            { 'using'            } 
-    token Virtual          { 'virtual'          } 
-    token Void             { 'void'             } 
-    token Volatile         { 'volatile'         } 
-    token Wchar            { 'wchar_t'          } 
-    token While            { 'while'            } 
-    token LeftParen        { '('                } 
-    token RightParen       { ')'                } 
-    token LeftBracket      { '['                } 
-    token RightBracket     { ']'                } 
-    token LeftBrace        { '{'                } 
-    token RightBrace       { '}'                } 
-    token Plus             { '+'                } 
-    token Minus            { '-'                } 
-    token Star             { '*'                } 
-    token Div              { '/'                } 
-    token Mod              { '%'                } 
-    token Caret            { '^'                } 
-    token And              { '&' <!before '&'>  } 
-    token Or               { '|' <!before '|'>  } 
-    token Tilde            { '~'                } 
-    token Assign           { '='                } 
-    token Less             { '<'  <!before '='> } 
-    token Greater          { '>'  <!before '='> } 
-    token PlusAssign       { '+='               } 
-    token MinusAssign      { '-='               } 
-    token StarAssign       { '*='               } 
-    token DivAssign        { '/='               } 
-    token ModAssign        { '%='               } 
-    token XorAssign        { '^='               } 
-    token AndAssign        { '&='               } 
-    token OrAssign         { '|='               } 
-    token LeftShiftAssign  { '<<='              } 
-    token RightShiftAssign { '>>='              } 
-    token Equal            { '=='               } 
-    token NotEqual         { '!='               } 
-    token LessEqual        { '<='               } 
-    token GreaterEqual     { '>='               } 
-    token PlusPlus         { '++'               } 
-    token MinusMinus       { '--'               } 
-    token Comma            { ','                } 
-    token ArrowStar        { '->*'              } 
-    token Arrow            { '->'               } 
-    token Question         { '?'                } 
-    token Colon            { ':'                } 
-    token Doublecolon      { '::'               } 
-    rule Semi              { ';' <comment>?     }
-    token Dot              { '.'                } 
-    token DotStar          { '.*'               } 
-    token Ellipsis         { '...'              } 
+    token alignas          { 'alignas'          } 
+    token alignof          { 'alignof'          } 
+    token asm              { 'asm'              } 
+    token auto             { 'auto'             } 
+    token bool_            { 'bool'             } 
+    token break_           { 'break'            } 
+    token case             { 'case'             } 
+    token catch            { 'catch'            } 
+    token char_            { 'char'             } 
+    token char16           { 'char16_t'         } 
+    token char32           { 'char32_t'         } 
+    token class_           { 'class'            } 
+    token const            { 'const'            } 
+    token constexpr        { 'constexpr'        } 
+    token const_cast       { 'const_cast'       } 
+    token continue_        { 'continue'         } 
+    token decltype         { 'decltype'         } 
+    token default_         { 'default'          } 
+    token delete           { 'delete'           } 
+    token do_              { 'do'               } 
+    token double           { 'double'           } 
+    token dynamic_cast     { 'dynamic_cast'     } 
+    token else_            { 'else'             } 
+    token enum_            { 'enum'             } 
+    token explicit         { 'explicit'         } 
+    token export           { 'export'           } 
+    token extern           { 'extern'           } 
+    token false_           { 'false'            } 
+    token final            { 'final'            } 
+    token float            { 'float'            } 
+    token for_             { 'for'              } 
+    token friend           { 'friend'           } 
+    token goto_            { 'goto'             } 
+    token if_              { 'if'               } 
+    token inline           { 'inline'           } 
+    token int_             { 'int'              } 
+    token long_            { 'long'             } 
+    token mutable          { 'mutable'          } 
+    token namespace        { 'namespace'        } 
+    token new_             { 'new'              } 
+    token noexcept         { 'noexcept'         } 
+    token nullptr          { 'nullptr'          } 
+    token operator         { 'operator'         } 
+    token override         { 'override'         } 
+    token private          { 'private'          } 
+    token protected        { 'protected'        } 
+    token public           { 'public'           } 
+    token register         { 'register'         } 
+    token reinterpret_cast { 'reinterpret_cast' } 
+    token return_          { 'return'           } 
+    token short            { 'short'            } 
+    token signed           { 'signed'           } 
+    token sizeof           { 'sizeof'           } 
+    token static           { 'static'           } 
+    token static_assert    { 'static_assert'    } 
+    token static_cast      { 'static_cast'      } 
+    token struct           { 'struct'           } 
+    token switch           { 'switch'           } 
+    token template         { 'template'         } 
+    token this             { 'this'             } 
+    token thread_local     { 'thread_local'     } 
+    token throw            { 'throw'            } 
+    token true_            { 'true'             } 
+    token try_             { 'try'              } 
+    token typedef          { 'typedef'          } 
+    token typeid_          { 'typeid'           } 
+    token typename_        { 'typename'         } 
+    token union            { 'union'            } 
+    token unsigned         { 'unsigned'         } 
+    token using            { 'using'            } 
+    token virtual          { 'virtual'          } 
+    token void_            { 'void'             } 
+    token volatile         { 'volatile'         } 
+    token wchar            { 'wchar_t'          } 
+    token while_           { 'while'            } 
+    token left-paren       { '('                } 
+    token right-paren      { ')'                } 
+    token left-bracket     { '['                } 
+    token right-bracket    { ']'                } 
+    token left-brace       { '{'                } 
+    token right-brace      { '}'                } 
+    token plus             { '+'                } 
+    token minus            { '-'                } 
+    token star             { '*'                } 
+    token div_             { '/'                } 
+    token mod_             { '%'                } 
+    token caret            { '^'                } 
+    token and_             { '&' <!before '&'>  } 
+    token or_              { '|' <!before '|'>  } 
+    token tilde            { '~'                } 
+    token assign           { '='                } 
+    token less             { '<'  <!before '='> } 
+    token greater          { '>'  <!before '='> } 
+    token plus-assign      { '+='               } 
+    token minus-assign     { '-='               } 
+    token star-assign      { '*='               } 
+    token div-assign       { '/='               } 
+    token mod-assign       { '%='               } 
+    token xor-assign       { '^='               } 
+    token and-assign       { '&='               } 
+    token or-assign        { '|='               } 
+    token left-shift-assign  { '<<='              } 
+    token right-shift-assign { '>>='              } 
+    token equal            { '=='               } 
+    token not-equal        { '!='               } 
+    token less-equal       { '<='               } 
+    token greater-equal    { '>='               } 
+    token plus-plus        { '++'               } 
+    token minus-minus      { '--'               } 
+    token comma            { ','                } 
+    token arrow-star       { '->*'              } 
+    token arrow            { '->'               } 
+    token question         { '?'                } 
+    token colon            { ':'                } 
+    token doublecolon      { '::'               } 
+    rule semi              { ';' <comment>?     }
+    token dot              { '.'                } 
+    token dot-star         { '.*'               } 
+    token ellipsis         { '...'              } 
 
-    proto token Not    { * }
-    token Not:sym<!>       { <sym> }
-    token Not:sym<not>     { <sym> }
+    proto token not_        { * }
+    token not_:sym<!>       { <sym> }
+    token not_:sym<not>     { <sym> }
 
-    proto token AndAnd { * }
-    token AndAnd:sym<&&>   { <sym> }
-    token AndAnd:sym<and>  { <sym> }
+    proto token and-and { * }
+    token and-and:sym<&&>   { <sym> }
+    token and-and:sym<and>  { <sym> }
 
-    proto token OrOr   { * }
-    token OrOr:sym<||>     { <sym> }
-    token OrOr:sym<or>     { <sym> }
+    proto token or-or   { * }
+    token or-or:sym<||>     { <sym> }
+    token or-or:sym<or>     { <sym> }
 }
 
 our role CPP14Lexer does CPP14Keyword {
 
     #--------------------
-    proto token IntegerLiteral { * }
-    token IntegerLiteral:sym<dec> { <DecimalLiteral>     <Integersuffix>? }
-    token IntegerLiteral:sym<oct> { <OctalLiteral>       <Integersuffix>? }
-    token IntegerLiteral:sym<hex> { <HexadecimalLiteral> <Integersuffix>? }
-    token IntegerLiteral:sym<bin> { <BinaryLiteral>      <Integersuffix>? }
+    proto token integer-literal { * }
+    token integer-literal:sym<dec> { <decimal-literal>     <integersuffix>? }
+    token integer-literal:sym<oct> { <octal-literal>       <integersuffix>? }
+    token integer-literal:sym<hex> { <hexadecimal-literal> <integersuffix>? }
+    token integer-literal:sym<bin> { <binary-literal>      <integersuffix>? }
 
     #--------------------
-    proto token CharacterLiteralPrefix { * }
-    token CharacterLiteralPrefix:sym<u> { 'u' }
-    token CharacterLiteralPrefix:sym<U> { 'U' }
-    token CharacterLiteralPrefix:sym<L> { 'L' }
+    proto token character-literal-prefix { * }
+    token character-literal-prefix:sym<u> { 'u' }
+    token character-literal-prefix:sym<U> { 'U' }
+    token character-literal-prefix:sym<L> { 'L' }
 
-    token CharacterLiteral {
-        <CharacterLiteralPrefix>? '\'' <Cchar>+ '\''
+    token character-literal {
+        <character-literal-prefix>? '\'' <cchar>+ '\''
     }
 
     #------------------------
-    proto token FloatingLiteral { * }
+    proto token floating-literal { * }
 
-    token FloatingLiteral:sym<frac> {
-        <Fractionalconstant> <Exponentpart>?  <Floatingsuffix>?
+    token floating-literal:sym<frac> {
+        <fractionalconstant> <exponentpart>?  <floatingsuffix>?
     }
 
-    token FloatingLiteral:sym<digit> {
-        <Digitsequence> <Exponentpart> <Floatingsuffix>?
+    token floating-literal:sym<digit> {
+        <digitsequence> <exponentpart> <floatingsuffix>?
     }
 
     #------------------------
-    token StringLiteralItem {
-        <Encodingprefix>?
+    token string-literal-item {
+        <encodingprefix>?
         [   
-           || <Rawstring>
-           || '"' <Schar>* '"'
+           || <rawstring>
+           || '"' <schar>* '"'
         ]
     }
 
-    token StringLiteral {
-        <StringLiteralItem> [<.ws> <StringLiteralItem>]*
+    token string-literal {
+        <string-literal-item> [<.ws> <string-literal-item>]*
     }
 
     #--------------------
-    proto token BooleanLiteral { * }
-    token BooleanLiteral:sym<f> { <False_> }
-    token BooleanLiteral:sym<t> { <True_> }
+    proto token boolean-literal { * }
+    token boolean-literal:sym<f> { <false_> }
+    token boolean-literal:sym<t> { <true_> }
 
-    token PointerLiteral {
-        <Nullptr>
+    token pointer-literal {
+        <nullptr>
     }
 
     #--------------------
-    proto token UserDefinedLiteral { * }
-    token UserDefinedLiteral:syn<int>   { <UserDefinedIntegerLiteral> }
-    token UserDefinedLiteral:sym<float> { <UserDefinedFloatingLiteral> }
-    token UserDefinedLiteral:sym<str>   { <UserDefinedStringLiteral> }
-    token UserDefinedLiteral:sym<char>  { <UserDefinedCharacterLiteral> }
+    proto token user-defined-literal { * }
+    token user-defined-literal:syn<int>   { <user-defined-integer-literal> }
+    token user-defined-literal:sym<float> { <user-defined-floating-literal> }
+    token user-defined-literal:sym<str>   { <user-defined-string-literal> }
+    token user-defined-literal:sym<char>  { <user-defined-character-literal> }
 
-    token MultiLineMacro {
+    token multi-line-macro {
         '#'
         [ <-[ \n ]>*? '\\' '\r'? '\n' ]
         <-[ \n ]>+
     }
 
-    token Directive {
+    token directive {
         '#' <-[ \n ]>*
     }
 
-    token Hexquad {
+    token hexquad {
         <HEXADECIMALDIGIT> ** 4
     }
 
-    proto token Universalcharactername { * }
-    token Universalcharactername:sym<one> { '\\u' <Hexquad> }
-    token Universalcharactername:sym<two> { '\\U' <Hexquad> <Hexquad> }
+    proto token universalcharactername { * }
+    token universalcharactername:sym<one> { '\\u' <hexquad> }
+    token universalcharactername:sym<two> { '\\U' <hexquad> <hexquad> }
 
     #-------------------
-    proto token IdentifierStart { * }
-    token IdentifierStart:sym<nondigit> { <NONDIGIT> }
-    token IdentifierStart:sym<ucn>      { <Universalcharactername> }
+    proto token identifier-start { * }
+    token identifier-start:sym<nondigit> { <NONDIGIT> }
+    token identifier-start:sym<ucn>      { <universalcharactername> }
 
     #-------------------
-    proto token IdentifierContinue { * }
-    token IdentifierContinue:sym<digit>    { <DIGIT> }
-    token IdentifierContinue:sym<nondigit> { <NONDIGIT> }
-    token IdentifierContinue:sym<ucn>      { <Universalcharactername> }
+    proto token identifier-continue { * }
+    token identifier-continue:sym<digit>    { <DIGIT> }
+    token identifier-continue:sym<nondigit> { <NONDIGIT> }
+    token identifier-continue:sym<ucn>      { <universalcharactername> }
 
-    token Identifier {
-        <IdentifierStart>
-        <IdentifierContinue>*
+    token identifier {
+        <identifier-start>
+        <identifier-continue>*
     }
 
     token NONDIGIT {
@@ -235,19 +235,19 @@ our role CPP14Lexer does CPP14Keyword {
         <[ 0 .. 9 ]>
     }
 
-    token DecimalLiteral {
+    token decimal-literal {
         <NONZERODIGIT> [ '\''?  <DIGIT>]*
     }
 
-    token OctalLiteral {
+    token octal-literal {
         '0' [ '\''?  <OCTALDIGIT>]*
     }
 
-    token HexadecimalLiteral {
+    token hexadecimal-literal {
         [ '0x' || '0X' ] <HEXADECIMALDIGIT> [ '\''?  <HEXADECIMALDIGIT> ]*
     }
 
-    token BinaryLiteral {
+    token binary-literal {
         [ '0b' || '0B' ] <BINARYDIGIT> [ '\''?  <BINARYDIGIT> ]*
     }
 
@@ -268,52 +268,52 @@ our role CPP14Lexer does CPP14Keyword {
     }
 
     #------------------------------
-    proto token Integersuffix { * }
-    token Integersuffix:sym<ul>  { <Unsignedsuffix> <Longsuffix>? }
-    token Integersuffix:sym<ull> { <Unsignedsuffix> <Longlongsuffix>? }
-    token Integersuffix:sym<lu>  { <Longsuffix>     <Unsignedsuffix>? }
-    token Integersuffix:sym<llu> { <Longlongsuffix> <Unsignedsuffix>? }
+    proto token integersuffix { * }
+    token integersuffix:sym<ul>  { <unsignedsuffix> <longsuffix>? }
+    token integersuffix:sym<ull> { <unsignedsuffix> <longlongsuffix>? }
+    token integersuffix:sym<lu>  { <longsuffix>     <unsignedsuffix>? }
+    token integersuffix:sym<llu> { <longlongsuffix> <unsignedsuffix>? }
 
     #------------------------------
-    token Unsignedsuffix {
+    token unsignedsuffix {
         <[ u U ]>
     }
 
-    token Longsuffix {
+    token longsuffix {
         <[ l L ]>
     }
 
     #------------------------------
-    proto token Longlongsuffix { * }
-    token Longlongsuffix:sym<ll> { 'll' }
-    token Longlongsuffix:sym<LL> { 'LL' }
+    proto token longlongsuffix { * }
+    token longlongsuffix:sym<ll> { 'll' }
+    token longlongsuffix:sym<LL> { 'LL' }
 
     #------------------------------
-    proto token Cchar { * }
-    token Cchar:sym<basic>     { <-[ \' \\ \r \n ]> }
-    token Cchar:sym<escape>    { <Escapesequence> }
-    token Cchar:sym<universal> { <Universalcharactername> }
+    proto token cchar { * }
+    token cchar:sym<basic>     { <-[ \' \\ \r \n ]> }
+    token cchar:sym<escape>    { <escapesequence> }
+    token cchar:sym<universal> { <universalcharactername> }
 
     #------------------------------
-    proto token Escapesequence { * }
-    token Escapesequence:sym<simple> { <Simpleescapesequence> }
-    token Escapesequence:sym<octal>  { <Octalescapesequence> }
-    token Escapesequence:sym<hex>    { <Hexadecimalescapesequence> }
+    proto token escapesequence { * }
+    token escapesequence:sym<simple> { <simpleescapesequence> }
+    token escapesequence:sym<octal>  { <octalescapesequence> }
+    token escapesequence:sym<hex>    { <hexadecimalescapesequence> }
 
     #------------------------------
-    proto token Simpleescapesequence { * }
-    token Simpleescapesequence:sym<slash>        { '\\\'' }
-    token Simpleescapesequence:sym<quote>        { '\\"' }
-    token Simpleescapesequence:sym<question>     { '\\?' }
-    token Simpleescapesequence:sym<double-slash> { '\\\\' }
-    token Simpleescapesequence:sym<a>            { '\\a' }
-    token Simpleescapesequence:sym<b>            { '\\b' }
-    token Simpleescapesequence:sym<f>            { '\\f' }
-    token Simpleescapesequence:sym<n>            { '\\n' }
-    token Simpleescapesequence:sym<r>            { '\\r' }
-    token Simpleescapesequence:sym<t>            { '\\t' }
-    token Simpleescapesequence:sym<v>            { '\\v' }
-    token Simpleescapesequence:sym<rn-n> {
+    proto token simpleescapesequence { * }
+    token simpleescapesequence:sym<slash>        { '\\\'' }
+    token simpleescapesequence:sym<quote>        { '\\"' }
+    token simpleescapesequence:sym<question>     { '\\?' }
+    token simpleescapesequence:sym<double-slash> { '\\\\' }
+    token simpleescapesequence:sym<a>            { '\\a' }
+    token simpleescapesequence:sym<b>            { '\\b' }
+    token simpleescapesequence:sym<f>            { '\\f' }
+    token simpleescapesequence:sym<n>            { '\\n' }
+    token simpleescapesequence:sym<r>            { '\\r' }
+    token simpleescapesequence:sym<t>            { '\\t' }
+    token simpleescapesequence:sym<v>            { '\\v' }
+    token simpleescapesequence:sym<rn-n> {
         '\\'
         [   
             ||  '\r' '\n'?
@@ -322,52 +322,52 @@ our role CPP14Lexer does CPP14Keyword {
     }
 
     #------------------------------
-    token Octalescapesequence {
+    token octalescapesequence {
         '\\' [<OCTALDIGIT> ** 1..3]
     }
 
-    token Hexadecimalescapesequence {
+    token hexadecimalescapesequence {
         '\\x' <HEXADECIMALDIGIT>+
     }
 
-    proto token Fractionalconstant { * }
-    token Fractionalconstant:sym<with-tail> { <Digitsequence>?  '.' <Digitsequence> }
-    token Fractionalconstant:sym<no-tail>   { <Digitsequence> '.' }
+    proto token fractionalconstant { * }
+    token fractionalconstant:sym<with-tail> { <digitsequence>?  '.' <digitsequence> }
+    token fractionalconstant:sym<no-tail>   { <digitsequence> '.' }
 
-    token ExponentpartPrefix {
+    token exponentpart-prefix {
         'e' || 'E'
     }
 
-    token Exponentpart {
-        <ExponentpartPrefix> <SIGN>?  <Digitsequence>
+    token exponentpart {
+        <exponentpart-prefix> <SIGN>?  <digitsequence>
     }
 
     token SIGN {
         <[ + - ]>
     }
 
-    token Digitsequence {
+    token digitsequence {
         <DIGIT> [  '\''?  <DIGIT>]*
     }
 
-    token Floatingsuffix {
+    token floatingsuffix {
         <[ f l F L ]>
     }
 
     #------------------
-    proto token Encodingprefix { * }
-    token Encodingprefix:sym<u8> { 'u8' }
-    token Encodingprefix:sym<u>  { 'u' }
-    token Encodingprefix:sym<U>  { 'U' }
-    token Encodingprefix:sym<L>  { 'L' }
+    proto token encodingprefix { * }
+    token encodingprefix:sym<u8> { 'u8' }
+    token encodingprefix:sym<u>  { 'u' }
+    token encodingprefix:sym<U>  { 'U' }
+    token encodingprefix:sym<L>  { 'L' }
 
     #------------------
-    proto token Schar { * }
-    token Schar:sym<basic>  { <-[ " \\ \r \n ]> }
-    token Schar:sym<escape> { <Escapesequence> }
-    token Schar:sym<ucn>    { <Universalcharactername> }
+    proto token schar { * }
+    token schar:sym<basic>  { <-[ " \\ \r \n ]> }
+    token schar:sym<escape> { <escapesequence> }
+    token schar:sym<ucn>    { <universalcharactername> }
 
-    token Rawstring {
+    token rawstring {
         ||  'R"'
             [   ||  [   ||  '\\'
                             <[ " ( ) ]>
@@ -385,212 +385,212 @@ our role CPP14Lexer does CPP14Keyword {
             '"'
     }
 
-    proto token UserDefinedIntegerLiteral { * }
-    token UserDefinedIntegerLiteral:sym<dec> { <DecimalLiteral> <Udsuffix> }
-    token UserDefinedIntegerLiteral:sym<oct> { <OctalLiteral> <Udsuffix> }
-    token UserDefinedIntegerLiteral:sym<hex> { <HexadecimalLiteral> <Udsuffix> }
-    token UserDefinedIntegerLiteral:sym<bin> { <BinaryLiteral> <Udsuffix> }
+    proto token user-defined-integer-literal { * }
+    token user-defined-integer-literal:sym<dec> { <decimal-literal> <udsuffix> }
+    token user-defined-integer-literal:sym<oct> { <octal-literal> <udsuffix> }
+    token user-defined-integer-literal:sym<hex> { <hexadecimal-literal> <udsuffix> }
+    token user-defined-integer-literal:sym<bin> { <binary-literal> <udsuffix> }
 
     #-------------------
-    proto token UserDefinedFloatingLiteral { * }
-    token UserDefinedFloatingLiteral:sym<frac> { <Fractionalconstant> <Exponentpart>?  <Udsuffix> }
-    token UserDefinedFloatingLiteral:sym<digi> { <Digitsequence> <Exponentpart> <Udsuffix> }
+    proto token user-defined-floating-literal { * }
+    token user-defined-floating-literal:sym<frac> { <fractionalconstant> <exponentpart>?  <udsuffix> }
+    token user-defined-floating-literal:sym<digi> { <digitsequence> <exponentpart> <udsuffix> }
 
     #-------------------
-    token UserDefinedStringLiteral    { <StringLiteral> <Udsuffix> }
-    token UserDefinedCharacterLiteral { <CharacterLiteral> <Udsuffix> }
+    token user-defined-string-literal    { <string-literal> <udsuffix> }
+    token user-defined-character-literal { <character-literal> <udsuffix> }
 
-    token Udsuffix {
-        <Identifier>
+    token udsuffix {
+        <identifier>
     }
 
-    token Whitespace {
+    token whitespace {
         <[   \t ]>+
     }
 
-    token Newline {
+    token newline {
         [   
             ||  '\r' '\n'?
             ||  '\n'
         ]
     }
 
-    token BlockComment {
+    token block-comment {
         '/*' .*?  '*/'
     }
 
-    token LineComment {
+    token line-comment {
         '//' <-[ \r \n ]>*
     }
 }
 
 our role CPP14Parser does CPP14Lexer {
 
-    #<statementSeq>
+    #<statement-seq>
     rule TOP {
         <.ws> 
-        <statementSeq>
-        #<unaryExpression>
+        <statement-seq>
+        #<unary-expression>
     }
 
-    token translationUnit {
+    token translation-unit {
         <declarationseq>?  $
     }
 
-    proto token primaryExpression { * }
-    token primaryExpression:sym<literal> { <literal>+ }
-    token primaryExpression:sym<this>    { <This> }
-    token primaryExpression:sym<expr>    { <LeftParen> <expression> <RightParen> }
-    token primaryExpression:sym<id>      { <idExpression> }
-    token primaryExpression:sym<lambda>  { <lambdaExpression> }
+    proto token primary-expression { * }
+    token primary-expression:sym<literal> { <literal>+ }
+    token primary-expression:sym<this>    { <this> }
+    token primary-expression:sym<expr>    { <left-paren> <expression> <right-paren> }
+    token primary-expression:sym<id>      { <id-expression> }
+    token primary-expression:sym<lambda>  { <lambda-expression> }
 
     #-------------------------------
-    proto regex idExpression { * }
-    regex idExpression:sym<qualified>   { <qualifiedId> }
-    regex idExpression:sym<unqualified> { <unqualifiedId> }
+    proto regex id-expression { * }
+    regex id-expression:sym<qualified>   { <qualified-id> }
+    regex id-expression:sym<unqualified> { <unqualified-id> }
 
     #-------------------------------
-    proto regex unqualifiedId { * }
-    regex unqualifiedId:sym<ident>               { <Identifier> }
-    regex unqualifiedId:sym<op-func-id>          { <operatorFunctionId> }
-    regex unqualifiedId:sym<conversion-func-id>  { <conversionFunctionId> }
-    regex unqualifiedId:sym<literal-operator-id> { <literalOperatorId> }
-    regex unqualifiedId:sym<tilde>               { <Tilde> [   <className> ||  <decltypeSpecifier> ] }
-    regex unqualifiedId:sym<template-id>         { <templateId> }
+    proto regex unqualified-id { * }
+    regex unqualified-id:sym<ident>               { <identifier> }
+    regex unqualified-id:sym<op-func-id>          { <operator-function-id> }
+    regex unqualified-id:sym<conversion-func-id>  { <conversion-function-id> }
+    regex unqualified-id:sym<literal-operator-id> { <literal-operator-id> }
+    regex unqualified-id:sym<tilde>               { <tilde> [   <class-name> ||  <decltype-specifier> ] }
+    regex unqualified-id:sym<template-id>         { <template-id> }
 
     #-------------------------------
-    regex qualifiedId {
-        <nestedNameSpecifier> 
-        <Template>?  
-        <unqualifiedId>
-    }
-
-    #-------------------------------
-    proto regex nestedNameSpecifierPrefix { * }
-
-    regex nestedNameSpecifierPrefix:sym<null> {
-        <Doublecolon>
-    }
-
-    regex nestedNameSpecifierPrefix:sym<type> {
-        <theTypeName>
-        <Doublecolon>
-    }
-
-    regex nestedNameSpecifierPrefix:sym<ns> {
-        <namespaceName>
-        <Doublecolon>
-    }
-
-    regex nestedNameSpecifierPrefix:sym<decl> {
-        <decltypeSpecifier>
-        <Doublecolon>
+    regex qualified-id {
+        <nested-name-specifier> 
+        <template>?  
+        <unqualified-id>
     }
 
     #-------------------------------
-    proto regex nestedNameSpecifierSuffix { * }
+    proto regex nested-name-specifier-prefix { * }
 
-    regex nestedNameSpecifierSuffix:sym<id> {
-        <Identifier>
-        <Doublecolon>
+    regex nested-name-specifier-prefix:sym<null> {
+        <doublecolon>
     }
 
-    regex nestedNameSpecifierSuffix:sym<template> {
-        <Template>? 
-        <simpleTemplateId>
-        <Doublecolon>
+    regex nested-name-specifier-prefix:sym<type> {
+        <the-type-name>
+        <doublecolon>
     }
 
-    #-------------------------------
-    regex nestedNameSpecifier {
-        <nestedNameSpecifierPrefix> 
-        <nestedNameSpecifierSuffix>*
+    regex nested-name-specifier-prefix:sym<ns> {
+        <namespace-name>
+        <doublecolon>
     }
 
-    rule lambdaExpression {
-        <lambdaIntroducer> <lambdaDeclarator>?  <compoundStatement>
-    }
-
-    rule lambdaIntroducer {
-        <LeftBracket> <lambdaCapture>?  <RightBracket>
+    regex nested-name-specifier-prefix:sym<decl> {
+        <decltype-specifier>
+        <doublecolon>
     }
 
     #-------------------------------
-    proto rule lambdaCapture { * }
-    rule lambdaCapture:sym<list> { <captureList> }
-    rule lambdaCapture:sym<def>  { <captureDefault> [ <Comma> <captureList> ]? }
+    proto regex nested-name-specifier-suffix { * }
+
+    regex nested-name-specifier-suffix:sym<id> {
+        <identifier>
+        <doublecolon>
+    }
+
+    regex nested-name-specifier-suffix:sym<template> {
+        <template>? 
+        <simple-template-id>
+        <doublecolon>
+    }
 
     #-------------------------------
-    proto rule captureDefault { * }
-    rule captureDefault:sym<and>    { <And> }
-    rule captureDefault:sym<Assign> { <Assign> }
+    regex nested-name-specifier {
+        <nested-name-specifier-prefix> 
+        <nested-name-specifier-suffix>*
+    }
+
+    rule lambda-expression {
+        <lambda-introducer> <lambda-declarator>?  <compound-statement>
+    }
+
+    rule lambda-introducer {
+        <left-bracket> <lambda-capture>?  <right-bracket>
+    }
 
     #-------------------------------
-    rule captureList {
-        <capture> [ <Comma> <capture> ]* <Ellipsis>?
+    proto rule lambda-capture { * }
+    rule lambda-capture:sym<list> { <capture-list> }
+    rule lambda-capture:sym<def>  { <capture-default> [ <comma> <capture-list> ]? }
+
+    #-------------------------------
+    proto rule capture-default { * }
+    rule capture-default:sym<and>    { <and_> }
+    rule capture-default:sym<assign> { <assign> }
+
+    #-------------------------------
+    rule capture-list {
+        <capture> [ <comma> <capture> ]* <ellipsis>?
     }
 
     #-------------------------------
     proto rule capture { * }
-    rule capture:sym<simple> { <simpleCapture> }
+    rule capture:sym<simple> { <simple-capture> }
     rule capture:sym<init>   { <initcapture> }
 
     #-------------------------------
-    proto rule simpleCapture { * }
-    rule simpleCapture:sym<id>   { <And>? <Identifier> }
-    rule simpleCapture:sym<this> { <This> }
+    proto rule simple-capture { * }
+    rule simple-capture:sym<id>   { <and_>? <identifier> }
+    rule simple-capture:sym<this> { <this> }
 
     #-------------------------------
     rule initcapture {
-        <And>?  <Identifier> <initializer>
+        <and_>?  <identifier> <initializer>
     }
 
     #-------------------------------
-    rule lambdaDeclarator {
-        <LeftParen>
-        <parameterDeclarationClause>?
-        <RightParen>
-        <Mutable>?
-        <exceptionSpecification>?
-        <attributeSpecifierSeq>?
-        <trailingReturnType>?
+    rule lambda-declarator {
+        <left-paren>
+        <parameter-declaration-clause>?
+        <right-paren>
+        <mutable>?
+        <exception-specification>?
+        <attribute-specifier-seq>?
+        <trailing-return-type>?
     }
 
     #-------------------------------------
-    rule postfixExpression {  
-        <postfixExpressionBody> <postfixExpressionTail>*
+    rule postfix-expression {  
+        <postfix-expression-body> <postfix-expression-tail>*
     }
 
-    proto rule postfixExpressionTail { * }
+    proto rule postfix-expression-tail { * }
 
-    rule bracketTail {
-        <LeftBracket> 
-        [ <expression> || <bracedInitList> ] 
-        <RightBracket>
+    rule bracket-tail {
+        <left-bracket> 
+        [ <expression> || <braced-init-list> ] 
+        <right-bracket>
     }
 
-    rule postfixExpressionTail:sym<bracket> {
-        <bracketTail>
+    rule postfix-expression-tail:sym<bracket> {
+        <bracket-tail>
     }
 
-    rule postfixExpressionTail:sym<parens> { 
-        <LeftParen> 
-        <expressionList>?  
-        <RightParen>
+    rule postfix-expression-tail:sym<parens> { 
+        <left-paren> 
+        <expression-list>?  
+        <right-paren>
     }
 
-    rule postfixExpressionTail:sym<indirection-id> { 
-        [ <Dot> ||  <Arrow> ]
-        <Template>?  <idExpression> 
+    rule postfix-expression-tail:sym<indirection-id> { 
+        [ <dot> ||  <arrow> ]
+        <template>?  <id-expression> 
     }
 
-    rule postfixExpressionTail:sym<indirection-pseudo-dtor> { 
-        [ <Dot> ||  <Arrow> ]
-        <pseudoDestructorName> 
+    rule postfix-expression-tail:sym<indirection-pseudo-dtor> { 
+        [ <dot> ||  <arrow> ]
+        <pseudo-destructor-name> 
     }
 
-    rule postfixExpressionTail:sym<pp-mm> { 
-        [ <PlusPlus> ||  <MinusMinus> ]
+    rule postfix-expression-tail:sym<pp-mm> { 
+        [ <plus-plus> ||  <minus-minus> ]
     }
 
     #-------------------------------------
@@ -599,152 +599,152 @@ our role CPP14Parser does CPP14Lexer {
     #parses, for example:
     #
     # uint8_t{format}
-    token postfixExpressionBody { 
-        || <postfixExpressionList>
-        || <postfixExpressionCast>
-        || <postfixExpressionTypeid>
-        || <primaryExpression>
+    token postfix-expression-body { 
+        || <postfix-expression-list>
+        || <postfix-expression-cast>
+        || <postfix-expression-typeid>
+        || <primary-expression>
     }
 
     #-------------------------------------
     proto token cast-token { * }
-    token cast-token:sym<dyn>         { <Dynamic_cast> }
-    token cast-token:sym<static>      { <Static_cast> }
-    token cast-token:sym<reinterpret> { <Reinterpret_cast> }
-    token cast-token:sym<const>       { <Const_cast> }
+    token cast-token:sym<dyn>         { <dynamic_cast> }
+    token cast-token:sym<static>      { <static_cast> }
+    token cast-token:sym<reinterpret> { <reinterpret_cast> }
+    token cast-token:sym<const>       { <const_cast> }
 
-    rule postfixExpressionCast {
+    rule postfix-expression-cast {
         <cast-token>
-        <Less> 
-        <theTypeId> 
-        <Greater> 
-        <LeftParen> 
+        <less> 
+        <the-type-id> 
+        <greater> 
+        <left-paren> 
         <expression> 
-        <RightParen>
+        <right-paren>
     }
 
-    rule postfixExpressionTypeid {
-        <typeIdOfTheTypeId> 
-        <LeftParen> 
-        [ <expression> ||  <theTypeId>] 
-        <RightParen>
+    rule postfix-expression-typeid {
+        <type-id-of-the-type-id> 
+        <left-paren> 
+        [ <expression> ||  <the-type-id>] 
+        <right-paren>
     }
 
     #---------------------
-    proto token postListHead { * }
-    token postListHead:sym<simple>    { <simpleTypeSpecifier> }
-    token postListHead:sym<type-name> { <typeNameSpecifier> }
+    proto token post-list-head { * }
+    token post-list-head:sym<simple>    { <simple-type-specifier> }
+    token post-list-head:sym<type-name> { <type-name-specifier> }
 
     #---------------------
-    proto token postListTail { * }
-    token postListTail:sym<parenthesized> { <LeftParen> <expressionList>?  <RightParen> }
-    token postListTail:sym<braced>        { <bracedInitList> }
+    proto token post-list-tail { * }
+    token post-list-tail:sym<parenthesized> { <left-paren> <expression-list>?  <right-paren> }
+    token post-list-tail:sym<braced>        { <braced-init-list> }
 
-    token postfixExpressionList {
-        <postListHead>
-        <postListTail>
+    token postfix-expression-list {
+        <post-list-head>
+        <post-list-tail>
     }
 
     #-------------------------------------
-    rule typeIdOfTheTypeId {
-        <Typeid_>
+    rule type-id-of-the-type-id {
+        <typeid_>
     }
 
-    rule expressionList {
-        <initializerList>
-    }
-
-    #-------------------------------------
-    proto rule pseudoDestructorName { * }
-
-    rule pseudoDestructorName:sym<basic> {
-        <nestedNameSpecifier>?
-        [ <theTypeName> <Doublecolon> ]?
-        <Tilde>
-        <theTypeName>
-    }
-
-    rule pseudoDestructorName:sym<template> {
-        <nestedNameSpecifier>
-        <Template>
-        <simpleTemplateId>
-        <Doublecolon>
-        <Tilde>
-        <theTypeName>
-    }
-
-    rule pseudoDestructorName:sym<decltype> {
-        <Tilde>
-        <decltypeSpecifier>
+    rule expression-list {
+        <initializer-list>
     }
 
     #-------------------------------------
-    rule unaryExpression { 
-        || <newExpression>
-        || <unaryExpressionCase>
+    proto rule pseudo-destructor-name { * }
+
+    rule pseudo-destructor-name:sym<basic> {
+        <nested-name-specifier>?
+        [ <the-type-name> <doublecolon> ]?
+        <tilde>
+        <the-type-name>
     }
 
-    proto rule unaryExpressionCase { * }
-    rule unaryExpressionCase:sym<postfix>  { <postfixExpression> }
-    rule unaryExpressionCase:sym<pp>       { <PlusPlus> <unaryExpression> }
-    rule unaryExpressionCase:sym<mm>       { <MinusMinus> <unaryExpression> }
-    rule unaryExpressionCase:sym<unary-op> { <unaryOperator> <unaryExpression> }
-    rule unaryExpressionCase:sym<sizeof>   { <Sizeof> <unaryExpression> }
-
-    rule unaryExpressionCase:sym<sizeof-typeid> {
-        <Sizeof>
-        <LeftParen>
-        <theTypeId>
-        <RightParen>
+    rule pseudo-destructor-name:sym<template> {
+        <nested-name-specifier>
+        <template>
+        <simple-template-id>
+        <doublecolon>
+        <tilde>
+        <the-type-name>
     }
 
-    rule unaryExpressionCase:sym<sizeof-ids> {
-        <Sizeof>
-        <Ellipsis>
-        <LeftParen>
-        <Identifier>
-        <RightParen>
+    rule pseudo-destructor-name:sym<decltype> {
+        <tilde>
+        <decltype-specifier>
     }
 
-    rule unaryExpressionCase:sym<alignof>  { <Alignof> <LeftParen> <theTypeId> <RightParen> }
-    rule unaryExpressionCase:sym<noexcept> { <noExceptExpression> }
-    rule unaryExpressionCase:sym<delete>   { <deleteExpression> }
+    #-------------------------------------
+    rule unary-expression { 
+        || <new-expression>
+        || <unary-expression-case>
+    }
+
+    proto rule unary-expression-case { * }
+    rule unary-expression-case:sym<postfix>  { <postfix-expression> }
+    rule unary-expression-case:sym<pp>       { <plus-plus> <unary-expression> }
+    rule unary-expression-case:sym<mm>       { <minus-minus> <unary-expression> }
+    rule unary-expression-case:sym<unary-op> { <unary-operator> <unary-expression> }
+    rule unary-expression-case:sym<sizeof>   { <sizeof> <unary-expression> }
+
+    rule unary-expression-case:sym<sizeof-typeid> {
+        <sizeof>
+        <left-paren>
+        <the-type-id>
+        <right-paren>
+    }
+
+    rule unary-expression-case:sym<sizeof-ids> {
+        <sizeof>
+        <ellipsis>
+        <left-paren>
+        <identifier>
+        <right-paren>
+    }
+
+    rule unary-expression-case:sym<alignof>  { <alignof> <left-paren> <the-type-id> <right-paren> }
+    rule unary-expression-case:sym<noexcept> { <no-except-expression> }
+    rule unary-expression-case:sym<delete>   { <delete-expression> }
 
     #--------------------------------------
-    proto rule unaryOperator { * } 
-    rule unaryOperator:sym<Or>    { <Or>    } 
-    rule unaryOperator:sym<Star>  { <Star>  } 
-    rule unaryOperator:sym<And>   { <And>   } 
-    rule unaryOperator:sym<Plus>  { <Plus>  } 
-    rule unaryOperator:sym<Tilde> { <Tilde> } 
-    rule unaryOperator:sym<Minus> { <Minus> } 
-    rule unaryOperator:sym<Not>   { <Not>   } 
+    proto rule unary-operator { * } 
+    rule unary-operator:sym<or_>   { <or_>   } 
+    rule unary-operator:sym<star>  { <star>  }
+    rule unary-operator:sym<and_>  { <and_>  } 
+    rule unary-operator:sym<plus>  { <plus>  } 
+    rule unary-operator:sym<tilde> { <tilde> } 
+    rule unary-operator:sym<minus> { <minus> } 
+    rule unary-operator:sym<not>   { <not_>  } 
 
     #--------------------------------------
-    rule newExpression {
-        <Doublecolon>?
-        <New>
-        <newPlacement>?
+    rule new-expression {
+        <doublecolon>?
+        <new_>
+        <new-placement>?
         [   
-           || <newTypeId>
-           || [ <LeftParen> <theTypeId> <RightParen> ]
+           || <new-type-id>
+           || [ <left-paren> <the-type-id> <right-paren> ]
         ]
-        <newInitializer>?
+        <new-initializer>?
     }
 
-    rule newPlacement {
-        <LeftParen>
-        <expressionList>
-        <RightParen>
+    rule new-placement {
+        <left-paren>
+        <expression-list>
+        <right-paren>
     }
 
-    rule newTypeId {
-        <typeSpecifierSeq> <newDeclarator>?
+    rule new-type-id {
+        <type-specifier-seq> <new-declarator>?
     }
 
-    rule newDeclarator {
-        <pointerOperator>* 
-        <noPointerNewDeclarator>?
+    rule new-declarator {
+        <pointer-operator>* 
+        <no-pointer-new-declarator>?
     }
 
     #applied a transfomation on this rule to
@@ -752,196 +752,196 @@ our role CPP14Parser does CPP14Lexer {
     #
     #if we get any bugs downstream come back to
     #this
-    rule noPointerNewDeclarator {
-        <LeftBracket>
+    rule no-pointer-new-declarator {
+        <left-bracket>
         <expression>
-        <RightBracket>
-        <attributeSpecifierSeq>?
+        <right-bracket>
+        <attribute-specifier-seq>?
         [
-            <LeftBracket>
-            <constantExpression>
-            <RightBracket>
-            <attributeSpecifierSeq>?
+            <left-bracket>
+            <constant-expression>
+            <right-bracket>
+            <attribute-specifier-seq>?
         ]*
     }
 
     #------------------------
-    proto rule newInitializer { * }
-    rule newInitializer:sym<expr-list> { <LeftParen> <expressionList>?  <RightParen> }
-    rule newInitializer:sym<braced>    { <bracedInitList> }
+    proto rule new-initializer { * }
+    rule new-initializer:sym<expr-list> { <left-paren> <expression-list>?  <right-paren> }
+    rule new-initializer:sym<braced>    { <braced-init-list> }
 
     #------------------------
-    rule deleteExpression {
-        <Doublecolon>?
-        <Delete>
-        [ <LeftBracket> <RightBracket> ]?
-        <castExpression>
+    rule delete-expression {
+        <doublecolon>?
+        <delete>
+        [ <left-bracket> <right-bracket> ]?
+        <cast-expression>
     }
 
-    rule noExceptExpression {
-        <Noexcept>
-        <LeftParen>
+    rule no-except-expression {
+        <noexcept>
+        <left-paren>
         <expression>
-        <RightParen>
+        <right-paren>
     }
 
-    rule castExpression {
-        [ <LeftParen> <theTypeId> <RightParen> ]* <unaryExpression>
+    rule cast-expression {
+        [ <left-paren> <the-type-id> <right-paren> ]* <unary-expression>
     }
 
-    proto rule pointerMemberOperator { * }
-    rule pointerMemberOperator:sym<dot>   { <DotStar> }
-    rule pointerMemberOperator:sym<arrow> { <ArrowStar> }
+    proto rule pointer-member-operator { * }
+    rule pointer-member-operator:sym<dot>   { <dot-star> }
+    rule pointer-member-operator:sym<arrow> { <arrow-star> }
 
-    rule pointerMemberExpression {
-        <castExpression>
+    rule pointer-member-expression {
+        <cast-expression>
         [
-            <pointerMemberOperator>
-            <castExpression>
+            <pointer-member-operator>
+            <cast-expression>
         ]*
     }
 
     #-----------------
-    proto token multiplicativeOperator { * }
-    token multiplicativeOperator:sym<*> { <Star> }
-    token multiplicativeOperator:sym</> { <Div> }
-    token multiplicativeOperator:sym<%> { <Mod> }
+    proto token multiplicative-operator { * }
+    token multiplicative-operator:sym<*> { <star> }
+    token multiplicative-operator:sym</> { <div_> }
+    token multiplicative-operator:sym<%> { <mod_> }
 
-    rule multiplicativeExpression {
-        <pointerMemberExpression>
+    rule multiplicative-expression {
+        <pointer-member-expression>
         [   
-            <multiplicativeOperator> 
-            <pointerMemberExpression>
+            <multiplicative-operator> 
+            <pointer-member-expression>
         ]*
     }
 
     #-----------------
-    proto token additiveOperator { * }
-    token additiveOperator:sym<plus>  {  <Plus> }
-    token additiveOperator:sym<minus> {  <Minus> }
+    proto token additive-operator { * }
+    token additive-operator:sym<plus>  {  <plus> }
+    token additive-operator:sym<minus> {  <minus> }
 
     #-----------------
-    rule additiveExpression {
-        <multiplicativeExpression>
+    rule additive-expression {
+        <multiplicative-expression>
         [   
-            <additiveOperator> 
-            <multiplicativeExpression>
+            <additive-operator> 
+            <multiplicative-expression>
         ]*
     }
 
-    rule shiftExpression {
-        <additiveExpression>
-        [ <shiftOperator> <additiveExpression> ]*
+    rule shift-expression {
+        <additive-expression>
+        [ <shift-operator> <additive-expression> ]*
     }
 
     #-----------------------
-    proto rule shiftOperator { * }
-    rule shiftOperator:sym<right> { <Greater> <Greater> }
-    rule shiftOperator:sym<left>  { <Less> <Less> }
+    proto rule shift-operator { * }
+    rule shift-operator:sym<right> { <greater> <greater> }
+    rule shift-operator:sym<left>  { <less> <less> }
 
     #-----------------------
-    proto rule relationalOperator { * }
-    rule relationalOperator:sym<less>       { <Less> }
-    rule relationalOperator:sym<greater>    { <Greater> }
-    rule relationalOperator:sym<less-eq>    { <LessEqual> }
-    rule relationalOperator:sym<greater-eq> { <GreaterEqual> }
+    proto rule relational-operator { * }
+    rule relational-operator:sym<less>       { <less> }
+    rule relational-operator:sym<greater>    { <greater> }
+    rule relational-operator:sym<less-eq>    { <less-equal> }
+    rule relational-operator:sym<greater-eq> { <greater-equal> }
 
     #-----------------------
-    regex relationalExpression {
-        <shiftExpression>
+    regex relational-expression {
+        <shift-expression>
         [  
             <.ws>
-            <relationalOperator>
+            <relational-operator>
             <.ws>
-            <shiftExpression>
+            <shift-expression>
         ]*
     }
 
     #-----------------------
-    proto token equalityOperator { * }
-    token equalityOperator:sym<eq>  { <Equal> }
-    token equalityOperator:sym<neq> { <NotEqual> }
+    proto token equality-operator { * }
+    token equality-operator:sym<eq>  { <equal> }
+    token equality-operator:sym<neq> { <not-equal> }
 
     #-----------------------
-    rule equalityExpression {
-        <relationalExpression>
+    rule equality-expression {
+        <relational-expression>
         [   
-            <equalityOperator> <relationalExpression>
+            <equality-operator> <relational-expression>
         ]*
     }
 
-    rule andExpression {
-        <equalityExpression> [ <And> <equalityExpression> ]*
+    rule and-expression {
+        <equality-expression> [ <and_> <equality-expression> ]*
     }
 
-    rule exclusiveOrExpression {
-        <andExpression> [  <Caret> <andExpression> ]*
+    rule exclusive-or-expression {
+        <and-expression> [  <caret> <and-expression> ]*
     }
 
-    rule inclusiveOrExpression {
-        <exclusiveOrExpression> [ <Or> <exclusiveOrExpression> ]*
+    rule inclusive-or-expression {
+        <exclusive-or-expression> [ <or_> <exclusive-or-expression> ]*
     }
 
-    rule logicalAndExpression {
-        <inclusiveOrExpression> [  <AndAnd> <inclusiveOrExpression>]*
+    rule logical-and-expression {
+        <inclusive-or-expression> [  <and-and> <inclusive-or-expression>]*
     }
 
-    rule logicalOrExpression {
-        <logicalAndExpression> [ <OrOr> <logicalAndExpression> ]*
+    rule logical-or-expression {
+        <logical-and-expression> [ <or-or> <logical-and-expression> ]*
     }
 
-    rule conditionalExpression {
-        <logicalOrExpression>
+    rule conditional-expression {
+        <logical-or-expression>
         [ 
-            <Question> 
+            <question> 
             <expression> 
-            <Colon> 
-            <assignmentExpression> 
+            <colon> 
+            <assignment-expression> 
         ]?
     }
 
     #-----------------------
-    proto rule assignmentExpression { * }
+    proto rule assignment-expression { * }
 
-    rule assignmentExpression:sym<throw> {  
-        <throwExpression>
+    rule assignment-expression:sym<throw> {  
+        <throw-expression>
     }
 
-    rule assignmentExpression:sym<basic> {  
-        <logicalOrExpression> <assignmentOperator> <initializerClause>
+    rule assignment-expression:sym<basic> {  
+        <logical-or-expression> <assignment-operator> <initializer-clause>
     }
 
-    rule assignmentExpression:sym<conditional> {  
-        <conditionalExpression>
+    rule assignment-expression:sym<conditional> {  
+        <conditional-expression>
     }
 
-    proto token assignmentOperator { * }
-    token assignmentOperator:sym<assign>        { <Assign>           } 
-    token assignmentOperator:sym<star-assign>   { <StarAssign>       } 
-    token assignmentOperator:sym<div-assign>    { <DivAssign>        } 
-    token assignmentOperator:sym<mod-assign>    { <ModAssign>        } 
-    token assignmentOperator:sym<plus-assign>   { <PlusAssign>       } 
-    token assignmentOperator:sym<minus-assign>  { <MinusAssign>      } 
-    token assignmentOperator:sym<rshift-assign> { <RightShiftAssign> } 
-    token assignmentOperator:sym<lshift-assign> { <LeftShiftAssign>  } 
-    token assignmentOperator:sym<and-assign>    { <AndAssign>        } 
-    token assignmentOperator:sym<xor-assign>    { <XorAssign>        } 
-    token assignmentOperator:sym<or-assign>     { <OrAssign>         } 
+    proto token assignment-operator { * }
+    token assignment-operator:sym<assign>        { <assign>           } 
+    token assignment-operator:sym<star-assign>   { <star-assign>       } 
+    token assignment-operator:sym<div-assign>    { <div-assign>        } 
+    token assignment-operator:sym<mod-assign>    { <mod-assign>        } 
+    token assignment-operator:sym<plus-assign>   { <plus-assign>       } 
+    token assignment-operator:sym<minus-assign>  { <minus-assign>      } 
+    token assignment-operator:sym<rshift-assign> { <right-shift-assign> } 
+    token assignment-operator:sym<lshift-assign> { <left-shift-assign>  } 
+    token assignment-operator:sym<and-assign>    { <and-assign>        } 
+    token assignment-operator:sym<xor-assign>    { <xor-assign>        } 
+    token assignment-operator:sym<or-assign>     { <or-assign>         } 
 
     rule expression {
-        <assignmentExpression>+ %% <Comma>
+        <assignment-expression>+ %% <comma>
     }
 
-    rule constantExpression { <conditionalExpression> }
+    rule constant-expression { <conditional-expression> }
 
     proto rule comment { * }
 
     regex comment:sym<line> {
-        [<LineComment> <.ws>?]+
+        [<line-comment> <.ws>?]+
     }
 
     rule comment:sym<block> {
-        <BlockComment>
+        <block-comment>
     }
 
     #-----------------------------
@@ -949,68 +949,68 @@ our role CPP14Parser does CPP14Lexer {
 
     token statement:sym<attributed> { 
         <comment>?
-        <attributeSpecifierSeq>?
-        <attributedStatementBody>
+        <attribute-specifier-seq>?
+        <attributed-statement-body>
     }
 
-    token statement:sym<labeled>     { <comment>? <labeledStatement>     }
-    token statement:sym<declaration> { <comment>? <declarationStatement> }
+    token statement:sym<labeled>     { <comment>? <labeled-statement>     }
+    token statement:sym<declaration> { <comment>? <declaration-statement> }
 
-    proto rule attributedStatementBody { * }
-    rule attributedStatementBody:sym<expression> { <expressionStatement> }
-    rule attributedStatementBody:sym<compound>   { <compoundStatement>   }
-    rule attributedStatementBody:sym<selection>  { <selectionStatement>  }
-    rule attributedStatementBody:sym<iteration>  { <iterationStatement>  }
-    rule attributedStatementBody:sym<jump>       { <jumpStatement>       }
-    rule attributedStatementBody:sym<try>        { <tryBlock>            }
-
-    #-----------------------------
-    proto rule labeledStatementLabelBody { * }
-    rule labeledStatementLabelBody:sym<id>        { <Identifier>                }
-    rule labeledStatementLabelBody:sym<case-expr> { <Case> <constantExpression> }
-    rule labeledStatementLabelBody:sym<default>   { <Default>                   }
+    proto rule attributed-statement-body { * }
+    rule attributed-statement-body:sym<expression> { <expression-statement> }
+    rule attributed-statement-body:sym<compound>   { <compound-statement>   }
+    rule attributed-statement-body:sym<selection>  { <selection-statement>  }
+    rule attributed-statement-body:sym<iteration>  { <iteration-statement>  }
+    rule attributed-statement-body:sym<jump>       { <jump-statement>       }
+    rule attributed-statement-body:sym<try>        { <try-block>            }
 
     #-----------------------------
-    rule labeledStatementLabel {
-        <attributeSpecifierSeq>?
-        <labeledStatementLabelBody>
-        <Colon>
+    proto rule labeled-statement-label-body { * }
+    rule labeled-statement-label-body:sym<id>        { <identifier>                }
+    rule labeled-statement-label-body:sym<case-expr> { <case> <constant-expression> }
+    rule labeled-statement-label-body:sym<default>   { <default_>                   }
+
+    #-----------------------------
+    rule labeled-statement-label {
+        <attribute-specifier-seq>?
+        <labeled-statement-label-body>
+        <colon>
     }
 
-    rule labeledStatement {
-        <labeledStatementLabel>
+    rule labeled-statement {
+        <labeled-statement-label>
         <statement>
     }
 
-    rule declarationStatement { <blockDeclaration> }
+    rule declaration-statement { <block-declaration> }
 
     #-----------------------------
-    rule expressionStatement {
-        <expression>?  <Semi>
+    rule expression-statement {
+        <expression>?  <semi>
     }
 
-    rule compoundStatement {
-        <LeftBrace> <statementSeq>?  <RightBrace>
+    rule compound-statement {
+        <left-brace> <statement-seq>?  <right-brace>
     }
 
-    regex statementSeq {
+    regex statement-seq {
         <statement> [<.ws> <statement>]*
     }
 
     #-----------------------------
-    proto rule selectionStatement { * }
+    proto rule selection-statement { * }
 
-    rule selectionStatement:sym<if> {  
-        <If>
-        <LeftParen>
+    rule selection-statement:sym<if> {  
+        <if_>
+        <left-paren>
         <condition>
-        <RightParen>
+        <right-paren>
         <statement>
-        [ <comment>? <Else> <statement> ]?
+        [ <comment>? <else_> <statement> ]?
     }
 
-    rule selectionStatement:sym<switch> {  
-        <Switch> <LeftParen> <condition> <RightParen> <statement>
+    rule selection-statement:sym<switch> {  
+        <switch> <left-paren> <condition> <right-paren> <statement>
     }
 
     #-----------------------------
@@ -1022,1188 +1022,1188 @@ our role CPP14Parser does CPP14Lexer {
 
     #-----------------------------
     proto rule condition-decl-tail { * }
-    rule condition-decl-tail:sym<assign-init> { <Assign> <initializerClause> }
-    rule condition-decl-tail:sym<braced-init> { <bracedInitList> }
+    rule condition-decl-tail:sym<assign-init> { <assign> <initializer-clause> }
+    rule condition-decl-tail:sym<braced-init> { <braced-init-list> }
 
     #-----------------------------
     rule condition:sym<decl> {
-        <attributeSpecifierSeq>?
-        <declSpecifierSeq> 
+        <attribute-specifier-seq>?
+        <decl-specifier-seq> 
         <declarator>
         <condition-decl-tail>
     }
 
     #-----------------------------
-    proto rule iterationStatement { * }
+    proto rule iteration-statement { * }
 
-    rule iterationStatement:sym<while> {
-        <While>
-        <LeftParen>
+    rule iteration-statement:sym<while> {
+        <while_>
+        <left-paren>
         <condition>
-        <RightParen>
+        <right-paren>
         <statement>
     }
 
-    rule iterationStatement:sym<do> {
-        <Do>
+    rule iteration-statement:sym<do> {
+        <do_>
         <statement>
-        <While>
-        <LeftParen>
+        <while_>
+        <left-paren>
         <expression>
-        <RightParen>
-        <Semi>
+        <right-paren>
+        <semi>
     }
 
-    rule iterationStatement:sym<for> {
-        <For>
-        <LeftParen>
-        <forInitStatement>
+    rule iteration-statement:sym<for> {
+        <for_>
+        <left-paren>
+        <for-init-statement>
         <condition>?
-        <Semi>
+        <semi>
         <expression>?
-        <RightParen>
+        <right-paren>
         <statement>
     }
 
-    rule iterationStatement:sym<for-range> {
-        <For>
-        <LeftParen>
-        <forRangeDeclaration>
-        <Colon>
-        <forRangeInitializer>
-        <RightParen>
+    rule iteration-statement:sym<for-range> {
+        <for_>
+        <left-paren>
+        <for-range-declaration>
+        <colon>
+        <for-range-initializer>
+        <right-paren>
         <statement>
     }
 
     #-----------------------------
-    proto rule forInitStatement { * }
-    rule forInitStatement:sym<expressionStatement> { <expressionStatement> }
-    rule forInitStatement:sym<simpleDeclaration> { <simpleDeclaration> }
+    proto rule for-init-statement { * }
+    rule for-init-statement:sym<expression-statement> { <expression-statement> }
+    rule for-init-statement:sym<simple-declaration> { <simple-declaration> }
 
-    rule forRangeDeclaration {
-        <attributeSpecifierSeq>?
-        <declSpecifierSeq>
+    rule for-range-declaration {
+        <attribute-specifier-seq>?
+        <decl-specifier-seq>
         <declarator>
     }
 
-    proto rule forRangeInitializer { * }
-    rule forRangeInitializer:sym<expression>     { <expression> }
-    rule forRangeInitializer:sym<bracedInitList> { <bracedInitList> }
+    proto rule for-range-initializer { * }
+    rule for-range-initializer:sym<expression>     { <expression> }
+    rule for-range-initializer:sym<braced-init-list> { <braced-init-list> }
 
     #-------------------------------
-    proto rule jumpStatement { * }
-    rule jumpStatement:sym<break>    { <Break>                                        <Semi> } 
-    rule jumpStatement:sym<continue> { <Continue>                                     <Semi> } 
-    rule jumpStatement:sym<return>   { <Return> [ <expression> || <bracedInitList> ]? <Semi> } 
-    rule jumpStatement:sym<goto>     { <Goto> <Identifier>                            <Semi> } 
+    proto rule jump-statement { * }
+    rule jump-statement:sym<break>    { <break_>                                        <semi> } 
+    rule jump-statement:sym<continue> { <continue_>                                     <semi> } 
+    rule jump-statement:sym<return>   { <return_> [ <expression> || <braced-init-list> ]? <semi> } 
+    rule jump-statement:sym<goto>     { <goto_> <identifier>                            <semi> } 
 
     rule declarationseq { <declaration>+ }
 
     #-------------------------------
     proto rule declaration { * }
-    rule declaration:sym<blockDeclaration>       { <blockDeclaration>         } 
-    rule declaration:sym<functionDefinition>     { <functionDefinition>       } 
-    rule declaration:sym<templateDeclaration>    { <templateDeclaration>      } 
-    rule declaration:sym<explicitInstantiation>  { <explicitInstantiation>    } 
-    rule declaration:sym<explicitSpecialization> { <explicitSpecialization>   } 
-    rule declaration:sym<linkageSpecification>   { <linkageSpecification>     } 
-    rule declaration:sym<namespaceDefinition>    { <namespaceDefinition>      } 
-    rule declaration:sym<emptyDeclaration>       { <emptyDeclaration>         } 
-    rule declaration:sym<attributeDeclaration>   { <attributeDeclaration>     } 
+    rule declaration:sym<block-declaration>       { <block-declaration>         } 
+    rule declaration:sym<function-definition>     { <function-definition>       } 
+    rule declaration:sym<template-declaration>    { <template-declaration>      } 
+    rule declaration:sym<explicit-instantiation>  { <explicit-instantiation>    } 
+    rule declaration:sym<explicit-specialization> { <explicit-specialization>   } 
+    rule declaration:sym<linkage-specification>   { <linkage-specification>     } 
+    rule declaration:sym<namespace-definition>    { <namespace-definition>      } 
+    rule declaration:sym<empty-declaration>       { <empty-declaration>         } 
+    rule declaration:sym<attribute-declaration>   { <attribute-declaration>     } 
 
-    proto rule blockDeclaration { * }
-    rule blockDeclaration:sym<simple>            { <simpleDeclaration>        } 
-    rule blockDeclaration:sym<asm>               { <asmDefinition>            } 
-    rule blockDeclaration:sym<namespace-alias>   { <namespaceAliasDefinition> } 
-    rule blockDeclaration:sym<using-decl>        { <usingDeclaration>         } 
-    rule blockDeclaration:sym<using-directive>   { <usingDirective>           } 
-    rule blockDeclaration:sym<static-assert>     { <staticAssertDeclaration>  } 
-    rule blockDeclaration:sym<alias>             { <aliasDeclaration>         } 
-    rule blockDeclaration:sym<opaque-enum-decl>  { <opaqueEnumDeclaration>    } 
+    proto rule block-declaration { * }
+    rule block-declaration:sym<simple>            { <simple-declaration>        } 
+    rule block-declaration:sym<asm>               { <asm-definition>            } 
+    rule block-declaration:sym<namespace-alias>   { <namespace-alias-definition> } 
+    rule block-declaration:sym<using-decl>        { <using-declaration>         } 
+    rule block-declaration:sym<using-directive>   { <using-directive>           } 
+    rule block-declaration:sym<static-assert>     { <static-assert-declaration>  } 
+    rule block-declaration:sym<alias>             { <alias-declaration>         } 
+    rule block-declaration:sym<opaque-enum-decl>  { <opaque-enum-declaration>    } 
 
-    rule aliasDeclaration {
-        <Using>
-        <Identifier>
-        <attributeSpecifierSeq>?
-        <Assign>
-        <theTypeId>
-        <Semi>
+    rule alias-declaration {
+        <using>
+        <identifier>
+        <attribute-specifier-seq>?
+        <assign>
+        <the-type-id>
+        <semi>
     }
 
     #---------------------------
-    proto rule simpleDeclaration { * }
-    rule simpleDeclaration:sym<basic>     { <declSpecifierSeq>? <initDeclaratorList>? <Semi> }
-    rule simpleDeclaration:sym<init-list> { <attributeSpecifierSeq> <declSpecifierSeq>? <initDeclaratorList> <Semi> }
+    proto rule simple-declaration { * }
+    rule simple-declaration:sym<basic>     { <decl-specifier-seq>? <init-declarator-list>? <semi> }
+    rule simple-declaration:sym<init-list> { <attribute-specifier-seq> <decl-specifier-seq>? <init-declarator-list> <semi> }
 
-    rule staticAssertDeclaration {
-        <Static_assert>
-        <LeftParen>
-        <constantExpression>
-        <Comma>
-        <StringLiteral>
-        <RightParen>
-        <Semi>
+    rule static-assert-declaration {
+        <static_assert>
+        <left-paren>
+        <constant-expression>
+        <comma>
+        <string-literal>
+        <right-paren>
+        <semi>
     }
 
-    rule emptyDeclaration {
-        <Semi>
+    rule empty-declaration {
+        <semi>
     }
 
-    rule attributeDeclaration {
-        <attributeSpecifierSeq> <Semi>
-    }
-
-    #---------------------------
-    proto token declSpecifier { * }
-    token declSpecifier:sym<storage-class> { <storageClassSpecifier> }
-    token declSpecifier:sym<type>          { <typeSpecifier> }
-    token declSpecifier:sym<func>          { <functionSpecifier> }
-    token declSpecifier:sym<friend>        { <Friend> }
-    token declSpecifier:sym<typedef>       { <Typedef> }
-    token declSpecifier:sym<constexpr>     { <Constexpr> }
-
-    regex declSpecifierSeq {
-        <declSpecifier> [<.ws> <declSpecifier>]*?  <attributeSpecifierSeq>?  
+    rule attribute-declaration {
+        <attribute-specifier-seq> <semi>
     }
 
     #---------------------------
-    proto rule storageClassSpecifier { * }
-    rule storageClassSpecifier:sym<Register>     { <Register>     } 
-    rule storageClassSpecifier:sym<Static>       { <Static>       } 
-    rule storageClassSpecifier:sym<Thread_local> { <Thread_local> } 
-    rule storageClassSpecifier:sym<Extern>       { <Extern>       } 
-    rule storageClassSpecifier:sym<Mutable>      { <Mutable>      } 
-    #---------------------------
-    proto rule functionSpecifier { * }
-    rule functionSpecifier:sym<inline>   { <Inline> }
-    rule functionSpecifier:sym<virtual>  { <Virtual> }
-    rule functionSpecifier:sym<explicit> { <Explicit> }
+    proto token decl-specifier { * }
+    token decl-specifier:sym<storage-class> { <storage-class-specifier> }
+    token decl-specifier:sym<type>          { <type-specifier> }
+    token decl-specifier:sym<func>          { <function-specifier> }
+    token decl-specifier:sym<friend>        { <friend> }
+    token decl-specifier:sym<typedef>       { <typedef> }
+    token decl-specifier:sym<constexpr>     { <constexpr> }
 
-    rule typedefName { <Identifier> }
-
-    #---------------------------
-    proto rule typeSpecifier { * }
-    rule typeSpecifier:sym<trailingTypeSpecifier> { <trailingTypeSpecifier> }
-    rule typeSpecifier:sym<classSpecifier>        { <classSpecifier>        }
-    rule typeSpecifier:sym<enumSpecifier>         { <enumSpecifier>         }
-
-    #---------------------------
-    proto rule trailingTypeSpecifier { * }
-    rule trailingTypeSpecifier:sym<cv-qualifier> { <cvQualifier> <simpleTypeSpecifier> }
-    rule trailingTypeSpecifier:sym<simple>       { <simpleTypeSpecifier>     } 
-    rule trailingTypeSpecifier:sym<elaborated>   { <elaboratedTypeSpecifier> } 
-    rule trailingTypeSpecifier:sym<typename>     { <typeNameSpecifier>       } 
-
-    #---------------------------
-    rule typeSpecifierSeq {
-        <typeSpecifier>+ <attributeSpecifierSeq>?
+    regex decl-specifier-seq {
+        <decl-specifier> [<.ws> <decl-specifier>]*?  <attribute-specifier-seq>?  
     }
 
-    rule trailingTypeSpecifierSeq {
-        <trailingTypeSpecifier>+ <attributeSpecifierSeq>?
+    #---------------------------
+    proto rule storage-class-specifier { * }
+    rule storage-class-specifier:sym<register>     { <register>     } 
+    rule storage-class-specifier:sym<static>       { <static>       } 
+    rule storage-class-specifier:sym<thread_local> { <thread_local> } 
+    rule storage-class-specifier:sym<extern>       { <extern>       } 
+    rule storage-class-specifier:sym<mutable>      { <mutable>      } 
+    #---------------------------
+    proto rule function-specifier { * }
+    rule function-specifier:sym<inline>   { <inline> }
+    rule function-specifier:sym<virtual>  { <virtual> }
+    rule function-specifier:sym<explicit> { <explicit> }
+
+    rule typedef-name { <identifier> }
+
+    #---------------------------
+    proto rule type-specifier { * }
+    rule type-specifier:sym<trailing-type-specifier> { <trailing-type-specifier> }
+    rule type-specifier:sym<class-specifier>        { <class-specifier>        }
+    rule type-specifier:sym<enum-specifier>         { <enum-specifier>         }
+
+    #---------------------------
+    proto rule trailing-type-specifier { * }
+    rule trailing-type-specifier:sym<cv-qualifier> { <cv-qualifier> <simple-type-specifier> }
+    rule trailing-type-specifier:sym<simple>       { <simple-type-specifier>     } 
+    rule trailing-type-specifier:sym<elaborated>   { <elaborated-type-specifier> } 
+    rule trailing-type-specifier:sym<typename>     { <type-name-specifier>       } 
+
+    #---------------------------
+    rule type-specifier-seq {
+        <type-specifier>+ <attribute-specifier-seq>?
     }
 
-    proto rule simpleTypeLengthModifier { * }
-    rule simpleTypeLengthModifier:sym<Short> { <Short> }
-    rule simpleTypeLengthModifier:sym<Long>  { <Long>  }
+    rule trailing-type-specifier-seq {
+        <trailing-type-specifier>+ <attribute-specifier-seq>?
+    }
 
-    proto rule simpleTypeSignednessModifier         { * }
-    rule simpleTypeSignednessModifier:sym<Unsigned> { <Unsigned> }
-    rule simpleTypeSignednessModifier:sym<Signed>   { <Signed> }
+    proto rule simple-type-length-modifier { * }
+    rule simple-type-length-modifier:sym<short> { <short> }
+    rule simple-type-length-modifier:sym<long_>  { <long_>  }
+
+    proto rule simple-type-signedness-modifier         { * }
+    rule simple-type-signedness-modifier:sym<unsigned> { <unsigned> }
+    rule simple-type-signedness-modifier:sym<signed>   { <signed> }
 
     rule full-type-name {
-        <nestedNameSpecifier>? <theTypeName>
+        <nested-name-specifier>? <the-type-name>
     }
 
     rule scoped-template-id {
-        <nestedNameSpecifier> <Template> <simpleTemplateId>
+        <nested-name-specifier> <template> <simple-template-id>
     }
 
     rule simple-int-type-specifier {
-        <simpleTypeSignednessModifier>?  <simpleTypeLengthModifier>* <Int_>
+        <simple-type-signedness-modifier>?  <simple-type-length-modifier>* <int_>
     }
 
     rule simple-char-type-specifier {
-        <simpleTypeSignednessModifier>?  <Char_>
+        <simple-type-signedness-modifier>?  <char_>
     }
 
     rule simple-char16-type-specifier {
-        <simpleTypeSignednessModifier>?  <Char16>
+        <simple-type-signedness-modifier>?  <char16>
     }
 
     rule simple-char32-type-specifier {
-        <simpleTypeSignednessModifier>?  <Char32>
+        <simple-type-signedness-modifier>?  <char32>
     }
 
     rule simple-wchar-type-specifier {
-        <simpleTypeSignednessModifier>?  <Wchar>
+        <simple-type-signedness-modifier>?  <wchar>
     }
 
     rule simple-double-type-specifier {
-        <simpleTypeLengthModifier>?  <Double>
+        <simple-type-length-modifier>?  <double>
     }
 
     #------------------------------
-    proto regex simpleTypeSpecifier { * }
-    regex simpleTypeSpecifier:sym<int>                   { <simple-int-type-specifier>                                  } 
-    regex simpleTypeSpecifier:sym<full>                  { <full-type-name>                                             } 
-    regex simpleTypeSpecifier:sym<scoped>                { <scoped-template-id>                                         } 
-    regex simpleTypeSpecifier:sym<signedness-mod>        { <simpleTypeSignednessModifier>                               } 
-    regex simpleTypeSpecifier:sym<signedness-mod-length> { <simpleTypeSignednessModifier>?  <simpleTypeLengthModifier>+ } 
-    regex simpleTypeSpecifier:sym<char>                  { <simple-char-type-specifier>                                 } 
-    regex simpleTypeSpecifier:sym<char16>                { <simple-char16-type-specifier>                               } 
-    regex simpleTypeSpecifier:sym<char32>                { <simple-char32-type-specifier>                               } 
-    regex simpleTypeSpecifier:sym<wchar>                 { <simple-wchar-type-specifier>                                } 
-    regex simpleTypeSpecifier:sym<bool>                  { <Bool_>                                                      } 
-    regex simpleTypeSpecifier:sym<float>                 { <Float>                                                      } 
-    regex simpleTypeSpecifier:sym<double>                { <simple-double-type-specifier>                               } 
-    regex simpleTypeSpecifier:sym<void>                  { <Void>                                                       } 
-    regex simpleTypeSpecifier:sym<auto>                  { <Auto>                                                       } 
-    regex simpleTypeSpecifier:sym<decltype>              { <decltypeSpecifier>                                          } 
+    proto regex simple-type-specifier { * }
+    regex simple-type-specifier:sym<int>                   { <simple-int-type-specifier>                                  } 
+    regex simple-type-specifier:sym<full>                  { <full-type-name>                                             } 
+    regex simple-type-specifier:sym<scoped>                { <scoped-template-id>                                         } 
+    regex simple-type-specifier:sym<signedness-mod>        { <simple-type-signedness-modifier>                               } 
+    regex simple-type-specifier:sym<signedness-mod-length> { <simple-type-signedness-modifier>?  <simple-type-length-modifier>+ } 
+    regex simple-type-specifier:sym<char>                  { <simple-char-type-specifier>                                 } 
+    regex simple-type-specifier:sym<char16>                { <simple-char16-type-specifier>                               } 
+    regex simple-type-specifier:sym<char32>                { <simple-char32-type-specifier>                               } 
+    regex simple-type-specifier:sym<wchar>                 { <simple-wchar-type-specifier>                                } 
+    regex simple-type-specifier:sym<bool>                  { <bool_>                                                      } 
+    regex simple-type-specifier:sym<float>                 { <float>                                                      } 
+    regex simple-type-specifier:sym<double>                { <simple-double-type-specifier>                               } 
+    regex simple-type-specifier:sym<void>                  { <void_>                                                       } 
+    regex simple-type-specifier:sym<auto>                  { <auto>                                                       } 
+    regex simple-type-specifier:sym<decltype>              { <decltype-specifier>                                          } 
 
     #------------------------------
-    proto rule theTypeName                   { * }
-    rule theTypeName:sym<simple-template-id> { <simpleTemplateId> }
-    rule theTypeName:sym<class>              { <className> }
-    rule theTypeName:sym<enum>               { <enumName> }
-    rule theTypeName:sym<typedef>            { <typedefName> }
+    proto rule the-type-name                   { * }
+    rule the-type-name:sym<simple-template-id> { <simple-template-id> }
+    rule the-type-name:sym<class>              { <class-name> }
+    rule the-type-name:sym<enum>               { <enum-name> }
+    rule the-type-name:sym<typedef>            { <typedef-name> }
 
     #------------------------------
-    proto rule decltypeSpecifierBody { * }
-    rule decltypeSpecifierBody:sym<expr> {  <expression> }
-    rule decltypeSpecifierBody:sym<auto> {  <Auto> }
+    proto rule decltype-specifier-body { * }
+    rule decltype-specifier-body:sym<expr> {  <expression> }
+    rule decltype-specifier-body:sym<auto> {  <auto> }
 
-    rule decltypeSpecifier {
-        <Decltype>
-        <LeftParen>
-        <decltypeSpecifierBody>
-        <RightParen>
-    }
-
-    #------------------------------
-    proto rule elaboratedTypeSpecifier { * }
-
-    rule elaboratedTypeSpecifier:sym<class-ident> {
-        <classKey>
-        <attributeSpecifierSeq>? 
-        <nestedNameSpecifier>? 
-        <Identifier>
-    }
-
-    rule elaboratedTypeSpecifier:sym<class-template-id> {
-        <classKey>
-        <simpleTemplateId>
-    }
-
-    rule elaboratedTypeSpecifier:sym<class-nested-template-id> {
-        <classKey>
-        <nestedNameSpecifier> 
-        <Template>? 
-        <simpleTemplateId>
-    }
-
-    rule elaboratedTypeSpecifier:sym<enum> {
-        <Enum> <nestedNameSpecifier>? <Identifier>
+    rule decltype-specifier {
+        <decltype>
+        <left-paren>
+        <decltype-specifier-body>
+        <right-paren>
     }
 
     #------------------------------
-    rule enumName {
-        <Identifier>
+    proto rule elaborated-type-specifier { * }
+
+    rule elaborated-type-specifier:sym<class-ident> {
+        <class-key>
+        <attribute-specifier-seq>? 
+        <nested-name-specifier>? 
+        <identifier>
     }
 
-    rule enumSpecifier {
-        <enumHead>
-        <LeftBrace>
-        [ <enumeratorList> <Comma>?  ]?
-        <RightBrace>
+    rule elaborated-type-specifier:sym<class-template-id> {
+        <class-key>
+        <simple-template-id>
     }
 
-    rule enumHead {
+    rule elaborated-type-specifier:sym<class-nested-template-id> {
+        <class-key>
+        <nested-name-specifier> 
+        <template>? 
+        <simple-template-id>
+    }
+
+    rule elaborated-type-specifier:sym<enum> {
+        <enum_> <nested-name-specifier>? <identifier>
+    }
+
+    #------------------------------
+    rule enum-name {
+        <identifier>
+    }
+
+    rule enum-specifier {
+        <enum-head>
+        <left-brace>
+        [ <enumerator-list> <comma>?  ]?
+        <right-brace>
+    }
+
+    rule enum-head {
         <enumkey>
-        <attributeSpecifierSeq>?
-        [ <nestedNameSpecifier>? <Identifier> ]?
+        <attribute-specifier-seq>?
+        [ <nested-name-specifier>? <identifier> ]?
         <enumbase>?
     }
 
-    rule opaqueEnumDeclaration {
+    rule opaque-enum-declaration {
         <enumkey>
-        <attributeSpecifierSeq>?
-        <Identifier>
+        <attribute-specifier-seq>?
+        <identifier>
         <enumbase>?
-        <Semi>
+        <semi>
     }
 
     rule enumkey {
-        <Enum>
-        [  <Class_> || <Struct> ]?
+        <enum_>
+        [  <class_> || <struct> ]?
     }
 
     rule enumbase {
-        <Colon> <typeSpecifierSeq>
+        <colon> <type-specifier-seq>
     }
 
-    rule enumeratorList {
-        <enumeratorDefinition>
-        [ <Comma> <enumeratorDefinition> ]*
+    rule enumerator-list {
+        <enumerator-definition>
+        [ <comma> <enumerator-definition> ]*
     }
 
-    rule enumeratorDefinition {
+    rule enumerator-definition {
         <enumerator>
-        [ <Assign> <constantExpression> ]?
+        [ <assign> <constant-expression> ]?
     }
 
     rule enumerator {
-        <Identifier>
+        <identifier>
     }
 
-    proto rule namespaceName { * }
-    rule namespaceName:sym<original> { <originalNamespaceName> }
-    rule namespaceName:sym<alias>    { <namespaceAlias> }
+    proto rule namespace-name { * }
+    rule namespace-name:sym<original> { <original-namespace-name> }
+    rule namespace-name:sym<alias>    { <namespace-alias> }
 
-    rule originalNamespaceName {
-        <Identifier>
+    rule original-namespace-name {
+        <identifier>
     }
 
     #--------------------
-    proto rule namespaceTag { * }
-    rule namespaceTag:sym<ident>   { <Identifier> }
-    rule namespaceTag:sym<ns-name> { <originalNamespaceName> }
+    proto rule namespace-tag { * }
+    rule namespace-tag:sym<ident>   { <identifier> }
+    rule namespace-tag:sym<ns-name> { <original-namespace-name> }
 
     #--------------------
-    rule namespaceDefinition {
-        <Inline>?
-        <Namespace>
-        <namespaceTag>?
-        <LeftBrace>
+    rule namespace-definition {
+        <inline>?
+        <namespace>
+        <namespace-tag>?
+        <left-brace>
         <namespaceBody=declarationseq>?
-        <RightBrace>
+        <right-brace>
     }
 
-    rule namespaceAlias {
-        <Identifier>
+    rule namespace-alias {
+        <identifier>
     }
 
-    rule namespaceAliasDefinition {
-        <Namespace>
-        <Identifier>
-        <Assign>
+    rule namespace-alias-definition {
+        <namespace>
+        <identifier>
+        <assign>
         <qualifiednamespacespecifier>
-        <Semi>
+        <semi>
     }
 
     rule qualifiednamespacespecifier {
-        <nestedNameSpecifier>?
-        <namespaceName>
+        <nested-name-specifier>?
+        <namespace-name>
     }
 
     #--------------------
-    proto rule usingDeclarationPrefix { * }
-    rule usingDeclarationPrefix:sym<nested> { [ <Typename_>? <nestedNameSpecifier> ] }
-    rule usingDeclarationPrefix:sym<base>   { <Doublecolon> }
+    proto rule using-declaration-prefix { * }
+    rule using-declaration-prefix:sym<nested> { [ <typename_>? <nested-name-specifier> ] }
+    rule using-declaration-prefix:sym<base>   { <doublecolon> }
 
     #--------------------
-    rule usingDeclaration {
-        <Using>
-        <usingDeclarationPrefix>
-        <unqualifiedId>
-        <Semi>
+    rule using-declaration {
+        <using>
+        <using-declaration-prefix>
+        <unqualified-id>
+        <semi>
     }
 
-    rule usingDirective {
-        <attributeSpecifierSeq>?
-        <Using>
-        <Namespace>
-        <nestedNameSpecifier>?
-        <namespaceName>
-        <Semi>
+    rule using-directive {
+        <attribute-specifier-seq>?
+        <using>
+        <namespace>
+        <nested-name-specifier>?
+        <namespace-name>
+        <semi>
     }
 
-    rule asmDefinition {
-        <Asm>
-        <LeftParen>
-        <StringLiteral>
-        <RightParen>
-        <Semi>
-    }
-
-    #--------------------
-    proto rule linkageSpecificationBody { * }
-    rule linkageSpecificationBody:sym<seq>  { <LeftBrace> <declarationseq>?  <RightBrace> }
-    rule linkageSpecificationBody:sym<decl> {  <declaration> }
-
-    rule linkageSpecification {
-        <Extern>
-        <StringLiteral>
-        <linkageSpecificationBody>
-    }
-
-    rule attributeSpecifierSeq {
-        <attributeSpecifier>+
+    rule asm-definition {
+        <asm>
+        <left-paren>
+        <string-literal>
+        <right-paren>
+        <semi>
     }
 
     #--------------------
-    proto rule attributeSpecifier { * }
+    proto rule linkage-specification-body { * }
+    rule linkage-specification-body:sym<seq>  { <left-brace> <declarationseq>?  <right-brace> }
+    rule linkage-specification-body:sym<decl> {  <declaration> }
 
-    rule attributeSpecifier:sym<double-braced> {
-        <LeftBracket>
-        <LeftBracket>
-        <attributeList>?
-        <RightBracket>
-        <RightBracket>
+    rule linkage-specification {
+        <extern>
+        <string-literal>
+        <linkage-specification-body>
     }
 
-    rule attributeSpecifier:sym<alignment> {
+    rule attribute-specifier-seq {
+        <attribute-specifier>+
+    }
+
+    #--------------------
+    proto rule attribute-specifier { * }
+
+    rule attribute-specifier:sym<double-braced> {
+        <left-bracket>
+        <left-bracket>
+        <attribute-list>?
+        <right-bracket>
+        <right-bracket>
+    }
+
+    rule attribute-specifier:sym<alignment> {
         <alignmentspecifier>
     }
 
     #--------------------
     proto rule alignmentspecifierbody { * }
-    rule alignmentspecifierbody:sym<type-id>    { <theTypeId> }
-    rule alignmentspecifierbody:sym<const-expr> { <constantExpression> }
+    rule alignmentspecifierbody:sym<type-id>    { <the-type-id> }
+    rule alignmentspecifierbody:sym<const-expr> { <constant-expression> }
 
     #--------------------
     rule alignmentspecifier {
-        <Alignas>
-        <LeftParen>
+        <alignas>
+        <left-paren>
         <alignmentspecifierbody>
-        <Ellipsis>?
-        <RightParen>
+        <ellipsis>?
+        <right-paren>
     }
 
-    rule attributeList {
+    rule attribute-list {
         <attribute>
-        [ <Comma> <attribute> ]*
-        <Ellipsis>?
+        [ <comma> <attribute> ]*
+        <ellipsis>?
     }
 
     rule attribute {
-        [ <attributeNamespace> <Doublecolon> ]?
-        <Identifier>
-        <attributeArgumentClause>?
+        [ <attribute-namespace> <doublecolon> ]?
+        <identifier>
+        <attribute-argument-clause>?
     }
 
-    rule attributeNamespace {
-        <Identifier>
+    rule attribute-namespace {
+        <identifier>
     }
 
-    rule attributeArgumentClause {
-        <LeftParen> <balancedTokenSeq>?  <RightParen>
+    rule attribute-argument-clause {
+        <left-paren> <balanced-token-seq>?  <right-paren>
     }
 
-    rule balancedTokenSeq {
+    rule balanced-token-seq {
         <balancedrule>+
     }
 
     #--------------------------
     proto rule balancedrule { * }
-    rule balancedrule:sym<parens>   { <LeftParen> <balancedTokenSeq> <RightParen> }
-    rule balancedrule:sym<brackets> { <LeftBracket> <balancedTokenSeq> <RightBracket> }
-    rule balancedrule:sym<braces>   { <LeftBrace> <balancedTokenSeq> <RightBrace> }
+    rule balancedrule:sym<parens>   { <left-paren> <balanced-token-seq> <right-paren> }
+    rule balancedrule:sym<brackets> { <left-bracket> <balanced-token-seq> <right-bracket> }
+    rule balancedrule:sym<braces>   { <left-brace> <balanced-token-seq> <right-brace> }
 
     #--------------------------
-    rule initDeclaratorList {
-        <initDeclarator> [ <Comma> <initDeclarator> ]*
+    rule init-declarator-list {
+        <init-declarator> [ <comma> <init-declarator> ]*
     }
 
-    rule initDeclarator {
+    rule init-declarator {
         <declarator> <initializer>?
     }
 
     #--------------------------
     proto rule declarator { * }
-    rule declarator:sym<ptr>    { <pointerDeclarator> }
-    rule declarator:sym<no-ptr> { <noPointerDeclarator> <parametersAndQualifiers> <trailingReturnType> }
+    rule declarator:sym<ptr>    { <pointer-declarator> }
+    rule declarator:sym<no-ptr> { <no-pointer-declarator> <parameters-and-qualifiers> <trailing-return-type> }
 
-    rule pointerDeclarator {
-        [ <pointerOperator> <Const>? ]* <noPointerDeclarator>
+    rule pointer-declarator {
+        [ <pointer-operator> <const>? ]* <no-pointer-declarator>
     }
 
     #------------------------------
-    proto rule noPointerDeclaratorBase { * }
-    rule noPointerDeclaratorBase:sym<base>   { <declaratorid> <attributeSpecifierSeq>? }
-    rule noPointerDeclaratorBase:sym<parens> { <LeftParen> <pointerDeclarator> <RightParen> }
+    proto rule no-pointer-declarator-base { * }
+    rule no-pointer-declarator-base:sym<base>   { <declaratorid> <attribute-specifier-seq>? }
+    rule no-pointer-declarator-base:sym<parens> { <left-paren> <pointer-declarator> <right-paren> }
 
     #------------------------------
-    proto rule noPointerDeclaratorTail { * }
-    rule noPointerDeclaratorTail:sym<basic>     { <parametersAndQualifiers> }
-    rule noPointerDeclaratorTail:sym<bracketed> { <LeftBracket> <constantExpression>?  <RightBracket> <attributeSpecifierSeq>? }
+    proto rule no-pointer-declarator-tail { * }
+    rule no-pointer-declarator-tail:sym<basic>     { <parameters-and-qualifiers> }
+    rule no-pointer-declarator-tail:sym<bracketed> { <left-bracket> <constant-expression>?  <right-bracket> <attribute-specifier-seq>? }
 
     #------------------------------
-    rule noPointerDeclarator {
-        <noPointerDeclaratorBase>
-        <noPointerDeclaratorTail>*
+    rule no-pointer-declarator {
+        <no-pointer-declarator-base>
+        <no-pointer-declarator-tail>*
     }
 
     #------------------------------
-    rule parametersAndQualifiers {
-        <LeftParen>
-        <parameterDeclarationClause>?
-        <RightParen>
+    rule parameters-and-qualifiers {
+        <left-paren>
+        <parameter-declaration-clause>?
+        <right-paren>
         <cvqualifierseq>?
         <refqualifier>?
-        <exceptionSpecification>?
-        <attributeSpecifierSeq>?
+        <exception-specification>?
+        <attribute-specifier-seq>?
     }
 
-    rule trailingReturnType {
-        <Arrow>
-        <trailingTypeSpecifierSeq>
-        <abstractDeclarator>?
+    rule trailing-return-type {
+        <arrow>
+        <trailing-type-specifier-seq>
+        <abstract-declarator>?
     }
 
     #-----------------------------
-    proto rule pointerOperator { * }
+    proto rule pointer-operator { * }
 
-    rule pointerOperator:sym<ref> {
-        <And>
-        <attributeSpecifierSeq>?
+    rule pointer-operator:sym<ref> {
+        <and_>
+        <attribute-specifier-seq>?
     }
 
-    rule pointerOperator:sym<ref-ref> {
-        <AndAnd>
-        <attributeSpecifierSeq>?
+    rule pointer-operator:sym<ref-ref> {
+        <and-and>
+        <attribute-specifier-seq>?
     }
 
-    rule pointerOperator:sym<star> {
-        <nestedNameSpecifier>?
-        <Star>
-        <attributeSpecifierSeq>?
+    rule pointer-operator:sym<star> {
+        <nested-name-specifier>?
+        <star>
+        <attribute-specifier-seq>?
         <cvqualifierseq>?
     }
 
     rule cvqualifierseq {
-        <cvQualifier>+
+        <cv-qualifier>+
     }
 
     #-----------------------------
-    proto rule cvQualifier { * }
-    rule cvQualifier:sym<const>    { <Const> }
-    rule cvQualifier:sym<volatile> { <Volatile> }
+    proto rule cv-qualifier { * }
+    rule cv-qualifier:sym<const>    { <const> }
+    rule cv-qualifier:sym<volatile> { <volatile> }
 
     #-----------------------------
     proto rule refqualifier { * }
-    rule refqualifier:sym<and>     { <And> }
-    rule refqualifier:sym<and-and> { <AndAnd> }
+    rule refqualifier:sym<and>     { <and_> }
+    rule refqualifier:sym<and-and> { <and-and> }
 
     #-----------------------------
     rule declaratorid {
-        <Ellipsis>?  <idExpression>
+        <ellipsis>?  <id-expression>
     }
 
-    rule theTypeId {
-        <typeSpecifierSeq> <abstractDeclarator>?
-    }
-
-    #-----------------------------
-    proto rule abstractDeclarator { * }
-
-    rule abstractDeclarator:sym<base> {
-        <pointerAbstractDeclarator>
-    }
-
-    rule abstractDeclarator:sym<aug> {
-        <noPointerAbstractDeclarator>? <parametersAndQualifiers> <trailingReturnType>
-    }
-
-    rule abstractDeclarator:sym<abstract-pack> {
-        <abstractPackDeclarator>
+    rule the-type-id {
+        <type-specifier-seq> <abstract-declarator>?
     }
 
     #-----------------------------
-    proto rule pointerAbstractDeclarator { * }
-    rule pointerAbstractDeclarator:sym<no-ptr> { <noPointerAbstractDeclarator> }
-    rule pointerAbstractDeclarator:sym<ptr>    { <pointerOperator>+ <noPointerAbstractDeclarator>? }
+    proto rule abstract-declarator { * }
 
-    #-----------------------------
-    proto rule noPointerAbstractDeclaratorBody { * }
-
-    rule noPointerAbstractDeclaratorBody:sym<base> {
-        <parametersAndQualifiers>
+    rule abstract-declarator:sym<base> {
+        <pointer-abstract-declarator>
     }
 
-    rule noPointerAbstractDeclaratorBody:sym<brack> {
-        <noPointerAbstractDeclarator> <noPointerAbstractDeclaratorBracketedBase>
+    rule abstract-declarator:sym<aug> {
+        <no-pointer-abstract-declarator>? <parameters-and-qualifiers> <trailing-return-type>
     }
 
-    rule noPointerAbstractDeclarator {
-        <noPointerAbstractDeclaratorBase>
-        <noPointerAbstractDeclaratorBody>*
+    rule abstract-declarator:sym<abstract-pack> {
+        <abstract-pack-declarator>
     }
 
     #-----------------------------
-    proto rule noPointerAbstractDeclaratorBase { * }
-    rule noPointerAbstractDeclaratorBase:sym<basic>         { <parametersAndQualifiers> }
-    rule noPointerAbstractDeclaratorBase:sym<bracketed>     { <noPointerAbstractDeclaratorBracketedBase> }
-    rule noPointerAbstractDeclaratorBase:sym<parenthesized> { <LeftParen> <pointerAbstractDeclarator> <RightParen> }
+    proto rule pointer-abstract-declarator { * }
+    rule pointer-abstract-declarator:sym<no-ptr> { <no-pointer-abstract-declarator> }
+    rule pointer-abstract-declarator:sym<ptr>    { <pointer-operator>+ <no-pointer-abstract-declarator>? }
 
-    rule noPointerAbstractDeclaratorBracketedBase {
-        <LeftBracket> <constantExpression>?  <RightBracket> <attributeSpecifierSeq>?
+    #-----------------------------
+    proto rule no-pointer-abstract-declarator-body { * }
+
+    rule no-pointer-abstract-declarator-body:sym<base> {
+        <parameters-and-qualifiers>
     }
 
-    rule abstractPackDeclarator {
-        <pointerOperator>* 
-        <noPointerAbstractPackDeclarator>
+    rule no-pointer-abstract-declarator-body:sym<brack> {
+        <no-pointer-abstract-declarator> <no-pointer-abstract-declarator-bracketed-base>
+    }
+
+    rule no-pointer-abstract-declarator {
+        <no-pointer-abstract-declarator-base>
+        <no-pointer-abstract-declarator-body>*
     }
 
     #-----------------------------
-    rule noPointerAbstractPackDeclaratorBasic {
-        <parametersAndQualifiers>
+    proto rule no-pointer-abstract-declarator-base { * }
+    rule no-pointer-abstract-declarator-base:sym<basic>         { <parameters-and-qualifiers> }
+    rule no-pointer-abstract-declarator-base:sym<bracketed>     { <no-pointer-abstract-declarator-bracketed-base> }
+    rule no-pointer-abstract-declarator-base:sym<parenthesized> { <left-paren> <pointer-abstract-declarator> <right-paren> }
+
+    rule no-pointer-abstract-declarator-bracketed-base {
+        <left-bracket> <constant-expression>?  <right-bracket> <attribute-specifier-seq>?
     }
 
-    rule noPointerAbstractPackDeclaratorBrackets {
-        <LeftBracket> 
-        <constantExpression>?  
-        <RightBracket> 
-        <attributeSpecifierSeq>?
-    }
-
-    #-----------------------------
-    proto rule noPointerAbstractPackDeclaratorBody { * }
-    rule noPointerAbstractPackDeclaratorBody:sym<basic> { <noPointerAbstractPackDeclaratorBasic> }
-    rule noPointerAbstractPackDeclaratorBody:sym<brack> { <noPointerAbstractPackDeclaratorBrackets> }
-
-    #-----------------------------
-    rule noPointerAbstractPackDeclarator {
-        <Ellipsis>
-        <noPointerAbstractPackDeclaratorBody>*
-    }
-
-    rule parameterDeclarationClause {
-        <parameterDeclarationList> [ <Comma>? <Ellipsis> ]?
-    }
-
-    rule parameterDeclarationList {
-        <parameterDeclaration> [ <Comma> <parameterDeclaration> ]*
+    rule abstract-pack-declarator {
+        <pointer-operator>* 
+        <no-pointer-abstract-pack-declarator>
     }
 
     #-----------------------------
-    proto rule parameterDeclarationBody { * }
-    rule parameterDeclarationBody:sym<decl> { <declarator> }
-    rule parameterDeclarationBody:sym<abst> { <abstractDeclarator>? }
-
-    rule parameterDeclaration {
-        <attributeSpecifierSeq>?
-        <declSpecifierSeq>
-        <parameterDeclarationBody>
-        [ <Assign> <initializerClause> ]?
+    rule no-pointer-abstract-pack-declarator-basic {
+        <parameters-and-qualifiers>
     }
 
-    rule functionDefinition {
-        <attributeSpecifierSeq>?
-        <declSpecifierSeq>?
+    rule no-pointer-abstract-pack-declarator-brackets {
+        <left-bracket> 
+        <constant-expression>?  
+        <right-bracket> 
+        <attribute-specifier-seq>?
+    }
+
+    #-----------------------------
+    proto rule no-pointer-abstract-pack-declarator-body { * }
+    rule no-pointer-abstract-pack-declarator-body:sym<basic> { <no-pointer-abstract-pack-declarator-basic> }
+    rule no-pointer-abstract-pack-declarator-body:sym<brack> { <no-pointer-abstract-pack-declarator-brackets> }
+
+    #-----------------------------
+    rule no-pointer-abstract-pack-declarator {
+        <ellipsis>
+        <no-pointer-abstract-pack-declarator-body>*
+    }
+
+    rule parameter-declaration-clause {
+        <parameter-declaration-list> [ <comma>? <ellipsis> ]?
+    }
+
+    rule parameter-declaration-list {
+        <parameter-declaration> [ <comma> <parameter-declaration> ]*
+    }
+
+    #-----------------------------
+    proto rule parameter-declaration-body { * }
+    rule parameter-declaration-body:sym<decl> { <declarator> }
+    rule parameter-declaration-body:sym<abst> { <abstract-declarator>? }
+
+    rule parameter-declaration {
+        <attribute-specifier-seq>?
+        <decl-specifier-seq>
+        <parameter-declaration-body>
+        [ <assign> <initializer-clause> ]?
+    }
+
+    rule function-definition {
+        <attribute-specifier-seq>?
+        <decl-specifier-seq>?
         <declarator>
-        <virtualSpecifierSeq>?
-        <functionBody>
+        <virtual-specifier-seq>?
+        <function-body>
     }
 
     #-----------------------------
-    proto rule functionBody { * }
+    proto rule function-body { * }
 
-    rule functionBody:sym<compound> {
-        <constructorInitializer>?  <compoundStatement>
+    rule function-body:sym<compound> {
+        <constructor-initializer>?  <compound-statement>
     }
 
-    rule functionBody:sym<try> {
-        <functionTryBlock>
+    rule function-body:sym<try> {
+        <function-try-block>
     }
 
-    rule functionBody:sym<assign-default> {
-        <Assign> <Default> <Semi>
+    rule function-body:sym<assign-default> {
+        <assign> <default_> <semi>
     }
 
-    rule functionBody:sym<assign-delete> {
-        <Assign> <Delete> <Semi>
+    rule function-body:sym<assign-delete> {
+        <assign> <delete> <semi>
     }
 
     #-----------------------------
     proto rule initializer { * }
 
     rule initializer:sym<brace-or-eq> {
-        <braceOrEqualInitializer>
+        <brace-or-equal-initializer>
     }
 
     rule initializer:sym<paren-expr-list> {
-        <LeftParen> <expressionList> <RightParen>
+        <left-paren> <expression-list> <right-paren>
     }
 
     #-----------------------------
-    proto rule braceOrEqualInitializer { * }
-    rule braceOrEqualInitializer:sym<assign-init>      { <Assign> <initializerClause> }
-    rule braceOrEqualInitializer:sym<braced-init-list> { <bracedInitList> }
+    proto rule brace-or-equal-initializer { * }
+    rule brace-or-equal-initializer:sym<assign-init>      { <assign> <initializer-clause> }
+    rule brace-or-equal-initializer:sym<braced-init-list> { <braced-init-list> }
 
     #-----------------------------
-    proto rule initializerClause { * }
+    proto rule initializer-clause { * }
 
-    rule initializerClause:sym<assignment> {
+    rule initializer-clause:sym<assignment> {
         <comment>?
-        <assignmentExpression>
+        <assignment-expression>
     }
 
-    rule initializerClause:sym<braced> {
+    rule initializer-clause:sym<braced> {
         <comment>?
-        <bracedInitList>
+        <braced-init-list>
     }
 
     #-----------------------------
-    rule initializerList {
-        <initializerClause>
-        <Ellipsis>?
-        [ <Comma> <initializerClause> <Ellipsis>? ]*
+    rule initializer-list {
+        <initializer-clause>
+        <ellipsis>?
+        [ <comma> <initializer-clause> <ellipsis>? ]*
     }
 
-    rule bracedInitList {
-        <LeftBrace> [ <initializerList> <Comma>? ]?  <RightBrace>
-    }
-
-    #-----------------------------
-    proto rule className { * }
-    rule className:sym<id>          { <Identifier> }
-    rule className:sym<template-id> { <simpleTemplateId> }
-
-    rule classSpecifier {
-        <classHead>
-        <LeftBrace>
-        <memberSpecification>?
-        <RightBrace>
+    rule braced-init-list {
+        <left-brace> [ <initializer-list> <comma>? ]?  <right-brace>
     }
 
     #-----------------------------
-    proto rule classHead { * }
+    proto rule class-name { * }
+    rule class-name:sym<id>          { <identifier> }
+    rule class-name:sym<template-id> { <simple-template-id> }
 
-    rule classHead:sym<class> {
-        <classKey>
-        <attributeSpecifierSeq>?
-        [ <classHeadName> <classVirtSpecifier>? ]?
-        <baseClause>?
-    }
-
-    rule classHead:sym<union> {
-        <Union>
-        <attributeSpecifierSeq>?
-        [ <classHeadName> <classVirtSpecifier>? ]?
+    rule class-specifier {
+        <class-head>
+        <left-brace>
+        <member-specification>?
+        <right-brace>
     }
 
     #-----------------------------
-    rule classHeadName {
-        <nestedNameSpecifier>?  <className>
+    proto rule class-head { * }
+
+    rule class-head:sym<class> {
+        <class-key>
+        <attribute-specifier-seq>?
+        [ <class-head-name> <class-virt-specifier>? ]?
+        <base-clause>?
     }
 
-    rule classVirtSpecifier {
-        <Final>
+    rule class-head:sym<union> {
+        <union>
+        <attribute-specifier-seq>?
+        [ <class-head-name> <class-virt-specifier>? ]?
     }
 
     #-----------------------------
-    proto rule classKey { * }
-    rule classKey:sym<class>  { <Class_> }
-    rule classKey:sym<struct> { <Struct> }
+    rule class-head-name {
+        <nested-name-specifier>?  <class-name>
+    }
+
+    rule class-virt-specifier {
+        <final>
+    }
 
     #-----------------------------
-    proto rule memberSpecificationBase { * }
-    rule memberSpecificationBase:sym<decl>   { <memberdeclaration> }
-    rule memberSpecificationBase:sym<access> { <accessSpecifier> <Colon> }
+    proto rule class-key { * }
+    rule class-key:sym<class>  { <class_> }
+    rule class-key:sym<struct> { <struct> }
 
-    rule memberSpecification {
-        <memberSpecificationBase>+
+    #-----------------------------
+    proto rule member-specification-base { * }
+    rule member-specification-base:sym<decl>   { <memberdeclaration> }
+    rule member-specification-base:sym<access> { <access-specifier> <colon> }
+
+    rule member-specification {
+        <member-specification-base>+
     }
 
     #-----------------------------
     proto rule memberdeclaration { * }
 
     rule memberdeclaration:sym<basic> {
-        <attributeSpecifierSeq>?  
-        <declSpecifierSeq>?  
-        <memberDeclaratorList>?  
-        <Semi>
+        <attribute-specifier-seq>?  
+        <decl-specifier-seq>?  
+        <member-declarator-list>?  
+        <semi>
     }
 
-    rule memberdeclaration:sym<func>          { <functionDefinition> }
-    rule memberdeclaration:sym<using>         { <usingDeclaration> }
-    rule memberdeclaration:sym<static-assert> { <staticAssertDeclaration> }
-    rule memberdeclaration:sym<template>      { <templateDeclaration> }
-    rule memberdeclaration:sym<alias>         { <aliasDeclaration> }
-    rule memberdeclaration:sym<empty>         { <emptyDeclaration> }
+    rule memberdeclaration:sym<func>          { <function-definition> }
+    rule memberdeclaration:sym<using>         { <using-declaration> }
+    rule memberdeclaration:sym<static-assert> { <static-assert-declaration> }
+    rule memberdeclaration:sym<template>      { <template-declaration> }
+    rule memberdeclaration:sym<alias>         { <alias-declaration> }
+    rule memberdeclaration:sym<empty>         { <empty-declaration> }
 
     #-----------------------------
-    rule memberDeclaratorList {
-        <memberDeclarator> [ <Comma> <memberDeclarator> ]*
+    rule member-declarator-list {
+        <member-declarator> [ <comma> <member-declarator> ]*
     }
 
     #-----------------------------
-    proto rule memberDeclarator { * }
+    proto rule member-declarator { * }
 
-    rule memberDeclarator:sym<virt> {
+    rule member-declarator:sym<virt> {
         <declarator>
-        <virtualSpecifierSeq>? 
-        <pureSpecifier>?
+        <virtual-specifier-seq>? 
+        <pure-specifier>?
     }
 
-    rule memberDeclarator:sym<brace-or-eq> {
+    rule member-declarator:sym<brace-or-eq> {
         <declarator>
-        <braceOrEqualInitializer>?
+        <brace-or-equal-initializer>?
     }
 
-    rule memberDeclarator:sym<ident> {
-        <Identifier>?
-        <attributeSpecifierSeq>?
-        <Colon>
-        <constantExpression>
-    }
-
-    #-----------------------------
-    rule virtualSpecifierSeq {
-        <virtualSpecifier>+
+    rule member-declarator:sym<ident> {
+        <identifier>?
+        <attribute-specifier-seq>?
+        <colon>
+        <constant-expression>
     }
 
     #-----------------------------
-    proto rule virtualSpecifier { * }
-    rule virtualSpecifier:sym<override> { <Override> }
-    rule virtualSpecifier:sym<final>    { <Final> }
+    rule virtual-specifier-seq {
+        <virtual-specifier>+
+    }
 
     #-----------------------------
-    rule pureSpecifier {
-        <Assign>
-        <val=OctalLiteral>
+    proto rule virtual-specifier { * }
+    rule virtual-specifier:sym<override> { <override> }
+    rule virtual-specifier:sym<final>    { <final> }
+
+    #-----------------------------
+    rule pure-specifier {
+        <assign>
+        <val=octal-literal>
         #|{if($val.text.compareTo("0")!=0) throw new InputMismatchException(this); }
     }
 
-    rule baseClause {
-        <Colon> <baseSpecifierList>
+    rule base-clause {
+        <colon> <base-specifier-list>
     }
 
-    rule baseSpecifierList {
-        <baseSpecifier> <Ellipsis>?  [ <Comma> <baseSpecifier> <Ellipsis>?  ]*
-    }
-
-    #-----------------------------
-    proto rule baseSpecifier { * }
-
-    rule baseSpecifier:sym<base-type> {
-        <attributeSpecifierSeq>?
-        <baseTypeSpecifier>
-    }
-
-    rule baseSpecifier:sym<virtual> {
-        <attributeSpecifierSeq>?
-        <Virtual> 
-        <accessSpecifier>? 
-        <baseTypeSpecifier>
-    }
-
-    rule baseSpecifier:sym<access> {
-        <attributeSpecifierSeq>?
-        <accessSpecifier> 
-        <Virtual>? 
-        <baseTypeSpecifier>
+    rule base-specifier-list {
+        <base-specifier> <ellipsis>?  [ <comma> <base-specifier> <ellipsis>?  ]*
     }
 
     #-----------------------------
-    proto rule classOrDeclType { * }
-    rule classOrDeclType:sym<class>    { <nestedNameSpecifier>?  <className> }
-    rule classOrDeclType:sym<decltype> { <decltypeSpecifier> }
+    proto rule base-specifier { * }
 
-    #-----------------------------
-    rule baseTypeSpecifier {
-        <classOrDeclType>
+    rule base-specifier:sym<base-type> {
+        <attribute-specifier-seq>?
+        <base-type-specifier>
     }
 
-    proto rule accessSpecifier { * }
-    rule accessSpecifier:sym<private>   { <Private> }
-    rule accessSpecifier:sym<protected> { <Protected> }
-    rule accessSpecifier:sym<public>    { <Public> }
-
-    rule conversionFunctionId {
-        <Operator> <conversionTypeId>
+    rule base-specifier:sym<virtual> {
+        <attribute-specifier-seq>?
+        <virtual> 
+        <access-specifier>? 
+        <base-type-specifier>
     }
 
-    rule conversionTypeId {
-        <typeSpecifierSeq> <conversionDeclarator>?
-    }
-
-    rule conversionDeclarator {
-        <pointerOperator> <conversionDeclarator>?
-    }
-
-    rule constructorInitializer {
-        <Colon> <memInitializerList>
-    }
-
-    rule memInitializerList {
-        <memInitializer>
-        <Ellipsis>?
-        [ <Comma> <memInitializer> <Ellipsis>? ]*
+    rule base-specifier:sym<access> {
+        <attribute-specifier-seq>?
+        <access-specifier> 
+        <virtual>? 
+        <base-type-specifier>
     }
 
     #-----------------------------
-    proto rule memInitializer { * }
+    proto rule class-or-decl-type { * }
+    rule class-or-decl-type:sym<class>    { <nested-name-specifier>?  <class-name> }
+    rule class-or-decl-type:sym<decltype> { <decltype-specifier> }
 
-    rule memInitializer:sym<expr-list> {
+    #-----------------------------
+    rule base-type-specifier {
+        <class-or-decl-type>
+    }
+
+    proto rule access-specifier { * }
+    rule access-specifier:sym<private>   { <private> }
+    rule access-specifier:sym<protected> { <protected> }
+    rule access-specifier:sym<public>    { <public> }
+
+    rule conversion-function-id {
+        <operator> <conversion-type-id>
+    }
+
+    rule conversion-type-id {
+        <type-specifier-seq> <conversion-declarator>?
+    }
+
+    rule conversion-declarator {
+        <pointer-operator> <conversion-declarator>?
+    }
+
+    rule constructor-initializer {
+        <colon> <mem-initializer-list>
+    }
+
+    rule mem-initializer-list {
+        <mem-initializer>
+        <ellipsis>?
+        [ <comma> <mem-initializer> <ellipsis>? ]*
+    }
+
+    #-----------------------------
+    proto rule mem-initializer { * }
+
+    rule mem-initializer:sym<expr-list> {
         <meminitializerid>
-        <LeftParen> 
-        <expressionList>?  
-        <RightParen>
+        <left-paren> 
+        <expression-list>?  
+        <right-paren>
     }
 
-    rule memInitializer:sym<braced> {
+    rule mem-initializer:sym<braced> {
         <meminitializerid>
-        <bracedInitList>
+        <braced-init-list>
     }
 
     #-----------------------------
     proto rule meminitializerid { * }
-    rule meminitializerid:sym<class-or-decl> { <classOrDeclType> }
-    rule meminitializerid:sym<ident>         { <Identifier> }
+    rule meminitializerid:sym<class-or-decl> { <class-or-decl-type> }
+    rule meminitializerid:sym<ident>         { <identifier> }
 
-    rule operatorFunctionId {
-        <Operator> <theOperator>
+    rule operator-function-id {
+        <operator> <the-operator>
     }
 
     #-----------------------------
-    proto rule literalOperatorId { * }
+    proto rule literal-operator-id { * }
 
-    rule literalOperatorId:sym<string-lit> {
-        <Operator>
-        <StringLiteral> 
-        <Identifier>
+    rule literal-operator-id:sym<string-lit> {
+        <operator>
+        <string-literal> 
+        <identifier>
     }
 
-    rule literalOperatorId:sym<user-defined> {
-        <Operator>
-        <UserDefinedStringLiteral>
+    rule literal-operator-id:sym<user-defined> {
+        <operator>
+        <user-defined-string-literal>
     }
 
     #-----------------------------
-    rule templateDeclaration {
-        <Template>
-        <Less>
-        <templateparameterList>
-        <Greater>
+    rule template-declaration {
+        <template>
+        <less>
+        <templateparameter-list>
+        <greater>
         <declaration>
     }
 
-    rule templateparameterList {
-        <templateParameter>
-        [ <Comma> <templateParameter> ]*
+    rule templateparameter-list {
+        <template-parameter>
+        [ <comma> <template-parameter> ]*
     }
 
     #-----------------------------
-    proto rule templateParameter { * }
-    rule templateParameter:sym<type>  { <typeParameter> }
-    rule templateParameter:sym<param> { <parameterDeclaration> }
+    proto rule template-parameter { * }
+    rule template-parameter:sym<type>  { <type-parameter> }
+    rule template-parameter:sym<param> { <parameter-declaration> }
 
     #-----------------------------
-    proto rule typeParameterBase { * }
+    proto rule type-parameter-base { * }
 
-    rule typeParameterBase:sym<basic> {
-       [ <Template> <Less> <templateparameterList> <Greater> ]? 
-       <Class_>
+    rule type-parameter-base:sym<basic> {
+       [ <template> <less> <templateparameter-list> <greater> ]? 
+       <class_>
     }
 
-    rule typeParameterBase:sym<typename> {
-       <Typename_>
-    }
-
-    #-----------------------------
-    proto rule typeParameterSuffix { * }
-    rule typeParameterSuffix:sym<maybe-ident>    { <Ellipsis>? <Identifier>? }
-    rule typeParameterSuffix:sym<assign-type-id> { <Identifier>? <Assign> <theTypeId> }
-
-    #-----------------------------
-    rule typeParameter {
-        <typeParameterBase>
-        <typeParameterSuffix>
-    }
-
-    rule simpleTemplateId {
-        <templateName>
-        <Less>
-        <templateArgumentList>?
-        <Greater>
+    rule type-parameter-base:sym<typename> {
+       <typename_>
     }
 
     #-----------------------------
-    proto rule templateId { * }
+    proto rule type-parameter-suffix { * }
+    rule type-parameter-suffix:sym<maybe-ident>    { <ellipsis>? <identifier>? }
+    rule type-parameter-suffix:sym<assign-type-id> { <identifier>? <assign> <the-type-id> }
 
-    rule templateId:sym<simple> {
-        <simpleTemplateId>
+    #-----------------------------
+    rule type-parameter {
+        <type-parameter-base>
+        <type-parameter-suffix>
     }
 
-    rule templateId:sym<operator-function-id> {
-        <operatorFunctionId>
-        <Less>
-        <templateArgumentList>?
-        <Greater>
-    }
-
-    rule templateId:sym<literal-operator-id> {
-        <literalOperatorId>
-        <Less>
-        <templateArgumentList>?
-        <Greater>
+    rule simple-template-id {
+        <template-name>
+        <less>
+        <template-argument-list>?
+        <greater>
     }
 
     #-----------------------------
-    token templateName {
-        <Identifier>
+    proto rule template-id { * }
+
+    rule template-id:sym<simple> {
+        <simple-template-id>
     }
 
-    rule templateArgumentList {
-        <templateArgument> 
-        <Ellipsis>? 
-        [ <Comma> <templateArgument> <Ellipsis>? ]*
+    rule template-id:sym<operator-function-id> {
+        <operator-function-id>
+        <less>
+        <template-argument-list>?
+        <greater>
+    }
+
+    rule template-id:sym<literal-operator-id> {
+        <literal-operator-id>
+        <less>
+        <template-argument-list>?
+        <greater>
+    }
+
+    #-----------------------------
+    token template-name {
+        <identifier>
+    }
+
+    rule template-argument-list {
+        <template-argument> 
+        <ellipsis>? 
+        [ <comma> <template-argument> <ellipsis>? ]*
     }
 
     #---------------------
-    proto token templateArgument { * }
-    token templateArgument:sym<type-id>    { <theTypeId> }
-    token templateArgument:sym<const-expr> { <constantExpression> }
-    token templateArgument:sym<id-expr>    { <idExpression> }
+    proto token template-argument { * }
+    token template-argument:sym<type-id>    { <the-type-id> }
+    token template-argument:sym<const-expr> { <constant-expression> }
+    token template-argument:sym<id-expr>    { <id-expression> }
 
     #---------------------
-    proto rule typeNameSpecifier { * }
+    proto rule type-name-specifier { * }
 
-    rule typeNameSpecifier:sym<ident> {
-        <Typename_>
-        <nestedNameSpecifier>
-        <Identifier>
+    rule type-name-specifier:sym<ident> {
+        <typename_>
+        <nested-name-specifier>
+        <identifier>
     }
 
-    rule typeNameSpecifier:sym<template> {
-        <Typename_>
-        <nestedNameSpecifier>
-        <Template>?  
-        <simpleTemplateId>
+    rule type-name-specifier:sym<template> {
+        <typename_>
+        <nested-name-specifier>
+        <template>?  
+        <simple-template-id>
     }
 
     #---------------------
-    rule explicitInstantiation {
-        <Extern>?
-        <Template>
+    rule explicit-instantiation {
+        <extern>?
+        <template>
         <declaration>
     }
 
-    rule explicitSpecialization {
-        <Template>
-        <Less>
-        <Greater>
+    rule explicit-specialization {
+        <template>
+        <less>
+        <greater>
         <declaration>
     }
 
-    rule tryBlock {
-        <Try>
-        <compoundStatement>
-        <handlerSeq>
+    rule try-block {
+        <try_>
+        <compound-statement>
+        <handler-seq>
     }
 
-    rule functionTryBlock {
-        <Try>
-        <constructorInitializer>?
-        <compoundStatement>
-        <handlerSeq>
+    rule function-try-block {
+        <try_>
+        <constructor-initializer>?
+        <compound-statement>
+        <handler-seq>
     }
 
-    rule handlerSeq {
+    rule handler-seq {
         <handler>+
     }
 
     rule handler {
-        <Catch>
-        <LeftParen>
-        <exceptionDeclaration>
-        <RightParen>
-        <compoundStatement>
+        <catch>
+        <left-paren>
+        <exception-declaration>
+        <right-paren>
+        <compound-statement>
     }
 
     proto rule some-declarator { * }
     rule some-declarator:sym<basic>    { <declarator> }
-    rule some-declarator:sym<abstract> { <abstractDeclarator> }
+    rule some-declarator:sym<abstract> { <abstract-declarator> }
 
     #---------------------
-    proto rule exceptionDeclaration { * }
+    proto rule exception-declaration { * }
 
-    rule exceptionDeclaration:sym<basic> {
-        <attributeSpecifierSeq>?
-        <typeSpecifierSeq>
+    rule exception-declaration:sym<basic> {
+        <attribute-specifier-seq>?
+        <type-specifier-seq>
         <some-declarator>?
     }
 
-    rule exceptionDeclaration:sym<ellipsis> {
-        <Ellipsis>
+    rule exception-declaration:sym<ellipsis> {
+        <ellipsis>
     }
 
-    rule throwExpression {
-        <Throw> <assignmentExpression>?
-    }
-
-    #---------------------
-    proto token exceptionSpecification { * }
-    token exceptionSpecification:sym<dynamic>  { <dynamicExceptionSpecification> }
-    token exceptionSpecification:sym<noexcept> { <noeExceptSpecification> }
-
-    #---------------------
-    rule dynamicExceptionSpecification {
-        <Throw> <LeftParen> <typeIdList>?  <RightParen>
-    }
-
-    rule typeIdList {
-         <theTypeId> <Ellipsis>? [ <Comma> <theTypeId> <Ellipsis>? ]*
+    rule throw-expression {
+        <throw> <assignment-expression>?
     }
 
     #---------------------
-    proto token noeExceptSpecification { * }
-    token noeExceptSpecification:sym<full>         { <Noexcept> <LeftParen> <constantExpression> <RightParen> }
-    token noeExceptSpecification:sym<keyword-only> { <Noexcept> }
+    proto token exception-specification { * }
+    token exception-specification:sym<dynamic>  { <dynamic-exception-specification> }
+    token exception-specification:sym<noexcept> { <noe-except-specification> }
 
     #---------------------
-    proto token theOperator { * }
-    token theOperator:sym<New>              { <New> [ <LeftBracket> <RightBracket>]?    } 
-    token theOperator:sym<Delete>           { <Delete> [ <LeftBracket> <RightBracket>]? } 
-    token theOperator:sym<Plus>             { <Plus>                                    } 
-    token theOperator:sym<Minus>            { <Minus>                                   } 
-    token theOperator:sym<Star>             { <Star>                                    } 
-    token theOperator:sym<Div>              { <Div>                                     } 
-    token theOperator:sym<Mod>              { <Mod>                                     } 
-    token theOperator:sym<Caret>            { <Caret>                                   } 
-    token theOperator:sym<And>              { <And>    <!before <And>>                  } 
-    token theOperator:sym<Or>               { <Or>                                      } 
-    token theOperator:sym<Tilde>            { <Tilde>                                   } 
-    token theOperator:sym<Not>              { <Not>                                     } 
-    token theOperator:sym<Assign>           { <Assign>                                  } 
-    token theOperator:sym<Greater>          { <Greater>                                 } 
-    token theOperator:sym<Less>             { <Less>                                    } 
-    token theOperator:sym<GreaterEqual>     { <GreaterEqual>                            } 
-    token theOperator:sym<PlusAssign>       { <PlusAssign>                              } 
-    token theOperator:sym<MinusAssign>      { <MinusAssign>                             } 
-    token theOperator:sym<StarAssign>       { <StarAssign>                              } 
-    token theOperator:sym<ModAssign>        { <ModAssign>                               } 
-    token theOperator:sym<XorAssign>        { <XorAssign>                               } 
-    token theOperator:sym<AndAssign>        { <AndAssign>                               } 
-    token theOperator:sym<OrAssign>         { <OrAssign>                                } 
-    token theOperator:sym<LessLess>         { <Less> <Less>                             } 
-    token theOperator:sym<GreaterGreater>   { <Greater> <Greater>                       } 
-    token theOperator:sym<RightShiftAssign> { <RightShiftAssign>                        } 
-    token theOperator:sym<LeftShiftAssign>  { <LeftShiftAssign>                         } 
-    token theOperator:sym<Equal>            { <Equal>                                   } 
-    token theOperator:sym<NotEqual>         { <NotEqual>                                } 
-    token theOperator:sym<LessEqual>        { <LessEqual>                               } 
-    token theOperator:sym<AndAnd>           { <AndAnd>                                  } 
-    token theOperator:sym<OrOr>             { <OrOr>                                    } 
-    token theOperator:sym<PlusPlus>         { <PlusPlus>                                } 
-    token theOperator:sym<MinusMinus>       { <MinusMinus>                              } 
-    token theOperator:sym<Comma>            { <Comma>                                   } 
-    token theOperator:sym<ArrowStar>        { <ArrowStar>                               } 
-    token theOperator:sym<Arrow>            { <Arrow>                                   } 
-    token theOperator:sym<Parens>           { <LeftParen> <RightParen>                  } 
-    token theOperator:sym<Brak>             { <LeftBracket> <RightBracket>              } 
+    rule dynamic-exception-specification {
+        <throw> <left-paren> <type-id-list>?  <right-paren>
+    }
+
+    rule type-id-list {
+         <the-type-id> <ellipsis>? [ <comma> <the-type-id> <ellipsis>? ]*
+    }
+
+    #---------------------
+    proto token noe-except-specification { * }
+    token noe-except-specification:sym<full>         { <noexcept> <left-paren> <constant-expression> <right-paren> }
+    token noe-except-specification:sym<keyword-only> { <noexcept> }
+
+    #---------------------
+    proto token the-operator   { * }
+    token the-operator:sym<new>                { <new_> [ <left-bracket> <right-bracket>]?    } 
+    token the-operator:sym<delete>             { <delete> [ <left-bracket> <right-bracket>]? } 
+    token the-operator:sym<plus>               { <plus>                                    } 
+    token the-operator:sym<minus>              { <minus>                                   } 
+    token the-operator:sym<star>               { <star>                                    } 
+    token the-operator:sym<div_>               { <div_>                                     } 
+    token the-operator:sym<mod_>               { <mod_>                                     } 
+    token the-operator:sym<caret>              { <caret>                                   } 
+    token the-operator:sym<and_>               { <and_>    <!before <and_>>                  } 
+    token the-operator:sym<or_>                { <or_>                                      } 
+    token the-operator:sym<tilde>              { <tilde>                                   } 
+    token the-operator:sym<not>                { <not_>                                     } 
+    token the-operator:sym<assign>             { <assign>                                  } 
+    token the-operator:sym<greater>            { <greater>                                 } 
+    token the-operator:sym<less>               { <less>                                    } 
+    token the-operator:sym<greater-equal>      { <greater-equal>                            } 
+    token the-operator:sym<plus-assign>        { <plus-assign>                              } 
+    token the-operator:sym<minus-assign>       { <minus-assign>                             } 
+    token the-operator:sym<star-assign>        { <star-assign>                              } 
+    token the-operator:sym<mod-assign>         { <mod-assign>                               } 
+    token the-operator:sym<xor-assign>         { <xor-assign>                               } 
+    token the-operator:sym<and-assign>         { <and-assign>                               } 
+    token the-operator:sym<or-assign>          { <or-assign>                                } 
+    token the-operator:sym<LessLess>           { <less> <less>                             } 
+    token the-operator:sym<GreaterGreater>     { <greater> <greater>                       } 
+    token the-operator:sym<right-shift-assign> { <right-shift-assign>                        } 
+    token the-operator:sym<left-shift-assign>  { <left-shift-assign>                         } 
+    token the-operator:sym<equal>              { <equal>                                   } 
+    token the-operator:sym<not-equal>          { <not-equal>                                } 
+    token the-operator:sym<less-equal>         { <less-equal>                               } 
+    token the-operator:sym<and-and>            { <and-and>                                  } 
+    token the-operator:sym<or-or>              { <or-or>                                    } 
+    token the-operator:sym<plus-plus>          { <plus-plus>                                } 
+    token the-operator:sym<minus-minus>        { <minus-minus>                              } 
+    token the-operator:sym<comma>              { <comma>                                   } 
+    token the-operator:sym<arrow-star>         { <arrow-star>                               } 
+    token the-operator:sym<arrow>              { <arrow>                                   } 
+    token the-operator:sym<Parens>             { <left-paren> <right-paren>                  } 
+    token the-operator:sym<Brak>               { <left-bracket> <right-bracket>              } 
 
     proto token literal { * }
-    token literal:sym<int>                  { <IntegerLiteral> }
-    token literal:sym<char>                 { <CharacterLiteral> }
-    token literal:sym<float>                { <FloatingLiteral> }
+    token literal:sym<int>                  { <integer-literal> }
+    token literal:sym<char>                 { <character-literal> }
+    token literal:sym<float>                { <floating-literal> }
 
     #Note: are we allowed to have many strings in a row?
-    token literal:sym<str>                  { <StringLiteral> } 
+    token literal:sym<str>                  { <string-literal> } 
 
-    token literal:sym<bool>                 { <BooleanLiteral> }
-    token literal:sym<ptr>                  { <PointerLiteral> }
-    token literal:sym<user-defined>         { <UserDefinedLiteral> }
+    token literal:sym<bool>                 { <boolean-literal> }
+    token literal:sym<ptr>                  { <pointer-literal> }
+    token literal:sym<user-defined>         { <user-defined-literal> }
 }
