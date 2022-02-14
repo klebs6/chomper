@@ -1248,21 +1248,21 @@ our role CPP14Parser does CPP14Lexer {
 
     #------------------------------
     proto regex simpleTypeSpecifier { * }
-    regex simpleTypeSpecifier:sym<int>                   { <simple-int-type-specifier> }
-    regex simpleTypeSpecifier:sym<full>                  { <full-type-name> }
-    regex simpleTypeSpecifier:sym<scoped>                { <scoped-template-id> }
-    regex simpleTypeSpecifier:sym<signedness-mod>        { <simpleTypeSignednessModifier> }
-    regex simpleTypeSpecifier:sym<signedness-mod-length> { <simpleTypeSignednessModifier>?  <simpleTypeLengthModifier>+ }
-    regex simpleTypeSpecifier:sym<char>                  { <simple-char-type-specifier> }
-    regex simpleTypeSpecifier:sym<char16>                { <simple-char16-type-specifier> }
-    regex simpleTypeSpecifier:sym<char32>                { <simple-char32-type-specifier> }
-    regex simpleTypeSpecifier:sym<wchar>                 { <simple-wchar-type-specifier> }
-    regex simpleTypeSpecifier:sym<bool>                  { <Bool_> }
-    regex simpleTypeSpecifier:sym<float>                 { <Float> }
-    regex simpleTypeSpecifier:sym<double>                { <simple-double-type-specifier> }
-    regex simpleTypeSpecifier:sym<void>                  { <Void> }
-    regex simpleTypeSpecifier:sym<auto>                  { <Auto> }
-    regex simpleTypeSpecifier:sym<decltype>              { <decltypeSpecifier> }
+    regex simpleTypeSpecifier:sym<int>                   { <simple-int-type-specifier>                                  } 
+    regex simpleTypeSpecifier:sym<full>                  { <full-type-name>                                             } 
+    regex simpleTypeSpecifier:sym<scoped>                { <scoped-template-id>                                         } 
+    regex simpleTypeSpecifier:sym<signedness-mod>        { <simpleTypeSignednessModifier>                               } 
+    regex simpleTypeSpecifier:sym<signedness-mod-length> { <simpleTypeSignednessModifier>?  <simpleTypeLengthModifier>+ } 
+    regex simpleTypeSpecifier:sym<char>                  { <simple-char-type-specifier>                                 } 
+    regex simpleTypeSpecifier:sym<char16>                { <simple-char16-type-specifier>                               } 
+    regex simpleTypeSpecifier:sym<char32>                { <simple-char32-type-specifier>                               } 
+    regex simpleTypeSpecifier:sym<wchar>                 { <simple-wchar-type-specifier>                                } 
+    regex simpleTypeSpecifier:sym<bool>                  { <Bool_>                                                      } 
+    regex simpleTypeSpecifier:sym<float>                 { <Float>                                                      } 
+    regex simpleTypeSpecifier:sym<double>                { <simple-double-type-specifier>                               } 
+    regex simpleTypeSpecifier:sym<void>                  { <Void>                                                       } 
+    regex simpleTypeSpecifier:sym<auto>                  { <Auto>                                                       } 
+    regex simpleTypeSpecifier:sym<decltype>              { <decltypeSpecifier>                                          } 
 
     #------------------------------
     proto rule theTypeName                   { * }
@@ -1272,29 +1272,26 @@ our role CPP14Parser does CPP14Lexer {
     rule theTypeName:sym<typedef>            { <typedefName> }
 
     #------------------------------
+    proto rule decltypeSpecifierBody { * }
+    rule decltypeSpecifierBody:sym<expr> {  <expression> }
+    rule decltypeSpecifierBody:sym<auto> {  <Auto> }
+
     rule decltypeSpecifier {
         <Decltype>
         <LeftParen>
-        [   
-            ||  <expression>
-            ||  <Auto>
-        ]
+        <decltypeSpecifierBody>
         <RightParen>
     }
 
+    #------------------------------
     rule elaboratedTypeSpecifier {
         ||  <classKey>
-            [   ||  <attributeSpecifierSeq>?
-                    <nestedNameSpecifier>?
-                    <Identifier>
+            [   
+                ||  <attributeSpecifierSeq>? <nestedNameSpecifier>? <Identifier>
                 ||  <simpleTemplateId>
-                ||  <nestedNameSpecifier>
-                    <Template>?
-                    <simpleTemplateId>
+                ||  <nestedNameSpecifier> <Template>? <simpleTemplateId>
             ]
-        ||  <Enum>
-            <nestedNameSpecifier>?
-            <Identifier>
+        ||  <Enum> <nestedNameSpecifier>? <Identifier>
     }
 
     rule enumName {
