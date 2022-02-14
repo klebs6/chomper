@@ -1497,12 +1497,13 @@ our role CPP14Parser does CPP14Lexer {
         <balancedrule>+
     }
 
-    rule balancedrule {
-        ||  <LeftParen> <balancedTokenSeq> <RightParen>
-        ||  <LeftBracket> <balancedTokenSeq> <RightBracket>
-        ||  <LeftBrace> <balancedTokenSeq> <RightBrace>
-    }
+    #--------------------------
+    proto rule balancedrule { * }
+    rule balancedrule:sym<parens>   { <LeftParen> <balancedTokenSeq> <RightParen> }
+    rule balancedrule:sym<brackets> { <LeftBracket> <balancedTokenSeq> <RightBracket> }
+    rule balancedrule:sym<braces>   { <LeftBrace> <balancedTokenSeq> <RightBrace> }
 
+    #--------------------------
     rule initDeclaratorList {
         <initDeclarator> [ <Comma> <initDeclarator> ]*
     }
@@ -1511,17 +1512,16 @@ our role CPP14Parser does CPP14Lexer {
         <declarator> <initializer>?
     }
 
-    rule declarator {
-        ||  <pointerDeclarator>
-        ||  <noPointerDeclarator> <parametersAndQualifiers> <trailingReturnType>
-    }
+    #--------------------------
+    proto rule declarator { * }
+    rule declarator:sym<ptr>    { <pointerDeclarator> }
+    rule declarator:sym<no-ptr> { <noPointerDeclarator> <parametersAndQualifiers> <trailingReturnType> }
 
     rule pointerDeclarator {
         [ <pointerOperator> <Const>? ]* <noPointerDeclarator>
     }
 
     #------------------------------
-
     rule noPointerDeclaratorBase {
         | <declaratorid> <attributeSpecifierSeq>?
         | <LeftParen> <pointerDeclarator> <RightParen>
