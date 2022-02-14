@@ -1527,53 +1527,68 @@ our role CPP14Parser does CPP14Lexer {
     rule noPointerDeclaratorBase:sym<parens> { <LeftParen> <pointerDeclarator> <RightParen> }
 
     #------------------------------
+    proto rule noPointerDeclaratorTail { * }
+    rule noPointerDeclaratorTail:sym<basic>     { <parametersAndQualifiers> }
+    rule noPointerDeclaratorTail:sym<bracketed> { <LeftBracket> <constantExpression>?  <RightBracket> <attributeSpecifierSeq>? }
+
+    #------------------------------
     rule noPointerDeclarator {
         <noPointerDeclaratorBase>
-        [   
-            ||  <parametersAndQualifiers>
-            ||  <LeftBracket> <constantExpression>?  <RightBracket> <attributeSpecifierSeq>?
-        ]*
+        <noPointerDeclaratorTail>*
     }
 
     #------------------------------
     rule parametersAndQualifiers {
-        ||  <LeftParen>
-            <parameterDeclarationClause>?
-            <RightParen>
-            <cvqualifierseq>?
-            <refqualifier>?
-            <exceptionSpecification>?
-            <attributeSpecifierSeq>?
+        <LeftParen>
+        <parameterDeclarationClause>?
+        <RightParen>
+        <cvqualifierseq>?
+        <refqualifier>?
+        <exceptionSpecification>?
+        <attributeSpecifierSeq>?
     }
+
     rule trailingReturnType {
-        ||  <Arrow>
-            <trailingTypeSpecifierSeq>
-            <abstractDeclarator>?
+        <Arrow>
+        <trailingTypeSpecifierSeq>
+        <abstractDeclarator>?
     }
-    rule pointerOperator {
-        ||  [   ||  <And>
-                ||  <AndAnd>
-            ]
-            <attributeSpecifierSeq>?
-        ||  <nestedNameSpecifier>?
-            <Star>
-            <attributeSpecifierSeq>?
-            <cvqualifierseq>?
+
+    #-----------------------------
+    proto rule pointerOperator { * }
+
+    rule pointerOperator:sym<ref> {
+        <And>
+        <attributeSpecifierSeq>?
+    }
+
+    rule pointerOperator:sym<ref-ref> {
+        <AndAnd>
+        <attributeSpecifierSeq>?
+    }
+
+    rule pointerOperator:sym<star> {
+        <nestedNameSpecifier>?
+        <Star>
+        <attributeSpecifierSeq>?
+        <cvqualifierseq>?
     }
 
     rule cvqualifierseq {
         <cvQualifier>+
     }
 
+    #-----------------------------
     proto rule cvQualifier { * }
     rule cvQualifier:sym<const>    { <Const> }
     rule cvQualifier:sym<volatile> { <Volatile> }
 
-    rule refqualifier {
-        ||  <And>
-        ||  <AndAnd>
-    }
+    #-----------------------------
+    proto rule refqualifier { * }
+    rule refqualifier:sym<and>     { <And> }
+    rule refqualifier:sym<and-and> { <AndAnd> }
 
+    #-----------------------------
     rule declaratorid {
         <Ellipsis>?  <idExpression>
     }
