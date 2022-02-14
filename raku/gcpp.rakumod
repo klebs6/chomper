@@ -1735,14 +1735,19 @@ our role CPP14Parser does CPP14Lexer {
     rule braceOrEqualInitializer:sym<braced-init-list> { <bracedInitList> }
 
     #-----------------------------
-    rule initializerClause {
+    proto rule initializerClause { * }
+
+    rule initializerClause:sym<assignment> {
         <comment>?
-        [
-            || <assignmentExpression>
-            || <bracedInitList>
-        ]
+        <assignmentExpression>
     }
 
+    rule initializerClause:Sym<braced> {
+        <comment>?
+        <bracedInitList>
+    }
+
+    #-----------------------------
     rule initializerList {
         <initializerClause>
         <Ellipsis>?
