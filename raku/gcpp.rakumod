@@ -861,10 +861,11 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-----------------------
-    proto token equalityExpression { * }
-    token equalityExpression:sym<eq>  { <Equal> }
-    token equalityExpression:sym<neq> { <NotEqual> }
+    proto token equalityOperator { * }
+    token equalityOperator:sym<eq>  { <Equal> }
+    token equalityOperator:sym<neq> { <NotEqual> }
 
+    #-----------------------
     rule equalityExpression {
         <relationalExpression>
         [   
@@ -902,6 +903,7 @@ our role CPP14Parser does CPP14Lexer {
         ]?
     }
 
+    #-----------------------
     proto rule assignmentExpression { * }
 
     rule assignmentExpression:sym<throw> {  
@@ -965,13 +967,16 @@ our role CPP14Parser does CPP14Lexer {
     rule attributedStatementBody:sym<jump>       { <jumpStatement> }
     rule attributedStatementBody:sym<try>        { <tryBlock> }
 
+    #-----------------------------
+    proto rule labeledStatementLabelBody { * }
+    rule labeledStatementLabelBody:sym<id>        { <Identifier> }
+    rule labeledStatementLabelBody:sym<case-expr> { <Case> <constantExpression> }
+    rule labeledStatementLabelBody:sym<default>   { <Default> }
+
+    #-----------------------------
     rule labeledStatementLabel {
         <attributeSpecifierSeq>?
-        [   
-            ||  <Identifier>
-            ||  <Case> <constantExpression>
-            ||  <Default>
-        ]
+        <labeledStatementLabelBody>
         <Colon>
     }
 
