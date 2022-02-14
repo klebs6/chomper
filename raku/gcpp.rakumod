@@ -1801,11 +1801,12 @@ our role CPP14Parser does CPP14Lexer {
     rule classKey:sym<struct> { <Struct> }
 
     #-----------------------------
+    proto rule memberSpecificationBase { * }
+    rule memberSpecificationBase:sym<decl>   { <memberdeclaration> }
+    rule memberSpecificationBase:sym<access> { <accessSpecifier> <Colon> }
+
     rule memberSpecification {
-        [   
-           ||  <memberdeclaration>
-           ||  <accessSpecifier> <Colon>
-        ]+
+        <memberSpecificationBase>+
     }
 
     rule memberdeclaration {
