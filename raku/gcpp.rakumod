@@ -1857,15 +1857,16 @@ our role CPP14Parser does CPP14Lexer {
         <virtualSpecifier>+
     }
 
-    rule virtualSpecifier {
-        ||  <Override>
-        ||  <Final>
-    }
+    #-----------------------------
+    proto rule virtualSpecifier { * }
+    rule virtualSpecifier:sym<override> { <Override> }
+    rule virtualSpecifier:sym<final>    { <Final> }
 
+    #-----------------------------
     rule pureSpecifier {
-        ||  <Assign>
-            <val=OctalLiteral>
-            #|{if($val.text.compareTo("0")!=0) throw new InputMismatchException(this); }
+        <Assign>
+        <val=OctalLiteral>
+        #|{if($val.text.compareTo("0")!=0) throw new InputMismatchException(this); }
     }
 
     rule baseClause {
@@ -1876,15 +1877,29 @@ our role CPP14Parser does CPP14Lexer {
         <baseSpecifier> <Ellipsis>?  [ <Comma> <baseSpecifier> <Ellipsis>?  ]*
     }
 
-    rule baseSpecifier {
+    #-----------------------------
+    proto rule baseSpecifier { * }
+
+    rule baseSpecifier:sym<base-type> {
         <attributeSpecifierSeq>?
-        [   
-          ||  <baseTypeSpecifier>
-          ||  <Virtual> <accessSpecifier>? <baseTypeSpecifier>
-          ||  <accessSpecifier> <Virtual>? <baseTypeSpecifier>
-        ]
+        <baseTypeSpecifier>
     }
 
+    rule baseSpecifier:sym<virtual> {
+        <attributeSpecifierSeq>?
+        <Virtual> 
+        <accessSpecifier>? 
+        <baseTypeSpecifier>
+    }
+
+    rule baseSpecifier:sym<access> {
+        <attributeSpecifierSeq>?
+        <accessSpecifier> 
+        <Virtual>? 
+        <baseTypeSpecifier>
+    }
+
+    #-----------------------------
     rule classOrDeclType {
         ||  <nestedNameSpecifier>?  <className>
         ||  <decltypeSpecifier>
