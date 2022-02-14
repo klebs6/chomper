@@ -1952,29 +1952,35 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-----------------------------
-    rule meminitializerid {
-        ||  <classOrDeclType>
-        ||  <Identifier>
-    }
+    proto rule meminitializerid { * }
+    rule meminitializerid:sym<class-or-decl> { <classOrDeclType> }
+    rule meminitializerid:sym<ident>         { <Identifier> }
 
     rule operatorFunctionId {
         <Operator> <theOperator>
     }
 
-    rule literalOperatorId {
+    #-----------------------------
+    proto rule literalOperatorId { * }
+
+    rule literalOperatorId:sym<string-lit> {
         <Operator>
-        [   
-          ||<StringLiteral> <Identifier>
-          || <UserDefinedStringLiteral>
-        ]
+        <StringLiteral> 
+        <Identifier>
     }
 
+    rule literalOperatorId:sym<user-defined> {
+        <Operator>
+        <UserDefinedStringLiteral>
+    }
+
+    #-----------------------------
     rule templateDeclaration {
-        ||  <Template>
-            <Less>
-            <templateparameterList>
-            <Greater>
-            <declaration>
+        <Template>
+        <Less>
+        <templateparameterList>
+        <Greater>
+        <declaration>
     }
 
     rule templateparameterList {
