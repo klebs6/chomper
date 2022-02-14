@@ -1719,16 +1719,22 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-----------------------------
-    rule initializer {
-        ||  <braceOrEqualInitializer>
-        ||  <LeftParen> <expressionList> <RightParen>
+    proto rule initializer { * }
+
+    rule initializer:Sym<brace-or-eq> {
+        <braceOrEqualInitializer>
     }
 
-    rule braceOrEqualInitializer {
-        || <Assign> <initializerClause>
-        || <bracedInitList>
+    rule initializer:sym<paren-expr-list> {
+        <LeftParen> <expressionList> <RightParen>
     }
 
+    #-----------------------------
+    proto rule braceOrEqualInitializer { * }
+    rule braceOrEqualInitializer:sym<assign-init>      { <Assign> <initializerClause> }
+    rule braceOrEqualInitializer:sym<braced-init-list> { <bracedInitList> }
+
+    #-----------------------------
     rule initializerClause {
         <comment>?
         [
