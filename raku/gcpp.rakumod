@@ -88,48 +88,48 @@ our role CPP14Keyword {
     token div_             { '/'                } 
     token mod_             { '%'                } 
     token caret            { '^'                } 
-    token and_             { '&' <!before '&'>  } 
-    token or_              { '|' <!before '|'>  } 
-    token tilde            { '~'                } 
-    token assign           { '='                } 
-    token less             { '<'  <!before '='> } 
-    token greater          { '>'  <!before '='> } 
-    token plus-assign      { '+='               } 
-    token minus-assign     { '-='               } 
-    token star-assign      { '*='               } 
-    token div-assign       { '/='               } 
-    token mod-assign       { '%='               } 
-    token xor-assign       { '^='               } 
-    token and-assign       { '&='               } 
-    token or-assign        { '|='               } 
-    token left-shift-assign  { '<<='              } 
-    token right-shift-assign { '>>='              } 
-    token equal            { '=='               } 
-    token not-equal        { '!='               } 
-    token less-equal       { '<='               } 
-    token greater-equal    { '>='               } 
-    token plus-plus        { '++'               } 
-    token minus-minus      { '--'               } 
-    token comma            { ','                } 
-    token arrow-star       { '->*'              } 
-    token arrow            { '->'               } 
-    token question         { '?'                } 
-    token colon            { ':'                } 
-    token doublecolon      { '::'               } 
-    rule semi              { ';' <comment>?     }
-    token dot              { '.'                } 
-    token dot-star         { '.*'               } 
-    token ellipsis         { '...'              } 
+    token and_             { '&'  <!before '&'>  } 
+    token or_              { '|'  <!before '|'>  } 
+    token tilde            { '~'                 } 
+    token assign           { '='                 } 
+    token less             { '<'  <!before '='>  } 
+    token greater          { '>'  <!before '='>  } 
+    token plus-assign      { '+='                } 
+    token minus-assign     { '-='                } 
+    token star-assign      { '*='                } 
+    token div-assign       { '/='                } 
+    token mod-assign       { '%='                } 
+    token xor-assign       { '^='                } 
+    token and-assign       { '&='                } 
+    token or-assign        { '|='                } 
+    token left-shift-assign  { '<<='             } 
+    token right-shift-assign { '>>='             } 
+    token equal            { '=='                } 
+    token not-equal        { '!='                } 
+    token less-equal       { '<='                } 
+    token greater-equal    { '>='                } 
+    token plus-plus        { '++'                } 
+    token minus-minus      { '--'                } 
+    token comma            { ','                 } 
+    token arrow-star       { '->*'               } 
+    token arrow            { '->'                } 
+    token question         { '?'                 } 
+    token colon            { ':'                 } 
+    token doublecolon      { '::'                } 
+    rule semi              { ';' <comment>?      }
+    token dot              { '.'                 } 
+    token dot-star         { '.*'                } 
+    token ellipsis         { '...'               } 
 
     proto token not_        { * }
     token not_:sym<!>       { <sym> }
     token not_:sym<not>     { <sym> }
 
-    proto token and-and { * }
+    proto token and-and     { * }
     token and-and:sym<&&>   { <sym> }
     token and-and:sym<and>  { <sym> }
 
-    proto token or-or   { * }
+    proto token or-or       { * }
     token or-or:sym<||>     { <sym> }
     token or-or:sym<or>     { <sym> }
 }
@@ -157,11 +157,15 @@ our role CPP14Lexer does CPP14Keyword {
     proto token floating-literal { * }
 
     token floating-literal:sym<frac> {
-        <fractionalconstant> <exponentpart>?  <floatingsuffix>?
+        <fractionalconstant>
+        <exponentpart>?
+        <floatingsuffix>?
     }
 
     token floating-literal:sym<digit> {
-        <digitsequence> <exponentpart> <floatingsuffix>?
+        <digitsequence>
+        <exponentpart>
+        <floatingsuffix>?
     }
 
     #------------------------
@@ -174,7 +178,8 @@ our role CPP14Lexer does CPP14Keyword {
     }
 
     token string-literal {
-        <string-literal-item> [<.ws> <string-literal-item>]*
+        <string-literal-item> 
+        [<.ws> <string-literal-item>]*
     }
 
     #--------------------
@@ -204,7 +209,7 @@ our role CPP14Lexer does CPP14Keyword {
     }
 
     token hexquad {
-        <HEXADECIMALDIGIT> ** 4
+        <hexadecimaldigit> ** 4
     }
 
     proto token universalcharactername { * }
@@ -213,13 +218,13 @@ our role CPP14Lexer does CPP14Keyword {
 
     #-------------------
     proto token identifier-start { * }
-    token identifier-start:sym<nondigit> { <NONDIGIT> }
+    token identifier-start:sym<nondigit> { <nondigit> }
     token identifier-start:sym<ucn>      { <universalcharactername> }
 
     #-------------------
     proto token identifier-continue { * }
-    token identifier-continue:sym<digit>    { <DIGIT> }
-    token identifier-continue:sym<nondigit> { <NONDIGIT> }
+    token identifier-continue:sym<digit>    { <digit> }
+    token identifier-continue:sym<nondigit> { <nondigit> }
     token identifier-continue:sym<ucn>      { <universalcharactername> }
 
     token identifier {
@@ -227,43 +232,43 @@ our role CPP14Lexer does CPP14Keyword {
         <identifier-continue>*
     }
 
-    token NONDIGIT {
+    token nondigit {
         <[ a .. z A .. Z _]>
     }
 
-    token DIGIT {
+    token digit {
         <[ 0 .. 9 ]>
     }
 
     token decimal-literal {
-        <NONZERODIGIT> [ '\''?  <DIGIT>]*
+        <nonzerodigit> [ '\''?  <digit>]*
     }
 
     token octal-literal {
-        '0' [ '\''?  <OCTALDIGIT>]*
+        '0' [ '\''?  <octaldigit>]*
     }
 
     token hexadecimal-literal {
-        [ '0x' || '0X' ] <HEXADECIMALDIGIT> [ '\''?  <HEXADECIMALDIGIT> ]*
+        [ '0x' || '0X' ] <hexadecimaldigit> [ '\''?  <hexadecimaldigit> ]*
     }
 
     token binary-literal {
-        [ '0b' || '0B' ] <BINARYDIGIT> [ '\''?  <BINARYDIGIT> ]*
+        [ '0b' || '0B' ] <binarydigit> [ '\''?  <binarydigit> ]*
     }
 
-    token NONZERODIGIT {
+    token nonzerodigit {
         <[ 1 .. 9 ]>
     }
 
-    token OCTALDIGIT {
+    token octaldigit {
         <[ 0 .. 7 ]>
     }
 
-    token HEXADECIMALDIGIT {
+    token hexadecimaldigit {
         <[ 0 .. 9 ]>
     }
 
-    token BINARYDIGIT {
+    token binarydigit {
         <[ 0 1 ]>
     }
 
@@ -323,11 +328,11 @@ our role CPP14Lexer does CPP14Keyword {
 
     #------------------------------
     token octalescapesequence {
-        '\\' [<OCTALDIGIT> ** 1..3]
+        '\\' [<octaldigit> ** 1..3]
     }
 
     token hexadecimalescapesequence {
-        '\\x' <HEXADECIMALDIGIT>+
+        '\\x' <hexadecimaldigit>+
     }
 
     proto token fractionalconstant { * }
@@ -339,15 +344,15 @@ our role CPP14Lexer does CPP14Keyword {
     }
 
     token exponentpart {
-        <exponentpart-prefix> <SIGN>?  <digitsequence>
+        <exponentpart-prefix> <sign>?  <digitsequence>
     }
 
-    token SIGN {
+    token sign {
         <[ + - ]>
     }
 
     token digitsequence {
-        <DIGIT> [  '\''?  <DIGIT>]*
+        <digit> [  '\''?  <digit>]*
     }
 
     token floatingsuffix {
@@ -408,7 +413,7 @@ our role CPP14Lexer does CPP14Keyword {
         <[   \t ]>+
     }
 
-    token newline {
+    token newline_ {
         [   
             ||  '\r' '\n'?
             ||  '\n'
@@ -440,7 +445,7 @@ our role CPP14Parser does CPP14Lexer {
     proto token primary-expression { * }
     token primary-expression:sym<literal> { <literal>+ }
     token primary-expression:sym<this>    { <this> }
-    token primary-expression:sym<expr>    { <left-paren> <expression> <right-paren> }
+    token primary-expression:sym<expr>    { <.left-paren> <expression> <.right-paren> }
     token primary-expression:sym<id>      { <id-expression> }
     token primary-expression:sym<lambda>  { <lambda-expression> }
 
@@ -512,7 +517,7 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule lambda-introducer {
-        <left-bracket> <lambda-capture>?  <right-bracket>
+        <.left-bracket> <lambda-capture>?  <.right-bracket>
     }
 
     #-------------------------------
@@ -547,9 +552,9 @@ our role CPP14Parser does CPP14Lexer {
 
     #-------------------------------
     rule lambda-declarator {
-        <left-paren>
+        <.left-paren>
         <parameter-declaration-clause>?
-        <right-paren>
+        <.right-paren>
         <mutable>?
         <exception-specification>?
         <attribute-specifier-seq>?
@@ -564,9 +569,9 @@ our role CPP14Parser does CPP14Lexer {
     proto rule postfix-expression-tail { * }
 
     rule bracket-tail {
-        <left-bracket> 
+        <.left-bracket> 
         [ <expression> || <braced-init-list> ] 
-        <right-bracket>
+        <.right-bracket>
     }
 
     rule postfix-expression-tail:sym<bracket> {
@@ -574,9 +579,9 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule postfix-expression-tail:sym<parens> { 
-        <left-paren> 
+        <.left-paren> 
         <expression-list>?  
-        <right-paren>
+        <.right-paren>
     }
 
     rule postfix-expression-tail:sym<indirection-id> { 
@@ -618,16 +623,16 @@ our role CPP14Parser does CPP14Lexer {
         <less> 
         <the-type-id> 
         <greater> 
-        <left-paren> 
+        <.left-paren> 
         <expression> 
-        <right-paren>
+        <.right-paren>
     }
 
     rule postfix-expression-typeid {
         <type-id-of-the-type-id> 
-        <left-paren> 
+        <.left-paren> 
         [ <expression> ||  <the-type-id>] 
-        <right-paren>
+        <.right-paren>
     }
 
     #---------------------
@@ -637,7 +642,7 @@ our role CPP14Parser does CPP14Lexer {
 
     #---------------------
     proto token post-list-tail { * }
-    token post-list-tail:sym<parenthesized> { <left-paren> <expression-list>?  <right-paren> }
+    token post-list-tail:sym<parenthesized> { <.left-paren> <expression-list>?  <.right-paren> }
     token post-list-tail:sym<braced>        { <braced-init-list> }
 
     token postfix-expression-list {
@@ -693,20 +698,20 @@ our role CPP14Parser does CPP14Lexer {
 
     rule unary-expression-case:sym<sizeof-typeid> {
         <sizeof>
-        <left-paren>
+        <.left-paren>
         <the-type-id>
-        <right-paren>
+        <.right-paren>
     }
 
     rule unary-expression-case:sym<sizeof-ids> {
         <sizeof>
         <ellipsis>
-        <left-paren>
+        <.left-paren>
         <identifier>
-        <right-paren>
+        <.right-paren>
     }
 
-    rule unary-expression-case:sym<alignof>  { <alignof> <left-paren> <the-type-id> <right-paren> }
+    rule unary-expression-case:sym<alignof>  { <alignof> <.left-paren> <the-type-id> <.right-paren> }
     rule unary-expression-case:sym<noexcept> { <no-except-expression> }
     rule unary-expression-case:sym<delete>   { <delete-expression> }
 
@@ -727,15 +732,15 @@ our role CPP14Parser does CPP14Lexer {
         <new-placement>?
         [   
            || <new-type-id>
-           || [ <left-paren> <the-type-id> <right-paren> ]
+           || [ <.left-paren> <the-type-id> <.right-paren> ]
         ]
         <new-initializer>?
     }
 
     rule new-placement {
-        <left-paren>
+        <.left-paren>
         <expression-list>
-        <right-paren>
+        <.right-paren>
     }
 
     rule new-type-id {
@@ -753,40 +758,40 @@ our role CPP14Parser does CPP14Lexer {
     #if we get any bugs downstream come back to
     #this
     rule no-pointer-new-declarator {
-        <left-bracket>
+        <.left-bracket>
         <expression>
-        <right-bracket>
+        <.right-bracket>
         <attribute-specifier-seq>?
         [
-            <left-bracket>
+            <.left-bracket>
             <constant-expression>
-            <right-bracket>
+            <.right-bracket>
             <attribute-specifier-seq>?
         ]*
     }
 
     #------------------------
     proto rule new-initializer { * }
-    rule new-initializer:sym<expr-list> { <left-paren> <expression-list>?  <right-paren> }
+    rule new-initializer:sym<expr-list> { <.left-paren> <expression-list>?  <.right-paren> }
     rule new-initializer:sym<braced>    { <braced-init-list> }
 
     #------------------------
     rule delete-expression {
         <doublecolon>?
         <delete>
-        [ <left-bracket> <right-bracket> ]?
+        [ <.left-bracket> <.right-bracket> ]?
         <cast-expression>
     }
 
     rule no-except-expression {
         <noexcept>
-        <left-paren>
+        <.left-paren>
         <expression>
-        <right-paren>
+        <.right-paren>
     }
 
     rule cast-expression {
-        [ <left-paren> <the-type-id> <right-paren> ]* <unary-expression>
+        [ <.left-paren> <the-type-id> <.right-paren> ]* <unary-expression>
     }
 
     proto rule pointer-member-operator { * }
@@ -990,7 +995,7 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule compound-statement {
-        <left-brace> <statement-seq>?  <right-brace>
+        <.left-brace> <statement-seq>?  <.right-brace>
     }
 
     regex statement-seq {
@@ -1002,15 +1007,15 @@ our role CPP14Parser does CPP14Lexer {
 
     rule selection-statement:sym<if> {  
         <if_>
-        <left-paren>
+        <.left-paren>
         <condition>
-        <right-paren>
+        <.right-paren>
         <statement>
         [ <comment>? <else_> <statement> ]?
     }
 
     rule selection-statement:sym<switch> {  
-        <switch> <left-paren> <condition> <right-paren> <statement>
+        <switch> <.left-paren> <condition> <.right-paren> <statement>
     }
 
     #-----------------------------
@@ -1038,9 +1043,9 @@ our role CPP14Parser does CPP14Lexer {
 
     rule iteration-statement:sym<while> {
         <while_>
-        <left-paren>
+        <.left-paren>
         <condition>
-        <right-paren>
+        <.right-paren>
         <statement>
     }
 
@@ -1048,30 +1053,30 @@ our role CPP14Parser does CPP14Lexer {
         <do_>
         <statement>
         <while_>
-        <left-paren>
+        <.left-paren>
         <expression>
-        <right-paren>
+        <.right-paren>
         <semi>
     }
 
     rule iteration-statement:sym<for> {
         <for_>
-        <left-paren>
+        <.left-paren>
         <for-init-statement>
         <condition>?
         <semi>
         <expression>?
-        <right-paren>
+        <.right-paren>
         <statement>
     }
 
     rule iteration-statement:sym<for-range> {
-        <for_>
-        <left-paren>
+        <.for_>
+        <.left-paren>
         <for-range-declaration>
-        <colon>
+        <.colon>
         <for-range-initializer>
-        <right-paren>
+        <.right-paren>
         <statement>
     }
 
@@ -1137,20 +1142,20 @@ our role CPP14Parser does CPP14Lexer {
 
     rule static-assert-declaration {
         <static_assert>
-        <left-paren>
+        <.left-paren>
         <constant-expression>
-        <comma>
+        <.comma>
         <string-literal>
-        <right-paren>
-        <semi>
+        <.right-paren>
+        <.semi>
     }
 
     rule empty-declaration {
-        <semi>
+        <.semi>
     }
 
     rule attribute-declaration {
-        <attribute-specifier-seq> <semi>
+        <attribute-specifier-seq> <.semi>
     }
 
     #---------------------------
@@ -1275,9 +1280,9 @@ our role CPP14Parser does CPP14Lexer {
 
     rule decltype-specifier {
         <decltype>
-        <left-paren>
+        <.left-paren>
         <decltype-specifier-body>
-        <right-paren>
+        <.right-paren>
     }
 
     #------------------------------
@@ -1313,9 +1318,9 @@ our role CPP14Parser does CPP14Lexer {
 
     rule enum-specifier {
         <enum-head>
-        <left-brace>
+        <.left-brace>
         [ <enumerator-list> <comma>?  ]?
-        <right-brace>
+        <.right-brace>
     }
 
     rule enum-head {
@@ -1374,9 +1379,9 @@ our role CPP14Parser does CPP14Lexer {
         <inline>?
         <namespace>
         <namespace-tag>?
-        <left-brace>
+        <.left-brace>
         <namespaceBody=declarationseq>?
-        <right-brace>
+        <.right-brace>
     }
 
     rule namespace-alias {
@@ -1420,15 +1425,15 @@ our role CPP14Parser does CPP14Lexer {
 
     rule asm-definition {
         <asm>
-        <left-paren>
+        <.left-paren>
         <string-literal>
-        <right-paren>
-        <semi>
+        <.right-paren>
+        <.semi>
     }
 
     #--------------------
     proto rule linkage-specification-body { * }
-    rule linkage-specification-body:sym<seq>  { <left-brace> <declarationseq>?  <right-brace> }
+    rule linkage-specification-body:sym<seq>  { <.left-brace> <declarationseq>?  <.right-brace> }
     rule linkage-specification-body:sym<decl> {  <declaration> }
 
     rule linkage-specification {
@@ -1445,11 +1450,11 @@ our role CPP14Parser does CPP14Lexer {
     proto rule attribute-specifier { * }
 
     rule attribute-specifier:sym<double-braced> {
-        <left-bracket>
-        <left-bracket>
+        <.left-bracket>
+        <.left-bracket>
         <attribute-list>?
-        <right-bracket>
-        <right-bracket>
+        <.right-bracket>
+        <.right-bracket>
     }
 
     rule attribute-specifier:sym<alignment> {
@@ -1464,10 +1469,10 @@ our role CPP14Parser does CPP14Lexer {
     #--------------------
     rule alignmentspecifier {
         <alignas>
-        <left-paren>
+        <.left-paren>
         <alignmentspecifierbody>
         <ellipsis>?
-        <right-paren>
+        <.right-paren>
     }
 
     rule attribute-list {
@@ -1487,7 +1492,7 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule attribute-argument-clause {
-        <left-paren> <balanced-token-seq>?  <right-paren>
+        <.left-paren> <balanced-token-seq>?  <.right-paren>
     }
 
     rule balanced-token-seq {
@@ -1496,9 +1501,9 @@ our role CPP14Parser does CPP14Lexer {
 
     #--------------------------
     proto rule balancedrule { * }
-    rule balancedrule:sym<parens>   { <left-paren> <balanced-token-seq> <right-paren> }
-    rule balancedrule:sym<brackets> { <left-bracket> <balanced-token-seq> <right-bracket> }
-    rule balancedrule:sym<braces>   { <left-brace> <balanced-token-seq> <right-brace> }
+    rule balancedrule:sym<parens>   { <.left-paren> <balanced-token-seq> <.right-paren> }
+    rule balancedrule:sym<brackets> { <.left-bracket> <balanced-token-seq> <.right-bracket> }
+    rule balancedrule:sym<braces>   { <.left-brace> <balanced-token-seq> <.right-brace> }
 
     #--------------------------
     rule init-declarator-list {
@@ -1521,12 +1526,17 @@ our role CPP14Parser does CPP14Lexer {
     #------------------------------
     proto rule no-pointer-declarator-base { * }
     rule no-pointer-declarator-base:sym<base>   { <declaratorid> <attribute-specifier-seq>? }
-    rule no-pointer-declarator-base:sym<parens> { <left-paren> <pointer-declarator> <right-paren> }
+    rule no-pointer-declarator-base:sym<parens> { <.left-paren> <pointer-declarator> <.right-paren> }
 
     #------------------------------
     proto rule no-pointer-declarator-tail { * }
     rule no-pointer-declarator-tail:sym<basic>     { <parameters-and-qualifiers> }
-    rule no-pointer-declarator-tail:sym<bracketed> { <left-bracket> <constant-expression>?  <right-bracket> <attribute-specifier-seq>? }
+    rule no-pointer-declarator-tail:sym<bracketed> { 
+        <.left-bracket> 
+        <constant-expression>?  
+        <.right-bracket> 
+        <attribute-specifier-seq>? 
+    }
 
     #------------------------------
     rule no-pointer-declarator {
@@ -1536,9 +1546,9 @@ our role CPP14Parser does CPP14Lexer {
 
     #------------------------------
     rule parameters-and-qualifiers {
-        <left-paren>
+        <.left-paren>
         <parameter-declaration-clause>?
-        <right-paren>
+        <.right-paren>
         <cvqualifierseq>?
         <refqualifier>?
         <exception-specification>?
@@ -1634,10 +1644,17 @@ our role CPP14Parser does CPP14Lexer {
     proto rule no-pointer-abstract-declarator-base { * }
     rule no-pointer-abstract-declarator-base:sym<basic>         { <parameters-and-qualifiers> }
     rule no-pointer-abstract-declarator-base:sym<bracketed>     { <no-pointer-abstract-declarator-bracketed-base> }
-    rule no-pointer-abstract-declarator-base:sym<parenthesized> { <left-paren> <pointer-abstract-declarator> <right-paren> }
+    rule no-pointer-abstract-declarator-base:sym<parenthesized> { 
+        <.left-paren> 
+        <pointer-abstract-declarator> 
+        <.right-paren> 
+    }
 
     rule no-pointer-abstract-declarator-bracketed-base {
-        <left-bracket> <constant-expression>?  <right-bracket> <attribute-specifier-seq>?
+        <.left-bracket> 
+        <constant-expression>?  
+        <.right-bracket> 
+        <attribute-specifier-seq>?
     }
 
     rule abstract-pack-declarator {
@@ -1651,9 +1668,9 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule no-pointer-abstract-pack-declarator-brackets {
-        <left-bracket> 
+        <.left-bracket> 
         <constant-expression>?  
-        <right-bracket> 
+        <.right-bracket> 
         <attribute-specifier-seq>?
     }
 
@@ -1723,7 +1740,7 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule initializer:sym<paren-expr-list> {
-        <left-paren> <expression-list> <right-paren>
+        <.left-paren> <expression-list> <.right-paren>
     }
 
     #-----------------------------
@@ -1752,7 +1769,7 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule braced-init-list {
-        <left-brace> [ <initializer-list> <comma>? ]?  <right-brace>
+        <.left-brace> [ <initializer-list> <comma>? ]?  <.right-brace>
     }
 
     #-----------------------------
@@ -1762,9 +1779,9 @@ our role CPP14Parser does CPP14Lexer {
 
     rule class-specifier {
         <class-head>
-        <left-brace>
+        <.left-brace>
         <member-specification>?
-        <right-brace>
+        <.right-brace>
     }
 
     #-----------------------------
@@ -1938,9 +1955,9 @@ our role CPP14Parser does CPP14Lexer {
 
     rule mem-initializer:sym<expr-list> {
         <meminitializerid>
-        <left-paren> 
+        <.left-paren> 
         <expression-list>?  
-        <right-paren>
+        <.right-paren>
     }
 
     rule mem-initializer:sym<braced> {
@@ -2107,9 +2124,9 @@ our role CPP14Parser does CPP14Lexer {
 
     rule handler {
         <catch>
-        <left-paren>
+        <.left-paren>
         <exception-declaration>
-        <right-paren>
+        <.right-paren>
         <compound-statement>
     }
 
@@ -2141,7 +2158,7 @@ our role CPP14Parser does CPP14Lexer {
 
     #---------------------
     rule dynamic-exception-specification {
-        <throw> <left-paren> <type-id-list>?  <right-paren>
+        <throw> <.left-paren> <type-id-list>?  <.right-paren>
     }
 
     rule type-id-list {
@@ -2150,13 +2167,13 @@ our role CPP14Parser does CPP14Lexer {
 
     #---------------------
     proto token noe-except-specification { * }
-    token noe-except-specification:sym<full>         { <noexcept> <left-paren> <constant-expression> <right-paren> }
+    token noe-except-specification:sym<full>         { <noexcept> <.left-paren> <constant-expression> <.right-paren> }
     token noe-except-specification:sym<keyword-only> { <noexcept> }
 
     #---------------------
     proto token the-operator   { * }
-    token the-operator:sym<new>                { <new_> [ <left-bracket> <right-bracket>]?    } 
-    token the-operator:sym<delete>             { <delete> [ <left-bracket> <right-bracket>]? } 
+    token the-operator:sym<new>                { <new_>   [ <.left-bracket> <.right-bracket>]? } 
+    token the-operator:sym<delete>             { <delete> [ <.left-bracket> <.right-bracket>]? } 
     token the-operator:sym<plus>               { <plus>                                    } 
     token the-operator:sym<minus>              { <minus>                                   } 
     token the-operator:sym<star>               { <star>                                    } 
@@ -2192,8 +2209,8 @@ our role CPP14Parser does CPP14Lexer {
     token the-operator:sym<comma>              { <comma>                                   } 
     token the-operator:sym<arrow-star>         { <arrow-star>                               } 
     token the-operator:sym<arrow>              { <arrow>                                   } 
-    token the-operator:sym<Parens>             { <left-paren> <right-paren>                  } 
-    token the-operator:sym<Brak>               { <left-bracket> <right-bracket>              } 
+    token the-operator:sym<Parens>             { <.left-paren>   <.right-paren>   } 
+    token the-operator:sym<Brak>               { <.left-bracket> <.right-bracket> } 
 
     proto token literal { * }
     token literal:sym<int>                  { <integer-literal> }
