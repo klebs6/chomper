@@ -1680,16 +1680,15 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-----------------------------
+    proto rule parameterDeclarationBody { * }
+    rule parameterDeclarationBody:sym<decl> { <declarator> }
+    rule parameterDeclarationBody:sym<abst> { <abstractDeclarator>? }
+
     rule parameterDeclaration {
         <attributeSpecifierSeq>?
         <declSpecifierSeq>
-        [  
-            [   
-                ||  <declarator>
-                ||  <abstractDeclarator>?
-            ]
-            [ <Assign> <initializerClause> ]?
-        ]
+        <parameterDeclarationBody>
+        [ <Assign> <initializerClause> ]?
     }
 
     rule functionDefinition {
