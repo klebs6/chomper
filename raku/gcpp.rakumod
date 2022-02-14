@@ -819,20 +819,22 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-----------------
+    proto token additiveOperator { * }
+    token additiveOperator:sym<plus>  {  <Plus> }
+    token additiveOperator:sym<minus> {  <Minus> }
+
+    #-----------------
     rule additiveExpression {
-        ||  <multiplicativeExpression>
-            [   ||  [   ||  <Plus>
-                        ||  <Minus>
-                    ]
-                    <multiplicativeExpression>
-            ]*
+        <multiplicativeExpression>
+        [   
+            <additiveOperator> 
+            <multiplicativeExpression>
+        ]*
     }
 
     rule shiftExpression {
-        ||  <additiveExpression>
-            [   ||  <shiftOperator>
-                    <additiveExpression>
-            ]*
+        <additiveExpression>
+        [ <shiftOperator> <additiveExpression> ]*
     }
 
     #-----------------------
@@ -841,25 +843,32 @@ our role CPP14Parser does CPP14Lexer {
     rule shiftOperator:sym<left>  { <Less> <Less> }
 
     #-----------------------
+    proto rule relationalOperator { * }
+    rule relationalOperator:sym<less>       { <Less> }
+    rule relationalOperator:sym<greater>    { <Greater> }
+    rule relationalOperator:sym<less-eq>    { <LessEqual> }
+    rule relationalOperator:sym<greater-eq> { <GreaterEqual> }
+
+    #-----------------------
     regex relationalExpression {
         <shiftExpression>
         [  
             <.ws>
-            [   
-                ||  <Less>
-                ||  <Greater>
-                ||  <LessEqual>
-                ||  <GreaterEqual>
-            ]
+            <relationalOperator>
             <.ws>
             <shiftExpression>
         ]*
     }
 
+    #-----------------------
+    proto token equalityExpression { * }
+    token equalityExpression:sym<eq>  { <Equal> }
+    token equalityExpression:sym<neq> { <NotEqual> }
+
     rule equalityExpression {
         <relationalExpression>
         [   
-            [ <Equal> ||  <NotEqual> ] <relationalExpression>
+            <equalityOperator> <relationalExpression>
         ]*
     }
 
