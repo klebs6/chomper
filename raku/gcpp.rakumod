@@ -1937,14 +1937,21 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-----------------------------
-    rule memInitializer {
+    proto rule memInitializer { * }
+
+    rule memInitializer:sym<expr-list> {
         <meminitializerid>
-        [   
-            ||  <LeftParen> <expressionList>?  <RightParen>
-            ||  <bracedInitList>
-        ]
+        <LeftParen> 
+        <expressionList>?  
+        <RightParen>
     }
 
+    rule memInitializer:sym<braced> {
+        <meminitializerid>
+        <bracedInitList>
+    }
+
+    #-----------------------------
     rule meminitializerid {
         ||  <classOrDeclType>
         ||  <Identifier>
