@@ -1359,10 +1359,9 @@ our role CPP14Parser does CPP14Lexer {
         <Identifier>
     }
 
-    rule namespaceName {
-        ||  <originalNamespaceName>
-        ||  <namespaceAlias>
-    }
+    proto rule namespaceName { * }
+    rule namespaceName:sym<original> { <originalNamespaceName> }
+    rule namespaceName:sym<alias>    { <namespaceAlias> }
 
     rule originalNamespaceName {
         ||  <Identifier>
