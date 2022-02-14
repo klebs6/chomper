@@ -1156,18 +1156,19 @@ our role CPP14Parser does CPP14Lexer {
         <attributeSpecifierSeq> <Semi>
     }
 
-    token declSpecifier {
-        || <storageClassSpecifier>
-        || <typeSpecifier> 
-        || <functionSpecifier>
-        || <Friend>
-        || <Typedef>
-        || <Constexpr>
-    }
+    #---------------------------
+    proto token declSpecifier { * }
+    token declSpecifier:sym<storage-class> { <storageClassSpecifier> }
+    token declSpecifier:sym<type>          { <typeSpecifier> }
+    token declSpecifier:sym<func>          { <functionSpecifier> }
+    token declSpecifier:sym<friend>        { <Friend> }
+    token declSpecifier:sym<typedef>       { <Typedef> }
+    token declSpecifier:sym<constexpr>     { <Constexpr> }
 
     regex declSpecifierSeq {
         <declSpecifier> [<.ws> <declSpecifier>]*?  <attributeSpecifierSeq>?  
     }
+
     #---------------------------
     proto rule storageClassSpecifier { * }
     rule storageClassSpecifier:sym<Register>     { <Register>     } 
@@ -1180,9 +1181,9 @@ our role CPP14Parser does CPP14Lexer {
     rule functionSpecifier:sym<inline>   { <Inline> }
     rule functionSpecifier:sym<virtual>  { <Virtual> }
     rule functionSpecifier:sym<explicit> { <Explicit> }
-    rule typedefName {
-        ||  <Identifier>
-    }
+
+    rule typedefName { <Identifier> }
+
     #---------------------------
     proto rule typeSpecifier { * }
     rule typeSpecifier:sym<trailingTypeSpecifier> { <trailingTypeSpecifier> }
