@@ -1900,11 +1900,11 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     #-----------------------------
-    rule classOrDeclType {
-        ||  <nestedNameSpecifier>?  <className>
-        ||  <decltypeSpecifier>
-    }
+    proto rule classOrDeclType { * }
+    rule classOrDeclType:sym<class>    { <nestedNameSpecifier>?  <className> }
+    rule classOrDeclType:sym<decltype> { <decltypeSpecifier> }
 
+    #-----------------------------
     rule baseTypeSpecifier {
         <classOrDeclType>
     }
