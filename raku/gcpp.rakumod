@@ -793,13 +793,14 @@ our role CPP14Parser does CPP14Lexer {
         [ <LeftParen> <theTypeId> <RightParen> ]* <unaryExpression>
     }
 
+    proto rule pointerMemberOperator { * }
+    rule pointerMemberOperator:sym<dot>   { <DotStar> }
+    rule pointerMemberOperator:sym<arrow> { <ArrowStar> }
+
     rule pointerMemberExpression {
         <castExpression>
         [
-            [   
-                ||  <DotStar>
-                ||  <ArrowStar>
-            ]
+            <pointerMemberOperator>
             <castExpression>
         ]*
     }
