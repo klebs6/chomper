@@ -2023,22 +2023,36 @@ our role CPP14Parser does CPP14Lexer {
         <Greater>
     }
 
-    rule templateId {
-        ||  <simpleTemplateId>
-        ||  [   ||  <operatorFunctionId>
-                ||  <literalOperatorId>
-            ]
-            <Less>
-            <templateArgumentList>?
-            <Greater>
+    #-----------------------------
+    proto rule templateId { * }
+
+    rule templateId:sym<simple> {
+        <simpleTemplateId>
     }
 
+    rule templateId:sym<operator-function-id> {
+        <operatorFunctionId>
+        <Less>
+        <templateArgumentList>?
+        <Greater>
+    }
+
+    rule templateId:sym<literal-operator-id> {
+        <literalOperatorId>
+        <Less>
+        <templateArgumentList>?
+        <Greater>
+    }
+
+    #-----------------------------
     token templateName {
         <Identifier>
     }
 
     rule templateArgumentList {
-        <templateArgument> <Ellipsis>? [ <Comma> <templateArgument> <Ellipsis>? ]*
+        <templateArgument> 
+        <Ellipsis>? 
+        [ <Comma> <templateArgument> <Ellipsis>? ]*
     }
 
     #---------------------
@@ -2048,15 +2062,22 @@ our role CPP14Parser does CPP14Lexer {
     token templateArgument:sym<id-expr>    { <idExpression> }
 
     #---------------------
-    rule typeNameSpecifier {
+    proto rule typeNameSpecifier { * }
+
+    rule typeNameSpecifier:sym<ident> {
         <Typename_>
         <nestedNameSpecifier>
-        [
-            ||  <Identifier>
-            ||  <Template>?  <simpleTemplateId>
-        ]
+        <Identifier>
     }
 
+    rule typeNameSpecifier:sym<template> {
+        <Typename_>
+        <nestedNameSpecifier>
+        <Template>?  
+        <simpleTemplateId>
+    }
+
+    #---------------------
     rule explicitInstantiation {
         <Extern>?
         <Template>
@@ -2095,6 +2116,7 @@ our role CPP14Parser does CPP14Lexer {
         <compoundStatement>
     }
 
+    #---------------------
     rule exceptionDeclaration {
         ||  <attributeSpecifierSeq>?
             <typeSpecifierSeq>
