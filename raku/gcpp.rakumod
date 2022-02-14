@@ -121,7 +121,7 @@ our role CPP14Keyword {
     token DotStar          { '.*'               } 
     token Ellipsis         { '...'              } 
 
-    proto token Not { * }
+    proto token Not    { * }
     token Not:sym<!>       { <sym> }
     token Not:sym<not>     { <sym> }
 
@@ -129,7 +129,7 @@ our role CPP14Keyword {
     token AndAnd:sym<&&>   { <sym> }
     token AndAnd:sym<and>  { <sym> }
 
-    proto token OrOr { * }
+    proto token OrOr   { * }
     token OrOr:sym<||>     { <sym> }
     token OrOr:sym<or>     { <sym> }
 }
@@ -168,8 +168,8 @@ our role CPP14Lexer does CPP14Keyword {
     token StringLiteralItem {
         <Encodingprefix>?
         [   
-            ||  <Rawstring>
-            ||  '"' <Schar>* '"'
+           || <Rawstring>
+           || '"' <Schar>* '"'
         ]
     }
 
@@ -194,13 +194,9 @@ our role CPP14Lexer does CPP14Keyword {
     token UserDefinedLiteral:sym<char>  { <UserDefinedCharacterLiteral> }
 
     token MultiLineMacro {
-        ||  '#'
-            [   ||  <-[ \n ]>*?
-                    '\\'
-                    '\r'?
-                    '\n'
-            ]
-            <-[ \n ]>+
+        '#'
+        [ <-[ \n ]>*? '\\' '\r'? '\n' ]
+        <-[ \n ]>+
     }
 
     token Directive {
@@ -730,8 +726,8 @@ our role CPP14Parser does CPP14Lexer {
         <New>
         <newPlacement>?
         [   
-          ||  <newTypeId>
-          ||  [ <LeftParen> <theTypeId> <RightParen> ]
+           || <newTypeId>
+           || [ <LeftParen> <theTypeId> <RightParen> ]
         ]
         <newInitializer>?
     }
@@ -772,7 +768,7 @@ our role CPP14Parser does CPP14Lexer {
     #------------------------
     proto rule newInitializer { * }
     rule newInitializer:sym<expr-list> { <LeftParen> <expressionList>?  <RightParen> }
-    rule newInitializer:sym<braced> { <bracedInitList> }
+    rule newInitializer:sym<braced>    { <bracedInitList> }
 
     #------------------------
     rule deleteExpression {
@@ -957,22 +953,22 @@ our role CPP14Parser does CPP14Lexer {
         <attributedStatementBody>
     }
 
-    token statement:sym<labeled>     { <comment>? <labeledStatement> }
+    token statement:sym<labeled>     { <comment>? <labeledStatement>     }
     token statement:sym<declaration> { <comment>? <declarationStatement> }
 
     proto rule attributedStatementBody { * }
     rule attributedStatementBody:sym<expression> { <expressionStatement> }
-    rule attributedStatementBody:sym<compound>   { <compoundStatement> }
-    rule attributedStatementBody:sym<selection>  { <selectionStatement> }
-    rule attributedStatementBody:sym<iteration>  { <iterationStatement> }
-    rule attributedStatementBody:sym<jump>       { <jumpStatement> }
-    rule attributedStatementBody:sym<try>        { <tryBlock> }
+    rule attributedStatementBody:sym<compound>   { <compoundStatement>   }
+    rule attributedStatementBody:sym<selection>  { <selectionStatement>  }
+    rule attributedStatementBody:sym<iteration>  { <iterationStatement>  }
+    rule attributedStatementBody:sym<jump>       { <jumpStatement>       }
+    rule attributedStatementBody:sym<try>        { <tryBlock>            }
 
     #-----------------------------
     proto rule labeledStatementLabelBody { * }
-    rule labeledStatementLabelBody:sym<id>        { <Identifier> }
+    rule labeledStatementLabelBody:sym<id>        { <Identifier>                }
     rule labeledStatementLabelBody:sym<case-expr> { <Case> <constantExpression> }
-    rule labeledStatementLabelBody:sym<default>   { <Default> }
+    rule labeledStatementLabelBody:sym<default>   { <Default>                   }
 
     #-----------------------------
     rule labeledStatementLabel {
@@ -1609,7 +1605,7 @@ our role CPP14Parser does CPP14Lexer {
         <noPointerAbstractDeclarator>? <parametersAndQualifiers> <trailingReturnType>
     }
 
-    rule abstractDeclarator:Sym<abstract-pack> {
+    rule abstractDeclarator:sym<abstract-pack> {
         <abstractPackDeclarator>
     }
 
@@ -1722,7 +1718,7 @@ our role CPP14Parser does CPP14Lexer {
     #-----------------------------
     proto rule initializer { * }
 
-    rule initializer:Sym<brace-or-eq> {
+    rule initializer:sym<brace-or-eq> {
         <braceOrEqualInitializer>
     }
 
@@ -1743,7 +1739,7 @@ our role CPP14Parser does CPP14Lexer {
         <assignmentExpression>
     }
 
-    rule initializerClause:Sym<braced> {
+    rule initializerClause:sym<braced> {
         <comment>?
         <bracedInitList>
     }
