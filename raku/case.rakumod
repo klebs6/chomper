@@ -29,3 +29,7 @@ our sub screaming-snake-case-to-camel-case($in) {
     $in.trim.chomp.split("_")>>.lc>>.tc.join("")
 }
 
+our sub kebab-to-camel($id) {
+    my @parts = $id.split("-");
+    @parts>>.tc.join("").subst(/_$/,"")
+}
