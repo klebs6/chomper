@@ -1156,78 +1156,67 @@ our class ShiftExpressionTail {
 
 # rule shift-expression { <additive-expression> <shift-expression-tail>* } #-----------------------
 our class ShiftExpression { 
-    #TODO
+    has AdditiveExpression  $.additive-expression is required;
+    has ShiftExpressionTail $.shift-expression-tail is required;
 }
 
 our role IShiftOperator { }
 
 # rule shift-operator:sym<right> { <.greater> <.greater> }
-our class ShiftOperator::Right does IShiftOperator {
-
-}
+our class ShiftOperator::Right does IShiftOperator { }
 
 # rule shift-operator:sym<left> { <.less> <.less> } #-----------------------
-our class ShiftOperator::Left does IShiftOperator {
-    #TODO
-}
+our class ShiftOperator::Left does IShiftOperator { }
 
 our role IRelationalOperator { }
 
 # rule relational-operator:sym<less> { <.less> }
-our class RelationalOperator::Less does IRelationalOperator {
-
-}
+our class RelationalOperator::Less does IRelationalOperator { }
 
 # rule relational-operator:sym<greater> { <.greater> }
-our class RelationalOperator::Greater does IRelationalOperator {
-
-}
+our class RelationalOperator::Greater does IRelationalOperator { }
 
 # rule relational-operator:sym<less-eq> { <.less-equal> }
-our class RelationalOperator::LessEq does IRelationalOperator {
-
-}
+our class RelationalOperator::LessEq does IRelationalOperator { }
 
 # rule relational-operator:sym<greater-eq> { <.greater-equal> } #-----------------------
-our class RelationalOperator::GreaterEq does IRelationalOperator {
-    #TODO
-}
+our class RelationalOperator::GreaterEq does IRelationalOperator { }
 
 # regex relational-expression-tail { <.ws> <relational-operator> <.ws> <shift-expression> }
 our class RelationalExpressionTail { 
-    #TODO
+    has RelationalOperator $.relational-operator is required;
+    has ShiftExpression    $.shift-expression    is required;
 }
 
 # regex relational-expression { <shift-expression> <relational-expression-tail>* } #-----------------------
 our class RelationalExpression { 
-    #TODO
+    has ShiftExpression          $.shift-expression is required;
+    has RelationalExpressionTail @.relational-expression-tail is required;
 }
 
 our role IEqualityOperator { }
 
 # token equality-operator:sym<eq> { <equal> }
-our class EqualityOperator::Eq does IEqualityOperator {
-    has Equal $.equal is required;
-}
+our class EqualityOperator::Eq does IEqualityOperator { }
 
 # token equality-operator:sym<neq> { <not-equal> } #-----------------------
-our class EqualityOperator::Neq does IEqualityOperator {
-    #TODO
-}
+our class EqualityOperator::Neq does IEqualityOperator { }
 
 # rule equality-expression-tail { <equality-operator> <relational-expression> }
 our class EqualityExpressionTail { 
-    #TODO
+    has EqualityOperator     $.equality-operator     is required;
+    has RelationalExpression $.relational-expression is required;
 }
 
 # rule equality-expression { <relational-expression> <equality-expression-tail>* }
 our class EqualityExpression { 
-    #TODO
+    has RelationalExpression   $.relational-expression is required;
+    has EqualityExpressionTail @.equality-expression-tail is required;
 }
 
 # rule and-expression { <equality-expression> [ <and_> <equality-expression> ]* }
 our class AndExpression { 
-    #TODO
+    has EqualityExpression @.equality-expressions is required;
 }
 
 # rule exclusive-or-expression { <and-expression> [ <caret> <and-expression> ]* }
