@@ -3283,12 +3283,15 @@ our class TemplateId::LiteralOperatorId does ITemplateId {
 # token template-name { <identifier> }
 our class TemplateName { 
     has Identifier $.identifier is required;
-    #TODO
 }
 
-# rule template-argument-list { <template-argument> <ellipsis>? [ <.comma> <template-argument> <ellipsis>? ]* } #---------------------
+# rule template-argument-list { 
+# <template-argument> 
+# <ellipsis>? 
+# [ <.comma> <template-argument> <ellipsis>? ]* 
+# }
 our class TemplateArgumentList { 
-    #TODO
+    has TemplateArgument @.template-arguments is required;
 }
 
 our role ITemplateArgument { }
@@ -3305,7 +3308,7 @@ our class TemplateArgument::ConstExpr does ITemplateArgument {
 
 # token template-argument:sym<id-expr> { <id-expression> } #---------------------
 our class TemplateArgument::IdExpr does ITemplateArgument {
-    #TODO
+    has IdExpression $.id-expression is required;
 }
 
 our role ITypeNameSpecifier { }
@@ -3317,24 +3320,33 @@ our class TypeNameSpecifier::Ident does ITypeNameSpecifier {
     has Identifier $.identifier is required;
 }
 
-# rule type-name-specifier:sym<template> { <typename_> <nested-name-specifier> <template>? <simple-template-id> } #---------------------
+# rule type-name-specifier:sym<template> { 
+#   <typename_> 
+#   <nested-name-specifier> 
+#   <template>? 
+#   <simple-template-id> 
+# }
 our class TypeNameSpecifier::Template does ITypeNameSpecifier {
-    #TODO
+    has NestedNameSpecifier $.nested-name-specifier is required;
+    has Bool                $.has-template          is required;
+    has SimpleTemplateId    $.simple-template-id    is required;
 }
 
 # rule explicit-instantiation { <extern>? <template> <declaration> }
 our class ExplicitInstantiation { 
-    #TODO
+    has Bool        $.extern      is required;
+    has Declaration $.declaration is required; 
 }
 
 # rule explicit-specialization { <template> <less> <greater> <declaration> }
 our class ExplicitSpecialization { 
-    #TODO
+    has Declaration $.declaration is required;
 }
 
 # rule try-block { <try_> <compound-statement> <handler-seq> }
 our class TryBlock { 
-    #TODO
+    has CompoundStatement $.compound-statement is required;
+    has HandlerSeq        $.handler-seq        is required;
 }
 
 # rule function-try-block { <try_> <constructor-initializer>? <compound-statement> <handler-seq> }
