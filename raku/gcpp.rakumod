@@ -431,11 +431,9 @@ our role CPP14Lexer does CPP14Keyword {
 
 our role CPP14Parser does CPP14Lexer {
 
-    #<statement-seq>
     rule TOP {
         <.ws> 
         <statement-seq>
-        #<unary-expression>
     }
 
     token translation-unit {

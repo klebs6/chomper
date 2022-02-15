@@ -1,330 +1,41 @@
 unit package CPP14;
 
-#-------------------------------
-our class Alignas          { }
-our class Alignof          { }
-our class Asm              { }
-our class Auto             { }
-our class Bool             { }
-our class Break            { }
-our class Case             { }
-our class Catch            { }
-our class Char             { }
-our class Char16           { }
-our class Char32           { }
-our class Class            { }
-our class Const            { }
-our class Constexpr        { }
-our class Const_cast       { }
-our class Continue         { }
-our class Decltype         { }
-our class Default          { }
-our class Delete           { }
-our class Do               { }
-our class Double           { }
-our class Dynamic_cast     { }
-our class Else             { }
-our class Enum             { }
-our class Explicit         { }
-our class Export           { }
-our class Extern           { }
-our class False            { }
-our class Final            { }
-our class Float            { }
-our class For              { }
-our class Friend           { }
-our class Goto             { }
-our class If               { }
-our class Inline           { }
-our class Int              { }
-our class Long             { }
-our class Mutable          { }
-our class Namespace        { }
-our class New              { }
-our class Noexcept         { }
-our class Nullptr          { }
-our class Operator         { }
-our class Override         { }
-our class Private          { }
-our class Protected        { }
-our class Public           { }
-our class Register         { }
-our class Reinterpret_cast { }
-our class Return           { }
-our class Short            { }
-our class Signed           { }
-our class Sizeof           { }
-our class Static           { }
-our class Static_assert    { }
-our class Static_cast      { }
-our class Struct           { }
-our class Switch           { }
-our class Template         { }
-our class This             { }
-our class Thread_local     { }
-our class Throw            { }
-our class True             { }
-our class Try              { }
-our class Typedef          { }
-our class Typeid           { }
-our class Typename         { }
-our class Union            { }
-our class Unsigned         { }
-our class Using            { }
-our class Virtual          { }
-our class Void             { }
-our class Volatile         { }
-our class Wchar            { }
-our class While            { }
-our class LeftParen        { }
-our class RightParen       { }
-our class LeftBracket      { }
-our class RightBracket     { }
-our class LeftBrace        { }
-our class RightBrace       { }
-our class Plus             { }
-our class Minus            { }
-our class Star             { }
-our class Div              { }
-our class Mod              { }
-our class Caret            { }
-our class And              { }
-our class Or               { }
-our class Tilde            { }
-our class Assign           { }
-our class Less             { }
-our class Greater          { }
-our class PlusAssign       { }
-our class MinusAssign      { }
-our class StarAssign       { }
-our class DivAssign        { }
-our class ModAssign        { }
-our class XorAssign        { }
-our class AndAssign        { }
-our class OrAssign         { }
-our class LeftShiftAssign  { }
-our class RightShiftAssign { }
-our class Equal            { }
-our class NotEqual         { }
-our class LessEqual        { }
-our class GreaterEqual     { }
-our class PlusPlus         { }
-our class MinusMinus       { }
-our class Comma            { }
-our class ArrowStar        { }
-our class Arrow            { }
-our class Question         { }
-our class Colon            { }
-our class Doublecolon      { }
-our class Semi             { }
-our class Dot              { }
-our class DotStar          { }
-our class Ellipsis         { }
+our class Identifier         { has Str $.value is required; }
+our class Nondigit           { has Str $.value is required; }
+our class Digit              { has Str $.value is required; }
+our class DecimalLiteral     { has Str $.value is required; }
+our class OctalLiteral       { has Str $.value is required; }
+our class HexadecimalLiteral { has Str $.value is required; }
+our class BinaryLiteral      { has Str $.value is required; }
+our class Nonzerodigit       { has Str $.value is required; }
+our class Octaldigit         { has Str $.value is required; }
+our class Hexadecimaldigit   { has Str $.value is required; }
+our class Binarydigit        { has Str $.value is required; }
 
 #-------------------------------
 our role INot { }
 our class Not::Bang      does INot { }
-our class Not::Not       does INot { has Not $.not is required; }
+our class Not::Not       does INot { }
 
 #-------------------------------
 our role IAndAnd { }
 our class AndAnd::AndAnd does IAndAnd { }
-our class AndAnd::And    does IAndAnd { has And $.and is required; }
+our class AndAnd::And    does IAndAnd { }
 
 #-------------------------------
 our role IOrOr { }
 our class OrOr::PipePipe does IOrOr { }
-our class OrOr::Or       does IOrOr { has Or $.or is required; }
+our class OrOr::Or       does IOrOr { }
 
 #-------------------------------
-our role IIntegerLiteral { }
-
-our class IntegerLiteral::Dec does IIntegerLiteral {
-    has DecimalLiteral     $.decimal-literal is required;
-    has Integersuffix      $.integersuffix;
-}
-
-our class IntegerLiteral::Oct does IIntegerLiteral {
-    has OctalLiteral       $.octal-literal is required;
-    has Integersuffix      $.integersuffix;
-}
-
-our class IntegerLiteral::Hex does IIntegerLiteral {
-    has HexadecimalLiteral $.hexadecimal-literal is required;
-    has Integersuffix      $.integersuffix;
-}
-
-our class IntegerLiteral::Bin does IIntegerLiteral {
-    has BinaryLiteral      $.binary-literal is required;
-    has Integersuffix      $.integersuffix;
-}
+our role ILonglongsuffix { }
+our class Longlongsuffix::Ll does ILonglongsuffix { }
+our class Longlongsuffix::LL does ILonglongsuffix { }
 
 #-------------------------------
-our role ICharacterLiteralPrefix { }
+our class Unsignedsuffix { }
+our class Longsuffix     { }
 
-our class CharacterLiteralPrefix::U    does ICharacterLiteralPrefix { }
-our class CharacterLiteralPrefix::BigU does ICharacterLiteralPrefix { }
-our class CharacterLiteralPrefix::L    does ICharacterLiteralPrefix { }
-
-#-------------------------------
-our class CharacterLiteral { 
-    has CharacterLiteralPrefix $.character-literal-prefix;
-    has Cchar                  @.cchar;
-}
-
-our role IFloatingLiteral { }
-
-our class FloatingLiteral::Frac does IFloatingLiteral {
-    has Fractionalconstant $.fractionalconstant is required;
-    has Exponentpart       $.exponentpart;
-    has Floatingsuffix     $.floatingsuffix;
-}
-
-our class FloatingLiteral::Digit does IFloatingLiteral {
-    has Digitsequence  $.digitsequence is required;
-    has Exponentpart   $.exponentpart  is required;
-    has Floatingsuffix $.floatingsuffix;
-}
-
-our class StringLiteralItem { 
-    has Encodingprefix $.encodingprefix;
-    has Str            $.content is required;
-}
-
-our class StringLiteral { 
-    has StringLiteralItem @.string-literal-items;
-}
-
-#-------------------------------
-our role IBooleanLiteral { }
-
-our class BooleanLiteral::F does IBooleanLiteral {
-    has False $.false is required;
-}
-
-our class BooleanLiteral::T does IBooleanLiteral {
-    has True $.true is required;
-}
-
-our class PointerLiteral { 
-    has Nullptr $.nullptr is required;
-}
-
-#-------------------------------
-our role IUserDefinedLiteral { }
-
-our class UserDefinedLiteral:syn<int> { 
-    has UserDefinedIntegerLiteral   $.user-defined-integer-literal is required;
-}
-
-our class UserDefinedLiteral::Float does IUserDefinedLiteral {
-    has UserDefinedFloatingLiteral  $.user-defined-floating-literal is required;
-}
-
-our class UserDefinedLiteral::Str does IUserDefinedLiteral {
-    has UserDefinedStringLiteral    $.user-defined-string-literal is required;
-}
-
-our class UserDefinedLiteral::Char does IUserDefinedLiteral {
-    has UserDefinedCharacterLiteral $.user-defined-character-literal is required;
-}
-
-#-------------------------------
-our class MultiLineMacro { 
-    has Str $.content is required;
-}
-
-our class Directive { 
-    has Str $.content is required;
-}
-
-our class Hexquad { 
-    has Quad @hexadecimaldigit is required;
-}
-
-#-------------------------------
-our role IUniversalcharactername { }
-
-our class Universalcharactername::One does IUniversalcharactername {
-    has Hexquad $.first is required;
-}
-
-our class Universalcharactername::Two does IUniversalcharactername {
-    has Hexquad $.first is required;
-    has Hexquad $.second is required;
-}
-
-#-------------------------------
-our role IIdentifierStart { }
-
-our class IdentifierStart::Nondigit does IIdentifierStart {
-    has Nondigit $.nondigit is required;
-}
-
-our class IdentifierStart::Ucn does IIdentifierStart {
-    has Universalcharactername $.universalcharactername is required;
-}
-
-#-------------------------------
-our role IIdentifierContinue { }
-
-our class IdentifierContinue::Digit does IIdentifierContinue {
-    has Digit $.digit is required;
-}
-
-our class IdentifierContinue::Nondigit does IIdentifierContinue {
-    has Nondigit $.nondigit is required;
-}
-
-our class IdentifierContinue::Ucn does IIdentifierContinue {
-    has Universalcharactername $.universalcharactername is required;
-}
-
-our class Identifier { 
-    has Str $.value is required;
-}
-
-our class Nondigit { 
-    has Str $.value is required;
-}
-
-our class Digit { 
-    has Str $.value is required;
-}
-
-our class DecimalLiteral { 
-    has Str $.value is required;
-}
-
-our class OctalLiteral { 
-    has Str $.value is required;
-}
-
-our class HexadecimalLiteral { 
-    has Str $.value is required;
-}
-
-our class BinaryLiteral { 
-    has Str $.value is required;
-}
-
-our class Nonzerodigit { 
-    has Str $.value is required;
-}
-
-our class Octaldigit { 
-    has Str $.value is required;
-}
-
-our class Hexadecimaldigit { 
-    has Str $.value is required;
-}
-
-our class Binarydigit { 
-    has Str $.value is required;
-}
-
-#-------------------------------
 our role IIntegersuffix { }
 
 our class Integersuffix::Ul does IIntegersuffix {
@@ -334,7 +45,7 @@ our class Integersuffix::Ul does IIntegersuffix {
 
 our class Integersuffix::Ull does IIntegersuffix {
     has Unsignedsuffix $.unsignedsuffix is required;
-    has Longlongsuffix $.longlongsuffix;
+    has ILonglongsuffix $.longlongsuffix;
 }
 
 our class Integersuffix::Lu does IIntegersuffix {
@@ -343,47 +54,39 @@ our class Integersuffix::Lu does IIntegersuffix {
 }
 
 our class Integersuffix::Llu does IIntegersuffix {
-    has LongLongsuffix $.longsuffix is required;
-    has Unsignedsuffix $.unsignedsuffix;
-}
-
-our class Unsignedsuffix { }
-our class Longsuffix     { }
-
-#-------------------------------
-our role ILonglongsuffix { }
-our class Longlongsuffix::Ll does ILonglongsuffix { }
-our class Longlongsuffix::LL does ILonglongsuffix { }
-
-#-------------------------------
-our role ICchar { }
-
-our class Cchar::Basic does ICchar {
-    has Str $.value is required;
-}
-
-our class Cchar::Escape does ICchar {
-    has Escapesequence $.escapesequence is required;
-}
-
-our class Cchar::Universal does ICchar {
-    has Universalcharactername $.universalcharactername is required;
+    has ILonglongsuffix $.longsuffix is required;
+    has Unsignedsuffix  $.unsignedsuffix;
 }
 
 #-------------------------------
-our role IEscapesequence { }
+our role IIntegerLiteral { }
 
-our class Escapesequence::Simple does IEscapesequence {
-    has Simpleescapesequence $.simpleescapesequence is required;
+our class IntegerLiteral::Dec does IIntegerLiteral {
+    has DecimalLiteral $.decimal-literal is required;
+    has IIntegersuffix $.integersuffix;
 }
 
-our class Escapesequence::Octal does IEscapesequence {
-    has Octalescapesequence $.octalescapesequence is required;
+our class IntegerLiteral::Oct does IIntegerLiteral {
+    has OctalLiteral       $.octal-literal is required;
+    has IIntegersuffix     $.integersuffix;
 }
 
-our class Escapesequence::Hex does IEscapesequence {
-    has Hexadecimalescapesequence $.hexadecimalescapesequence is required;
+our class IntegerLiteral::Hex does IIntegerLiteral {
+    has HexadecimalLiteral $.hexadecimal-literal is required;
+    has IIntegersuffix     $.integersuffix;
 }
+
+our class IntegerLiteral::Bin does IIntegerLiteral {
+    has BinaryLiteral      $.binary-literal is required;
+    has IIntegersuffix     $.integersuffix;
+}
+
+#-------------------------------
+our role ICharacterLiteralPrefix { }
+
+our class CharacterLiteralPrefix::U    does ICharacterLiteralPrefix { }
+our class CharacterLiteralPrefix::BigU does ICharacterLiteralPrefix { }
+our class CharacterLiteralPrefix::L    does ICharacterLiteralPrefix { }
 
 #-------------------------------
 our role ISimpleescapesequence { }
@@ -409,6 +112,70 @@ our class Hexadecimalescapesequence {
 }
 
 #-------------------------------
+our role IEscapesequence { }
+
+our class Escapesequence::Simple does IEscapesequence {
+    has ISimpleescapesequence $.simpleescapesequence is required;
+}
+
+our class Escapesequence::Octal does IEscapesequence {
+    has Octalescapesequence $.octalescapesequence is required;
+}
+
+our class Escapesequence::Hex does IEscapesequence {
+    has Hexadecimalescapesequence $.hexadecimalescapesequence is required;
+}
+
+#-------------------------------
+our class MultiLineMacro { 
+    has Str $.content is required;
+}
+
+our class Directive { 
+    has Str $.content is required;
+}
+
+subset Quad of List where (Hexadecimaldigit, Hexadecimaldigit, Hexadecimaldigit, Hexadecimaldigit);
+
+our class Hexquad { 
+    has Quad @hexadecimaldigit is required;
+}
+
+#-------------------------------
+our role IUniversalcharactername { }
+
+our class Universalcharactername::One does IUniversalcharactername {
+    has Hexquad $.first is required;
+}
+
+our class Universalcharactername::Two does IUniversalcharactername {
+    has Hexquad $.first is required;
+    has Hexquad $.second is required;
+}
+
+#-------------------------------
+our role ICchar { }
+
+our class Cchar::Basic does ICchar {
+    has Str $.value is required;
+}
+
+our class Cchar::Escape does ICchar {
+    has IEscapesequence $.escapesequence is required;
+}
+
+our class Cchar::Universal does ICchar {
+    has IUniversalcharactername $.universalcharactername is required;
+}
+
+#-------------------------------
+our class CharacterLiteral { 
+    has ICharacterLiteralPrefix $.character-literal-prefix;
+    has ICchar                  @.cchar;
+}
+
+our role IFloatingLiteral { }
+
 our role IFractionalconstant { }
 
 our class Fractionalconstant::WithTail does IFractionalconstant {
@@ -432,37 +199,47 @@ our class Digitsequence {
     has Digit @.digits is required;
 }
 
-our class Floatingsuffix { }
-
 #-------------------------------
 our role IEncodingprefix { }
 
 our class Encodingprefix::U8 does IEncodingprefix { }
-our class Encodingprefix::U  does IEncodingprefix { }
+our class Encodingprefix::u  does IEncodingprefix { }
 our class Encodingprefix::U  does IEncodingprefix { }
 our class Encodingprefix::L  does IEncodingprefix { }
 
+our class Floatingsuffix { }
+
+our class FloatingLiteral::Frac does IFloatingLiteral {
+    has IFractionalconstant $.fractionalconstant is required;
+    has Exponentpart       $.exponentpart;
+    has Floatingsuffix     $.floatingsuffix;
+}
+
+our class FloatingLiteral::Digit does IFloatingLiteral {
+    has Digitsequence  $.digitsequence is required;
+    has Exponentpart   $.exponentpart  is required;
+    has Floatingsuffix $.floatingsuffix;
+}
+
+our class StringLiteralItem { 
+    has IEncodingprefix $.encodingprefix;
+    has Str            $.content is required;
+}
+
+our class StringLiteral { 
+    has StringLiteralItem @.string-literal-items;
+}
+
 #-------------------------------
-our role ISchar { }
+our role IBooleanLiteral { }
 
-our class Schar::Basic does ISchar {
-    has Str $.value is required;
-}
+our class BooleanLiteral::F does IBooleanLiteral { }
 
-our class Schar::Escape does ISchar {
-    has Escapesequence $.escapesequence is required;
-}
+our class BooleanLiteral::T does IBooleanLiteral { }
 
-our class Schar::Ucn does ISchar {
-    has Universalcharactername $.universalcharactername is required;
-}
-
-our class Rawstring { 
-    has Str $.value is required;
-}
+our class PointerLiteral { }
 
 #-------------------------------
-
 our role IUserDefinedIntegerLiteral { }
 
 # token user-defined-integer-literal:sym<dec> { <decimal-literal> <udsuffix> }
@@ -482,19 +259,39 @@ our class UserDefinedIntegerLiteral::Hex does IUserDefinedIntegerLiteral {
 
 # token user-defined-integer-literal:sym<bin> { <binary-literal> <udsuffix> }      #-------------------
 our class UserDefinedIntegerLiteral::Bin does IUserDefinedIntegerLiteral {
-    has Binaryliteral $.binary-literal is required;
+    has BinaryLiteral $.binary-literal is required;
 }
 
+#-------------------------------
 our role IUserDefinedFloatingLiteral { }
 
 # token user-defined-floating-literal:sym<frac> { <fractionalconstant> <exponentpart>?  <udsuffix> }
 our class UserDefinedFloatingLiteral::Frac does IUserDefinedFloatingLiteral {
-    has Fractionalconstant $.fractionalconstant is required;
+    has IFractionalconstant $.fractionalconstant is required;
     has Exponentpart       $.exponentpart;
 }
 
 # token user-defined-floating-literal:sym<digi> { <digitsequence> <exponentpart> <udsuffix> }      #-------------------
 our class UserDefinedFloatingLiteral::Digi does IUserDefinedFloatingLiteral {
+    has Str $.value is required;
+}
+
+#-------------------------------
+our role ISchar { }
+
+our class Schar::Basic does ISchar {
+    has Str $.value is required;
+}
+
+our class Schar::Escape does ISchar {
+    has IEscapesequence $.escapesequence is required;
+}
+
+our class Schar::Ucn does ISchar {
+    has IUniversalcharactername $.universalcharactername is required;
+}
+
+our class Rawstring { 
     has Str $.value is required;
 }
 
@@ -513,6 +310,51 @@ our class Udsuffix {
     has Str $.value is required;
 }
 
+#-------------------------------
+our role IUserDefinedLiteral { }
+
+our class UserDefinedLiteral::Int { 
+    has IUserDefinedIntegerLiteral   $.user-defined-integer-literal is required;
+}
+
+our class UserDefinedLiteral::Float does IUserDefinedLiteral {
+    has IUserDefinedFloatingLiteral  $.user-defined-floating-literal is required;
+}
+
+our class UserDefinedLiteral::Str does IUserDefinedLiteral {
+    has UserDefinedStringLiteral    $.user-defined-string-literal is required;
+}
+
+our class UserDefinedLiteral::Char does IUserDefinedLiteral {
+    has UserDefinedCharacterLiteral $.user-defined-character-literal is required;
+}
+
+#-------------------------------
+our role IIdentifierStart { }
+
+our class IdentifierStart::Nondigit does IIdentifierStart {
+    has Nondigit $.nondigit is required;
+}
+
+our class IdentifierStart::Ucn does IIdentifierStart {
+    has IUniversalcharactername $.universalcharactername is required;
+}
+
+#-------------------------------
+our role IIdentifierContinue { }
+
+our class IdentifierContinue::Digit does IIdentifierContinue {
+    has Digit $.digit is required;
+}
+
+our class IdentifierContinue::Nondigit does IIdentifierContinue {
+    has Nondigit $.nondigit is required;
+}
+
+our class IdentifierContinue::Ucn does IIdentifierContinue {
+    has IUniversalcharactername $.universalcharactername is required;
+}
+
 # token block-comment {         '/*' .*?  '*/'     }
 our class BlockComment { 
     has Str $.value is required;
@@ -521,6 +363,372 @@ our class BlockComment {
 # token line-comment {         '//' <-[ \r \n ]>*     }
 our class LineComment { 
     has Str $.value is required;
+}
+
+#-------------------
+our role IStorageClassSpecifier { }
+
+# rule storage-class-specifier:sym<register> { <.register> }
+our class StorageClassSpecifier::Register does IStorageClassSpecifier { }
+
+# rule storage-class-specifier:sym<static> { <.static> }
+our class StorageClassSpecifier::Static does IStorageClassSpecifier { }
+
+# rule storage-class-specifier:sym<thread_local> { <.thread_local> }
+our class StorageClassSpecifier::Thread_local does IStorageClassSpecifier { }
+
+# rule storage-class-specifier:sym<extern> { <.extern> }
+our class StorageClassSpecifier::Extern does IStorageClassSpecifier { }
+
+# rule storage-class-specifier:sym<mutable> { <.mutable> } 
+our class StorageClassSpecifier::Mutable does IStorageClassSpecifier { }
+
+#-------------------
+our role ISimpleTypeSignednessModifier { }
+
+# rule simple-type-signedness-modifier:sym<unsigned> { <.unsigned> }
+our class SimpleTypeSignednessModifier::Unsigned does ISimpleTypeSignednessModifier { }
+
+# rule simple-type-signedness-modifier:sym<signed> { <.signed> }
+our class SimpleTypeSignednessModifier::Signed does ISimpleTypeSignednessModifier { }
+
+#-------------------
+our role ISimpleTypeLengthModifier { }
+
+# rule simple-type-length-modifier:sym<short> { <.short> }
+our class SimpleTypeLengthModifier::Short does ISimpleTypeLengthModifier { }
+
+# rule simple-type-length-modifier:sym<long_> { <.long_> }
+our class SimpleTypeLengthModifier::Long does ISimpleTypeLengthModifier { }
+
+#-------------------
+# rule simple-int-type-specifier { 
+#   <simple-type-signedness-modifier>? 
+#   <simple-type-length-modifier>* 
+#   <int_> 
+# }
+our class SimpleIntTypeSpecifier { 
+    has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+    has ISimpleTypeLengthModifier     @.simple-type-length-modifiers is required;
+}
+
+# rule simple-char-type-specifier { <simple-type-signedness-modifier>? <char_> }
+our class SimpleCharTypeSpecifier { 
+    has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+}
+
+# rule simple-char16-type-specifier { <simple-type-signedness-modifier>? <char16> }
+our class SimpleChar16TypeSpecifier { 
+    has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+}
+
+# rule simple-char32-type-specifier { <simple-type-signedness-modifier>? <char32> }
+our class SimpleChar32TypeSpecifier { 
+    has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+}
+
+# rule simple-wchar-type-specifier { <simple-type-signedness-modifier>? <wchar> }
+our class SimpleWcharTypeSpecifier { 
+    has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+}
+
+# rule simple-double-type-specifier { <simple-type-length-modifier>? <double> } #------------------------------
+our class SimpleDoubleTypeSpecifier { 
+    has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+}
+
+#-------------------------------------
+our role ISimpleTypeSpecifier { }
+
+# regex simple-type-specifier:sym<int> { <simple-int-type-specifier> }
+our class SimpleTypeSpecifier::Int_ does ISimpleTypeSpecifier {
+    has SimpleIntTypeSpecifier $.simple-int-type-specifier is required;
+}
+
+# regex simple-type-specifier:sym<full> { <full-type-name> }
+our class SimpleTypeSpecifier::Full does ISimpleTypeSpecifier {
+    has FullTypeName $.full-type-name is required;
+}
+
+# regex simple-type-specifier:sym<scoped> { <scoped-template-id> }
+our class SimpleTypeSpecifier::Scoped does ISimpleTypeSpecifier {
+    has ScopedTemplateId $.scoped-template-id is required;
+}
+
+# regex simple-type-specifier:sym<signedness-mod> { <simple-type-signedness-modifier> }
+our class SimpleTypeSpecifier::SignednessMod does ISimpleTypeSpecifier {
+    has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier is required;
+}
+
+# regex simple-type-specifier:sym<signedness-mod-length> { <simple-type-signedness-modifier>? <simple-type-length-modifier>+ }
+our class SimpleTypeSpecifier::SignednessModLength does ISimpleTypeSpecifier {
+    has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+    has ISimpleTypeLengthModifier     @.simple-type-length-modifier is required;
+}
+
+# regex simple-type-specifier:sym<char> { <simple-char-type-specifier> }
+our class SimpleTypeSpecifier::Char does ISimpleTypeSpecifier {
+    has SimpleCharTypeSpecifier $.simple-char-type-specifier is required;
+}
+
+# regex simple-type-specifier:sym<char16> { <simple-char16-type-specifier> }
+our class SimpleTypeSpecifier::Char16 does ISimpleTypeSpecifier {
+    has SimpleChar16TypeSpecifier $.simple-char16-type-specifier is required;
+}
+
+# regex simple-type-specifier:sym<char32> { <simple-char32-type-specifier> }
+our class SimpleTypeSpecifier::Char32 does ISimpleTypeSpecifier {
+    has SimpleChar32TypeSpecifier $.simple-char32-type-specifier is required;
+}
+
+# regex simple-type-specifier:sym<wchar> { <simple-wchar-type-specifier> }
+our class SimpleTypeSpecifier::Wchar does ISimpleTypeSpecifier {
+    has SimpleWcharTypeSpecifier $.simple-wchar-type-specifier is required;
+}
+
+# regex simple-type-specifier:sym<bool> { <bool_> }
+our class SimpleTypeSpecifier::Bool does ISimpleTypeSpecifier {
+    has Bool $.bool_ is required;
+}
+
+# regex simple-type-specifier:sym<float> { <float> }
+our class SimpleTypeSpecifier::Float does ISimpleTypeSpecifier {
+    has Float $.float is required;
+}
+
+# regex simple-type-specifier:sym<double> { <simple-double-type-specifier> }
+our class SimpleTypeSpecifier::Double does ISimpleTypeSpecifier {
+    has SimpleDoubleTypeSpecifier $.simple-double-type-specifier is required;
+}
+
+# regex simple-type-specifier:sym<void> { <void_> }
+our class SimpleTypeSpecifier::Void does ISimpleTypeSpecifier {
+    has Void $.void_ is required;
+}
+
+# regex simple-type-specifier:sym<auto> { <auto> }
+our class SimpleTypeSpecifier::Auto does ISimpleTypeSpecifier {
+    has Auto $.auto is required;
+}
+
+# regex simple-type-specifier:sym<decltype> { <decltype-specifier> } #------------------------------
+our class SimpleTypeSpecifier::Decltype does ISimpleTypeSpecifier {
+    has DecltypeSpecifier $.decltype-specifier is required;
+}
+
+#---------------------------
+our role ITrailingTypeSpecifier { }
+
+our role ICvQualifier { }
+
+# rule cv-qualifier:sym<const> { <const> }
+our class CvQualifier::Const does ICvQualifier { }
+
+# rule cv-qualifier:sym<volatile> { <volatile> } #-----------------------------
+our class CvQualifier::Volatile does ICvQualifier { }
+
+# rule trailing-type-specifier:sym<cv-qualifier> { <cv-qualifier> <simple-type-specifier> }
+our class TrailingTypeSpecifier::CvQualifier does ITrailingTypeSpecifier {
+    has ICvQualifier        $.cv-qualifier          is required;
+    has SimpleTypeSpecifier $.simple-type-specifier is required;
+}
+
+# rule trailing-type-specifier:sym<simple> { <simple-type-specifier> }
+our class TrailingTypeSpecifier::Simple does ITrailingTypeSpecifier {
+    has SimpleTypeSpecifier $.simple-type-specifier is required;
+}
+
+# rule trailing-type-specifier:sym<elaborated> { <elaborated-type-specifier> }
+our class TrailingTypeSpecifier::Elaborated does ITrailingTypeSpecifier {
+    has ElaboratedTypeSpecifier $.elaborated-type-specifier is required;
+}
+
+# rule trailing-type-specifier:sym<typename> { <type-name-specifier> } #---------------------------
+our class TrailingTypeSpecifier::Typename does ITrailingTypeSpecifier {
+    has TypeNameSpecifier $.type-name-specifier is required;
+}
+
+#------------------------
+our role ITypeSpecifier { }
+
+# rule type-specifier:sym<trailing-type-specifier> { <trailing-type-specifier> }
+our class TypeSpecifier::TrailingTypeSpecifier does ITypeSpecifier {
+    has TrailingTypeSpecifier $.trailing-type-specifier is required;
+}
+
+# rule type-specifier:sym<class-specifier> { <class-specifier> }
+our class TypeSpecifier::ClassSpecifier does ITypeSpecifier {
+    has ClassSpecifier $.class-specifier is required;
+}
+
+# rule type-specifier:sym<enum-specifier> { <enum-specifier> } #---------------------------
+our class TypeSpecifier::EnumSpecifier does ITypeSpecifier {
+    has EnumSpecifier $.enum-specifier is required;
+}
+
+
+# rule type-specifier-seq { <type-specifier>+ <attribute-specifier-seq>? }
+our class TypeSpecifierSeq { 
+    has TypeNameSpecifier     @.type-specifiers is required;
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
+}
+
+# rule trailing-type-specifier-seq { <trailing-type-specifier>+ <attribute-specifier-seq>? }
+our class TrailingTypeSpecifierSeq { 
+    has TrailingTypeSpecifier @.trailing-type-specifiers is required;
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
+}
+
+
+#-------------------
+our role IDeclSpecifier { }
+
+# token decl-specifier:sym<storage-class> { <storage-class-specifier> }
+our class DeclSpecifier::StorageClass does IDeclSpecifier {
+    has IStorageClassSpecifier $.storage-class-specifier is required;
+}
+
+# token decl-specifier:sym<type> { <type-specifier> }
+our class DeclSpecifier::Type does IDeclSpecifier {
+    has TypeSpecifier $.type-specifier is required;
+}
+
+# token decl-specifier:sym<func> { <function-specifier> }
+our class DeclSpecifier::Func does IDeclSpecifier {
+    has FunctionSpecifier $.function-specifier is required;
+}
+
+# token decl-specifier:sym<friend> { <.friend> }
+our class DeclSpecifier::Friend does IDeclSpecifier { }
+
+# token decl-specifier:sym<typedef> { <.typedef> }
+our class DeclSpecifier::Typedef does IDeclSpecifier { }
+
+# token decl-specifier:sym<constexpr> { <.constexpr> }
+our class DeclSpecifier::Constexpr does IDeclSpecifier { }
+
+# regex decl-specifier-seq { 
+#   <decl-specifier> 
+#   [<.ws> <decl-specifier>]*? 
+#   <attribute-specifier-seq>? 
+# }
+our class DeclSpecifierSeq { 
+    has DeclSpecifier @.decl-specifiers is required;
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
+}
+
+
+#-------------------------------
+our role ISimpleDeclaration { }
+
+# rule simple-declaration:sym<basic> { <decl-specifier-seq>? <init-declarator-list>? <.semi> }
+our class SimpleDeclaration::Basic does ISimpleDeclaration {
+    has DeclSpecifierSeq   $.decl-specifier-seq;
+    has InitDeclaratorList $.init-declarator-list;
+}
+
+# rule simple-declaration:sym<init-list> { <attribute-specifier-seq> <decl-specifier-seq>? <init-declarator-list> <.semi> }
+our class SimpleDeclaration::InitList does ISimpleDeclaration {
+    has AttributeSpecifierSeq $.attribute-specifier-seq is required;
+    has DeclSpecifierSeq      $.decl-specifier-seq;
+    has InitDeclaratorList    $.init-declarator-list is required;
+}
+
+#-------------------------------
+our role IBlockDeclaration { }
+
+# rule block-declaration:sym<simple> { <simple-declaration> }
+our class BlockDeclaration::Simple does IBlockDeclaration {
+    has SimpleDeclaration $.simple-declaration is required;
+}
+
+# rule block-declaration:sym<asm> { <asm-definition> }
+our class BlockDeclaration::Asm does IBlockDeclaration {
+    has AsmDefinition $.asm-definition is required;
+}
+
+# rule block-declaration:sym<namespace-alias> { <namespace-alias-definition> }
+our class BlockDeclaration::NamespaceAlias does IBlockDeclaration {
+    has NamespaceAliasDefinition $.namespace-alias-definition is required;
+}
+
+# rule block-declaration:sym<using-decl> { <using-declaration> }
+our class BlockDeclaration::UsingDecl does IBlockDeclaration {
+    has UsingDeclaration $.using-declaration is required;
+}
+
+# rule block-declaration:sym<using-directive> { <using-directive> }
+our class BlockDeclaration::UsingDirective does IBlockDeclaration {
+    has UsingDirective $.using-directive is required;
+}
+
+# rule block-declaration:sym<static-assert> { <static-assert-declaration> }
+our class BlockDeclaration::StaticAssert does IBlockDeclaration {
+    has StaticAssertDeclaration $.static-assert-declaration is required;
+}
+
+# rule block-declaration:sym<alias> { <alias-declaration> }
+our class BlockDeclaration::Alias does IBlockDeclaration {
+    has AliasDeclaration $.alias-declaration is required;
+}
+
+# rule block-declaration:sym<opaque-enum-decl> { <opaque-enum-declaration> }
+our class BlockDeclaration::OpaqueEnumDecl does IBlockDeclaration {
+    has OpaqueEnumDeclaration $.opaque-enum-declaration is required;
+}
+
+
+our role IDeclaration { }
+
+# rule declaration:sym<block-declaration> { <block-declaration> }
+our class Declaration::BlockDeclaration does IDeclaration {
+    has BlockDeclaration $.block-declaration is required;
+}
+
+# rule declaration:sym<function-definition> { <function-definition> }
+our class Declaration::FunctionDefinition does IDeclaration {
+    has FunctionDefinition $.function-definition is required;
+}
+
+# rule declaration:sym<template-declaration> { <template-declaration> }
+our class Declaration::TemplateDeclaration does IDeclaration {
+    has TemplateDeclaration $.template-declaration is required;
+}
+
+# rule declaration:sym<explicit-instantiation> { <explicit-instantiation> }
+our class Declaration::ExplicitInstantiation does IDeclaration {
+    has ExplicitInstantiation $.explicit-instantiation is required;
+}
+
+# rule declaration:sym<explicit-specialization> { <explicit-specialization> }
+our class Declaration::ExplicitSpecialization does IDeclaration {
+    has ExplicitSpecialization $.explicit-specialization is required;
+}
+
+# rule declaration:sym<linkage-specification> { <linkage-specification> }
+our class Declaration::LinkageSpecification does IDeclaration {
+    has LinkageSpecification $.linkage-specification is required;
+}
+
+# rule declaration:sym<namespace-definition> { <namespace-definition> }
+our class Declaration::NamespaceDefinition does IDeclaration {
+    has NamespaceDefinition $.namespace-definition is required;
+}
+
+# rule declaration:sym<empty-declaration> { <empty-declaration> }
+our class Declaration::EmptyDeclaration does IDeclaration {
+    has EmptyDeclaration $.empty-declaration is required;
+}
+
+# rule declaration:sym<attribute-declaration> { <attribute-declaration> }
+our class Declaration::AttributeDeclaration does IDeclaration {
+    has AttributeDeclaration $.attribute-declaration is required;
+}
+
+
+# rule declarationseq { <declaration>+ } #-------------------------------
+our class Declarationseq { 
+    has Declaration @.declarations is required;
 }
 
 # token translation-unit {         <declarationseq>?  $     }
@@ -1634,99 +1842,6 @@ our class ReturnStatementBody::BracedInitList does IReturnStatementBody {
     has BracedInitList $.braced-init-list is required;
 }
 
-# rule declarationseq { <declaration>+ } #-------------------------------
-our class Declarationseq { 
-    has Declaration @.declarations is required;
-}
-
-our role IDeclaration { }
-
-# rule declaration:sym<block-declaration> { <block-declaration> }
-our class Declaration::BlockDeclaration does IDeclaration {
-    has BlockDeclaration $.block-declaration is required;
-}
-
-# rule declaration:sym<function-definition> { <function-definition> }
-our class Declaration::FunctionDefinition does IDeclaration {
-    has FunctionDefinition $.function-definition is required;
-}
-
-# rule declaration:sym<template-declaration> { <template-declaration> }
-our class Declaration::TemplateDeclaration does IDeclaration {
-    has TemplateDeclaration $.template-declaration is required;
-}
-
-# rule declaration:sym<explicit-instantiation> { <explicit-instantiation> }
-our class Declaration::ExplicitInstantiation does IDeclaration {
-    has ExplicitInstantiation $.explicit-instantiation is required;
-}
-
-# rule declaration:sym<explicit-specialization> { <explicit-specialization> }
-our class Declaration::ExplicitSpecialization does IDeclaration {
-    has ExplicitSpecialization $.explicit-specialization is required;
-}
-
-# rule declaration:sym<linkage-specification> { <linkage-specification> }
-our class Declaration::LinkageSpecification does IDeclaration {
-    has LinkageSpecification $.linkage-specification is required;
-}
-
-# rule declaration:sym<namespace-definition> { <namespace-definition> }
-our class Declaration::NamespaceDefinition does IDeclaration {
-    has NamespaceDefinition $.namespace-definition is required;
-}
-
-# rule declaration:sym<empty-declaration> { <empty-declaration> }
-our class Declaration::EmptyDeclaration does IDeclaration {
-    has EmptyDeclaration $.empty-declaration is required;
-}
-
-# rule declaration:sym<attribute-declaration> { <attribute-declaration> }
-our class Declaration::AttributeDeclaration does IDeclaration {
-    has AttributeDeclaration $.attribute-declaration is required;
-}
-
-our role IBlockDeclaration { }
-
-# rule block-declaration:sym<simple> { <simple-declaration> }
-our class BlockDeclaration::Simple does IBlockDeclaration {
-    has SimpleDeclaration $.simple-declaration is required;
-}
-
-# rule block-declaration:sym<asm> { <asm-definition> }
-our class BlockDeclaration::Asm does IBlockDeclaration {
-    has AsmDefinition $.asm-definition is required;
-}
-
-# rule block-declaration:sym<namespace-alias> { <namespace-alias-definition> }
-our class BlockDeclaration::NamespaceAlias does IBlockDeclaration {
-    has NamespaceAliasDefinition $.namespace-alias-definition is required;
-}
-
-# rule block-declaration:sym<using-decl> { <using-declaration> }
-our class BlockDeclaration::UsingDecl does IBlockDeclaration {
-    has UsingDeclaration $.using-declaration is required;
-}
-
-# rule block-declaration:sym<using-directive> { <using-directive> }
-our class BlockDeclaration::UsingDirective does IBlockDeclaration {
-    has UsingDirective $.using-directive is required;
-}
-
-# rule block-declaration:sym<static-assert> { <static-assert-declaration> }
-our class BlockDeclaration::StaticAssert does IBlockDeclaration {
-    has StaticAssertDeclaration $.static-assert-declaration is required;
-}
-
-# rule block-declaration:sym<alias> { <alias-declaration> }
-our class BlockDeclaration::Alias does IBlockDeclaration {
-    has AliasDeclaration $.alias-declaration is required;
-}
-
-# rule block-declaration:sym<opaque-enum-decl> { <opaque-enum-declaration> }
-our class BlockDeclaration::OpaqueEnumDecl does IBlockDeclaration {
-    has OpaqueEnumDeclaration $.opaque-enum-declaration is required;
-}
 
 # rule alias-declaration { 
 #   <.using> 
@@ -1742,20 +1857,6 @@ our class AliasDeclaration {
     has TheTypeId $.the-type-id is required;
 }
 
-our role ISimpleDeclaration { }
-
-# rule simple-declaration:sym<basic> { <decl-specifier-seq>? <init-declarator-list>? <.semi> }
-our class SimpleDeclaration::Basic does ISimpleDeclaration {
-    has DeclSpecifierSeq   $.decl-specifier-seq;
-    has InitDeclaratorList $.init-declarator-list;
-}
-
-# rule simple-declaration:sym<init-list> { <attribute-specifier-seq> <decl-specifier-seq>? <init-declarator-list> <.semi> }
-our class SimpleDeclaration::InitList does ISimpleDeclaration {
-    has AttributeSpecifierSeq $.attribute-specifier-seq is required;
-    has DeclSpecifierSeq      $.decl-specifier-seq;
-    has InitDeclaratorList    $.init-declarator-list is required;
-}
 
 # rule static-assert-declaration { 
 #   <.static_assert> 
@@ -1779,59 +1880,6 @@ our class AttributeDeclaration {
     has AttributeSpecifierSeq $.attribute-specifier-seq is required;
 }
 
-#-------------------
-our role IDeclSpecifier { }
-
-# token decl-specifier:sym<storage-class> { <storage-class-specifier> }
-our class DeclSpecifier::StorageClass does IDeclSpecifier {
-    has StorageClassSpecifier $.storage-class-specifier is required;
-}
-
-# token decl-specifier:sym<type> { <type-specifier> }
-our class DeclSpecifier::Type does IDeclSpecifier {
-    has TypeSpecifier $.type-specifier is required;
-}
-
-# token decl-specifier:sym<func> { <function-specifier> }
-our class DeclSpecifier::Func does IDeclSpecifier {
-    has FunctionSpecifier $.function-specifier is required;
-}
-
-# token decl-specifier:sym<friend> { <.friend> }
-our class DeclSpecifier::Friend does IDeclSpecifier { }
-
-# token decl-specifier:sym<typedef> { <.typedef> }
-our class DeclSpecifier::Typedef does IDeclSpecifier { }
-
-# token decl-specifier:sym<constexpr> { <.constexpr> }
-our class DeclSpecifier::Constexpr does IDeclSpecifier { }
-
-# regex decl-specifier-seq { 
-#   <decl-specifier> 
-#   [<.ws> <decl-specifier>]*? 
-#   <attribute-specifier-seq>? 
-# }
-our class DeclSpecifierSeq { 
-    has DeclSpecifier @.decl-specifiers is required;
-    has AttributeSpecifierSeq $.attribute-specifier-seq;
-}
-
-our role IStorageClassSpecifier { }
-
-# rule storage-class-specifier:sym<register> { <.register> }
-our class StorageClassSpecifier::Register does IStorageClassSpecifier { }
-
-# rule storage-class-specifier:sym<static> { <.static> }
-our class StorageClassSpecifier::Static does IStorageClassSpecifier { }
-
-# rule storage-class-specifier:sym<thread_local> { <.thread_local> }
-our class StorageClassSpecifier::Thread_local does IStorageClassSpecifier { }
-
-# rule storage-class-specifier:sym<extern> { <.extern> }
-our class StorageClassSpecifier::Extern does IStorageClassSpecifier { }
-
-# rule storage-class-specifier:sym<mutable> { <.mutable> } #---------------------------
-our class StorageClassSpecifier::Mutable does IStorageClassSpecifier { }
 
 our role IFunctionSpecifier { }
 
@@ -1849,73 +1897,6 @@ our class TypedefName {
     has Identifier $.identifier is required;
 }
 
-our role ITypeSpecifier { }
-
-# rule type-specifier:sym<trailing-type-specifier> { <trailing-type-specifier> }
-our class TypeSpecifier::TrailingTypeSpecifier does ITypeSpecifier {
-    has TrailingTypeSpecifier $.trailing-type-specifier is required;
-}
-
-# rule type-specifier:sym<class-specifier> { <class-specifier> }
-our class TypeSpecifier::ClassSpecifier does ITypeSpecifier {
-    has ClassSpecifier $.class-specifier is required;
-}
-
-# rule type-specifier:sym<enum-specifier> { <enum-specifier> } #---------------------------
-our class TypeSpecifier::EnumSpecifier does ITypeSpecifier {
-    has EnumSpecifier $.enum-specifier is required;
-}
-
-our role ITrailingTypeSpecifier { }
-
-# rule trailing-type-specifier:sym<cv-qualifier> { <cv-qualifier> <simple-type-specifier> }
-our class TrailingTypeSpecifier::CvQualifier does ITrailingTypeSpecifier {
-    has CvQualifier         $.cv-qualifier          is required;
-    has SimpleTypeSpecifier $.simple-type-specifier is required;
-}
-
-# rule trailing-type-specifier:sym<simple> { <simple-type-specifier> }
-our class TrailingTypeSpecifier::Simple does ITrailingTypeSpecifier {
-    has SimpleTypeSpecifier $.simple-type-specifier is required;
-}
-
-# rule trailing-type-specifier:sym<elaborated> { <elaborated-type-specifier> }
-our class TrailingTypeSpecifier::Elaborated does ITrailingTypeSpecifier {
-    has ElaboratedTypeSpecifier $.elaborated-type-specifier is required;
-}
-
-# rule trailing-type-specifier:sym<typename> { <type-name-specifier> } #---------------------------
-our class TrailingTypeSpecifier::Typename does ITrailingTypeSpecifier {
-    has TypeNameSpecifier $.type-name-specifier is required;
-}
-
-# rule type-specifier-seq { <type-specifier>+ <attribute-specifier-seq>? }
-our class TypeSpecifierSeq { 
-    has TypeNameSpecifier     @.type-specifiers is required;
-    has AttributeSpecifierSeq $.attribute-specifier-seq;
-}
-
-# rule trailing-type-specifier-seq { <trailing-type-specifier>+ <attribute-specifier-seq>? }
-our class TrailingTypeSpecifierSeq { 
-    has TrailingTypeSpecifier @.trailing-type-specifiers is required;
-    has AttributeSpecifierSeq $.attribute-specifier-seq;
-}
-
-our role ISimpleTypeLengthModifier { }
-
-# rule simple-type-length-modifier:sym<short> { <.short> }
-our class SimpleTypeLengthModifier::Short does ISimpleTypeLengthModifier { }
-
-# rule simple-type-length-modifier:sym<long_> { <.long_> }
-our class SimpleTypeLengthModifier::Long does ISimpleTypeLengthModifier { }
-
-our role ISimpleTypeSignednessModifier { }
-
-# rule simple-type-signedness-modifier:sym<unsigned> { <.unsigned> }
-our class SimpleTypeSignednessModifier::Unsigned does ISimpleTypeSignednessModifier { }
-
-# rule simple-type-signedness-modifier:sym<signed> { <.signed> }
-our class SimpleTypeSignednessModifier::Signed does ISimpleTypeSignednessModifier { }
 
 # rule full-type-name { <nested-name-specifier>? <the-type-name> }
 our class FullTypeName { 
@@ -1929,123 +1910,7 @@ our class ScopedTemplateId {
     has SimpleTemplateId    $.simple-template-id is required;
 }
 
-# rule simple-int-type-specifier { 
-#   <simple-type-signedness-modifier>? 
-#   <simple-type-length-modifier>* 
-#   <int_> 
-# }
-our class SimpleIntTypeSpecifier { 
-    has SimpleTypeSignednessModifier $.simple-type-signedness-modifier;
-    has SimpleTypeLengthModifier     @.simple-type-length-modifiers is required;
-}
 
-# rule simple-char-type-specifier { <simple-type-signedness-modifier>? <char_> }
-our class SimpleCharTypeSpecifier { 
-    has SimpleTypeSignednessModifier $.simple-type-signedness-modifier;
-    has Char_                        $.char is required;
-}
-
-# rule simple-char16-type-specifier { <simple-type-signedness-modifier>? <char16> }
-our class SimpleChar16TypeSpecifier { 
-    has SimpleTypeSignednessModifier $.simple-type-signedness-modifier;
-    has Char16                       $.char16 is required;
-}
-
-# rule simple-char32-type-specifier { <simple-type-signedness-modifier>? <char32> }
-our class SimpleChar32TypeSpecifier { 
-    has SimpleTypeSignednessModifier $.simple-type-signedness-modifier;
-    has Char32                       $.char32 is required;
-}
-
-# rule simple-wchar-type-specifier { <simple-type-signedness-modifier>? <wchar> }
-our class SimpleWcharTypeSpecifier { 
-    has SimpleTypeSignednessModifier $.simple-type-signedness-modifier;
-    has WChar                        $.wchar is required;
-}
-
-# rule simple-double-type-specifier { <simple-type-length-modifier>? <double> } #------------------------------
-our class SimpleDoubleTypeSpecifier { 
-    has SimpleTypeSignednessModifier $.simple-type-signedness-modifier;
-    has Double                       $.double is required;
-}
-
-our role ISimpleTypeSpecifier { }
-
-# regex simple-type-specifier:sym<int> { <simple-int-type-specifier> }
-our class SimpleTypeSpecifier::Int does ISimpleTypeSpecifier {
-    has SimpleIntTypeSpecifier $.simple-int-type-specifier is required;
-}
-
-# regex simple-type-specifier:sym<full> { <full-type-name> }
-our class SimpleTypeSpecifier::Full does ISimpleTypeSpecifier {
-    has FullTypeName $.full-type-name is required;
-}
-
-# regex simple-type-specifier:sym<scoped> { <scoped-template-id> }
-our class SimpleTypeSpecifier::Scoped does ISimpleTypeSpecifier {
-    has ScopedTemplateId $.scoped-template-id is required;
-}
-
-# regex simple-type-specifier:sym<signedness-mod> { <simple-type-signedness-modifier> }
-our class SimpleTypeSpecifier::SignednessMod does ISimpleTypeSpecifier {
-    has SimpleTypeSignednessModifier $.simple-type-signedness-modifier is required;
-}
-
-# regex simple-type-specifier:sym<signedness-mod-length> { <simple-type-signedness-modifier>? <simple-type-length-modifier>+ }
-our class SimpleTypeSpecifier::SignednessModLength does ISimpleTypeSpecifier {
-    has SimpleTypeSignednessModifier $.simple-type-signedness-modifier;
-    has SimpleTypeLengthModifier     @.simple-type-length-modifier is required;
-}
-
-# regex simple-type-specifier:sym<char> { <simple-char-type-specifier> }
-our class SimpleTypeSpecifier::Char does ISimpleTypeSpecifier {
-    has SimpleCharTypeSpecifier $.simple-char-type-specifier is required;
-}
-
-# regex simple-type-specifier:sym<char16> { <simple-char16-type-specifier> }
-our class SimpleTypeSpecifier::Char16 does ISimpleTypeSpecifier {
-    has SimpleChar16TypeSpecifier $.simple-char16-type-specifier is required;
-}
-
-# regex simple-type-specifier:sym<char32> { <simple-char32-type-specifier> }
-our class SimpleTypeSpecifier::Char32 does ISimpleTypeSpecifier {
-    has SimpleChar32TypeSpecifier $.simple-char32-type-specifier is required;
-}
-
-# regex simple-type-specifier:sym<wchar> { <simple-wchar-type-specifier> }
-our class SimpleTypeSpecifier::Wchar does ISimpleTypeSpecifier {
-    has SimpleWcharTypeSpecifier $.simple-wchar-type-specifier is required;
-}
-
-# regex simple-type-specifier:sym<bool> { <bool_> }
-our class SimpleTypeSpecifier::Bool does ISimpleTypeSpecifier {
-    has Bool $.bool_ is required;
-}
-
-# regex simple-type-specifier:sym<float> { <float> }
-our class SimpleTypeSpecifier::Float does ISimpleTypeSpecifier {
-    has Float $.float is required;
-}
-
-# regex simple-type-specifier:sym<double> { <simple-double-type-specifier> }
-our class SimpleTypeSpecifier::Double does ISimpleTypeSpecifier {
-    has SimpleDoubleTypeSpecifier $.simple-double-type-specifier is required;
-}
-
-# regex simple-type-specifier:sym<void> { <void_> }
-our class SimpleTypeSpecifier::Void does ISimpleTypeSpecifier {
-    has Void $.void_ is required;
-}
-
-# regex simple-type-specifier:sym<auto> { <auto> }
-our class SimpleTypeSpecifier::Auto does ISimpleTypeSpecifier {
-    has Auto $.auto is required;
-}
-
-# regex simple-type-specifier:sym<decltype> { <decltype-specifier> } #------------------------------
-our class SimpleTypeSpecifier::Decltype does ISimpleTypeSpecifier {
-    has DecltypeSpecifier $.decltype-specifier is required;
-}
 
 our role ITheTypeName { }
 
@@ -2538,15 +2403,6 @@ our class Cvqualifierseq {
     has CvQualifier @.cv-qualifiers;
 }
 
-our role ICvQualifier { }
-
-# rule cv-qualifier:sym<const> { <const> }
-our class CvQualifier::Const does ICvQualifier {
-    has Const $.const is required;
-}
-
-# rule cv-qualifier:sym<volatile> { <volatile> } #-----------------------------
-our class CvQualifier::Volatile does ICvQualifier { }
 
 our role IRefqualifier { }
 
@@ -3661,7 +3517,7 @@ our class TheOperator::Brak does ITheOperator {
 our role ILiteral { }
 
 # token literal:sym<int> { <integer-literal> }
-our class Literal::Int does ILiteral {
+our class Literal::Int_ does ILiteral {
     has IntegerLiteral $.integer-literal is required;
 }
 
@@ -3692,6 +3548,7 @@ our class Literal::Ptr does ILiteral {
 
 # token literal:sym<user-defined> { <user-defined-literal> }
 our class Literal::UserDefined does ILiteral {
-    has UserDefinedLiteral $.user-defined-literal is required;
+    has IUserDefinedLiteral $.user-defined-literal is required;
 }
-
+=begin comment
+=end comment
