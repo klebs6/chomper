@@ -1579,7 +1579,11 @@ our role CPP14Parser does CPP14Lexer {
     rule declarator:sym<no-ptr> { <no-pointer-declarator> <parameters-and-qualifiers> <trailing-return-type> }
 
     rule pointer-declarator {
-        [ <pointer-operator> <const>? ]* <no-pointer-declarator>
+        <augmented-pointer-operator>* <no-pointer-declarator>
+    }
+
+    rule augmented-pointer-operator {
+        <pointer-operator> <const>?
     }
 
     #------------------------------
