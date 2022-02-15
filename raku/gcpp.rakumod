@@ -727,14 +727,23 @@ our role CPP14Parser does CPP14Lexer {
     rule unary-operator:sym<not>   { <not_>  } 
 
     #--------------------------------------
-    rule new-expression {
+    proto rule new-expression { * }
+
+    rule new-expression:sym<new-type-id> {
         <doublecolon>?
         <new_>
         <new-placement>?
-        [   
-           || <new-type-id>
-           || [ <.left-paren> <the-type-id> <.right-paren> ]
-        ]
+        <new-type-id>
+        <new-initializer>?
+    }
+
+    rule new-expression:sym<the-type-id> {
+        <doublecolon>?
+        <new_>
+        <new-placement>?
+        <.left-paren> 
+        <the-type-id> 
+        <.right-paren>
         <new-initializer>?
     }
 
@@ -763,12 +772,14 @@ our role CPP14Parser does CPP14Lexer {
         <expression>
         <.right-bracket>
         <attribute-specifier-seq>?
-        [
-            <.left-bracket>
-            <constant-expression>
-            <.right-bracket>
-            <attribute-specifier-seq>?
-        ]*
+        <no-pointer-new-declarator-tail>*
+    }
+
+    rule no-pointer-new-declarator-tail {
+        <.left-bracket>
+        <constant-expression>
+        <.right-bracket>
+        <attribute-specifier-seq>?
     }
 
     #------------------------
@@ -801,10 +812,12 @@ our role CPP14Parser does CPP14Lexer {
 
     rule pointer-member-expression {
         <cast-expression>
-        [
-            <pointer-member-operator>
-            <cast-expression>
-        ]*
+        <pointer-member-expression-tail>*
+    }
+
+    rule pointer-member-expression-tail {
+        <pointer-member-operator>
+        <cast-expression>
     }
 
     #-----------------
@@ -815,10 +828,12 @@ our role CPP14Parser does CPP14Lexer {
 
     rule multiplicative-expression {
         <pointer-member-expression>
-        [   
-            <multiplicative-operator> 
-            <pointer-member-expression>
-        ]*
+        <multiplicative-expression-tail>*
+    }
+
+    rule multiplicative-expression-tail {
+        <multiplicative-operator> 
+        <pointer-member-expression>
     }
 
     #-----------------
@@ -827,40 +842,49 @@ our role CPP14Parser does CPP14Lexer {
     token additive-operator:sym<minus> {  <minus> }
 
     #-----------------
+    rule additive-expression-tail {
+        <additive-operator> 
+        <multiplicative-expression>
+    }
+
     rule additive-expression {
         <multiplicative-expression>
-        [   
-            <additive-operator> 
-            <multiplicative-expression>
-        ]*
+        <additive-expression-tail>*
+    }
+
+    rule shift-expression-tail {
+        <shift-operator>
+        <additive-expression>
     }
 
     rule shift-expression {
         <additive-expression>
-        [ <shift-operator> <additive-expression> ]*
+        <shift-expression-tail>*
     }
 
     #-----------------------
     proto rule shift-operator { * }
-    rule shift-operator:sym<right> { <greater> <greater> }
-    rule shift-operator:sym<left>  { <less> <less> }
+    rule shift-operator:sym<right> { <.greater> <.greater> }
+    rule shift-operator:sym<left>  { <.less> <.less> }
 
     #-----------------------
     proto rule relational-operator { * }
-    rule relational-operator:sym<less>       { <less> }
-    rule relational-operator:sym<greater>    { <greater> }
-    rule relational-operator:sym<less-eq>    { <less-equal> }
-    rule relational-operator:sym<greater-eq> { <greater-equal> }
+    rule relational-operator:sym<less>       { <.less> }
+    rule relational-operator:sym<greater>    { <.greater> }
+    rule relational-operator:sym<less-eq>    { <.less-equal> }
+    rule relational-operator:sym<greater-eq> { <.greater-equal> }
 
     #-----------------------
+    regex relational-expression-tail {
+        <.ws>
+        <relational-operator>
+        <.ws>
+        <shift-expression>
+    }
+
     regex relational-expression {
         <shift-expression>
-        [  
-            <.ws>
-            <relational-operator>
-            <.ws>
-            <shift-expression>
-        ]*
+        <relational-expression-tail>*
     }
 
     #-----------------------
@@ -869,11 +893,14 @@ our role CPP14Parser does CPP14Lexer {
     token equality-operator:sym<neq> { <not-equal> }
 
     #-----------------------
+    rule equality-expression-tail {
+        <equality-operator> 
+        <relational-expression>
+    }
+
     rule equality-expression {
         <relational-expression>
-        [   
-            <equality-operator> <relational-expression>
-        ]*
+        <equality-expression-tail>*
     }
 
     rule and-expression {
@@ -881,7 +908,7 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule exclusive-or-expression {
-        <and-expression> [  <caret> <and-expression> ]*
+        <and-expression> [ <caret> <and-expression> ]*
     }
 
     rule inclusive-or-expression {
@@ -889,21 +916,23 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule logical-and-expression {
-        <inclusive-or-expression> [  <and-and> <inclusive-or-expression>]*
+        <inclusive-or-expression> [ <and-and> <inclusive-or-expression>]*
     }
 
     rule logical-or-expression {
         <logical-and-expression> [ <or-or> <logical-and-expression> ]*
     }
 
+    rule conditional-expression-tail {
+        <question> 
+        <expression> 
+        <colon> 
+        <assignment-expression> 
+    }
+
     rule conditional-expression {
         <logical-or-expression>
-        [ 
-            <question> 
-            <expression> 
-            <colon> 
-            <assignment-expression> 
-        ]?
+        <conditional-expression-tail>?
     }
 
     #-----------------------
@@ -922,17 +951,17 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     proto token assignment-operator { * }
-    token assignment-operator:sym<assign>        { <assign>           } 
-    token assignment-operator:sym<star-assign>   { <star-assign>       } 
-    token assignment-operator:sym<div-assign>    { <div-assign>        } 
-    token assignment-operator:sym<mod-assign>    { <mod-assign>        } 
-    token assignment-operator:sym<plus-assign>   { <plus-assign>       } 
-    token assignment-operator:sym<minus-assign>  { <minus-assign>      } 
-    token assignment-operator:sym<rshift-assign> { <right-shift-assign> } 
-    token assignment-operator:sym<lshift-assign> { <left-shift-assign>  } 
-    token assignment-operator:sym<and-assign>    { <and-assign>        } 
-    token assignment-operator:sym<xor-assign>    { <xor-assign>        } 
-    token assignment-operator:sym<or-assign>     { <or-assign>         } 
+    token assignment-operator:sym<assign>        { <.assign>           } 
+    token assignment-operator:sym<star-assign>   { <.star-assign>       } 
+    token assignment-operator:sym<div-assign>    { <.div-assign>        } 
+    token assignment-operator:sym<mod-assign>    { <.mod-assign>        } 
+    token assignment-operator:sym<plus-assign>   { <.plus-assign>       } 
+    token assignment-operator:sym<minus-assign>  { <.minus-assign>      } 
+    token assignment-operator:sym<rshift-assign> { <.right-shift-assign> } 
+    token assignment-operator:sym<lshift-assign> { <.left-shift-assign>  } 
+    token assignment-operator:sym<and-assign>    { <.and-assign>        } 
+    token assignment-operator:sym<xor-assign>    { <.xor-assign>        } 
+    token assignment-operator:sym<or-assign>     { <.or-assign>         } 
 
     rule expression {
         <assignment-expression>+ %% <comma>
