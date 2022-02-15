@@ -1133,8 +1133,12 @@ our role CPP14Parser does CPP14Lexer {
     proto rule jump-statement { * }
     rule jump-statement:sym<break>    { <break_>                                        <semi> } 
     rule jump-statement:sym<continue> { <continue_>                                     <semi> } 
-    rule jump-statement:sym<return>   { <return_> [ <expression> || <braced-init-list> ]? <semi> } 
+    rule jump-statement:sym<return>   { <return_> <return-statement-body>? <semi> } 
     rule jump-statement:sym<goto>     { <goto_> <identifier>                            <semi> } 
+
+    proto rule return-statement-body { * }
+    rule return-statement-body:sym<expr> { <expression> }
+    rule return-statement-body:sym<braced-init-list> { <braced-init-list> }
 
     rule declarationseq { <declaration>+ }
 

@@ -1221,32 +1221,34 @@ our class AndExpression {
 
 # rule exclusive-or-expression { <and-expression> [ <caret> <and-expression> ]* }
 our class ExclusiveOrExpression { 
-    #TODO
+    has AndExpression @.and-expressions is required;
 }
 
 # rule inclusive-or-expression { <exclusive-or-expression> [ <or_> <exclusive-or-expression> ]* }
 our class InclusiveOrExpression { 
-    #TODO
+    has ExclusiveOrExpression @.exclusive-or-expressions is required;
 }
 
 # rule logical-and-expression { <inclusive-or-expression> [ <and-and> <inclusive-or-expression>]* }
 our class LogicalAndExpression { 
-    #TODO
+    has InclusiveOrExpression @.inclusive-or-expressions is required;
 }
 
 # rule logical-or-expression { <logical-and-expression> [ <or-or> <logical-and-expression> ]* }
 our class LogicalOrExpression { 
-    #TODO
+    has LogicalAndExpression @.logical-and-expressions is required;
 }
 
 # rule conditional-expression-tail { <question> <expression> <colon> <assignment-expression> }
 our class ConditionalExpressionTail { 
-    #TODO
+    has Expression           $.question-expression   is required;
+    has AssignmentExpression $.assignment-expression is required;
 }
 
 # rule conditional-expression { <logical-or-expression> <conditional-expression-tail>? } #-----------------------
 our class ConditionalExpression { 
-    #TODO
+    has LogicalOrExpression       $.logical-or-expression is required;
+    has ConditionalExpressionTail $.conditional-expression-tail;
 }
 
 our role IAssignmentExpression { }
@@ -1271,100 +1273,78 @@ our class AssignmentExpression::Conditional does IAssignmentExpression {
 our role IAssignmentOperator { }
 
 # token assignment-operator:sym<assign> { <.assign> }
-our class AssignmentOperator::Assign does IAssignmentOperator {
-
-}
+our class AssignmentOperator::Assign does IAssignmentOperator { }
 
 # token assignment-operator:sym<star-assign> { <.star-assign> }
-our class AssignmentOperator::StarAssign does IAssignmentOperator {
-
-}
+our class AssignmentOperator::StarAssign does IAssignmentOperator { }
 
 # token assignment-operator:sym<div-assign> { <.div-assign> }
-our class AssignmentOperator::DivAssign does IAssignmentOperator {
-
-}
+our class AssignmentOperator::DivAssign does IAssignmentOperator { }
 
 # token assignment-operator:sym<mod-assign> { <.mod-assign> }
-our class AssignmentOperator::ModAssign does IAssignmentOperator {
-
-}
+our class AssignmentOperator::ModAssign does IAssignmentOperator { }
 
 # token assignment-operator:sym<plus-assign> { <.plus-assign> }
-our class AssignmentOperator::PlusAssign does IAssignmentOperator {
-
-}
+our class AssignmentOperator::PlusAssign does IAssignmentOperator { }
 
 # token assignment-operator:sym<minus-assign> { <.minus-assign> }
-our class AssignmentOperator::MinusAssign does IAssignmentOperator {
-
-}
+our class AssignmentOperator::MinusAssign does IAssignmentOperator { }
 
 # token assignment-operator:sym<rshift-assign> { <.right-shift-assign> }
-our class AssignmentOperator::RshiftAssign does IAssignmentOperator {
-
-}
+our class AssignmentOperator::RshiftAssign does IAssignmentOperator { }
 
 # token assignment-operator:sym<lshift-assign> { <.left-shift-assign> }
-our class AssignmentOperator::LshiftAssign does IAssignmentOperator {
-
-}
+our class AssignmentOperator::LshiftAssign does IAssignmentOperator { }
 
 # token assignment-operator:sym<and-assign> { <.and-assign> }
-our class AssignmentOperator::AndAssign does IAssignmentOperator {
-
-}
+our class AssignmentOperator::AndAssign does IAssignmentOperator { }
 
 # token assignment-operator:sym<xor-assign> { <.xor-assign> }
-our class AssignmentOperator::XorAssign does IAssignmentOperator {
-
-}
+our class AssignmentOperator::XorAssign does IAssignmentOperator { }
 
 # token assignment-operator:sym<or-assign> { <.or-assign> }
-our class AssignmentOperator::OrAssign does IAssignmentOperator {
-
-}
+our class AssignmentOperator::OrAssign does IAssignmentOperator { }
 
 # rule expression { <assignment-expression>+ %% <.comma> }
 our class Expression { 
-    #TODO
+    has AssignmentExpression @.assignment-expressions is required;
 }
 
 # rule constant-expression { <conditional-expression> }
 our class ConstantExpression { 
-    #TODO
+    has ConditionalExpression $.conditional-expression is required;
 }
 
 our role IComment { }
 
 # regex comment:sym<line> { [<line-comment> <.ws>?]+ }
 our class Comment::Line does IComment {
-    #TODO
+    has LineComment @.line-comments is required;
 }
 
 # rule comment:sym<block> { <block-comment> } #-----------------------------
 our class Comment::Block does IComment {
-    #TODO
+    has BlockComment @.block-comments is required;
 }
 
 our role IStatement { }
 
 # token statement:sym<attributed> { <comment>? <attribute-specifier-seq>? <attributed-statement-body> }
 our class Statement::Attributed does IStatement {
-    has Comment $.comment;
-    has AttributeSpecifierSeq $.attribute-specifier-seq;
+    has Comment                 $.comment;
+    has AttributeSpecifierSeq   $.attribute-specifier-seq;
     has AttributedStatementBody $.attributed-statement-body is required;
 }
 
 # token statement:sym<labeled> { <comment>? <labeled-statement> }
 our class Statement::Labeled does IStatement {
-    has Comment $.comment;
+    has Comment          $.comment;
     has LabeledStatement $.labeled-statement is required;
 }
 
 # token statement:sym<declaration> { <comment>? <declaration-statement> }
 our class Statement::Declaration does IStatement {
-    has Comment $.comment;
+    has Comment              $.comment;
     has DeclarationStatement $.declaration-statement is required;
 }
 
@@ -1397,7 +1377,7 @@ our class AttributedStatementBody::Jump does IAttributedStatementBody {
 
 # rule attributed-statement-body:sym<try> { <try-block> } #-----------------------------
 our class AttributedStatementBody::Try does IAttributedStatementBody {
-    #TODO
+    has TryBlock $.try-block is required;
 }
 
 our role ILabeledStatementLabelBody { }
@@ -1409,50 +1389,60 @@ our class LabeledStatementLabelBody::Id does ILabeledStatementLabelBody {
 
 # rule labeled-statement-label-body:sym<case-expr> { <case> <constant-expression> }
 our class LabeledStatementLabelBody::CaseExpr does ILabeledStatementLabelBody {
-    has Case $.case is required;
+    has Case               $.case                is required;
     has ConstantExpression $.constant-expression is required;
 }
 
 # rule labeled-statement-label-body:sym<default> { <default_> } #-----------------------------
-our class LabeledStatementLabelBody::Default does ILabeledStatementLabelBody {
-    #TODO
-}
+our class LabeledStatementLabelBody::Default does ILabeledStatementLabelBody { }
 
 # rule labeled-statement-label { <attribute-specifier-seq>? <labeled-statement-label-body> <colon> }
 our class LabeledStatementLabel { 
-    #TODO
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
+    has LabeledStatementLabelBody $.labeled-statement-label-body is required;
 }
 
 # rule labeled-statement { <labeled-statement-label> <statement> }
 our class LabeledStatement { 
-    #TODO
+    has LabeledStatementLabel $.labeled-statement-label is required;
+    has Statement             $.statement is required;
 }
 
 # rule declaration-statement { <block-declaration> } #-----------------------------
 our class DeclarationStatement { 
-    #TODO
+    has BlockDeclaration $.block-declaration is required;
 }
 
 # rule expression-statement { <expression>? <semi> }
 our class ExpressionStatement { 
-    #TODO
+    has Expression $.expression;
 }
 
 # rule compound-statement { <.left-brace> <statement-seq>? <.right-brace> }
 our class CompoundStatement { 
-    #TODO
+    has StatementSeq $.statement-seq;
 }
 
 # regex statement-seq { <statement> [<.ws> <statement>]* } #-----------------------------
 our class StatementSeq { 
-    #TODO
+    has Statement @.statements is required;
 }
 
 our role ISelectionStatement { }
 
-# rule selection-statement:sym<if> { <if_> <.left-paren> <condition> <.right-paren> <statement> [ <comment>? <else_> <statement> ]? }
+# rule selection-statement:sym<if> { 
+#   <.if_> 
+#   <.left-paren> 
+#   <condition> 
+#   <.right-paren> 
+#   <statement> 
+#   [ <comment>? <else_> <statement> ]? 
+# }
 our class SelectionStatement::If does ISelectionStatement {
-    #TODO
+    has Condition $.condition is required;
+    has Statement $.statement is required;
+    has Comment   $.else-statement-comment;
+    has Statement $.else-statement;
 }
 
 # rule selection-statement:sym<switch> { <switch> <.left-paren> <condition> <.right-paren> <statement> } #-----------------------------
@@ -1471,51 +1461,85 @@ our role IConditionDeclTail { }
 
 # rule condition-decl-tail:sym<assign-init> { <assign> <initializer-clause> }
 our class ConditionDeclTail::AssignInit does IConditionDeclTail {
-    has Assign $.assign is required;
+    has Assign            $.assign             is required;
     has InitializerClause $.initializer-clause is required;
 }
 
 # rule condition-decl-tail:sym<braced-init> { <braced-init-list> } #-----------------------------
 our class ConditionDeclTail::BracedInit does IConditionDeclTail {
-    #TODO
+    has BracedInitList $.braced-init-list is required;
 }
 
-# rule condition:sym<decl> { <attribute-specifier-seq>? <decl-specifier-seq> <declarator> <condition-decl-tail> } #-----------------------------
+# rule condition:sym<decl> { 
+#   <attribute-specifier-seq>? 
+#   <decl-specifier-seq> 
+#   <declarator> 
+#   <condition-decl-tail> 
+# } #-----------------------------
 our class Condition::Decl does ICondition {
-    #TODO
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
+    has DeclSpecifierSeq      $.decl-specifier-seq  is required;
+    has Declarator            $.declarator          is required;
+    has ConditionDeclTail     $.condition-decl-tail is required;
 }
 
 our role IIterationStatement { }
 
-# rule iteration-statement:sym<while> { <while_> <.left-paren> <condition> <.right-paren> <statement> }
+# rule iteration-statement:sym<while> { 
+#   <while_> 
+#   <.left-paren> 
+#   <condition> 
+#   <.right-paren> <statement> 
+# }
 our class IterationStatement::While does IIterationStatement {
-    has While $.while_ is required;
     has Condition $.condition is required;
     has Statement $.statement is required;
 }
 
-# rule iteration-statement:sym<do> { <do_> <statement> <while_> <.left-paren> <expression> <.right-paren> <semi> }
+# rule iteration-statement:sym<do> { 
+#   <.do_> 
+#   <statement> 
+#   <.while_> 
+#   <.left-paren> 
+#   <expression> 
+#   <.right-paren> 
+#   <.semi> 
+# }
 our class IterationStatement::Do does IIterationStatement {
-    has Do $.do_ is required;
-    has Statement $.statement is required;
-    has While $.while_ is required;
+    has Statement  $.statement is required;
     has Expression $.expression is required;
-    has Semi $.semi is required;
 }
 
-# rule iteration-statement:sym<for> { <for_> <.left-paren> <for-init-statement> <condition>? <semi> <expression>? <.right-paren> <statement> }
+# rule iteration-statement:sym<for> { 
+#   <.for_> 
+#   <.left-paren> 
+#   <for-init-statement> 
+#   <condition>? 
+#   <semi> 
+#   <expression>? 
+#   <.right-paren> 
+#   <statement> 
+# }
 our class IterationStatement::For does IIterationStatement {
-    has For $.for_ is required;
     has ForInitStatement $.for-init-statement is required;
-    has Condition $.condition;
-    has Semi $.semi is required;
-    has Expression $.expression;
-    has Statement $.statement is required;
+    has Condition        $.condition;
+    has Expression       $.expression;
+    has Statement        $.statement is required;
 }
 
-# rule iteration-statement:sym<for-range> { <.for_> <.left-paren> <for-range-declaration> <.colon> <for-range-initializer> <.right-paren> <statement> } #-----------------------------
+# rule iteration-statement:sym<for-range> { 
+#   <.for_> 
+#   <.left-paren> 
+#   <for-range-declaration> 
+#   <.colon> 
+#   <for-range-initializer> 
+#   <.right-paren> 
+#   <statement> 
+# } #-----------------------------
 our class IterationStatement::ForRange does IIterationStatement {
-    #TODO
+    has ForRangeDeclaration $.for-range-declaration is required;
+    has ForRangeInitializer $.for-range-initializer is required;
+    has Statement           $.statement is required;
 }
 
 our role IForInitStatement { }
@@ -1532,7 +1556,9 @@ our class ForInitStatement::SimpleDeclaration does IForInitStatement {
 
 # rule for-range-declaration { <attribute-specifier-seq>? <decl-specifier-seq> <declarator> }
 our class ForRangeDeclaration { 
-    #TODO
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
+    has DeclSpecifierSeq      $.decl-specifier-seq is required;
+    has Declarator            $.declarator is required;
 }
 
 our role IForRangeInitializer { }
@@ -1544,38 +1570,45 @@ our class ForRangeInitializer::Expression does IForRangeInitializer {
 
 # rule for-range-initializer:sym<braced-init-list> { <braced-init-list> } #-------------------------------
 our class ForRangeInitializer::BracedInitList does IForRangeInitializer {
-    #TODO
+    has BracedInitList $.braced-init-list is required;
 }
 
+#----------------------
 our role IJumpStatement { }
 
 # rule jump-statement:sym<break> { <break_> <semi> }
-our class JumpStatement::Break does IJumpStatement {
-    has Break $.break_ is required;
-    has Semi $.semi is required;
-}
+our class JumpStatement::Break does IJumpStatement { }
 
 # rule jump-statement:sym<continue> { <continue_> <semi> }
-our class JumpStatement::Continue does IJumpStatement {
-    has Continue $.continue_ is required;
-    has Semi $.semi is required;
-}
+our class JumpStatement::Continue does IJumpStatement { }
 
-# rule jump-statement:sym<return> { <return_> [ <expression> || <braced-init-list> ]? <semi> }
+# rule jump-statement:sym<return> { <return_> <return-statement-body>? <semi> }
 our class JumpStatement::Return does IJumpStatement {
-    #TODO
+    has Return              $.return_ is required;
+    has ReturnStatementBody $.return-statement-body;
 }
 
 # rule jump-statement:sym<goto> { <goto_> <identifier> <semi> }
 our class JumpStatement::Goto does IJumpStatement {
-    has Goto $.goto_ is required;
     has Identifier $.identifier is required;
-    has Semi $.semi is required;
+}
+
+#----------------------
+our role IReturnStatementBody { }
+
+# rule return-statement-body:sym<expr> { <expression> }
+our class ReturnStatementBody::Expr does IReturnStatementBody {
+    has Expression $.expression is required;
+}
+
+# rule return-statement-body:sym<braced-init-list> { <braced-init-list> }
+our class ReturnStatementBody::BracedInitList does IReturnStatementBody {
+    has BracedInitList $.braced-init-list is required;
 }
 
 # rule declarationseq { <declaration>+ } #-------------------------------
 our class Declarationseq { 
-    #TODO
+    has Declaration @.declarations is required;
 }
 
 our role IDeclaration { }
@@ -1667,41 +1700,58 @@ our class BlockDeclaration::OpaqueEnumDecl does IBlockDeclaration {
     has OpaqueEnumDeclaration $.opaque-enum-declaration is required;
 }
 
-# rule alias-declaration { <.using> <identifier> <attribute-specifier-seq>? <.assign> <the-type-id> <.semi> } #---------------------------
+# rule alias-declaration { 
+#   <.using> 
+#   <identifier> 
+#   <attribute-specifier-seq>? 
+#   <.assign> 
+#   <the-type-id> 
+#   <.semi> 
+# } #---------------------------
 our class AliasDeclaration { 
-    #TODO
+    has Identifier $.identifier is required;
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
+    has TheTypeId $.the-type-id is required;
 }
 
 our role ISimpleDeclaration { }
 
 # rule simple-declaration:sym<basic> { <decl-specifier-seq>? <init-declarator-list>? <.semi> }
 our class SimpleDeclaration::Basic does ISimpleDeclaration {
-    has DeclSpecifierSeq $.decl-specifier-seq;
+    has DeclSpecifierSeq   $.decl-specifier-seq;
     has InitDeclaratorList $.init-declarator-list;
 }
 
 # rule simple-declaration:sym<init-list> { <attribute-specifier-seq> <decl-specifier-seq>? <init-declarator-list> <.semi> }
 our class SimpleDeclaration::InitList does ISimpleDeclaration {
     has AttributeSpecifierSeq $.attribute-specifier-seq is required;
-    has DeclSpecifierSeq $.decl-specifier-seq;
-    has InitDeclaratorList $.init-declarator-list is required;
+    has DeclSpecifierSeq      $.decl-specifier-seq;
+    has InitDeclaratorList    $.init-declarator-list is required;
 }
 
-# rule static-assert-declaration { <static_assert> <.left-paren> <constant-expression> <.comma> <string-literal> <.right-paren> <.semi> }
+# rule static-assert-declaration { 
+#   <.static_assert> 
+#   <.left-paren> 
+#   <constant-expression> 
+#   <.comma> 
+#   <string-literal> 
+#   <.right-paren> 
+#   <.semi> 
+# }
 our class StaticAssertDeclaration { 
-    #TODO
+    has ConstantExpression $.constant-expression is required;
+    has StringLiteral      $.string-literal is required;
 }
 
 # rule empty-declaration { <.semi> }
-our class EmptyDeclaration { 
-    #TODO
-}
+our class EmptyDeclaration { }
 
-# rule attribute-declaration { <attribute-specifier-seq> <.semi> } #---------------------------
+# rule attribute-declaration { <attribute-specifier-seq> <.semi> }
 our class AttributeDeclaration { 
-    #TODO
+    has AttributeSpecifierSeq $.attribute-specifier-seq is required;
 }
 
+#-------------------
 our role IDeclSpecifier { }
 
 # token decl-specifier:sym<storage-class> { <storage-class-specifier> }
@@ -1720,72 +1770,55 @@ our class DeclSpecifier::Func does IDeclSpecifier {
 }
 
 # token decl-specifier:sym<friend> { <.friend> }
-our class DeclSpecifier::Friend does IDeclSpecifier {
-
-}
+our class DeclSpecifier::Friend does IDeclSpecifier { }
 
 # token decl-specifier:sym<typedef> { <.typedef> }
-our class DeclSpecifier::Typedef does IDeclSpecifier {
-
-}
+our class DeclSpecifier::Typedef does IDeclSpecifier { }
 
 # token decl-specifier:sym<constexpr> { <.constexpr> }
-our class DeclSpecifier::Constexpr does IDeclSpecifier {
+our class DeclSpecifier::Constexpr does IDeclSpecifier { }
 
-}
-
-# regex decl-specifier-seq { <decl-specifier> [<.ws> <decl-specifier>]*? <attribute-specifier-seq>? } #---------------------------
+# regex decl-specifier-seq { 
+#   <decl-specifier> 
+#   [<.ws> <decl-specifier>]*? 
+#   <attribute-specifier-seq>? 
+# }
 our class DeclSpecifierSeq { 
-    #TODO
+    has DeclSpecifier @.decl-specifiers is required;
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
 }
 
 our role IStorageClassSpecifier { }
 
 # rule storage-class-specifier:sym<register> { <.register> }
-our class StorageClassSpecifier::Register does IStorageClassSpecifier {
-
-}
+our class StorageClassSpecifier::Register does IStorageClassSpecifier { }
 
 # rule storage-class-specifier:sym<static> { <.static> }
-our class StorageClassSpecifier::Static does IStorageClassSpecifier {
-
-}
+our class StorageClassSpecifier::Static does IStorageClassSpecifier { }
 
 # rule storage-class-specifier:sym<thread_local> { <.thread_local> }
-our class StorageClassSpecifier::Thread_local does IStorageClassSpecifier {
-
-}
+our class StorageClassSpecifier::Thread_local does IStorageClassSpecifier { }
 
 # rule storage-class-specifier:sym<extern> { <.extern> }
-our class StorageClassSpecifier::Extern does IStorageClassSpecifier {
-
-}
+our class StorageClassSpecifier::Extern does IStorageClassSpecifier { }
 
 # rule storage-class-specifier:sym<mutable> { <.mutable> } #---------------------------
-our class StorageClassSpecifier::Mutable does IStorageClassSpecifier {
-    #TODO
-}
+our class StorageClassSpecifier::Mutable does IStorageClassSpecifier { }
 
 our role IFunctionSpecifier { }
 
 # rule function-specifier:sym<inline> { <.inline> }
-our class FunctionSpecifier::Inline does IFunctionSpecifier {
-
-}
+our class FunctionSpecifier::Inline does IFunctionSpecifier { }
 
 # rule function-specifier:sym<virtual> { <.virtual> }
-our class FunctionSpecifier::Virtual does IFunctionSpecifier {
-
-}
+our class FunctionSpecifier::Virtual does IFunctionSpecifier { }
 
 # rule function-specifier:sym<explicit> { <.explicit> }
-our class FunctionSpecifier::Explicit does IFunctionSpecifier {
-
-}
+our class FunctionSpecifier::Explicit does IFunctionSpecifier { }
 
 # rule typedef-name { <identifier> } #---------------------------
 our class TypedefName { 
-    #TODO
+    has Identifier $.identifier is required;
 }
 
 our role ITypeSpecifier { }
@@ -1802,14 +1835,14 @@ our class TypeSpecifier::ClassSpecifier does ITypeSpecifier {
 
 # rule type-specifier:sym<enum-specifier> { <enum-specifier> } #---------------------------
 our class TypeSpecifier::EnumSpecifier does ITypeSpecifier {
-    #TODO
+    has EnumSpecifier $.enum-specifier is required;
 }
 
 our role ITrailingTypeSpecifier { }
 
 # rule trailing-type-specifier:sym<cv-qualifier> { <cv-qualifier> <simple-type-specifier> }
 our class TrailingTypeSpecifier::CvQualifier does ITrailingTypeSpecifier {
-    has CvQualifier $.cv-qualifier is required;
+    has CvQualifier         $.cv-qualifier          is required;
     has SimpleTypeSpecifier $.simple-type-specifier is required;
 }
 
@@ -1825,81 +1858,87 @@ our class TrailingTypeSpecifier::Elaborated does ITrailingTypeSpecifier {
 
 # rule trailing-type-specifier:sym<typename> { <type-name-specifier> } #---------------------------
 our class TrailingTypeSpecifier::Typename does ITrailingTypeSpecifier {
-    #TODO
+    has TypeNameSpecifier $.type-name-specifier is required;
 }
 
 # rule type-specifier-seq { <type-specifier>+ <attribute-specifier-seq>? }
 our class TypeSpecifierSeq { 
-    #TODO
+    has TypeNameSpecifier     @.type-specifiers is required;
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
 }
 
 # rule trailing-type-specifier-seq { <trailing-type-specifier>+ <attribute-specifier-seq>? }
 our class TrailingTypeSpecifierSeq { 
-    #TODO
+    has TrailingTypeSpecifier @.trailing-type-specifiers is required;
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
 }
 
 our role ISimpleTypeLengthModifier { }
 
 # rule simple-type-length-modifier:sym<short> { <.short> }
-our class SimpleTypeLengthModifier::Short does ISimpleTypeLengthModifier {
-
-}
+our class SimpleTypeLengthModifier::Short does ISimpleTypeLengthModifier { }
 
 # rule simple-type-length-modifier:sym<long_> { <.long_> }
-our class SimpleTypeLengthModifier::Long does ISimpleTypeLengthModifier {
-
-}
+our class SimpleTypeLengthModifier::Long does ISimpleTypeLengthModifier { }
 
 our role ISimpleTypeSignednessModifier { }
 
 # rule simple-type-signedness-modifier:sym<unsigned> { <.unsigned> }
-our class SimpleTypeSignednessModifier::Unsigned does ISimpleTypeSignednessModifier {
-
-}
+our class SimpleTypeSignednessModifier::Unsigned does ISimpleTypeSignednessModifier { }
 
 # rule simple-type-signedness-modifier:sym<signed> { <.signed> }
-our class SimpleTypeSignednessModifier::Signed does ISimpleTypeSignednessModifier {
-
-}
+our class SimpleTypeSignednessModifier::Signed does ISimpleTypeSignednessModifier { }
 
 # rule full-type-name { <nested-name-specifier>? <the-type-name> }
 our class FullTypeName { 
-    #TODO
+    has NestedNameSpecifier $.nested-name-specifier;
+    has TheTypeName         $.the-type-name is required;
 }
 
 # rule scoped-template-id { <nested-name-specifier> <.template> <simple-template-id> }
 our class ScopedTemplateId { 
-    #TODO
+    has NestedNameSpecifier $.nested-name-specifier is required;
+    has SimpleTemplateId    $.simple-template-id is required;
 }
 
-# rule simple-int-type-specifier { <simple-type-signedness-modifier>? <simple-type-length-modifier>* <int_> }
+# rule simple-int-type-specifier { 
+#   <simple-type-signedness-modifier>? 
+#   <simple-type-length-modifier>* 
+#   <int_> 
+# }
 our class SimpleIntTypeSpecifier { 
-    #TODO
+    has SimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+    has SimpleTypeLengthModifier     @.simple-type-length-modifiers is required;
 }
 
 # rule simple-char-type-specifier { <simple-type-signedness-modifier>? <char_> }
 our class SimpleCharTypeSpecifier { 
-    #TODO
+    has SimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+    has Char_                        $.char is required;
 }
 
 # rule simple-char16-type-specifier { <simple-type-signedness-modifier>? <char16> }
 our class SimpleChar16TypeSpecifier { 
-    #TODO
+    has SimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+    has Char16                       $.char16 is required;
 }
 
 # rule simple-char32-type-specifier { <simple-type-signedness-modifier>? <char32> }
 our class SimpleChar32TypeSpecifier { 
-    #TODO
+    has SimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+    has Char32                       $.char32 is required;
 }
 
 # rule simple-wchar-type-specifier { <simple-type-signedness-modifier>? <wchar> }
 our class SimpleWcharTypeSpecifier { 
-    #TODO
+    has SimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+    has WChar                        $.wchar is required;
 }
 
 # rule simple-double-type-specifier { <simple-type-length-modifier>? <double> } #------------------------------
 our class SimpleDoubleTypeSpecifier { 
-    #TODO
+    has SimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+    has Double                       $.double is required;
 }
 
 our role ISimpleTypeSpecifier { }
@@ -1927,7 +1966,7 @@ our class SimpleTypeSpecifier::SignednessMod does ISimpleTypeSpecifier {
 # regex simple-type-specifier:sym<signedness-mod-length> { <simple-type-signedness-modifier>? <simple-type-length-modifier>+ }
 our class SimpleTypeSpecifier::SignednessModLength does ISimpleTypeSpecifier {
     has SimpleTypeSignednessModifier $.simple-type-signedness-modifier;
-    has SimpleTypeLengthModifier @.simple-type-length-modifier is required;
+    has SimpleTypeLengthModifier     @.simple-type-length-modifier is required;
 }
 
 # regex simple-type-specifier:sym<char> { <simple-char-type-specifier> }
@@ -1977,7 +2016,7 @@ our class SimpleTypeSpecifier::Auto does ISimpleTypeSpecifier {
 
 # regex simple-type-specifier:sym<decltype> { <decltype-specifier> } #------------------------------
 our class SimpleTypeSpecifier::Decltype does ISimpleTypeSpecifier {
-    #TODO
+    has DecltypeSpecifier $.decltype-specifier is required;
 }
 
 our role ITheTypeName { }
@@ -1999,7 +2038,7 @@ our class TheTypeName::Enum does ITheTypeName {
 
 # rule the-type-name:sym<typedef> { <typedef-name> } #------------------------------
 our class TheTypeName::Typedef does ITheTypeName {
-    #TODO
+    has TypedefName $.typedef-name is required;
 }
 
 our role IDecltypeSpecifierBody { }
@@ -2014,9 +2053,14 @@ our class DecltypeSpecifierBody::Auto does IDecltypeSpecifierBody {
     has Auto $.auto is required;
 }
 
-# rule decltype-specifier { <decltype> <.left-paren> <decltype-specifier-body> <.right-paren> } #------------------------------
+# rule decltype-specifier { 
+#   <decltype> 
+#   <.left-paren> 
+#   <decltype-specifier-body> 
+#   <.right-paren> 
+# } #------------------------------
 our class DecltypeSpecifier { 
-    #TODO
+    has DecltypeSpecifierBody $.decltype-specifier-body is required;
 }
 
 our role IElaboratedTypeSpecifier { }
@@ -2024,8 +2068,8 @@ our role IElaboratedTypeSpecifier { }
 # rule elaborated-type-specifier:sym<class-ident> { <.class-key> <attribute-specifier-seq>? <nested-name-specifier>? <identifier> }
 our class ElaboratedTypeSpecifier::ClassIdent does IElaboratedTypeSpecifier {
     has AttributeSpecifierSeq $.attribute-specifier-seq;
-    has NestedNameSpecifier $.nested-name-specifier;
-    has Identifier $.identifier is required;
+    has NestedNameSpecifier   $.nested-name-specifier;
+    has Identifier            $.identifier is required;
 }
 
 # rule elaborated-type-specifier:sym<class-template-id> { <.class-key> <simple-template-id> }
@@ -2036,60 +2080,82 @@ our class ElaboratedTypeSpecifier::ClassTemplateId does IElaboratedTypeSpecifier
 # rule elaborated-type-specifier:sym<class-nested-template-id> { <.class-key> <nested-name-specifier> <template>? <simple-template-id> }
 our class ElaboratedTypeSpecifier::ClassNestedTemplateId does IElaboratedTypeSpecifier {
     has NestedNameSpecifier $.nested-name-specifier is required;
-    has Template $.template;
-    has SimpleTemplateId $.simple-template-id is required;
+    has Template            $.template;
+    has SimpleTemplateId    $.simple-template-id is required;
 }
 
 # rule elaborated-type-specifier:sym<enum> { <.enum_> <nested-name-specifier>? <identifier> } #------------------------------
 our class ElaboratedTypeSpecifier::Enum does IElaboratedTypeSpecifier {
-    #TODO
+    has NestedNameSpecifier $.nested-name-specifier;
+    has Identifier          $.identifier is required;
 }
 
 # rule enum-name { <identifier> }
 our class EnumName { 
-    #TODO
+    has Identifier $.identifier is required;
 }
 
-# rule enum-specifier { <enum-head> <.left-brace> [ <enumerator-list> <.comma>? ]? <.right-brace> }
+# rule enum-specifier { 
+#   <enum-head> 
+#   <.left-brace> 
+#   [ <enumerator-list> <.comma>? ]? 
+#   <.right-brace> 
+# }
 our class EnumSpecifier { 
-    #TODO
+    has EnumeratorList $.enumerator-list;
 }
 
-# rule enum-head { <.enumkey> <attribute-specifier-seq>? [ <nested-name-specifier>? <identifier> ]? <enumbase>? }
+# rule enum-head { 
+#   <.enumkey> 
+#   <attribute-specifier-seq>? 
+#   [ <nested-name-specifier>? <identifier> ]? 
+#   <enumbase>? 
+# }
 our class EnumHead { 
-    #TODO
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
+    has NestedNameSpecifier   $.nested-name-specifier;
+    has Identifier            $.identifier;
+    has EnumBase              $.enum-base;
 }
 
-# rule opaque-enum-declaration { <.enumkey> <attribute-specifier-seq>? <identifier> <enumbase>? <semi> }
+# rule opaque-enum-declaration { 
+#   <.enumkey> 
+#   <attribute-specifier-seq>? 
+#   <identifier> 
+#   <enumbase>? 
+#   <semi> 
+# }
 our class OpaqueEnumDeclaration { 
-    #TODO
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
+    has Identifier            $.identifier is required;
+    has EnumBase              $.enum-base is required;
 }
 
 # rule enumkey { <enum_> [ <class_> || <struct> ]? }
-our class Enumkey { 
-    #TODO
-}
+our class Enumkey { }
 
 # rule enumbase { <colon> <type-specifier-seq> }
 our class Enumbase { 
-    #TODO
+    has TypeSpecifierSeq $.type-specifier-seq is required;
 }
 
 # rule enumerator-list { <enumerator-definition> [ <.comma> <enumerator-definition> ]* }
 our class EnumeratorList { 
-    #TODO
+    has EnumeratorDefinition @.enumerator-definition is required;
 }
 
 # rule enumerator-definition { <enumerator> [ <assign> <constant-expression> ]? }
 our class EnumeratorDefinition { 
-    #TODO
+    has Enumerator         $.enumerator is required;
+    has ConstantExpression $.constant-expression;
 }
 
 # rule enumerator { <identifier> }
 our class Enumerator { 
-    #TODO
+    has Identifier $.identifier is required;
 }
 
+#-----------------------
 our role INamespaceName { }
 
 # rule namespace-name:sym<original> { <original-namespace-name> }
@@ -2104,7 +2170,7 @@ our class NamespaceName::Alias does INamespaceName {
 
 # rule original-namespace-name { <identifier> } #--------------------
 our class OriginalNamespaceName { 
-    #TODO
+    has Identifier $.identifier is required;
 }
 
 our role INamespaceTag { }
@@ -2116,54 +2182,79 @@ our class NamespaceTag::Ident does INamespaceTag {
 
 # rule namespace-tag:sym<ns-name> { <original-namespace-name> } #--------------------
 our class NamespaceTag::NsName does INamespaceTag {
-    #TODO
+    has OriginalNamespaceName $.original-namespace-name is required;
 }
 
-# rule namespace-definition { <inline>? <namespace> <namespace-tag>? <.left-brace> <namespaceBody=declarationseq>? <.right-brace> }
+# rule namespace-definition { 
+#   <inline>? 
+#   <namespace> 
+#   <namespace-tag>? 
+#   <.left-brace> 
+#   <namespaceBody=declarationseq>? 
+#   <.right-brace> 
+# }
 our class NamespaceDefinition { 
-    #TODO
+    has Bool           $.inline is required;
+    has NamespaceTag   $.namespace-tag;
+    has Declarationseq $.namespace-body;
 }
 
 # rule namespace-alias { <identifier> }
 our class NamespaceAlias { 
-    #TODO
+    has Identifier $.identifier is required;
 }
 
 # rule namespace-alias-definition { <namespace> <identifier> <assign> <qualifiednamespacespecifier> <semi> }
 our class NamespaceAliasDefinition { 
-    #TODO
+    has Identifier $.identifier is required;
+    has Qualifiednamespacespecifier $.qualifiednamespacespecifier is required;
 }
 
 # rule qualifiednamespacespecifier { <nested-name-specifier>? <namespace-name> } #--------------------
 our class Qualifiednamespacespecifier { 
-    #TODO
+    has NestedNameSpecifier $.nested-name-specifier;
+    has NamespaceName       $.namespace-name is required;
 }
 
 our role IUsingDeclarationPrefix { }
 
 # rule using-declaration-prefix:sym<nested> { [ <typename_>? <nested-name-specifier> ] }
 our class UsingDeclarationPrefix::Nested does IUsingDeclarationPrefix {
-    #TODO
+    has NestedNameSpecifier $.nested-name-specifier is required;
 }
 
 # rule using-declaration-prefix:sym<base> { <doublecolon> } #--------------------
-our class UsingDeclarationPrefix::Base does IUsingDeclarationPrefix {
-    #TODO
-}
+our class UsingDeclarationPrefix::Base does IUsingDeclarationPrefix { }
 
 # rule using-declaration { <using> <using-declaration-prefix> <unqualified-id> <semi> }
 our class UsingDeclaration { 
-    #TODO
+    has UsingDeclarationPrefix $.using-declaration-prefix is required;
+    has UnqualifiedId          $.unqualified-id is required;
 }
 
-# rule using-directive { <attribute-specifier-seq>? <using> <namespace> <nested-name-specifier>? <namespace-name> <semi> }
+# rule using-directive { 
+#   <attribute-specifier-seq>? 
+#   <using> 
+#   <namespace> 
+#   <nested-name-specifier>? 
+#   <namespace-name> 
+#   <semi> 
+# }
 our class UsingDirective { 
-    #TODO
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
+    has NestedNameSpecifier   $.nested-name-specifier;
+    has NamespaceName         $.namespace-name is required;
 }
 
-# rule asm-definition { <asm> <.left-paren> <string-literal> <.right-paren> <.semi> } #--------------------
+# rule asm-definition { 
+#   <asm> 
+#   <.left-paren> 
+#   <string-literal> 
+#   <.right-paren> 
+#   <.semi> 
+# } #--------------------
 our class AsmDefinition { 
-    #TODO
+    has StringLiteral $.string-literal is required;
 }
 
 our role ILinkageSpecificationBody { }
@@ -2178,26 +2269,37 @@ our class LinkageSpecificationBody::Decl does ILinkageSpecificationBody {
     has Declaration $.declaration is required;
 }
 
-# rule linkage-specification { <extern> <string-literal> <linkage-specification-body> }
+# rule linkage-specification { 
+#   <extern> 
+#   <string-literal> 
+#   <linkage-specification-body> 
+# }
 our class LinkageSpecification { 
-    #TODO
+    has StringLiteral            $.string-literal is required;
+    has LinkageSpecificationBody $.linkage-specification-body is required;
 }
 
 # rule attribute-specifier-seq { <attribute-specifier>+ } #--------------------
 our class AttributeSpecifierSeq { 
-    #TODO
+    has AttributeSpecifier @.attribute-specifier is required;
 }
 
 our role IAttributeSpecifier { }
 
-# rule attribute-specifier:sym<double-braced> { <.left-bracket> <.left-bracket> <attribute-list>? <.right-bracket> <.right-bracket> }
+# rule attribute-specifier:sym<double-braced> { 
+#   <.left-bracket> 
+#   <.left-bracket> 
+#   <attribute-list>? 
+#   <.right-bracket> 
+#   <.right-bracket> 
+# }
 our class AttributeSpecifier::DoubleBraced does IAttributeSpecifier {
     has AttributeList $.attribute-list;
 }
 
 # rule attribute-specifier:sym<alignment> { <alignmentspecifier> } #--------------------
 our class AttributeSpecifier::Alignment does IAttributeSpecifier {
-    #TODO
+    has AlignmentSpecifier $.alignmentspecifier is required;
 }
 
 our role IAlignmentspecifierbody { }
@@ -2209,12 +2311,19 @@ our class Alignmentspecifierbody::TypeId does IAlignmentspecifierbody {
 
 # rule alignmentspecifierbody:sym<const-expr> { <constant-expression> } #--------------------
 our class Alignmentspecifierbody::ConstExpr does IAlignmentspecifierbody {
-    #TODO
+    has ConstantExpression $.constant-expression is required;
 }
 
-# rule alignmentspecifier { <alignas> <.left-paren> <alignmentspecifierbody> <ellipsis>? <.right-paren> }
+# rule alignmentspecifier { 
+#   <alignas> 
+#   <.left-paren> 
+#   <alignmentspecifierbody> 
+#   <ellipsis>? 
+#   <.right-paren> 
+# }
 our class Alignmentspecifier { 
-    #TODO
+    has Alignmentspecifierbody $.alignmentspecifierbody is required;
+    has Bool                   $.has-ellipsis is required;
 }
 
 # rule attribute-list { <attribute> [ <.comma> <attribute> ]* <ellipsis>? }
@@ -2541,7 +2650,6 @@ our class FunctionBody::Try does IFunctionBody {
 our class FunctionBody::AssignDefault does IFunctionBody {
     has Assign $.assign is required;
     has Default $.default_ is required;
-    has Semi $.semi is required;
 }
 
 # rule function-body:sym<assign-delete> { <assign> <delete> <semi> } #-----------------------------
@@ -2673,7 +2781,6 @@ our class Memberdeclaration::Basic does IMemberdeclaration {
     has AttributeSpecifierSeq $.attribute-specifier-seq;
     has DeclSpecifierSeq $.decl-specifier-seq;
     has MemberDeclaratorList $.member-declarator-list;
-    has Semi $.semi is required;
 }
 
 # rule memberdeclaration:sym<func> { <function-definition> }
