@@ -784,9 +784,9 @@ our class PostfixExpressionTail::IndirectionPseudoDtor does IPostfixExpressionTa
 }
 
 # rule postfix-expression-tail:sym<pp-mm> { [ <plus-plus> || <minus-minus> ] } 
-our class PostfixExpressionTail::PpMm does IPostfixExpressionTail {
-    #TODO
-}
+our class PostfixExpressionTail::PlusPlus does IPostfixExpressionTail { }
+
+our class PostfixExpressionTail::MinusMinus does IPostfixExpressionTail { }
 
 # token postfix-expression-body { 
 #   || <postfix-expression-list> 
@@ -818,14 +818,35 @@ our class CastToken::Const does ICastToken {
     has Const_cast $.const_cast is required;
 }
 
-# rule postfix-expression-cast { <cast-token> <less> <the-type-id> <greater> <.left-paren> <expression> <.right-paren> }
+# rule postfix-expression-cast { 
+#   <cast-token> 
+#   <less> 
+#   <the-type-id> 
+#   <greater> 
+#   <.left-paren> 
+#   <expression> 
+#   <.right-paren> 
+# }
 our class PostfixExpressionCast { 
-    #TODO
+    has CastToken  $.cast-token  is required;
+    has TheTypeId  $.the-type-id is required;
+    has Expression $.expression  is required;
 }
 
-# rule postfix-expression-typeid { <type-id-of-the-type-id> <.left-paren> [ <expression> || <the-type-id>] <.right-paren> } 
-our class PostfixExpressionTypeid { 
-    #TODO
+# rule postfix-expression-typeid { 
+# <type-id-of-the-type-id> 
+# <.left-paren> 
+# [ <expression> || <the-type-id>] 
+# <.right-paren> 
+# } 
+our class PostfixExpressionTypeid::Expr { 
+    has TypeIdOfTheTypeId $.type-id-of-the-type-id is required;
+    has Expression        $.expression             is required;
+}
+
+our class PostfixExpressionTypeid::TypeId { 
+    has TypeIdOfTheTypeId $.type-id-of-the-type-id is required;
+    has TheTypeId         $.the-type-id            is required;
 }
 
 our role IPostListHead { }
@@ -837,7 +858,7 @@ our class PostListHead::Simple does IPostListHead {
 
 # token post-list-head:sym<type-name> { <type-name-specifier> } 
 our class PostListHead::TypeName does IPostListHead {
-    #TODO
+    has TypeNameSpecifier $.type-name-specifier is required;
 }
 
 our role IPostListTail { }
@@ -1445,16 +1466,23 @@ our class SelectionStatement::If does ISelectionStatement {
     has Statement $.else-statement;
 }
 
-# rule selection-statement:sym<switch> { <switch> <.left-paren> <condition> <.right-paren> <statement> } #-----------------------------
+# rule selection-statement:sym<switch> { 
+#   <switch> 
+#   <.left-paren> 
+#   <condition> 
+#   <.right-paren> 
+#   <statement> 
+# } #-----------------------------
 our class SelectionStatement::Switch does ISelectionStatement {
-    #TODO
+    has Condition $.condition is required;
+    has Statement $.statement is required;
 }
 
 our role ICondition { }
 
 # rule condition:sym<expr> { <expression> } #-----------------------------
 our class Condition::Expr does ICondition {
-    #TODO
+    has Expression $.expression is required;
 }
 
 our role IConditionDeclTail { }
@@ -3351,17 +3379,26 @@ our class TryBlock {
 
 # rule function-try-block { <try_> <constructor-initializer>? <compound-statement> <handler-seq> }
 our class FunctionTryBlock { 
-    #TODO
+    has ConstructorInitializer $.constructor-initializer;
+    has CompoundStatement      $.compound-statement is required;
+    has HandlerSeq             $.handler-seq is required;
 }
 
 # rule handler-seq { <handler>+ }
 our class HandlerSeq { 
-    #TODO
+    has Handler @.handlers is required;
 }
 
-# rule handler { <catch> <.left-paren> <exception-declaration> <.right-paren> <compound-statement> }
+# rule handler { 
+#   <catch> 
+#   <.left-paren> 
+#   <exception-declaration> 
+#   <.right-paren> 
+#   <compound-statement> 
+# }
 our class Handler { 
-    #TODO
+    has ExceptionDeclaration $.exception-declaration is required;
+    has CompoundStatement    $.compound-statement is required;
 }
 
 our role ISomeDeclarator { }
@@ -3373,7 +3410,7 @@ our class SomeDeclarator::Basic does ISomeDeclarator {
 
 # rule some-declarator:sym<abstract> { <abstract-declarator> } #---------------------
 our class SomeDeclarator::Abstract does ISomeDeclarator {
-    #TODO
+    has AbstractDeclarator $.abstract-declarator is required;
 }
 
 our role IExceptionDeclaration { }
@@ -3392,7 +3429,7 @@ our class ExceptionDeclaration::Ellipsis does IExceptionDeclaration {
 
 # rule throw-expression { <throw> <assignment-expression>? } #---------------------
 our class ThrowExpression { 
-    #TODO
+    has AssignmentExpression $.assignment-expression;
 }
 
 our role IExceptionSpecification { }
@@ -3404,17 +3441,17 @@ our class ExceptionSpecification::Dynamic does IExceptionSpecification {
 
 # token exception-specification:sym<noexcept> { <noe-except-specification> } #---------------------
 our class ExceptionSpecification::Noexcept does IExceptionSpecification {
-    #TODO
+    has NoeExceptSpecification $.noe-except-specification is required;
 }
 
 # rule dynamic-exception-specification { <throw> <.left-paren> <type-id-list>? <.right-paren> }
 our class DynamicExceptionSpecification { 
-    #TODO
+    has TypeIdList $.type-id-list;
 }
 
 # rule type-id-list { <the-type-id> <ellipsis>? [ <.comma> <the-type-id> <ellipsis>? ]* } #---------------------
 our class TypeIdList { 
-    #TODO
+    has TheTypeId @.the-type-ids is required;
 }
 
 our role INoeExceptSpecification { }
@@ -3426,21 +3463,15 @@ our class NoeExceptSpecification::Full does INoeExceptSpecification {
 }
 
 # token noe-except-specification:sym<keyword-only> { <noexcept> } #---------------------
-our class NoeExceptSpecification::KeywordOnly does INoeExceptSpecification {
-    #TODO
-}
+our class NoeExceptSpecification::KeywordOnly does INoeExceptSpecification { }
 
 our role ITheOperator { }
 
 # token the-operator:sym<new> { <new_> [ <.left-bracket> <.right-bracket>]? }
-our class TheOperator::New does ITheOperator {
-    #TODO
-}
+our class TheOperator::New does ITheOperator { }
 
 # token the-operator:sym<delete> { <delete> [ <.left-bracket> <.right-bracket>]? }
-our class TheOperator::Delete does ITheOperator {
-    #TODO
-}
+our class TheOperator::Delete does ITheOperator { }
 
 # token the-operator:sym<plus> { <plus> }
 our class TheOperator::Plus does ITheOperator {
@@ -3473,9 +3504,7 @@ our class TheOperator::Caret does ITheOperator {
 }
 
 # token the-operator:sym<and_> { <and_> <!before <and_>> }
-our class TheOperator::And does ITheOperator {
-    #TODO
-}
+our class TheOperator::And does ITheOperator { }
 
 # token the-operator:sym<or_> { <or_> }
 our class TheOperator::Or does ITheOperator {
@@ -3643,7 +3672,7 @@ our class Literal::Char does ILiteral {
 
 # token literal:sym<float> { <floating-literal> } #Note: are we allowed to have many strings in a row?
 our class Literal::Float does ILiteral {
-    #TODO
+    has FloatingLiteral $.floating-literal is required;
 }
 
 # token literal:sym<str> { <string-literal> }
