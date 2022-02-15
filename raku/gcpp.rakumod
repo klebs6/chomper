@@ -460,7 +460,8 @@ our role CPP14Parser does CPP14Lexer {
     regex unqualified-id:sym<op-func-id>          { <operator-function-id> }
     regex unqualified-id:sym<conversion-func-id>  { <conversion-function-id> }
     regex unqualified-id:sym<literal-operator-id> { <literal-operator-id> }
-    regex unqualified-id:sym<tilde>               { <tilde> [   <class-name> ||  <decltype-specifier> ] }
+    regex unqualified-id:sym<tilde-classname>     { <tilde> <class-name> }
+    regex unqualified-id:sym<tilde-decltype>      { <tilde> <decltype-specifier> }
     regex unqualified-id:sym<template-id>         { <template-id> }
 
     #-------------------------------
