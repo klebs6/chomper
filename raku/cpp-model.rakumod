@@ -437,6 +437,194 @@ our class SimpleDoubleTypeSpecifier {
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
 }
 
+#--------------------------------------
+# token template-name { <identifier> }
+our class TemplateName { 
+    has Identifier $.identifier is required;
+}
+
+our class TypeSpecifierSeq   { ... }
+our class AbstractDeclarator { ... }
+our class ConstantExpression { ... }
+
+#--------------------------------------
+# rule the-type-id { <type-specifier-seq> <abstract-declarator>? } #-----------------------------
+our class TheTypeId { 
+    has TypeSpecifierSeq   $.type-specifier-seq is required;
+    has AbstractDeclarator $.abstract-declarator;
+}
+
+#--------------------------------------
+our role ITemplateArgument { }
+
+# token template-argument:sym<type-id> { <the-type-id> }
+our class TemplateArgument::TypeId does ITemplateArgument {
+    has TheTypeId $.the-type-id is required;
+}
+
+# token template-argument:sym<const-expr> { <constant-expression> }
+our class TemplateArgument::ConstExpr does ITemplateArgument {
+    has ConstantExpression $.constant-expression is required;
+}
+
+# token template-argument:sym<id-expr> { <id-expression> } #---------------------
+our class TemplateArgument::IdExpr does ITemplateArgument {
+    has IdExpression $.id-expression is required;
+}
+
+#--------------------------------------
+# rule template-argument-list { 
+# <template-argument> 
+# <ellipsis>? 
+# [ <.comma> <template-argument> <ellipsis>? ]* 
+# }
+our class TemplateArgumentList { 
+    has ITemplateArgument @.template-arguments is required;
+}
+
+# rule template-id:sym<operator-function-id> { <operator-function-id> <less> <template-argument-list>? <greater> }
+our class TemplateId::OperatorFunctionId does ITemplateId {
+    has OperatorFunctionId $.operator-function-id is required;
+    has Less $.less is required;
+    has TemplateArgumentList $.template-argument-list;
+    has Greater $.greater is required;
+}
+
+# rule template-id:sym<literal-operator-id> { 
+# <literal-operator-id> 
+# <less> 
+# <template-argument-list>? 
+# <greater> } #-----------------------------
+our class TemplateId::LiteralOperatorId does ITemplateId {
+    has LiteralOperatorId    $.literal-operator-id is required;
+    has TemplateArgumentList $.template-argument-list;
+}
+
+
+#--------------------------------------
+# rule simple-template-id { 
+# <template-name> 
+# <less> 
+# <template-argument-list>? 
+# <greater> 
+# }
+our class SimpleTemplateId { 
+    has TemplateName         $.template-name is required;
+    has TemplateArgumentList $.template-argument-list;
+}
+
+our role ITemplateId { }
+
+# rule template-id:sym<simple> { <simple-template-id> }
+our class TemplateId::Simple does ITemplateId {
+    has SimpleTemplateId $.simple-template-id is required;
+}
+
+#--------------------------------------
+our role ITheTypeName { }
+
+# rule the-type-name:sym<simple-template-id> { <simple-template-id> }
+our class TheTypeName::SimpleTemplateId does ITheTypeName {
+    has SimpleTemplateId $.simple-template-id is required;
+}
+
+# rule the-type-name:sym<class> { <class-name> }
+our class TheTypeName::Class does ITheTypeName {
+    has ClassName $.class-name is required;
+}
+
+# rule the-type-name:sym<enum> { <enum-name> }
+our class TheTypeName::Enum does ITheTypeName {
+    has EnumName $.enum-name is required;
+}
+
+# rule the-type-name:sym<typedef> { <typedef-name> } #------------------------------
+our class TheTypeName::Typedef does ITheTypeName {
+    has TypedefName $.typedef-name is required;
+}
+#--------------------------------------
+our role INestedNameSpecifierPrefix { }
+
+# regex nested-name-specifier-prefix:sym<null> { <doublecolon> }
+our class NestedNameSpecifierPrefix::Null does INestedNameSpecifierPrefix { }
+
+# regex nested-name-specifier-prefix:sym<type> { <the-type-name> <doublecolon> }
+our class NestedNameSpecifierPrefix::Type does INestedNameSpecifierPrefix {
+    has TheTypeName $.the-type-name is required;
+}
+
+# regex nested-name-specifier-prefix:sym<ns> { <namespace-name> <doublecolon> }
+our class NestedNameSpecifierPrefix::Ns does INestedNameSpecifierPrefix {
+    has NamespaceName $.namespace-name is required;
+}
+
+# regex nested-name-specifier-prefix:sym<decl> { <decltype-specifier> <doublecolon> }
+our class NestedNameSpecifierPrefix::Decl does INestedNameSpecifierPrefix {
+    has DecltypeSpecifier $.decltype-specifier is required;
+}
+
+#--------------------------
+our role INestedNameSpecifierSuffix { }
+
+# regex nested-name-specifier-suffix:sym<id> { <identifier> <doublecolon> }
+our class NestedNameSpecifierSuffix::Id does INestedNameSpecifierSuffix {
+    has Identifier $.identifier is required;
+}
+
+# regex nested-name-specifier-suffix:sym<template> { <template>? <simple-template-id> <doublecolon> } 
+our class NestedNameSpecifierSuffix::Template does INestedNameSpecifierSuffix {
+    has Bool             $.template is required;
+    has SimpleTemplateId $.simple-template-id is required;
+}
+
+# regex nested-name-specifier { <nested-name-specifier-prefix> <nested-name-specifier-suffix>* }
+our class NestedNameSpecifier { 
+    has NestedNameSpecifierPrefix $.nested-name-specifier-prefix   is required;
+    has NestedNameSpecifierSuffix @.nested-name-specifier-suffixes;
+}
+
+#--------------------------------------
+our role ITypeNameSpecifier { }
+
+# rule type-name-specifier:sym<ident> { <typename_> <nested-name-specifier> <identifier> }
+our class TypeNameSpecifier::Ident does ITypeNameSpecifier {
+    has NestedNameSpecifier $.nested-name-specifier is required;
+    has Identifier $.identifier is required;
+}
+
+# rule type-name-specifier:sym<template> { 
+#   <typename_> 
+#   <nested-name-specifier> 
+#   <template>? 
+#   <simple-template-id> 
+# }
+our class TypeNameSpecifier::Template does ITypeNameSpecifier {
+    has NestedNameSpecifier $.nested-name-specifier is required;
+    has Bool                $.has-template          is required;
+    has SimpleTemplateId    $.simple-template-id    is required;
+}
+
+#--------------------------------------
+# rule type-specifier-seq { <type-specifier>+ <attribute-specifier-seq>? }
+our class TypeSpecifierSeq { 
+    has TypeNameSpecifier     @.type-specifiers is required;
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
+}
+
+# rule trailing-type-specifier-seq { <trailing-type-specifier>+ <attribute-specifier-seq>? }
+our class TrailingTypeSpecifierSeq { 
+    has TrailingTypeSpecifier @.trailing-type-specifiers is required;
+    has AttributeSpecifierSeq $.attribute-specifier-seq;
+}
+
+
+#-------------------------------------
+# rule full-type-name { <nested-name-specifier>? <the-type-name> }
+our class FullTypeName { 
+    has NestedNameSpecifier $.nested-name-specifier;
+    has TheTypeName         $.the-type-name is required;
+}
+
 #-------------------------------------
 our role ISimpleTypeSpecifier { }
 
@@ -564,19 +752,6 @@ our class TypeSpecifier::ClassSpecifier does ITypeSpecifier {
 # rule type-specifier:sym<enum-specifier> { <enum-specifier> } #---------------------------
 our class TypeSpecifier::EnumSpecifier does ITypeSpecifier {
     has EnumSpecifier $.enum-specifier is required;
-}
-
-
-# rule type-specifier-seq { <type-specifier>+ <attribute-specifier-seq>? }
-our class TypeSpecifierSeq { 
-    has TypeNameSpecifier     @.type-specifiers is required;
-    has AttributeSpecifierSeq $.attribute-specifier-seq;
-}
-
-# rule trailing-type-specifier-seq { <trailing-type-specifier>+ <attribute-specifier-seq>? }
-our class TrailingTypeSpecifierSeq { 
-    has TrailingTypeSpecifier @.trailing-type-specifiers is required;
-    has AttributeSpecifierSeq $.attribute-specifier-seq;
 }
 
 
@@ -823,45 +998,6 @@ our class QualifiedId {
     has UnqualifiedId       $.unqualified-id        is required;
 }
 
-our role INestedNameSpecifierPrefix { }
-
-# regex nested-name-specifier-prefix:sym<null> { <doublecolon> }
-our class NestedNameSpecifierPrefix::Null does INestedNameSpecifierPrefix { }
-
-# regex nested-name-specifier-prefix:sym<type> { <the-type-name> <doublecolon> }
-our class NestedNameSpecifierPrefix::Type does INestedNameSpecifierPrefix {
-    has TheTypeName $.the-type-name is required;
-}
-
-# regex nested-name-specifier-prefix:sym<ns> { <namespace-name> <doublecolon> }
-our class NestedNameSpecifierPrefix::Ns does INestedNameSpecifierPrefix {
-    has NamespaceName $.namespace-name is required;
-}
-
-# regex nested-name-specifier-prefix:sym<decl> { <decltype-specifier> <doublecolon> }
-our class NestedNameSpecifierPrefix::Decl does INestedNameSpecifierPrefix {
-    has DecltypeSpecifier $.decltype-specifier is required;
-}
-
-#--------------------------
-our role INestedNameSpecifierSuffix { }
-
-# regex nested-name-specifier-suffix:sym<id> { <identifier> <doublecolon> }
-our class NestedNameSpecifierSuffix::Id does INestedNameSpecifierSuffix {
-    has Identifier $.identifier is required;
-}
-
-# regex nested-name-specifier-suffix:sym<template> { <template>? <simple-template-id> <doublecolon> } 
-our class NestedNameSpecifierSuffix::Template does INestedNameSpecifierSuffix {
-    has Bool             $.template is required;
-    has SimpleTemplateId $.simple-template-id is required;
-}
-
-# regex nested-name-specifier { <nested-name-specifier-prefix> <nested-name-specifier-suffix>* }
-our class NestedNameSpecifier { 
-    has NestedNameSpecifierPrefix $.nested-name-specifier-prefix   is required;
-    has NestedNameSpecifierSuffix @.nested-name-specifier-suffixes;
-}
 
 # rule lambda-expression { <lambda-introducer> <lambda-declarator>? <compound-statement> }
 our class LambdaExpression { 
@@ -1898,41 +2034,12 @@ our class TypedefName {
 }
 
 
-# rule full-type-name { <nested-name-specifier>? <the-type-name> }
-our class FullTypeName { 
-    has NestedNameSpecifier $.nested-name-specifier;
-    has TheTypeName         $.the-type-name is required;
-}
-
 # rule scoped-template-id { <nested-name-specifier> <.template> <simple-template-id> }
 our class ScopedTemplateId { 
     has NestedNameSpecifier $.nested-name-specifier is required;
     has SimpleTemplateId    $.simple-template-id is required;
 }
 
-
-
-our role ITheTypeName { }
-
-# rule the-type-name:sym<simple-template-id> { <simple-template-id> }
-our class TheTypeName::SimpleTemplateId does ITheTypeName {
-    has SimpleTemplateId $.simple-template-id is required;
-}
-
-# rule the-type-name:sym<class> { <class-name> }
-our class TheTypeName::Class does ITheTypeName {
-    has ClassName $.class-name is required;
-}
-
-# rule the-type-name:sym<enum> { <enum-name> }
-our class TheTypeName::Enum does ITheTypeName {
-    has EnumName $.enum-name is required;
-}
-
-# rule the-type-name:sym<typedef> { <typedef-name> } #------------------------------
-our class TheTypeName::Typedef does ITheTypeName {
-    has TypedefName $.typedef-name is required;
-}
 
 our role IDecltypeSpecifierBody { }
 
@@ -2418,12 +2525,6 @@ our class Refqualifier::AndAnd does IRefqualifier { }
 our class Declaratorid { 
     has Bool         $.has-ellipsis  is required;
     has IdExpression $.id-expression is required;
-}
-
-# rule the-type-id { <type-specifier-seq> <abstract-declarator>? } #-----------------------------
-our class TheTypeId { 
-    has TypeSpecifierSeq   $.type-specifier-seq is required;
-    has AbstractDeclarator $.abstract-declarator;
 }
 
 our role IAbstractDeclarator { }
@@ -3104,9 +3205,7 @@ our class TypeParameterBase::Basic does ITypeParameterBase {
 }
 
 # rule type-parameter-base:sym<typename> { <typename_> } #-----------------------------
-our class TypeParameterBase::Typename does ITypeParameterBase {
-    has Typename $.typename is required;
-}
+our class TypeParameterBase::Typename does ITypeParameterBase { }
 
 our role ITypeParameterSuffix { }
 
@@ -3126,94 +3225,6 @@ our class TypeParameterSuffix::AssignTypeId does ITypeParameterSuffix {
 our class TypeParameter { 
     has TypeParameterBase   $.type-parameter-base   is required;
     has TypeParameterSuffix $.type-parameter-suffix is required;
-}
-
-# rule simple-template-id { 
-# <template-name> 
-# <less> 
-# <template-argument-list>? 
-# <greater> 
-# }
-our class SimpleTemplateId { 
-    has TemplateName         $.template-name is required;
-    has TemplateArgumentList $.template-argument-list;
-}
-
-our role ITemplateId { }
-
-# rule template-id:sym<simple> { <simple-template-id> }
-our class TemplateId::Simple does ITemplateId {
-    has SimpleTemplateId $.simple-template-id is required;
-}
-
-# rule template-id:sym<operator-function-id> { <operator-function-id> <less> <template-argument-list>? <greater> }
-our class TemplateId::OperatorFunctionId does ITemplateId {
-    has OperatorFunctionId $.operator-function-id is required;
-    has Less $.less is required;
-    has TemplateArgumentList $.template-argument-list;
-    has Greater $.greater is required;
-}
-
-# rule template-id:sym<literal-operator-id> { 
-# <literal-operator-id> 
-# <less> 
-# <template-argument-list>? 
-# <greater> } #-----------------------------
-our class TemplateId::LiteralOperatorId does ITemplateId {
-    has LiteralOperatorId    $.literal-operator-id is required;
-    has TemplateArgumentList $.template-argument-list;
-}
-
-# token template-name { <identifier> }
-our class TemplateName { 
-    has Identifier $.identifier is required;
-}
-
-# rule template-argument-list { 
-# <template-argument> 
-# <ellipsis>? 
-# [ <.comma> <template-argument> <ellipsis>? ]* 
-# }
-our class TemplateArgumentList { 
-    has TemplateArgument @.template-arguments is required;
-}
-
-our role ITemplateArgument { }
-
-# token template-argument:sym<type-id> { <the-type-id> }
-our class TemplateArgument::TypeId does ITemplateArgument {
-    has TheTypeId $.the-type-id is required;
-}
-
-# token template-argument:sym<const-expr> { <constant-expression> }
-our class TemplateArgument::ConstExpr does ITemplateArgument {
-    has ConstantExpression $.constant-expression is required;
-}
-
-# token template-argument:sym<id-expr> { <id-expression> } #---------------------
-our class TemplateArgument::IdExpr does ITemplateArgument {
-    has IdExpression $.id-expression is required;
-}
-
-our role ITypeNameSpecifier { }
-
-# rule type-name-specifier:sym<ident> { <typename_> <nested-name-specifier> <identifier> }
-our class TypeNameSpecifier::Ident does ITypeNameSpecifier {
-    has Typename $.typename_ is required;
-    has NestedNameSpecifier $.nested-name-specifier is required;
-    has Identifier $.identifier is required;
-}
-
-# rule type-name-specifier:sym<template> { 
-#   <typename_> 
-#   <nested-name-specifier> 
-#   <template>? 
-#   <simple-template-id> 
-# }
-our class TypeNameSpecifier::Template does ITypeNameSpecifier {
-    has NestedNameSpecifier $.nested-name-specifier is required;
-    has Bool                $.has-template          is required;
-    has SimpleTemplateId    $.simple-template-id    is required;
 }
 
 # rule explicit-instantiation { <extern>? <template> <declaration> }
