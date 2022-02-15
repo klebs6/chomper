@@ -524,7 +524,7 @@ our role CPP14Parser does CPP14Lexer {
     #-------------------------------
     proto rule lambda-capture { * }
     rule lambda-capture:sym<list> { <capture-list> }
-    rule lambda-capture:sym<def>  { <capture-default> [ <comma> <capture-list> ]? }
+    rule lambda-capture:sym<def>  { <capture-default> [ <.comma> <capture-list> ]? }
 
     #-------------------------------
     proto rule capture-default { * }
@@ -533,7 +533,7 @@ our role CPP14Parser does CPP14Lexer {
 
     #-------------------------------
     rule capture-list {
-        <capture> [ <comma> <capture> ]* <ellipsis>?
+        <capture> [ <.comma> <capture> ]* <ellipsis>?
     }
 
     #-------------------------------
@@ -964,7 +964,7 @@ our role CPP14Parser does CPP14Lexer {
     token assignment-operator:sym<or-assign>     { <.or-assign>         } 
 
     rule expression {
-        <assignment-expression>+ %% <comma>
+        <assignment-expression>+ %% <.comma>
     }
 
     rule constant-expression { <conditional-expression> }
@@ -1045,7 +1045,11 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule selection-statement:sym<switch> {  
-        <switch> <.left-paren> <condition> <.right-paren> <statement>
+        <switch> 
+        <.left-paren> 
+        <condition> 
+        <.right-paren> 
+        <statement>
     }
 
     #-----------------------------
@@ -1157,18 +1161,29 @@ our role CPP14Parser does CPP14Lexer {
     rule block-declaration:sym<opaque-enum-decl>  { <opaque-enum-declaration>    } 
 
     rule alias-declaration {
-        <using>
+        <.using>
         <identifier>
         <attribute-specifier-seq>?
-        <assign>
+        <.assign>
         <the-type-id>
-        <semi>
+        <.semi>
     }
 
     #---------------------------
     proto rule simple-declaration { * }
-    rule simple-declaration:sym<basic>     { <decl-specifier-seq>? <init-declarator-list>? <semi> }
-    rule simple-declaration:sym<init-list> { <attribute-specifier-seq> <decl-specifier-seq>? <init-declarator-list> <semi> }
+
+    rule simple-declaration:sym<basic> { 
+        <decl-specifier-seq>? 
+        <init-declarator-list>? 
+        <.semi> 
+    }
+
+    rule simple-declaration:sym<init-list> { 
+        <attribute-specifier-seq> 
+        <decl-specifier-seq>? 
+        <init-declarator-list> 
+        <.semi> 
+    }
 
     rule static-assert-declaration {
         <static_assert>
@@ -1193,9 +1208,9 @@ our role CPP14Parser does CPP14Lexer {
     token decl-specifier:sym<storage-class> { <storage-class-specifier> }
     token decl-specifier:sym<type>          { <type-specifier> }
     token decl-specifier:sym<func>          { <function-specifier> }
-    token decl-specifier:sym<friend>        { <friend> }
-    token decl-specifier:sym<typedef>       { <typedef> }
-    token decl-specifier:sym<constexpr>     { <constexpr> }
+    token decl-specifier:sym<friend>        { <.friend> }
+    token decl-specifier:sym<typedef>       { <.typedef> }
+    token decl-specifier:sym<constexpr>     { <.constexpr> }
 
     regex decl-specifier-seq {
         <decl-specifier> [<.ws> <decl-specifier>]*?  <attribute-specifier-seq>?  
@@ -1203,24 +1218,24 @@ our role CPP14Parser does CPP14Lexer {
 
     #---------------------------
     proto rule storage-class-specifier { * }
-    rule storage-class-specifier:sym<register>     { <register>     } 
-    rule storage-class-specifier:sym<static>       { <static>       } 
-    rule storage-class-specifier:sym<thread_local> { <thread_local> } 
-    rule storage-class-specifier:sym<extern>       { <extern>       } 
-    rule storage-class-specifier:sym<mutable>      { <mutable>      } 
+    rule storage-class-specifier:sym<register>     { <.register>     } 
+    rule storage-class-specifier:sym<static>       { <.static>       } 
+    rule storage-class-specifier:sym<thread_local> { <.thread_local> } 
+    rule storage-class-specifier:sym<extern>       { <.extern>       } 
+    rule storage-class-specifier:sym<mutable>      { <.mutable>      } 
     #---------------------------
     proto rule function-specifier { * }
-    rule function-specifier:sym<inline>   { <inline> }
-    rule function-specifier:sym<virtual>  { <virtual> }
-    rule function-specifier:sym<explicit> { <explicit> }
+    rule function-specifier:sym<inline>   { <.inline> }
+    rule function-specifier:sym<virtual>  { <.virtual> }
+    rule function-specifier:sym<explicit> { <.explicit> }
 
     rule typedef-name { <identifier> }
 
     #---------------------------
     proto rule type-specifier { * }
     rule type-specifier:sym<trailing-type-specifier> { <trailing-type-specifier> }
-    rule type-specifier:sym<class-specifier>        { <class-specifier>        }
-    rule type-specifier:sym<enum-specifier>         { <enum-specifier>         }
+    rule type-specifier:sym<class-specifier>         { <class-specifier>        }
+    rule type-specifier:sym<enum-specifier>          { <enum-specifier>         }
 
     #---------------------------
     proto rule trailing-type-specifier { * }
@@ -1239,43 +1254,53 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     proto rule simple-type-length-modifier { * }
-    rule simple-type-length-modifier:sym<short> { <short> }
-    rule simple-type-length-modifier:sym<long_>  { <long_>  }
+    rule simple-type-length-modifier:sym<short>  { <.short> }
+    rule simple-type-length-modifier:sym<long_>  { <.long_>  }
 
     proto rule simple-type-signedness-modifier         { * }
-    rule simple-type-signedness-modifier:sym<unsigned> { <unsigned> }
-    rule simple-type-signedness-modifier:sym<signed>   { <signed> }
+    rule simple-type-signedness-modifier:sym<unsigned> { <.unsigned> }
+    rule simple-type-signedness-modifier:sym<signed>   { <.signed> }
 
     rule full-type-name {
-        <nested-name-specifier>? <the-type-name>
+        <nested-name-specifier>? 
+        <the-type-name>
     }
 
     rule scoped-template-id {
-        <nested-name-specifier> <template> <simple-template-id>
+        <nested-name-specifier> 
+        <.template> 
+        <simple-template-id>
     }
 
     rule simple-int-type-specifier {
-        <simple-type-signedness-modifier>?  <simple-type-length-modifier>* <int_>
+        <simple-type-signedness-modifier>? 
+        <simple-type-length-modifier>* 
+        <int_>
     }
 
     rule simple-char-type-specifier {
-        <simple-type-signedness-modifier>?  <char_>
+        <simple-type-signedness-modifier>?
+        <char_>
     }
 
     rule simple-char16-type-specifier {
-        <simple-type-signedness-modifier>?  <char16>
+        <simple-type-signedness-modifier>?  
+        <char16>
     }
 
     rule simple-char32-type-specifier {
-        <simple-type-signedness-modifier>?  <char32>
+        <simple-type-signedness-modifier>?
+        <char32>
     }
 
     rule simple-wchar-type-specifier {
-        <simple-type-signedness-modifier>?  <wchar>
+        <simple-type-signedness-modifier>? 
+        <wchar>
     }
 
     rule simple-double-type-specifier {
-        <simple-type-length-modifier>?  <double>
+        <simple-type-length-modifier>?
+        <double>
     }
 
     #------------------------------
@@ -1319,26 +1344,26 @@ our role CPP14Parser does CPP14Lexer {
     proto rule elaborated-type-specifier { * }
 
     rule elaborated-type-specifier:sym<class-ident> {
-        <class-key>
+        <.class-key>
         <attribute-specifier-seq>? 
         <nested-name-specifier>? 
         <identifier>
     }
 
     rule elaborated-type-specifier:sym<class-template-id> {
-        <class-key>
+        <.class-key>
         <simple-template-id>
     }
 
     rule elaborated-type-specifier:sym<class-nested-template-id> {
-        <class-key>
+        <.class-key>
         <nested-name-specifier> 
         <template>? 
         <simple-template-id>
     }
 
     rule elaborated-type-specifier:sym<enum> {
-        <enum_> <nested-name-specifier>? <identifier>
+        <.enum_> <nested-name-specifier>? <identifier>
     }
 
     #------------------------------
@@ -1349,19 +1374,19 @@ our role CPP14Parser does CPP14Lexer {
     rule enum-specifier {
         <enum-head>
         <.left-brace>
-        [ <enumerator-list> <comma>?  ]?
+        [ <enumerator-list> <.comma>?  ]?
         <.right-brace>
     }
 
     rule enum-head {
-        <enumkey>
+        <.enumkey>
         <attribute-specifier-seq>?
         [ <nested-name-specifier>? <identifier> ]?
         <enumbase>?
     }
 
     rule opaque-enum-declaration {
-        <enumkey>
+        <.enumkey>
         <attribute-specifier-seq>?
         <identifier>
         <enumbase>?
@@ -1379,7 +1404,7 @@ our role CPP14Parser does CPP14Lexer {
 
     rule enumerator-list {
         <enumerator-definition>
-        [ <comma> <enumerator-definition> ]*
+        [ <.comma> <enumerator-definition> ]*
     }
 
     rule enumerator-definition {
@@ -1507,7 +1532,7 @@ our role CPP14Parser does CPP14Lexer {
 
     rule attribute-list {
         <attribute>
-        [ <comma> <attribute> ]*
+        [ <.comma> <attribute> ]*
         <ellipsis>?
     }
 
@@ -1537,7 +1562,7 @@ our role CPP14Parser does CPP14Lexer {
 
     #--------------------------
     rule init-declarator-list {
-        <init-declarator> [ <comma> <init-declarator> ]*
+        <init-declarator> [ <.comma> <init-declarator> ]*
     }
 
     rule init-declarator {
@@ -1716,11 +1741,11 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule parameter-declaration-clause {
-        <parameter-declaration-list> [ <comma>? <ellipsis> ]?
+        <parameter-declaration-list> [ <.comma>? <ellipsis> ]?
     }
 
     rule parameter-declaration-list {
-        <parameter-declaration> [ <comma> <parameter-declaration> ]*
+        <parameter-declaration> [ <.comma> <parameter-declaration> ]*
     }
 
     #-----------------------------
@@ -1795,11 +1820,11 @@ our role CPP14Parser does CPP14Lexer {
     rule initializer-list {
         <initializer-clause>
         <ellipsis>?
-        [ <comma> <initializer-clause> <ellipsis>? ]*
+        [ <.comma> <initializer-clause> <ellipsis>? ]*
     }
 
     rule braced-init-list {
-        <.left-brace> [ <initializer-list> <comma>? ]?  <.right-brace>
+        <.left-brace> [ <initializer-list> <.comma>? ]?  <.right-brace>
     }
 
     #-----------------------------
@@ -1818,7 +1843,7 @@ our role CPP14Parser does CPP14Lexer {
     proto rule class-head { * }
 
     rule class-head:sym<class> {
-        <class-key>
+        <.class-key>
         <attribute-specifier-seq>?
         [ <class-head-name> <class-virt-specifier>? ]?
         <base-clause>?
@@ -1841,8 +1866,8 @@ our role CPP14Parser does CPP14Lexer {
 
     #-----------------------------
     proto rule class-key { * }
-    rule class-key:sym<class>  { <class_> }
-    rule class-key:sym<struct> { <struct> }
+    rule class-key:sym<class>  { <.class_> }
+    rule class-key:sym<struct> { <.struct> }
 
     #-----------------------------
     proto rule member-specification-base { * }
@@ -1872,7 +1897,7 @@ our role CPP14Parser does CPP14Lexer {
 
     #-----------------------------
     rule member-declarator-list {
-        <member-declarator> [ <comma> <member-declarator> ]*
+        <member-declarator> [ <.comma> <member-declarator> ]*
     }
 
     #-----------------------------
@@ -1918,7 +1943,7 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule base-specifier-list {
-        <base-specifier> <ellipsis>?  [ <comma> <base-specifier> <ellipsis>?  ]*
+        <base-specifier> <ellipsis>?  [ <.comma> <base-specifier> <ellipsis>?  ]*
     }
 
     #-----------------------------
@@ -1977,7 +2002,7 @@ our role CPP14Parser does CPP14Lexer {
     rule mem-initializer-list {
         <mem-initializer>
         <ellipsis>?
-        [ <comma> <mem-initializer> <ellipsis>? ]*
+        [ <.comma> <mem-initializer> <ellipsis>? ]*
     }
 
     #-----------------------------
@@ -2029,7 +2054,7 @@ our role CPP14Parser does CPP14Lexer {
 
     rule templateparameter-list {
         <template-parameter>
-        [ <comma> <template-parameter> ]*
+        [ <.comma> <template-parameter> ]*
     }
 
     #-----------------------------
@@ -2096,7 +2121,7 @@ our role CPP14Parser does CPP14Lexer {
     rule template-argument-list {
         <template-argument> 
         <ellipsis>? 
-        [ <comma> <template-argument> <ellipsis>? ]*
+        [ <.comma> <template-argument> <ellipsis>? ]*
     }
 
     #---------------------
@@ -2192,7 +2217,7 @@ our role CPP14Parser does CPP14Lexer {
     }
 
     rule type-id-list {
-         <the-type-id> <ellipsis>? [ <comma> <the-type-id> <ellipsis>? ]*
+         <the-type-id> <ellipsis>? [ <.comma> <the-type-id> <ellipsis>? ]*
     }
 
     #---------------------
@@ -2236,7 +2261,7 @@ our role CPP14Parser does CPP14Lexer {
     token the-operator:sym<or-or>              { <or-or>                                    } 
     token the-operator:sym<plus-plus>          { <plus-plus>                                } 
     token the-operator:sym<minus-minus>        { <minus-minus>                              } 
-    token the-operator:sym<comma>              { <comma>                                   } 
+    token the-operator:sym<comma>              { <.comma>                                   } 
     token the-operator:sym<arrow-star>         { <arrow-star>                               } 
     token the-operator:sym<arrow>              { <arrow>                                   } 
     token the-operator:sym<Parens>             { <.left-paren>   <.right-paren>   } 
