@@ -28,27 +28,17 @@ our class OrOr::PipePipe does IOrOr { }
 our class OrOr::Or       does IOrOr { }
 
 #-------------------------------[fwd declare]
-our class CharacterLiteralPrefix       { ... }
-our class Digitsequence                { ... }
-our class Encodingprefix               { ... }
-our class Exponentpart                 { ... }
-our class Floatingsuffix               { ... }
-our class Fractionalconstant           { ... }
-our class Integersuffix                { ... }
-our class UserDefinedCharacterLiteral  { ... }
-our class UserDefinedFloatingLiteral   { ... }
-our class UserDefinedIntegerLiteral    { ... }
-our class UserDefinedStringLiteral     { ... }
+our class Digitsequence                            { ... }
+our class Exponentpart                             { ... }
+our class Floatingsuffix                           { ... }
+our class UserDefinedCharacterLiteral              { ... }
+our class UserDefinedStringLiteral                 { ... }
 our subset Quad of List where (HexadecimalLiteral, HexadecimalLiteral, HexadecimalLiteral, HexadecimalLiteral);
 our class Unsignedsuffix                           { ... }
 our class Longsuffix                               { ... }
-our class Longlongsuffix                           { ... }
-our class Escapesequence                           { ... }
-our class Simpleescapesequence                     { ... }
 our class Octalescapesequence                      { ... }
 our class Hexadecimalescapesequence                { ... }
 our class Declarationseq                           { ... }
-our class Literal                                  { ... }
 our class Expression                               { ... }
 our class IdExpression                             { ... }
 our class LambdaExpression                         { ... }
@@ -99,7 +89,7 @@ our class DeleteExpression                         { ... }
 our class NewPlacement                             { ... }
 our class NewTypeId                                { ... }
 our class NewInitializer                           { ... }
-our class TypeSpecifierSeq                         { ... }
+our role  ITypeSpecifierSeq                         { ... }
 our class NewDeclarator                            { ... }
 our class PointerOperator                          { ... }
 our class NoPointerNewDeclarator                   { ... }
@@ -206,29 +196,114 @@ our class BaseClause                               { ... }
 our class Memberdeclaration                        { ... }
 our class AccessSpecifier                          { ... }
 our class MemberDeclaratorList                     { ... }
-our class MemberDeclarator                     { ... }
-our class PureSpecifier                     { ... }
-our class VirtualSpecifier                     { ... }
-our class BaseSpecifierList                     { ... }
-our class BaseSpecifier                     { ... }
-our class BaseTypeSpecifier                     { ... }
-our class ConversionTypeId                     { ... }
+our class MemberDeclarator                         { ... }
+our class PureSpecifier                            { ... }
+our class VirtualSpecifier                         { ... }
+our class BaseSpecifierList                        { ... }
+our class BaseSpecifier                            { ... }
+our class BaseTypeSpecifier                        { ... }
+our class ConversionTypeId                         { ... }
 our class ConversionDeclarator                     { ... }
-our class MemInitializerList                     { ... }
-our class MemInitializer                     { ... }
-our class Meminitializerid                     { ... }
-our class TheOperator                     { ... }
-our class TemplateParameter                     { ... }
-our class TypeParameter                     { ... }
-our class TemplateParameterList                     { ... }
-our class TemplateName                     { ... }
+our class MemInitializerList                       { ... }
+our class MemInitializer                           { ... }
+our class Meminitializerid                         { ... }
+our class TheOperator                              { ... }
+our class TemplateParameter                        { ... }
+our class TypeParameter                            { ... }
+our class TemplateParameterList                    { ... }
+our class TemplateName                             { ... }
 our class TemplateArgumentList                     { ... }
-our class TemplateArgument                     { ... }
-our class HandlerSeq                     { ... }
-our class Handler                   { ... }
-our class ExceptionDeclaration                   { ... }
-our class DynamicExceptionSpecification                   { ... }
-our class TypeIdList                   { ... }
+our class TemplateArgument                         { ... }
+our class HandlerSeq                               { ... }
+our class Handler                                  { ... }
+our class ExceptionDeclaration                     { ... }
+our class DynamicExceptionSpecification            { ... }
+our class TypeIdList                               { ... }
+our role IIntegersuffix                            { ... }
+
+our role ICchar                               { ... }
+our role IDeclarationseq                      { ... }
+our role IAttributeSpecifierSeq               { ... }
+our role ICharacterLiteralPrefix              { ... }
+our role IEncodingprefix                      { ... }
+our role IFractionalconstant                  { ... }
+our role IIntegersuffix                       { ... }
+our role IUserDefinedFloatingLiteral          { ... }
+our role IUserDefinedIntegerLiteral           { ... }
+our role ILonglongsuffix                      { ... }
+our role IEscapesequence                      { ... }
+our role ISimpleescapesequence                { ... }
+our role ILiteral                             { ... }
+our role IIdExpression                        { ... }
+our role IUnqualifiedId                       { ... }
+our role ILiteralOperatorId                   { ... }
+our role IClassName                           { ... }
+our role ITemplateId                          { ... }
+our role ITheTypeName                         { ... }
+our role INamespaceName                       { ... }
+our role ILambdaCapture                       { ... }
+our role ICaptureDefault                      { ... }
+our role ISimpleCapture                       { ... }
+our role IInitializer                         { ... }
+our role IExceptionSpecification              { ... }
+our role IPostfixExpressionBody               { ... }
+our role IPostfixExpressionTail               { ... }
+our role IPseudoDestructorName                { ... }
+our role ISimpleTypeSpecifier                 { ... }
+our role ITypeNameSpecifier                   { ... }
+our role ITypeid                              { ... }
+our role INewExpression                       { ... }
+our role IUnaryExpression                     { ... }
+our role IUnaryOperator                       { ... }
+our role INoeExceptSpecification              { ... }
+our role INewInitializer                      { ... }
+our role IPointerOperator                     { ... }
+our role IMultiplicativeOperator              { ... }
+our role IShiftOperator                       { ... }
+our role IAssignmentOperator                  { ... }
+our role IInitializerClause                   { ... }
+our role ISelectionStatement                  { ... }
+our role IIterationStatement                  { ... }
+our role IJumpStatement                       { ... }
+our role ICase                                { ... }
+our role IBlockDeclaration                    { ... }
+our role ICondition                           { ... }
+our role IDeclarator                          { ... }
+our role IForInitStatement                    { ... }
+our role IForRangeInitializer                 { ... }
+our role ISimpleDeclaration                   { ... }
+our role IReturnStatementBody                 { ... }
+our role IDeclaration                         { ... }
+our role IStorageClassSpecifier               { ... }
+our role ITypeSpecifier                       { ... }
+our role IFunctionSpecifier                   { ... }
+our role ITrailingTypeSpecifier               { ... }
+our role ICvQualifier                         { ... }
+our role IElaboratedTypeSpecifier             { ... }
+our role IEnumBase                            { ... }
+our role INamespaceTag                        { ... }
+our role IAttributeSpecifier                  { ... }
+our role IAlignmentSpecifier                  { ... }
+our role IBalancedrule                        { ... }
+our role IRefqualifier                        { ... }
+our role IAbstractDeclarator                  { ... }
+our role IPointerAbstractDeclarator           { ... }
+our role INoPointerAbstractDeclaratorBase     { ... }
+our role INoPointerAbstractPackDeclaratorBody { ... }
+our role IParameterDeclarationBody            { ... }
+our role IFunctionBody                        { ... }
+our role IBraceOrEqualInitializer             { ... }
+our role IMemberdeclaration                   { ... }
+our role IAccessSpecifier                     { ... }
+our role IMemberDeclarator                    { ... }
+our role IVirtualSpecifier                    { ... }
+our role IBaseSpecifier                       { ... }
+our role IMemInitializer                      { ... }
+our role IMeminitializerid                    { ... }
+our role ITheOperator                         { ... }
+our role ITemplateParameter                   { ... }
+our role ITemplateArgument                    { ... }
+our role IExceptionDeclaration                { ... }
 
 #-------------------------------
 our role IIntegerLiteral { }
@@ -269,9 +344,9 @@ our class CharacterLiteral {
 our role IFloatingLiteral { }
 
 our class FloatingLiteral::Frac does IFloatingLiteral {
-    has Fractionalconstant $.fractionalconstant is required;
-    has Exponentpart       $.exponentpart;
-    has Floatingsuffix     $.floatingsuffix;
+    has IFractionalconstant $.fractionalconstant is required;
+    has Exponentpart        $.exponentpart;
+    has Floatingsuffix      $.floatingsuffix;
 }
 
 our class FloatingLiteral::Digit does IFloatingLiteral {
@@ -1288,7 +1363,7 @@ our class ConditionalExpressionTail {
 # rule conditional-expression { <logical-or-expression> <conditional-expression-tail>? } #-----------------------
 our class ConditionalExpression { 
     has LogicalOrExpression       $.logical-or-expression is required;
-    has IConditionalExpressionTail $.conditional-expression-tail;
+    has ConditionalExpressionTail $.conditional-expression-tail;
 }
 
 our role IAssignmentExpression { }
@@ -1307,7 +1382,7 @@ our class AssignmentExpression::Basic does IAssignmentExpression {
 
 # rule assignment-expression:sym<conditional> { <conditional-expression> }
 our class AssignmentExpression::Conditional does IAssignmentExpression {
-    has IConditionalExpression $.conditional-expression is required;
+    has ConditionalExpression $.conditional-expression is required;
 }
 
 our role IAssignmentOperator { }
@@ -1352,7 +1427,7 @@ our class Expression {
 
 # rule constant-expression { <conditional-expression> }
 our class ConstantExpression { 
-    has IConditionalExpression $.conditional-expression is required;
+    has ConditionalExpression $.conditional-expression is required;
 }
 
 our role IComment { }
@@ -1385,7 +1460,7 @@ our class Statement::Labeled does IStatement {
 # token statement:sym<declaration> { <comment>? <declaration-statement> }
 our class Statement::Declaration does IStatement {
     has IComment             $.comment;
-    has IDeclarationStatement $.declaration-statement is required;
+    has DeclarationStatement $.declaration-statement is required;
 }
 
 our role IAttributedStatementBody { }
@@ -2451,7 +2526,7 @@ our role INoPointerDeclaratorBase { }
 
 # rule no-pointer-declarator-base:sym<base> { <declaratorid> <attribute-specifier-seq>? }
 our class NoPointerDeclaratorBase::Base does INoPointerDeclaratorBase {
-    has IDeclaratorid          $.declaratorid is required;
+    has Declaratorid           $.declaratorid is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
 }
 
@@ -2510,8 +2585,8 @@ our class ParametersAndQualifiers {
 #   <abstract-declarator>? 
 # }
 our class TrailingReturnType { 
-    has ITrailingTypeSpecifierSeq $.trailing-type-specifier-seq is required;
-    has IAbstractDeclarator       $.abstract-declarator;
+    has TrailingTypeSpecifierSeq $.trailing-type-specifier-seq is required;
+    has IAbstractDeclarator      $.abstract-declarator;
 }
 
 our role IPointerOperator { }
@@ -2751,9 +2826,9 @@ our class ParameterDeclaration {
 # } #-----------------------------
 our class FunctionDefinition { 
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has DeclSpecifierSeq      $.decl-specifier-seq;
+    has DeclSpecifierSeq       $.decl-specifier-seq;
     has IDeclarator            $.declarator is required;
-    has IVirtualSpecifierSeq   $.virtual-specifier-seq;
+    has VirtualSpecifierSeq    $.virtual-specifier-seq;
     has IFunctionBody          $.function-body is required;
 }
 
@@ -2934,7 +3009,7 @@ our role IMemberdeclaration { }
 our class Memberdeclaration::Basic does IMemberdeclaration {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
     has DeclSpecifierSeq      $.decl-specifier-seq;
-    has IMemberDeclaratorList  $.member-declarator-list;
+    has MemberDeclaratorList  $.member-declarator-list;
 }
 
 # rule memberdeclaration:sym<func> { <function-definition> }
@@ -2974,8 +3049,8 @@ our role IMemberDeclarator { }
 
 # rule member-declarator:sym<virt> { <declarator> <virtual-specifier-seq>? <pure-specifier>? }
 our class MemberDeclarator::Virt does IMemberDeclarator {
-    has IDeclarator          $.declarator is required;
-    has IVirtualSpecifierSeq $.virtual-specifier-seq;
+    has IDeclarator         $.declarator is required;
+    has VirtualSpecifierSeq $.virtual-specifier-seq;
     has PureSpecifier       $.pure-specifier;
 }
 
@@ -3023,7 +3098,7 @@ our class PureSpecifier {
 
 # rule base-clause { <colon> <base-specifier-list> }
 our class BaseClause { 
-    has IBaseSpecifierList $.base-specifier-list is required;
+    has BaseSpecifierList $.base-specifier-list is required;
 }
 
 # rule base-specifier-list { 
@@ -3111,7 +3186,7 @@ our class ConversionDeclarator {
 
 # rule constructor-initializer { <colon> <mem-initializer-list> }
 our class ConstructorInitializer { 
-    has IMemInitializerList $.mem-initializer-list is required;
+    has MemInitializerList $.mem-initializer-list is required;
 }
 
 # rule mem-initializer-list { 
@@ -3189,8 +3264,8 @@ our class LiteralOperatorId::UserDefined does ILiteralOperatorId {
 #   <declaration> 
 # }
 our class TemplateDeclaration { 
-    has ITemplateParameterList $.templateparameter-list is required;
-    has IDeclaration           $.declaration            is required;
+    has TemplateParameterList $.templateparameter-list is required;
+    has IDeclaration          $.declaration            is required;
 }
 
 # rule templateparameter-list { 
@@ -3220,7 +3295,7 @@ our role ITypeParameterBase { }
 # <class_> 
 # }
 our class TypeParameterBase::Basic does ITypeParameterBase {
-    has ITemplateParameterList $.templateparameter-list;
+    has TemplateParameterList $.templateparameter-list;
 }
 
 # rule type-parameter-base:sym<typename> { <typename_> } #-----------------------------
@@ -3254,7 +3329,7 @@ our class TypeParameter {
 # }
 our class SimpleTemplateId { 
     has TemplateName         $.template-name is required;
-    has ITemplateArgumentList $.template-argument-list;
+    has TemplateArgumentList $.template-argument-list;
 }
 
 our role ITemplateId { }
@@ -3266,8 +3341,8 @@ our class TemplateId::Simple does ITemplateId {
 
 # rule template-id:sym<operator-function-id> { <operator-function-id> <less> <template-argument-list>? <greater> }
 our class TemplateId::OperatorFunctionId does ITemplateId {
-    has OperatorFunctionId $.operator-function-id is required;
-    has ITemplateArgumentList $.template-argument-list;
+    has OperatorFunctionId   $.operator-function-id is required;
+    has TemplateArgumentList $.template-argument-list;
 }
 
 # rule template-id:sym<literal-operator-id> { 
@@ -3276,8 +3351,8 @@ our class TemplateId::OperatorFunctionId does ITemplateId {
 # <template-argument-list>? 
 # <greater> } #-----------------------------
 our class TemplateId::LiteralOperatorId does ITemplateId {
-    has ILiteralOperatorId    $.literal-operator-id is required;
-    has ITemplateArgumentList $.template-argument-list;
+    has ILiteralOperatorId   $.literal-operator-id is required;
+    has TemplateArgumentList $.template-argument-list;
 }
 
 # token template-name { <identifier> }
