@@ -306,7 +306,7 @@ our class PointerLiteral { }
 #-------------------------------
 our role IUserDefinedLiteral { }
 
-our class UserDefinedLiteral::Integer { 
+our class UserDefinedLiteral::Int { 
     has IUserDefinedIntegerLiteral   $.user-defined-integer-literal is required;
 }
 

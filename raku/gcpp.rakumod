@@ -193,7 +193,7 @@ our role CPP14Lexer does CPP14Keyword {
 
     #--------------------
     proto token user-defined-literal { * }
-    token user-defined-literal:syn<int>   { <user-defined-integer-literal> }
+    token user-defined-literal:sym<int>   { <user-defined-integer-literal> }
     token user-defined-literal:sym<float> { <user-defined-floating-literal> }
     token user-defined-literal:sym<str>   { <user-defined-string-literal> }
     token user-defined-literal:sym<char>  { <user-defined-character-literal> }
