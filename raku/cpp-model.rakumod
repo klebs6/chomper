@@ -1445,12 +1445,6 @@ our class Comment::Line does IComment {
     has LineComment @.line-comments is required;
 }
 
-# rule comment:sym<block> { <block-comment> } #-----------------------------
-our class Comment::Block does IComment {
-    has BlockComment @.block-comments is required;
-}
-
-
 # token statement:sym<attributed> { <comment>? <attribute-specifier-seq>? <attributed-statement-body> }
 our class Statement::Attributed does IStatement {
     has IComment                 $.comment;
@@ -1509,7 +1503,6 @@ our class LabeledStatementLabelBody::Id does ILabeledStatementLabelBody {
 
 # rule labeled-statement-label-body:sym<case-expr> { <case> <constant-expression> }
 our class LabeledStatementLabelBody::CaseExpr does ILabeledStatementLabelBody {
-    has ICase               $.case                is required;
     has ConstantExpression $.constant-expression is required;
 }
 
@@ -1518,14 +1511,14 @@ our class LabeledStatementLabelBody::Default does ILabeledStatementLabelBody { }
 
 # rule labeled-statement-label { <attribute-specifier-seq>? <labeled-statement-label-body> <colon> }
 our class LabeledStatementLabel { 
-    has IAttributeSpecifierSeq      $.attribute-specifier-seq;
+    has IAttributeSpecifierSeq     $.attribute-specifier-seq;
     has ILabeledStatementLabelBody $.labeled-statement-label-body is required;
 }
 
 # rule labeled-statement { <labeled-statement-label> <statement> }
 our class LabeledStatement { 
     has LabeledStatementLabel $.labeled-statement-label is required;
-    has IStatement             $.statement is required;
+    has IStatement            $.statement is required;
 }
 
 # rule declaration-statement { <block-declaration> } #-----------------------------
@@ -1736,93 +1729,6 @@ our class Declarationseq {
     has IDeclaration @.declarations is required;
 }
 
-
-# rule declaration:sym<block-declaration> { <block-declaration> }
-our class Declaration::BlockDeclaration does IDeclaration {
-    has IBlockDeclaration $.block-declaration is required;
-}
-
-# rule declaration:sym<function-definition> { <function-definition> }
-our class Declaration::FunctionDefinition does IDeclaration {
-    has FunctionDefinition $.function-definition is required;
-}
-
-# rule declaration:sym<template-declaration> { <template-declaration> }
-our class Declaration::TemplateDeclaration does IDeclaration {
-    has TemplateDeclaration $.template-declaration is required;
-}
-
-# rule declaration:sym<explicit-instantiation> { <explicit-instantiation> }
-our class Declaration::ExplicitInstantiation does IDeclaration {
-    has ExplicitInstantiation $.explicit-instantiation is required;
-}
-
-# rule declaration:sym<explicit-specialization> { <explicit-specialization> }
-our class Declaration::ExplicitSpecialization does IDeclaration {
-    has ExplicitSpecialization $.explicit-specialization is required;
-}
-
-# rule declaration:sym<linkage-specification> { <linkage-specification> }
-our class Declaration::LinkageSpecification does IDeclaration {
-    has LinkageSpecification $.linkage-specification is required;
-}
-
-# rule declaration:sym<namespace-definition> { <namespace-definition> }
-our class Declaration::NamespaceDefinition does IDeclaration {
-    has NamespaceDefinition $.namespace-definition is required;
-}
-
-# rule declaration:sym<empty-declaration> { <empty-declaration> }
-our class Declaration::EmptyDeclaration does IDeclaration {
-    has EmptyDeclaration $.empty-declaration is required;
-}
-
-# rule declaration:sym<attribute-declaration> { <attribute-declaration> }
-our class Declaration::AttributeDeclaration does IDeclaration {
-    has AttributeDeclaration $.attribute-declaration is required;
-}
-
-
-# rule block-declaration:sym<simple> { <simple-declaration> }
-our class BlockDeclaration::Simple does IBlockDeclaration {
-    has ISimpleDeclaration $.simple-declaration is required;
-}
-
-# rule block-declaration:sym<asm> { <asm-definition> }
-our class BlockDeclaration::Asm does IBlockDeclaration {
-    has AsmDefinition $.asm-definition is required;
-}
-
-# rule block-declaration:sym<namespace-alias> { <namespace-alias-definition> }
-our class BlockDeclaration::NamespaceAlias does IBlockDeclaration {
-    has NamespaceAliasDefinition $.namespace-alias-definition is required;
-}
-
-# rule block-declaration:sym<using-decl> { <using-declaration> }
-our class BlockDeclaration::UsingDecl does IBlockDeclaration {
-    has UsingDeclaration $.using-declaration is required;
-}
-
-# rule block-declaration:sym<using-directive> { <using-directive> }
-our class BlockDeclaration::UsingDirective does IBlockDeclaration {
-    has UsingDirective $.using-directive is required;
-}
-
-# rule block-declaration:sym<static-assert> { <static-assert-declaration> }
-our class BlockDeclaration::StaticAssert does IBlockDeclaration {
-    has StaticAssertDeclaration $.static-assert-declaration is required;
-}
-
-# rule block-declaration:sym<alias> { <alias-declaration> }
-our class BlockDeclaration::Alias does IBlockDeclaration {
-    has AliasDeclaration $.alias-declaration is required;
-}
-
-# rule block-declaration:sym<opaque-enum-decl> { <opaque-enum-declaration> }
-our class BlockDeclaration::OpaqueEnumDecl does IBlockDeclaration {
-    has OpaqueEnumDeclaration $.opaque-enum-declaration is required;
-}
-
 # rule alias-declaration { 
 #   <.using> 
 #   <identifier> 
@@ -1881,30 +1787,6 @@ our class AttributeDeclaration {
 }
 
 #-------------------
-
-# token decl-specifier:sym<storage-class> { <storage-class-specifier> }
-our class DeclSpecifier::StorageClass does IDeclSpecifier {
-    has IStorageClassSpecifier $.storage-class-specifier is required;
-}
-
-# token decl-specifier:sym<type> { <type-specifier> }
-our class DeclSpecifier::Type does IDeclSpecifier {
-    has ITypeSpecifier $.type-specifier is required;
-}
-
-# token decl-specifier:sym<func> { <function-specifier> }
-our class DeclSpecifier::Func does IDeclSpecifier {
-    has IFunctionSpecifier $.function-specifier is required;
-}
-
-# token decl-specifier:sym<friend> { <.friend> }
-our class DeclSpecifier::Friend does IDeclSpecifier { }
-
-# token decl-specifier:sym<typedef> { <.typedef> }
-our class DeclSpecifier::Typedef does IDeclSpecifier { }
-
-# token decl-specifier:sym<constexpr> { <.constexpr> }
-our class DeclSpecifier::Constexpr does IDeclSpecifier { }
 
 # regex decl-specifier-seq { 
 #   <decl-specifier> 

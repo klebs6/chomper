@@ -1187,8 +1187,8 @@ our class CPP14Parser::Actions {
     # rule new-expression:sym<new-type-id> { <doublecolon>? <new_> <new-placement>? <new-type-id> <new-initializer>? }
     method new-expression:sym<new-type-id>($/) {
         make NewExpression::NewTypeId.new(
-            new-placement => $<new-placement>.made,
-            new-type-id => $<new-type-id>.made,
+            new-placement   => $<new-placement>.made,
+            new-type-id     => $<new-type-id>.made,
             new-initializer => $<new-initializer>.made,
         )
     }
@@ -1196,8 +1196,8 @@ our class CPP14Parser::Actions {
     # rule new-expression:sym<the-type-id> { <doublecolon>? <new_> <new-placement>? <.left-paren> <the-type-id> <.right-paren> <new-initializer>? }
     method new-expression:sym<the-type-id>($/) {
         make NewExpression::TheTypeId.new(
-            new-placement => $<new-placement>.made,
-            the-type-id => $<the-type-id>.made,
+            new-placement   => $<new-placement>.made,
+            the-type-id     => $<the-type-id>.made,
             new-initializer => $<new-initializer>.made,
         )
     }
@@ -1213,14 +1213,14 @@ our class CPP14Parser::Actions {
     method new-type-id($/) {
         make NewTypeId.new(
             type-specifier-seq => $<type-specifier-seq>.made,
-            new-declarator => $<new-declarator>.made,
+            new-declarator     => $<new-declarator>.made,
         )
     }
 
     # rule new-declarator { <pointer-operator>* <no-pointer-new-declarator>? } 
     method new-declarator($/) {
         make NewDeclarator.new(
-            pointer-operators => $<pointer-operator>>>.made,
+            pointer-operators         => $<pointer-operator>>>.made,
             no-pointer-new-declarator => $<no-pointer-new-declarator>.made,
         )
     }
@@ -1228,8 +1228,8 @@ our class CPP14Parser::Actions {
     # rule no-pointer-new-declarator { <.left-bracket> <expression> <.right-bracket> <attribute-specifier-seq>? <no-pointer-new-declarator-tail>* }
     method no-pointer-new-declarator($/) {
         make NoPointerNewDeclarator.new(
-            expression => $<expression>.made,
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            expression                     => $<expression>.made,
+            attribute-specifier-seq        => $<attribute-specifier-seq>.made,
             no-pointer-new-declarator-tail => $<no-pointer-new-declarator-tail>>>.made,
         )
     }
@@ -1237,7 +1237,7 @@ our class CPP14Parser::Actions {
     # rule no-pointer-new-declarator-tail { <.left-bracket> <constant-expression> <.right-bracket> <attribute-specifier-seq>? } 
     method no-pointer-new-declarator-tail($/) {
         make NoPointerNewDeclaratorTail.new(
-            constant-expression => $<constant-expression>.made,
+            constant-expression     => $<constant-expression>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
         )
     }
@@ -1411,14 +1411,14 @@ our class CPP14Parser::Actions {
     method relational-expression-tail($/) {
         make RelationalExpressionTail.new(
             relational-operator => $<relational-operator>.made,
-            shift-expression => $<shift-expression>.made,
+            shift-expression    => $<shift-expression>.made,
         )
     }
 
     # regex relational-expression { <shift-expression> <relational-expression-tail>* } 
     method relational-expression($/) {
         make RelationalExpression.new(
-            shift-expression => $<shift-expression>.made,
+            shift-expression           => $<shift-expression>.made,
             relational-expression-tail => $<relational-expression-tail>>>.made,
         )
     }
@@ -1436,58 +1436,98 @@ our class CPP14Parser::Actions {
     # rule equality-expression-tail { <equality-operator> <relational-expression> }
     method equality-expression-tail($/) {
         make EqualityExpressionTail.new(
-            equality-operator => $<equality-operator>.made,
+            equality-operator     => $<equality-operator>.made,
             relational-expression => $<relational-expression>.made,
         )
     }
 
     # rule equality-expression { <relational-expression> <equality-expression-tail>* }
     method equality-expression($/) {
-        make EqualityExpression.new(
-            relational-expression => $<relational-expression>.made,
-            equality-expression-tail => $<equality-expression-tail>>>.made,
-        )
+        my $base = $<relational-expression>.made;
+        my @tail = $<equality-expression-tail>>>.made.List;
+
+        if @tail.elems gt 0 {
+            make EqualityExpression.new(
+                relational-expression    => $base,
+                equality-expression-tail => @tail,
+            )
+        } else {
+            make $base
+        }
     }
 
     # rule and-expression { <equality-expression> [ <and_> <equality-expression> ]* }
     method and-expression($/) {
-        make AndExpression.new(
-            equality-expressions => $<equality-expression>>>.made,
-        )
+        my @equality-expressions = $<equality-expression>>>.made;
+
+        if @equality-expressions.elems gt 1 {
+            make AndExpression.new(
+                equality-expressions => @equality-expressions,
+            )
+
+        } else {
+            make @equality-expressions[0]
+        }
     }
 
     # rule exclusive-or-expression { <and-expression> [ <caret> <and-expression> ]* }
     method exclusive-or-expression($/) {
-        make ExclusiveOrExpression.new(
-            and-expressions => $<and-expression>>>.made,
-        )
+        my @and-expressions = $<and-expression>>>.made;
+
+        if @and-expressions.elems gt 1 {
+            make ExclusiveOrExpression.new(
+                and-expressions => @and-expressions,
+            )
+        } else {
+            make @and-expressions[0]
+        }
     }
 
     # rule inclusive-or-expression { <exclusive-or-expression> [ <or_> <exclusive-or-expression> ]* }
     method inclusive-or-expression($/) {
-        make InclusiveOrExpression.new(
-            exclusive-or-expressions => $<exclusive-or-expression>>>.made,
-        )
+        my @exclusive-or-expressions = $<exclusive-or-expression>>>.made;
+
+        if @exclusive-or-expressions.elems gt 1 {
+            make InclusiveOrExpression.new(
+                exclusive-or-expressions => @exclusive-or-expressions,
+            )
+
+        } else {
+            @exclusive-or-expressions[0]
+        }
     }
 
     # rule logical-and-expression { <inclusive-or-expression> [ <and-and> <inclusive-or-expression>]* }
     method logical-and-expression($/) {
-        make LogicalAndExpression.new(
-            inclusive-or-expressions => $<inclusive-or-expression>>>.made,
-        )
+        my @inclusive-or-expressions = $<inclusive-or-expression>>>.made;
+
+        if @inclusive-or-expressions.elems {
+            make LogicalAndExpression.new(
+                inclusive-or-expressions => @inclusive-or-expressions,
+            )
+        } else {
+            @inclusive-or-expressions[0]
+        }
     }
 
     # rule logical-or-expression { <logical-and-expression> [ <or-or> <logical-and-expression> ]* }
     method logical-or-expression($/) {
-        make LogicalOrExpression.new(
-            logical-and-expressions => $<logical-and-expression>>>.made,
-        )
+
+        my @exprs = $<logical-and-expression>>>.made;
+
+        if @exprs.elems gt 1 {
+            make LogicalOrExpression.new(
+                logical-and-expressions => @exprs,
+            )
+        } else {
+            @exprs[0]
+        }
     }
 
     # rule conditional-expression-tail { <question> <expression> <colon> <assignment-expression> }
     method conditional-expression-tail($/) {
         make ConditionalExpressionTail.new(
-            question-expression => $<question-expression>.made,
+            question-expression   => $<question-expression>.made,
             assignment-expression => $<assignment-expression>.made,
         )
     }
@@ -1495,7 +1535,7 @@ our class CPP14Parser::Actions {
     # rule conditional-expression { <logical-or-expression> <conditional-expression-tail>? } 
     method conditional-expression($/) {
         make ConditionalExpression.new(
-            logical-or-expression => $<logical-or-expression>.made,
+            logical-or-expression       => $<logical-or-expression>.made,
             conditional-expression-tail => $<conditional-expression-tail>.made,
         )
     }
@@ -1511,8 +1551,8 @@ our class CPP14Parser::Actions {
     method assignment-expression:sym<basic>($/) {
         make AssignmentExpression::Basic.new(
             logical-or-expression => $<logical-or-expression>.made,
-            assignment-operator => $<assignment-operator>.made,
-            initializer-clause => $<initializer-clause>.made,
+            assignment-operator   => $<assignment-operator>.made,
+            initializer-clause    => $<initializer-clause>.made,
         )
     }
 
@@ -1580,9 +1620,15 @@ our class CPP14Parser::Actions {
 
     # rule expression { <assignment-expression>+ %% <.comma> }
     method expression($/) {
-        make Expression.new(
-            assignment-expressions => $<assignment-expression>>>.made,
-        )
+        my @exprs = $<assignment-expression>>>.made;
+
+        if @exprs.elems gt 1 {
+            make Expression.new(
+                assignment-expressions => @exprs,
+            )
+        } else {
+            @exprs[0]
+        }
     }
 
     # rule constant-expression { <conditional-expression> }
@@ -1601,16 +1647,14 @@ our class CPP14Parser::Actions {
 
     # rule comment:sym<block> { <block-comment> } 
     method comment:sym<block>($/) {
-        make Comment::Block.new(
-            block-comments => $<block-comment>>>.made,
-        )
+        make $<block-comment>.made
     }
 
     # token statement:sym<attributed> { <comment>? <attribute-specifier-seq>? <attributed-statement-body> }
     method statement:sym<attributed>($/) {
         make Statement::Attributed.new(
-            comment => $<comment>.made,
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            comment                   => $<comment>.made,
+            attribute-specifier-seq   => $<attribute-specifier-seq>.made,
             attributed-statement-body => $<attributed-statement-body>.made,
         )
     }
@@ -1618,7 +1662,7 @@ our class CPP14Parser::Actions {
     # token statement:sym<labeled> { <comment>? <labeled-statement> }
     method statement:sym<labeled>($/) {
         make Statement::Labeled.new(
-            comment => $<comment>.made,
+            comment           => $<comment>.made,
             labeled-statement => $<labeled-statement>.made,
         )
     }
@@ -1633,57 +1677,42 @@ our class CPP14Parser::Actions {
 
     # rule attributed-statement-body:sym<expression> { <expression-statement> }
     method attributed-statement-body:sym<expression>($/) {
-        make AttributedStatementBody::Expression.new(
-            expression-statement => $<expression-statement>.made,
-        )
+        make $<expression-statement>.made;
     }
 
     # rule attributed-statement-body:sym<compound> { <compound-statement> }
     method attributed-statement-body:sym<compound>($/) {
-        make AttributedStatementBody::Compound.new(
-            compound-statement => $<compound-statement>.made,
-        )
+        make $<compound-statement>.made;
     }
 
     # rule attributed-statement-body:sym<selection> { <selection-statement> }
     method attributed-statement-body:sym<selection>($/) {
-        make AttributedStatementBody::Selection.new(
-            selection-statement => $<selection-statement>.made,
-        )
+        make $<selection-statement>.made
     }
 
     # rule attributed-statement-body:sym<iteration> { <iteration-statement> }
     method attributed-statement-body:sym<iteration>($/) {
-        make AttributedStatementBody::Iteration.new(
-            iteration-statement => $<iteration-statement>.made,
-        )
+        make $<iteration-statement>.made
     }
 
     # rule attributed-statement-body:sym<jump> { <jump-statement> }
     method attributed-statement-body:sym<jump>($/) {
-        make AttributedStatementBody::Jump.new(
-            jump-statement => $<jump-statement>.made,
-        )
+        make $<jump-statement>.made
     }
 
     # rule attributed-statement-body:sym<try> { <try-block> } 
     method attributed-statement-body:sym<try>($/) {
-        make AttributedStatementBody::Try.new(
-            try-block => $<try-block>.made,
-        )
+        make $<try-block>.made
     }
 
     # rule labeled-statement-label-body:sym<id> { <identifier> }
     method labeled-statement-label-body:sym<id>($/) {
-        make LabeledStatementLabelBody::Id.new(
-            identifier => $<identifier>.made,
-        )
+        make $<identifier>.made
     }
 
     # rule labeled-statement-label-body:sym<case-expr> { <case> <constant-expression> }
     method labeled-statement-label-body:sym<case-expr>($/) {
         make LabeledStatementLabelBody::CaseExpr.new(
-            case => $<case>.made,
             constant-expression => $<constant-expression>.made,
         )
     }
@@ -1696,7 +1725,7 @@ our class CPP14Parser::Actions {
     # rule labeled-statement-label { <attribute-specifier-seq>? <labeled-statement-label-body> <colon> }
     method labeled-statement-label($/) {
         make LabeledStatementLabel.new(
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            attribute-specifier-seq      => $<attribute-specifier-seq>.made,
             labeled-statement-label-body => $<labeled-statement-label-body>.made,
         )
     }
@@ -1705,15 +1734,13 @@ our class CPP14Parser::Actions {
     method labeled-statement($/) {
         make LabeledStatement.new(
             labeled-statement-label => $<labeled-statement-label>.made,
-            statement => $<statement>.made,
+            statement               => $<statement>.made,
         )
     }
 
     # rule declaration-statement { <block-declaration> } 
     method declaration-statement($/) {
-        make DeclarationStatement.new(
-            block-declaration => $<block-declaration>.made,
-        )
+        make $<block-declaration>.made
     }
 
     # rule expression-statement { <expression>? <semi> }
@@ -1726,16 +1753,12 @@ our class CPP14Parser::Actions {
 
     # rule compound-statement { <.left-brace> <statement-seq>? <.right-brace> }
     method compound-statement($/) {
-        make CompoundStatement.new(
-            statement-seq => $<statement-seq>.made,
-        )
+        make $<statement-seq>.made
     }
 
     # regex statement-seq { <statement> [<.ws> <statement>]* } 
     method statement-seq($/) {
-        make StatementSeq.new(
-            statements => $<statement>>>.made,
-        )
+        make $<statement>>>.made;
     }
 
     # rule selection-statement:sym<if> { <if_> <.left-paren> <condition> <.right-paren> <statement> [ <comment>? <else_> <statement> ]? }
@@ -1759,9 +1782,7 @@ our class CPP14Parser::Actions {
 
     # rule condition:sym<expr> { <expression> } 
     method condition:sym<expr>($/) {
-        make Condition::Expr.new(
-            expression => $<expression>.made,
-        )
+        make $<expression>.made
     }
 
     # rule condition-decl-tail:sym<assign-init> { <assign> <initializer-clause> }
@@ -1773,9 +1794,7 @@ our class CPP14Parser::Actions {
 
     # rule condition-decl-tail:sym<braced-init> { <braced-init-list> } 
     method condition-decl-tail:sym<braced-init>($/) {
-        make ConditionDeclTail::BracedInit.new(
-            braced-init-list => $<braced-init-list>.made,
-        )
+        make $<braced-init-list>.made
     }
 
     # rule condition:sym<decl> { <attribute-specifier-seq>? <decl-specifier-seq> <declarator> <condition-decl-tail> } 
@@ -1834,9 +1853,7 @@ our class CPP14Parser::Actions {
 
     # rule for-init-statement:sym<simple-declaration> { <simple-declaration> }
     method for-init-statement:sym<simple-declaration>($/) {
-        make ForInitStatement::SimpleDeclaration.new(
-            simple-declaration => $<simple-declaration>.made,
-        )
+        make $<simple-declaration>.made
     }
 
     # rule for-range-declaration { <attribute-specifier-seq>? <decl-specifier-seq> <declarator> }
@@ -1850,29 +1867,25 @@ our class CPP14Parser::Actions {
 
     # rule for-range-initializer:sym<expression> { <expression> }
     method for-range-initializer:sym<expression>($/) {
-        make ForRangeInitializer::Expression.new(
-            expression => $<expression>.made,
-        )
+        make $<expression>.made
     }
 
     # rule for-range-initializer:sym<braced-init-list> { <braced-init-list> } 
     method for-range-initializer:sym<braced-init-list>($/) {
-        make ForRangeInitializer::BracedInitList.new(
-            braced-init-list => $<braced-init-list>.made,
-        )
+        make $<braced-init-list>.made
     }
 
     # rule jump-statement:sym<break> { <break_> <semi> }
     method jump-statement:sym<break>($/) {
         make JumpStatement::Break.new(
-            comment            => $<semi>.made,
+            comment => $<semi>.made,
         )
     }
 
     # rule jump-statement:sym<continue> { <continue_> <semi> }
     method jump-statement:sym<continue>($/) {
         make JumpStatement::Continue.new(
-            comment            => $<semi>.made,
+            comment => $<semi>.made,
         )
     }
 
@@ -1894,142 +1907,113 @@ our class CPP14Parser::Actions {
 
     # rule return-statement-body:sym<expr> { <expression> }
     method return-statement-body:sym<expr>($/) {
-        make ReturnStatementBody::Expr.new(
-            expression => $<expression>.made,
-        )
+        make $<expression>.made
     }
 
     # rule return-statement-body:sym<braced-init-list> { <braced-init-list> }
     method return-statement-body:sym<braced-init-list>($/) {
-        make ReturnStatementBody::BracedInitList.new(
-            braced-init-list => $<braced-init-list>.made,
-        )
+        make $<braced-init-list>.made
     }
 
     # rule declarationseq { <declaration>+ } 
     method declarationseq($/) {
-        make Declarationseq.new(
-            declarations => $<declaration>>>.made,
-        )
+
+        my @decls = $<declaration>>>.made;
+
+        if @decls.elems gt 1 {
+
+            make Declarationseq.new(
+                declarations => @decls,
+            )
+
+        } else {
+            @decls[0]
+        }
     }
 
     # rule declaration:sym<block-declaration> { <block-declaration> }
     method declaration:sym<block-declaration>($/) {
-        make Declaration::BlockDeclaration.new(
-            block-declaration => $<block-declaration>.made,
-        )
+        make $<block-declaration>.made
     }
 
     # rule declaration:sym<function-definition> { <function-definition> }
     method declaration:sym<function-definition>($/) {
-        make Declaration::FunctionDefinition.new(
-            function-definition => $<function-definition>.made,
-        )
+        make $<function-definition>.made
     }
 
     # rule declaration:sym<template-declaration> { <template-declaration> }
     method declaration:sym<template-declaration>($/) {
-        make Declaration::TemplateDeclaration.new(
-            template-declaration => $<template-declaration>.made,
-        )
+        make $<template-declaration>.made
     }
 
     # rule declaration:sym<explicit-instantiation> { <explicit-instantiation> }
     method declaration:sym<explicit-instantiation>($/) {
-        make Declaration::ExplicitInstantiation.new(
-            explicit-instantiation => $<explicit-instantiation>.made,
-        )
+        make $<explicit-instantiation>.made
     }
 
     # rule declaration:sym<explicit-specialization> { <explicit-specialization> }
     method declaration:sym<explicit-specialization>($/) {
-        make Declaration::ExplicitSpecialization.new(
-            explicit-specialization => $<explicit-specialization>.made,
-        )
+        make $<explicit-specialization>.made
     }
 
     # rule declaration:sym<linkage-specification> { <linkage-specification> }
     method declaration:sym<linkage-specification>($/) {
-        make Declaration::LinkageSpecification.new(
-            linkage-specification => $<linkage-specification>.made,
-        )
+        make $<linkage-specification>.made
     }
 
     # rule declaration:sym<namespace-definition> { <namespace-definition> }
     method declaration:sym<namespace-definition>($/) {
-        make Declaration::NamespaceDefinition.new(
-            namespace-definition => $<namespace-definition>.made,
-        )
+        make $<namespace-definition>.made
     }
 
     # rule declaration:sym<empty-declaration> { <empty-declaration> }
     method declaration:sym<empty-declaration>($/) {
-        make Declaration::EmptyDeclaration.new(
-            empty-declaration => $<empty-declaration>.made,
-        )
+        make $<empty-declaration>.made
     }
 
     # rule declaration:sym<attribute-declaration> { <attribute-declaration> }
     method declaration:sym<attribute-declaration>($/) {
-        make Declaration::AttributeDeclaration.new(
-            attribute-declaration => $<attribute-declaration>.made,
-        )
+        make $<attribute-declaration>.made
     }
 
     # rule block-declaration:sym<simple> { <simple-declaration> }
     method block-declaration:sym<simple>($/) {
-        make BlockDeclaration::Simple.new(
-            simple-declaration => $<simple-declaration>.made,
-        )
+        make $<simple-declaration>.made
     }
 
     # rule block-declaration:sym<asm> { <asm-definition> }
     method block-declaration:sym<asm>($/) {
-        make BlockDeclaration::Asm.new(
-            asm-definition => $<asm-definition>.made,
-        )
+        make $<asm-definition>.made
     }
 
     # rule block-declaration:sym<namespace-alias> { <namespace-alias-definition> }
     method block-declaration:sym<namespace-alias>($/) {
-        make BlockDeclaration::NamespaceAlias.new(
-            namespace-alias-definition => $<namespace-alias-definition>.made,
-        )
+        make $<namespace-alias-definition>.made
     }
 
     # rule block-declaration:sym<using-decl> { <using-declaration> }
     method block-declaration:sym<using-decl>($/) {
-        make BlockDeclaration::UsingDecl.new(
-            using-declaration => $<using-declaration>.made,
-        )
+        make $<using-declaration>.made
     }
 
     # rule block-declaration:sym<using-directive> { <using-directive> }
     method block-declaration:sym<using-directive>($/) {
-        make BlockDeclaration::UsingDirective.new(
-            using-directive => $<using-directive>.made,
-        )
+        make $<using-directive>.made
     }
 
     # rule block-declaration:sym<static-assert> { <static-assert-declaration> }
     method block-declaration:sym<static-assert>($/) {
-        make BlockDeclaration::StaticAssert.new(
-            static-assert-declaration => $<static-assert-declaration>.made,
-        )
+        make $<static-assert-declaration>.made
     }
 
     # rule block-declaration:sym<alias> { <alias-declaration> }
     method block-declaration:sym<alias>($/) {
-        make BlockDeclaration::Alias.new(
-            alias-declaration => $<alias-declaration>.made,
-        )
+        make $<alias-declaration>.made
     }
 
     # rule block-declaration:sym<opaque-enum-decl> { <opaque-enum-declaration> }
     method block-declaration:sym<opaque-enum-decl>($/) {
-        make BlockDeclaration::OpaqueEnumDecl.new(
-            opaque-enum-declaration => $<opaque-enum-declaration>.made,
-        )
+        make $<opaque-enum-declaration>.made
     }
 
     # rule alias-declaration { <.using> <identifier> <attribute-specifier-seq>? <.assign> <the-type-id> <.semi> } 
@@ -2086,38 +2070,17 @@ our class CPP14Parser::Actions {
 
     # token decl-specifier:sym<storage-class> { <storage-class-specifier> }
     method decl-specifier:sym<storage-class>($/) {
-        make DeclSpecifier::StorageClass.new(
-            storage-class-specifier => $<storage-class-specifier>.made,
-        )
+        make $<storage-class-specifier>.made
     }
 
     # token decl-specifier:sym<type> { <type-specifier> }
     method decl-specifier:sym<type>($/) {
-        make DeclSpecifier::Type.new(
-            type-specifier => $<type-specifier>.made,
-        )
+        make $<type-specifier>.made
     }
 
     # token decl-specifier:sym<func> { <function-specifier> }
     method decl-specifier:sym<func>($/) {
-        make DeclSpecifier::Func.new(
-            function-specifier => $<function-specifier>.made,
-        )
-    }
-
-    # token decl-specifier:sym<friend> { <.friend> }
-    method decl-specifier:sym<friend>($/) {
-        make DeclSpecifier::Friend.new
-    }
-
-    # token decl-specifier:sym<typedef> { <.typedef> }
-    method decl-specifier:sym<typedef>($/) {
-        make DeclSpecifier::Typedef.new
-    }
-
-    # token decl-specifier:sym<constexpr> { <.constexpr> }
-    method decl-specifier:sym<constexpr>($/) {
-        make DeclSpecifier::Constexpr.new
+        make $<function-specifier>.made
     }
 
     # regex decl-specifier-seq { <decl-specifier> [<.ws> <decl-specifier>]*? <attribute-specifier-seq>? } 
