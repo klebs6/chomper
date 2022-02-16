@@ -40,58 +40,34 @@ our class Octalescapesequence                      { ... }
 our class Hexadecimalescapesequence                { ... }
 our class Declarationseq                           { ... }
 our class Expression                               { ... }
-our class IdExpression                             { ... }
 our class LambdaExpression                         { ... }
 our class QualifiedId                              { ... }
-our class UnqualifiedId                            { ... }
 our class OperatorFunctionId                       { ... }
 our class ConversionFunctionId                     { ... }
-our class LiteralOperatorId                        { ... }
-our class ClassName                                { ... }
 our class DecltypeSpecifier                        { ... }
-our class TemplateId                               { ... }
 our class NestedNameSpecifier                      { ... }
-our class TheTypeName                              { ... }
-our class NamespaceName                            { ... }
 our class SimpleTemplateId                         { ... }
 our class LambdaIntroducer                         { ... }
 our class LambdaDeclarator                         { ... }
 our class CompoundStatement                        { ... }
-our class LambdaCapture                            { ... }
 our class CaptureList                              { ... }
-our class CaptureDefault                           { ... }
 our role  ICapture                                 { ... }
-our class SimpleCapture                            { ... }
 our class Initcapture                              { ... }
-our class Initializer                              { ... }
 our class ParameterDeclarationClause               { ... }
-our class ExceptionSpecification                   { ... }
 our class AttributeSpecifierSeq                    { ... }
 our class TrailingReturnType                       { ... }
-our class PostfixExpressionBody                    { ... }
-our class PostfixExpressionTail                    { ... }
 our class ExpressionList                           { ... }
-our class PseudoDestructorName                     { ... }
 our class TheTypeId                                { ... }
 our class TypeIdOfTheTypeId                        { ... }
-our class SimpleTypeSpecifier                      { ... }
-our class TypeNameSpecifier                        { ... }
 our class BracedInitList                           { ... }
-our class Typeid                                   { ... }
 our class InitializerList                          { ... }
-our class NewExpression                            { ... }
 our role  IUnaryExpressionCase                     { ... }
-our class UnaryExpression                          { ... }
-our class UnaryOperator                            { ... }
-our class NoeExceptSpecification                   { ... }
 our class NoExceptExpression                       { ... }
 our class DeleteExpression                         { ... }
 our class NewPlacement                             { ... }
 our class NewTypeId                                { ... }
-our class NewInitializer                           { ... }
 our role  ITypeSpecifierSeq                         { ... }
 our class NewDeclarator                            { ... }
-our class PointerOperator                          { ... }
 our class NoPointerNewDeclarator                   { ... }
 our class NoPointerNewDeclaratorTail               { ... }
 our class ConstantExpression                       { ... }
@@ -99,32 +75,16 @@ our class CastExpression                           { ... }
 our class PointerMemberExpression                  { ... }
 our class PointerMemberExpressionTail              { ... }
 our class MultiplicativeExpressionTail             { ... }
-our class MultiplicativeOperator                   { ... }
-our class ShiftOperator                            { ... }
 our role  IAssignmentExpression                    { ... }
 our class ThrowExpression                          { ... }
-our class AssignmentOperator                       { ... }
-our class InitializerClause                        { ... }
 our role  IAttributedStatementBody                 { ... }
 our class LabeledStatement                         { ... }
 our class DeclarationStatement                     { ... }
 our class ExpressionStatement                      { ... }
-our class SelectionStatement                       { ... }
-our class IterationStatement                       { ... }
-our class JumpStatement                            { ... }
 our class TryBlock                                 { ... }
-our class Case                                     { ... }
-our class BlockDeclaration                         { ... }
 our class StatementSeq                             { ... }
-our class Condition                                { ... }
 our class DeclSpecifierSeq                         { ... }
-our class Declarator                               { ... }
-our class ForInitStatement                         { ... }
 our class ForRangeDeclaration                      { ... }
-our class ForRangeInitializer                      { ... }
-our class SimpleDeclaration                        { ... }
-our class ReturnStatementBody                      { ... }
-our class Declaration                              { ... }
 our class FunctionDefinition                       { ... }
 our class TemplateDeclaration                      { ... }
 our class ExplicitInstantiation                    { ... }
@@ -141,30 +101,19 @@ our class StaticAssertDeclaration                  { ... }
 our class AliasDeclaration                         { ... }
 our class OpaqueEnumDeclaration                    { ... }
 our class InitDeclaratorList                       { ... }
-our class StorageClassSpecifier                    { ... }
-our class TypeSpecifier                            { ... }
-our class FunctionSpecifier                        { ... }
-our class TrailingTypeSpecifier                    { ... }
 our class ClassSpecifier                           { ... }
 our class EnumSpecifier                            { ... }
-our class CvQualifier                              { ... }
-our class ElaboratedTypeSpecifier                  { ... }
 our class EnumName                                 { ... }
 our class EnumeratorList                           { ... }
-our class EnumBase                                 { ... }
 our class EnumeratorDefinition                     { ... }
 our class Enumerator                               { ... }
 our class OriginalNamespaceName                    { ... }
 our class NamespaceAlias                           { ... }
-our class NamespaceTag                             { ... }
 our class Qualifiednamespacespecifier              { ... }
-our class AttributeSpecifier                       { ... }
 our class AttributeList                            { ... }
-our class AlignmentSpecifier                       { ... }
 our class AttributeNamespace                       { ... }
 our class AttributeArgumentClause                  { ... }
 our class BalancedTokenSeq                         { ... }
-our class Balancedrule                             { ... }
 our class InitDeclarator                           { ... }
 our class PointerDeclarator                        { ... }
 our class NoPointerDeclarator                      { ... }
@@ -172,51 +121,32 @@ our class ParametersAndQualifiers                  { ... }
 our class AugmentedPointerOperator                 { ... }
 our class Declaratorid                             { ... }
 our class Cvqualifierseq                           { ... }
-our class Refqualifier                             { ... }
-our class AbstractDeclarator                       { ... }
-our class PointerAbstractDeclarator                { ... }
 our class NoPointerAbstractDeclarator              { ... }
 our class AbstractPackDeclarator                   { ... }
 our class NoPointerAbstractDeclaratorBracketedBase { ... }
-our class NoPointerAbstractDeclaratorBase          { ... }
 our class NoPointerAbstractPackDeclarator          { ... }
-our class NoPointerAbstractPackDeclaratorBody      { ... }
 our class ParameterDeclarationList                 { ... }
 our class ParameterDeclaration                     { ... }
-our class ParameterDeclarationBody                 { ... }
 our class VirtualSpecifierSeq                      { ... }
-our class FunctionBody                             { ... }
 our class ConstructorInitializer                   { ... }
 our class FunctionTryBlock                         { ... }
-our class BraceOrEqualInitializer                  { ... }
 our class MemberSpecification                      { ... }
 our class ClassHeadName                            { ... }
 our class ClassVirtSpecifier                       { ... }
 our class BaseClause                               { ... }
-our class Memberdeclaration                        { ... }
-our class AccessSpecifier                          { ... }
 our class MemberDeclaratorList                     { ... }
-our class MemberDeclarator                         { ... }
 our class PureSpecifier                            { ... }
-our class VirtualSpecifier                         { ... }
 our class BaseSpecifierList                        { ... }
-our class BaseSpecifier                            { ... }
 our class BaseTypeSpecifier                        { ... }
 our class ConversionTypeId                         { ... }
 our class ConversionDeclarator                     { ... }
 our class MemInitializerList                       { ... }
-our class MemInitializer                           { ... }
-our class Meminitializerid                         { ... }
-our class TheOperator                              { ... }
-our class TemplateParameter                        { ... }
 our class TypeParameter                            { ... }
 our class TemplateParameterList                    { ... }
 our class TemplateName                             { ... }
 our class TemplateArgumentList                     { ... }
-our class TemplateArgument                         { ... }
 our class HandlerSeq                               { ... }
 our class Handler                                  { ... }
-our class ExceptionDeclaration                     { ... }
 our class DynamicExceptionSpecification            { ... }
 our class TypeIdList                               { ... }
 our role IIntegersuffix                            { ... }
@@ -730,7 +660,7 @@ our class UnqualifiedId::TemplateId does IUnqualifiedId {
 our class QualifiedId { 
     has NestedNameSpecifier $.nested-name-specifier is required;
     has Bool                $.template              is required;
-    has UnqualifiedId       $.unqualified-id        is required;
+    has IUnqualifiedId      $.unqualified-id        is required;
 }
 
 our role INestedNameSpecifierPrefix { }
@@ -2335,7 +2265,7 @@ our class UsingDeclarationPrefix::Base does IUsingDeclarationPrefix { }
 # rule using-declaration { <using> <using-declaration-prefix> <unqualified-id> <semi> }
 our class UsingDeclaration { 
     has IUsingDeclarationPrefix $.using-declaration-prefix is required;
-    has UnqualifiedId           $.unqualified-id is required;
+    has IUnqualifiedId          $.unqualified-id is required;
 }
 
 # rule using-directive { 
@@ -2493,7 +2423,7 @@ our class InitDeclaratorList {
 # rule init-declarator { <declarator> <initializer>? } #--------------------------
 our class InitDeclarator { 
     has IDeclarator  $.declarator is required;
-    has Initializer $.initializer;
+    has IInitializer $.initializer;
 }
 
 our role IDeclarator { }
