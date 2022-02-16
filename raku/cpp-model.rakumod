@@ -1798,7 +1798,6 @@ our class DeclSpecifierSeq {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
 }
 
-
 # rule storage-class-specifier:sym<extern> { <.extern> }
 our class StorageClassSpecifier::Extern does IStorageClassSpecifier { }
 
@@ -1828,42 +1827,10 @@ our class TypedefName {
     has Identifier $.identifier is required;
 }
 
-
-# rule type-specifier:sym<trailing-type-specifier> { <trailing-type-specifier> }
-our class TypeSpecifier::TrailingTypeSpecifier does ITypeSpecifier {
-    has ITrailingTypeSpecifier $.trailing-type-specifier is required;
-}
-
-# rule type-specifier:sym<class-specifier> { <class-specifier> }
-our class TypeSpecifier::ClassSpecifier does ITypeSpecifier {
-    has ClassSpecifier $.class-specifier is required;
-}
-
-# rule type-specifier:sym<enum-specifier> { <enum-specifier> } #---------------------------
-our class TypeSpecifier::EnumSpecifier does ITypeSpecifier {
-    has EnumSpecifier $.enum-specifier is required;
-}
-
-
 # rule trailing-type-specifier:sym<cv-qualifier> { <cv-qualifier> <simple-type-specifier> }
 our class TrailingTypeSpecifier::CvQualifier does ITrailingTypeSpecifier {
     has ICvQualifier         $.cv-qualifier          is required;
     has ISimpleTypeSpecifier $.simple-type-specifier is required;
-}
-
-# rule trailing-type-specifier:sym<simple> { <simple-type-specifier> }
-our class TrailingTypeSpecifier::Simple does ITrailingTypeSpecifier {
-    has ISimpleTypeSpecifier $.simple-type-specifier is required;
-}
-
-# rule trailing-type-specifier:sym<elaborated> { <elaborated-type-specifier> }
-our class TrailingTypeSpecifier::Elaborated does ITrailingTypeSpecifier {
-    has IElaboratedTypeSpecifier $.elaborated-type-specifier is required;
-}
-
-# rule trailing-type-specifier:sym<typename> { <type-name-specifier> } #---------------------------
-our class TrailingTypeSpecifier::Typename does ITrailingTypeSpecifier {
-    has ITypeNameSpecifier $.type-name-specifier is required;
 }
 
 # rule type-specifier-seq { <type-specifier>+ <attribute-specifier-seq>? }
@@ -1987,9 +1954,7 @@ our class SimpleTypeSpecifier::Wchar does ISimpleTypeSpecifier {
 }
 
 # regex simple-type-specifier:sym<bool> { <bool_> }
-our class SimpleTypeSpecifier::Bool does ISimpleTypeSpecifier {
-    has Bool $.bool_ is required;
-}
+our class SimpleTypeSpecifier::Bool does ISimpleTypeSpecifier { }
 
 # regex simple-type-specifier:sym<float> { <float> }
 our class SimpleTypeSpecifier::Float does ISimpleTypeSpecifier { }

@@ -2083,6 +2083,21 @@ our class CPP14Parser::Actions {
         make $<function-specifier>.made
     }
 
+    # token decl-specifier:sym<friend> { <.friend> }
+    method decl-specifier:sym<friend>($/) {
+        make DeclSpecifier::Friend.new
+    }
+
+    # token decl-specifier:sym<typedef> { <.typedef> }
+    method decl-specifier:sym<typedef>($/) {
+        make DeclSpecifier::Typedef.new
+    }
+
+    # token decl-specifier:sym<constexpr> { <.constexpr> }
+    method decl-specifier:sym<constexpr>($/) {
+        make DeclSpecifier::Constexpr.new
+    }
+
     # regex decl-specifier-seq { <decl-specifier> [<.ws> <decl-specifier>]*? <attribute-specifier-seq>? } 
     method decl-specifier-seq($/) {
         make DeclSpecifierSeq.new(
@@ -2133,30 +2148,22 @@ our class CPP14Parser::Actions {
 
     # rule typedef-name { <identifier> } 
     method typedef-name($/) {
-        make TypedefName.new(
-            identifier => $<identifier>.made,
-        )
+        make $<identifier>.made
     }
 
     # rule type-specifier:sym<trailing-type-specifier> { <trailing-type-specifier> }
     method type-specifier:sym<trailing-type-specifier>($/) {
-        make TypeSpecifier::TrailingTypeSpecifier.new(
-            trailing-type-specifier => $<trailing-type-specifier>.made,
-        )
+        make $<trailing-type-specifier>.made
     }
 
     # rule type-specifier:sym<class-specifier> { <class-specifier> }
     method type-specifier:sym<class-specifier>($/) {
-        make TypeSpecifier::ClassSpecifier.new(
-            class-specifier => $<class-specifier>.made,
-        )
+        make $<class-specifier>.made
     }
 
     # rule type-specifier:sym<enum-specifier> { <enum-specifier> } 
     method type-specifier:sym<enum-specifier>($/) {
-        make TypeSpecifier::EnumSpecifier.new(
-            enum-specifier => $<enum-specifier>.made,
-        )
+        make $<enum-specifier>.made
     }
 
     # rule trailing-type-specifier:sym<cv-qualifier> { <cv-qualifier> <simple-type-specifier> }
@@ -2169,23 +2176,17 @@ our class CPP14Parser::Actions {
 
     # rule trailing-type-specifier:sym<simple> { <simple-type-specifier> }
     method trailing-type-specifier:sym<simple>($/) {
-        make TrailingTypeSpecifier::Simple.new(
-            simple-type-specifier => $<simple-type-specifier>.made,
-        )
+        make $<simple-type-specifier>.made
     }
 
     # rule trailing-type-specifier:sym<elaborated> { <elaborated-type-specifier> }
     method trailing-type-specifier:sym<elaborated>($/) {
-        make TrailingTypeSpecifier::Elaborated.new(
-            elaborated-type-specifier => $<elaborated-type-specifier>.made,
-        )
+        make $<elaborated-type-specifier>.made
     }
 
     # rule trailing-type-specifier:sym<typename> { <type-name-specifier> } 
     method trailing-type-specifier:sym<typename>($/) {
-        make TrailingTypeSpecifier::Typename.new(
-            type-name-specifier => $<type-name-specifier>.made,
-        )
+        make $<type-name-specifier>.made
     }
 
     # rule type-specifier-seq { <type-specifier>+ <attribute-specifier-seq>? }
@@ -2290,66 +2291,50 @@ our class CPP14Parser::Actions {
 
     # regex simple-type-specifier:sym<full> { <full-type-name> }
     method simple-type-specifier:sym<full>($/) {
-        make SimpleTypeSpecifier::Full.new(
-            full-type-name => $<full-type-name>.made,
-        )
+        make $<full-type-name>.made
     }
 
     # regex simple-type-specifier:sym<scoped> { <scoped-template-id> }
     method simple-type-specifier:sym<scoped>($/) {
-        make SimpleTypeSpecifier::Scoped.new(
-            scoped-template-id => $<scoped-template-id>.made,
-        )
+        make $<scoped-template-id>.made
     }
 
     # regex simple-type-specifier:sym<signedness-mod> { <simple-type-signedness-modifier> }
     method simple-type-specifier:sym<signedness-mod>($/) {
-        make SimpleTypeSpecifier::SignednessMod.new(
-            simple-type-signedness-modifier => $<simple-type-signedness-modifier>.made,
-        )
+        make $<simple-type-signedness-modifier>.made
     }
 
     # regex simple-type-specifier:sym<signedness-mod-length> { <simple-type-signedness-modifier>? <simple-type-length-modifier>+ }
     method simple-type-specifier:sym<signedness-mod-length>($/) {
         make SimpleTypeSpecifier::SignednessModLength.new(
             simple-type-signedness-modifier => $<simple-type-signedness-modifier>.made,
-            simple-type-length-modifier => $<simple-type-length-modifier>>>.made,
+            simple-type-length-modifier     => $<simple-type-length-modifier>>>.made,
         )
     }
 
     # regex simple-type-specifier:sym<char> { <simple-char-type-specifier> }
     method simple-type-specifier:sym<char>($/) {
-        make SimpleTypeSpecifier::Char.new(
-            simple-char-type-specifier => $<simple-char-type-specifier>.made,
-        )
+        make $<simple-char-type-specifier>.made
     }
 
     # regex simple-type-specifier:sym<char16> { <simple-char16-type-specifier> }
     method simple-type-specifier:sym<char16>($/) {
-        make SimpleTypeSpecifier::Char16.new(
-            simple-char16-type-specifier => $<simple-char16-type-specifier>.made,
-        )
+        make $<simple-char16-type-specifier>.made
     }
 
     # regex simple-type-specifier:sym<char32> { <simple-char32-type-specifier> }
     method simple-type-specifier:sym<char32>($/) {
-        make SimpleTypeSpecifier::Char32.new(
-            simple-char32-type-specifier => $<simple-char32-type-specifier>.made,
-        )
+        make $<simple-char32-type-specifier>.made
     }
 
     # regex simple-type-specifier:sym<wchar> { <simple-wchar-type-specifier> }
     method simple-type-specifier:sym<wchar>($/) {
-        make SimpleTypeSpecifier::Wchar.new(
-            simple-wchar-type-specifier => $<simple-wchar-type-specifier>.made,
-        )
+        make $<simple-wchar-type-specifier>.made
     }
 
     # regex simple-type-specifier:sym<bool> { <bool_> }
     method simple-type-specifier:sym<bool>($/) {
-        make SimpleTypeSpecifier::Bool.new(
-            bool_ => $<bool_>.made,
-        )
+        make SimpleTypeSpecifier::Bool.new
     }
 
     # regex simple-type-specifier:sym<float> { <float> }
