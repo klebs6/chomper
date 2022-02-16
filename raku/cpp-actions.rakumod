@@ -1,3 +1,4 @@
+use cpp-model;
 
 our class CPP14Parser::Actions {
     # token integer-literal:sym<dec> { <decimal-literal> <integersuffix>? }
@@ -607,16 +608,6 @@ our class CPP14Parser::Actions {
         )
     }
 
-    # token whitespace { <[ \t ]>+ }
-    method whitespace($/) {
-        make Whitespace.new
-    }
-
-    # token newline_ { [ || '\r' '\n'? || '\n' ] }
-    method newline_($/) {
-        make Newline.new
-    }
-
     # token block-comment { '/*' .*? '*/' }
     method block-comment($/) {
         make BlockComment.new(
@@ -942,7 +933,24 @@ our class CPP14Parser::Actions {
 
     # token postfix-expression-body { || <postfix-expression-list> || <postfix-expression-cast> || <postfix-expression-typeid> || <primary-expression> } 
     method postfix-expression-body($/) {
-        make PostfixExpressionBody.new
+
+        given $/.keys[0] {
+            when "postfix-expression-list" {
+                make $<postfix-expression-list>.made
+            }
+            when "postfix-expression-cast" {
+                make $<postfix-expression-cast>.made
+            }
+            when "postfix-expression-typeid" {
+                make $<postfix-expression-type-id>.made
+            }
+            when "primary-expression" {
+                make $<primary-expression>.made
+            }
+            default {
+                die "bad switch";
+            }
+        }
     }
 
     # token cast-token:sym<dyn> { <dynamic_cast> }
@@ -1063,7 +1071,11 @@ our class CPP14Parser::Actions {
 
     # rule unary-expression { || <new-expression> || <unary-expression-case> }
     method unary-expression($/) {
-        make UnaryExpression.new
+        make do if $/<new-expression>:exists {
+            $<new-expression>.made
+        } else {
+            $<unary-expression-case>.made
+        }
     }
 
     # rule unary-expression-case:sym<postfix> { <postfix-expression> }
@@ -1768,9 +1780,9 @@ our class CPP14Parser::Actions {
     method condition:sym<decl>($/) {
         make Condition::Decl.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            decl-specifier-seq => $<decl-specifier-seq>.made,
-            declarator => $<declarator>.made,
-            condition-decl-tail => $<condition-decl-tail>.made,
+            decl-specifier-seq      => $<decl-specifier-seq>.made,
+            declarator              => $<declarator>.made,
+            condition-decl-tail     => $<condition-decl-tail>.made,
         )
     }
 
@@ -1785,7 +1797,7 @@ our class CPP14Parser::Actions {
     # rule iteration-statement:sym<do> { <do_> <statement> <while_> <.left-paren> <expression> <.right-paren> <semi> }
     method iteration-statement:sym<do>($/) {
         make IterationStatement::Do.new(
-            statement => $<statement>.made,
+            statement  => $<statement>.made,
             expression => $<expression>.made,
         )
     }
@@ -1794,9 +1806,9 @@ our class CPP14Parser::Actions {
     method iteration-statement:sym<for>($/) {
         make IterationStatement::For.new(
             for-init-statement => $<for-init-statement>.made,
-            condition => $<condition>.made,
-            expression => $<expression>.made,
-            statement => $<statement>.made,
+            condition          => $<condition>.made,
+            expression         => $<expression>.made,
+            statement          => $<statement>.made,
         )
     }
 
@@ -1805,7 +1817,7 @@ our class CPP14Parser::Actions {
         make IterationStatement::ForRange.new(
             for-range-declaration => $<for-range-declaration>.made,
             for-range-initializer => $<for-range-initializer>.made,
-            statement => $<statement>.made,
+            statement             => $<statement>.made,
         )
     }
 
@@ -1827,8 +1839,8 @@ our class CPP14Parser::Actions {
     method for-range-declaration($/) {
         make ForRangeDeclaration.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            decl-specifier-seq => $<decl-specifier-seq>.made,
-            declarator => $<declarator>.made,
+            decl-specifier-seq      => $<decl-specifier-seq>.made,
+            declarator              => $<declarator>.made,
         )
     }
 
@@ -2013,16 +2025,16 @@ our class CPP14Parser::Actions {
     # rule alias-declaration { <.using> <identifier> <attribute-specifier-seq>? <.assign> <the-type-id> <.semi> } 
     method alias-declaration($/) {
         make AliasDeclaration.new(
-            identifier => $<identifier>.made,
+            identifier              => $<identifier>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            the-type-id => $<the-type-id>.made,
+            the-type-id             => $<the-type-id>.made,
         )
     }
 
     # rule simple-declaration:sym<basic> { <decl-specifier-seq>? <init-declarator-list>? <.semi> }
     method simple-declaration:sym<basic>($/) {
         make SimpleDeclaration::Basic.new(
-            decl-specifier-seq => $<decl-specifier-seq>.made,
+            decl-specifier-seq   => $<decl-specifier-seq>.made,
             init-declarator-list => $<init-declarator-list>.made,
         )
     }
@@ -2031,8 +2043,8 @@ our class CPP14Parser::Actions {
     method simple-declaration:sym<init-list>($/) {
         make SimpleDeclaration::InitList.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            decl-specifier-seq => $<decl-specifier-seq>.made,
-            init-declarator-list => $<init-declarator-list>.made,
+            decl-specifier-seq      => $<decl-specifier-seq>.made,
+            init-declarator-list    => $<init-declarator-list>.made,
         )
     }
 
@@ -2040,7 +2052,7 @@ our class CPP14Parser::Actions {
     method static-assert-declaration($/) {
         make StaticAssertDeclaration.new(
             constant-expression => $<constant-expression>.made,
-            string-literal => $<string-literal>.made,
+            string-literal      => $<string-literal>.made,
         )
     }
 
@@ -2095,7 +2107,7 @@ our class CPP14Parser::Actions {
     # regex decl-specifier-seq { <decl-specifier> [<.ws> <decl-specifier>]*? <attribute-specifier-seq>? } 
     method decl-specifier-seq($/) {
         make DeclSpecifierSeq.new(
-            decl-specifiers => $<decl-specifiers>>>.made,
+            decl-specifiers         => $<decl-specifiers>>>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
         )
     }
@@ -2171,7 +2183,7 @@ our class CPP14Parser::Actions {
     # rule trailing-type-specifier:sym<cv-qualifier> { <cv-qualifier> <simple-type-specifier> }
     method trailing-type-specifier:sym<cv-qualifier>($/) {
         make TrailingTypeSpecifier::CvQualifier.new(
-            cv-qualifier => $<cv-qualifier>.made,
+            cv-qualifier          => $<cv-qualifier>.made,
             simple-type-specifier => $<simple-type-specifier>.made,
         )
     }
@@ -2200,7 +2212,7 @@ our class CPP14Parser::Actions {
     # rule type-specifier-seq { <type-specifier>+ <attribute-specifier-seq>? }
     method type-specifier-seq($/) {
         make TypeSpecifierSeq.new(
-            type-specifiers => $<type-specifiers>>>.made,
+            type-specifiers         => $<type-specifiers>>>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
         )
     }
@@ -2209,7 +2221,7 @@ our class CPP14Parser::Actions {
     method trailing-type-specifier-seq($/) {
         make TrailingTypeSpecifierSeq.new(
             trailing-type-specifiers => $<trailing-type-specifiers>>>.made,
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            attribute-specifier-seq  => $<attribute-specifier-seq>.made,
         )
     }
 
@@ -2237,7 +2249,7 @@ our class CPP14Parser::Actions {
     method full-type-name($/) {
         make FullTypeName.new(
             nested-name-specifier => $<nested-name-specifier>.made,
-            the-type-name => $<the-type-name>.made,
+            the-type-name         => $<the-type-name>.made,
         )
     }
 
@@ -2245,7 +2257,7 @@ our class CPP14Parser::Actions {
     method scoped-template-id($/) {
         make ScopedTemplateId.new(
             nested-name-specifier => $<nested-name-specifier>.made,
-            simple-template-id => $<simple-template-id>.made,
+            simple-template-id    => $<simple-template-id>.made,
         )
     }
 
@@ -2253,7 +2265,7 @@ our class CPP14Parser::Actions {
     method simple-int-type-specifier($/) {
         make SimpleIntTypeSpecifier.new(
             simple-type-signedness-modifier => $<simple-type-signedness-modifier>.made,
-            simple-type-length-modifiers => $<simple-type-length-modifiers>>>.made,
+            simple-type-length-modifiers    => $<simple-type-length-modifiers>>>.made,
         )
     }
 

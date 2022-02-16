@@ -1,0 +1,66 @@
+#!/usr/bin/env raku
+use gcpp;
+
+sub reformat($name) {
+
+    my %kwmap = %(
+        break    => "break_",
+        continue => "continue_",
+        default  => "default_",
+        do       => "do_",
+        else     => "else_",
+        enum     => "enum_",
+        for      => "for_",
+        goto     => "goto_",
+        if       => "if_",
+        long     => "long_",
+        return   => "return_",
+        try      => "try_",
+        void     => "void_",
+        while    => "while_",
+        div      => "div_",
+        mod      => "mod_",
+        and      => "and_",
+        or       => "or_",
+    );
+
+    my $result = $name;
+    $result ~~ s:g/<?after <[a..z]>>(<[A..Z]>)/-{~$0.lc}/;
+    $result ~~ s:g/(<[A..Z]>)<?before <[a..z]>>/{~$0.lc}/;
+
+    if %kwmap{$result}:exists {
+        $result = %kwmap{$result};
+    }
+
+    $result
+}
+
+sub get-token-names {
+
+    [
+        |CPP14Keyword.^methods(:all),
+        |CPP14Lexer.^methods(:all),
+        |CPP14Parser.^methods(:all),
+    ]
+    ==> map({
+        $_.name.split(":sym")[0]
+    })
+    ==> sort()
+    ==> unique()
+    ==> map({
+        ($_, reformat($_))
+    })
+}
+
+sub MAIN {
+    my @names = get-token-names();
+
+    my $file     = "raku/gcpp.rakumod";
+    my $contents = $file.IO.slurp;
+
+    for @names -> ($src, $dst) {
+        $contents ~~ s:g/<wb> $src <wb>/$dst/;
+    }
+
+    spurt $file, $contents;
+}

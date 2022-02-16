@@ -1,4 +1,3 @@
-unit package CPP14;
 
 our class Identifier         { has Str $.value is required; }
 our class Nondigit           { has Str $.value is required; }

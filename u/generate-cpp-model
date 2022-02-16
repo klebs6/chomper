@@ -1,0 +1,16 @@
+#!/usr/bin/env raku
+
+use gcpp;
+use Data::Dump::Tree;
+use generate-cpp-model;
+
+my $marker          = Nil;#"pointer-declarator";
+my @grammar-methods = cpp-grammar-methods($marker);
+my @class-defs      = generate-cpp-model(@grammar-methods);
+
+#ddt @non-inheritors;
+#ddt %inheritance-map;
+
+#--------------------------
+
+say @class-defs.join("\n");

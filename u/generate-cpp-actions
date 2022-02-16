@@ -1,0 +1,89 @@
+#!/usr/bin/env raku
+use MONKEY-SEE-NO-EVAL;
+
+use generate-cpp-model;
+use cpp-model;
+
+my $marker = Nil;
+
+my @grammar-methods = cpp-grammar-methods($marker);
+my @grammar-tokens  = cpp-grammar-tokens(@grammar-methods);
+my $inheritance-map = build-token-inheritance-maps(@grammar-tokens);
+
+our sub grammar-method-as-comment($grammar-method) {
+    qq:to/END/.chomp
+    # {$grammar-method.gist.split("\n").join(" ").subst(:g, /\h+/," ").split("#")[0]}
+    END
+}
+
+our sub handle-attribute($attrib) {
+    my @parts = $attrib.Str.split("!");
+    my $sigil = @parts[0];
+    my $name  = @parts[1];
+    if $name {
+        if $sigil ~~ /\@/ {
+            "{$name} => \$<{$name}>>>.made,"
+        } else {
+            "{$name} => \$<{$name}>.made,"
+        }
+    }
+}
+
+our sub action-method-body($grammar-method) {
+    my $class-name = class-name($grammar-method.name);
+
+    if $class-name {
+
+        my @attributes = EVAL "CPP14::{$class-name}.^attributes";
+
+        if @attributes.elems gt 0 {
+            return do for @attributes {
+                handle-attribute($_)
+            }.join("\n");
+        }
+
+        CATCH {
+            default {
+                return "TODO:";
+            }
+        }
+    }
+    
+    ""
+}
+
+our sub need-generate-action-method($inheritance-map, $meth) {
+    my Bool $is-proto = so $meth.name (elem) $inheritance-map.map.keys;
+    not $is-proto
+}
+
+say "our class CPP14Parser::Actions \{";
+
+.say for do for @grammar-methods {
+
+    if need-generate-action-method($inheritance-map,$_) {
+        my $body       = action-method-body($_);
+        my $comment    = grammar-method-as-comment($_);
+        my $class-name = class-name($_.name);
+
+        if $body {
+            qq:to/END/.indent(4)
+            $comment
+            method {$_.name}(\$/) \{
+                make {$class-name}.new(
+            {$body.indent(8)}
+                )
+            \}
+            END
+        } else {
+            qq:to/END/.indent(4)
+            $comment
+            method {$_.name}(\$/) \{
+                make {$class-name}.new
+            \}
+            END
+        }
+    } 
+};
+
+say "}";
