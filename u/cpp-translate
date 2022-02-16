@@ -1,7 +1,15 @@
 #!/usr/bin/env raku
 use cpp-translate;
+use cpp-actions;
+use Data::Dump::Tree;
 
 my $in = $*IN.slurp.chomp;
 
-say cpp-translate($in);
+my $translated = cpp-translate($in);
+
+if $translated {
+    say $translated;
+    say $translated.made;
+    ddt $translated.made;
+}
 

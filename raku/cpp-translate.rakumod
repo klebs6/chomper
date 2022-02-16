@@ -1,4 +1,5 @@
 use gcpp;
+use cpp-actions;
 
 our sub cpp-translate($in) {
 
@@ -7,5 +8,6 @@ our sub cpp-translate($in) {
     use Grammar::Tracer;
     grammar GD does CPP14Parser {}
 
-    G.parse($in) // do { say "Bad $in"; GD.parse($in) }
+    G.parse($in, actions => CPP14Parser::Actions.new)
+    // do { say "Bad $in"; say GD.parse($in); Nil }
 }
