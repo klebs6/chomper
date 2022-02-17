@@ -3626,13 +3626,26 @@ our class CPP14Parser::Actions {
 
     # rule base-specifier:sym<base-type> { <attribute-specifier-seq>? <base-type-specifier> }
     method base-specifier:sym<base-type>($/) {
-        make BaseSpecifier::BaseType.new(
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            base-type-specifier     => $<base-type-specifier>.made,
-        )
+
+        my $prefix = $<attribute-specifier-seq>.made;
+        my $base   = $<base-type-specifier>.made;
+
+        if $prefix {
+            make BaseSpecifier::BaseType.new(
+                attribute-specifier-seq => $prefix,
+                base-type-specifier     => $base,
+            )
+        } else {
+            make $base
+        }
     }
 
-    # rule base-specifier:sym<virtual> { <attribute-specifier-seq>? <virtual> <access-specifier>? <base-type-specifier> }
+    # rule base-specifier:sym<virtual> { 
+    #   <attribute-specifier-seq>? 
+    #   <virtual> 
+    #   <access-specifier>? 
+    #   <base-type-specifier> 
+    # }
     method base-specifier:sym<virtual>($/) {
         make BaseSpecifier::Virtual.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
@@ -3641,7 +3654,12 @@ our class CPP14Parser::Actions {
         )
     }
 
-    # rule base-specifier:sym<access> { <attribute-specifier-seq>? <access-specifier> <virtual>? <base-type-specifier> } 
+    # rule base-specifier:sym<access> { 
+    #   <attribute-specifier-seq>? 
+    #   <access-specifier> 
+    #   <virtual>? 
+    #   <base-type-specifier> 
+    # } 
     method base-specifier:sym<access>($/) {
         make BaseSpecifier::Access.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
@@ -3653,10 +3671,20 @@ our class CPP14Parser::Actions {
 
     # rule class-or-decl-type:sym<class> { <nested-name-specifier>? <class-name> }
     method class-or-decl-type:sym<class>($/) {
-        make ClassOrDeclType::Class.new(
-            nested-name-specifier => $<nested-name-specifier>.made,
-            class-name            => $<class-name>.made,
-        )
+
+        my $prefix = $<nested-name-specifier>.made;
+        my $base   = $<class-name>.made;
+
+        if $prefix {
+            make ClassOrDeclType::Class.new(
+                nested-name-specifier => $prefix,
+                class-name            => $base,
+            )
+
+        } else {
+
+            make $base
+        }
     }
 
     # rule class-or-decl-type:sym<decltype> { <decltype-specifier> } 
@@ -3693,18 +3721,32 @@ our class CPP14Parser::Actions {
 
     # rule conversion-type-id { <type-specifier-seq> <conversion-declarator>? }
     method conversion-type-id($/) {
-        make ConversionTypeId.new(
-            type-specifier-seq => $<type-specifier-seq>.made,
-            conversion-declarator => $<conversion-declarator>.made,
-        )
+        my $base = $<type-specifier-seq>.made;
+        my $tail = $<conversion-declarator>.made;
+
+        if $tail {
+            make ConversionTypeId.new(
+                type-specifier-seq => $base,
+                conversion-declarator => $tail,
+            )
+        } else {
+            make $base
+        }
     }
 
     # rule conversion-declarator { <pointer-operator> <conversion-declarator>? }
     method conversion-declarator($/) {
-        make ConversionDeclarator.new(
-            pointer-operator      => $<pointer-operator>.made,
-            conversion-declarator => $<conversion-declarator>.made,
-        )
+        my $base = $<pointer-operator>.made;
+        my $tail = $<conversion-declarator>.made;
+
+        if $tail {
+            make ConversionDeclarator.new(
+                pointer-operator      => $base,
+                conversion-declarator => $tail,
+            )
+        } else {
+            make $body
+        }
     }
 
     # rule constructor-initializer { <colon> <mem-initializer-list> }
@@ -3716,9 +3758,7 @@ our class CPP14Parser::Actions {
 
     # rule mem-initializer-list { <mem-initializer> <ellipsis>? [ <.comma> <mem-initializer> <ellipsis>? ]* } 
     method mem-initializer-list($/) {
-        make MemInitializerList.new(
-            mem-initializers => $<mem-initializer>>>.made,
-        )
+        make $<mem-initializer>>>.made;
     }
 
     # rule mem-initializer:sym<expr-list> { <meminitializerid> <.left-paren> <expression-list>? <.right-paren> }
@@ -3806,10 +3846,18 @@ our class CPP14Parser::Actions {
 
     # rule type-parameter-suffix:sym<maybe-ident> { <ellipsis>? <identifier>? }
     method type-parameter-suffix:sym<maybe-ident>($/) {
-        make TypeParameterSuffix::MaybeIdent.new(
-            has-ellipsis => $<has-ellipsis>.made,
-            identifier   => $<identifier>.made,
-        )
+
+        my $base         = $<identifier>.made;
+        my $has-ellipsis = $<has-ellipsis>.made;
+
+        if $has-ellipsis {
+            make TypeParameterSuffix::MaybeIdent.new(
+                has-ellipsis => $has-ellipsis,
+                identifier   => $base,
+            )
+        } else {
+            make $base
+        }
     }
 
     # rule type-parameter-suffix:sym<assign-type-id> { <identifier>? <assign> <the-type-id> } 
@@ -3864,9 +3912,7 @@ our class CPP14Parser::Actions {
 
     # rule template-argument-list { <template-argument> <ellipsis>? [ <.comma> <template-argument> <ellipsis>? ]* } 
     method template-argument-list($/) {
-        make TemplateArgumentList.new(
-            template-arguments => $<template-argument>>>.made,
-        )
+        make $<template-argument>>>.made
     }
 
     # token template-argument:sym<type-id> { <the-type-id> }
@@ -3995,9 +4041,7 @@ our class CPP14Parser::Actions {
 
     # rule type-id-list { <the-type-id> <ellipsis>? [ <.comma> <the-type-id> <ellipsis>? ]* } 
     method type-id-list($/) {
-        make TypeIdList.new(
-            the-type-ids => $<the-type-id>>>.made,
-        )
+        make $<the-type-id>>>.made
     }
 
     # token noe-except-specification:sym<full> { <noexcept> <.left-paren> <constant-expression> <.right-paren> }
