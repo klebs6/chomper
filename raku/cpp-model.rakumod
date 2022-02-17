@@ -1,31 +1,4 @@
 
-our class Identifier         { has Str $.value is required; }
-our class Nondigit           { has Str $.value is required; }
-our class Digit              { has Str $.value is required; }
-our class DecimalLiteral     { has Str $.value is required; }
-our class OctalLiteral       { has Str $.value is required; }
-our class HexadecimalLiteral { has Str $.value is required; }
-our class BinaryLiteral      { has Str $.value is required; }
-our class Nonzerodigit       { has Str $.value is required; }
-our class Octaldigit         { has Str $.value is required; }
-our class Hexadecimaldigit   { has Str $.value is required; }
-our class Binarydigit        { has Str $.value is required; }
-
-#-------------------------------
-our role INot { }
-our class Not::Bang      does INot { }
-our class Not::Not       does INot { }
-
-#-------------------------------
-our role IAndAnd { }
-our class AndAnd::AndAnd does IAndAnd { }
-our class AndAnd::And    does IAndAnd { }
-
-#-------------------------------
-our role IOrOr { }
-our class OrOr::PipePipe does IOrOr { }
-our class OrOr::Or       does IOrOr { }
-
 #-------------------------------[fwd declare]
 
 our class AbstractPackDeclarator                   { ... }
@@ -56,6 +29,7 @@ our class ConversionTypeId                         { ... }
 our class Cvqualifierseq                           { ... }
 our class DeclSpecifierSeq                         { ... }
 our class DeclarationStatement                     { ... }
+our role IDeclarationStatement                     {  }
 our class Declarationseq                           { ... }
 our class Declaratorid                             { ... }
 our class DecltypeSpecifier                        { ... }
@@ -82,7 +56,6 @@ our class Handler                                  { ... }
 our class HandlerSeq                               { ... }
 our class Hexadecimalescapesequence                { ... }
 our class InitDeclarator                           { ... }
-our class InitDeclaratorList                       { ... }
 our class Initcapture                              { ... }
 our class InitializerList                          { ... }
 our class LabeledStatement                         { ... }
@@ -148,8 +121,6 @@ our class VirtualSpecifierSeq                      { ... }
 our role IAssignmentExpression                    { ... }
 our role IAttributedStatementBody                 { ... }
 our role ICapture                                 { ... }
-our role IUnaryExpression                          { ... }
-our role IUnaryExpressionCase does IUnaryExpression  { ... }
 our role IAbstractDeclarator                       { ... }
 our role IAccessSpecifier                          { ... }
 our role IAlignmentSpecifier                       { ... }
@@ -232,21 +203,9 @@ our role IUserDefinedFloatingLiteral               { ... }
 our role IUserDefinedIntegerLiteral                { ... }
 our role IVirtualSpecifier                         { ... }
 
-our role ICharacterLiteralPrefix { }
-
-# token literal:sym<int> { <integer-literal> }
-our role IIntegerLiteral  does ILiteral { }
-
-# token literal:sym<float> { <floating-literal> }
-our role IFloatingLiteral does ILiteral { }
-
-# token literal:sym<bool> { <boolean-literal> }
-our role IBooleanLiteral  does ILiteral { }
-
-# token literal:sym<user-defined> { <user-defined-literal> }
-our role IUserDefinedLiteral does ILiteral { }
-
-our role IUniversalcharactername { }
+our role INot    { }
+our role IAndAnd { }
+our role IOrOr   { }
 our role IIdentifierStart { }
 our role IIdentifierContinue { }
 our role IIntegersuffix { }
@@ -284,9 +243,6 @@ our role ICastToken { }
 our role IPostListHead { }
 our role IPostListTail { }
 our role IPseudoDestructorName { }
-# rule unary-expression { <new-expression> || <unary-expression-case> }
-our role IUnaryExpression { }
-our role IUnaryExpressionCase does IUnaryExpression { }
 
 our role IUnaryOperator { }
 our role INewExpression { }
@@ -297,82 +253,177 @@ our role IAdditiveOperator { }
 our role IShiftOperator { }
 our role IRelationalOperator { }
 our role IEqualityOperator { }
-our role IAssignmentExpression { }
-our role IAssignmentOperator { }
-our role IComment { }
-our role IStatement { }
-our role IAttributedStatementBody { }
-our role ILabeledStatementLabelBody { }
-our role ISelectionStatement { }
-our role ICondition { }
-our role IConditionDeclTail { }
-our role IIterationStatement { }
-our role IForInitStatement { }
-our role IForRangeInitializer { }
-our role IJumpStatement { }
-our role IReturnStatementBody { }
-our role IDeclaration { }
-our role IBlockDeclaration { }
-our role ISimpleDeclaration { }
-our role IDeclSpecifier { }
-our role IStorageClassSpecifier { }
-our role IFunctionSpecifier { }
-our role ITypeSpecifier { }
-our role ITrailingTypeSpecifier { }
-our role ISimpleTypeLengthModifier { }
-our role ISimpleTypeSignednessModifier { }
-our role ISimpleTypeSpecifier { }
-our role ITheTypeName { }
-our role IDecltypeSpecifierBody { }
-our role IElaboratedTypeSpecifier { }
-our role INamespaceName { }
-our role INamespaceTag { }
-our role IUsingDeclarationPrefix { }
-our role ILinkageSpecificationBody { }
-our role IAttributeSpecifier { }
-our role IAlignmentspecifierbody { }
-our role IBalancedrule { }
-our role IDeclarator { }
-our role INoPointerDeclaratorBase { }
-our role INoPointerDeclaratorTail { }
-our role IPointerOperator { }
-our role ICvQualifier { }
-our role IRefqualifier { }
-our role IAbstractDeclarator { }
-our role IPointerAbstractDeclarator { }
-our role INoPointerAbstractDeclaratorBody { }
-our role INoPointerAbstractDeclaratorBase { }
-our role INoPointerAbstractPackDeclaratorBody { }
-our role IParameterDeclarationBody { }
-our role IFunctionBody { }
-our role IInitializer { }
-our role IBraceOrEqualInitializer { }
-our role IInitializerClause { }
-our role IClassName { }
-our role IClassHead { }
-our role IClassKey { }
-our role IMemberSpecificationBase { }
-our role IMemberdeclaration { }
-our role IMemberDeclarator { }
-our role IVirtualSpecifier { }
-our role IBaseSpecifier { }
-our role IClassOrDeclType { }
-our role IAccessSpecifier { }
-our role IMemInitializer { }
-our role IMeminitializerid { }
-our role ILiteralOperatorId { }
-our role ITemplateParameter { }
-our role ITypeParameterBase { }
-our role ITypeParameterSuffix { }
-our role ITemplateId { }
-our role ITemplateArgument { }
-our role ITypeNameSpecifier { }
-our role ISomeDeclarator { }
-our role IExceptionDeclaration { }
-our role IExceptionSpecification { }
-our role INoeExceptSpecification { }
-our role ITheOperator { }
-our role ILiteral { }
+
+our role IAssignmentExpression 
+does ICondition { }
+
+our role IAssignmentOperator                        { }
+our role IComment                                   { }
+our role IStatement                                 { }
+our role IAttributedStatementBody                   { }
+our role ILabeledStatementLabelBody                 { }
+our role ISelectionStatement                        { }
+our role ICondition                                 { }
+our role IConditionDeclTail                         { }
+our role IIterationStatement                        { }
+our role IForInitStatement                          { }
+our role IForRangeInitializer                       { }
+our role IJumpStatement                             { }
+our role IReturnStatementBody                       { }
+our role IDeclaration                               { }
+our role IBlockDeclaration                          { }
+our role ISimpleDeclaration                         { }
+our role IDeclSpecifierSeq                          { }
+our role IDeclSpecifier does IDeclSpecifierSeq      { }
+our role IStorageClassSpecifier                     { }
+our role IFunctionSpecifier                         { }
+our role ITypeSpecifier                             { }
+our role ITrailingTypeSpecifier                     { }
+our role ISimpleTypeLengthModifier                  { }
+our role ISimpleTypeSignednessModifier              { }
+our role ISimpleTypeSpecifier                       { }
+our role ITheTypeName                               { }
+our role IDecltypeSpecifierBody                     { }
+our role IElaboratedTypeSpecifier                   { }
+our role INamespaceName                             { }
+our role INamespaceTag                              { }
+our role IUsingDeclarationPrefix                    { }
+our role ILinkageSpecificationBody                  { }
+our role IAttributeSpecifier                        { }
+our role IAlignmentspecifierbody                    { }
+our role IBalancedrule                              { }
+our role IDeclarator                                { }
+our role INoPointerDeclaratorBase                   { }
+our role INoPointerDeclaratorTail                   { }
+our role IPointerOperator                           { }
+our role ICvQualifier                               { }
+our role IRefqualifier                              { }
+our role IAbstractDeclarator                        { }
+our role IPointerAbstractDeclarator                 { }
+our role INoPointerAbstractDeclaratorBody           { }
+our role INoPointerAbstractDeclaratorBase           { }
+our role INoPointerAbstractPackDeclaratorBody       { }
+our role IParameterDeclarationBody                  { }
+our role IFunctionBody                              { }
+our role IInitializer                               { }
+our role IBraceOrEqualInitializer does IInitializer { }
+our role IInitializerClause      does IInitializer  { }
+our role IClassName                                 { }
+our role IClassHead                                 { }
+our role IClassKey                                  { }
+our role IMemberSpecificationBase                   { }
+our role IMemberdeclaration                         { }
+our role IMemberDeclarator                          { }
+our role IVirtualSpecifier                          { }
+our role IBaseSpecifier                             { }
+our role IClassOrDeclType                           { }
+our role IAccessSpecifier                           { }
+our role IMemInitializer                            { }
+our role IMeminitializerid                          { }
+our role ILiteralOperatorId                         { }
+our role ITemplateParameter                         { }
+our role ITypeParameterBase                         { }
+our role ITypeParameterSuffix                       { }
+our role ITemplateId                                { }
+our role ITemplateArgument                          { }
+our role ITypeNameSpecifier                         { }
+our role ISomeDeclarator                            { }
+our role IExceptionDeclaration                      { }
+our role IExceptionSpecification                    { }
+our role INoeExceptSpecification                    { }
+our role ITheOperator                               { }
+our role ILiteral                                   { }
+
+our role IConditionalExpression    does IAssignmentExpression     { }
+our role ILogicalOrExpression      does IConditionalExpression    { }
+our role ILogicalAndExpression     does ILogicalOrExpression      { }
+our role IInclusiveOrExpression    does ILogicalAndExpression     { }
+our role IExclusiveOrExpression    does IInclusiveOrExpression    { }
+our role IAndExpression            does IExclusiveOrExpression    { }
+our role IEqualityExpression       does IAndExpression            { }
+our role IRelationalExpression     does IEqualityExpression       { }
+our role IShiftExpression          does IRelationalExpression     { }
+our role IAdditiveExpression       does IShiftExpression          { }
+our role IMultiplicativeExpression does IAdditiveExpression       { }
+our role IPointerMemberExpression  does IMultiplicativeExpression { }
+our role ICastExpression           does IPointerMemberExpression  { }
+
+# rule unary-expression { <new-expression> || <unary-expression-case> }
+our role IUnaryExpression       does ICastExpression { }
+our role IUnaryExpressionCase   does IUnaryExpression { }
+
+#-------------------------------
+our class Not::Bang      does INot { }
+our class Not::Not       does INot { }
+
+#-------------------------------
+our class AndAnd::AndAnd does IAndAnd { }
+our class AndAnd::And    does IAndAnd { }
+
+#-------------------------------
+our class OrOr::PipePipe does IOrOr { }
+our class OrOr::Or       does IOrOr { }
+
+our role ICharacterLiteralPrefix { }
+
+# token literal:sym<int> { <integer-literal> }
+our role IIntegerLiteral  does ILiteral { }
+
+# token literal:sym<float> { <floating-literal> }
+our role IFloatingLiteral does ILiteral { }
+
+# token literal:sym<bool> { <boolean-literal> }
+our role IBooleanLiteral  does ILiteral { }
+
+# token literal:sym<user-defined> { <user-defined-literal> }
+our role IUserDefinedLiteral does ILiteral { }
+
+#-------------------------------
+our class Identifier 
+does IIdExpression
+does ITheTypeName { 
+    has Str $.value is required; 
+}
+
+our class Nondigit { 
+    has Str $.value is required; 
+}
+
+our class Digit { 
+    has Str $.value is required; 
+}
+
+our class DecimalLiteral { 
+    has Str $.value is required; 
+}
+
+our class OctalLiteral { 
+    has Str $.value is required; 
+}
+
+our class HexadecimalLiteral {
+    has Str $.value is required; 
+}
+
+our class BinaryLiteral { 
+    has Str $.value is required; 
+}
+
+our class Nonzerodigit { 
+    has Str $.value is required; 
+}
+
+our class Octaldigit { 
+    has Str $.value is required; 
+}
+
+our class Hexadecimaldigit { 
+    has Str $.value is required; 
+}
+
+our class Binarydigit { 
+    has Str $.value is required; 
+}
 
 our subset Quad of List where (HexadecimalLiteral, HexadecimalLiteral, HexadecimalLiteral, HexadecimalLiteral);
 
@@ -471,13 +522,9 @@ our class Hexquad {
 
 #-------------------------------
 
-our class Universalcharactername::One does IUniversalcharactername {
+our class Universalcharactername {
     has Hexquad $.first is required;
-}
-
-our class Universalcharactername::Two does IUniversalcharactername {
-    has Hexquad $.first is required;
-    has Hexquad $.second is required;
+    has Hexquad $.second;
 }
 
 #-------------------------------
@@ -487,7 +534,7 @@ our class IdentifierStart::Nondigit does IIdentifierStart {
 }
 
 our class IdentifierStart::Ucn does IIdentifierStart {
-    has IUniversalcharactername $.universalcharactername is required;
+    has Universalcharactername $.universalcharactername is required;
 }
 
 #-------------------------------
@@ -501,7 +548,7 @@ our class IdentifierContinue::Nondigit does IIdentifierContinue {
 }
 
 our class IdentifierContinue::Ucn does IIdentifierContinue {
-    has IUniversalcharactername $.universalcharactername is required;
+    has Universalcharactername $.universalcharactername is required;
 }
 
 #-------------------------------
@@ -544,7 +591,7 @@ our class Cchar::Escape does ICchar {
 }
 
 our class Cchar::Universal does ICchar {
-    has IUniversalcharactername $.universalcharactername is required;
+    has Universalcharactername $.universalcharactername is required;
 }
 
 #-------------------------------
@@ -626,7 +673,7 @@ our class Schar::Escape does ISchar {
 }
 
 our class Schar::Ucn does ISchar {
-    has IUniversalcharactername $.universalcharactername is required;
+    has Universalcharactername $.universalcharactername is required;
 }
 
 our class Rawstring { 
@@ -898,7 +945,8 @@ our class LambdaDeclarator {
 }
 
 # rule postfix-expression { <postfix-expression-body> <postfix-expression-tail>* }
-our class PostfixExpression { 
+our class PostfixExpression 
+does IUnaryExpression { 
     has IPostfixExpressionBody $.postfix-expression-body is required;
     has IPostfixExpressionTail @.postfix-expression-tail;
 }
@@ -1008,7 +1056,10 @@ our class PostListTail::Braced does IPostListTail {
 }
 
 # token postfix-expression-list { <post-list-head> <post-list-tail> } 
-our class PostfixExpressionList does IPostfixExpressionBody { }
+our class PostfixExpressionList does IPostfixExpressionBody { 
+    has IPostListHead $.post-list-head is required;
+    has IPostListTail $.post-list-tail is required;
+}
 
 # rule type-id-of-the-type-id { <typeid_> }
 our class TypeIdOfTheTypeId { 
@@ -1199,9 +1250,10 @@ our class NewInitializer::Braced does INewInitializer {
     has BracedInitList $.braced-init-list is required;
 }
 
+
 # rule delete-expression { <doublecolon>? <delete> [ <.left-bracket> <.right-bracket> ]? <cast-expression> }
 our class DeleteExpression { 
-    has CastExpression $.cast-expression is required;
+    has ICastExpression $.cast-expression is required;
 }
 
 # rule no-except-expression { <noexcept> <.left-paren> <expression> <.right-paren> }
@@ -1209,8 +1261,9 @@ our class NoExceptExpression {
     has Expression $.expression is required;
 }
 
+
 # rule cast-expression { [ <.left-paren> <the-type-id> <.right-paren> ]* <unary-expression> }
-our class CastExpression { 
+our class CastExpression does ICastExpression { 
     has TheTypeId @.the-type-ids           is required;
     has IUnaryExpression $.unary-expression is required;
 }
@@ -1224,15 +1277,15 @@ our class PointerMemberOperator::Dot does IPointerMemberOperator { }
 our class PointerMemberOperator::Arrow does IPointerMemberOperator { }
 
 # rule pointer-member-expression { <cast-expression> <pointer-member-expression-tail>* }
-our class PointerMemberExpression { 
-    has CastExpression              $.cast-expression is required;
+our class PointerMemberExpression does IPointerMemberExpression { 
+    has ICastExpression              $.cast-expression is required;
     has PointerMemberExpressionTail @.pointer-member-expression-tail;
 }
 
 # rule pointer-member-expression-tail { <pointer-member-operator> <cast-expression> }
 our class PointerMemberExpressionTail { 
     has IPointerMemberOperator $.pointer-member-operator is required;
-    has CastExpression         $.cast-expression is required;
+    has ICastExpression         $.cast-expression is required;
 }
 
 #-----------------------
@@ -1247,7 +1300,7 @@ our class MultiplicativeOperator::Slash does IMultiplicativeOperator { }
 our class MultiplicativeOperator::Mod does IMultiplicativeOperator { }
 
 # rule multiplicative-expression { <pointer-member-expression> <multiplicative-expression-tail>* }
-our class MultiplicativeExpression { 
+our class MultiplicativeExpression does IMultiplicativeExpression { 
     has PointerMemberExpression      $.pointer-member-expression is required;
     has MultiplicativeExpressionTail @.multiplicative-expression-tail is required;
 }
@@ -1268,27 +1321,26 @@ our class AdditiveOperator::Minus does IAdditiveOperator { }
 # rule additive-expression-tail { <additive-operator> <multiplicative-expression> }
 our class AdditiveExpressionTail { 
     has IAdditiveOperator        $.additive-operator         is required;
-    has MultiplicativeExpression $.multiplicative-expression is required;
+    has IMultiplicativeExpression $.multiplicative-expression is required;
 }
 
 # rule additive-expression { <multiplicative-expression> <additive-expression-tail>* }
-our class AdditiveExpression { 
-    has MultiplicativeExpression $.multiplicative-expression is required;
+our class AdditiveExpression does IAdditiveExpression { 
+    has IMultiplicativeExpression $.multiplicative-expression is required;
     has AdditiveExpressionTail   @.additive-expression-tail;
 }
 
 # rule shift-expression-tail { <shift-operator> <additive-expression> }
 our class ShiftExpressionTail { 
     has IShiftOperator      $.shift-operator      is required;
-    has AdditiveExpression $.additive-expression is required;
+    has IAdditiveExpression $.additive-expression is required;
 }
 
 # rule shift-expression { <additive-expression> <shift-expression-tail>* } #-----------------------
-our class ShiftExpression { 
-    has AdditiveExpression  $.additive-expression is required;
+our class ShiftExpression does IShiftExpression { 
+    has IAdditiveExpression  $.additive-expression is required;
     has ShiftExpressionTail @.shift-expression-tail is required;
 }
-
 
 # rule shift-operator:sym<right> { <.greater> <.greater> }
 our class ShiftOperator::Right does IShiftOperator { }
@@ -1309,18 +1361,18 @@ our class RelationalOperator::LessEq does IRelationalOperator { }
 # rule relational-operator:sym<greater-eq> { <.greater-equal> } #-----------------------
 our class RelationalOperator::GreaterEq does IRelationalOperator { }
 
+
 # regex relational-expression-tail { <.ws> <relational-operator> <.ws> <shift-expression> }
 our class RelationalExpressionTail { 
-    has IRelationalOperator $.relational-operator is required;
-    has ShiftExpression     $.shift-expression    is required;
+    has IRelationalOperator  $.relational-operator is required;
+    has IShiftExpression     $.shift-expression    is required;
 }
 
 # regex relational-expression { <shift-expression> <relational-expression-tail>* } #-----------------------
-our class RelationalExpression { 
-    has ShiftExpression          $.shift-expression is required;
-    has RelationalExpressionTail @.relational-expression-tail is required;
+our class RelationalExpression does IRelationalExpression { 
+    has IShiftExpression         $.shift-expression is required;
+    has RelationalExpressionTail @.relational-expression-tail;
 }
-
 
 # token equality-operator:sym<eq> { <equal> }
 our class EqualityOperator::Eq does IEqualityOperator { }
@@ -1330,39 +1382,41 @@ our class EqualityOperator::Neq does IEqualityOperator { }
 
 # rule equality-expression-tail { <equality-operator> <relational-expression> }
 our class EqualityExpressionTail { 
-    has IEqualityOperator    $.equality-operator     is required;
-    has RelationalExpression $.relational-expression is required;
+    has IEqualityOperator     $.equality-operator     is required;
+    has IRelationalExpression $.relational-expression is required;
 }
 
 # rule equality-expression { <relational-expression> <equality-expression-tail>* }
-our class EqualityExpression { 
-    has RelationalExpression   $.relational-expression is required;
-    has EqualityExpressionTail @.equality-expression-tail is required;
+our class EqualityExpression does IEqualityExpression { 
+    has IRelationalExpression  $.relational-expression is required;
+    has EqualityExpressionTail @.equality-expression-tail;
 }
 
 # rule and-expression { <equality-expression> [ <and_> <equality-expression> ]* }
-our class AndExpression { 
-    has EqualityExpression @.equality-expressions is required;
+our class AndExpression does IAndExpression { 
+    has IEqualityExpression @.equality-expressions is required;
 }
 
 # rule exclusive-or-expression { <and-expression> [ <caret> <and-expression> ]* }
-our class ExclusiveOrExpression { 
-    has AndExpression @.and-expressions is required;
+our class ExclusiveOrExpression does IExclusiveOrExpression { 
+    has IAndExpression @.and-expressions is required;
 }
 
 # rule inclusive-or-expression { <exclusive-or-expression> [ <or_> <exclusive-or-expression> ]* }
-our class InclusiveOrExpression { 
-    has ExclusiveOrExpression @.exclusive-or-expressions is required;
+our class InclusiveOrExpression does IInclusiveOrExpression { 
+    has IExclusiveOrExpression @.exclusive-or-expressions is required;
 }
 
 # rule logical-and-expression { <inclusive-or-expression> [ <and-and> <inclusive-or-expression>]* }
-our class LogicalAndExpression { 
-    has InclusiveOrExpression @.inclusive-or-expressions is required;
+our class LogicalAndExpression does ILogicalAndExpression { 
+    has IInclusiveOrExpression @.inclusive-or-expressions is required;
 }
 
+
 # rule logical-or-expression { <logical-and-expression> [ <or-or> <logical-and-expression> ]* }
-our class LogicalOrExpression { 
-    has LogicalAndExpression @.logical-and-expressions is required;
+our class LogicalOrExpression 
+does ILogicalOrExpression { 
+    has ILogicalAndExpression @.logical-and-expressions is required;
 }
 
 # rule conditional-expression-tail { <question> <expression> <colon> <assignment-expression> }
@@ -1372,8 +1426,8 @@ our class ConditionalExpressionTail {
 }
 
 # rule conditional-expression { <logical-or-expression> <conditional-expression-tail>? } #-----------------------
-our class ConditionalExpression { 
-    has LogicalOrExpression       $.logical-or-expression is required;
+our class ConditionalExpression does IConditionalExpression { 
+    has ILogicalOrExpression      $.logical-or-expression is required;
     has ConditionalExpressionTail $.conditional-expression-tail;
 }
 
@@ -1385,14 +1439,14 @@ our class AssignmentExpression::Throw does IAssignmentExpression {
 
 # rule assignment-expression:sym<basic> { <logical-or-expression> <assignment-operator> <initializer-clause> }
 our class AssignmentExpression::Basic does IAssignmentExpression {
-    has LogicalOrExpression $.logical-or-expression is required;
+    has ILogicalOrExpression $.logical-or-expression is required;
     has IAssignmentOperator $.assignment-operator is required;
     has IInitializerClause $.initializer-clause is required;
 }
 
 # rule assignment-expression:sym<conditional> { <conditional-expression> }
 our class AssignmentExpression::Conditional does IAssignmentExpression {
-    has ConditionalExpression $.conditional-expression is required;
+    has IConditionalExpression $.conditional-expression is required;
 }
 
 
@@ -1430,13 +1484,13 @@ our class AssignmentOperator::XorAssign does IAssignmentOperator { }
 our class AssignmentOperator::OrAssign does IAssignmentOperator { }
 
 # rule expression { <assignment-expression>+ %% <.comma> }
-our class Expression { 
+our class Expression does ICondition { 
     has IAssignmentExpression @.assignment-expressions is required;
 }
 
 # rule constant-expression { <conditional-expression> }
 our class ConstantExpression { 
-    has ConditionalExpression $.conditional-expression is required;
+    has IConditionalExpression $.conditional-expression is required;
 }
 
 
@@ -1460,8 +1514,8 @@ our class Statement::Labeled does IStatement {
 
 # token statement:sym<declaration> { <comment>? <declaration-statement> }
 our class Statement::Declaration does IStatement {
-    has IComment             $.comment;
-    has DeclarationStatement $.declaration-statement is required;
+    has IComment              $.comment;
+    has IDeclarationStatement $.declaration-statement is required;
 }
 
 
@@ -1522,7 +1576,7 @@ our class LabeledStatement {
 }
 
 # rule declaration-statement { <block-declaration> } #-----------------------------
-our class DeclarationStatement { 
+our class DeclarationStatement does IDeclarationStatement { 
     has IBlockDeclaration $.block-declaration is required;
 }
 
@@ -1551,11 +1605,13 @@ our class StatementSeq {
 #   <statement> 
 #   [ <comment>? <else_> <statement> ]? 
 # }
-our class SelectionStatement::If does ISelectionStatement {
+our class SelectionStatement::If 
+does IAttributedStatementBody
+does ISelectionStatement {
     has ICondition  $.condition is required;
-    has IStatement $.statement is required;
-    has IComment   $.else-statement-comment;
-    has IStatement $.else-statement;
+    has IStatement  $.statement is required;
+    has IComment    $.else-statement-comment;
+    has IStatement  $.else-statement;
 }
 
 # rule selection-statement:sym<switch> { 
@@ -1595,7 +1651,7 @@ our class ConditionDeclTail::BracedInit does IConditionDeclTail {
 # } #-----------------------------
 our class Condition::Decl does ICondition {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has DeclSpecifierSeq      $.decl-specifier-seq  is required;
+    has IDeclSpecifierSeq      $.decl-specifier-seq  is required;
     has IDeclarator            $.declarator          is required;
     has IConditionDeclTail    $.condition-decl-tail is required;
 }
@@ -1673,7 +1729,7 @@ our class ForInitStatement::SimpleDeclaration does IForInitStatement {
 # rule for-range-declaration { <attribute-specifier-seq>? <decl-specifier-seq> <declarator> }
 our class ForRangeDeclaration { 
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has DeclSpecifierSeq      $.decl-specifier-seq is required;
+    has IDeclSpecifierSeq      $.decl-specifier-seq is required;
     has IDeclarator            $.declarator is required;
 }
 
@@ -1701,7 +1757,9 @@ our class JumpStatement::Continue does IJumpStatement {
 }
 
 # rule jump-statement:sym<return> { <return_> <return-statement-body>? <semi> }
-our class JumpStatement::Return does IJumpStatement {
+our class JumpStatement::Return 
+does IAttributedStatementBody
+does IJumpStatement {
     has IComment             $.comment;
     has IReturnStatementBody $.return-statement-body;
 }
@@ -1746,18 +1804,20 @@ our class AliasDeclaration {
 
 
 # rule simple-declaration:sym<basic> { <decl-specifier-seq>? <init-declarator-list>? <.semi> }
-our class SimpleDeclaration::Basic does ISimpleDeclaration {
+our class SimpleDeclaration::Basic 
+does IDeclarationStatement
+does ISimpleDeclaration {
     has IComment           $.comment;
-    has DeclSpecifierSeq   $.decl-specifier-seq;
-    has InitDeclaratorList $.init-declarator-list;
+    has IDeclSpecifierSeq   $.decl-specifier-seq;
+    has InitDeclarator     @.init-declarator-list;
 }
 
 # rule simple-declaration:sym<init-list> { <attribute-specifier-seq> <decl-specifier-seq>? <init-declarator-list> <.semi> }
 our class SimpleDeclaration::InitList does ISimpleDeclaration {
     has IComment               $.comment;
     has IAttributeSpecifierSeq $.attribute-specifier-seq is required;
-    has DeclSpecifierSeq       $.decl-specifier-seq;
-    has InitDeclaratorList     $.init-declarator-list is required;
+    has IDeclSpecifierSeq       $.decl-specifier-seq;
+    has InitDeclarator         @.init-declarator-list;
 }
 
 # rule static-assert-declaration { 
@@ -1793,7 +1853,7 @@ our class AttributeDeclaration {
 #   [<.ws> <decl-specifier>]*? 
 #   <attribute-specifier-seq>? 
 # }
-our class DeclSpecifierSeq { 
+our class DeclSpecifierSeq does IDeclSpecifierSeq { 
     has IDeclSpecifier        @.decl-specifiers is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
 }
@@ -1860,7 +1920,9 @@ our class SimpleTypeSignednessModifier::Unsigned does ISimpleTypeSignednessModif
 our class SimpleTypeSignednessModifier::Signed does ISimpleTypeSignednessModifier { }
 
 # rule full-type-name { <nested-name-specifier>? <the-type-name> }
-our class FullTypeName { 
+our class FullTypeName 
+does IPostListHead
+does IDeclSpecifier { 
     has NestedNameSpecifier $.nested-name-specifier;
     has ITheTypeName         $.the-type-name is required;
 }
@@ -2092,7 +2154,7 @@ our class Enumbase {
 
 # rule enumerator-list { <enumerator-definition> [ <.comma> <enumerator-definition> ]* }
 our class EnumeratorList { 
-    has EnumeratorDefinition @.enumerator-definition is required;
+    has EnumeratorDefinition @.enumerator-definitions is required;
 }
 
 # rule enumerator-definition { <enumerator> [ <assign> <constant-expression> ]? }
@@ -2327,11 +2389,6 @@ our class Balancedrule::Braces does IBalancedrule {
     has BalancedTokenSeq $.balanced-token-seq is required;
 }
 
-# rule init-declarator-list { <init-declarator> [ <.comma> <init-declarator> ]* }
-our class InitDeclaratorList { 
-    has InitDeclarator @.init-declarators is required;
-}
-
 # rule init-declarator { <declarator> <initializer>? } #--------------------------
 our class InitDeclarator { 
     has IDeclarator  $.declarator is required;
@@ -2352,7 +2409,7 @@ our class Declarator::NoPtr does IDeclarator {
 }
 
 # rule pointer-declarator { <augmented-pointer-operator>* <no-pointer-declarator> }
-our class PointerDeclarator { 
+our class PointerDeclarator does IDeclarator { 
     has AugmentedPointerOperator @.augmented-pointer-operators;
     has NoPointerDeclarator      $.no-pointer-declarator is required;
 }
@@ -2396,7 +2453,7 @@ our class NoPointerDeclaratorTail::Bracketed does INoPointerDeclaratorTail {
 #   <no-pointer-declarator-base> 
 #   <no-pointer-declarator-tail>* 
 # } #------------------------------
-our class NoPointerDeclarator { 
+our class NoPointerDeclarator does IDeclarator { 
     has INoPointerDeclaratorBase $.no-pointer-declarator-base is required;
     has INoPointerDeclaratorTail @.no-pointer-declarator-tail;
 }
@@ -2410,7 +2467,9 @@ our class NoPointerDeclarator {
 #   <exception-specification>? 
 #   <attribute-specifier-seq>? 
 # }
-our class ParametersAndQualifiers { 
+our class ParametersAndQualifiers 
+does INoPointerDeclaratorTail
+{
     has ParameterDeclarationClause $.parameter-declaration-clause;
     has Cvqualifierseq             $.cvqualifierseq;
     has IRefqualifier               $.refqualifier;
@@ -2467,7 +2526,8 @@ our class Refqualifier::And does IRefqualifier { }
 our class Refqualifier::AndAnd does IRefqualifier { }
 
 # rule declaratorid { <ellipsis>? <id-expression> }
-our class Declaratorid { 
+our class Declaratorid 
+does INoPointerDeclaratorBase { 
     has Bool         $.has-ellipsis  is required;
     has IIdExpression $.id-expression is required;
 }
@@ -2642,7 +2702,7 @@ our class ParameterDeclarationBody::Abst does IParameterDeclarationBody {
 # }
 our class ParameterDeclaration { 
     has IAttributeSpecifierSeq    $.attribute-specifier-seq;
-    has DeclSpecifierSeq         $.decl-specifier-seq is required;
+    has IDeclSpecifierSeq         $.decl-specifier-seq is required;
     has IParameterDeclarationBody $.parameter-declaration-body is required;
     has IInitializerClause        $.initializer-clause;
 }
@@ -2656,7 +2716,7 @@ our class ParameterDeclaration {
 # } #-----------------------------
 our class FunctionDefinition { 
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has DeclSpecifierSeq       $.decl-specifier-seq;
+    has IDeclSpecifierSeq       $.decl-specifier-seq;
     has IDeclarator            $.declarator is required;
     has VirtualSpecifierSeq    $.virtual-specifier-seq;
     has IFunctionBody          $.function-body is required;
@@ -2831,7 +2891,7 @@ our class MemberSpecification {
 our class Memberdeclaration::Basic does IMemberdeclaration {
     has IComment               $.comment;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has DeclSpecifierSeq       $.decl-specifier-seq;
+    has IDeclSpecifierSeq       $.decl-specifier-seq;
     has MemberDeclaratorList   $.member-declarator-list;
 }
 

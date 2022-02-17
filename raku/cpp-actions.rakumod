@@ -1,6 +1,9 @@
 use cpp-model;
 
 our class CPP14Parser::Actions {
+    method semi($/) {
+        make $<comment>.made
+    }
 
     # token integer-literal:sym<dec> { <decimal-literal> <integersuffix>? }
     method integer-literal:sym<dec>($/) {
@@ -61,16 +64,16 @@ our class CPP14Parser::Actions {
     method floating-literal:sym<frac>($/) {
         make FloatingLiteral::Frac.new(
             fractionalconstant => $<fractionalconstant>.made,
-            exponentpart => $<exponentpart>.made,
-            floatingsuffix => $<floatingsuffix>.made,
+            exponentpart       => $<exponentpart>.made,
+            floatingsuffix     => $<floatingsuffix>.made,
         )
     }
 
     # token floating-literal:sym<digit> { <digitsequence> <exponentpart> <floatingsuffix>? } 
     method floating-literal:sym<digit>($/) {
         make FloatingLiteral::Digit.new(
-            digitsequence => $<digitsequence>.made,
-            exponentpart => $<exponentpart>.made,
+            digitsequence  => $<digitsequence>.made,
+            exponentpart   => $<exponentpart>.made,
             floatingsuffix => $<floatingsuffix>.made,
         )
     }
@@ -106,44 +109,32 @@ our class CPP14Parser::Actions {
 
     # token user-defined-literal:sym<int> { <user-defined-integer-literal> }
     method user-defined-literal:sym<int>($/) {
-        make UserDefinedLiteral::Int.new(
-            user-defined-integer-literal => $<user-defined-integer-literal>.made,
-        )
+        make $<user-defined-integer-literal>.made
     }
 
     # token user-defined-literal:sym<float> { <user-defined-floating-literal> }
     method user-defined-literal:sym<float>($/) {
-        make UserDefinedLiteral::Float.new(
-            user-defined-floating-literal => $<user-defined-floating-literal>.made,
-        )
+        make $<user-defined-floating-literal>.made
     }
 
     # token user-defined-literal:sym<str> { <user-defined-string-literal> }
     method user-defined-literal:sym<str>($/) {
-        make UserDefinedLiteral::Str.new(
-            user-defined-string-literal => $<user-defined-string-literal>.made,
-        )
+        make $<user-defined-string-literal>.made
     }
 
     # token user-defined-literal:sym<char> { <user-defined-character-literal> }
     method user-defined-literal:sym<char>($/) {
-        make UserDefinedLiteral::Char.new(
-            user-defined-character-literal => $<user-defined-character-literal>.made,
-        )
+        make $<user-defined-character-literal>.made
     }
 
     # token multi-line-macro { '
     method multi-line-macro($/) {
-        make MultiLineMacro.new(
-            content => $<content>.made,
-        )
+        make ~$/
     }
 
     # token directive { '
     method directive($/) {
-        make Directive.new(
-            content => $<content>.made,
-        )
+        make ~$/
     }
 
     # token hexquad { <hexadecimaldigit> ** 4 }
@@ -155,14 +146,14 @@ our class CPP14Parser::Actions {
 
     # token universalcharactername:sym<one> { '\\u' <hexquad> }
     method universalcharactername:sym<one>($/) {
-        make Universalcharactername::One.new(
+        make Universalcharactername.new(
             first => $<first>.made,
         )
     }
 
     # token universalcharactername:sym<two> { '\\U' <hexquad> <hexquad> } 
     method universalcharactername:sym<two>($/) {
-        make Universalcharactername::Two.new(
+        make Universalcharactername.new(
             first => $<first>.made,
             second => $<second>.made,
         )
@@ -170,37 +161,27 @@ our class CPP14Parser::Actions {
 
     # token identifier-start:sym<nondigit> { <nondigit> }
     method identifier-start:sym<nondigit>($/) {
-        make IdentifierStart::Nondigit.new(
-            nondigit => $<nondigit>.made,
-        )
+        make $<nondigit>.made
     }
 
     # token identifier-start:sym<ucn> { <universalcharactername> } 
     method identifier-start:sym<ucn>($/) {
-        make IdentifierStart::Ucn.new(
-            universalcharactername => $<universalcharactername>.made,
-        )
+        make $<universalcharactername>.made
     }
 
     # token identifier-continue:sym<digit> { <digit> }
     method identifier-continue:sym<digit>($/) {
-        make IdentifierContinue::Digit.new(
-            digit => $<digit>.made,
-        )
+        make $<digit>.made
     }
 
     # token identifier-continue:sym<nondigit> { <nondigit> }
     method identifier-continue:sym<nondigit>($/) {
-        make IdentifierContinue::Nondigit.new(
-            nondigit => $<nondigit>.made,
-        )
+        make $<nondigit>.made
     }
 
     # token identifier-continue:sym<ucn> { <universalcharactername> }
     method identifier-continue:sym<ucn>($/) {
-        make IdentifierContinue::Ucn.new(
-            universalcharactername => $<universalcharactername>.made,
-        )
+        make $<universalcharactername>.made
     }
 
     # token identifier { <identifier-start> <identifier-continue>* }
@@ -284,7 +265,7 @@ our class CPP14Parser::Actions {
     method integersuffix:sym<ul>($/) {
         make Integersuffix::Ul.new(
             unsignedsuffix => $<unsignedsuffix>.made,
-            longsuffix => $<longsuffix>.made,
+            longsuffix     => $<longsuffix>.made,
         )
     }
 
@@ -299,7 +280,7 @@ our class CPP14Parser::Actions {
     # token integersuffix:sym<lu> { <longsuffix> <unsignedsuffix>? }
     method integersuffix:sym<lu>($/) {
         make Integersuffix::Lu.new(
-            longsuffix => $<longsuffix>.made,
+            longsuffix     => $<longsuffix>.made,
             unsignedsuffix => $<unsignedsuffix>.made,
         )
     }
@@ -307,7 +288,7 @@ our class CPP14Parser::Actions {
     # token integersuffix:sym<llu> { <longlongsuffix> <unsignedsuffix>? } 
     method integersuffix:sym<llu>($/) {
         make Integersuffix::Llu.new(
-            longsuffix => $<longsuffix>.made,
+            longsuffix     => $<longsuffix>.made,
             unsignedsuffix => $<unsignedsuffix>.made,
         )
     }
@@ -341,37 +322,27 @@ our class CPP14Parser::Actions {
 
     # token cchar:sym<escape> { <escapesequence> }
     method cchar:sym<escape>($/) {
-        make Cchar::Escape.new(
-            escapesequence => $<escapesequence>.made,
-        )
+        make $<escapesequence>.made
     }
 
     # token cchar:sym<universal> { <universalcharactername> } 
     method cchar:sym<universal>($/) {
-        make Cchar::Universal.new(
-            universalcharactername => $<universalcharactername>.made,
-        )
+        make $<universalcharactername>.made
     }
 
     # token escapesequence:sym<simple> { <simpleescapesequence> }
     method escapesequence:sym<simple>($/) {
-        make Escapesequence::Simple.new(
-            simpleescapesequence => $<simpleescapesequence>.made,
-        )
+        make $<simpleescapesequence>.made
     }
 
     # token escapesequence:sym<octal> { <octalescapesequence> }
     method escapesequence:sym<octal>($/) {
-        make Escapesequence::Octal.new(
-            octalescapesequence => $<octalescapesequence>.made,
-        )
+        make $<octalescapesequence>.made
     }
 
     # token escapesequence:sym<hex> { <hexadecimalescapesequence> } 
     method escapesequence:sym<hex>($/) {
-        make Escapesequence::Hex.new(
-            hexadecimalescapesequence => $<hexadecimalescapesequence>.made,
-        )
+        make $<hexadecimalescapesequence>.made
     }
 
     # token simpleescapesequence:sym<slash> { '\\\'' }
@@ -525,16 +496,12 @@ our class CPP14Parser::Actions {
 
     # token schar:sym<escape> { <escapesequence> }
     method schar:sym<escape>($/) {
-        make Schar::Escape.new(
-            escapesequence => $<escapesequence>.made,
-        )
+        make $<escapesequence>.made
     }
 
     # token schar:sym<ucn> { <universalcharactername> }
     method schar:sym<ucn>($/) {
-        make Schar::Ucn.new(
-            universalcharactername => $<universalcharactername>.made,
-        )
+        make $<universalcharactername>.made
     }
 
     # token rawstring { || 'R"' [ || [ || '\\' <[ " ( ) ]> ] || <-[ \r \n ( ]> ] '(' <-[ ) ]>*? ')' [ || [ || '\\' <[ " ( ) ]> ] || <-[ \r \n " ]> ] '"' }
@@ -603,9 +570,7 @@ our class CPP14Parser::Actions {
 
     # token udsuffix { <identifier> }
     method udsuffix($/) {
-        make Udsuffix.new(
-            value => ~$/,
-        )
+        make $<identifier>.made
     }
 
     # token block-comment { '/*' .*? '*/' }
@@ -629,16 +594,12 @@ our class CPP14Parser::Actions {
 
     # token translation-unit { <declarationseq>? $ }
     method translation-unit($/) {
-        make TranslationUnit.new(
-            declarationseq => $<declarationseq>.made,
-        )
+        make $<declarationseq>.made
     }
 
     # token primary-expression:sym<literal> { <literal>+ }
     method primary-expression:sym<literal>($/) {
-        make PrimaryExpression::Literal.new(
-            literal => $<literal>>>.made,
-        )
+        make $<literal>>>.made
     }
 
     # token primary-expression:sym<this> { <this> }
@@ -648,65 +609,47 @@ our class CPP14Parser::Actions {
 
     # token primary-expression:sym<expr> { <.left-paren> <expression> <.right-paren> }
     method primary-expression:sym<expr>($/) {
-        make PrimaryExpression::Expr.new(
-            expression => $<expression>.made,
-        )
+        make $<expression>.made
     }
 
     # token primary-expression:sym<id> { <id-expression> }
     method primary-expression:sym<id>($/) {
-        make PrimaryExpression::Id.new(
-            id-expression => $<id-expression>.made,
-        )
+        make $<id-expression>.made
     }
 
     # token primary-expression:sym<lambda> { <lambda-expression> } 
     method primary-expression:sym<lambda>($/) {
-        make PrimaryExpression::Lambda.new(
-            lambda-expression => $<lambda-expression>.made,
-        )
+        make $<lambda-expression>.made
     }
 
     # regex id-expression:sym<qualified> { <qualified-id> }
     method id-expression:sym<qualified>($/) {
-        make IdExpression::Qualified.new(
-            qualified-id => $<qualified-id>.made,
-        )
+        make $<qualified-id>.made
     }
 
     # regex id-expression:sym<unqualified> { <unqualified-id> } 
     method id-expression:sym<unqualified>($/) {
-        make IdExpression::Unqualified.new(
-            unqualified-id => $<unqualified-id>.made,
-        )
+        make $<unqualified-id>.made
     }
 
     # regex unqualified-id:sym<ident> { <identifier> }
     method unqualified-id:sym<ident>($/) {
-        make UnqualifiedId::Ident.new(
-            identifier => $<identifier>.made,
-        )
+        make $<identifier>.made
     }
 
     # regex unqualified-id:sym<op-func-id> { <operator-function-id> }
     method unqualified-id:sym<op-func-id>($/) {
-        make UnqualifiedId::OpFuncId.new(
-            operator-function-id => $<operator-function-id>.made,
-        )
+        make $<operator-function-id>.made
     }
 
     # regex unqualified-id:sym<conversion-func-id> { <conversion-function-id> }
     method unqualified-id:sym<conversion-func-id>($/) {
-        make UnqualifiedId::ConversionFuncId.new(
-            conversion-function-id => $<conversion-function-id>.made,
-        )
+        make $<conversion-function-id>.made
     }
 
     # regex unqualified-id:sym<literal-operator-id> { <literal-operator-id> }
     method unqualified-id:sym<literal-operator-id>($/) {
-        make UnqualifiedId::LiteralOperatorId.new(
-            literal-operator-id => $<literal-operator-id>.made,
-        )
+        make $<literal-operator-id>.made
     }
 
     # regex unqualified-id:sym<tilde-classname> { <tilde> <class-name> }
@@ -725,9 +668,7 @@ our class CPP14Parser::Actions {
 
     # regex unqualified-id:sym<template-id> { <template-id> } 
     method unqualified-id:sym<template-id>($/) {
-        make UnqualifiedId::TemplateId.new(
-            template-id => $<template-id>.made,
-        )
+        make $<template-id>.made
     }
 
     # regex qualified-id { <nested-name-specifier> <template>? <unqualified-id> } 
@@ -799,16 +740,12 @@ our class CPP14Parser::Actions {
 
     # rule lambda-introducer { <.left-bracket> <lambda-capture>? <.right-bracket> } 
     method lambda-introducer($/) {
-        make LambdaIntroducer.new(
-            lambda-capture => $<lambda-capture>.made,
-        )
+        make $<lambda-capture>.made
     }
 
     # rule lambda-capture:sym<list> { <capture-list> }
     method lambda-capture:sym<list>($/) {
-        make LambdaCapture::List.new(
-            capture-list => $<capture-list>.made,
-        )
+        make $<capture-list>.made
     }
 
     # rule lambda-capture:sym<def> { <capture-default> [ <.comma> <capture-list> ]? } 
@@ -850,7 +787,7 @@ our class CPP14Parser::Actions {
     # rule simple-capture:sym<id> { <and_>? <identifier> }
     method simple-capture:sym<id>($/) {
         make SimpleCapture::Id.new(
-            has-and_ => $<has-and_>.made,
+            has-and_   => $<has-and_>.made,
             identifier => $<identifier>.made,
         )
     }
@@ -863,8 +800,8 @@ our class CPP14Parser::Actions {
     # rule initcapture { <and_>? <identifier> <initializer> } 
     method initcapture($/) {
         make Initcapture.new(
-            has-and => $<has-and>.made,
-            identifier => $<identifier>.made,
+            has-and     => $<has-and>.made,
+            identifier  => $<identifier>.made,
             initializer => $<initializer>.made,
         )
     }
@@ -873,10 +810,10 @@ our class CPP14Parser::Actions {
     method lambda-declarator($/) {
         make LambdaDeclarator.new(
             parameter-declaration-clause => $<parameter-declaration-clause>.made,
-            mutable => $<mutable>.made,
-            exception-specification => $<exception-specification>.made,
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            trailing-return-type => $<trailing-return-type>.made,
+            mutable                      => $<mutable>.made,
+            exception-specification      => $<exception-specification>.made,
+            attribute-specifier-seq      => $<attribute-specifier-seq>.made,
+            trailing-return-type         => $<trailing-return-type>.made,
         )
     }
 
@@ -895,22 +832,18 @@ our class CPP14Parser::Actions {
 
     # rule postfix-expression-tail:sym<bracket> { <bracket-tail> }
     method postfix-expression-tail:sym<bracket>($/) {
-        make PostfixExpressionTail::Bracket.new(
-            bracket-tail => $<bracket-tail>.made,
-        )
+        make $<bracket-tail>.made
     }
 
     # rule postfix-expression-tail:sym<parens> { <.left-paren> <expression-list>? <.right-paren> }
     method postfix-expression-tail:sym<parens>($/) {
-        make PostfixExpressionTail::Parens.new(
-            expression-list => $<expression-list>.made,
-        )
+        make $<expression-list>.made
     }
 
     # rule postfix-expression-tail:sym<indirection-id> { [ <dot> || <arrow> ] <template>? <id-expression> }
     method postfix-expression-tail:sym<indirection-id>($/) {
         make PostfixExpressionTail::IndirectionId.new(
-            template => $<template>.made,
+            template      => $<template>.made,
             id-expression => $<id-expression>.made,
         )
     }
@@ -976,9 +909,9 @@ our class CPP14Parser::Actions {
     # rule postfix-expression-cast { <cast-token> <less> <the-type-id> <greater> <.left-paren> <expression> <.right-paren> }
     method postfix-expression-cast($/) {
         make PostfixExpressionCast.new(
-            cast-token => $<cast-token>.made,
+            cast-token  => $<cast-token>.made,
             the-type-id => $<the-type-id>.made,
-            expression => $<expression>.made,
+            expression  => $<expression>.made,
         )
     }
 
@@ -999,57 +932,48 @@ our class CPP14Parser::Actions {
 
     # token post-list-head:sym<simple> { <simple-type-specifier> }
     method post-list-head:sym<simple>($/) {
-        make PostListHead::Simple.new(
-            simple-type-specifier => $<simple-type-specifier>.made,
-        )
+        make $<simple-type-specifier>.made
     }
 
     # token post-list-head:sym<type-name> { <type-name-specifier> } 
     method post-list-head:sym<type-name>($/) {
-        make PostListHead::TypeName.new(
-            type-name-specifier => $<type-name-specifier>.made,
-        )
+        make $<type-name-specifier>.made
     }
 
     # token post-list-tail:sym<parenthesized> { <.left-paren> <expression-list>? <.right-paren> }
     method post-list-tail:sym<parenthesized>($/) {
-        make PostListTail::Parenthesized.new(
-            expression-list => $<expression-list>.made,
-        )
+        make $<expression-list>.made
     }
 
     # token post-list-tail:sym<braced> { <braced-init-list> }
     method post-list-tail:sym<braced>($/) {
-        make PostListTail::Braced.new(
-            braced-init-list => $<braced-init-list>.made,
-        )
+        make $<braced-init-list>.made
     }
 
     # token postfix-expression-list { <post-list-head> <post-list-tail> } 
     method postfix-expression-list($/) {
-        make PostfixExpressionList.new
+        make PostfixExpressionList.new(
+            post-list-head => $<post-list-head>.made,
+            post-list-tail => $<post-list-tail>.made,
+        )
     }
 
     # rule type-id-of-the-type-id { <typeid_> }
     method type-id-of-the-type-id($/) {
-        make TypeIdOfTheTypeId.new(
-            typeid => $<typeid>.made,
-        )
+        make $<typeid>.made
     }
 
     # rule expression-list { <initializer-list> } 
     method expression-list($/) {
-        make ExpressionList.new(
-            initializer-list => $<initializer-list>.made,
-        )
+        make $<initializer-list>.made
     }
 
     # rule pseudo-destructor-name:sym<basic> { <nested-name-specifier>? [ <the-type-name> <doublecolon> ]? <tilde> <the-type-name> }
     method pseudo-destructor-name:sym<basic>($/) {
         make PseudoDestructorName::Basic.new(
             nested-name-specifier => $<nested-name-specifier>.made,
-            the-scoped-type-name => $<the-scoped-type-name>.made,
-            the-type-anme => $<the-type-anme>.made,
+            the-scoped-type-name  => $<the-scoped-type-name>.made,
+            the-type-anme         => $<the-type-anme>.made,
         )
     }
 
@@ -1057,8 +981,8 @@ our class CPP14Parser::Actions {
     method pseudo-destructor-name:sym<template>($/) {
         make PseudoDestructorName::Template.new(
             nested-name-specifier => $<nested-name-specifier>.made,
-            simple-template-id => $<simple-template-id>.made,
-            the-type-name => $<the-type-name>.made,
+            simple-template-id    => $<simple-template-id>.made,
+            the-type-name         => $<the-type-name>.made,
         )
     }
 
@@ -1080,9 +1004,7 @@ our class CPP14Parser::Actions {
 
     # rule unary-expression-case:sym<postfix> { <postfix-expression> }
     method unary-expression-case:sym<postfix>($/) {
-        make UnaryExpressionCase::Postfix.new(
-            postfix-expression => $<postfix-expression>.made,
-        )
+        make $<postfix-expression>.made
     }
 
     # rule unary-expression-case:sym<pp> { <plus-plus> <unary-expression> }
@@ -1137,16 +1059,12 @@ our class CPP14Parser::Actions {
 
     # rule unary-expression-case:sym<noexcept> { <no-except-expression> }
     method unary-expression-case:sym<noexcept>($/) {
-        make UnaryExpressionCase::Noexcept.new(
-            no-except-expression => $<no-except-expression>.made,
-        )
+        make $<no-except-expression>.made
     }
 
     # rule unary-expression-case:sym<delete> { <delete-expression> } 
     method unary-expression-case:sym<delete>($/) {
-        make UnaryExpressionCase::Delete.new(
-            delete-expression => $<delete-expression>.made,
-        )
+        make $<delete-expression>.made
     }
 
     # rule unary-operator:sym<or_> { <or_> }
@@ -1204,9 +1122,7 @@ our class CPP14Parser::Actions {
 
     # rule new-placement { <.left-paren> <expression-list> <.right-paren> }
     method new-placement($/) {
-        make NewPlacement.new(
-            expression-list => $<expression-list>.made,
-        )
+        make $<expression-list>.made
     }
 
     # rule new-type-id { <type-specifier-seq> <new-declarator>? }
@@ -1251,9 +1167,7 @@ our class CPP14Parser::Actions {
 
     # rule new-initializer:sym<braced> { <braced-init-list> } 
     method new-initializer:sym<braced>($/) {
-        make NewInitializer::Braced.new(
-            braced-init-list => $<braced-init-list>.made,
-        )
+        make $<braced-init-list>.made
     }
 
     # rule delete-expression { <doublecolon>? <delete> [ <.left-bracket> <.right-bracket> ]? <cast-expression> }
@@ -1272,10 +1186,21 @@ our class CPP14Parser::Actions {
 
     # rule cast-expression { [ <.left-paren> <the-type-id> <.right-paren> ]* <unary-expression> }
     method cast-expression($/) {
-        make CastExpression.new(
-            the-type-ids => $<the-type-id>>>.made,
-            unary-expression => $<unary-expression>.made,
-        )
+
+        my $base     = $<unary-expression>.made;
+        my @type-ids = $<the-type-id>>>.made.List;
+
+        if @type-ids.elems gt 0 {
+
+            make CastExpression.new(
+                unary-expression => $base,
+                the-type-ids     => @type-ids,
+            )
+
+        } else {
+
+            make $base
+        }
     }
 
     # rule pointer-member-operator:sym<dot> { <dot-star> }
@@ -1290,17 +1215,23 @@ our class CPP14Parser::Actions {
 
     # rule pointer-member-expression { <cast-expression> <pointer-member-expression-tail>* }
     method pointer-member-expression($/) {
-        make PointerMemberExpression.new(
-            cast-expression => $<cast-expression>.made,
-            pointer-member-expression-tail => $<pointer-member-expression-tail>>>.made,
-        )
+        my $base = $<cast-expression>.made;
+        my @tail = $<pointer-member-expression-tail>>>.made;
+        if @tail.elems gt 0 {
+            make PointerMemberExpression.new(
+                cast-expression                => $base,
+                pointer-member-expression-tail => @tail,
+            )
+        } else {
+            make $base
+        }
     }
 
     # rule pointer-member-expression-tail { <pointer-member-operator> <cast-expression> } 
     method pointer-member-expression-tail($/) {
         make PointerMemberExpressionTail.new(
             pointer-member-operator => $<pointer-member-operator>.made,
-            cast-expression => $<cast-expression>.made,
+            cast-expression         => $<cast-expression>.made,
         )
     }
 
@@ -1321,16 +1252,23 @@ our class CPP14Parser::Actions {
 
     # rule multiplicative-expression { <pointer-member-expression> <multiplicative-expression-tail>* }
     method multiplicative-expression($/) {
-        make MultiplicativeExpression.new(
-            pointer-member-expression => $<pointer-member-expression>.made,
-            multiplicative-expression-tail => $<multiplicative-expression-tail>>>.made,
-        )
+        my $base = $<pointer-member-expression>.made;
+        my @tail = $<multiplicative-expression-tail>>>.made.List;
+
+        if @tail.elems gt 0 {
+            make MultiplicativeExpression.new(
+                pointer-member-expression      => $base,
+                multiplicative-expression-tail => @tail,
+            )
+        } else {
+            make $base
+        }
     }
 
     # rule multiplicative-expression-tail { <multiplicative-operator> <pointer-member-expression> } 
     method multiplicative-expression-tail($/) {
         make MultiplicativeExpressionTail.new(
-            multiplicative-operator => $<multiplicative-operator>.made,
+            multiplicative-operator   => $<multiplicative-operator>.made,
             pointer-member-expression => $<pointer-member-expression>.made,
         )
     }
@@ -1348,33 +1286,52 @@ our class CPP14Parser::Actions {
     # rule additive-expression-tail { <additive-operator> <multiplicative-expression> }
     method additive-expression-tail($/) {
         make AdditiveExpressionTail.new(
-            additive-operator => $<additive-operator>.made,
+            additive-operator         => $<additive-operator>.made,
             multiplicative-expression => $<multiplicative-expression>.made,
         )
     }
 
     # rule additive-expression { <multiplicative-expression> <additive-expression-tail>* }
     method additive-expression($/) {
-        make AdditiveExpression.new(
-            multiplicative-expression => $<multiplicative-expression>.made,
-            additive-expression-tail => $<additive-expression-tail>>>.made,
-        )
+        my $base = $<multiplicative-expression>.made;
+        my @tail = $<additive-expression-tail>>>.made.List;
+
+        if @tail.elems gt 0 {
+            make AdditiveExpression.new(
+                multiplicative-expression => $base,
+                additive-expression-tail  => @tail,
+            )
+
+        } else {
+            make $base
+        }
     }
 
     # rule shift-expression-tail { <shift-operator> <additive-expression> }
     method shift-expression-tail($/) {
         make ShiftExpressionTail.new(
-            shift-operator => $<shift-operator>.made,
+            shift-operator      => $<shift-operator>.made,
             additive-expression => $<additive-expression>.made,
         )
     }
 
     # rule shift-expression { <additive-expression> <shift-expression-tail>* } 
     method shift-expression($/) {
-        make ShiftExpression.new(
-            additive-expression => $<additive-expression>.made,
-            shift-expression-tail => $<shift-expression-tail>>>.made,
-        )
+
+        my $base = $<additive-expression>.made;
+        my @tail = $<shift-expression-tail>>>.made.List;
+
+        if @tail.elems gt 0 {
+
+            make ShiftExpression.new(
+                additive-expression   => $base,
+                shift-expression-tail => @tail,
+            )
+
+        } else {
+
+            make $base
+        }
     }
 
     # rule shift-operator:sym<right> { <.greater> <.greater> }
@@ -1417,10 +1374,17 @@ our class CPP14Parser::Actions {
 
     # regex relational-expression { <shift-expression> <relational-expression-tail>* } 
     method relational-expression($/) {
-        make RelationalExpression.new(
-            shift-expression           => $<shift-expression>.made,
-            relational-expression-tail => $<relational-expression-tail>>>.made,
-        )
+        my $base = $<shift-expression>.made;
+        my @tail = $<relational-expression-tail>>>.made.List;
+
+        if @tail.elems gt 0 {
+            make RelationalExpression.new(
+                shift-expression           => $base,
+                relational-expression-tail => @tail,
+            )
+        } else {
+            make $base
+        }
     }
 
     # token equality-operator:sym<eq> { <equal> }
@@ -1458,7 +1422,8 @@ our class CPP14Parser::Actions {
 
     # rule and-expression { <equality-expression> [ <and_> <equality-expression> ]* }
     method and-expression($/) {
-        my @equality-expressions = $<equality-expression>>>.made;
+
+        my @equality-expressions = $<equality-expression>>>.made.List;
 
         if @equality-expressions.elems gt 1 {
             make AndExpression.new(
@@ -1485,6 +1450,7 @@ our class CPP14Parser::Actions {
 
     # rule inclusive-or-expression { <exclusive-or-expression> [ <or_> <exclusive-or-expression> ]* }
     method inclusive-or-expression($/) {
+
         my @exclusive-or-expressions = $<exclusive-or-expression>>>.made;
 
         if @exclusive-or-expressions.elems gt 1 {
@@ -1493,20 +1459,21 @@ our class CPP14Parser::Actions {
             )
 
         } else {
-            @exclusive-or-expressions[0]
+            make @exclusive-or-expressions[0]
         }
     }
 
     # rule logical-and-expression { <inclusive-or-expression> [ <and-and> <inclusive-or-expression>]* }
     method logical-and-expression($/) {
+
         my @inclusive-or-expressions = $<inclusive-or-expression>>>.made;
 
-        if @inclusive-or-expressions.elems {
+        if @inclusive-or-expressions.elems gt 1 {
             make LogicalAndExpression.new(
                 inclusive-or-expressions => @inclusive-or-expressions,
             )
         } else {
-            @inclusive-or-expressions[0]
+            make @inclusive-or-expressions[0]
         }
     }
 
@@ -1520,7 +1487,7 @@ our class CPP14Parser::Actions {
                 logical-and-expressions => @exprs,
             )
         } else {
-            @exprs[0]
+            make @exprs[0]
         }
     }
 
@@ -1534,10 +1501,21 @@ our class CPP14Parser::Actions {
 
     # rule conditional-expression { <logical-or-expression> <conditional-expression-tail>? } 
     method conditional-expression($/) {
-        make ConditionalExpression.new(
-            logical-or-expression       => $<logical-or-expression>.made,
-            conditional-expression-tail => $<conditional-expression-tail>.made,
-        )
+
+        my $base = $<logical-or-expression>.made;
+        my $tail = $<conditional-expression-tail>.made;
+
+        if $tail {
+
+            make ConditionalExpression.new(
+                logical-or-expression       => $base,
+                conditional-expression-tail => $tail,
+            )
+
+        } else {
+
+            make $base
+        }
     }
 
     # rule assignment-expression:sym<throw> { <throw-expression> }
@@ -1558,9 +1536,7 @@ our class CPP14Parser::Actions {
 
     # rule assignment-expression:sym<conditional> { <conditional-expression> }
     method assignment-expression:sym<conditional>($/) {
-        make AssignmentExpression::Conditional.new(
-            conditional-expression => $<conditional-expression>.made,
-        )
+        make $<conditional-expression>.made
     }
 
     # token assignment-operator:sym<assign> { <.assign> }
@@ -1627,15 +1603,13 @@ our class CPP14Parser::Actions {
                 assignment-expressions => @exprs,
             )
         } else {
-            @exprs[0]
+            make @exprs[0]
         }
     }
 
     # rule constant-expression { <conditional-expression> }
     method constant-expression($/) {
-        make ConstantExpression.new(
-            conditional-expression => $<conditional-expression>.made,
-        )
+        make $<conditional-expression>.made
     }
 
     # regex comment:sym<line> { [<line-comment> <.ws>?]+ }
@@ -1824,7 +1798,16 @@ our class CPP14Parser::Actions {
         )
     }
 
-    # rule iteration-statement:sym<for> { <for_> <.left-paren> <for-init-statement> <condition>? <semi> <expression>? <.right-paren> <statement> }
+    # rule iteration-statement:sym<for> { 
+    #   <for_> 
+    #   <.left-paren> 
+    #   <for-init-statement> 
+    #   <condition>? 
+    #   <semi> 
+    #   <expression>? 
+    #   <.right-paren> 
+    #   <statement> 
+    # }
     method iteration-statement:sym<for>($/) {
         make IterationStatement::For.new(
             comment            => $<semi>.made,
@@ -1927,7 +1910,8 @@ our class CPP14Parser::Actions {
             )
 
         } else {
-            @decls[0]
+
+            make @decls[0]
         }
     }
 
@@ -2100,10 +2084,17 @@ our class CPP14Parser::Actions {
 
     # regex decl-specifier-seq { <decl-specifier> [<.ws> <decl-specifier>]*? <attribute-specifier-seq>? } 
     method decl-specifier-seq($/) {
-        make DeclSpecifierSeq.new(
-            decl-specifiers         => $<decl-specifier>>>.made,
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
-        )
+        my @specifiers = $<decl-specifier>>>.made;
+        my $seq        = $<attribute-specifier-seq>.made;
+
+        if @specifiers.elems gt 1 or $seq {
+            make DeclSpecifierSeq.new(
+                decl-specifiers         => @specifiers,
+                attribute-specifier-seq => $seq,
+            )
+        } else {
+            make @specifiers[0]
+        }
     }
 
     # rule storage-class-specifier:sym<register> { <.register> }
@@ -2344,9 +2335,7 @@ our class CPP14Parser::Actions {
 
     # regex simple-type-specifier:sym<double> { <simple-double-type-specifier> }
     method simple-type-specifier:sym<double>($/) {
-        make SimpleTypeSpecifier::Double.new(
-            simple-double-type-specifier => $<simple-double-type-specifier>.made,
-        )
+        make $<simple-double-type-specifier>.made
     }
 
     # regex simple-type-specifier:sym<void> { <void_> }
@@ -2361,44 +2350,32 @@ our class CPP14Parser::Actions {
 
     # regex simple-type-specifier:sym<decltype> { <decltype-specifier> } 
     method simple-type-specifier:sym<decltype>($/) {
-        make SimpleTypeSpecifier::Decltype.new(
-            decltype-specifier => $<decltype-specifier>.made,
-        )
+        make $<decltype-specifier>.made
     }
 
     # rule the-type-name:sym<simple-template-id> { <simple-template-id> }
     method the-type-name:sym<simple-template-id>($/) {
-        make TheTypeName::SimpleTemplateId.new(
-            simple-template-id => $<simple-template-id>.made,
-        )
+        make $<simple-template-id>.made
     }
 
     # rule the-type-name:sym<class> { <class-name> }
     method the-type-name:sym<class>($/) {
-        make TheTypeName::Class.new(
-            class-name => $<class-name>.made,
-        )
+        make $<class-name>.made
     }
 
     # rule the-type-name:sym<enum> { <enum-name> }
     method the-type-name:sym<enum>($/) {
-        make TheTypeName::Enum.new(
-            enum-name => $<enum-name>.made,
-        )
+        make $<enum-name>.made
     }
 
     # rule the-type-name:sym<typedef> { <typedef-name> } 
     method the-type-name:sym<typedef>($/) {
-        make TheTypeName::Typedef.new(
-            typedef-name => $<typedef-name>.made,
-        )
+        make $<typedef-name>.made
     }
 
     # rule decltype-specifier-body:sym<expr> { <expression> }
     method decltype-specifier-body:sym<expr>($/) {
-        make DecltypeSpecifierBody::Expr.new(
-            expression => $<expression>.made,
-        )
+        make $<expression>.made
     }
 
     # rule decltype-specifier-body:sym<auto> { <auto> }
@@ -2417,8 +2394,8 @@ our class CPP14Parser::Actions {
     method elaborated-type-specifier:sym<class-ident>($/) {
         make ElaboratedTypeSpecifier::ClassIdent.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            nested-name-specifier => $<nested-name-specifier>.made,
-            identifier => $<identifier>.made,
+            nested-name-specifier   => $<nested-name-specifier>.made,
+            identifier              => $<identifier>.made,
         )
     }
 
@@ -2429,11 +2406,16 @@ our class CPP14Parser::Actions {
         )
     }
 
-    # rule elaborated-type-specifier:sym<class-nested-template-id> { <.class-key> <nested-name-specifier> <template>? <simple-template-id> }
+    # rule elaborated-type-specifier:sym<class-nested-template-id> { 
+    #   <.class-key> 
+    #   <nested-name-specifier> 
+    #   <template>? 
+    #   <simple-template-id> 
+    # }
     method elaborated-type-specifier:sym<class-nested-template-id>($/) {
         make ElaboratedTypeSpecifier::ClassNestedTemplateId.new(
             nested-name-specifier => $<nested-name-specifier>.made,
-            simple-template-id => $<simple-template-id>.made,
+            simple-template-id    => $<simple-template-id>.made,
         )
     }
 
@@ -2441,15 +2423,13 @@ our class CPP14Parser::Actions {
     method elaborated-type-specifier:sym<enum>($/) {
         make ElaboratedTypeSpecifier::Enum.new(
             nested-name-specifier => $<nested-name-specifier>.made,
-            identifier => $<identifier>.made,
+            identifier            => $<identifier>.made,
         )
     }
 
     # rule enum-name { <identifier> }
     method enum-name($/) {
-        make EnumName.new(
-            identifier => $<identifier>.made,
-        )
+        make $<identifier>.made
     }
 
     # rule enum-specifier { <enum-head> <.left-brace> [ <enumerator-list> <.comma>? ]? <.right-brace> }
@@ -2463,9 +2443,9 @@ our class CPP14Parser::Actions {
     method enum-head($/) {
         make EnumHead.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            nested-name-specifier => $<nested-name-specifier>.made,
-            identifier => $<identifier>.made,
-            enum-base => $<enum-base>.made,
+            nested-name-specifier   => $<nested-name-specifier>.made,
+            identifier              => $<identifier>.made,
+            enum-base               => $<enum-base>.made,
         )
     }
 
@@ -2494,74 +2474,60 @@ our class CPP14Parser::Actions {
     # rule enumerator-list { <enumerator-definition> [ <.comma> <enumerator-definition> ]* }
     method enumerator-list($/) {
         make EnumeratorList.new(
-            enumerator-definition => $<enumerator-definition>>>.made,
+            enumerator-definitions => $<enumerator-definition>>>.made,
         )
     }
 
     # rule enumerator-definition { <enumerator> [ <assign> <constant-expression> ]? }
     method enumerator-definition($/) {
         make EnumeratorDefinition.new(
-            enumerator => $<enumerator>.made,
+            enumerator          => $<enumerator>.made,
             constant-expression => $<constant-expression>.made,
         )
     }
 
     # rule enumerator { <identifier> }
     method enumerator($/) {
-        make Enumerator.new(
-            identifier => $<identifier>.made,
-        )
+        make $<identifier>.made
     }
 
     # rule namespace-name:sym<original> { <original-namespace-name> }
     method namespace-name:sym<original>($/) {
-        make NamespaceName::Original.new(
-            original-namespace-name => $<original-namespace-name>.made,
-        )
+        make $<original-namespace-name>.made
     }
 
     # rule namespace-name:sym<alias> { <namespace-alias> }
     method namespace-name:sym<alias>($/) {
-        make NamespaceName::Alias.new(
-            namespace-alias => $<namespace-alias>.made,
-        )
+        make $<namespace-alias>.made
     }
 
     # rule original-namespace-name { <identifier> } 
     method original-namespace-name($/) {
-        make OriginalNamespaceName.new(
-            identifier => $<identifier>.made,
-        )
+        make $<identifier>.made
     }
 
     # rule namespace-tag:sym<ident> { <identifier> }
     method namespace-tag:sym<ident>($/) {
-        make NamespaceTag::Ident.new(
-            identifier => $<identifier>.made,
-        )
+        make $<identifier>.made
     }
 
     # rule namespace-tag:sym<ns-name> { <original-namespace-name> } 
     method namespace-tag:sym<ns-name>($/) {
-        make NamespaceTag::NsName.new(
-            original-namespace-name => $<original-namespace-name>.made,
-        )
+        make $<original-namespace-name>.made
     }
 
     # rule namespace-definition { <inline>? <namespace> <namespace-tag>? <.left-brace> <namespaceBody=declarationseq>? <.right-brace> }
     method namespace-definition($/) {
         make NamespaceDefinition.new(
-            inline => $<inline>.made,
-            namespace-tag => $<namespace-tag>.made,
+            inline         => $<inline>.made,
+            namespace-tag  => $<namespace-tag>.made,
             namespace-body => $<namespace-body>.made,
         )
     }
 
     # rule namespace-alias { <identifier> }
     method namespace-alias($/) {
-        make NamespaceAlias.new(
-            identifier => $<identifier>.made,
-        )
+        make $<identifier>.made
     }
 
     # rule namespace-alias-definition { <namespace> <identifier> <assign> <qualifiednamespacespecifier> <semi> }
@@ -2577,7 +2543,7 @@ our class CPP14Parser::Actions {
     method qualifiednamespacespecifier($/) {
         make Qualifiednamespacespecifier.new(
             nested-name-specifier => $<nested-name-specifier>.made,
-            namespace-name => $<namespace-name>.made,
+            namespace-name        => $<namespace-name>.made,
         )
     }
 
@@ -2681,14 +2647,14 @@ our class CPP14Parser::Actions {
     method alignmentspecifier($/) {
         make Alignmentspecifier.new(
             alignmentspecifierbody => $<alignmentspecifierbody>.made,
-            has-ellipsis => $<has-ellipsis>.made,
+            has-ellipsis           => $<has-ellipsis>.made,
         )
     }
 
     # rule attribute-list { <attribute> [ <.comma> <attribute> ]* <ellipsis>? }
     method attribute-list($/) {
         make AttributeList.new(
-            attributes => $<attribute>>>.made,
+            attributes   => $<attribute>>>.made,
             has-ellipsis => $<has-ellipsis>.made,
         )
     }
@@ -2696,59 +2662,45 @@ our class CPP14Parser::Actions {
     # rule attribute { [ <attribute-namespace> <doublecolon> ]? <identifier> <attribute-argument-clause>? }
     method attribute($/) {
         make Attribute.new(
-            attribute-namespace => $<attribute-namespace>.made,
-            identifier => $<identifier>.made,
+            attribute-namespace       => $<attribute-namespace>.made,
+            identifier                => $<identifier>.made,
             attribute-argument-clause => $<attribute-argument-clause>.made,
         )
     }
 
     # rule attribute-namespace { <identifier> }
     method attribute-namespace($/) {
-        make AttributeNamespace.new(
-            identifier => $<identifier>.made,
-        )
+        make $<identifier>.made
     }
 
     # rule attribute-argument-clause { <.left-paren> <balanced-token-seq>? <.right-paren> }
     method attribute-argument-clause($/) {
-        make AttributeArgumentClause.new(
-            balanced-token-seq => $<balanced-token-seq>.made,
-        )
+        make $<balanced-token-seq>.made
     }
 
     # rule balanced-token-seq { <balancedrule>+ } 
     method balanced-token-seq($/) {
-        make BalancedTokenSeq.new(
-            balancedrules => $<balancedrule>>>.made,
-        )
+        make $<balancedrule>>>.made
     }
 
     # rule balancedrule:sym<parens> { <.left-paren> <balanced-token-seq> <.right-paren> }
     method balancedrule:sym<parens>($/) {
-        make Balancedrule::Parens.new(
-            balanced-token-seq => $<balanced-token-seq>.made,
-        )
+        make $<balanced-token-seq>.made
     }
 
     # rule balancedrule:sym<brackets> { <.left-bracket> <balanced-token-seq> <.right-bracket> }
     method balancedrule:sym<brackets>($/) {
-        make Balancedrule::Brackets.new(
-            balanced-token-seq => $<balanced-token-seq>.made,
-        )
+        make $<balanced-token-seq>.made
     }
 
     # rule balancedrule:sym<braces> { <.left-brace> <balanced-token-seq> <.right-brace> } 
     method balancedrule:sym<braces>($/) {
-        make Balancedrule::Braces.new(
-            balanced-token-seq => $<balanced-token-seq>.made,
-        )
+        make $<balanced-token-seq>.made
     }
 
     # rule init-declarator-list { <init-declarator> [ <.comma> <init-declarator> ]* }
     method init-declarator-list($/) {
-        make InitDeclaratorList.new(
-            init-declarators => $<init-declarator>>>.made,
-        )
+        make $<init-declarator>>>.made
     }
 
     # rule init-declarator { <declarator> <initializer>? } 
@@ -2761,62 +2713,75 @@ our class CPP14Parser::Actions {
 
     # rule declarator:sym<ptr> { <pointer-declarator> }
     method declarator:sym<ptr>($/) {
-        make Declarator::Ptr.new(
-            pointer-declarator => $<pointer-declarator>.made
-        )
+        make $<pointer-declarator>.made
     }
 
     # rule declarator:sym<no-ptr> { <no-pointer-declarator> <parameters-and-qualifiers> <trailing-return-type> }
     method declarator:sym<no-ptr>($/) {
         make Declarator::NoPtr.new(
-            no-pointer-declarator => $<no-pointer-declarator>.made,
+            no-pointer-declarator     => $<no-pointer-declarator>.made,
             parameters-and-qualifiers => $<parameters-and-qualifiers>.made,
-            trailing-return-type => $<trailing-return-type>.made,
+            trailing-return-type      => $<trailing-return-type>.made,
         )
     }
 
     # rule pointer-declarator { <augmented-pointer-operator>* <no-pointer-declarator> }
     method pointer-declarator($/) {
-        make PointerDeclarator.new(
-            augmented-pointer-operators => $<augmented-pointer-operator>>>.made,
-            no-pointer-declarator => $<no-pointer-declarator>.made,
-        )
+
+        my $base      = $<no-pointer-declarator>.made;
+        my @augmented = $<augmented-pointer-operator>>>.made.List;
+
+        if @augmented.elems gt 0 {
+
+            make PointerDeclarator.new(
+                augmented-pointer-operators => @augmented,
+                no-pointer-declarator       => $base,
+            )
+
+        } else {
+
+            make $base
+        }
     }
 
     # rule augmented-pointer-operator { <pointer-operator> <const>? } 
     method augmented-pointer-operator($/) {
         make AugmentedPointerOperator.new(
             pointer-operator => $<pointer-operator>.made,
-            const => $<const>.made,
+            const            => $<const>.made,
         )
     }
 
     # rule no-pointer-declarator-base:sym<base> { <declaratorid> <attribute-specifier-seq>? }
     method no-pointer-declarator-base:sym<base>($/) {
-        make NoPointerDeclaratorBase::Base.new(
-            declaratorid => $<declaratorid>.made,
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
-        )
+        my $base  = $<declaratorid>.made;
+        my $maybe = $<attribute-specifier-seq>.made;
+
+        if $maybe {
+            make NoPointerDeclaratorBase::Base.new(
+                declaratorid            => $base,
+                attribute-specifier-seq => $maybe,
+            )
+
+        } else {
+            make $base
+        }
     }
 
     # rule no-pointer-declarator-base:sym<parens> { <.left-paren> <pointer-declarator> <.right-paren> } 
     method no-pointer-declarator-base:sym<parens>($/) {
-        make NoPointerDeclaratorBase::Parens.new(
-            pointer-declarator => $<pointer-declarator>.made,
-        )
+        make $<pointer-declarator>.made
     }
 
     # rule no-pointer-declarator-tail:sym<basic> { <parameters-and-qualifiers> }
     method no-pointer-declarator-tail:sym<basic>($/) {
-        make NoPointerDeclaratorTail::Basic.new(
-            parameters-and-qualifiers => $<parameters-and-qualifiers>.made,
-        )
+        make $<parameters-and-qualifiers>.made
     }
 
     # rule no-pointer-declarator-tail:sym<bracketed> { <.left-bracket> <constant-expression>? <.right-bracket> <attribute-specifier-seq>? } 
     method no-pointer-declarator-tail:sym<bracketed>($/) {
         make NoPointerDeclaratorTail::Bracketed.new(
-            constant-expression => $<constant-expression>.made,
+            constant-expression     => $<constant-expression>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
         )
     }
@@ -2829,14 +2794,22 @@ our class CPP14Parser::Actions {
         )
     }
 
-    # rule parameters-and-qualifiers { <.left-paren> <parameter-declaration-clause>? <.right-paren> <cvqualifierseq>? <refqualifier>? <exception-specification>? <attribute-specifier-seq>? }
+    # rule parameters-and-qualifiers { 
+    #   <.left-paren> 
+    #   <parameter-declaration-clause>? 
+    #   <.right-paren> 
+    #   <cvqualifierseq>? 
+    #   <refqualifier>? 
+    #   <exception-specification>? 
+    #   <attribute-specifier-seq>? 
+    # j}
     method parameters-and-qualifiers($/) {
         make ParametersAndQualifiers.new(
             parameter-declaration-clause => $<parameter-declaration-clause>.made,
-            cvqualifierseq => $<cvqualifierseq>.made,
-            refqualifier => $<refqualifier>.made,
-            exception-specification => $<exception-specification>.made,
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            cvqualifierseq               => $<cvqualifierseq>.made,
+            refqualifier                 => $<refqualifier>.made,
+            exception-specification      => $<exception-specification>.made,
+            attribute-specifier-seq      => $<attribute-specifier-seq>.made,
         )
     }
 
@@ -2844,7 +2817,7 @@ our class CPP14Parser::Actions {
     method trailing-return-type($/) {
         make TrailingReturnType.new(
             trailing-type-specifier-seq => $<trailing-type-specifier-seq>.made,
-            abstract-declarator => $<abstract-declarator>.made,
+            abstract-declarator         => $<abstract-declarator>.made,
         )
     }
 
@@ -2858,7 +2831,7 @@ our class CPP14Parser::Actions {
     # rule pointer-operator:sym<ref-ref> { <and-and> <attribute-specifier-seq>? }
     method pointer-operator:sym<ref-ref>($/) {
         make PointerOperator::RefRef.new(
-            and-and => $<and-and>.made,
+            and-and                 => $<and-and>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
         )
     }
@@ -2866,17 +2839,15 @@ our class CPP14Parser::Actions {
     # rule pointer-operator:sym<star> { <nested-name-specifier>? <star> <attribute-specifier-seq>? <cvqualifierseq>? }
     method pointer-operator:sym<star>($/) {
         make PointerOperator::Star.new(
-            nested-name-specifier => $<nested-name-specifier>.made,
+            nested-name-specifier   => $<nested-name-specifier>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            cvqualifierseq => $<cvqualifierseq>.made,
+            cvqualifierseq          => $<cvqualifierseq>.made,
         )
     }
 
     # rule cvqualifierseq { <cv-qualifier>+ } 
     method cvqualifierseq($/) {
-        make Cvqualifierseq.new(
-            cv-qualifiers => $<cv-qualifier>>>.made,
-        )
+        make $<cv-qualifier>>>.made
     }
 
     # rule cv-qualifier:sym<const> { <const> }
@@ -2902,7 +2873,7 @@ our class CPP14Parser::Actions {
     # rule declaratorid { <ellipsis>? <id-expression> }
     method declaratorid($/) {
         make Declaratorid.new(
-            has-ellipsis => $<has-ellipsis>.made,
+            has-ellipsis  => $<has-ellipsis>.made,
             id-expression => $<id-expression>.made,
         )
     }
@@ -2910,60 +2881,52 @@ our class CPP14Parser::Actions {
     # rule the-type-id { <type-specifier-seq> <abstract-declarator>? } 
     method the-type-id($/) {
         make TheTypeId.new(
-            type-specifier-seq => $<type-specifier-seq>.made,
+            type-specifier-seq  => $<type-specifier-seq>.made,
             abstract-declarator => $<abstract-declarator>.made,
         )
     }
 
     # rule abstract-declarator:sym<base> { <pointer-abstract-declarator> }
     method abstract-declarator:sym<base>($/) {
-        make AbstractDeclarator::Base.new(
-            pointer-abstract-declarator => $<pointer-abstract-declarator>.made,
-        )
+        make $<pointer-abstract-declarator>.made
     }
 
     # rule abstract-declarator:sym<aug> { <no-pointer-abstract-declarator>? <parameters-and-qualifiers> <trailing-return-type> }
     method abstract-declarator:sym<aug>($/) {
         make AbstractDeclarator::Aug.new(
             no-pointer-abstract-declarator => $<no-pointer-abstract-declarator>.made,
-            parameters-and-qualifiers => $<parameters-and-qualifiers>.made,
-            trailing-return-type => $<trailing-return-type>.made,
+            parameters-and-qualifiers      => $<parameters-and-qualifiers>.made,
+            trailing-return-type           => $<trailing-return-type>.made,
         )
     }
 
     # rule abstract-declarator:sym<abstract-pack> { <abstract-pack-declarator> } 
     method abstract-declarator:sym<abstract-pack>($/) {
-        make AbstractDeclarator::AbstractPack.new(
-            abstract-pack-declarator => $<abstract-pack-declarator>.made,
-        )
+        make $<abstract-pack-declarator>.made
     }
 
     # rule pointer-abstract-declarator:sym<no-ptr> { <no-pointer-abstract-declarator> }
     method pointer-abstract-declarator:sym<no-ptr>($/) {
-        make PointerAbstractDeclarator::NoPtr.new(
-            no-pointer-abstract-declarator => $<no-pointer-abstract-declarator>.made,
-        )
+        make $<no-pointer-abstract-declarator>.made
     }
 
     # rule pointer-abstract-declarator:sym<ptr> { <pointer-operator>+ <no-pointer-abstract-declarator>? } 
     method pointer-abstract-declarator:sym<ptr>($/) {
         make PointerAbstractDeclarator::Ptr.new(
-            pointer-operators => $<pointer-operator>>>.made,
+            pointer-operators              => $<pointer-operator>>>.made,
             no-pointer-abstract-declarator => $<no-pointer-abstract-declarator>.made,
         )
     }
 
     # rule no-pointer-abstract-declarator-body:sym<base> { <parameters-and-qualifiers> }
     method no-pointer-abstract-declarator-body:sym<base>($/) {
-        make NoPointerAbstractDeclaratorBody::Base.new(
-            parameters-and-qualifiers => $<parameters-and-qualifiers>.made,
-        )
+        make $<parameters-and-qualifiers>.made
     }
 
     # rule no-pointer-abstract-declarator-body:sym<brack> { <no-pointer-abstract-declarator> <no-pointer-abstract-declarator-bracketed-base> }
     method no-pointer-abstract-declarator-body:sym<brack>($/) {
         make NoPointerAbstractDeclaratorBody::Brack.new(
-            no-pointer-abstract-declarator => $<no-pointer-abstract-declarator>.made,
+            no-pointer-abstract-declarator                => $<no-pointer-abstract-declarator>.made,
             no-pointer-abstract-declarator-bracketed-base => $<no-pointer-abstract-declarator-bracketed-base>.made,
         )
     }
@@ -2978,29 +2941,23 @@ our class CPP14Parser::Actions {
 
     # rule no-pointer-abstract-declarator-base:sym<basic> { <parameters-and-qualifiers> }
     method no-pointer-abstract-declarator-base:sym<basic>($/) {
-        make NoPointerAbstractDeclaratorBase::Basic.new(
-            parameters-and-qualifiers => $<parameters-and-qualifiers>.made,
-        )
+        make $<parameters-and-qualifiers>.made
     }
 
     # rule no-pointer-abstract-declarator-base:sym<bracketed> { <no-pointer-abstract-declarator-bracketed-base> }
     method no-pointer-abstract-declarator-base:sym<bracketed>($/) {
-        make NoPointerAbstractDeclaratorBase::Bracketed.new(
-            no-pointer-abstract-declarator-bracketed-base => $<no-pointer-abstract-declarator-bracketed-base>.made,
-        )
+        make $<no-pointer-abstract-declarator-bracketed-base>.made
     }
 
     # rule no-pointer-abstract-declarator-base:sym<parenthesized> { <.left-paren> <pointer-abstract-declarator> <.right-paren> }
     method no-pointer-abstract-declarator-base:sym<parenthesized>($/) {
-        make NoPointerAbstractDeclaratorBase::Parenthesized.new(
-            pointer-abstract-declarator => $<pointer-abstract-declarator>.made,
-        )
+        make $<pointer-abstract-declarator>.made
     }
 
     # rule no-pointer-abstract-declarator-bracketed-base { <.left-bracket> <constant-expression>? <.right-bracket> <attribute-specifier-seq>? }
     method no-pointer-abstract-declarator-bracketed-base($/) {
         make NoPointerAbstractDeclaratorBracketedBase.new(
-            constant-expression => $<constant-expression>.made,
+            constant-expression     => $<constant-expression>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
         )
     }
@@ -3008,83 +2965,69 @@ our class CPP14Parser::Actions {
     # rule abstract-pack-declarator { <pointer-operator>* <no-pointer-abstract-pack-declarator> } 
     method abstract-pack-declarator($/) {
         make AbstractPackDeclarator.new(
-            pointer-operators => $<pointer-operator>>>.made,
+            pointer-operators                   => $<pointer-operator>>>.made,
             no-pointer-abstract-pack-declarator => $<no-pointer-abstract-pack-declarator>.made,
         )
     }
 
     # rule no-pointer-abstract-pack-declarator-basic { <parameters-and-qualifiers> }
     method no-pointer-abstract-pack-declarator-basic($/) {
-        make NoPointerAbstractPackDeclaratorBasic.new(
-            parameters-and-qualifiers => $<parameters-and-qualifiers>.made,
-        )
+        make $<parameters-and-qualifiers>.made
     }
 
     # rule no-pointer-abstract-pack-declarator-brackets { <.left-bracket> <constant-expression>? <.right-bracket> <attribute-specifier-seq>? } 
     method no-pointer-abstract-pack-declarator-brackets($/) {
         make NoPointerAbstractPackDeclaratorBrackets.new(
-            constant-expression => $<constant-expression>.made,
+            constant-expression     => $<constant-expression>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
         )
     }
 
     # rule no-pointer-abstract-pack-declarator-body:sym<basic> { <no-pointer-abstract-pack-declarator-basic> }
     method no-pointer-abstract-pack-declarator-body:sym<basic>($/) {
-        make NoPointerAbstractPackDeclaratorBody::Basic.new(
-            no-pointer-abstract-pack-declarator-basic => $<no-pointer-abstract-pack-declarator-basic>.made,
-        )
+        make $<no-pointer-abstract-pack-declarator-basic>.made
     }
 
     # rule no-pointer-abstract-pack-declarator-body:sym<brack> { <no-pointer-abstract-pack-declarator-brackets> } 
     method no-pointer-abstract-pack-declarator-body:sym<brack>($/) {
-        make NoPointerAbstractPackDeclaratorBody::Brack.new(
-            no-pointer-abstract-pack-declarator-brackets => $<no-pointer-abstract-pack-declarator-brackets>.made,
-        )
+        make $<no-pointer-abstract-pack-declarator-brackets>.made
     }
 
     # rule no-pointer-abstract-pack-declarator { <ellipsis> <no-pointer-abstract-pack-declarator-body>* }
     method no-pointer-abstract-pack-declarator($/) {
-        make NoPointerAbstractPackDeclarator.new(
-            no-pointer-abstract-pack-declarator-bodies => $<no-pointer-abstract-pack-declarator-bodie>>>.made,
-        )
+        make $<no-pointer-abstract-pack-declarator-body>>>.made
     }
 
     # rule parameter-declaration-clause { <parameter-declaration-list> [ <.comma>? <ellipsis> ]? }
     method parameter-declaration-clause($/) {
         make ParameterDeclarationClause.new(
             parameter-declaration-list => $<parameter-declaration-list>.made,
-            has-ellipsis => $<has-ellipsis>.made,
+            has-ellipsis               => $<has-ellipsis>.made,
         )
     }
 
     # rule parameter-declaration-list { <parameter-declaration> [ <.comma> <parameter-declaration> ]* } 
     method parameter-declaration-list($/) {
-        make ParameterDeclarationList.new(
-            parameter-declaration => $<parameter-declaration>>>.made,
-        )
+        make $<parameter-declaration>>>.made
     }
 
     # rule parameter-declaration-body:sym<decl> { <declarator> }
     method parameter-declaration-body:sym<decl>($/) {
-        make ParameterDeclarationBody::Decl.new(
-            declarator => $<declarator>.made,
-        )
+        make $<declarator>.made
     }
 
     # rule parameter-declaration-body:sym<abst> { <abstract-declarator>? }
     method parameter-declaration-body:sym<abst>($/) {
-        make ParameterDeclarationBody::Abst.new(
-            abstract-declarator => $<abstract-declarator>.made,
-        )
+        make $<abstract-declarator>.made
     }
 
     # rule parameter-declaration { <attribute-specifier-seq>? <decl-specifier-seq> <parameter-declaration-body> [ <assign> <initializer-clause> ]? }
     method parameter-declaration($/) {
         make ParameterDeclaration.new(
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            decl-specifier-seq => $<decl-specifier-seq>.made,
+            attribute-specifier-seq    => $<attribute-specifier-seq>.made,
+            decl-specifier-seq         => $<decl-specifier-seq>.made,
             parameter-declaration-body => $<parameter-declaration-body>.made,
-            initializer-clause => $<initializer-clause>.made,
+            initializer-clause         => $<initializer-clause>.made,
         )
     }
 
@@ -3092,10 +3035,10 @@ our class CPP14Parser::Actions {
     method function-definition($/) {
         make FunctionDefinition.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            decl-specifier-seq => $<decl-specifier-seq>.made,
-            declarator => $<declarator>.made,
-            virtual-specifier-seq => $<virtual-specifier-seq>.made,
-            function-body => $<function-body>.made,
+            decl-specifier-seq      => $<decl-specifier-seq>.made,
+            declarator              => $<declarator>.made,
+            virtual-specifier-seq   => $<virtual-specifier-seq>.made,
+            function-body           => $<function-body>.made,
         )
     }
 
@@ -3103,15 +3046,13 @@ our class CPP14Parser::Actions {
     method function-body:sym<compound>($/) {
         make FunctionBody::Compound.new(
             constructor-initializer => $<constructor-initializer>.made,
-            compound-statement => $<compound-statement>.made,
+            compound-statement      => $<compound-statement>.made,
         )
     }
 
     # rule function-body:sym<try> { <function-try-block> }
     method function-body:sym<try>($/) {
-        make FunctionBody::Try.new(
-            function-try-block => $<function-try-block>.made,
-        )
+        make $<function-try-block>.made
     }
 
     # rule function-body:sym<assign-default> { <assign> <default_> <semi> }
@@ -3130,36 +3071,28 @@ our class CPP14Parser::Actions {
 
     # rule initializer:sym<brace-or-eq> { <brace-or-equal-initializer> }
     method initializer:sym<brace-or-eq>($/) {
-        make Initializer::BraceOrEq.new(
-            brace-or-equal-initializer => $<brace-or-equal-initializer>.made,
-        )
+        make $<brace-or-equal-initializer>.made
     }
 
     # rule initializer:sym<paren-expr-list> { <.left-paren> <expression-list> <.right-paren> } 
     method initializer:sym<paren-expr-list>($/) {
-        make Initializer::ParenExprList.new(
-            expression-list => $<expression-list>.made,
-        )
+        make $<expression-list>.made
     }
 
     # rule brace-or-equal-initializer:sym<assign-init> { <assign> <initializer-clause> }
     method brace-or-equal-initializer:sym<assign-init>($/) {
-        make BraceOrEqualInitializer::AssignInit.new(
-            initializer-clause => $<initializer-clause>.made,
-        )
+        make $<initializer-clause>.made
     }
 
     # rule brace-or-equal-initializer:sym<braced-init-list> { <braced-init-list> } 
     method brace-or-equal-initializer:sym<braced-init-list>($/) {
-        make BraceOrEqualInitializer::BracedInitList.new(
-            braced-init-list => $<braced-init-list>.made,
-        )
+        make $<braced-init-list>.made
     }
 
     # rule initializer-clause:sym<assignment> { <comment>? <assignment-expression> }
     method initializer-clause:sym<assignment>($/) {
         make InitializerClause::Assignment.new(
-            comment => $<comment>.made,
+            comment               => $<comment>.made,
             assignment-expression => $<assignment-expression>.made,
         )
     }
@@ -3167,42 +3100,35 @@ our class CPP14Parser::Actions {
     # rule initializer-clause:sym<braced> { <comment>? <braced-init-list> } 
     method initializer-clause:sym<braced>($/) {
         make InitializerClause::Braced.new(
-            comment => $<comment>.made,
+            comment          => $<comment>.made,
             braced-init-list => $<braced-init-list>.made,
         )
     }
 
     # rule initializer-list { <initializer-clause> <ellipsis>? [ <.comma> <initializer-clause> <ellipsis>? ]* }
     method initializer-list($/) {
-        make InitializerList.new(
-            initializer-clauses       => $<initializer-clause>>>.made,
-        )
+        make $<initializer-clause>>>.made
     }
 
     # rule braced-init-list { <.left-brace> [ <initializer-list> <.comma>? ]? <.right-brace> } 
     method braced-init-list($/) {
-        make BracedInitList.new(
-            initializer-list => $<initializer-list>.made,
-        )
+        make $<initializer-list>.made
     }
 
     # rule class-name:sym<id> { <identifier> }
     method class-name:sym<id>($/) {
-        make ClassName::Id.new(
-            identifier => $<identifier>.made,
-        )
+        make $<identifier>.made
     }
 
     # rule class-name:sym<template-id> { <simple-template-id> }
     method class-name:sym<template-id>($/) {
-        make ClassName::TemplateId.new(
-            simple-template-id => $<simple-template-id>.made,
-        )
+        make $<simple-template-id>.made
     }
 
     # rule class-specifier { <class-head> <.left-brace> <member-specification>? <.right-brace> } 
     method class-specifier($/) {
         make ClassSpecifier.new(
+            class-head           => $<class-head>.mde,
             member-specification => $<member-specification>.made,
         )
     }
@@ -3211,9 +3137,9 @@ our class CPP14Parser::Actions {
     method class-head:sym<class>($/) {
         make ClassHead::Class.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            class-head-name => $<class-head-name>.made,
-            class-virt-specifier => $<class-virt-specifier>.made,
-            base-clause => $<base-clause>.made,
+            class-head-name         => $<class-head-name>.made,
+            class-virt-specifier    => $<class-virt-specifier>.made,
+            base-clause             => $<base-clause>.made,
         )
     }
 
@@ -3221,8 +3147,8 @@ our class CPP14Parser::Actions {
     method class-head:sym<union>($/) {
         make ClassHead::Union.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            class-head-name => $<class-head-name>.made,
-            class-virt-specifier => $<class-virt-specifier>.made,
+            class-head-name         => $<class-head-name>.made,
+            class-virt-specifier    => $<class-virt-specifier>.made,
         )
     }
 
@@ -3230,7 +3156,7 @@ our class CPP14Parser::Actions {
     method class-head-name($/) {
         make ClassHeadName.new(
             nested-name-specifier => $<nested-name-specifier>.made,
-            class-name => $<class-name>.made,
+            class-name            => $<class-name>.made,
         )
     }
 
@@ -3251,9 +3177,7 @@ our class CPP14Parser::Actions {
 
     # rule member-specification-base:sym<decl> { <memberdeclaration> }
     method member-specification-base:sym<decl>($/) {
-        make MemberSpecificationBase::Decl.new(
-            memberdeclaration => $<memberdeclaration>.made,
-        )
+        make $<memberdeclaration>.made
     }
 
     # rule member-specification-base:sym<access> { <access-specifier> <colon> }
@@ -3270,7 +3194,12 @@ our class CPP14Parser::Actions {
         )
     }
 
-    # rule memberdeclaration:sym<basic> { <attribute-specifier-seq>? <decl-specifier-seq>? <member-declarator-list>? <semi> }
+    # rule memberdeclaration:sym<basic> { 
+    #   <attribute-specifier-seq>? 
+    #   <decl-specifier-seq>? 
+    #   <member-declarator-list>? 
+    #   <semi> 
+    # }
     method memberdeclaration:sym<basic>($/) {
         make Memberdeclaration::Basic.new(
             comment                 => $<semi>.made,
@@ -3282,37 +3211,27 @@ our class CPP14Parser::Actions {
 
     # rule memberdeclaration:sym<func> { <function-definition> }
     method memberdeclaration:sym<func>($/) {
-        make Memberdeclaration::Func.new(
-            function-definition => $<function-definition>.made,
-        )
+        make $<function-definition>.made
     }
 
     # rule memberdeclaration:sym<using> { <using-declaration> }
     method memberdeclaration:sym<using>($/) {
-        make Memberdeclaration::Using.new(
-            using-declaration => $<using-declaration>.made,
-        )
+        make $<using-declaration>.made
     }
 
     # rule memberdeclaration:sym<static-assert> { <static-assert-declaration> }
     method memberdeclaration:sym<static-assert>($/) {
-        make Memberdeclaration::StaticAssert.new(
-            static-assert-declaration => $<static-assert-declaration>.made,
-        )
+        make $<static-assert-declaration>.made
     }
 
     # rule memberdeclaration:sym<template> { <template-declaration> }
     method memberdeclaration:sym<template>($/) {
-        make Memberdeclaration::Template.new(
-            template-declaration => $<template-declaration>.made,
-        )
+        make $<template-declaration>.made
     }
 
     # rule memberdeclaration:sym<alias> { <alias-declaration> }
     method memberdeclaration:sym<alias>($/) {
-        make Memberdeclaration::Alias.new(
-            alias-declaration => $<alias-declaration>.made,
-        )
+        make $<alias-declaration>.made
     }
 
     # rule memberdeclaration:sym<empty> { <empty-declaration> } 
@@ -3322,24 +3241,22 @@ our class CPP14Parser::Actions {
 
     # rule member-declarator-list { <member-declarator> [ <.comma> <member-declarator> ]* } 
     method member-declarator-list($/) {
-        make MemberDeclaratorList.new(
-            member-declarators => $<member-declarator>>>.made,
-        )
+        make $<member-declarator>>>.made
     }
 
     # rule member-declarator:sym<virt> { <declarator> <virtual-specifier-seq>? <pure-specifier>? }
     method member-declarator:sym<virt>($/) {
         make MemberDeclarator::Virt.new(
-            declarator => $<declarator>.made,
+            declarator            => $<declarator>.made,
             virtual-specifier-seq => $<virtual-specifier-seq>.made,
-            pure-specifier => $<pure-specifier>.made,
+            pure-specifier        => $<pure-specifier>.made,
         )
     }
 
     # rule member-declarator:sym<brace-or-eq> { <declarator> <brace-or-equal-initializer>? }
     method member-declarator:sym<brace-or-eq>($/) {
         make MemberDeclarator::BraceOrEq.new(
-            declarator => $<declarator>.made,
+            declarator                 => $<declarator>.made,
             brace-or-equal-initializer => $<brace-or-equal-initializer>.made,
         )
     }
@@ -3347,17 +3264,15 @@ our class CPP14Parser::Actions {
     # rule member-declarator:sym<ident> { <identifier>? <attribute-specifier-seq>? <colon> <constant-expression> } 
     method member-declarator:sym<ident>($/) {
         make MemberDeclarator::Ident.new(
-            identifier => $<identifier>.made,
+            identifier              => $<identifier>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            constant-expression => $<constant-expression>.made,
+            constant-expression     => $<constant-expression>.made,
         )
     }
 
     # rule virtual-specifier-seq { <virtual-specifier>+ } 
     method virtual-specifier-seq($/) {
-        make VirtualSpecifierSeq.new(
-            virtual-specifiers => $<virtual-specifier>>>.made,
-        )
+        make $<virtual-specifier>>>.made
     }
 
     # rule virtual-specifier:sym<override> { <override> }
@@ -3386,16 +3301,14 @@ our class CPP14Parser::Actions {
 
     # rule base-specifier-list { <base-specifier> <ellipsis>? [ <.comma> <base-specifier> <ellipsis>? ]* } 
     method base-specifier-list($/) {
-        make BaseSpecifierList.new(
-            base-specifiers => $<base-specifier>>>.made,
-        )
+        make $<base-specifier>>>.made
     }
 
     # rule base-specifier:sym<base-type> { <attribute-specifier-seq>? <base-type-specifier> }
     method base-specifier:sym<base-type>($/) {
         make BaseSpecifier::BaseType.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            base-type-specifier => $<base-type-specifier>.made,
+            base-type-specifier     => $<base-type-specifier>.made,
         )
     }
 
@@ -3403,8 +3316,8 @@ our class CPP14Parser::Actions {
     method base-specifier:sym<virtual>($/) {
         make BaseSpecifier::Virtual.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            access-specifier => $<access-specifier>.made,
-            base-type-specifier => $<base-type-specifier>.made,
+            access-specifier        => $<access-specifier>.made,
+            base-type-specifier     => $<base-type-specifier>.made,
         )
     }
 
@@ -3412,9 +3325,9 @@ our class CPP14Parser::Actions {
     method base-specifier:sym<access>($/) {
         make BaseSpecifier::Access.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            access-specifier => $<access-specifier>.made,
-            is-virtual => $<is-virtual>.made,
-            base-type-specifier => $<base-type-specifier>.made,
+            access-specifier        => $<access-specifier>.made,
+            is-virtual              => $<is-virtual>.made,
+            base-type-specifier     => $<base-type-specifier>.made,
         )
     }
 
@@ -3422,22 +3335,18 @@ our class CPP14Parser::Actions {
     method class-or-decl-type:sym<class>($/) {
         make ClassOrDeclType::Class.new(
             nested-name-specifier => $<nested-name-specifier>.made,
-            class-name => $<class-name>.made,
+            class-name            => $<class-name>.made,
         )
     }
 
     # rule class-or-decl-type:sym<decltype> { <decltype-specifier> } 
     method class-or-decl-type:sym<decltype>($/) {
-        make ClassOrDeclType::Decltype.new(
-            decltype-specifier => $<decltype-specifier>.made,
-        )
+        make $<decltype-specifier>.made
     }
 
     # rule base-type-specifier { <class-or-decl-type> }
     method base-type-specifier($/) {
-        make BaseTypeSpecifier.new(
-            class-or-decl-type => $<class-or-decl-type>.made,
-        )
+        make $<class-or-decl-type>.made
     }
 
     # rule access-specifier:sym<private> { <private> }
@@ -3473,7 +3382,7 @@ our class CPP14Parser::Actions {
     # rule conversion-declarator { <pointer-operator> <conversion-declarator>? }
     method conversion-declarator($/) {
         make ConversionDeclarator.new(
-            pointer-operator => $<pointer-operator>.made,
+            pointer-operator      => $<pointer-operator>.made,
             conversion-declarator => $<conversion-declarator>.made,
         )
     }
@@ -3496,7 +3405,7 @@ our class CPP14Parser::Actions {
     method mem-initializer:sym<expr-list>($/) {
         make MemInitializer::ExprList.new(
             meminitializerid => $<meminitializerid>.made,
-            expression-list => $<expression-list>.made,
+            expression-list  => $<expression-list>.made,
         )
     }
 
@@ -3510,16 +3419,12 @@ our class CPP14Parser::Actions {
 
     # rule meminitializerid:sym<class-or-decl> { <class-or-decl-type> }
     method meminitializerid:sym<class-or-decl>($/) {
-        make Meminitializerid::ClassOrDecl.new(
-            class-or-decl-type => $<class-or-decl-type>.made,
-        )
+        make $<class-or-decl-type>.made
     }
 
     # rule meminitializerid:sym<ident> { <identifier> }
     method meminitializerid:sym<ident>($/) {
-        make Meminitializerid::Ident.new(
-            identifier => $<identifier>.made,
-        )
+        make $<identifier>.made
     }
 
     # rule operator-function-id { <operator> <the-operator> } 
@@ -3533,7 +3438,7 @@ our class CPP14Parser::Actions {
     method literal-operator-id:sym<string-lit>($/) {
         make LiteralOperatorId::StringLit.new(
             string-literal => $<string-literal>.made,
-            identifier => $<identifier>.made,
+            identifier     => $<identifier>.made,
         )
     }
 
@@ -3548,7 +3453,7 @@ our class CPP14Parser::Actions {
     method template-declaration($/) {
         make TemplateDeclaration.new(
             templateparameter-list => $<templateparameter-list>.made,
-            declaration => $<declaration>.made,
+            declaration            => $<declaration>.made,
         )
     }
 
@@ -3559,16 +3464,12 @@ our class CPP14Parser::Actions {
 
     # rule template-parameter:sym<type> { <type-parameter> }
     method template-parameter:sym<type>($/) {
-        make TemplateParameter::Type.new(
-            type-parameter => $<type-parameter>.made,
-        )
+        make $<type-parameter>.made
     }
 
     # rule template-parameter:sym<param> { <parameter-declaration> } 
     method template-parameter:sym<param>($/) {
-        make TemplateParameter::Param.new(
-            parameter-declaration => $<parameter-declaration>.made,
-        )
+        make $<parameter-declaration>.made
     }
 
     # rule type-parameter-base:sym<basic> { [ <template> <less> <templateparameter-list> <greater> ]? <class_> }
@@ -3587,14 +3488,14 @@ our class CPP14Parser::Actions {
     method type-parameter-suffix:sym<maybe-ident>($/) {
         make TypeParameterSuffix::MaybeIdent.new(
             has-ellipsis => $<has-ellipsis>.made,
-            identifier => $<identifier>.made,
+            identifier   => $<identifier>.made,
         )
     }
 
     # rule type-parameter-suffix:sym<assign-type-id> { <identifier>? <assign> <the-type-id> } 
     method type-parameter-suffix:sym<assign-type-id>($/) {
         make TypeParameterSuffix::AssignTypeId.new(
-            identifier => $<identifier>.made,
+            identifier  => $<identifier>.made,
             the-type-id => $<the-type-id>.made,
         )
     }
@@ -3602,7 +3503,7 @@ our class CPP14Parser::Actions {
     # rule type-parameter { <type-parameter-base> <type-parameter-suffix> }
     method type-parameter($/) {
         make TypeParameter.new(
-            type-parameter-base => $<type-parameter-base>.made,
+            type-parameter-base   => $<type-parameter-base>.made,
             type-parameter-suffix => $<type-parameter-suffix>.made,
         )
     }
@@ -3610,22 +3511,20 @@ our class CPP14Parser::Actions {
     # rule simple-template-id { <template-name> <less> <template-argument-list>? <greater> } 
     method simple-template-id($/) {
         make SimpleTemplateId.new(
-            template-name => $<template-name>.made,
+            template-name          => $<template-name>.made,
             template-argument-list => $<template-argument-list>.made,
         )
     }
 
     # rule template-id:sym<simple> { <simple-template-id> }
     method template-id:sym<simple>($/) {
-        make TemplateId::Simple.new(
-            simple-template-id => $<simple-template-id>.made,
-        )
+        make $<simple-template-id>.made
     }
 
     # rule template-id:sym<operator-function-id> { <operator-function-id> <less> <template-argument-list>? <greater> }
     method template-id:sym<operator-function-id>($/) {
         make TemplateId::OperatorFunctionId.new(
-            operator-function-id => $<operator-function-id>.made,
+            operator-function-id   => $<operator-function-id>.made,
             template-argument-list => $<template-argument-list>.made,
         )
     }
@@ -3633,16 +3532,14 @@ our class CPP14Parser::Actions {
     # rule template-id:sym<literal-operator-id> { <literal-operator-id> <less> <template-argument-list>? <greater> } 
     method template-id:sym<literal-operator-id>($/) {
         make TemplateId::LiteralOperatorId.new(
-            literal-operator-id => $<literal-operator-id>.made,
+            literal-operator-id    => $<literal-operator-id>.made,
             template-argument-list => $<template-argument-list>.made,
         )
     }
 
     # token template-name { <identifier> }
     method template-name($/) {
-        make TemplateName.new(
-            identifier => $<identifier>.made,
-        )
+        make $<identifier>.made
     }
 
     # rule template-argument-list { <template-argument> <ellipsis>? [ <.comma> <template-argument> <ellipsis>? ]* } 
@@ -3654,30 +3551,24 @@ our class CPP14Parser::Actions {
 
     # token template-argument:sym<type-id> { <the-type-id> }
     method template-argument:sym<type-id>($/) {
-        make TemplateArgument::TypeId.new(
-            the-type-id => $<the-type-id>.made,
-        )
+        make $<the-type-id>.made
     }
 
     # token template-argument:sym<const-expr> { <constant-expression> }
     method template-argument:sym<const-expr>($/) {
-        make TemplateArgument::ConstExpr.new(
-            constant-expression => $<constant-expression>.made,
-        )
+        make $<constant-expression>.made
     }
 
     # token template-argument:sym<id-expr> { <id-expression> } 
     method template-argument:sym<id-expr>($/) {
-        make TemplateArgument::IdExpr.new(
-            id-expression => $<id-expression>.made,
-        )
+        make $<id-expression>.made
     }
 
     # rule type-name-specifier:sym<ident> { <typename_> <nested-name-specifier> <identifier> }
     method type-name-specifier:sym<ident>($/) {
         make TypeNameSpecifier::Ident.new(
             nested-name-specifier => $<nested-name-specifier>.made,
-            identifier => $<identifier>.made,
+            identifier            => $<identifier>.made,
         )
     }
 
@@ -3685,15 +3576,14 @@ our class CPP14Parser::Actions {
     method type-name-specifier:sym<template>($/) {
         make TypeNameSpecifier::Template.new(
             nested-name-specifier => $<nested-name-specifier>.made,
-            has-template => $<has-template>.made,
-            simple-template-id => $<simple-template-id>.made,
+            has-template          => $<has-template>.made,
+            simple-template-id    => $<simple-template-id>.made,
         )
     }
 
     # rule explicit-instantiation { <extern>? <template> <declaration> }
     method explicit-instantiation($/) {
         make ExplicitInstantiation.new(
-            extern => $<extern>.made,
             declaration => $<declaration>.made,
         )
     }
@@ -3709,7 +3599,7 @@ our class CPP14Parser::Actions {
     method try-block($/) {
         make TryBlock.new(
             compound-statement => $<compound-statement>.made,
-            handler-seq => $<handler-seq>.made,
+            handler-seq        => $<handler-seq>.made,
         )
     }
 
@@ -3717,46 +3607,40 @@ our class CPP14Parser::Actions {
     method function-try-block($/) {
         make FunctionTryBlock.new(
             constructor-initializer => $<constructor-initializer>.made,
-            compound-statement => $<compound-statement>.made,
-            handler-seq => $<handler-seq>.made,
+            compound-statement      => $<compound-statement>.made,
+            handler-seq             => $<handler-seq>.made,
         )
     }
 
     # rule handler-seq { <handler>+ }
     method handler-seq($/) {
-        make HandlerSeq.new(
-            handlers => $<handler>>>.made,
-        )
+        make $<handler>>>.made
     }
 
     # rule handler { <catch> <.left-paren> <exception-declaration> <.right-paren> <compound-statement> }
     method handler($/) {
         make Handler.new(
             exception-declaration => $<exception-declaration>.made,
-            compound-statement => $<compound-statement>.made,
+            compound-statement    => $<compound-statement>.made,
         )
     }
 
     # rule some-declarator:sym<basic> { <declarator> }
     method some-declarator:sym<basic>($/) {
-        make SomeDeclarator::Basic.new(
-            declarator => $<declarator>.made,
-        )
+        make $<declarator>.made
     }
 
     # rule some-declarator:sym<abstract> { <abstract-declarator> } 
     method some-declarator:sym<abstract>($/) {
-        make SomeDeclarator::Abstract.new(
-            abstract-declarator => $<abstract-declarator>.made,
-        )
+        make $<abstract-declarator>.made
     }
 
     # rule exception-declaration:sym<basic> { <attribute-specifier-seq>? <type-specifier-seq> <some-declarator>? }
     method exception-declaration:sym<basic>($/) {
         make ExceptionDeclaration::Basic.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            type-specifier-seq => $<type-specifier-seq>.made,
-            some-declarator => $<some-declarator>.made,
+            type-specifier-seq      => $<type-specifier-seq>.made,
+            some-declarator         => $<some-declarator>.made,
         )
     }
 
@@ -3774,16 +3658,12 @@ our class CPP14Parser::Actions {
 
     # token exception-specification:sym<dynamic> { <dynamic-exception-specification> }
     method exception-specification:sym<dynamic>($/) {
-        make ExceptionSpecification::Dynamic.new(
-            dynamic-exception-specification => $<dynamic-exception-specification>.made,
-        )
+        make $<dynamic-exception-specification>.made
     }
 
     # token exception-specification:sym<noexcept> { <noe-except-specification> } 
     method exception-specification:sym<noexcept>($/) {
-        make ExceptionSpecification::Noexcept.new(
-            noe-except-specification => $<noe-except-specification>.made,
-        )
+        make $<noe-except-specification>.made
     }
 
     # rule dynamic-exception-specification { <throw> <.left-paren> <type-id-list>? <.right-paren> }
