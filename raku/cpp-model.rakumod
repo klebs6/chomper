@@ -56,6 +56,7 @@ our class Handler                                  { ... }
 our class HandlerSeq                               { ... }
 our class Hexadecimalescapesequence                { ... }
 our class InitDeclarator                           { ... }
+our role IInitDeclarator                           {  }
 our class Initcapture                              { ... }
 our class InitializerList                          { ... }
 our class LabeledStatement                         { ... }
@@ -72,6 +73,7 @@ our class NamespaceAlias                           { ... }
 our class NamespaceAliasDefinition                 { ... }
 our class NamespaceDefinition                      { ... }
 our class NestedNameSpecifier                      { ... }
+our role  INestedNameSpecifier                      {  }
 our class NewDeclarator                            { ... }
 our class NewPlacement                             { ... }
 our class NewTypeId                                { ... }
@@ -88,7 +90,6 @@ our class OperatorFunctionId                       { ... }
 our class OriginalNamespaceName                    { ... }
 our class ParameterDeclaration                     { ... }
 our class ParameterDeclarationClause               { ... }
-our class ParameterDeclarationList                 { ... }
 our class ParametersAndQualifiers                  { ... }
 our class PointerDeclarator                        { ... }
 our class PointerMemberExpression                  { ... }
@@ -232,7 +233,7 @@ our role IPostfixExpressionBody { }
 our role IPrimaryExpression does IPostfixExpressionBody { }
 our role IIdExpression { }
 our role IUnqualifiedId { }
-our role INestedNameSpecifierPrefix { }
+our role INestedNameSpecifierPrefix does INestedNameSpecifier { }
 our role INestedNameSpecifierSuffix { }
 our role ILambdaCapture { }
 our role ICaptureDefault { }
@@ -268,7 +269,7 @@ our role IConditionDeclTail                         { }
 our role IIterationStatement                        { }
 our role IForInitStatement                          { }
 our role IForRangeInitializer                       { }
-our role IJumpStatement                             { }
+our role IJumpStatement does IStatement             { }
 our role IReturnStatementBody                       { }
 our role IDeclaration                               { }
 our role IBlockDeclaration                          { }
@@ -380,7 +381,16 @@ our role IUserDefinedLiteral does ILiteral { }
 
 #-------------------------------
 our class Identifier 
+does IMultiplicativeExpression
+does IInitDeclarator
+does IUnqualifiedId
 does IIdExpression
+does IPostfixExpressionBody
+does IPostfixExpressionTail
+does IPostListHead
+does IDeclarator
+does IDeclSpecifierSeq
+does INoPointerDeclaratorBase
 does ITheTypeName { 
     has Str $.value is required; 
 }
@@ -821,7 +831,7 @@ our class UnqualifiedId::TemplateId does IUnqualifiedId {
 
 # regex qualified-id { <nested-name-specifier> <template>? <unqualified-id> }      
 our class QualifiedId { 
-    has NestedNameSpecifier $.nested-name-specifier is required;
+    has INestedNameSpecifier $.nested-name-specifier is required;
     has Bool                $.template              is required;
     has IUnqualifiedId      $.unqualified-id        is required;
 }
@@ -858,7 +868,7 @@ our class NestedNameSpecifierSuffix::Template does INestedNameSpecifierSuffix {
 }
 
 # regex nested-name-specifier { <nested-name-specifier-prefix> <nested-name-specifier-suffix>* }
-our class NestedNameSpecifier { 
+our class NestedNameSpecifier does INestedNameSpecifier { 
     has INestedNameSpecifierPrefix $.nested-name-specifier-prefix   is required;
     has INestedNameSpecifierSuffix @.nested-name-specifier-suffixes;
 }
@@ -950,6 +960,8 @@ does IUnaryExpression {
     has IPostfixExpressionBody $.postfix-expression-body is required;
     has IPostfixExpressionTail @.postfix-expression-tail;
 }
+
+our class PostfixExpressionTail::Null does IPostfixExpressionTail {}
 
 #------------------------------
 
@@ -1056,7 +1068,10 @@ our class PostListTail::Braced does IPostListTail {
 }
 
 # token postfix-expression-list { <post-list-head> <post-list-tail> } 
-our class PostfixExpressionList does IPostfixExpressionBody { 
+our class PostfixExpressionList 
+does IInitializer
+does IUnaryExpression
+does IPostfixExpressionBody { 
     has IPostListHead $.post-list-head is required;
     has IPostListTail $.post-list-tail is required;
 }
@@ -1094,7 +1109,7 @@ our class PseudoDestructorName::Basic does IPseudoDestructorName {
 #   <the-type-name> 
 # }
 our class PseudoDestructorName::Template does IPseudoDestructorName {
-    has NestedNameSpecifier $.nested-name-specifier is required;
+    has INestedNameSpecifier $.nested-name-specifier is required;
     has SimpleTemplateId    $.simple-template-id    is required;
     has ITheTypeName         $.the-type-name         is required;
 }
@@ -1809,7 +1824,7 @@ does IDeclarationStatement
 does ISimpleDeclaration {
     has IComment           $.comment;
     has IDeclSpecifierSeq   $.decl-specifier-seq;
-    has InitDeclarator     @.init-declarator-list;
+    has IInitDeclarator     @.init-declarator-list;
 }
 
 # rule simple-declaration:sym<init-list> { <attribute-specifier-seq> <decl-specifier-seq>? <init-declarator-list> <.semi> }
@@ -1817,7 +1832,7 @@ our class SimpleDeclaration::InitList does ISimpleDeclaration {
     has IComment               $.comment;
     has IAttributeSpecifierSeq $.attribute-specifier-seq is required;
     has IDeclSpecifierSeq       $.decl-specifier-seq;
-    has InitDeclarator         @.init-declarator-list;
+    has IInitDeclarator         @.init-declarator-list;
 }
 
 # rule static-assert-declaration { 
@@ -1923,13 +1938,13 @@ our class SimpleTypeSignednessModifier::Signed does ISimpleTypeSignednessModifie
 our class FullTypeName 
 does IPostListHead
 does IDeclSpecifier { 
-    has NestedNameSpecifier $.nested-name-specifier;
+    has INestedNameSpecifier $.nested-name-specifier;
     has ITheTypeName         $.the-type-name is required;
 }
 
 # rule scoped-template-id { <nested-name-specifier> <.template> <simple-template-id> }
 our class ScopedTemplateId { 
-    has NestedNameSpecifier $.nested-name-specifier is required;
+    has INestedNameSpecifier $.nested-name-specifier is required;
     has SimpleTemplateId    $.simple-template-id is required;
 }
 
@@ -2081,7 +2096,7 @@ our class DecltypeSpecifier {
 # rule elaborated-type-specifier:sym<class-ident> { <.class-key> <attribute-specifier-seq>? <nested-name-specifier>? <identifier> }
 our class ElaboratedTypeSpecifier::ClassIdent does IElaboratedTypeSpecifier {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has NestedNameSpecifier   $.nested-name-specifier;
+    has INestedNameSpecifier   $.nested-name-specifier;
     has Identifier            $.identifier is required;
 }
 
@@ -2092,13 +2107,13 @@ our class ElaboratedTypeSpecifier::ClassTemplateId does IElaboratedTypeSpecifier
 
 # rule elaborated-type-specifier:sym<class-nested-template-id> { <.class-key> <nested-name-specifier> <template>? <simple-template-id> }
 our class ElaboratedTypeSpecifier::ClassNestedTemplateId does IElaboratedTypeSpecifier {
-    has NestedNameSpecifier $.nested-name-specifier is required;
+    has INestedNameSpecifier $.nested-name-specifier is required;
     has SimpleTemplateId    $.simple-template-id is required;
 }
 
 # rule elaborated-type-specifier:sym<enum> { <.enum_> <nested-name-specifier>? <identifier> } #------------------------------
 our class ElaboratedTypeSpecifier::Enum does IElaboratedTypeSpecifier {
-    has NestedNameSpecifier $.nested-name-specifier;
+    has INestedNameSpecifier $.nested-name-specifier;
     has Identifier          $.identifier is required;
 }
 
@@ -2125,7 +2140,7 @@ our class EnumSpecifier {
 # }
 our class EnumHead { 
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has NestedNameSpecifier   $.nested-name-specifier;
+    has INestedNameSpecifier   $.nested-name-specifier;
     has Identifier            $.identifier;
     has IEnumBase              $.enum-base;
 }
@@ -2224,14 +2239,14 @@ our class NamespaceAliasDefinition {
 
 # rule qualifiednamespacespecifier { <nested-name-specifier>? <namespace-name> } #--------------------
 our class Qualifiednamespacespecifier { 
-    has NestedNameSpecifier $.nested-name-specifier;
+    has INestedNameSpecifier $.nested-name-specifier;
     has INamespaceName       $.namespace-name is required;
 }
 
 
 # rule using-declaration-prefix:sym<nested> { [ <typename_>? <nested-name-specifier> ] }
 our class UsingDeclarationPrefix::Nested does IUsingDeclarationPrefix {
-    has NestedNameSpecifier $.nested-name-specifier is required;
+    has INestedNameSpecifier $.nested-name-specifier is required;
 }
 
 # rule using-declaration-prefix:sym<base> { <doublecolon> } #--------------------
@@ -2255,7 +2270,7 @@ our class UsingDeclaration {
 our class UsingDirective { 
     has IComment               $.comment;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has NestedNameSpecifier    $.nested-name-specifier;
+    has INestedNameSpecifier    $.nested-name-specifier;
     has INamespaceName         $.namespace-name is required;
 }
 
@@ -2390,7 +2405,7 @@ our class Balancedrule::Braces does IBalancedrule {
 }
 
 # rule init-declarator { <declarator> <initializer>? } #--------------------------
-our class InitDeclarator { 
+our class InitDeclarator does IInitDeclarator { 
     has IDeclarator  $.declarator is required;
     has IInitializer $.initializer;
 }
@@ -2453,7 +2468,9 @@ our class NoPointerDeclaratorTail::Bracketed does INoPointerDeclaratorTail {
 #   <no-pointer-declarator-base> 
 #   <no-pointer-declarator-tail>* 
 # } #------------------------------
-our class NoPointerDeclarator does IDeclarator { 
+our class NoPointerDeclarator 
+does IInitDeclarator
+does IDeclarator { 
     has INoPointerDeclaratorBase $.no-pointer-declarator-base is required;
     has INoPointerDeclaratorTail @.no-pointer-declarator-tail;
 }
@@ -2501,7 +2518,7 @@ our class PointerOperator::RefRef does IPointerOperator {
 
 # rule pointer-operator:sym<star> { <nested-name-specifier>? <star> <attribute-specifier-seq>? <cvqualifierseq>? }
 our class PointerOperator::Star does IPointerOperator {
-    has NestedNameSpecifier   $.nested-name-specifier;
+    has INestedNameSpecifier   $.nested-name-specifier;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
     has Cvqualifierseq        $.cvqualifierseq;
 }
@@ -2670,19 +2687,14 @@ our class NoPointerAbstractPackDeclarator {
 #   <parameter-declaration-list> 
 #   [ <.comma>? <ellipsis> ]? 
 # }
-our class ParameterDeclarationClause { 
-    has ParameterDeclarationList $.parameter-declaration-list is required;
-    has Bool                     $.has-ellipsis is required;
-}
-
 # rule parameter-declaration-list { 
 #   <parameter-declaration> 
 #   [ <.comma> <parameter-declaration> ]* 
 # } #-----------------------------
-our class ParameterDeclarationList { 
-    has ParameterDeclaration @.parameter-declaration is required;
+our class ParameterDeclarationClause { 
+    has ParameterDeclaration @.parameter-declaration-list is required;
+    has Bool                 $.has-ellipsis is required;
 }
-
 
 # rule parameter-declaration-body:sym<decl> { <declarator> }
 our class ParameterDeclarationBody::Decl does IParameterDeclarationBody {
@@ -2751,6 +2763,10 @@ our class FunctionBody::AssignDelete does IFunctionBody {
 # rule initializer:sym<brace-or-eq> { <brace-or-equal-initializer> }
 our class Initializer::BraceOrEq does IInitializer {
     has IBraceOrEqualInitializer $.brace-or-equal-initializer is required;
+}
+
+our class Initializer does IInitializer {
+    has $.value is required;
 }
 
 # rule initializer:sym<paren-expr-list> { 
@@ -2851,7 +2867,7 @@ our class ClassHead::Union does IClassHead {
 
 # rule class-head-name { <nested-name-specifier>? <class-name> }
 our class ClassHeadName { 
-    has NestedNameSpecifier $.nested-name-specifier;
+    has INestedNameSpecifier $.nested-name-specifier;
     has IClassName           $.class-name is required;
 }
 
@@ -3021,7 +3037,7 @@ our class BaseSpecifier::Access does IBaseSpecifier {
 
 # rule class-or-decl-type:sym<class> { <nested-name-specifier>? <class-name> }
 our class ClassOrDeclType::Class does IClassOrDeclType {
-    has NestedNameSpecifier $.nested-name-specifier;
+    has INestedNameSpecifier $.nested-name-specifier;
     has IClassName           $.class-name is required;
 }
 
@@ -3259,7 +3275,7 @@ our class TemplateArgument::IdExpr does ITemplateArgument {
 
 # rule type-name-specifier:sym<ident> { <typename_> <nested-name-specifier> <identifier> }
 our class TypeNameSpecifier::Ident does ITypeNameSpecifier {
-    has NestedNameSpecifier $.nested-name-specifier is required;
+    has INestedNameSpecifier $.nested-name-specifier is required;
     has Identifier $.identifier is required;
 }
 
@@ -3270,7 +3286,7 @@ our class TypeNameSpecifier::Ident does ITypeNameSpecifier {
 #   <simple-template-id> 
 # }
 our class TypeNameSpecifier::Template does ITypeNameSpecifier {
-    has NestedNameSpecifier $.nested-name-specifier is required;
+    has INestedNameSpecifier $.nested-name-specifier is required;
     has Bool                $.has-template          is required;
     has SimpleTemplateId    $.simple-template-id    is required;
 }

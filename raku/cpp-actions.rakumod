@@ -860,10 +860,11 @@ our class CPP14Parser::Actions {
 
     # rule postfix-expression { <postfix-expression-body> <postfix-expression-tail>* }
     method postfix-expression($/) {
-        my $body = $<postfix-expression-body>.made;
-        my @tail = $<postfix-expression-tail>>>.made.List;
 
-        if @tail.elems gt 0 {
+        my $body = $<postfix-expression-body>.made;
+        my @tail = $<postfix-expression-tail>>>.made;
+
+        if @tail and @tail.elems gt 0 {
             make PostfixExpression.new(
                 postfix-expression-body => $body,
                 postfix-expression-tail => @tail,
@@ -885,7 +886,7 @@ our class CPP14Parser::Actions {
 
     # rule postfix-expression-tail:sym<parens> { <.left-paren> <expression-list>? <.right-paren> }
     method postfix-expression-tail:sym<parens>($/) {
-        make $<expression-list>.made
+        make $<expression-list>.made // PostfixExpressionTail::Null.new
     }
 
     # rule postfix-expression-tail:sym<indirection-id> { [ <dot> || <arrow> ] <template>? <id-expression> }
@@ -1232,7 +1233,7 @@ our class CPP14Parser::Actions {
                 pointer-operators         => @ops,
                 no-pointer-new-declarator => $base,
             )
-        } elems {
+        } else {
             make $base
         }
     }
@@ -2907,7 +2908,7 @@ our class CPP14Parser::Actions {
 
             make InitDeclarator.new(
                 declarator  => $body,
-                initializer => $initializer,
+                initializer => Initializer.new(value => $initializer),
             )
 
         } else {
@@ -3745,7 +3746,7 @@ our class CPP14Parser::Actions {
                 conversion-declarator => $tail,
             )
         } else {
-            make $body
+            make $base
         }
     }
 
