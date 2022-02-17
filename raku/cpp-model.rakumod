@@ -913,7 +913,7 @@ our class Capture::Init does ICapture {
 
 # rule simple-capture:sym<id> { <and_>? <identifier> }
 our class SimpleCapture::Id does ISimpleCapture {
-    has Bool       $.has-and_;
+    has Bool       $.has-and;
     has Identifier $.identifier is required;
 }
 
