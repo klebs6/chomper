@@ -567,9 +567,17 @@ our role CPP14Parser does CPP14Lexer {
 
     proto rule postfix-expression-tail { * }
 
-    rule bracket-tail {
+    proto rule bracket-tail { * }
+
+    rule bracket-tail:sym<expr> {
         <left-bracket> 
-        [ <expression> || <braced-init-list> ] 
+        <expression>
+        <right-bracket>
+    }
+
+    rule bracket-tail:sym<braced-init-list> {
+        <left-bracket> 
+        <braced-init-list>
         <right-bracket>
     }
 
@@ -593,8 +601,12 @@ our role CPP14Parser does CPP14Lexer {
         <pseudo-destructor-name> 
     }
 
-    rule postfix-expression-tail:sym<pp-mm> { 
-        [ <plus-plus> ||  <minus-minus> ]
+    rule postfix-expression-tail:sym<pp> { 
+        <plus-plus>
+    }
+
+    rule postfix-expression-tail:sym<mm> { 
+        <minus-minus>
     }
 
     #-------------------------------------

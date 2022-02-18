@@ -599,7 +599,13 @@ our class CPP14Parser::Actions {
 
     # token primary-expression:sym<literal> { <literal>+ }
     method primary-expression:sym<literal>($/) {
-        make $<literal>>>.made
+        my @literals = $<literal>>>.made;
+
+        if @literals.elems gt 1 {
+            make @literals
+        } else {
+            make @literals[0]
+        }
     }
 
     # token primary-expression:sym<this> { <this> }
@@ -875,8 +881,12 @@ our class CPP14Parser::Actions {
     }
 
     # rule bracket-tail { <.left-bracket> [ <expression> || <braced-init-list> ] <.right-bracket> }
-    method bracket-tail($/) {
-        make BracketTail.new
+    method bracket-tail:sym<expr>($/) {
+        make $<expression>.made
+    }
+
+    method bracket-tail:sym<braced-init-list>($/) {
+        make $<braced-init-list>.made
     }
 
     # rule postfix-expression-tail:sym<bracket> { <bracket-tail> }
@@ -1009,12 +1019,16 @@ our class CPP14Parser::Actions {
 
     # token post-list-tail:sym<parenthesized> { <.left-paren> <expression-list>? <.right-paren> }
     method post-list-tail:sym<parenthesized>($/) {
-        make $<expression-list>.made
+        make PostListTail.new(
+            value => $<expression-list>.made
+        )
     }
 
     # token post-list-tail:sym<braced> { <braced-init-list> }
     method post-list-tail:sym<braced>($/) {
-        make $<braced-init-list>.made
+        make PostListTail.new(
+            value => $<braced-init-list>.made
+        )
     }
 
     # token postfix-expression-list { <post-list-head> <post-list-tail> } 
@@ -1310,15 +1324,19 @@ our class CPP14Parser::Actions {
 
     # rule pointer-member-expression { <cast-expression> <pointer-member-expression-tail>* }
     method pointer-member-expression($/) {
+
         my $base = $<cast-expression>.made;
         my @tail = $<pointer-member-expression-tail>>>.made;
+
         if @tail.elems gt 0 {
             make PointerMemberExpression.new(
                 cast-expression                => $base,
                 pointer-member-expression-tail => @tail,
             )
+
         } else {
             make $base
+
         }
     }
 
@@ -1589,7 +1607,7 @@ our class CPP14Parser::Actions {
     # rule conditional-expression-tail { <question> <expression> <colon> <assignment-expression> }
     method conditional-expression-tail($/) {
         make ConditionalExpressionTail.new(
-            question-expression   => $<question-expression>.made,
+            question-expression   => $<expression>.made,
             assignment-expression => $<assignment-expression>.made,
         )
     }
@@ -1631,7 +1649,14 @@ our class CPP14Parser::Actions {
 
     # rule assignment-expression:sym<conditional> { <conditional-expression> }
     method assignment-expression:sym<conditional>($/) {
-        make $<conditional-expression>.made
+
+        my $res = $<conditional-expression>.made;
+
+        if $res.elems eq 1 {
+            make $res[0]
+        } else {
+            make $res
+        }
     }
 
     # token assignment-operator:sym<assign> { <.assign> }
@@ -1874,13 +1899,22 @@ our class CPP14Parser::Actions {
 
     # rule selection-statement:sym<if> { <if_> <.left-paren> <condition> <.right-paren> <statement> [ <comment>? <else_> <statement> ]? }
     method selection-statement:sym<if>($/) {
+
         my @statements = $<statement>>>.made;
-        make SelectionStatement::If.new(
-            condition              => $<condition>.made,
-            statement              => @statements[0],
-            else-statement-comment => $<comment>.made // Nil,
-            else-statement         => @statements[1] // Nil,
-        )
+
+        if @statements[1] {
+            make SelectionStatement::If.new(
+                condition              => $<condition>.made,
+                statements             => @statements[0].List,
+                else-statement-comment => $<comment>.made // Nil,
+                else-statements        => @statements[1].List,
+            )
+        } else {
+            make SelectionStatement::If.new(
+                condition              => $<condition>.made,
+                statements             => @statements[0].List,
+            )
+        }
     }
 
     # rule selection-statement:sym<switch> { <switch> <.left-paren> <condition> <.right-paren> <statement> } 
@@ -1921,8 +1955,8 @@ our class CPP14Parser::Actions {
     # rule iteration-statement:sym<while> { <while_> <.left-paren> <condition> <.right-paren> <statement> }
     method iteration-statement:sym<while>($/) {
         make IterationStatement::While.new(
-            condition => $<condition>.made,
-            statement => $<statement>.made,
+            condition  => $<condition>.made,
+            statements => $<statement>.made.List,
         )
     }
 
@@ -1951,7 +1985,7 @@ our class CPP14Parser::Actions {
             for-init-statement => $<for-init-statement>.made,
             condition          => $<condition>.made,
             expression         => $<expression>.made,
-            statement          => $<statement>.made,
+            statements         => $<statement>.made.List,
         )
     }
 
@@ -1968,7 +2002,7 @@ our class CPP14Parser::Actions {
         make IterationStatement::ForRange.new(
             for-range-declaration => $<for-range-declaration>.made,
             for-range-initializer => $<for-range-initializer>.made,
-            statement             => $<statement>.made,
+            statements            => $<statement>.made.List,
         )
     }
 
@@ -2172,7 +2206,15 @@ our class CPP14Parser::Actions {
         )
     }
 
-    # rule static-assert-declaration { <static_assert> <.left-paren> <constant-expression> <.comma> <string-literal> <.right-paren> <.semi> }
+    # rule static-assert-declaration { 
+    #   <static_assert> 
+    #   <.left-paren> 
+    #   <constant-expression> 
+    #   <.comma> 
+    #   <string-literal> 
+    #   <.right-paren> 
+    #   <.semi> 
+    # }
     method static-assert-declaration($/) {
         make StaticAssertDeclaration.new(
             constant-expression => $<constant-expression>.made,
@@ -2246,7 +2288,7 @@ our class CPP14Parser::Actions {
         if @specifiers.elems gt 1 or $seq {
             make DeclSpecifierSeq.new(
                 decl-specifiers         => @specifiers,
-                attribute-specifier-seq => $seq,
+                attribute-specifier-seq => $seq // Nil,
             )
         } else {
             make @specifiers[0]
@@ -2992,7 +3034,12 @@ our class CPP14Parser::Actions {
         make $<parameters-and-qualifiers>.made
     }
 
-    # rule no-pointer-declarator-tail:sym<bracketed> { <.left-bracket> <constant-expression>? <.right-bracket> <attribute-specifier-seq>? } 
+    # rule no-pointer-declarator-tail:sym<bracketed> { 
+    #   <.left-bracket> 
+    #   <constant-expression>? 
+    #   <.right-bracket> 
+    #   <attribute-specifier-seq>? 
+    # } 
     method no-pointer-declarator-tail:sym<bracketed>($/) {
         make NoPointerDeclaratorTail::Bracketed.new(
             constant-expression     => $<constant-expression>.made,
@@ -3210,7 +3257,12 @@ our class CPP14Parser::Actions {
         make $<pointer-abstract-declarator>.made
     }
 
-    # rule no-pointer-abstract-declarator-bracketed-base { <.left-bracket> <constant-expression>? <.right-bracket> <attribute-specifier-seq>? }
+    # rule no-pointer-abstract-declarator-bracketed-base { 
+    #   <.left-bracket> 
+    #   <constant-expression>? 
+    #   <.right-bracket> 
+    #   <attribute-specifier-seq>? 
+    # }
     method no-pointer-abstract-declarator-bracketed-base($/) {
         make NoPointerAbstractDeclaratorBracketedBase.new(
             constant-expression     => $<constant-expression>.made,
@@ -3241,7 +3293,12 @@ our class CPP14Parser::Actions {
         make $<parameters-and-qualifiers>.made
     }
 
-    # rule no-pointer-abstract-pack-declarator-brackets { <.left-bracket> <constant-expression>? <.right-bracket> <attribute-specifier-seq>? } 
+    # rule no-pointer-abstract-pack-declarator-brackets { 
+    #   <.left-bracket> 
+    #   <constant-expression>? 
+    #   <.right-bracket> 
+    #   <attribute-specifier-seq>? 
+    # } 
     method no-pointer-abstract-pack-declarator-brackets($/) {
         make NoPointerAbstractPackDeclaratorBrackets.new(
             constant-expression     => $<constant-expression>.made,
@@ -3397,7 +3454,7 @@ our class CPP14Parser::Actions {
 
     # rule initializer-list { <initializer-clause> <ellipsis>? [ <.comma> <initializer-clause> <ellipsis>? ]* }
     method initializer-list($/) {
-        make $<initializer-clause>>>.made
+        make InitializerList.new(clauses => $<initializer-clause>>>.made)
     }
 
     # rule braced-init-list { <.left-brace> [ <initializer-list> <.comma>? ]? <.right-brace> } 

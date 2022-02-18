@@ -9,7 +9,7 @@ my $translated = cpp-translate($in);
 
 if $translated {
     say $translated;
-    say $translated.made;
+    #say $translated.made;
     ddt $translated.made;
 }
 
