@@ -1,5 +1,7 @@
 unit package Rust::Lexer;
 
+my $pushback-len = 4;
+
 enum XState <
 str
 rawstr
@@ -18,6 +20,7 @@ doc_line
 blockcomment
 doc_block
 suffix
+INITIAL
 >;
 
 class XStateStack {
@@ -40,6 +43,18 @@ multi sub line-number(Match $match) {
 
 grammar G {
 
+    method begin(XState $.state) {
+
+    }
+
+    method push_state(XState $.state) {
+
+    }
+
+    method pop_state {
+
+    }
+
     token TOP {
         :my XStateStack $*STATES = XStateStack.new;
         :my Int $*NUM-HASHES   = 0;
@@ -48,7 +63,8 @@ grammar G {
     }
 
     token ident {
-        <[a..z A..Z \x80..\xff _]> <[a..z A..Z 0..9 \x80..\xff _]>*
+        <[a..z A..Z \x80..\xff _]> 
+        <[a..z A..Z 0..9 \x80..\xff _]>*
     }
 
     token ws {
@@ -57,7 +73,8 @@ grammar G {
 
     token byte-order-mark {
         \xef \xbb \xbf {
-            die "BOM found in invalid location" unless line-number($/) eq 0
+            die "BOM found in invalid location" 
+            unless line-number($/) eq 0
         }
     }
 
@@ -66,126 +83,174 @@ grammar G {
 
     token lit-integer:sym<hex> {
         0x <[0..9 a..f A..F _ ]>+
-        {self.begin(XState::suffix)}
+        {self.begin(XState::<suffix>)}
     }
 
     token lit-integer:sym<oct> {
         0o <[0..7 _]>+
-        {self.begin(XState::suffix)}
+        {self.begin(XState::<suffix>)}
     }
 
     token lit-integer:sym<bin> {
         0b <[01_]>+
-        {self.begin(XState::suffix)}
+        {self.begin(XState::<suffix>)}
     }
 
     token lit-integer:sym<int> {
         <[0..9]> <[0..9_]>*                                       
-        {self.begin(XState::suffix)}
+        {self.begin(XState::<suffix>)}
     }
 
     token lit-integer:sym<suf> {
-    #[0-9][0-9_]*\.(\.|[a-zA-Z])    { yyless(yyleng - 2); BEGIN(suffix); return LIT_INTEGER; }
-
+        <[0..9]>
+        <[0..9 _]>*
+        \.
+        [
+            | \.
+            | <[a..z A..Z]>
+        ]
+        { 
+            #yyless(yyleng - 2); 
+            self.begin(XState::<suffix>)
+        }
     }
 
     #-----------------------------
     proto token lit-float { * }
 
     token lit-float:sym<a> {
-
+        <[0..9]> 
+        <[0..9 _]>* 
+        \. 
+        <[0..9 _]>*
+        [
+            <[eE]>
+            <[\-\+]>?
+            <[0..9 _]>+
+        ]?
+        {
+            self.begin(XState::<suffix>)
+        }
     }
 
     token lit-float:sym<b> {
-
+        <[0..9]>
+        <[0..9_]>*
+        (\.<[0..9_]>*)?
+        <[eE]>
+        <[\-\+]>?
+        <[0..9_]>+          
+        {
+            self.begin(XState::<suffix>)
+        }
     }
 
     #-----------------------------
-    token semicolon { ';'    } 
-    token comma     { ','    } 
-    token dotdotdot { \.\.\. } 
-    token dotdot    { \.\.   } 
-    token dot       { \.     } 
-    token lparen    { '('    } 
-    token rparen    { ')'    } 
-    token lbrace    { '{'    } 
-    token rbrace    { '}'    } 
-    token lbrack    { '['    } 
-    token rbrack    { ']'    } 
-    token at        { '@'    } 
-    token tilde     { '~'    } 
-    token mod-sep   { '::'   } 
-    token colon     { ':'    } 
-    token dollar    { \$     } 
-    token question  { \?     } 
-    token eqeq      { '=='   } 
-    token fat-arrow { '=>'   } 
-    token equals    { '='    } 
-    token n-equals  { '!='   } 
-    token bang      { '!'    } 
-    token l-equals  { '<='   } 
-    token shl       { '<<'   } 
-    token shr       { '>>'   } 
-    token shl-eq    { '<<='  } 
-    token shr-eq    { '>>='  } 
-    token less      { '<'  } 
-    token greater   { '>'  } 
-    token g-equals  { '>='  } 
+    token semicolon  { ';'    } 
+    token comma      { ','    } 
+    token dotdotdot  { \.\.\. } 
+    token dotdot     { \.\.   } 
+    token dot        { \.     } 
+    token lparen     { '('    } 
+    token rparen     { ')'    } 
+    token lbrace     { '{'    } 
+    token rbrace     { '} '   } 
+    token lbrack     { '['    } 
+    token rbrack     { ']'    } 
+    token at         { '@'    } 
+    token tilde      { '~'    } 
+    token mod-sep    { '::'   } 
+    token colon      { ':'    } 
+    token dollar     { \$     } 
+    token question   { \?     } 
+    token eqeq       { '=='   } 
+    token fat-arrow  { '=>'   } 
+    token equals     { '='    } 
+    token n-equals   { '!='   } 
+    token bang       { '!'    } 
+    token l-equals   { '<='   } 
+    token shl        { '<<'   } 
+    token shr        { '>>'   } 
+    token shl-eq     { '<<='  } 
+    token shr-eq     { '>>='  } 
+    token less       { '<'    } 
+    token greater    { '>'    } 
+    token g-equals   { '>='   } 
+    token larrow     { '<-'   } 
+    token rarrow     { '->'   } 
+    token dash       { '-'    } 
+    token minus-eq   { '-='   } 
+    token and-and    { '&&'   } 
+    token and_       { '&'    } 
+    token and-eq     { '&='   } 
+    token or-or      { '||'   } 
+    token or_        { '|'    } 
+    token or-eq      { '|='   } 
+    token plus       { '+'    } 
+    token plus-eq    { '+='   } 
+    token star       { '*'    } 
+    token star-eq    { '*='   } 
+    token slash      { '/'    } 
+    token slash-eq   { '/='   } 
+    token caret      { '^'    } 
+    token caret-eq   { '^='   } 
+    token percent    { '%'    } 
+    token percent-eq { '%='   } 
 
     #-------------------------------
-    token UNDERSCORE { _ }
-    token ABSTRACT   { abstract }
-    token ALIGNOF    { alignof }
-    token AS         { as }
-    token BECOME     { become }
-    token BOX        { box }
-    token BREAK      { break }
-    token CATCH_     { catch }
-    token CONST      { const }
-    token CONTINUE   { continue }
-    token CRATE      { crate }
-    token DEFAULT    { default }
-    token DO         { do }
-    token ELSE       { else }
-    token ENUM       { enum }
-    token EXTERN     { extern }
-    token FALSE      { false }
-    token FINAL      { final }
-    token FN         { fn }
-    token FOR        { for }
-    token IF         { if }
-    token IMPL       { impl }
-    token IN         { in }
-    token LET        { let }
-    token LOOP       { loop }
-    token MACRO      { macro }
-    token MATCH      { match }
-    token MOD        { mod }
-    token MOVE       { move }
-    token MUT        { mut }
-    token OFFSETOF   { offsetof }
-    token OVERRIDE   { override }
-    token PRIV       { priv }
-    token PROC       { proc }
-    token PURE       { pure }
-    token PUB        { pub }
-    token REF        { ref }
-    token RETURN     { return }
-    token SELF       { self }
-    token SIZEOF     { sizeof }
-    token STATIC     { static }
-    token STRUCT     { struct }
-    token SUPER      { super }
-    token TRAIT      { trait }
-    token TRUE       { true }
-    token TYPE       { type }
-    token TYPEOF     { typeof }
-    token UNION      { union }
-    token UNSAFE     { unsafe }
-    token UNSIZED    { unsized }
-    token USE        { use }
-    token VIRTUAL    { virtual }
-    token WHERE      { where }
-    token WHILE      { while }
-    token YIELD      { yield }
+    token UNDERSCORE { _        } 
+    token ABSTRACT   { abstract } 
+    token ALIGNOF    { alignof  } 
+    token AS         { as       } 
+    token BECOME     { become   } 
+    token BOX        { box      } 
+    token BREAK      { break    } 
+    token CATCH_     { catch    } 
+    token CONST      { const    } 
+    token CONTINUE   { continue } 
+    token CRATE      { crate    } 
+    token DEFAULT    { default  } 
+    token DO         { do       } 
+    token ELSE       { else     } 
+    token ENUM       { enum     } 
+    token EXTERN     { extern   } 
+    token FALSE      { false    } 
+    token FINAL      { final    } 
+    token FN         { fn       } 
+    token FOR        { for      } 
+    token IF         { if       } 
+    token IMPL       { impl     } 
+    token IN         { in       } 
+    token LET        { let      } 
+    token LOOP       { loop     } 
+    token MACRO      { macro    } 
+    token MATCH      { match    } 
+    token MOD        { mod      } 
+    token MOVE       { move     } 
+    token MUT        { mut      } 
+    token OFFSETOF   { offsetof } 
+    token OVERRIDE   { override } 
+    token PRIV       { priv     } 
+    token PROC       { proc     } 
+    token PURE       { pure     } 
+    token PUB        { pub      } 
+    token REF        { ref      } 
+    token RETURN     { return   } 
+    token SELF       { self     } 
+    token SIZEOF     { sizeof   } 
+    token STATIC     { static   } 
+    token STRUCT     { struct   } 
+    token SUPER      { super    } 
+    token TRAIT      { trait    } 
+    token TRUE       { true     } 
+    token TYPE       { type     } 
+    token TYPEOF     { typeof   } 
+    token UNION      { union    } 
+    token UNSAFE     { unsafe   } 
+    token UNSIZED    { unsized  } 
+    token USE        { use      } 
+    token VIRTUAL    { virtual  } 
+    token WHERE      { where    } 
+    token WHILE      { while    } 
+    token YIELD      { yield    } 
 }
