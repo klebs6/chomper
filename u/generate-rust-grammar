@@ -1,0 +1,14 @@
+#!/usr/bin/env raku
+use antlr-grammar;
+#use ANTLR4::Grammar;
+
+my $out    = "grust.rakumod";
+
+my $ag     = ANTLR4::Grammar.new;
+
+my $lexer  = $ag.file-to-string(%*ENV<RUST_LEXER>);
+
+spurt $out, $lexer;
+
+#my $rust   = $ag.file-to-string(%*ENV<RUST_GRAMMAR>);
+

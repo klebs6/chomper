@@ -2199,10 +2199,10 @@ our class CPP14Parser::Actions {
     # rule simple-declaration:sym<init-list> { <attribute-specifier-seq> <decl-specifier-seq>? <init-declarator-list> <.semi> }
     method simple-declaration:sym<init-list>($/) {
         make SimpleDeclaration::InitList.new(
-            comment                 => $<semi>.made,
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            decl-specifier-seq      => $<decl-specifier-seq>.made,
-            init-declarator-list    => $<init-declarator-list>.made,
+            comment              => $<semi>.made,
+            attribute-specifiers => $<attribute-specifier-seq>.made,
+            decl-specifier-seq   => $<decl-specifier-seq>.made,
+            init-declarator-list => $<init-declarator-list>.made,
         )
     }
 
@@ -3937,8 +3937,8 @@ our class CPP14Parser::Actions {
     # rule simple-template-id { <template-name> <less> <template-argument-list>? <greater> } 
     method simple-template-id($/) {
         make SimpleTemplateId.new(
-            template-name          => $<template-name>.made,
-            template-argument-list => $<template-argument-list>.made,
+            template-name      => $<template-name>.made,
+            template-arguments => $<template-argument-list>.made.List,
         )
     }
 

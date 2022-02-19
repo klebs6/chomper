@@ -30,9 +30,9 @@ C<$grammar> value that you can walk through, and do your own thing.
 
 =end pod
 
-use v6;
+use Grammar::Tracer;
 use JSON::Tiny;
-use ANTLR4::Grammar::Parser;
+use antlr-grammar-parser;
 use antlr-actions-perl6;
 
 my role Indenting {
@@ -61,7 +61,7 @@ my role Formatting {
 
 	multi method to-lines( Any $a ) {
         say Backtrace.new.Str;
-		die "Unknown type, this should not get triggred"
+		die "Unknown type {$a.WHAT}, this should not get triggred"
 	}
 
 	multi method to-lines( Action $a ) {

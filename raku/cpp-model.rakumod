@@ -104,9 +104,9 @@ our class StatementSeq                             { ... }
 our class StaticAssertDeclaration                  { ... }
 our class TemplateArgumentList                     { ... }
 our class TemplateDeclaration                      { ... }
-our class TemplateName                             { ... }
 our class TemplateParameterList                    { ... }
 our class TheTypeId                                { ... }
+our role  ITheTypeId                                {  }
 our class ThrowExpression                          { ... }
 our class TrailingReturnType                       { ... }
 our class TryBlock                                 { ... }
@@ -114,6 +114,7 @@ our class TypeIdList                               { ... }
 our class TypeIdOfTheTypeId                        { ... }
 our class TypeParameter                            { ... }
 our class TypeSpecifierSeq                         { ... }
+our role  ITypeSpecifierSeq                        {  }
 our class Unsignedsuffix                           { ... }
 our class UserDefinedCharacterLiteral              { ... }
 our class UserDefinedStringLiteral                 { ... }
@@ -219,7 +220,7 @@ our role ISimpleescapesequence { }
 our role IFractionalconstant { }
 our role IEncodingprefix { }
 our role ISchar { }
-our role IUserDefinedIntegerLiteral { }
+our role IUserDefinedIntegerLiteral does ILiteral { }
 our role IUserDefinedFloatingLiteral { }
 
 our role IPostfixExpressionTail { }
@@ -286,7 +287,7 @@ our role IDeclSpecifierSeq                              { }
 our role IDeclSpecifier          does IDeclSpecifierSeq { }
 our role IStorageClassSpecifier  does IDeclSpecifier    { }
 our role IFunctionSpecifier      does IDeclSpecifier    { }
-our role ITypeSpecifier          does IDeclSpecifier    { }
+our role ITypeSpecifier          does IDeclSpecifier does ITypeSpecifierSeq    { }
 our role ITrailingTypeSpecifier does ITypeSpecifier     { }
 our role ISimpleTypeLengthModifier                      { }
 our role ISimpleTypeSpecifier          does ITypeSpecifier { }
@@ -305,7 +306,9 @@ our role IDeclarator                                    { }
 our role INoPointerDeclaratorBase                       { }
 our role INoPointerDeclaratorTail                       { }
 our role IAugmentedPointerOperator                      { }
-our role IPointerOperator does IAugmentedPointerOperator {  }
+our role IPointerOperator 
+does IAbstractDeclarator
+does IAugmentedPointerOperator {  }
 our role ICvQualifier                                   { }
 our role IRefqualifier                                  { }
 our role IAbstractDeclarator                            { }
@@ -395,6 +398,8 @@ our role IUserDefinedLiteral does ILiteral { }
 
 #-------------------------------
 our class Identifier 
+does ITheTypeId
+does ITemplateArgument
 does ISimpleTypeSpecifier
 does IConstantExpression
 does IDeclSpecifier
@@ -1044,9 +1049,13 @@ our class CastToken::Const does ICastToken { }
 #   <expression> 
 #   <.right-paren> 
 # }
-our class PostfixExpressionCast { 
+our class PostfixExpressionCast 
+does IInitializer
+does IUnaryExpression
+does IPostfixExpressionBody 
+{ 
     has ICastToken  $.cast-token  is required;
-    has TheTypeId   $.the-type-id is required;
+    has ITheTypeId  $.the-type-id is required;
     has IExpression $.expression  is required;
 }
 
@@ -1063,7 +1072,7 @@ our class PostfixExpressionTypeid::Expr {
 
 our class PostfixExpressionTypeid::TypeId { 
     has TypeIdOfTheTypeId $.type-id-of-the-type-id is required;
-    has TheTypeId         $.the-type-id            is required;
+    has ITheTypeId        $.the-type-id            is required;
 }
 
 
@@ -1098,7 +1107,8 @@ our class PostListTail does IPostListTail {
 our class PostfixExpressionList 
 does IInitializer
 does IUnaryExpression
-does IPostfixExpressionBody { 
+does IPostfixExpressionBody 
+{ 
     has IPostListHead $.post-list-head is required;
     has IPostListTail $.post-list-tail is required;
 }
@@ -1187,7 +1197,7 @@ our class UnaryExpressionCase::Sizeof does IUnaryExpressionCase {
 
 # rule unary-expression-case:sym<sizeof-typeid> { <sizeof> <.left-paren> <the-type-id> <.right-paren> }
 our class UnaryExpressionCase::SizeofTypeid does IUnaryExpressionCase {
-    has TheTypeId $.the-type-id is required;
+    has ITheTypeId $.the-type-id is required;
 }
 
 # rule unary-expression-case:sym<sizeof-ids> { <sizeof> <ellipsis> <.left-paren> <identifier> <.right-paren> }
@@ -1197,7 +1207,7 @@ our class UnaryExpressionCase::SizeofIds does IUnaryExpressionCase {
 
 # rule unary-expression-case:sym<alignof> { <alignof> <.left-paren> <the-type-id> <.right-paren> }
 our class UnaryExpressionCase::Alignof does IUnaryExpressionCase {
-    has TheTypeId $.the-type-id is required;
+    has ITheTypeId $.the-type-id is required;
 }
 
 # rule unary-expression-case:sym<noexcept> { <no-except-expression> }
@@ -1244,8 +1254,8 @@ our class NewExpression::NewTypeId does INewExpression {
 
 # rule new-expression:sym<the-type-id> { <doublecolon>? <new_> <new-placement>? <.left-paren> <the-type-id> <.right-paren> <new-initializer>? }
 our class NewExpression::TheTypeId does INewExpression {
-    has NewPlacement   $.new-placement;
-    has TheTypeId      $.the-type-id is required;
+    has NewPlacement    $.new-placement;
+    has ITheTypeId      $.the-type-id is required;
     has INewInitializer $.new-initializer;
 }
 
@@ -1256,7 +1266,7 @@ our class NewPlacement {
 
 # rule new-type-id { <type-specifier-seq> <new-declarator>? }
 our class NewTypeId { 
-    has TypeSpecifierSeq $.type-specifier-seq is required;
+    has ITypeSpecifierSeq $.type-specifier-seq is required;
     has NewDeclarator    $.new-declarator     is required;
 }
 
@@ -1307,7 +1317,7 @@ our class NoExceptExpression {
 
 # rule cast-expression { [ <.left-paren> <the-type-id> <.right-paren> ]* <unary-expression> }
 our class CastExpression does ICastExpression { 
-    has TheTypeId @.the-type-ids           is required;
+    has ITheTypeId       @.the-type-ids     is required;
     has IUnaryExpression $.unary-expression is required;
 }
 
@@ -1853,7 +1863,7 @@ our class AliasDeclaration {
     has IComment               $.comment;
     has Identifier             $.identifier is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has TheTypeId              $.the-type-id is required;
+    has ITheTypeId             $.the-type-id is required;
 }
 
 
@@ -1869,10 +1879,10 @@ does ISimpleDeclaration {
 # rule simple-declaration:sym<init-list> { <attribute-specifier-seq> <decl-specifier-seq>? <init-declarator-list> <.semi> }
 our class SimpleDeclaration::InitList 
 does ISimpleDeclaration {
-    has IComment               $.comment;
-    has IAttributeSpecifierSeq $.attribute-specifier-seq is required;
-    has IDeclSpecifierSeq       $.decl-specifier-seq;
-    has IInitDeclarator         @.init-declarator-list;
+    has IComment            $.comment;
+    has IAttributeSpecifier @.attribute-specifiers is required;
+    has IDeclSpecifierSeq   $.decl-specifier-seq;
+    has IInitDeclarator     @.init-declarator-list;
 }
 
 # rule static-assert-declaration { 
@@ -1949,7 +1959,7 @@ our class TrailingTypeSpecifier::CvQualifier does ITrailingTypeSpecifier {
 }
 
 # rule type-specifier-seq { <type-specifier>+ <attribute-specifier-seq>? }
-our class TypeSpecifierSeq { 
+our class TypeSpecifierSeq does ITypeSpecifierSeq { 
     has ITypeNameSpecifier     @.type-specifiers is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
 }
@@ -2203,7 +2213,7 @@ our class Enumkey { }
 
 # rule enumbase { <colon> <type-specifier-seq> }
 our class Enumbase { 
-    has TypeSpecifierSeq $.type-specifier-seq is required;
+    has ITypeSpecifierSeq $.type-specifier-seq is required;
 }
 
 # rule enumerator-list { <enumerator-definition> [ <.comma> <enumerator-definition> ]* }
@@ -2371,7 +2381,7 @@ our class AttributeSpecifier::Alignment does IAttributeSpecifier {
 
 # rule alignmentspecifierbody:sym<type-id> { <the-type-id> }
 our class Alignmentspecifierbody::TypeId does IAlignmentspecifierbody {
-    has TheTypeId $.the-type-id is required;
+    has ITheTypeId $.the-type-id is required;
 }
 
 # rule alignmentspecifierbody:sym<const-expr> { <constant-expression> } #--------------------
@@ -2386,7 +2396,9 @@ our class Alignmentspecifierbody::ConstExpr does IAlignmentspecifierbody {
 #   <ellipsis>? 
 #   <.right-paren> 
 # }
-our class Alignmentspecifier { 
+our class Alignmentspecifier 
+does IAttributeSpecifier
+{ 
     has IAlignmentspecifierbody $.alignmentspecifierbody is required;
     has Bool                    $.has-ellipsis is required;
 }
@@ -2592,8 +2604,10 @@ does INoPointerDeclaratorBase {
 }
 
 # rule the-type-id { <type-specifier-seq> <abstract-declarator>? } #-----------------------------
-our class TheTypeId { 
-    has TypeSpecifierSeq   $.type-specifier-seq is required;
+our class TheTypeId 
+does ITheTypeId
+does ITemplateArgument { 
+    has ITypeSpecifierSeq   $.type-specifier-seq is required;
     has IAbstractDeclarator $.abstract-declarator;
 }
 
@@ -3116,7 +3130,7 @@ our class ConversionFunctionId {
 
 # rule conversion-type-id { <type-specifier-seq> <conversion-declarator>? }
 our class ConversionTypeId { 
-    has TypeSpecifierSeq     $.type-specifier-seq is required;
+    has ITypeSpecifierSeq    $.type-specifier-seq is required;
     has ConversionDeclarator $.conversion-declarator;
 }
 
@@ -3248,7 +3262,7 @@ our class TypeParameterSuffix::MaybeIdent does ITypeParameterSuffix {
 # rule type-parameter-suffix:sym<assign-type-id> { <identifier>? <assign> <the-type-id> } #-----------------------------
 our class TypeParameterSuffix::AssignTypeId does ITypeParameterSuffix {
     has Identifier $.identifier;
-    has TheTypeId  $.the-type-id is required;
+    has ITheTypeId $.the-type-id is required;
 }
 
 # rule type-parameter { <type-parameter-base> <type-parameter-suffix> }
@@ -3263,9 +3277,12 @@ our class TypeParameter {
 # <template-argument-list>? 
 # <greater> 
 # }
-our class SimpleTemplateId { 
-    has TemplateName         $.template-name is required;
-    has TemplateArgumentList $.template-argument-list;
+our class SimpleTemplateId 
+does IDeclSpecifierSeq
+does IPostListHead
+{ 
+    has Identifier           $.template-name is required;
+    has ITemplateArgument @.template-arguments;
 }
 
 
@@ -3290,11 +3307,6 @@ our class TemplateId::LiteralOperatorId does ITemplateId {
     has TemplateArgumentList $.template-argument-list;
 }
 
-# token template-name { <identifier> }
-our class TemplateName { 
-    has Identifier $.identifier is required;
-}
-
 # rule template-argument-list { 
 # <template-argument> 
 # <ellipsis>? 
@@ -3307,7 +3319,7 @@ our class TemplateArgumentList {
 
 # token template-argument:sym<type-id> { <the-type-id> }
 our class TemplateArgument::TypeId does ITemplateArgument {
-    has TheTypeId $.the-type-id is required;
+    has ITheTypeId $.the-type-id is required;
 }
 
 # token template-argument:sym<const-expr> { <constant-expression> }
@@ -3395,8 +3407,8 @@ our class SomeDeclarator::Abstract does ISomeDeclarator {
 # rule exception-declaration:sym<basic> { <attribute-specifier-seq>? <type-specifier-seq> <some-declarator>? }
 our class ExceptionDeclaration::Basic does IExceptionDeclaration {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has TypeSpecifierSeq      $.type-specifier-seq is required;
-    has ISomeDeclarator       $.some-declarator;
+    has ITypeSpecifierSeq      $.type-specifier-seq is required;
+    has ISomeDeclarator        $.some-declarator;
 }
 
 # rule exception-declaration:sym<ellipsis> { <ellipsis> }
@@ -3424,7 +3436,7 @@ our class DynamicExceptionSpecification {
 
 # rule type-id-list { <the-type-id> <ellipsis>? [ <.comma> <the-type-id> <ellipsis>? ]* } #---------------------
 our class TypeIdList { 
-    has TheTypeId @.the-type-ids is required;
+    has ITheTypeId @.the-type-ids is required;
 }
 
 # token noe-except-specification:sym<full> { <noexcept> <.left-paren> <constant-expression> <.right-paren> }

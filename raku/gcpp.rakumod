@@ -616,8 +616,8 @@ our role CPP14Parser does CPP14Lexer {
     #
     # uint8_t{format}
     token postfix-expression-body { 
-        || <postfix-expression-list>
         || <postfix-expression-cast>
+        || <postfix-expression-list>
         || <postfix-expression-typeid>
         || <primary-expression>
     }
