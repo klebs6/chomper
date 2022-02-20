@@ -93,98 +93,11 @@
 // Part 1: Items and attributes
 ////////////////////////////////////////////////////////////////////////
 
-meta_item
-: ident                      { $$ = mk_node("MetaWord", 1, $1); }
-| ident '=' lit              { $$ = mk_node("MetaNameValue", 2, $1, $3); }
-| ident '(' meta_seq ')'     { $$ = mk_node("MetaList", 2, $1, $3); }
-| ident '(' meta_seq ',' ')' { $$ = mk_node("MetaList", 2, $1, $3); }
-;
 
-meta_seq
-: %empty                   { $$ = mk_none(); }
-| meta_item                { $$ = mk_node("MetaItems", 1, $1); }
-| meta_seq ',' meta_item   { $$ = ext_node($1, 1, $3); }
-;
 
-maybe_mod_items
-: mod_items
-| %empty             { $$ = mk_none(); }
-;
 
-mod_items
-: mod_item                               { $$ = mk_node("Items", 1, $1); }
-| mod_items mod_item                     { $$ = ext_node($1, 1, $2); }
-;
 
-attrs_and_vis
-: maybe_outer_attrs visibility           { $$ = mk_node("AttrsAndVis", 2, $1, $2); }
-;
 
-mod_item
-: attrs_and_vis item    { $$ = mk_node("Item", 2, $1, $2); }
-;
-
-// items that can appear outside of a fn block
-item
-: stmt_item
-| item_macro
-;
-
-// items that can appear in "stmts"
-stmt_item
-: item_static
-| item_const
-| item_type
-| block_item
-| view_item
-;
-
-item_static
-: STATIC ident ':' ty '=' expr ';'  { $$ = mk_node("ItemStatic", 3, $2, $4, $6); }
-| STATIC MUT ident ':' ty '=' expr ';'  { $$ = mk_node("ItemStatic", 3, $3, $5, $7); }
-;
-
-item_const
-: CONST ident ':' ty '=' expr ';'  { $$ = mk_node("ItemConst", 3, $2, $4, $6); }
-;
-
-item_macro
-: path_expr '!' maybe_ident parens_delimited_token_trees ';'  { $$ = mk_node("ItemMacro", 3, $1, $3, $4); }
-| path_expr '!' maybe_ident braces_delimited_token_trees      { $$ = mk_node("ItemMacro", 3, $1, $3, $4); }
-| path_expr '!' maybe_ident brackets_delimited_token_trees ';'{ $$ = mk_node("ItemMacro", 3, $1, $3, $4); }
-;
-
-view_item
-: use_item
-| extern_fn_item
-| EXTERN CRATE ident ';'                      { $$ = mk_node("ViewItemExternCrate", 1, $3); }
-| EXTERN CRATE ident AS ident ';'             { $$ = mk_node("ViewItemExternCrate", 2, $3, $5); }
-;
-
-extern_fn_item
-: EXTERN maybe_abi item_fn                    { $$ = mk_node("ViewItemExternFn", 2, $2, $3); }
-;
-
-use_item
-: USE view_path ';'                           { $$ = mk_node("ViewItemUse", 1, $2); }
-;
-
-view_path
-: path_no_types_allowed                                    { $$ = mk_node("ViewPathSimple", 1, $1); }
-| path_no_types_allowed MOD_SEP '{'                '}'     { $$ = mk_node("ViewPathList", 2, $1, mk_atom("ViewPathListEmpty")); }
-|                       MOD_SEP '{'                '}'     { $$ = mk_node("ViewPathList", 1, mk_atom("ViewPathListEmpty")); }
-| path_no_types_allowed MOD_SEP '{' idents_or_self '}'     { $$ = mk_node("ViewPathList", 2, $1, $4); }
-|                       MOD_SEP '{' idents_or_self '}'     { $$ = mk_node("ViewPathList", 1, $3); }
-| path_no_types_allowed MOD_SEP '{' idents_or_self ',' '}' { $$ = mk_node("ViewPathList", 2, $1, $4); }
-|                       MOD_SEP '{' idents_or_self ',' '}' { $$ = mk_node("ViewPathList", 1, $3); }
-| path_no_types_allowed MOD_SEP '*'                        { $$ = mk_node("ViewPathGlob", 1, $1); }
-|                       MOD_SEP '*'                        { $$ = mk_atom("ViewPathGlob"); }
-|                               '*'                        { $$ = mk_atom("ViewPathGlob"); }
-|                               '{'                '}'     { $$ = mk_atom("ViewPathListEmpty"); }
-|                               '{' idents_or_self '}'     { $$ = mk_node("ViewPathList", 1, $2); }
-|                               '{' idents_or_self ',' '}' { $$ = mk_node("ViewPathList", 1, $2); }
-| path_no_types_allowed AS ident                           { $$ = mk_node("ViewPathSimple", 2, $1, $3); }
-;
 
 block_item
 : item_fn

@@ -1,3 +1,6 @@
+our sub snake-to-kebab($input) {
+    $input.subst(/_+/,"-")
+}
 
 our sub is-screaming-snake-case($input) {
     grammar Screamer {
