@@ -1,0 +1,320 @@
+#!/usr/bin/env raku
+
+use Data::Dump::Tree;
+
+use gyacc;
+use yacc-actions;
+use case;
+use align;
+use dequote;
+
+=begin comment
+The hunger for wealth, which reduces the planet to
+a garden, fools the eager pursuer. What is the end
+sought? Plainly to secure the ends of good sense
+and beauty, from the intrusion of deformity or
+vulgarity of any kind. But what an operose method!
+What a train of means to secure a little
+conversation! This palace of brick and stone,
+these servants, this kitchen, these stables,
+horses and equipage, this bank-stock and file of
+mortgages; trade to all the world, country-house
+and cottage by the waterside, all for a little
+conversation, high, clear, and spiritual! Could it
+not be had as well by beggars on the highway? No,
+all these things came from successive efforts of
+these beggars to remove friction from the wheels
+of life, and give opportunity. Conversation,
+character, were the avowed ends; wealth was good
+as it appeased the animal cravings, cured the
+smoky chimney, silenced the creaking door, brought
+friends together in a warm and quiet room, and
+kept the children and the dinner-table in
+a different apartment. Thought, virtue, beauty,
+were the ends; but it was known that men of
+thought and virtue sometimes had the headache, or
+wet feet, or could lose good time whilst the room
+was getting warm in winter days. Unluckily, in the
+exertions necessary to remove these
+inconveniences, the main attention has been
+diverted to this object; the old aims have been
+lost sight of, and to remove friction has come to
+be the end. That is the ridicule of rich men, and
+Boston, London, Vienna, and now the governments
+generally of the world are cities and governments
+of the rich; and the masses are not men, but poor
+men, that is, men who would be rich; this is the
+ridicule of the class, that they arrive with pains
+and sweat and fury nowhere; when all is done, it
+is for nothing. They are like one who has
+interrupted the conversation of a company to make
+his speech, and now has forgotten what he went to
+say. The appearance strikes the eye everywhere of
+an aimless society, of aimless nations. Were the
+ends of nature so great and cogent as to exact
+this immense sacrifice of men?
+
+-Emerson
+=end comment
+
+sub write-subrule-body($body) {
+    do for $body.List {
+        my $val = $_.value.trim;
+        given $_ {
+            when SubruleToken {
+                $val = "<{snake-to-kebab($val)}>";
+            }
+            when QuotedChar {
+
+            }
+            when PrecPragma {
+                $val = "\{self.set-prec({snake-to-kebab($val)})\}";
+            }
+        }
+        $val
+    }.join(" ")
+}
+
+sub create-model-classes(%model-classes) {
+
+    my @model-classes;
+
+    for %model-classes.keys.sort {
+
+        my $name    = $_;
+        my @members = %model-classes{$name}.Set.List;
+
+        my @snippets = do for @members {
+            "has \$.{$_.key};"
+        };
+
+        @model-classes.push: qq:to/END/
+        our class {$name.tc} \{
+        {@snippets.join("\n").indent(4)}
+        \}
+        END
+    }
+
+    @model-classes
+}
+
+sub create-model-class(%model-classes, $name,$body,$args) {
+
+    my @members  = model-member-names($body,$args);
+
+    for @members {
+        %model-classes{$name}.push: $_;
+    }
+}
+
+sub model-member-names($body,$args) {
+
+    my @indices = do for $args.List {
+        if $_ ~~ DollarArg {
+            $_.value
+        }
+    };
+
+    my @body = do for $body.List {
+        if $_ !~~ PrecPragma {
+            $_
+        } 
+    };
+
+    do for @indices {
+        @body[$_-1].value.trim
+    }
+}
+
+sub kv-pairs-for-make-action($body,$args) {
+    my @members = model-member-names($body,$args);
+
+    do for @members -> $val {
+        "{snake-to-kebab($val)} => \$<{snake-to-kebab($val)}>.made,"
+    }.align("=>").join("\n")
+}
+
+sub write-subrule-action-body(%model-classes, $body,$actions) {
+
+    if $actions {
+
+        do given $actions.initializer {
+            when MkNode {
+                my $first-arg = $_.args[0];
+                die if not $first-arg ~~ Str;
+                my $name = dequote($first-arg);
+
+                create-model-class(%model-classes, $name,$body,$_.args);
+
+                qq:to/END/.chomp
+                make {$name}.new(
+                {kv-pairs-for-make-action($body,$_.args).indent(4)}
+                )
+                END
+            }
+            when ExtNode {
+                ~$_
+            }
+            when MkNone {
+                ~$_
+            }
+            when MkAtom {
+                qq:to/END/.chomp
+                make {$_.name}.new
+                END
+            }
+            when DollarArg {
+                my $member-name = model-member-names($body,[$_])[0];
+                qq:to/END/.chomp
+                make \$<{$member-name}>.made
+                END
+            }
+            default {
+                say $actions;
+                die "invalid node type";
+            }
+        }
+
+    } else {
+        if $body.elems eq 1 and $body[0] ~~ SubruleToken {
+
+            my $val = $body[0].value.chomp; 
+            qq:to/END/.chomp
+            make \$<{snake-to-kebab($val)}>.made
+            END
+
+        } else {
+            return;
+        }
+    }
+}
+
+sub write-raku-rules(:$role, :$made) {
+
+    my %model-classes;
+
+    my @grammar-tokens;
+    my @grammar-actions;
+
+    sub extract-snippets($item) {
+        my $name = snake-to-kebab($item.name).chomp;
+
+        my Int  $num-subrules = $item.subrules.elems;
+        my Bool $is-proto     = $num-subrules gt 1;
+
+        my @subrule-labels    = (|('a'..'z'), |('aa' .. 'zz'))[0 .. $num-subrules - 1];
+
+        if $is-proto {
+            @grammar-tokens.push: qq:to/END/;
+            proto rule {$name} \{ * \}
+            END
+        }
+
+        for $item.subrules Z @subrule-labels {
+
+            my $subrule = $_[0];
+            my $label   = $_[1];
+
+
+            if $is-proto {
+
+                @grammar-tokens.push: qq:to/END/;
+                rule {$name}:sym<{$label}> \{
+                {
+                    unless $subrule.body ~~ EmptySubrule {
+                        write-subrule-body($subrule.body).indent(4)
+                    }
+                }
+                \}
+                END
+
+                my $action-body = write-subrule-action-body(
+                    %model-classes, 
+                    $subrule.body,
+                    $subrule.actions
+                );
+
+                @grammar-actions.push: qq:to/END/;
+                method {$name}:sym<{$label}>(\$/) \{
+                {$action-body ?? $action-body.indent(4) !! ""}
+                \}
+                END
+
+            } else {
+
+                unless $subrule.body ~~ EmptySubrule  {
+                    @grammar-tokens.push: qq:to/END/;
+                    rule {$name} \{
+                    {write-subrule-body($subrule.body).indent(4)}
+                    \}
+                    END
+                }
+
+                my $action-body = write-subrule-action-body(
+                    %model-classes, 
+                    $subrule.body,
+                    $subrule.actions
+                );
+
+                @grammar-actions.push: qq:to/END/;
+                method {$name}(\$/) \{
+                {$action-body ?? $action-body.indent(4) !! ""}
+                \}
+                END
+            }
+        }
+    }
+
+    for $made.List -> $item {
+        extract-snippets($item);
+    }
+
+    my @model-classes = create-model-classes(%model-classes);
+
+    qq:to/END/
+    {@model-classes.join("\n")}
+    our class {$role}::G \{
+
+    {@grammar-tokens.join("\n").indent(4).chomp}
+    \}
+
+    our class {$role}::A \{
+
+    {@grammar-actions.join("\n").indent(4).chomp}
+    \}
+    END
+}
+
+sub translate-yacc($in, :$role, :$rule = Nil) {
+
+    grammar G  does Yacc { rule TOP { <.ws> <yacc-snippet> } }
+
+    use Grammar::Tracer;
+    grammar GD does Yacc { rule TOP { <.ws> <yacc-snippet> } }
+
+    my $made = G.parse(
+        $in,
+        actions => Yacc::Actions.new,
+        rule => $rule // 'TOP'
+    ).made;
+
+    if not $made {
+        say GD.parse(
+            $in, 
+            actions => Yacc::Actions.new, 
+            rule    => $rule // 'TOP'
+        ).made;
+        exit;
+    }
+
+    if not $role {
+        ddt $made;
+
+    } else {
+        say write-raku-rules(:$role, :$made);
+    }
+}
+
+sub MAIN(:$role = Nil, :$rule = Nil) {
+    translate-yacc($*IN.slurp, :$role , :$rule);
+}

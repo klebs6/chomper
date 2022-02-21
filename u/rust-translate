@@ -1,0 +1,15 @@
+#!/usr/bin/env raku
+use rust-translate;
+use Data::Dump::Tree;
+
+my $in = $*IN.slurp.chomp;
+
+my $hello = "self.target = 0.0;";
+
+my $translated = rust-translate($hello);
+
+if $translated {
+    say $translated;
+}
+
+
