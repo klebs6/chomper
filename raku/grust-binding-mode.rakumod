@@ -1,5 +1,5 @@
 
-our class BindingMode::Rules {
+our role BindingMode::Rules {
 
     proto rule binding-mode { * }
     rule binding-mode:sym<ref>     { <REF> }
@@ -7,7 +7,7 @@ our class BindingMode::Rules {
     rule binding-mode:sym<mut>     { <MUT> }
 }
 
-our class BindingMode::Actions {
+our role BindingMode::Actions {
 
     method binding-mode:sym<ref>($/)     { make BindByRef.new() }
     method binding-mode:sym<ref-mut>($/) { make BindByRef.new() }

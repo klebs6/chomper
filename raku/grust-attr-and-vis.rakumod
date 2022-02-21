@@ -3,14 +3,14 @@ our class AttrsAndVis {
     has $.visibility;
 }
 
-our class AttrsAndVis::Rules {
+our role AttrsAndVis::Rules {
 
     rule attrs-and_vis {
         <maybe-outer_attrs> <visibility>
     }
 }
 
-our class AttrsAndVis::Actions {
+our role AttrsAndVis::Actions {
 
     method attrs-and_vis($/) {
         make AttrsAndVis.new(

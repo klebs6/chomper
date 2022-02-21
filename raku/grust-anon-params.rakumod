@@ -4,144 +4,74 @@ our class AnonArg {
 }
 
 our class AnonArgs {
-    has $.anon_params_allow_variadic_tail;
-    has $.anon_param;
+    has Bool $.variadic-tail;
+    has @.anon_params;
 }
 
 # anon means it's allowed to be anonymous
 # (type-only), but it can still have a name
-our class AnonParams::Rules {
+our role AnonParams::Rules {
 
-    proto rule maybe-comma_anon_params { * }
-
-    rule maybe-comma_anon_params:sym<a> {
-        ','
+    rule maybe-comma_anon_params {
+        ','? <anon-params>?
     }
 
-    rule maybe-comma_anon_params:sym<b> {
-        ',' <anon-params>
+    rule maybe-anon_params {
+        <anon-params>? ','?
     }
 
-    rule maybe-comma_anon_params:sym<c> {
-        ',' <anon-params> ','
+    rule anon-params {
+        <anon-param>+ %% <comma>
     }
 
-    rule maybe-comma_anon_params:sym<d> {
-
-    }
-
-    proto rule maybe-anon_params { * }
-
-    rule maybe-anon_params:sym<a> {
-        <anon-params>
-    }
-
-    rule maybe-anon_params:sym<b> {
-        <anon-params> ','
-    }
-
-    rule maybe-anon_params:sym<c> {
-
-    }
-
-    proto rule anon-params { * }
-
-    rule anon-params:sym<a> {
-        <anon-param>
-    }
-
-    rule anon-params:sym<b> {
-        <anon-params> ',' <anon-param>
-    }
-
+    #-----------------------
     proto rule anon-param { * }
 
-    rule anon-param:sym<a> {
+    rule anon-param:sym<named-arg-ty> {
         <named-arg> ':' <ty>
     }
 
-    rule anon-param:sym<b> {
+    rule anon-param:sym<just-ty> {
         <ty>
     }
 
-    proto rule anon-params_allow_variadic_tail { * }
-
-    rule anon-params_allow_variadic_tail:sym<a> {
-        ',' <DOTDOTDOT>
-    }
-
-    rule anon-params_allow_variadic_tail:sym<b> {
-        ',' <anon-param> <anon-params_allow_variadic_tail>
-    }
-
-    rule anon-params_allow_variadic_tail:sym<c> {
-
+    rule anon-params_allow_variadic_tail {
+        [
+            [',' <anon-param>]*
+            [',' <DOTDOTDOT>]?
+        ]?
     }
 }
 
-our class AnonParams::Actions {
+our role AnonParams::Actions {
 
-    method maybe-comma_anon_params:sym<a>($/) {
-        MkNone<140355664378144>
-    }
-
-    method maybe-comma_anon_params:sym<b>($/) {
+    method maybe-comma_anon_params($/) {
         make $<anon_params>.made
     }
 
-    method maybe-comma_anon_params:sym<c>($/) {
-        make $<anon_params>.made
-    }
-
-    method maybe-comma_anon_params:sym<d>($/) {
-        MkNone<140355664378176>
-    }
-
-    method maybe-anon_params:sym<a>($/) {
+    method maybe-anon_params($/) {
         make $<anon-params>.made
     }
 
-    method maybe-anon_params:sym<b>($/) {
-
+    method anon-params($/) {
+        make $<anon-param>>>.made,
     }
 
-    method maybe-anon_params:sym<c>($/) {
-        MkNone<140355664378208>
-    }
-
-    method anon-params:sym<a>($/) {
-        make AnonArgs.new(
-            anon-param =>  $<anon-param>.made,
-        )
-    }
-
-    method anon-params:sym<b>($/) {
-        ExtNode<140357023572960>
-    }
-
-    method anon-param:sym<a>($/) {
+    method anon-param:sym<named-arg-ty>($/) {
         make AnonArg.new(
             named-arg =>  $<named-arg>.made,
             ty        =>  $<ty>.made,
         )
     }
 
-    method anon-param:sym<b>($/) {
+    method anon-param:sym<just-ty>($/) {
         make $<ty>.made
     }
 
-    method anon-params_allow_variadic_tail:sym<a>($/) {
-        MkNone<140356205527168>
-    }
-
-    method anon-params_allow_variadic_tail:sym<b>($/) {
+    method anon-params_allow_variadic_tail($/) {
         make AnonArgs.new(
-            anon-param                      =>  $<anon-param>.made,
-            anon-params_allow_variadic_tail =>  $<anon-params_allow_variadic_tail>.made,
+            anon-params   => $<anon-param>>>.made,
+            variadic-tail => so $<DOTDOTDOT>.made,
         )
-    }
-
-    method anon-params_allow_variadic_tail:sym<c>($/) {
-        MkNone<140356205527200>
     }
 }

@@ -7,7 +7,7 @@ our class Bindings {
     has $.binding;
 }
 
-our class Binding::Rules {
+our role Binding::Rules {
 
     rule bindings {
         <binding>+ %% <comma>
@@ -18,7 +18,7 @@ our class Binding::Rules {
     }
 }
 
-our class Binding::Actions {
+our role Binding::Actions {
 
     method bindings($/) {
         make $<binding>>>.made

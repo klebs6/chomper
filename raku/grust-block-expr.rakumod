@@ -9,89 +9,35 @@ our class UnsafeBlock {
     has $.block;
 }
 
-our class BlockExpr::Rules {
+our role BlockExpr::Rules {
 
     proto rule block-expr { * }
 
-    rule block-expr:sym<a> {
-        <expr-match>
-    }
-
-    rule block-expr:sym<b> {
-        <expr-if>
-    }
-
-    rule block-expr:sym<c> {
-        <expr-if_let>
-    }
-
-    rule block-expr:sym<d> {
-        <expr-while>
-    }
-
-    rule block-expr:sym<e> {
-        <expr-while_let>
-    }
-
-    rule block-expr:sym<f> {
-        <expr-loop>
-    }
-
-    rule block-expr:sym<g> {
-        <expr-for>
-    }
-
-    rule block-expr:sym<h> {
-        <UNSAFE> <block>
-    }
-
-    rule block-expr:sym<i> {
-        <path-expr> '!' <maybe-ident> <braces-delimited_token_trees>
-    }
+    rule block-expr:sym<a> { <expr-match> }
+    rule block-expr:sym<b> { <expr-if> }
+    rule block-expr:sym<c> { <expr-if_let> }
+    rule block-expr:sym<d> { <expr-while> }
+    rule block-expr:sym<e> { <expr-while_let> }
+    rule block-expr:sym<f> { <expr-loop> }
+    rule block-expr:sym<g> { <expr-for> }
+    rule block-expr:sym<h> { <UNSAFE> <block> }
+    rule block-expr:sym<i> { <path-expr> '!' <maybe-ident> <braces-delimited_token_trees> }
 
     proto rule full-block_expr { * }
 
-    rule full-block_expr:sym<a> {
-        <block-expr>
-    }
-
-    rule full-block_expr:sym<b> {
-        <block-expr_dot>
-    }
+    rule full-block_expr:sym<a> { <block-expr> }
+    rule full-block_expr:sym<b> { <block-expr_dot> }
 
     proto rule block-expr_dot { * }
 
-    rule block-expr_dot:sym<a> {
-        <block-expr> '.' <path-generic_args_with_colons> {self.set-prec(IDENT)}
-    }
-
-    rule block-expr_dot:sym<b> {
-        <block-expr_dot> '.' <path-generic_args_with_colons> {self.set-prec(IDENT)}
-    }
-
-    rule block-expr_dot:sym<c> {
-        <block-expr> '.' <path-generic_args_with_colons> '[' <maybe-expr> ']'
-    }
-
-    rule block-expr_dot:sym<d> {
-        <block-expr_dot> '.' <path-generic_args_with_colons> '[' <maybe-expr> ']'
-    }
-
-    rule block-expr_dot:sym<e> {
-        <block-expr> '.' <path-generic_args_with_colons> '(' <maybe-exprs> ')'
-    }
-
-    rule block-expr_dot:sym<f> {
-        <block-expr_dot> '.' <path-generic_args_with_colons> '(' <maybe-exprs> ')'
-    }
-
-    rule block-expr_dot:sym<g> {
-        <block-expr> '.' <LIT-INTEGER>
-    }
-
-    rule block-expr_dot:sym<h> {
-        <block-expr_dot> '.' <LIT-INTEGER>
-    }
+    rule block-expr_dot:sym<a> { <block-expr>     '.' <path-generic_args_with_colons> {self.set-prec(IDENT)} }
+    rule block-expr_dot:sym<b> { <block-expr_dot> '.' <path-generic_args_with_colons> {self.set-prec(IDENT)} }
+    rule block-expr_dot:sym<c> { <block-expr>     '.' <path-generic_args_with_colons>                          '[' <maybe-expr>  ']' }
+    rule block-expr_dot:sym<d> { <block-expr_dot> '.' <path-generic_args_with_colons>                          '[' <maybe-expr>  ']' }
+    rule block-expr_dot:sym<e> { <block-expr>     '.' <path-generic_args_with_colons>                          '(' <maybe-exprs> ')' }
+    rule block-expr_dot:sym<f> { <block-expr_dot> '.' <path-generic_args_with_colons>                          '(' <maybe-exprs> ')' }
+    rule block-expr_dot:sym<g> { <block-expr>     '.' <LIT-INTEGER> }
+    rule block-expr_dot:sym<h> { <block-expr_dot> '.' <LIT-INTEGER> }
 }
 
 our class BlockExpr::Actions {
