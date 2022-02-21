@@ -9,14 +9,8 @@ our class Bindings {
 
 our class Binding::Rules {
 
-    proto rule bindings { * }
-
-    rule bindings:sym<a> {
-        <binding>
-    }
-
-    rule bindings:sym<b> {
-        <bindings> ',' <binding>
+    rule bindings {
+        <binding>+ %% <comma>
     }
 
     rule binding {
@@ -26,14 +20,8 @@ our class Binding::Rules {
 
 our class Binding::Actions {
 
-    method bindings:sym<a>($/) {
-        make Bindings.new(
-            binding =>  $<binding>.made,
-        )
-    }
-
-    method bindings:sym<b>($/) {
-        ExtNode<140351397766456>
+    method bindings($/) {
+        make $<binding>>>.made
     }
 
     method binding($/) {
