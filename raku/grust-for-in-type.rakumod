@@ -3,7 +3,7 @@ our class ForInType {
     has $.maybe_lifetimes;
 }
 
-our class ForInType::G {
+our class ForInType::Rules {
 
     rule for-in_type {
         <FOR> '<' <maybe-lifetimes> '>' <for-in_type_suffix>
@@ -24,7 +24,7 @@ our class ForInType::G {
     }
 }
 
-our class ForInType::A {
+our class ForInType::Actions {
 
     method for-in_type($/) {
         make ForInType.new(

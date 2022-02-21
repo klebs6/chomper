@@ -4,14 +4,14 @@ our class DeclLocal {
     has $.maybe_ty_ascription;
 }
 
-our class Let::G {
+our class Let::Rules {
 
     rule let {
         <LET> <pat> <maybe-ty_ascription> <maybe-init_expr> ';'
     }
 }
 
-our class Let::A {
+our class Let::Actions {
 
     method let($/) {
         make DeclLocal.new(

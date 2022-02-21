@@ -132,7 +132,7 @@ our class ExprYield {
     has $.expr;
 }
 
-our class NonBlockExpr::G {
+our class NonBlockExpr::Rules {
 
     proto rule nonblock-expr { * }
 
@@ -369,7 +369,7 @@ our class NonBlockExpr::G {
     }
 }
 
-our class NonBlockExpr::A {
+our class NonBlockExpr::Actions {
 
     method nonblock-expr:sym<a>($/) {
         make ExprLit.new(

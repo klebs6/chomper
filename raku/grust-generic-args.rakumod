@@ -3,7 +3,7 @@ our class GenericValues {
     has $.maybe_ty_sums_and_or_bindings;
 }
 
-our class GenericArgs::G {
+our class GenericArgs::Rules {
 
     proto rule generic-args { * }
 
@@ -26,7 +26,7 @@ our class GenericArgs::G {
     }
 }
 
-our class GenericArgs::A {
+our class GenericArgs::Actions {
 
     method generic-args:sym<a>($/) {
         make $<generic_values>.made

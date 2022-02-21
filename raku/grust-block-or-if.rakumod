@@ -1,4 +1,4 @@
-our class BlockOrIf::G {
+our class BlockOrIf::Rules {
 
     proto rule block-or_if { * }
 
@@ -15,7 +15,7 @@ our class BlockOrIf::G {
     }
 }
 
-our class BlockOrIf::A {
+our class BlockOrIf::Actions {
 
     method block-or_if:sym<a>($/) {
         make $<block>.made

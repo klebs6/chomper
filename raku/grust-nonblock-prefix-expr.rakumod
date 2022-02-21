@@ -11,7 +11,7 @@ our class ExprUnary {
     has $.expr_nostruct;
 }
 
-our class NonblockPrefixExpr::G {
+our class NonblockPrefixExpr::Rules {
 
     proto rule nonblock-prefix_expr_nostruct { * }
 
@@ -74,7 +74,7 @@ our class NonblockPrefixExpr::G {
     }
 }
 
-our class NonblockPrefixExpr::A {
+our class NonblockPrefixExpr::Actions {
 
     method nonblock-prefix_expr_nostruct:sym<a>($/) {
         make ExprUnary.new(

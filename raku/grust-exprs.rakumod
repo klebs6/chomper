@@ -2,7 +2,7 @@ our class Exprs {
     has $.expr;
 }
 
-our class Exprs::G {
+our class Exprs::Rules {
 
     proto rule maybe-exprs { * }
 
@@ -39,7 +39,7 @@ our class Exprs::G {
     }
 }
 
-our class Exprs::A {
+our class Exprs::Actions {
 
     method maybe-exprs:sym<a>($/) {
         make $<exprs>.made

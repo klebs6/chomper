@@ -5,14 +5,14 @@ our class ExprWhileLet {
     has $.maybe_label;
 }
 
-our class ExprWhileLet::G {
+our class ExprWhileLet::Rules {
 
     rule expr-while_let {
         <maybe-label> <WHILE> <LET> <pat> '=' <expr-nostruct> <block>
     }
 }
 
-our class ExprWhileLet::A {
+our class ExprWhileLet::Actions {
 
     method expr-while_let($/) {
         make ExprWhileLet.new(

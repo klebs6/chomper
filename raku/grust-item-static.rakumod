@@ -4,7 +4,7 @@ our class ItemStatic {
     has $.ident;
 }
 
-our class ItemStatic::G {
+our class ItemStatic::Rules {
 
     proto rule item-static { * }
 
@@ -17,7 +17,7 @@ our class ItemStatic::G {
     }
 }
 
-our class ItemStatic::A {
+our class ItemStatic::Actions {
 
     method item-static:sym<a>($/) {
         make ItemStatic.new(

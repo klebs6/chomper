@@ -4,7 +4,7 @@ our class TyParam {
     has $.ident;
 }
 
-our class TyParam::G {
+our class TyParam::Rules {
 
     proto rule ty-param { * }
 
@@ -17,7 +17,7 @@ our class TyParam::G {
     }
 }
 
-our class TyParam::A {
+our class TyParam::Actions {
 
     method ty-param:sym<a>($/) {
         make TyParam.new(

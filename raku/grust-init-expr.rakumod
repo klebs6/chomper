@@ -1,4 +1,4 @@
-our class InitExpr::G {
+our class InitExpr::Rules {
 
     proto rule maybe-init_expr { * }
 
@@ -11,7 +11,7 @@ our class InitExpr::G {
     }
 }
 
-our class InitExpr::A {
+our class InitExpr::Actions {
 
     method maybe-init_expr:sym<a>($/) {
         make $<expr>.made

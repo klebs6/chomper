@@ -7,7 +7,7 @@ our class Args {
     has $.param;
 }
 
-our class Params::G {
+our class Params::Rules {
 
     proto rule maybe-params { * }
 
@@ -56,7 +56,7 @@ our class Params::G {
     }
 }
 
-our class Params::A {
+our class Params::Actions {
 
     method maybe-params:sym<a>($/) {
         make $<params>.made

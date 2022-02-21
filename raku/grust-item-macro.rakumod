@@ -6,7 +6,7 @@ our class ItemMacro {
     has $.brackets_delimited_token_trees;
 }
 
-our class ItemMacro::G {
+our class ItemMacro::Rules {
 
     proto rule item-macro { * }
 
@@ -23,7 +23,7 @@ our class ItemMacro::G {
     }
 }
 
-our class ItemMacro::A {
+our class ItemMacro::Actions {
 
     method item-macro:sym<a>($/) {
         make ItemMacro.new(

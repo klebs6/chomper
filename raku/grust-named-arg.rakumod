@@ -1,4 +1,4 @@
-our class NamedArg::G {
+our class NamedArg::Rules {
 
     proto rule named-arg { * }
 
@@ -31,7 +31,7 @@ our class NamedArg::G {
     }
 }
 
-our class NamedArg::A {
+our class NamedArg::Actions {
 
     method named-arg:sym<a>($/) {
         make $<ident>.made

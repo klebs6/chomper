@@ -3,7 +3,7 @@ our class TySumsAndBindings {
     has $.ty_sums;
 }
 
-our class TySumsAndBindings::G {
+our class TySumsAndBindings::Rules {
 
     proto rule maybe-ty_sums_and_or_bindings { * }
 
@@ -42,7 +42,7 @@ our class TySumsAndBindings::G {
     }
 }
 
-our class TySumsAndBindings::A {
+our class TySumsAndBindings::Actions {
 
     method maybe-ty_sums_and_or_bindings:sym<a>($/) {
         make $<ty-sums>.made

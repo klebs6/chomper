@@ -7,7 +7,7 @@ our class Bindings {
     has $.binding;
 }
 
-our class Binding::G {
+our class Binding::Rules {
 
     proto rule bindings { * }
 
@@ -24,7 +24,7 @@ our class Binding::G {
     }
 }
 
-our class Binding::A {
+our class Binding::Actions {
 
     method bindings:sym<a>($/) {
         make Bindings.new(

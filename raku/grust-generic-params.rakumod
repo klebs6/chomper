@@ -3,7 +3,7 @@ our class Generics {
     has $.lifetimes;
 }
 
-our class GenericParams::G {
+our class GenericParams::Rules {
 
     proto rule generic-params { * }
 
@@ -40,7 +40,7 @@ our class GenericParams::G {
     }
 }
 
-our class GenericParams::A {
+our class GenericParams::Actions {
 
     method generic-params:sym<a>($/) {
         make Generics.new(

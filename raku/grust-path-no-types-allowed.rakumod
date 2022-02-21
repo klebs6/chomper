@@ -9,7 +9,7 @@ our class ViewPath {
     has $.ident;
 }
 
-our class PathNoTypesAllowed::G {
+our class PathNoTypesAllowed::Rules {
 
     proto rule path-no_types_allowed { * }
 
@@ -42,7 +42,7 @@ our class PathNoTypesAllowed::G {
     }
 }
 
-our class PathNoTypesAllowed::A {
+our class PathNoTypesAllowed::Actions {
 
     method path-no_types_allowed:sym<a>($/) {
         make ViewPath.new(
@@ -105,7 +105,7 @@ our class Components {
     has $.ident;
 }
 
-our class PathNoTypesAllowed::G {
+our class PathNoTypesAllowed::Rules {
 
     proto rule path-generic_args_without_colons { * }
 
@@ -134,7 +134,7 @@ our class PathNoTypesAllowed::G {
     }
 }
 
-our class PathNoTypesAllowed::A {
+our class PathNoTypesAllowed::Actions {
 
     method path-generic_args_without_colons:sym<a>($/) {
         make components.new(

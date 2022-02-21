@@ -4,7 +4,7 @@ our class Crate {
     has $.inner_attrs;
 }
 
-our class Crate::G {
+our class Crate::Rules {
 
     proto rule crate { * }
 
@@ -27,7 +27,7 @@ our class Crate::G {
     }
 }
 
-our class Crate::A {
+our class Crate::Actions {
 
     method crate:sym<a>($/) {
         make crate.new(

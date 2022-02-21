@@ -2,7 +2,7 @@ our class Ltbounds {
     has $.lifetime;
 }
 
-our class LtBounds::G {
+our class LtBounds::Rules {
 
     proto rule maybe-ltbounds { * }
 
@@ -25,7 +25,7 @@ our class LtBounds::G {
     }
 }
 
-our class LtBounds::A {
+our class LtBounds::Actions {
 
     method maybe-ltbounds:sym<a>($/) {
         make $<ltbounds>.made

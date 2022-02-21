@@ -1,4 +1,4 @@
-our class AsTraitRef::G {
+our class AsTraitRef::Rules {
 
     proto rule maybe-as_trait_ref { * }
 
@@ -11,7 +11,7 @@ our class AsTraitRef::G {
     }
 }
 
-our class AsTraitRef::A {
+our class AsTraitRef::Actions {
 
     method maybe-as_trait_ref:sym<a>($/) {
         make $<trait_ref>.made

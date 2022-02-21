@@ -3,14 +3,14 @@ our class ViewItemExternFn {
     has $.maybe_abi;
 }
 
-our class ExternFnItem::G {
+our class ExternFnItem::Rules {
 
     rule extern-fn_item {
         <EXTERN> <maybe-abi> <item-fn>
     }
 }
 
-our class ExternFnItem::A {
+our class ExternFnItem::Actions {
 
     method extern-fn_item($/) {
         make ViewItemExternFn.new(

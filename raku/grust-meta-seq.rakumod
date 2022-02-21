@@ -2,7 +2,7 @@ our class MetaItems {
     has $.meta_item;
 }
 
-our class MetaSeq::G {
+our class MetaSeq::Rules {
 
     proto rule meta-seq { * }
 
@@ -19,7 +19,7 @@ our class MetaSeq::G {
     }
 }
 
-our class MetaSeq::A {
+our class MetaSeq::Actions {
 
     method meta-seq:sym<a>($/) {
         MkNone<140671732528704>

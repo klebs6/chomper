@@ -1,4 +1,4 @@
-our class FnDeclWithSelf::G {
+our class FnDeclWithSelf::Rules {
 
     rule fn-decl {
         <fn-params> <ret-ty>
@@ -13,7 +13,7 @@ our class FnDeclWithSelf::G {
     }
 }
 
-our class FnDeclWithSelf::A {
+our class FnDeclWithSelf::Actions {
 
     method fn-decl($/) {
         make FnDecl.new(

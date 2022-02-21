@@ -3,7 +3,7 @@ our class VecRepeat {
     has $.exprs;
 }
 
-our class VecExpr::G {
+our class VecExpr::Rules {
 
     proto rule vec-expr { * }
 
@@ -16,7 +16,7 @@ our class VecExpr::G {
     }
 }
 
-our class VecExpr::A {
+our class VecExpr::Actions {
 
     method vec-expr:sym<a>($/) {
         make $<maybe-exprs>.made

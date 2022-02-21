@@ -1,4 +1,4 @@
-our class TyQualifiedPath::G {
+our class TyQualifiedPath::Rules {
 
     proto rule ty-qualified_path_and_generic_values { * }
 
@@ -21,7 +21,7 @@ our class TyQualifiedPath::G {
     }
 }
 
-our class TyQualifiedPath::A {
+our class TyQualifiedPath::Actions {
 
     method ty-qualified_path_and_generic_values:sym<a>($/) {
         make GenericValues.new(

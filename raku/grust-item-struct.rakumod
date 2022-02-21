@@ -18,7 +18,7 @@ our class StructFields {
     has $.struct_tuple_field;
 }
 
-our class ItemStruct::G {
+our class ItemStruct::Rules {
 
     proto rule item-struct { * }
 
@@ -91,7 +91,7 @@ our class ItemStruct::G {
     }
 }
 
-our class ItemStruct::A {
+our class ItemStruct::Actions {
 
     method item-struct:sym<a>($/) {
         make ItemStruct.new(

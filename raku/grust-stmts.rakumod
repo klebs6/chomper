@@ -33,7 +33,7 @@ our class Stmts {
     has $.stmt;
 }
 
-our class Stmts::G {
+our class Stmts::Rules {
 
     proto rule maybe-stmts { * }
 
@@ -106,7 +106,7 @@ our class Stmts::G {
     }
 }
 
-our class Stmts::A {
+our class Stmts::Actions {
 
     method maybe-stmts:sym<a>($/) {
         make $<stmts>.made

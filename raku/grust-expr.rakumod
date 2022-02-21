@@ -39,7 +39,7 @@ our class ExprLit {
     has $.lit;
 }
 
-our class Expr::G {
+our class Expr::Rules {
 
     proto rule expr { * }
 
@@ -284,7 +284,7 @@ our class Expr::G {
     }
 }
 
-our class Expr::A {
+our class Expr::Actions {
 
     method expr:sym<a>($/) {
         make ExprLit.new(

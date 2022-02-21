@@ -1,4 +1,4 @@
-our class TyAscription::G {
+our class TyAscription::Rules {
 
     proto rule maybe-ty_ascription { * }
 
@@ -11,7 +11,7 @@ our class TyAscription::G {
     }
 }
 
-our class TyAscription::A {
+our class TyAscription::Actions {
 
     method maybe-ty_ascription:sym<a>($/) {
         make $<ty_sum>.made

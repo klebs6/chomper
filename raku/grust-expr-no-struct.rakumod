@@ -12,7 +12,7 @@ our class ExprCast {
     has $.ty;
 }
 
-our class ExprNoStruct::G {
+our class ExprNoStruct::Rules {
 
     proto rule expr-nostruct { * }
 
@@ -253,7 +253,7 @@ our class ExprNoStruct::G {
     }
 }
 
-our class ExprNoStruct::A {
+our class ExprNoStruct::Actions {
 
     method expr-nostruct:sym<a>($/) {
         make ExprLit.new(

@@ -12,7 +12,7 @@ our class ViewPathSimple {
     has $.ident;
 }
 
-our class ViewPath::G {
+our class ViewPath::Rules {
 
     proto rule view-path { * }
 
@@ -73,7 +73,7 @@ our class ViewPath::G {
     }
 }
 
-our class ViewPath::A {
+our class ViewPath::Actions {
 
     method view-path:sym<a>($/) {
         make ViewPathSimple.new(

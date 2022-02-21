@@ -8,7 +8,7 @@ our class PatFields {
     has $.pat_field;
 }
 
-our class PatField::G {
+our class PatField::Rules {
 
     proto rule pat-field { * }
 
@@ -51,7 +51,7 @@ our class PatField::G {
     }
 }
 
-our class PatField::A {
+our class PatField::Actions {
 
     method pat-field:sym<a>($/) {
         make PatField.new(

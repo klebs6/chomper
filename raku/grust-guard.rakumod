@@ -1,4 +1,4 @@
-our class Guard::G {
+our class Guard::Rules {
 
     proto rule maybe-guard { * }
 
@@ -11,7 +11,7 @@ our class Guard::G {
     }
 }
 
-our class Guard::A {
+our class Guard::Actions {
 
     method maybe-guard:sym<a>($/) {
         make $<expr_nostruct>.made

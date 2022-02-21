@@ -1,4 +1,4 @@
-our class ItemFn {
+our class Fn {
     has $.fn_decl;
     has $.inner_attrs_and_block;
     has $.ident;
@@ -6,7 +6,7 @@ our class ItemFn {
     has $.maybe_where_clause;
 }
 
-our class ItemUnsafeFn {
+our class UnsafeFn {
     has $.maybe_abi;
     has $.generic_params;
     has $.fn_decl;
@@ -15,7 +15,7 @@ our class ItemUnsafeFn {
     has $.inner_attrs_and_block;
 }
 
-our class ItemFn::G {
+our class Fn::Rules {
 
     proto rule item-fn { * }
 
@@ -42,7 +42,7 @@ our class ItemFn::G {
     }
 }
 
-our class ItemFn::A {
+our class Fn::Actions {
 
     method item-fn:sym<a>($/) {
         make ItemFn.new(

@@ -63,7 +63,7 @@ our class ItemImplNeg {
     has $.generic_params;
 }
 
-our class ItemImpl::G {
+our class ItemImpl::Rules {
 
     proto rule item-impl { * }
 
@@ -130,7 +130,7 @@ our class ItemImpl::G {
     }
 }
 
-our class ItemImpl::A {
+our class ItemImpl::Actions {
 
     method item-impl:sym<a>($/) {
         make ItemImpl.new(

@@ -3,14 +3,14 @@ our class ExprLoop {
     has $.maybe_label;
 }
 
-our class ExprLoop::G {
+our class ExprLoop::Rules {
 
     rule expr-loop {
         <maybe-label> <LOOP> <block>
     }
 }
 
-our class ExprLoop::A {
+our class ExprLoop::Actions {
 
     method expr-loop($/) {
         make ExprLoop.new(

@@ -1,4 +1,4 @@
-our class TyBareFn::G {
+our class TyBareFn::Rules {
 
     proto rule ty-bare_fn { * }
 
@@ -19,7 +19,7 @@ our class TyBareFn::G {
     }
 }
 
-our class TyBareFn::A {
+our class TyBareFn::Actions {
 
     method ty-bare_fn:sym<a>($/) {
         make $<ty_fn_decl>.made

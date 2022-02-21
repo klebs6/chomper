@@ -2,7 +2,7 @@ our class PatVecElts {
     has $.pat;
 }
 
-our class PatVec::G {
+our class PatVec::Rules {
 
     proto rule pat-vec { * }
 
@@ -65,7 +65,7 @@ our class PatVec::G {
     }
 }
 
-our class PatVec::A {
+our class PatVec::Actions {
 
     method pat-vec:sym<a>($/) {
         make PatVec.new(

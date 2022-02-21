@@ -3,7 +3,7 @@ our class PolyBound {
     has $.bound;
 }
 
-our class TyParamBounds::G {
+our class TyParamBounds::Rules {
 
     proto rule maybe-ty_param_bounds { * }
 
@@ -54,7 +54,7 @@ our class TyParamBounds::G {
     }
 }
 
-our class TyParamBounds::A {
+our class TyParamBounds::Actions {
 
     method maybe-ty_param_bounds:sym<a>($/) {
         make $<ty_param_bounds>.made

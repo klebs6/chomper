@@ -5,14 +5,14 @@ our class ItemTy {
     has $.ident;
 }
 
-our class ItemType::G {
+our class ItemType::Rules {
 
     rule item-type {
         <TYPE> <ident> <generic-params> <maybe-where_clause> '=' <ty-sum> ';'
     }
 }
 
-our class ItemType::A {
+our class ItemType::Actions {
 
     method item-type($/) {
         make ItemTy.new(

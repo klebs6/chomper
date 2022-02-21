@@ -1,4 +1,4 @@
-our class String::G {
+our class String::Rules {
 
     proto rule str { * }
 
@@ -19,7 +19,7 @@ our class String::G {
     }
 }
 
-our class String::A {
+our class String::Actions {
 
     method str:sym<a>($/) {
         make LitStr.new(

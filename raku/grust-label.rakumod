@@ -1,5 +1,5 @@
 
-our class Label::G {
+our class Label::Rules {
     rule maybe-label {  
         [<lifetime> ':']?
     }

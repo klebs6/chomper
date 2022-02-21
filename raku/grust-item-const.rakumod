@@ -4,14 +4,14 @@ our class ItemConst {
     has $.expr;
 }
 
-our class ItemConst::G {
+our class ItemConst::Rules {
 
     rule item-const {
         <CONST> <ident> ':' <ty> '=' <expr> ';'
     }
 }
 
-our class ItemConst::A {
+our class ItemConst::Actions {
 
     method item-const($/) {
         make ItemConst.new(

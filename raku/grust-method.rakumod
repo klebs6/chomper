@@ -30,7 +30,7 @@ our class TypeMethod {
     has $.ident;
 }
 
-our class Method::G {
+our class Method::Rules {
 
     proto rule trait-method { * }
 
@@ -85,7 +85,7 @@ our class Method::G {
     }
 }
 
-our class Method::A {
+our class Method::Actions {
 
     method trait-method:sym<a>($/) {
         make Required.new(

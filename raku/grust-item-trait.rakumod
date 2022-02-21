@@ -17,7 +17,7 @@ our class TraitMacroItem {
     has $.item_macro;
 }
 
-our class ItemTrait::G {
+our class ItemTrait::Rules {
 
     rule item-trait {
         <maybe-unsafe> 
@@ -69,7 +69,7 @@ our class ItemTrait::G {
     }
 }
 
-our class ItemTrait::A {
+our class ItemTrait::Actions {
 
     method item-trait($/) {
         make ItemTrait.new(

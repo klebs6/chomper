@@ -4,7 +4,7 @@ our class ExprIf {
     has $.expr_nostruct;
 }
 
-our class ExprIf::G {
+our class ExprIf::Rules {
 
     proto rule expr-if { * }
 
@@ -17,7 +17,7 @@ our class ExprIf::G {
     }
 }
 
-our class ExprIf::A {
+our class ExprIf::Actions {
 
     method expr-if:sym<a>($/) {
         make ExprIf.new(

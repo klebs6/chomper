@@ -14,7 +14,7 @@ our class EnumDefs {
     has $.enum_def;
 }
 
-our class ItemEnum::G {
+our class ItemEnum::Rules {
 
     proto rule item-enum { * }
 
@@ -67,7 +67,7 @@ our class ItemEnum::G {
     }
 }
 
-our class ItemEnum::A {
+our class ItemEnum::Actions {
 
     method item-enum:sym<a>($/) {
         make ItemEnum.new(

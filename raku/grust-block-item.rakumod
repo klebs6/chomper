@@ -4,7 +4,7 @@ our class ItemForeignMod {
     has $.maybe_foreign_items;
 }
 
-our class BlockItem::G {
+our class BlockItem::Rules {
 
     proto rule block-item { * }
 
@@ -45,7 +45,7 @@ our class BlockItem::G {
     }
 }
 
-our class BlockItem::A {
+our class BlockItem::Actions {
 
     method block-item:sym<a>($/) {
         make $<item-fn>.made

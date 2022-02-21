@@ -10,7 +10,7 @@ our class WherePredicates {
     has $.where_predicate;
 }
 
-our class WherePredicates::G {
+our class WherePredicates::Rules {
 
     proto rule where-predicates { * }
 
@@ -33,7 +33,7 @@ our class WherePredicates::G {
     }
 }
 
-our class WherePredicates::A {
+our class WherePredicates::Actions {
 
     method where-predicates:sym<a>($/) {
         make WherePredicates.new(

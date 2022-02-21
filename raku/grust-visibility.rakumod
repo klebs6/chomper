@@ -1,4 +1,4 @@
-our class Visibility::G {
+our class Visibility::Rules {
 
     proto rule visibility { * }
 
@@ -11,7 +11,7 @@ our class Visibility::G {
     }
 }
 
-our class Visibility::A {
+our class Visibility::Actions {
 
     method visibility:sym<a>($/) {
         make Public.new

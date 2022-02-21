@@ -3,14 +3,14 @@ our class ExprBlock {
     has $.maybe_inner_attrs;
 }
 
-our class InnerAttrsAndBlock::G {
+our class InnerAttrsAndBlock::Rules {
 
     rule inner-attrs_and_block {
         '{' <maybe-inner_attrs> <maybe-stmts> '}'
     }
 }
 
-our class InnerAttrsAndBlock::A {
+our class InnerAttrsAndBlock::Actions {
 
     method inner-attrs_and_block($/) {
         make ExprBlock.new(
@@ -22,14 +22,14 @@ our class InnerAttrsAndBlock::A {
 
 #---------------------------------
 
-our class Block::G {
+our class Block::Rules {
 
     rule block {
         '{' <maybe-stmts> '}'
     }
 }
 
-our class Block::A {
+our class Block::Actions {
 
     method block($/) {
         make ExprBlock.new(

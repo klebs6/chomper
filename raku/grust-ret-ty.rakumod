@@ -2,7 +2,7 @@ our class Ret-ty {
     has $.ty;
 }
 
-our class RetTy::G {
+our class RetTy::Rules {
 
     proto rule ret-ty { * }
 
@@ -19,7 +19,7 @@ our class RetTy::G {
     }
 }
 
-our class RetTy::A {
+our class RetTy::Actions {
 
     method ret-ty:sym<a>($/) {
         MkNone<140295749868448>

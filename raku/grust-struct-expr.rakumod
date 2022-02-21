@@ -11,7 +11,7 @@ our class FieldInits {
     has $.field_init;
 }
 
-our class StructExpr::G {
+our class StructExpr::Rules {
 
     proto rule struct-expr_fields { * }
 
@@ -74,7 +74,7 @@ our class StructExpr::G {
     }
 }
 
-our class StructExpr::A {
+our class StructExpr::Actions {
 
     method struct-expr_fields:sym<a>($/) {
         make $<field-inits>.made

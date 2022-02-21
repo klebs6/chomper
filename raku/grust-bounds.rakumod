@@ -2,7 +2,7 @@ our class Bounds {
     has $.bound;
 }
 
-our class Bounds::G {
+our class Bounds::Rules {
 
     proto rule maybe-bounds { * }
 
@@ -35,7 +35,7 @@ our class Bounds::G {
     }
 }
 
-our class Bounds::A {
+our class Bounds::Actions {
 
     method maybe-bounds:sym<a>($/) {
         make $<bounds>.made

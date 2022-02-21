@@ -4,14 +4,14 @@ our class ImplConst {
     has $.item_const;
 }
 
-our class ImplConst::G {
+our class ImplConst::Rules {
 
     rule impl-const {
         <attrs-and_vis> <maybe-default> <item-const>
     }
 }
 
-our class ImplConst::A {
+our class ImplConst::Actions {
 
     method impl-const($/) {
         make ImplConst.new(

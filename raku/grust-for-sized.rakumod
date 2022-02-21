@@ -2,7 +2,7 @@ our class ForSized {
     has $.ident;
 }
 
-our class ForSized::G {
+our class ForSized::Rules {
 
     proto rule for-sized { * }
 
@@ -19,7 +19,7 @@ our class ForSized::G {
     }
 }
 
-our class ForSized::A {
+our class ForSized::Actions {
 
     method for-sized:sym<a>($/) {
         make ForSized.new(

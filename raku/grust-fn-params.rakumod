@@ -26,7 +26,7 @@ our class SelfStatic {
     has $.maybe_anon_params;
 }
 
-our class FnParams::G {
+our class FnParams::Rules {
 
     rule fn-decl_allow_variadic {
         <fn-params_allow_variadic> <ret-ty>
@@ -101,7 +101,7 @@ our class FnParams::G {
     }
 }
 
-our class FnParams::A {
+our class FnParams::Actions {
 
     method fn-decl_allow_variadic($/) {
         make FnDecl.new(

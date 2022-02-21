@@ -1,5 +1,5 @@
 
-our class BindingMode::G {
+our class BindingMode::Rules {
 
     proto rule binding-mode { * }
 
@@ -16,7 +16,7 @@ our class BindingMode::G {
     }
 }
 
-our class BindingMode::A {
+our class BindingMode::Actions {
 
     method binding-mode:sym<a>($/) {
         make BindByRef.new(

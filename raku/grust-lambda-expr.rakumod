@@ -7,7 +7,7 @@ our class ExprFnBlock {
     has $.expr_nostruct;
 }
 
-our class LambdaExpr::G {
+our class LambdaExpr::Rules {
 
     proto rule lambda-expr { * }
 
@@ -74,7 +74,7 @@ our class LambdaExpr::G {
     }
 }
 
-our class LambdaExpr::A {
+our class LambdaExpr::Actions {
 
     method lambda-expr:sym<a>($/) {
         make ExprFnBlock.new(

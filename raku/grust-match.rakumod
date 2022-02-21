@@ -24,7 +24,7 @@ our class ExprMatch {
     has $.expr_nostruct;
 }
 
-our class ExprMatch::G {
+our class ExprMatch::Rules {
 
     proto rule expr-match { * }
 
@@ -89,7 +89,7 @@ our class ExprMatch::G {
     }
 }
 
-our class ExprMatch::A {
+our class ExprMatch::Actions {
 
     method expr-match:sym<a>($/) {
         make ExprMatch.new(

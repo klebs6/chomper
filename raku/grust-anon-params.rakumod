@@ -10,7 +10,7 @@ our class AnonArgs {
 
 # anon means it's allowed to be anonymous
 # (type-only), but it can still have a name
-our class AnonParams::G {
+our class AnonParams::Rules {
 
     proto rule maybe-comma_anon_params { * }
 
@@ -79,7 +79,7 @@ our class AnonParams::G {
     }
 }
 
-our class AnonParams::A {
+our class AnonParams::Actions {
 
     method maybe-comma_anon_params:sym<a>($/) {
         MkNone<140355664378144>

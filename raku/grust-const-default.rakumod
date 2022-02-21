@@ -2,7 +2,7 @@ our class ConstDefault {
     has $.expr;
 }
 
-our class ConstDefault::G {
+our class ConstDefault::Rules {
 
     proto rule maybe-const_default { * }
 
@@ -15,7 +15,7 @@ our class ConstDefault::G {
     }
 }
 
-our class ConstDefault::A {
+our class ConstDefault::Actions {
 
     method maybe-const_default:sym<a>($/) {
         make ConstDefault.new(

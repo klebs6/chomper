@@ -2,7 +2,7 @@ our class TyDefault {
     has $.ty_sum;
 }
 
-our class TyDefault::G {
+our class TyDefault::Rules {
 
     proto rule maybe-ty_default { * }
 
@@ -15,7 +15,7 @@ our class TyDefault::G {
     }
 }
 
-our class TyDefault::A {
+our class TyDefault::Actions {
 
     method maybe-ty_default:sym<a>($/) {
         make TyDefault.new(

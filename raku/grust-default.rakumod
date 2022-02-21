@@ -1,4 +1,4 @@
-our class Default::G {
+our class Default::Rules {
 
     proto rule maybe-default { * }
 
@@ -11,7 +11,7 @@ our class Default::G {
     }
 }
 
-our class Default::A {
+our class Default::Actions {
 
     method maybe-default:sym<a>($/) {
         make Default.new

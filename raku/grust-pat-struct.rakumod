@@ -1,4 +1,4 @@
-our class PatStruct::G {
+our class PatStruct::Rules {
 
     proto rule pat-struct { * }
 
@@ -23,7 +23,7 @@ our class PatStruct::G {
     }
 }
 
-our class PatStruct::A {
+our class PatStruct::Actions {
 
     method pat-struct:sym<a>($/) {
         make PatStruct.new(

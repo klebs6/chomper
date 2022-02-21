@@ -3,7 +3,7 @@ our class PatLit {
     has $.path_expr;
 }
 
-our class LitOrPath::G {
+our class LitOrPath::Rules {
 
     proto rule lit-or_path { * }
 
@@ -20,7 +20,7 @@ our class LitOrPath::G {
     }
 }
 
-our class LitOrPath::A {
+our class LitOrPath::Actions {
 
     method lit-or_path:sym<a>($/) {
         make PatLit.new(

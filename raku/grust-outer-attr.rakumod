@@ -2,7 +2,7 @@ our class OuterAttrs {
     has $.outer_attr;
 }
 
-our class OuterAttrs::G {
+our class OuterAttrs::Rules {
 
     proto rule maybe-outer_attrs { * }
 
@@ -35,7 +35,7 @@ our class OuterAttrs::G {
     }
 }
 
-our class OuterAttrs::A {
+our class OuterAttrs::Actions {
 
     method maybe-outer_attrs:sym<a>($/) {
         make $<outer-attrs>.made

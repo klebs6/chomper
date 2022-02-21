@@ -4,7 +4,7 @@ our class TyClosure {
     has $.maybe_bounds;
 }
 
-our class TyClosure::G {
+our class TyClosure::Rules {
 
     proto rule ty-closure { * }
 
@@ -25,7 +25,7 @@ our class TyClosure::G {
     }
 }
 
-our class TyClosure::A {
+our class TyClosure::Actions {
 
     method ty-closure:sym<a>($/) {
         make TyClosure.new(

@@ -3,7 +3,7 @@ our class SelfPath {
     has $.path_generic_args_with_colons;
 }
 
-our class PathExpr::G {
+our class PathExpr::Rules {
 
     proto rule path-expr { * }
 
@@ -20,7 +20,7 @@ our class PathExpr::G {
     }
 }
 
-our class PathExpr::A {
+our class PathExpr::Actions {
 
     method path-expr:sym<a>($/) {
         make $<path-generic_args_with_colons>.made

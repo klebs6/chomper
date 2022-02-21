@@ -5,14 +5,14 @@ our class ExprForLoop {
     has $.maybe_label;
 }
 
-our class ExprFor::G {
+our class ExprFor::Rules {
 
     rule expr-for {
         <maybe-label> <FOR> <pat> <IN> <expr-nostruct> <block>
     }
 }
 
-our class ExprFor::A {
+our class ExprFor::Actions {
 
     method expr-for($/) {
         make ExprForLoop.new(

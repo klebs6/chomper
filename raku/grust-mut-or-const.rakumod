@@ -1,4 +1,4 @@
-our class MutOrConst::G {
+our class MutOrConst::Rules {
 
     proto rule maybe-mut { * }
 
@@ -25,7 +25,7 @@ our class MutOrConst::G {
     }
 }
 
-our class MutOrConst::A {
+our class MutOrConst::Actions {
 
     method maybe-mut:sym<a>($/) {
         make MutMutable.new

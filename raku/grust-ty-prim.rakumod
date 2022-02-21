@@ -36,7 +36,7 @@ our class TyVec {
     has $.ty;
 }
 
-our class TyPrim::G {
+our class TyPrim::Rules {
 
     proto rule ty-prim { * }
 
@@ -121,7 +121,7 @@ our class TyPrim::G {
     }
 }
 
-our class TyPrim::A {
+our class TyPrim::Actions {
 
     method ty-prim:sym<a>($/) {
         make TyPath.new(

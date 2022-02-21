@@ -9,7 +9,7 @@ our class TyTup {
     has $.ty_sums;
 }
 
-our class Ty::G {
+our class Ty::Rules {
 
     proto rule ty { * }
 
@@ -42,7 +42,7 @@ our class Ty::G {
     }
 }
 
-our class Ty::A {
+our class Ty::Actions {
 
     method ty:sym<a>($/) {
         make $<ty-prim>.made

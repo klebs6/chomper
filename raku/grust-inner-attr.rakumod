@@ -6,7 +6,7 @@ our class InnerAttrs {
     has $.inner_attr;
 }
 
-our class InnerAttrs::G {
+our class InnerAttrs::Rules {
 
     proto rule maybe-inner_attrs { * }
 
@@ -39,7 +39,7 @@ our class InnerAttrs::G {
     }
 }
 
-our class InnerAttrs::A {
+our class InnerAttrs::Actions {
 
     method maybe-inner_attrs:sym<a>($/) {
         make $<inner-attrs>.made

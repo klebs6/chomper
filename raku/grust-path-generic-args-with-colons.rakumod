@@ -6,7 +6,7 @@
 #
 # These show up in expr context, in order to
 # disambiguate from "less-than" expressions.
-our class PathGenericArgsWithColons::G {
+our class PathGenericArgsWithColons::Rules {
 
     proto rule path-generic_args_with_colons { * }
 
@@ -31,7 +31,7 @@ our class PathGenericArgsWithColons::G {
     }
 }
 
-our class PathGenericArgsWithColons::A {
+our class PathGenericArgsWithColons::Actions {
 
     method path-generic_args_with_colons:sym<a>($/) {
         make components.new(

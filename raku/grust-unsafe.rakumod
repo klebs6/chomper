@@ -1,4 +1,4 @@
-our class Unsafe::G {
+our class Unsafe::Rules {
 
     proto rule maybe-unsafe { * }
 
@@ -29,7 +29,7 @@ our class Unsafe::G {
     }
 }
 
-our class Unsafe::A {
+our class Unsafe::Actions {
 
     method maybe-unsafe:sym<a>($/) {
         make Unsafe.new

@@ -1,4 +1,4 @@
-our class TraitRef::G {
+our class TraitRef::Rules {
 
     proto rule trait-ref { * }
 
@@ -11,7 +11,7 @@ our class TraitRef::G {
     }
 }
 
-our class TraitRef::A {
+our class TraitRef::Actions {
 
     method trait-ref:sym<a>($/) {
 

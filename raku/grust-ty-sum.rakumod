@@ -7,7 +7,7 @@ our class TySums {
     has $.ty_sum;
 }
 
-our class TySums::G {
+our class TySums::Rules {
 
     proto rule maybe-ty_sums { * }
 
@@ -74,7 +74,7 @@ our class TySums::G {
     }
 }
 
-our class TySums::A {
+our class TySums::Actions {
 
     method maybe-ty_sums:sym<a>($/) {
         make $<ty-sums>.made

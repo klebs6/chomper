@@ -8,7 +8,7 @@ our class ForeignItems {
     has $.foreign_item;
 }
 
-our class ForeignItems::G {
+our class ForeignItems::Rules {
 
     proto rule maybe-foreign_items { * }
 
@@ -45,7 +45,7 @@ our class ForeignItems::G {
     }
 }
 
-our class ForeignItems::A {
+our class ForeignItems::Actions {
 
     method maybe-foreign_items:sym<a>($/) {
         make $<foreign-items>.made

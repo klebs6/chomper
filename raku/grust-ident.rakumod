@@ -1,4 +1,4 @@
-our class Ident::G {
+our class Ident::Rules {
 
     proto rule maybe-ident { * }
 
@@ -30,7 +30,7 @@ our class Ident::G {
     }
 }
 
-our class Ident::A {
+our class Ident::Actions {
 
     method maybe-ident:sym<a>($/) {
         MkNone<140277797979904>

@@ -5,14 +5,14 @@ our class ForeignFn {
     has $.generic_params;
 }
 
-our class ForeignFn::G {
+our class ForeignFn::Rules {
 
     rule item-foreign_fn {
         <FN> <ident> <generic-params> <fn-decl_allow_variadic> <maybe-where_clause> ';'
     }
 }
 
-our class ForeignFn::A {
+our class ForeignFn::Actions {
 
     method item-foreign_fn($/) {
         make ForeignFn.new(

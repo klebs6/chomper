@@ -1,4 +1,4 @@
-our class QPathParams::G {
+our class QPathParams::Rules {
 
     proto rule maybe-qpath_params { * }
 
@@ -11,7 +11,7 @@ our class QPathParams::G {
     }
 }
 
-our class QPathParams::A {
+our class QPathParams::Actions {
 
     method maybe-qpath_params:sym<a>($/) {
         make $<generic_args>.made

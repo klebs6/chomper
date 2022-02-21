@@ -3,14 +3,14 @@ our class TypeTraitItem {
     has $.ty_param;
 }
 
-our class TraitType::G {
+our class TraitType::Rules {
 
     rule trait-type {
         <maybe-outer_attrs> <TYPE> <ty-param> ';'
     }
 }
 
-our class TraitType::A {
+our class TraitType::Actions {
 
     method trait-type($/) {
         make TypeTraitItem.new(

@@ -6,7 +6,7 @@ our class ExprQualifiedPath {
     has $.ident;
 }
 
-our class ExprQualifiedPath::G {
+our class ExprQualifiedPath::Rules {
 
     proto rule expr-qualified_path { * }
 
@@ -31,7 +31,7 @@ our class ExprQualifiedPath::G {
     }
 }
 
-our class ExprQualifiedPath::A {
+our class ExprQualifiedPath::Actions {
 
     method expr-qualified_path:sym<a>($/) {
         make ExprQualifiedPath.new(

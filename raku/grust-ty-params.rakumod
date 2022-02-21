@@ -2,7 +2,7 @@ our class TyParams {
     has $.ty_param;
 }
 
-our class TyParams::G {
+our class TyParams::Rules {
 
     proto rule ty-params { * }
 
@@ -15,7 +15,7 @@ our class TyParams::G {
     }
 }
 
-our class TyParams::A {
+our class TyParams::Actions {
 
     method ty-params:sym<a>($/) {
         make TyParams.new(

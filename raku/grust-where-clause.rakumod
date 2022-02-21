@@ -2,7 +2,7 @@ our class WhereClause {
     has $.where_predicates;
 }
 
-our class WhereClause::G {
+our class WhereClause::Rules {
 
     proto rule maybe-where_clause { * }
 
@@ -25,7 +25,7 @@ our class WhereClause::G {
     }
 }
 
-our class WhereClause::A {
+our class WhereClause::Actions {
 
     method maybe-where_clause:sym<a>($/) {
         MkNone<140613549527104>

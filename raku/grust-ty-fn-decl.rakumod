@@ -4,14 +4,14 @@ our class TyFnDecl {
     has $.generic_params;
 }
 
-our class TyFnDecl::G {
+our class TyFnDecl::Rules {
 
     rule ty-fn_decl {
         <generic-params> <fn-anon_params> <ret-ty>
     }
 }
 
-our class TyFnDecl::A {
+our class TyFnDecl::Actions {
 
     method ty-fn_decl($/) {
         make TyFnDecl.new(

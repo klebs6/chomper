@@ -5,14 +5,14 @@ our class ConstTraitItem {
     has $.maybe_outer_attrs;
 }
 
-our class TraitConst::G {
+our class TraitConst::Rules {
 
     rule trait-const {
         <maybe-outer_attrs> <CONST> <ident> <maybe-ty_ascription> <maybe-const_default> ';'
     }
 }
 
-our class TraitConst::A {
+our class TraitConst::Actions {
 
     method trait-const($/) {
         make ConstTraitItem.new(

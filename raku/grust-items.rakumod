@@ -1,7 +1,7 @@
 
 #------------------------------
 # items that can appear outside of a fn block
-our class Item::G {
+our class Item::Rules {
 
     proto rule item { * }
 
@@ -14,7 +14,7 @@ our class Item::G {
     }
 }
 
-our class Item::A {
+our class Item::Actions {
 
     method item:sym<a>($/) {
         make $<stmt-item>.made

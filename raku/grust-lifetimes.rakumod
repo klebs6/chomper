@@ -6,7 +6,7 @@ our class Lifetime {
     has $.maybe_ltbounds;
 }
 
-our class Lifetimes::G {
+our class Lifetimes::Rules {
 
     proto rule maybe-lifetimes { * }
 
@@ -53,7 +53,7 @@ our class Lifetimes::G {
     }
 }
 
-our class Lifetimes::A {
+our class Lifetimes::Actions {
 
     method maybe-lifetimes:sym<a>($/) {
         make $<lifetimes>.made

@@ -8,14 +8,14 @@ our class Item {
 }
 
 #-----------------------
-our class ModItem::G {
+our class ModItem::Rules {
 
     rule mod-item {
         <attrs-and_vis> <item>
     }
 }
 
-our class ModItem::A {
+our class ModItem::Actions {
 
     method mod-item($/) {
         make Item.new(
@@ -26,7 +26,7 @@ our class ModItem::A {
 }
 
 #-----------------------
-our class ModItems::G {
+our class ModItems::Rules {
 
     proto rule maybe-mod_items { * }
 
@@ -49,7 +49,7 @@ our class ModItems::G {
     }
 }
 
-our class ModItems::A {
+our class ModItems::Actions {
 
     method maybe-mod_items:sym<a>($/) {
         make $<mod-items>.made

@@ -4,7 +4,7 @@ our class ItemMod {
     has $.inner_attrs;
 }
 
-our class ItemMod::G {
+our class ItemMod::Rules {
 
     proto rule item-mod { * }
 
@@ -41,7 +41,7 @@ our class ItemMod::G {
     }
 }
 
-our class ItemMod::A {
+our class ItemMod::Actions {
 
     method item-mod:sym<a>($/) {
         make ItemMod.new(

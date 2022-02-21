@@ -6,7 +6,7 @@ our class TTTok {
     has $.unpaired_token;
 }
 
-our class TokenTree::G {
+our class TokenTree::Rules {
 
     proto rule token-trees { * }
 
@@ -55,7 +55,7 @@ our class TokenTree::G {
     }
 }
 
-our class TokenTree::A {
+our class TokenTree::Actions {
 
     method token-trees:sym<a>($/) {
         make TokenTrees.new(

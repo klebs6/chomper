@@ -1,4 +1,4 @@
-our class Lit::G {
+our class Lit::Rules {
 
     proto rule lit { * }
 
@@ -11,7 +11,7 @@ our class Lit::G {
     rule lit:sym<g> { <str> }
 }
 
-our class Lit::A {
+our class Lit::Actions {
 
     method lit:sym<a>($/) {
         make LitByte.new(

@@ -1,4 +1,4 @@
-our class UnpairedToken::G {
+our class UnpairedToken::Rules {
 
     proto rule unpaired-token { * }
 
@@ -118,7 +118,7 @@ our class UnpairedToken::G {
     rule unpaired-token:sym<dj> { '%' } 
 }
 
-our class UnpairedToken::A {
+our class UnpairedToken::Actions {
     method unpaired-token:sym<a>($/) { make yytext.new }
     method unpaired-token:sym<b>($/) { make yytext.new }
     method unpaired-token:sym<c>($/) { make yytext.new }

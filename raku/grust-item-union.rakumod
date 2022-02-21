@@ -1,5 +1,5 @@
 
-our class ItemUnion::G {
+our class ItemUnion::Rules {
 
     proto rule item-union { * }
 
@@ -12,7 +12,7 @@ our class ItemUnion::G {
     }
 }
 
-our class ItemUnion::A {
+our class ItemUnion::Actions {
 
     method item-union:sym<a>($/) {
         make ItemUnion.new(

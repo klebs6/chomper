@@ -4,14 +4,14 @@ our class StaticItem {
     has $.ty;
 }
 
-our class ForeignStatic::G {
+our class ForeignStatic::Rules {
 
     rule item-foreign_static {
         <maybe-mut> <ident> ':' <ty> ';'
     }
 }
 
-our class ForeignStatic::A {
+our class ForeignStatic::Actions {
 
     method item-foreign_static($/) {
         make StaticItem.new(

@@ -2,7 +2,7 @@ our class PatTupElts {
     has $.pat;
 }
 
-our class PatTup::G {
+our class PatTup::Rules {
 
     proto rule pat-tup { * }
 
@@ -61,7 +61,7 @@ our class PatTup::G {
     }
 }
 
-our class PatTup::A {
+our class PatTup::Actions {
 
     method pat-tup:sym<a>($/) {
         make PatTup.new(

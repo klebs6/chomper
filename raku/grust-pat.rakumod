@@ -53,7 +53,7 @@ our class Pats {
     has $.pat;
 }
 
-our class Pat::G {
+our class Pat::Rules {
 
     proto rule pat { * }
 
@@ -144,7 +144,7 @@ our class Pat::G {
     }
 }
 
-our class Pat::A {
+our class Pat::Actions {
 
     method pat:sym<a>($/) {
         make PatWild.new

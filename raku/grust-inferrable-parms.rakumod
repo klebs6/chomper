@@ -7,7 +7,7 @@ our class InferrableParams {
     has $.inferrable_param;
 }
 
-our class InferrableParams::G {
+our class InferrableParams::Rules {
 
     proto rule inferrable-params { * }
 
@@ -24,7 +24,7 @@ our class InferrableParams::G {
     }
 }
 
-our class InferrableParams::A {
+our class InferrableParams::Actions {
 
     method inferrable-params:sym<a>($/) {
         make InferrableParams.new(

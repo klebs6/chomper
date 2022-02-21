@@ -12,7 +12,7 @@ our class MetaWord {
     has $.ident;
 }
 
-our class MetaItem::G {
+our class MetaItem::Rules {
 
     proto rule meta-item { * }
 
@@ -33,7 +33,7 @@ our class MetaItem::G {
     }
 }
 
-our class MetaItem::A {
+our class MetaItem::Actions {
 
     method meta-item:sym<a>($/) {
         make MetaWord.new(

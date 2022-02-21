@@ -9,7 +9,7 @@ our class MacroExpr {
     has $.brackets_delimited_token_trees;
 }
 
-our class MacroExpr::G {
+our class MacroExpr::Rules {
 
     proto rule macro-expr { * }
 
@@ -22,7 +22,7 @@ our class MacroExpr::G {
     }
 }
 
-our class MacroExpr::A {
+our class MacroExpr::Actions {
 
     method macro-expr:sym<a>($/) {
         make MacroExpr.new(

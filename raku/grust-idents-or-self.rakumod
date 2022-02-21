@@ -4,7 +4,7 @@ our class IdentsOrSelf {
     has $.ident;
 }
 
-our class IdentsOrSelf::G {
+our class IdentsOrSelf::Rules {
 
     proto rule idents-or_self { * }
 
@@ -31,7 +31,7 @@ our class IdentsOrSelf::G {
     }
 }
 
-our class IdentsOrSelf::A {
+our class IdentsOrSelf::Actions {
 
     method idents-or_self:sym<a>($/) {
         make IdentsOrSelf.new(

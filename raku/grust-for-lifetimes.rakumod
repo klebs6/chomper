@@ -1,4 +1,4 @@
-our class ForLifetimes::G {
+our class ForLifetimes::Rules {
 
     proto rule maybe-for_lifetimes { * }
 
@@ -11,7 +11,7 @@ our class ForLifetimes::G {
     }
 }
 
-our class ForLifetimes::A {
+our class ForLifetimes::Actions {
 
     method maybe-for_lifetimes:sym<a>($/) {
         MkNone<140569789206720>

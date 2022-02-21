@@ -2,7 +2,7 @@ our class ViewItemExternCrate {
     has $.ident;
 }
 
-our class ViewItem::G {
+our class ViewItem::Rules {
 
     proto rule view-item { * }
 
@@ -23,7 +23,7 @@ our class ViewItem::G {
     }
 }
 
-our class ViewItem::A {
+our class ViewItem::Actions {
 
     method view-item:sym<a>($/) {
         make $<use-item>.made

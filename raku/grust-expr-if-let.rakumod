@@ -5,7 +5,7 @@ our class ExprIfLet {
     has $.block_or_if;
 }
 
-our class ExprIfLet::G {
+our class ExprIfLet::Rules {
 
     proto rule expr-if_let { * }
 
@@ -18,7 +18,7 @@ our class ExprIfLet::G {
     }
 }
 
-our class ExprIfLet::A {
+our class ExprIfLet::Actions {
 
     method expr-if_let:sym<a>($/) {
         make ExprIfLet.new(

@@ -9,7 +9,7 @@ our class UnsafeBlock {
     has $.block;
 }
 
-our class BlockExpr::G {
+our class BlockExpr::Rules {
 
     proto rule block-expr { * }
 
@@ -94,7 +94,7 @@ our class BlockExpr::G {
     }
 }
 
-our class BlockExpr::A {
+our class BlockExpr::Actions {
 
     method block-expr:sym<a>($/) {
         make $<expr-match>.made

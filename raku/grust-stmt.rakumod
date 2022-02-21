@@ -1,6 +1,6 @@
 #------------------------------
 # items that can appear in "stmts"
-our class StmtItem::G {
+our class StmtItem::Rules {
 
     proto rule stmt-item { * }
 
@@ -25,7 +25,7 @@ our class StmtItem::G {
     }
 }
 
-our class StmtItem::A {
+our class StmtItem::Actions {
 
     method stmt-item:sym<a>($/) {
         make $<item-static>.made

@@ -6,14 +6,14 @@ our class ImplType {
     has $.maybe_default;
 }
 
-our class ImplType::G {
+our class ImplType::Rules {
 
     rule impl-type {
         <attrs-and_vis> <maybe-default> <TYPE> <ident> <generic-params> '=' <ty-sum> ';'
     }
 }
 
-our class ImplType::A {
+our class ImplType::Actions {
 
     method impl-type($/) {
         make ImplType.new(
