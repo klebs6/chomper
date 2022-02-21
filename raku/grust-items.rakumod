@@ -5549,3 +5549,3984 @@ our class TyParamBounds::A {
 }
 
 #---------------------------------
+our class Binding {
+    has $.ty;
+    has $.ident;
+}
+
+our class Bindings {
+    has $.binding;
+}
+
+our class Binding::G {
+
+    proto rule bindings { * }
+
+    rule bindings:sym<a> {
+        <binding>
+    }
+
+    rule bindings:sym<b> {
+        <bindings> ',' <binding>
+    }
+
+    rule binding {
+        <ident> '=' <ty>
+    }
+}
+
+our class Binding::A {
+
+    method bindings:sym<a>($/) {
+        make Bindings.new(
+            binding =>  $<binding>.made,
+        )
+    }
+
+    method bindings:sym<b>($/) {
+        ExtNode<140351397766456>
+    }
+
+    method binding($/) {
+        make Binding.new(
+            ident =>  $<ident>.made,
+            ty    =>  $<ty>.made,
+        )
+    }
+}
+
+#---------------------------------
+our class TyParam {
+    has $.maybe_ty_param_bounds;
+    has $.maybe_ty_default;
+    has $.ident;
+}
+
+our class TyParam::G {
+
+    proto rule ty-param { * }
+
+    rule ty-param:sym<a> {
+        <ident> <maybe-ty_param_bounds> <maybe-ty_default>
+    }
+
+    rule ty-param:sym<b> {
+        <ident> '?' <ident> <maybe-ty_param_bounds> <maybe-ty_default>
+    }
+}
+
+our class TyParam::A {
+
+    method ty-param:sym<a>($/) {
+        make TyParam.new(
+            ident                 =>  $<ident>.made,
+            maybe-ty_param_bounds =>  $<maybe-ty_param_bounds>.made,
+            maybe-ty_default      =>  $<maybe-ty_default>.made,
+        )
+    }
+
+    method ty-param:sym<b>($/) {
+        make TyParam.new(
+            ident                 =>  $<ident>.made,
+            ident                 =>  $<ident>.made,
+            maybe-ty_param_bounds =>  $<maybe-ty_param_bounds>.made,
+            maybe-ty_default      =>  $<maybe-ty_default>.made,
+        )
+    }
+}
+
+#---------------------------------
+our class Bounds {
+    has $.bound;
+}
+
+our class Bounds::G {
+
+    proto rule maybe-bounds { * }
+
+    rule maybe-bounds:sym<a> {
+        {self.set-prec(SHIFTPLUS)} ':' <bounds>
+    }
+
+    rule maybe-bounds:sym<b> {
+        # %prec SHIFTPLUS 
+    }
+
+    proto rule bounds { * }
+
+    rule bounds:sym<a> {
+        <bound>
+    }
+
+    rule bounds:sym<b> {
+        <bounds> '+' <bound>
+    }
+
+    proto rule bound { * }
+
+    rule bound:sym<a> {
+        <lifetime>
+    }
+
+    rule bound:sym<b> {
+        <trait-ref>
+    }
+}
+
+our class Bounds::A {
+
+    method maybe-bounds:sym<a>($/) {
+        make $<bounds>.made
+    }
+
+    method maybe-bounds:sym<b>($/) {
+        MkNone<140424370458624>
+    }
+
+    method bounds:sym<a>($/) {
+        make bounds.new(
+            bound =>  $<bound>.made,
+        )
+    }
+
+    method bounds:sym<b>($/) {
+        ExtNode<140424375574320>
+    }
+
+    method bound:sym<a>($/) {
+        make $<lifetime>.made
+    }
+
+    method bound:sym<b>($/) {
+        make $<trait-ref>.made
+    }
+}
+
+#---------------------------------
+our class Ltbounds {
+    has $.lifetime;
+}
+
+our class LtBounds::G {
+
+    proto rule maybe-ltbounds { * }
+
+    rule maybe-ltbounds:sym<a> {
+        {self.set-prec(SHIFTPLUS)} ':' <ltbounds>
+    }
+
+    rule maybe-ltbounds:sym<b> {
+
+    }
+
+    proto rule ltbounds { * }
+
+    rule ltbounds:sym<a> {
+        <lifetime>
+    }
+
+    rule ltbounds:sym<b> {
+        <ltbounds> '+' <lifetime>
+    }
+}
+
+our class LtBounds::A {
+
+    method maybe-ltbounds:sym<a>($/) {
+        make $<ltbounds>.made
+    }
+
+    method maybe-ltbounds:sym<b>($/) {
+        MkNone<140308387816480>
+    }
+
+    method ltbounds:sym<a>($/) {
+        make ltbounds.new(
+            lifetime =>  $<lifetime>.made,
+        )
+    }
+
+    method ltbounds:sym<b>($/) {
+        ExtNode<140310419243344>
+    }
+}
+
+#---------------------------------
+our class TyDefault {
+    has $.ty_sum;
+}
+
+our class TyDefault::G {
+
+    proto rule maybe-ty_default { * }
+
+    rule maybe-ty_default:sym<a> {
+        '=' <ty-sum>
+    }
+
+    rule maybe-ty_default:sym<b> {
+
+    }
+}
+
+our class TyDefault::A {
+
+    method maybe-ty_default:sym<a>($/) {
+        make TyDefault.new(
+            ty-sum =>  $<ty-sum>.made,
+        )
+    }
+
+    method maybe-ty_default:sym<b>($/) {
+        MkNone<140350942994944>
+    }
+}
+
+#---------------------------------
+our class Lifetimes {
+    has $.lifetime_and_bounds;
+}
+
+our class Lifetime {
+    has $.maybe_ltbounds;
+}
+
+our class Lifetimes::G {
+
+    proto rule maybe-lifetimes { * }
+
+    rule maybe-lifetimes:sym<a> {
+        <lifetimes>
+    }
+
+    rule maybe-lifetimes:sym<b> {
+        <lifetimes> ','
+    }
+
+    rule maybe-lifetimes:sym<c> {
+
+    }
+
+    proto rule lifetimes { * }
+
+    rule lifetimes:sym<a> {
+        <lifetime-and_bounds>
+    }
+
+    rule lifetimes:sym<b> {
+        <lifetimes> ',' <lifetime-and_bounds>
+    }
+
+    proto rule lifetime-and_bounds { * }
+
+    rule lifetime-and_bounds:sym<a> {
+        <LIFETIME> <maybe-ltbounds>
+    }
+
+    rule lifetime-and_bounds:sym<b> {
+        <STATIC-LIFETIME>
+    }
+
+    proto rule lifetime { * }
+
+    rule lifetime:sym<a> {
+        <LIFETIME>
+    }
+
+    rule lifetime:sym<b> {
+        <STATIC-LIFETIME>
+    }
+}
+
+our class Lifetimes::A {
+
+    method maybe-lifetimes:sym<a>($/) {
+        make $<lifetimes>.made
+    }
+
+    method maybe-lifetimes:sym<b>($/) {
+
+    }
+
+    method maybe-lifetimes:sym<c>($/) {
+        MkNone<140203792891008>
+    }
+
+    method lifetimes:sym<a>($/) {
+        make Lifetimes.new(
+            lifetime-and_bounds =>  $<lifetime-and_bounds>.made,
+        )
+    }
+
+    method lifetimes:sym<b>($/) {
+        ExtNode<140203790912376>
+    }
+
+    method lifetime-and_bounds:sym<a>($/) {
+        make lifetime.new(
+            maybe-ltbounds =>  $<maybe-ltbounds>.made,
+        )
+    }
+
+    method lifetime-and_bounds:sym<b>($/) {
+        make static_lifetime.new
+    }
+
+    method lifetime:sym<a>($/) {
+        make lifetime.new(
+
+        )
+    }
+
+    method lifetime:sym<b>($/) {
+        make static_lifetime.new
+    }
+}
+
+#---------------------------------
+our class TraitRef::G {
+
+    proto rule trait-ref { * }
+
+    rule trait-ref:sym<a> {
+        {self.set-prec(IDENT)} <path-generic_args_without_colons>
+    }
+
+    rule trait-ref:sym<b> {
+        {self.set-prec(IDENT)} <MOD-SEP> <path-generic_args_without_colons>
+    }
+}
+
+our class TraitRef::A {
+
+    method trait-ref:sym<a>($/) {
+
+    }
+
+    method trait-ref:sym<b>($/) {
+        make $<path_generic_args_without_colons>.made
+    }
+}
+
+#////////////////////////////////////////////////////////////////////////
+#// Part 4: Blocks, statements, and expressions
+#////////////////////////////////////////////////////////////////////////
+our class ExprBlock {
+    has $.maybe_stmts;
+    has $.maybe_inner_attrs;
+}
+
+our class InnerAttrsAndBlock::G {
+
+    rule inner-attrs_and_block {
+        '{' <maybe-inner_attrs> <maybe-stmts> '}'
+    }
+}
+
+our class InnerAttrsAndBlock::A {
+
+    method inner-attrs_and_block($/) {
+        make ExprBlock.new(
+            maybe-inner_attrs =>  $<maybe-inner_attrs>.made,
+            maybe-stmts       =>  $<maybe-stmts>.made,
+        )
+    }
+}
+
+#---------------------------------
+our class ExprBlock {
+    has $.maybe_stmts;
+}
+
+our class Block::G {
+
+    rule block {
+        '{' <maybe-stmts> '}'
+    }
+}
+
+our class Block::A {
+
+    method block($/) {
+        make ExprBlock.new(
+            maybe-stmts =>  $<maybe-stmts>.made,
+        )
+    }
+}
+
+#---------------------------------
+# There are two sub-grammars within a "stmts:
+# exprs" derivation depending on whether each
+# stmt-expr is a block-expr form; this is to
+# handle the "semicolon rule" for stmt sequencing
+# that permits writing
+#
+#     if foo { bar } 10
+#
+# as a sequence of two stmts (one if-expr stmt,
+# one lit-10-expr stmt). Unfortunately by
+# permitting juxtaposition of exprs in sequence
+# like that, the non-block expr grammar has to
+# have a second limited sub-grammar that excludes
+# the prefix exprs that are ambiguous with
+# binops. That is to say:
+#
+#     {10} - 1
+#
+# should parse as (progn (progn 10) (- 1)) not (-
+# (progn 10) 1), that is to say, two statements
+# rather than one, at least according to the
+# mainline rust parser.
+#
+# So we wind up with a 3-way split in exprs that
+# occur in stmt lists: block, nonblock-prefix, and
+# nonblock-nonprefix.
+#
+# In non-stmts contexts, expr can relax this
+# trichotomy.
+our class Stmts {
+    has $.stmt;
+}
+
+our class Stmts::G {
+
+    proto rule maybe-stmts { * }
+
+    rule maybe-stmts:sym<a> {
+        <stmts>
+    }
+
+    rule maybe-stmts:sym<b> {
+        <stmts> <nonblock-expr>
+    }
+
+    rule maybe-stmts:sym<c> {
+        <nonblock-expr>
+    }
+
+    rule maybe-stmts:sym<d> {
+
+    }
+
+    proto rule stmts { * }
+
+    rule stmts:sym<a> {
+        <stmt>
+    }
+
+    rule stmts:sym<b> {
+        <stmts> <stmt>
+    }
+
+    proto rule stmt { * }
+
+    rule stmt:sym<a> {
+        <maybe-outer_attrs> <let>
+    }
+
+    rule stmt:sym<b> {
+        <stmt-item>
+    }
+
+    rule stmt:sym<c> {
+        <PUB> <stmt-item>
+    }
+
+    rule stmt:sym<d> {
+        <outer-attrs> <stmt-item>
+    }
+
+    rule stmt:sym<e> {
+        <outer-attrs> <PUB> <stmt-item>
+    }
+
+    rule stmt:sym<f> {
+        <full-block_expr>
+    }
+
+    rule stmt:sym<g> {
+        <maybe-outer_attrs> <block>
+    }
+
+    rule stmt:sym<h> {
+        <nonblock-expr> ';'
+    }
+
+    rule stmt:sym<i> {
+        <outer-attrs> <nonblock-expr> ';'
+    }
+
+    rule stmt:sym<j> {
+        ';'
+    }
+}
+
+our class Stmts::A {
+
+    method maybe-stmts:sym<a>($/) {
+        make $<stmts>.made
+    }
+
+    method maybe-stmts:sym<b>($/) {
+        ExtNode<140397158386760>
+    }
+
+    method maybe-stmts:sym<c>($/) {
+        make $<nonblock-expr>.made
+    }
+
+    method maybe-stmts:sym<d>($/) {
+        MkNone<140397971049472>
+    }
+
+    method stmts:sym<a>($/) {
+        make stmts.new(
+            stmt =>  $<stmt>.made,
+        )
+    }
+
+    method stmts:sym<b>($/) {
+        ExtNode<140397158387120>
+    }
+
+    method stmt:sym<a>($/) {
+        make $<let>.made
+    }
+
+    method stmt:sym<b>($/) {
+        make $<stmt-item>.made
+    }
+
+    method stmt:sym<c>($/) {
+        make $<stmt_item>.made
+    }
+
+    method stmt:sym<d>($/) {
+        make $<stmt_item>.made
+    }
+
+    method stmt:sym<e>($/) {
+        make $<stmt_item>.made
+    }
+
+    method stmt:sym<f>($/) {
+        make $<full-block_expr>.made
+    }
+
+    method stmt:sym<g>($/) {
+        make $<block>.made
+    }
+
+    method stmt:sym<h>($/) {
+
+    }
+
+    method stmt:sym<i>($/) {
+        make $<nonblock_expr>.made
+    }
+
+    method stmt:sym<j>($/) {
+        MkNone<140397971051360>
+    }
+}
+
+#-------------------------------------
+our class Exprs {
+    has $.expr;
+}
+
+our class Exprs::G {
+
+    proto rule maybe-exprs { * }
+
+    rule maybe-exprs:sym<a> {
+        <exprs>
+    }
+
+    rule maybe-exprs:sym<b> {
+        <exprs> ','
+    }
+
+    rule maybe-exprs:sym<c> {
+
+    }
+
+    proto rule maybe-expr { * }
+
+    rule maybe-expr:sym<a> {
+        <expr>
+    }
+
+    rule maybe-expr:sym<b> {
+
+    }
+
+    proto rule exprs { * }
+
+    rule exprs:sym<a> {
+        <expr>
+    }
+
+    rule exprs:sym<b> {
+        <exprs> ',' <expr>
+    }
+}
+
+our class Exprs::A {
+
+    method maybe-exprs:sym<a>($/) {
+        make $<exprs>.made
+    }
+
+    method maybe-exprs:sym<b>($/) {
+
+    }
+
+    method maybe-exprs:sym<c>($/) {
+        MkNone<140567541982240>
+    }
+
+    method maybe-expr:sym<a>($/) {
+        make $<expr>.made
+    }
+
+    method maybe-expr:sym<b>($/) {
+        MkNone<140567541982272>
+    }
+
+    method exprs:sym<a>($/) {
+        make exprs.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method exprs:sym<b>($/) {
+        ExtNode<140567166887600>
+    }
+}
+
+#-------------------------------------
+our class SelfPath {
+    has $.path_generic_args_with_colons;
+}
+
+our class PathExpr::G {
+
+    proto rule path-expr { * }
+
+    rule path-expr:sym<a> {
+        <path-generic_args_with_colons>
+    }
+
+    rule path-expr:sym<b> {
+        <MOD-SEP> <path-generic_args_with_colons>
+    }
+
+    rule path-expr:sym<c> {
+        <SELF> <MOD-SEP> <path-generic_args_with_colons>
+    }
+}
+
+our class PathExpr::A {
+
+    method path-expr:sym<a>($/) {
+        make $<path-generic_args_with_colons>.made
+    }
+
+    method path-expr:sym<b>($/) {
+        make $<path_generic_args_with_colons>.made
+    }
+
+    method path-expr:sym<c>($/) {
+        make SelfPath.new(
+            path-generic_args_with_colons =>  $<path-generic_args_with_colons>.made,
+        )
+    }
+}
+
+#-------------------------------------
+# A path with a lifetime and type parameters with
+# double colons before the type parameters;
+# e.g. `foo::bar::<'a>::Baz::<T>`
+#
+# These show up in expr context, in order to
+# disambiguate from "less-than" expressions.
+our class Components {
+    has $.ident;
+}
+
+our class PathGenericArgsWithColons::G {
+
+    proto rule path-generic_args_with_colons { * }
+
+    rule path-generic_args_with_colons:sym<a> {
+        <ident>
+    }
+
+    rule path-generic_args_with_colons:sym<b> {
+        <SUPER>
+    }
+
+    rule path-generic_args_with_colons:sym<c> {
+        <path-generic_args_with_colons> <MOD-SEP> <ident>
+    }
+
+    rule path-generic_args_with_colons:sym<d> {
+        <path-generic_args_with_colons> <MOD-SEP> <SUPER>
+    }
+
+    rule path-generic_args_with_colons:sym<e> {
+        <path-generic_args_with_colons> <MOD-SEP> <generic-args>
+    }
+}
+
+our class PathGenericArgsWithColons::A {
+
+    method path-generic_args_with_colons:sym<a>($/) {
+        make components.new(
+            ident =>  $<ident>.made,
+        )
+    }
+
+    method path-generic_args_with_colons:sym<b>($/) {
+        make Super.new
+    }
+
+    method path-generic_args_with_colons:sym<c>($/) {
+        ExtNode<140425165463024>
+    }
+
+    method path-generic_args_with_colons:sym<d>($/) {
+        ExtNode<140425165463064>
+    }
+
+    method path-generic_args_with_colons:sym<e>($/) {
+        ExtNode<140425165463104>
+    }
+}
+
+#-------------------------------------
+# the braces-delimited macro is a block_expr so it
+# doesn't appear here
+our class MacroExpr {
+    has $.path_expr;
+    has $.parens_delimited_token_trees;
+    has $.maybe_ident;
+    has $.brackets_delimited_token_trees;
+}
+
+our class MacroExpr::G {
+
+    proto rule macro-expr { * }
+
+    rule macro-expr:sym<a> {
+        <path-expr> '!' <maybe-ident> <parens-delimited_token_trees>
+    }
+
+    rule macro-expr:sym<b> {
+        <path-expr> '!' <maybe-ident> <brackets-delimited_token_trees>
+    }
+}
+
+our class MacroExpr::A {
+
+    method macro-expr:sym<a>($/) {
+        make MacroExpr.new(
+            path-expr                    =>  $<path-expr>.made,
+            maybe-ident                  =>  $<maybe-ident>.made,
+            parens-delimited_token_trees =>  $<parens-delimited_token_trees>.made,
+        )
+    }
+
+    method macro-expr:sym<b>($/) {
+        make MacroExpr.new(
+            path-expr                      =>  $<path-expr>.made,
+            maybe-ident                    =>  $<maybe-ident>.made,
+            brackets-delimited_token_trees =>  $<brackets-delimited_token_trees>.made,
+        )
+    }
+}
+
+#-------------------------------------
+
+our class ExprAgain {
+    has $.lifetime;
+}
+
+our class ExprAssign {
+    has $.expr;
+    has $.nonblock_expr;
+}
+
+our class ExprAssignAdd {
+    has $.expr;
+    has $.nonblock_expr;
+}
+
+our class ExprAssignBitAnd {
+    has $.expr;
+    has $.nonblock_expr;
+}
+
+our class ExprAssignBitOr {
+    has $.nonblock_expr;
+    has $.expr;
+}
+
+our class ExprAssignBitXor {
+    has $.expr;
+    has $.nonblock_expr;
+}
+
+our class ExprAssignDiv {
+    has $.expr;
+    has $.nonblock_expr;
+}
+
+our class ExprAssignMul {
+    has $.nonblock_expr;
+    has $.expr;
+}
+
+our class ExprAssignRem {
+    has $.expr;
+    has $.nonblock_expr;
+}
+
+our class ExprAssignShl {
+    has $.nonblock_expr;
+    has $.expr;
+}
+
+our class ExprAssignShr {
+    has $.nonblock_expr;
+    has $.expr;
+}
+
+our class ExprAssignSub {
+    has $.expr;
+    has $.nonblock_expr;
+}
+
+our class ExprBinary {
+    has $.expr;
+    has $.nonblock_expr;
+}
+
+our class ExprBox {
+    has $.expr;
+}
+
+our class ExprBreak {
+    has $.lifetime;
+}
+
+our class ExprCall {
+    has $.maybe_exprs;
+    has $.nonblock_expr;
+}
+
+our class ExprCast {
+    has $.ty;
+    has $.nonblock_expr;
+}
+
+our class ExprField {
+    has $.path_generic_args_with_colons;
+    has $.nonblock_expr;
+}
+
+our class ExprIndex {
+    has $.maybe_expr;
+    has $.nonblock_expr;
+}
+
+our class ExprLit {
+    has $.lit;
+}
+
+our class ExprMac {
+    has $.macro_expr;
+}
+
+our class ExprParen {
+    has $.maybe_exprs;
+}
+
+our class ExprPath {
+    has $.path_expr;
+}
+
+our class ExprRange {
+    has $.expr;
+    has $.nonblock_expr;
+}
+
+our class ExprRet {
+    has $.expr;
+}
+
+our class ExprStruct {
+    has $.struct_expr_fields;
+    has $.path_expr;
+}
+
+our class ExprTry {
+    has $.nonblock_expr;
+}
+
+our class ExprTupleIndex {
+    has $.nonblock_expr;
+}
+
+our class ExprTypeAscr {
+    has $.ty;
+    has $.nonblock_expr;
+}
+
+our class ExprVec {
+    has $.vec_expr;
+}
+
+our class ExprYield {
+    has $.expr;
+}
+
+our class NonBlockExpr::G {
+
+    proto rule nonblock-expr { * }
+
+    rule nonblock-expr:sym<a> {
+        <lit>
+    }
+
+    rule nonblock-expr:sym<b> {
+        {self.set-prec(IDENT)} <path-expr>
+    }
+
+    rule nonblock-expr:sym<c> {
+        <SELF>
+    }
+
+    rule nonblock-expr:sym<d> {
+        <macro-expr>
+    }
+
+    rule nonblock-expr:sym<e> {
+        <path-expr> '{' <struct-expr_fields> '}'
+    }
+
+    rule nonblock-expr:sym<f> {
+        <nonblock-expr> '?'
+    }
+
+    rule nonblock-expr:sym<g> {
+        <nonblock-expr> '.' <path-generic_args_with_colons>
+    }
+
+    rule nonblock-expr:sym<h> {
+        <nonblock-expr> '.' <LIT-INTEGER>
+    }
+
+    rule nonblock-expr:sym<i> {
+        <nonblock-expr> '[' <maybe-expr> ']'
+    }
+
+    rule nonblock-expr:sym<j> {
+        <nonblock-expr> '(' <maybe-exprs> ')'
+    }
+
+    rule nonblock-expr:sym<k> {
+        '[' <vec-expr> ']'
+    }
+
+    rule nonblock-expr:sym<l> {
+        '(' <maybe-exprs> ')'
+    }
+
+    rule nonblock-expr:sym<m> {
+        <CONTINUE>
+    }
+
+    rule nonblock-expr:sym<n> {
+        <CONTINUE> <lifetime>
+    }
+
+    rule nonblock-expr:sym<o> {
+        <RETURN>
+    }
+
+    rule nonblock-expr:sym<p> {
+        <RETURN> <expr>
+    }
+
+    rule nonblock-expr:sym<q> {
+        <BREAK>
+    }
+
+    rule nonblock-expr:sym<r> {
+        <BREAK> <lifetime>
+    }
+
+    rule nonblock-expr:sym<s> {
+        <YIELD>
+    }
+
+    rule nonblock-expr:sym<t> {
+        <YIELD> <expr>
+    }
+
+    rule nonblock-expr:sym<u> {
+        <nonblock-expr> '=' <expr>
+    }
+
+    rule nonblock-expr:sym<v> {
+        <nonblock-expr> <SHLEQ> <expr>
+    }
+
+    rule nonblock-expr:sym<w> {
+        <nonblock-expr> <SHREQ> <expr>
+    }
+
+    rule nonblock-expr:sym<x> {
+        <nonblock-expr> <MINUSEQ> <expr>
+    }
+
+    rule nonblock-expr:sym<y> {
+        <nonblock-expr> <ANDEQ> <expr>
+    }
+
+    rule nonblock-expr:sym<z> {
+        <nonblock-expr> <OREQ> <expr>
+    }
+
+    rule nonblock-expr:sym<aa> {
+        <nonblock-expr> <PLUSEQ> <expr>
+    }
+
+    rule nonblock-expr:sym<ab> {
+        <nonblock-expr> <STAREQ> <expr>
+    }
+
+    rule nonblock-expr:sym<ac> {
+        <nonblock-expr> <SLASHEQ> <expr>
+    }
+
+    rule nonblock-expr:sym<ad> {
+        <nonblock-expr> <CARETEQ> <expr>
+    }
+
+    rule nonblock-expr:sym<ae> {
+        <nonblock-expr> <PERCENTEQ> <expr>
+    }
+
+    rule nonblock-expr:sym<af> {
+        <nonblock-expr> <OROR> <expr>
+    }
+
+    rule nonblock-expr:sym<ag> {
+        <nonblock-expr> <ANDAND> <expr>
+    }
+
+    rule nonblock-expr:sym<ah> {
+        <nonblock-expr> <EQEQ> <expr>
+    }
+
+    rule nonblock-expr:sym<ai> {
+        <nonblock-expr> <NE> <expr>
+    }
+
+    rule nonblock-expr:sym<aj> {
+        <nonblock-expr> '<' <expr>
+    }
+
+    rule nonblock-expr:sym<ak> {
+        <nonblock-expr> '>' <expr>
+    }
+
+    rule nonblock-expr:sym<al> {
+        <nonblock-expr> <LE> <expr>
+    }
+
+    rule nonblock-expr:sym<am> {
+        <nonblock-expr> <GE> <expr>
+    }
+
+    rule nonblock-expr:sym<an> {
+        <nonblock-expr> '|' <expr>
+    }
+
+    rule nonblock-expr:sym<ao> {
+        <nonblock-expr> '^' <expr>
+    }
+
+    rule nonblock-expr:sym<ap> {
+        <nonblock-expr> '&' <expr>
+    }
+
+    rule nonblock-expr:sym<aq> {
+        <nonblock-expr> <SHL> <expr>
+    }
+
+    rule nonblock-expr:sym<ar> {
+        <nonblock-expr> <SHR> <expr>
+    }
+
+    rule nonblock-expr:sym<as> {
+        <nonblock-expr> '+' <expr>
+    }
+
+    rule nonblock-expr:sym<at> {
+        <nonblock-expr> '-' <expr>
+    }
+
+    rule nonblock-expr:sym<au> {
+        <nonblock-expr> '*' <expr>
+    }
+
+    rule nonblock-expr:sym<av> {
+        <nonblock-expr> '/' <expr>
+    }
+
+    rule nonblock-expr:sym<aw> {
+        <nonblock-expr> '%' <expr>
+    }
+
+    rule nonblock-expr:sym<ax> {
+        <nonblock-expr> <DOTDOT>
+    }
+
+    rule nonblock-expr:sym<ay> {
+        <nonblock-expr> <DOTDOT> <expr>
+    }
+
+    rule nonblock-expr:sym<az> {
+        <DOTDOT> <expr>
+    }
+
+    rule nonblock-expr:sym<ba> {
+        <DOTDOT>
+    }
+
+    rule nonblock-expr:sym<bb> {
+        <nonblock-expr> <AS> <ty>
+    }
+
+    rule nonblock-expr:sym<bc> {
+        <nonblock-expr> ':' <ty>
+    }
+
+    rule nonblock-expr:sym<bd> {
+        <BOX> <expr>
+    }
+
+    rule nonblock-expr:sym<be> {
+        <expr-qualified_path>
+    }
+
+    rule nonblock-expr:sym<bf> {
+        <nonblock-prefix_expr>
+    }
+}
+
+our class NonBlockExpr::A {
+
+    method nonblock-expr:sym<a>($/) {
+        make ExprLit.new(
+            lit =>  $<lit>.made,
+        )
+    }
+
+    method nonblock-expr:sym<b>($/) {
+        make ExprPath.new(
+            path-expr =>  $<path-expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<c>($/) {
+        make ExprPath.new(
+
+        )
+    }
+
+    method nonblock-expr:sym<d>($/) {
+        make ExprMac.new(
+            macro-expr =>  $<macro-expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<e>($/) {
+        make ExprStruct.new(
+            path-expr          =>  $<path-expr>.made,
+            struct-expr_fields =>  $<struct-expr_fields>.made,
+        )
+    }
+
+    method nonblock-expr:sym<f>($/) {
+        make ExprTry.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<g>($/) {
+        make ExprField.new(
+            nonblock-expr                 =>  $<nonblock-expr>.made,
+            path-generic_args_with_colons =>  $<path-generic_args_with_colons>.made,
+        )
+    }
+
+    method nonblock-expr:sym<h>($/) {
+        make ExprTupleIndex.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<i>($/) {
+        make ExprIndex.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            maybe-expr    =>  $<maybe-expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<j>($/) {
+        make ExprCall.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            maybe-exprs   =>  $<maybe-exprs>.made,
+        )
+    }
+
+    method nonblock-expr:sym<k>($/) {
+        make ExprVec.new(
+            vec-expr =>  $<vec-expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<l>($/) {
+        make ExprParen.new(
+            maybe-exprs =>  $<maybe-exprs>.made,
+        )
+    }
+
+    method nonblock-expr:sym<m>($/) {
+        make ExprAgain.new(
+
+        )
+    }
+
+    method nonblock-expr:sym<n>($/) {
+        make ExprAgain.new(
+            lifetime =>  $<lifetime>.made,
+        )
+    }
+
+    method nonblock-expr:sym<o>($/) {
+        make ExprRet.new(
+
+        )
+    }
+
+    method nonblock-expr:sym<p>($/) {
+        make ExprRet.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<q>($/) {
+        make ExprBreak.new(
+
+        )
+    }
+
+    method nonblock-expr:sym<r>($/) {
+        make ExprBreak.new(
+            lifetime =>  $<lifetime>.made,
+        )
+    }
+
+    method nonblock-expr:sym<s>($/) {
+        make ExprYield.new(
+
+        )
+    }
+
+    method nonblock-expr:sym<t>($/) {
+        make ExprYield.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<u>($/) {
+        make ExprAssign.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<v>($/) {
+        make ExprAssignShl.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<w>($/) {
+        make ExprAssignShr.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<x>($/) {
+        make ExprAssignSub.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<y>($/) {
+        make ExprAssignBitAnd.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<z>($/) {
+        make ExprAssignBitOr.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<aa>($/) {
+        make ExprAssignAdd.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<ab>($/) {
+        make ExprAssignMul.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<ac>($/) {
+        make ExprAssignDiv.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<ad>($/) {
+        make ExprAssignBitXor.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<ae>($/) {
+        make ExprAssignRem.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<af>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<ag>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<ah>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<ai>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<aj>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<ak>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<al>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<am>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<an>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<ao>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<ap>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<aq>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<ar>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<as>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<at>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<au>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<av>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<aw>($/) {
+        make ExprBinary.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<ax>($/) {
+        make ExprRange.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<ay>($/) {
+        make ExprRange.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            expr          =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<az>($/) {
+        make ExprRange.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<ba>($/) {
+        make ExprRange.new(
+
+        )
+    }
+
+    method nonblock-expr:sym<bb>($/) {
+        make ExprCast.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            ty            =>  $<ty>.made,
+        )
+    }
+
+    method nonblock-expr:sym<bc>($/) {
+        make ExprTypeAscr.new(
+            nonblock-expr =>  $<nonblock-expr>.made,
+            ty            =>  $<ty>.made,
+        )
+    }
+
+    method nonblock-expr:sym<bd>($/) {
+        make ExprBox.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-expr:sym<be>($/) {
+        make $<expr-qualified_path>.made
+    }
+
+    method nonblock-expr:sym<bf>($/) {
+        make $<nonblock-prefix_expr>.made
+    }
+}
+
+#-------------------------------------
+our class ExprAgain {
+    has $.ident;
+}
+
+our class ExprAssign {
+    has $.expr;
+}
+
+our class ExprAssignAdd {
+    has $.expr;
+}
+
+our class ExprAssignBitAnd {
+    has $.expr;
+}
+
+our class ExprAssignBitOr {
+    has $.expr;
+}
+
+our class ExprAssignBitXor {
+    has $.expr;
+}
+
+our class ExprAssignDiv {
+    has $.expr;
+}
+
+our class ExprAssignMul {
+    has $.expr;
+}
+
+our class ExprAssignRem {
+    has $.expr;
+}
+
+our class ExprAssignShl {
+    has $.expr;
+}
+
+our class ExprAssignShr {
+    has $.expr;
+}
+
+our class ExprAssignSub {
+    has $.expr;
+}
+
+our class ExprBinary {
+    has $.expr;
+}
+
+our class ExprBox {
+    has $.expr;
+}
+
+our class ExprBreak {
+    has $.ident;
+}
+
+our class ExprCall {
+    has $.expr;
+    has $.maybe_exprs;
+}
+
+our class ExprCast {
+    has $.ty;
+    has $.expr;
+}
+
+our class ExprField {
+    has $.path_generic_args_with_colons;
+    has $.expr;
+}
+
+our class ExprIndex {
+    has $.maybe_expr;
+    has $.expr;
+}
+
+our class ExprLit {
+    has $.lit;
+}
+
+our class ExprMac {
+    has $.macro_expr;
+}
+
+our class ExprParen {
+    has $.maybe_exprs;
+}
+
+our class ExprPath {
+    has $.path_expr;
+}
+
+our class ExprRange {
+    has $.expr;
+}
+
+our class ExprRet {
+    has $.expr;
+}
+
+our class ExprStruct {
+    has $.path_expr;
+    has $.struct_expr_fields;
+}
+
+our class ExprTry {
+    has $.expr;
+}
+
+our class ExprTupleIndex {
+    has $.expr;
+}
+
+our class ExprTypeAscr {
+    has $.expr;
+    has $.ty;
+}
+
+our class ExprVec {
+    has $.vec_expr;
+}
+
+our class ExprYield {
+    has $.expr;
+}
+
+our class Expr::G {
+
+    proto rule expr { * }
+
+    rule expr:sym<a> {
+        <lit>
+    }
+
+    rule expr:sym<b> {
+        {self.set-prec(IDENT)} <path-expr>
+    }
+
+    rule expr:sym<c> {
+        <SELF>
+    }
+
+    rule expr:sym<d> {
+        <macro-expr>
+    }
+
+    rule expr:sym<e> {
+        <path-expr> '{' <struct-expr_fields> '}'
+    }
+
+    rule expr:sym<f> {
+        <expr> '?'
+    }
+
+    rule expr:sym<g> {
+        <expr> '.' <path-generic_args_with_colons>
+    }
+
+    rule expr:sym<h> {
+        <expr> '.' <LIT-INTEGER>
+    }
+
+    rule expr:sym<i> {
+        <expr> '[' <maybe-expr> ']'
+    }
+
+    rule expr:sym<j> {
+        <expr> '(' <maybe-exprs> ')'
+    }
+
+    rule expr:sym<k> {
+        '(' <maybe-exprs> ')'
+    }
+
+    rule expr:sym<l> {
+        '[' <vec-expr> ']'
+    }
+
+    rule expr:sym<m> {
+        <CONTINUE>
+    }
+
+    rule expr:sym<n> {
+        <CONTINUE> <ident>
+    }
+
+    rule expr:sym<o> {
+        <RETURN>
+    }
+
+    rule expr:sym<p> {
+        <RETURN> <expr>
+    }
+
+    rule expr:sym<q> {
+        <BREAK>
+    }
+
+    rule expr:sym<r> {
+        <BREAK> <ident>
+    }
+
+    rule expr:sym<s> {
+        <YIELD>
+    }
+
+    rule expr:sym<t> {
+        <YIELD> <expr>
+    }
+
+    rule expr:sym<u> {
+        <expr> '=' <expr>
+    }
+
+    rule expr:sym<v> {
+        <expr> <SHLEQ> <expr>
+    }
+
+    rule expr:sym<w> {
+        <expr> <SHREQ> <expr>
+    }
+
+    rule expr:sym<x> {
+        <expr> <MINUSEQ> <expr>
+    }
+
+    rule expr:sym<y> {
+        <expr> <ANDEQ> <expr>
+    }
+
+    rule expr:sym<z> {
+        <expr> <OREQ> <expr>
+    }
+
+    rule expr:sym<aa> {
+        <expr> <PLUSEQ> <expr>
+    }
+
+    rule expr:sym<ab> {
+        <expr> <STAREQ> <expr>
+    }
+
+    rule expr:sym<ac> {
+        <expr> <SLASHEQ> <expr>
+    }
+
+    rule expr:sym<ad> {
+        <expr> <CARETEQ> <expr>
+    }
+
+    rule expr:sym<ae> {
+        <expr> <PERCENTEQ> <expr>
+    }
+
+    rule expr:sym<af> {
+        <expr> <OROR> <expr>
+    }
+
+    rule expr:sym<ag> {
+        <expr> <ANDAND> <expr>
+    }
+
+    rule expr:sym<ah> {
+        <expr> <EQEQ> <expr>
+    }
+
+    rule expr:sym<ai> {
+        <expr> <NE> <expr>
+    }
+
+    rule expr:sym<aj> {
+        <expr> '<' <expr>
+    }
+
+    rule expr:sym<ak> {
+        <expr> '>' <expr>
+    }
+
+    rule expr:sym<al> {
+        <expr> <LE> <expr>
+    }
+
+    rule expr:sym<am> {
+        <expr> <GE> <expr>
+    }
+
+    rule expr:sym<an> {
+        <expr> '|' <expr>
+    }
+
+    rule expr:sym<ao> {
+        <expr> '^' <expr>
+    }
+
+    rule expr:sym<ap> {
+        <expr> '&' <expr>
+    }
+
+    rule expr:sym<aq> {
+        <expr> <SHL> <expr>
+    }
+
+    rule expr:sym<ar> {
+        <expr> <SHR> <expr>
+    }
+
+    rule expr:sym<as> {
+        <expr> '+' <expr>
+    }
+
+    rule expr:sym<at> {
+        <expr> '-' <expr>
+    }
+
+    rule expr:sym<au> {
+        <expr> '*' <expr>
+    }
+
+    rule expr:sym<av> {
+        <expr> '/' <expr>
+    }
+
+    rule expr:sym<aw> {
+        <expr> '%' <expr>
+    }
+
+    rule expr:sym<ax> {
+        <expr> <DOTDOT>
+    }
+
+    rule expr:sym<ay> {
+        <expr> <DOTDOT> <expr>
+    }
+
+    rule expr:sym<az> {
+        <DOTDOT> <expr>
+    }
+
+    rule expr:sym<ba> {
+        <DOTDOT>
+    }
+
+    rule expr:sym<bb> {
+        <expr> <AS> <ty>
+    }
+
+    rule expr:sym<bc> {
+        <expr> ':' <ty>
+    }
+
+    rule expr:sym<bd> {
+        <BOX> <expr>
+    }
+
+    rule expr:sym<be> {
+        <expr-qualified_path>
+    }
+
+    rule expr:sym<bf> {
+        <block-expr>
+    }
+
+    rule expr:sym<bg> {
+        <block>
+    }
+
+    rule expr:sym<bh> {
+        <nonblock-prefix_expr>
+    }
+}
+
+our class Expr::A {
+
+    method expr:sym<a>($/) {
+        make ExprLit.new(
+            lit =>  $<lit>.made,
+        )
+    }
+
+    method expr:sym<b>($/) {
+        make ExprPath.new(
+            path-expr =>  $<path-expr>.made,
+        )
+    }
+
+    method expr:sym<c>($/) {
+        make ExprPath.new(
+
+        )
+    }
+
+    method expr:sym<d>($/) {
+        make ExprMac.new(
+            macro-expr =>  $<macro-expr>.made,
+        )
+    }
+
+    method expr:sym<e>($/) {
+        make ExprStruct.new(
+            path-expr          =>  $<path-expr>.made,
+            struct-expr_fields =>  $<struct-expr_fields>.made,
+        )
+    }
+
+    method expr:sym<f>($/) {
+        make ExprTry.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<g>($/) {
+        make ExprField.new(
+            expr                          =>  $<expr>.made,
+            path-generic_args_with_colons =>  $<path-generic_args_with_colons>.made,
+        )
+    }
+
+    method expr:sym<h>($/) {
+        make ExprTupleIndex.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<i>($/) {
+        make ExprIndex.new(
+            expr       =>  $<expr>.made,
+            maybe-expr =>  $<maybe-expr>.made,
+        )
+    }
+
+    method expr:sym<j>($/) {
+        make ExprCall.new(
+            expr        =>  $<expr>.made,
+            maybe-exprs =>  $<maybe-exprs>.made,
+        )
+    }
+
+    method expr:sym<k>($/) {
+        make ExprParen.new(
+            maybe-exprs =>  $<maybe-exprs>.made,
+        )
+    }
+
+    method expr:sym<l>($/) {
+        make ExprVec.new(
+            vec-expr =>  $<vec-expr>.made,
+        )
+    }
+
+    method expr:sym<m>($/) {
+        make ExprAgain.new(
+
+        )
+    }
+
+    method expr:sym<n>($/) {
+        make ExprAgain.new(
+            ident =>  $<ident>.made,
+        )
+    }
+
+    method expr:sym<o>($/) {
+        make ExprRet.new(
+
+        )
+    }
+
+    method expr:sym<p>($/) {
+        make ExprRet.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<q>($/) {
+        make ExprBreak.new(
+
+        )
+    }
+
+    method expr:sym<r>($/) {
+        make ExprBreak.new(
+            ident =>  $<ident>.made,
+        )
+    }
+
+    method expr:sym<s>($/) {
+        make ExprYield.new(
+
+        )
+    }
+
+    method expr:sym<t>($/) {
+        make ExprYield.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<u>($/) {
+        make ExprAssign.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<v>($/) {
+        make ExprAssignShl.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<w>($/) {
+        make ExprAssignShr.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<x>($/) {
+        make ExprAssignSub.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<y>($/) {
+        make ExprAssignBitAnd.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<z>($/) {
+        make ExprAssignBitOr.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<aa>($/) {
+        make ExprAssignAdd.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<ab>($/) {
+        make ExprAssignMul.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<ac>($/) {
+        make ExprAssignDiv.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<ad>($/) {
+        make ExprAssignBitXor.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<ae>($/) {
+        make ExprAssignRem.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<af>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<ag>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<ah>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<ai>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<aj>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<ak>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<al>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<am>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<an>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<ao>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<ap>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<aq>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<ar>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<as>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<at>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<au>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<av>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<aw>($/) {
+        make ExprBinary.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<ax>($/) {
+        make ExprRange.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<ay>($/) {
+        make ExprRange.new(
+            expr =>  $<expr>.made,
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<az>($/) {
+        make ExprRange.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<ba>($/) {
+        make ExprRange.new(
+
+        )
+    }
+
+    method expr:sym<bb>($/) {
+        make ExprCast.new(
+            expr =>  $<expr>.made,
+            ty   =>  $<ty>.made,
+        )
+    }
+
+    method expr:sym<bc>($/) {
+        make ExprTypeAscr.new(
+            expr =>  $<expr>.made,
+            ty   =>  $<ty>.made,
+        )
+    }
+
+    method expr:sym<bd>($/) {
+        make ExprBox.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr:sym<be>($/) {
+        make $<expr-qualified_path>.made
+    }
+
+    method expr:sym<bf>($/) {
+        make $<block-expr>.made
+    }
+
+    method expr:sym<bg>($/) {
+        make $<block>.made
+    }
+
+    method expr:sym<bh>($/) {
+        make $<nonblock-prefix_expr>.made
+    }
+}
+
+#-------------------------------------
+our class ExprAgain {
+    has $.ident;
+}
+
+our class ExprAssign {
+    has $.expr_nostruct;
+}
+
+our class ExprAssignAdd {
+    has $.expr_nostruct;
+}
+
+our class ExprAssignBitAnd {
+    has $.expr_nostruct;
+}
+
+our class ExprAssignBitOr {
+    has $.expr_nostruct;
+}
+
+our class ExprAssignBitXor {
+    has $.expr_nostruct;
+}
+
+our class ExprAssignDiv {
+    has $.expr_nostruct;
+}
+
+our class ExprAssignMul {
+    has $.expr_nostruct;
+}
+
+our class ExprAssignRem {
+    has $.expr_nostruct;
+}
+
+our class ExprAssignShl {
+    has $.expr_nostruct;
+}
+
+our class ExprAssignShr {
+    has $.expr_nostruct;
+}
+
+our class ExprAssignSub {
+    has $.expr_nostruct;
+}
+
+our class ExprBinary {
+    has $.expr_nostruct;
+}
+
+our class ExprBox {
+    has $.expr;
+}
+
+our class ExprBreak {
+    has $.ident;
+}
+
+our class ExprCall {
+    has $.expr_nostruct;
+    has $.maybe_exprs;
+}
+
+our class ExprCast {
+    has $.expr_nostruct;
+    has $.ty;
+}
+
+our class ExprField {
+    has $.expr_nostruct;
+    has $.path_generic_args_with_colons;
+}
+
+our class ExprIndex {
+    has $.maybe_expr;
+    has $.expr_nostruct;
+}
+
+our class ExprLit {
+    has $.lit;
+}
+
+our class ExprMac {
+    has $.macro_expr;
+}
+
+our class ExprParen {
+    has $.maybe_exprs;
+}
+
+our class ExprPath {
+    has $.path_expr;
+}
+
+our class ExprRange {
+    has $.expr_nostruct;
+}
+
+our class ExprRet {
+    has $.expr;
+}
+
+our class ExprTry {
+    has $.expr_nostruct;
+}
+
+our class ExprTupleIndex {
+    has $.expr_nostruct;
+}
+
+our class ExprTypeAscr {
+    has $.ty;
+    has $.expr_nostruct;
+}
+
+our class ExprVec {
+    has $.vec_expr;
+}
+
+our class ExprYield {
+    has $.expr;
+}
+
+our class ExprNoStruct::G {
+
+    proto rule expr-nostruct { * }
+
+    rule expr-nostruct:sym<a> {
+        <lit>
+    }
+
+    rule expr-nostruct:sym<b> {
+        {self.set-prec(IDENT)} <path-expr>
+    }
+
+    rule expr-nostruct:sym<c> {
+        <SELF>
+    }
+
+    rule expr-nostruct:sym<d> {
+        <macro-expr>
+    }
+
+    rule expr-nostruct:sym<e> {
+        <expr-nostruct> '?'
+    }
+
+    rule expr-nostruct:sym<f> {
+        <expr-nostruct> '.' <path-generic_args_with_colons>
+    }
+
+    rule expr-nostruct:sym<g> {
+        <expr-nostruct> '.' <LIT-INTEGER>
+    }
+
+    rule expr-nostruct:sym<h> {
+        <expr-nostruct> '[' <maybe-expr> ']'
+    }
+
+    rule expr-nostruct:sym<i> {
+        <expr-nostruct> '(' <maybe-exprs> ')'
+    }
+
+    rule expr-nostruct:sym<j> {
+        '[' <vec-expr> ']'
+    }
+
+    rule expr-nostruct:sym<k> {
+        '(' <maybe-exprs> ')'
+    }
+
+    rule expr-nostruct:sym<l> {
+        <CONTINUE>
+    }
+
+    rule expr-nostruct:sym<m> {
+        <CONTINUE> <ident>
+    }
+
+    rule expr-nostruct:sym<n> {
+        <RETURN>
+    }
+
+    rule expr-nostruct:sym<o> {
+        <RETURN> <expr>
+    }
+
+    rule expr-nostruct:sym<p> {
+        <BREAK>
+    }
+
+    rule expr-nostruct:sym<q> {
+        <BREAK> <ident>
+    }
+
+    rule expr-nostruct:sym<r> {
+        <YIELD>
+    }
+
+    rule expr-nostruct:sym<s> {
+        <YIELD> <expr>
+    }
+
+    rule expr-nostruct:sym<t> {
+        <expr-nostruct> '=' <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<u> {
+        <expr-nostruct> <SHLEQ> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<v> {
+        <expr-nostruct> <SHREQ> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<w> {
+        <expr-nostruct> <MINUSEQ> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<x> {
+        <expr-nostruct> <ANDEQ> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<y> {
+        <expr-nostruct> <OREQ> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<z> {
+        <expr-nostruct> <PLUSEQ> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<aa> {
+        <expr-nostruct> <STAREQ> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<ab> {
+        <expr-nostruct> <SLASHEQ> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<ac> {
+        <expr-nostruct> <CARETEQ> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<ad> {
+        <expr-nostruct> <PERCENTEQ> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<ae> {
+        <expr-nostruct> <OROR> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<af> {
+        <expr-nostruct> <ANDAND> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<ag> {
+        <expr-nostruct> <EQEQ> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<ah> {
+        <expr-nostruct> <NE> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<ai> {
+        <expr-nostruct> '<' <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<aj> {
+        <expr-nostruct> '>' <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<ak> {
+        <expr-nostruct> <LE> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<al> {
+        <expr-nostruct> <GE> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<am> {
+        <expr-nostruct> '|' <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<an> {
+        <expr-nostruct> '^' <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<ao> {
+        <expr-nostruct> '&' <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<ap> {
+        <expr-nostruct> <SHL> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<aq> {
+        <expr-nostruct> <SHR> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<ar> {
+        <expr-nostruct> '+' <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<as> {
+        <expr-nostruct> '-' <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<at> {
+        <expr-nostruct> '*' <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<au> {
+        <expr-nostruct> '/' <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<av> {
+        <expr-nostruct> '%' <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<aw> {
+        <expr-nostruct> <DOTDOT> {self.set-prec(RANGE)}
+    }
+
+    rule expr-nostruct:sym<ax> {
+        <expr-nostruct> <DOTDOT> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<ay> {
+        <DOTDOT> <expr-nostruct>
+    }
+
+    rule expr-nostruct:sym<az> {
+        <DOTDOT>
+    }
+
+    rule expr-nostruct:sym<ba> {
+        <expr-nostruct> <AS> <ty>
+    }
+
+    rule expr-nostruct:sym<bb> {
+        <expr-nostruct> ':' <ty>
+    }
+
+    rule expr-nostruct:sym<bc> {
+        <BOX> <expr>
+    }
+
+    rule expr-nostruct:sym<bd> {
+        <expr-qualified_path>
+    }
+
+    rule expr-nostruct:sym<be> {
+        <block-expr>
+    }
+
+    rule expr-nostruct:sym<bf> {
+        <block>
+    }
+
+    rule expr-nostruct:sym<bg> {
+        <nonblock-prefix_expr_nostruct>
+    }
+}
+
+our class ExprNoStruct::A {
+
+    method expr-nostruct:sym<a>($/) {
+        make ExprLit.new(
+            lit =>  $<lit>.made,
+        )
+    }
+
+    method expr-nostruct:sym<b>($/) {
+        make ExprPath.new(
+            path-expr =>  $<path-expr>.made,
+        )
+    }
+
+    method expr-nostruct:sym<c>($/) {
+        make ExprPath.new(
+
+        )
+    }
+
+    method expr-nostruct:sym<d>($/) {
+        make ExprMac.new(
+            macro-expr =>  $<macro-expr>.made,
+        )
+    }
+
+    method expr-nostruct:sym<e>($/) {
+        make ExprTry.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<f>($/) {
+        make ExprField.new(
+            expr-nostruct                 =>  $<expr-nostruct>.made,
+            path-generic_args_with_colons =>  $<path-generic_args_with_colons>.made,
+        )
+    }
+
+    method expr-nostruct:sym<g>($/) {
+        make ExprTupleIndex.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<h>($/) {
+        make ExprIndex.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            maybe-expr    =>  $<maybe-expr>.made,
+        )
+    }
+
+    method expr-nostruct:sym<i>($/) {
+        make ExprCall.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            maybe-exprs   =>  $<maybe-exprs>.made,
+        )
+    }
+
+    method expr-nostruct:sym<j>($/) {
+        make ExprVec.new(
+            vec-expr =>  $<vec-expr>.made,
+        )
+    }
+
+    method expr-nostruct:sym<k>($/) {
+        make ExprParen.new(
+            maybe-exprs =>  $<maybe-exprs>.made,
+        )
+    }
+
+    method expr-nostruct:sym<l>($/) {
+        make ExprAgain.new(
+
+        )
+    }
+
+    method expr-nostruct:sym<m>($/) {
+        make ExprAgain.new(
+            ident =>  $<ident>.made,
+        )
+    }
+
+    method expr-nostruct:sym<n>($/) {
+        make ExprRet.new(
+
+        )
+    }
+
+    method expr-nostruct:sym<o>($/) {
+        make ExprRet.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr-nostruct:sym<p>($/) {
+        make ExprBreak.new(
+
+        )
+    }
+
+    method expr-nostruct:sym<q>($/) {
+        make ExprBreak.new(
+            ident =>  $<ident>.made,
+        )
+    }
+
+    method expr-nostruct:sym<r>($/) {
+        make ExprYield.new(
+
+        )
+    }
+
+    method expr-nostruct:sym<s>($/) {
+        make ExprYield.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr-nostruct:sym<t>($/) {
+        make ExprAssign.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<u>($/) {
+        make ExprAssignShl.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<v>($/) {
+        make ExprAssignShr.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<w>($/) {
+        make ExprAssignSub.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<x>($/) {
+        make ExprAssignBitAnd.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<y>($/) {
+        make ExprAssignBitOr.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<z>($/) {
+        make ExprAssignAdd.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<aa>($/) {
+        make ExprAssignMul.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<ab>($/) {
+        make ExprAssignDiv.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<ac>($/) {
+        make ExprAssignBitXor.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<ad>($/) {
+        make ExprAssignRem.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<ae>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<af>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<ag>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<ah>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<ai>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<aj>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<ak>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<al>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<am>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<an>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<ao>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<ap>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<aq>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<ar>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<as>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<at>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<au>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<av>($/) {
+        make ExprBinary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<aw>($/) {
+        make ExprRange.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<ax>($/) {
+        make ExprRange.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<ay>($/) {
+        make ExprRange.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-nostruct:sym<az>($/) {
+        make ExprRange.new(
+
+        )
+    }
+
+    method expr-nostruct:sym<ba>($/) {
+        make ExprCast.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            ty            =>  $<ty>.made,
+        )
+    }
+
+    method expr-nostruct:sym<bb>($/) {
+        make ExprTypeAscr.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            ty            =>  $<ty>.made,
+        )
+    }
+
+    method expr-nostruct:sym<bc>($/) {
+        make ExprBox.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method expr-nostruct:sym<bd>($/) {
+        make $<expr-qualified_path>.made
+    }
+
+    method expr-nostruct:sym<be>($/) {
+        make $<block-expr>.made
+    }
+
+    method expr-nostruct:sym<bf>($/) {
+        make $<block>.made
+    }
+
+    method expr-nostruct:sym<bg>($/) {
+        make $<nonblock-prefix_expr_nostruct>.made
+    }
+}
+
+#-------------------------------------
+our class ExprAddrOf {
+    has $.expr_nostruct;
+    has $.maybe_mut;
+    has $.expr;
+}
+
+our class ExprUnary {
+    has $.expr;
+    has $.expr_nostruct;
+}
+
+our class NonblockPrefixExpr::G {
+
+    proto rule nonblock-prefix_expr_nostruct { * }
+
+    rule nonblock-prefix_expr_nostruct:sym<a> {
+        '-' <expr-nostruct>
+    }
+
+    rule nonblock-prefix_expr_nostruct:sym<b> {
+        '!' <expr-nostruct>
+    }
+
+    rule nonblock-prefix_expr_nostruct:sym<c> {
+        '*' <expr-nostruct>
+    }
+
+    rule nonblock-prefix_expr_nostruct:sym<d> {
+        '&' <maybe-mut> <expr-nostruct>
+    }
+
+    rule nonblock-prefix_expr_nostruct:sym<e> {
+        <ANDAND> <maybe-mut> <expr-nostruct>
+    }
+
+    rule nonblock-prefix_expr_nostruct:sym<f> {
+        <lambda-expr_nostruct>
+    }
+
+    rule nonblock-prefix_expr_nostruct:sym<g> {
+        <MOVE> <lambda-expr_nostruct>
+    }
+
+    proto rule nonblock-prefix_expr { * }
+
+    rule nonblock-prefix_expr:sym<a> {
+        '-' <expr>
+    }
+
+    rule nonblock-prefix_expr:sym<b> {
+        '!' <expr>
+    }
+
+    rule nonblock-prefix_expr:sym<c> {
+        '*' <expr>
+    }
+
+    rule nonblock-prefix_expr:sym<d> {
+        '&' <maybe-mut> <expr>
+    }
+
+    rule nonblock-prefix_expr:sym<e> {
+        <ANDAND> <maybe-mut> <expr>
+    }
+
+    rule nonblock-prefix_expr:sym<f> {
+        <lambda-expr>
+    }
+
+    rule nonblock-prefix_expr:sym<g> {
+        <MOVE> <lambda-expr>
+    }
+}
+
+our class NonblockPrefixExpr::A {
+
+    method nonblock-prefix_expr_nostruct:sym<a>($/) {
+        make ExprUnary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method nonblock-prefix_expr_nostruct:sym<b>($/) {
+        make ExprUnary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method nonblock-prefix_expr_nostruct:sym<c>($/) {
+        make ExprUnary.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method nonblock-prefix_expr_nostruct:sym<d>($/) {
+        make ExprAddrOf.new(
+            maybe-mut     =>  $<maybe-mut>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method nonblock-prefix_expr_nostruct:sym<e>($/) {
+        make ExprAddrOf.new(
+
+        )
+    }
+
+    method nonblock-prefix_expr_nostruct:sym<f>($/) {
+        make $<lambda-expr_nostruct>.made
+    }
+
+    method nonblock-prefix_expr_nostruct:sym<g>($/) {
+        make $<lambda_expr_nostruct>.made
+    }
+
+    method nonblock-prefix_expr:sym<a>($/) {
+        make ExprUnary.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-prefix_expr:sym<b>($/) {
+        make ExprUnary.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-prefix_expr:sym<c>($/) {
+        make ExprUnary.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-prefix_expr:sym<d>($/) {
+        make ExprAddrOf.new(
+            maybe-mut =>  $<maybe-mut>.made,
+            expr      =>  $<expr>.made,
+        )
+    }
+
+    method nonblock-prefix_expr:sym<e>($/) {
+        make ExprAddrOf.new(
+
+        )
+    }
+
+    method nonblock-prefix_expr:sym<f>($/) {
+        make $<lambda-expr>.made
+    }
+
+    method nonblock-prefix_expr:sym<g>($/) {
+        make $<lambda_expr>.made
+    }
+}
+
+#-------------------------------------
+our class ExprQualifiedPath {
+    has $.ty_sum;
+    has $.maybe_qpath_params;
+    has $.generic_args;
+    has $.maybe_as_trait_ref;
+    has $.ident;
+}
+
+our class ExprQualifiedPath::G {
+
+    proto rule expr-qualified_path { * }
+
+    rule expr-qualified_path:sym<a> {
+        '<' <ty-sum> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <maybe-qpath_params>
+    }
+
+    rule expr-qualified_path:sym<b> {
+        <SHL> <ty-sum> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <maybe-as_trait_ref> '>' <MOD-SEP> <ident>
+    }
+
+    rule expr-qualified_path:sym<c> {
+        <SHL> <ty-sum> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <generic-args> <maybe-as_trait_ref> '>' <MOD-SEP> <ident>
+    }
+
+    rule expr-qualified_path:sym<d> {
+        <SHL> <ty-sum> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <generic-args>
+    }
+
+    rule expr-qualified_path:sym<e> {
+        <SHL> <ty-sum> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <generic-args> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <generic-args>
+    }
+}
+
+our class ExprQualifiedPath::A {
+
+    method expr-qualified_path:sym<a>($/) {
+        make ExprQualifiedPath.new(
+            ty-sum             =>  $<ty-sum>.made,
+            maybe-as_trait_ref =>  $<maybe-as_trait_ref>.made,
+            ident              =>  $<ident>.made,
+            maybe-qpath_params =>  $<maybe-qpath_params>.made,
+        )
+    }
+
+    method expr-qualified_path:sym<b>($/) {
+        make ExprQualifiedPath.new(
+            maybe-as_trait_ref =>  $<maybe-as_trait_ref>.made,
+            ident              =>  $<ident>.made,
+        )
+    }
+
+    method expr-qualified_path:sym<c>($/) {
+        make ExprQualifiedPath.new(
+            maybe-as_trait_ref =>  $<maybe-as_trait_ref>.made,
+            ident              =>  $<ident>.made,
+        )
+    }
+
+    method expr-qualified_path:sym<d>($/) {
+        make ExprQualifiedPath.new(
+            maybe-as_trait_ref =>  $<maybe-as_trait_ref>.made,
+            ident              =>  $<ident>.made,
+            generic-args       =>  $<generic-args>.made,
+        )
+    }
+
+    method expr-qualified_path:sym<e>($/) {
+        make ExprQualifiedPath.new(
+            maybe-as_trait_ref =>  $<maybe-as_trait_ref>.made,
+            ident              =>  $<ident>.made,
+            generic-args       =>  $<generic-args>.made,
+        )
+    }
+}
+
+#-------------------------------------
+our class QPathParams::G {
+
+    proto rule maybe-qpath_params { * }
+
+    rule maybe-qpath_params:sym<a> {
+        <MOD-SEP> <generic-args>
+    }
+
+    rule maybe-qpath_params:sym<b> {
+
+    }
+}
+
+our class QPathParams::A {
+
+    method maybe-qpath_params:sym<a>($/) {
+        make $<generic_args>.made
+    }
+
+    method maybe-qpath_params:sym<b>($/) {
+        MkNone<140654400390368>
+    }
+}
+
+#-------------------------------------
+our class AsTraitRef::G {
+
+    proto rule maybe-as_trait_ref { * }
+
+    rule maybe-as_trait_ref:sym<a> {
+        <AS> <trait-ref>
+    }
+
+    rule maybe-as_trait_ref:sym<b> {
+
+    }
+}
+
+our class AsTraitRef::A {
+
+    method maybe-as_trait_ref:sym<a>($/) {
+        make $<trait_ref>.made
+    }
+
+    method maybe-as_trait_ref:sym<b>($/) {
+        MkNone<140417796742176>
+    }
+}
+
+#-------------------------------------
+our class ExprFnBlock {
+    has $.ret_ty;
+    has $.expr;
+    has $.inferrable_params;
+    has $.lambda_expr_nostruct_no_first_bar;
+    has $.lambda_expr_no_first_bar;
+    has $.expr_nostruct;
+}
+
+our class LambdaExpr::G {
+
+    proto rule lambda-expr { * }
+
+    rule lambda-expr:sym<a> {
+        {self.set-prec(LAMBDA)} <OROR> <ret-ty> <expr>
+    }
+
+    rule lambda-expr:sym<b> {
+        {self.set-prec(LAMBDA)} '|' '|' <ret-ty> <expr>
+    }
+
+    rule lambda-expr:sym<c> {
+        {self.set-prec(LAMBDA)} '|' <inferrable-params> '|' <ret-ty> <expr>
+    }
+
+    rule lambda-expr:sym<d> {
+        {self.set-prec(LAMBDA)} '|' <inferrable-params> <OROR> <lambda-expr_no_first_bar>
+    }
+
+    proto rule lambda-expr_no_first_bar { * }
+
+    rule lambda-expr_no_first_bar:sym<a> {
+        {self.set-prec(LAMBDA)} '|' <ret-ty> <expr>
+    }
+
+    rule lambda-expr_no_first_bar:sym<b> {
+        {self.set-prec(LAMBDA)} <inferrable-params> '|' <ret-ty> <expr>
+    }
+
+    rule lambda-expr_no_first_bar:sym<c> {
+        {self.set-prec(LAMBDA)} <inferrable-params> <OROR> <lambda-expr_no_first_bar>
+    }
+
+    proto rule lambda-expr_nostruct { * }
+
+    rule lambda-expr_nostruct:sym<a> {
+        {self.set-prec(LAMBDA)} <OROR> <expr-nostruct>
+    }
+
+    rule lambda-expr_nostruct:sym<b> {
+        {self.set-prec(LAMBDA)} '|' '|' <ret-ty> <expr-nostruct>
+    }
+
+    rule lambda-expr_nostruct:sym<c> {
+        {self.set-prec(LAMBDA)} '|' <inferrable-params> '|' <expr-nostruct>
+    }
+
+    rule lambda-expr_nostruct:sym<d> {
+        {self.set-prec(LAMBDA)} '|' <inferrable-params> <OROR> <lambda-expr_nostruct_no_first_bar>
+    }
+
+    proto rule lambda-expr_nostruct_no_first_bar { * }
+
+    rule lambda-expr_nostruct_no_first_bar:sym<a> {
+        {self.set-prec(LAMBDA)} '|' <ret-ty> <expr-nostruct>
+    }
+
+    rule lambda-expr_nostruct_no_first_bar:sym<b> {
+        {self.set-prec(LAMBDA)} <inferrable-params> '|' <ret-ty> <expr-nostruct>
+    }
+
+    rule lambda-expr_nostruct_no_first_bar:sym<c> {
+        {self.set-prec(LAMBDA)} <inferrable-params> <OROR> <lambda-expr_nostruct_no_first_bar>
+    }
+}
+
+our class LambdaExpr::A {
+
+    method lambda-expr:sym<a>($/) {
+        make ExprFnBlock.new(
+            ret-ty =>  $<ret-ty>.made,
+            expr   =>  $<expr>.made,
+        )
+    }
+
+    method lambda-expr:sym<b>($/) {
+        make ExprFnBlock.new(
+            ret-ty =>  $<ret-ty>.made,
+            expr   =>  $<expr>.made,
+        )
+    }
+
+    method lambda-expr:sym<c>($/) {
+        make ExprFnBlock.new(
+            inferrable-params =>  $<inferrable-params>.made,
+            ret-ty            =>  $<ret-ty>.made,
+            expr              =>  $<expr>.made,
+        )
+    }
+
+    method lambda-expr:sym<d>($/) {
+        make ExprFnBlock.new(
+            inferrable-params        =>  $<inferrable-params>.made,
+            lambda-expr_no_first_bar =>  $<lambda-expr_no_first_bar>.made,
+        )
+    }
+
+    method lambda-expr_no_first_bar:sym<a>($/) {
+        make ExprFnBlock.new(
+            ret-ty =>  $<ret-ty>.made,
+            expr   =>  $<expr>.made,
+        )
+    }
+
+    method lambda-expr_no_first_bar:sym<b>($/) {
+        make ExprFnBlock.new(
+            inferrable-params =>  $<inferrable-params>.made,
+            ret-ty            =>  $<ret-ty>.made,
+            expr              =>  $<expr>.made,
+        )
+    }
+
+    method lambda-expr_no_first_bar:sym<c>($/) {
+        make ExprFnBlock.new(
+            inferrable-params        =>  $<inferrable-params>.made,
+            lambda-expr_no_first_bar =>  $<lambda-expr_no_first_bar>.made,
+        )
+    }
+
+    method lambda-expr_nostruct:sym<a>($/) {
+        make ExprFnBlock.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method lambda-expr_nostruct:sym<b>($/) {
+        make ExprFnBlock.new(
+            ret-ty        =>  $<ret-ty>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method lambda-expr_nostruct:sym<c>($/) {
+        make ExprFnBlock.new(
+            inferrable-params =>  $<inferrable-params>.made,
+            expr-nostruct     =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method lambda-expr_nostruct:sym<d>($/) {
+        make ExprFnBlock.new(
+            inferrable-params                 =>  $<inferrable-params>.made,
+            lambda-expr_nostruct_no_first_bar =>  $<lambda-expr_nostruct_no_first_bar>.made,
+        )
+    }
+
+    method lambda-expr_nostruct_no_first_bar:sym<a>($/) {
+        make ExprFnBlock.new(
+            ret-ty        =>  $<ret-ty>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method lambda-expr_nostruct_no_first_bar:sym<b>($/) {
+        make ExprFnBlock.new(
+            inferrable-params =>  $<inferrable-params>.made,
+            ret-ty            =>  $<ret-ty>.made,
+            expr-nostruct     =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method lambda-expr_nostruct_no_first_bar:sym<c>($/) {
+        make ExprFnBlock.new(
+            inferrable-params                 =>  $<inferrable-params>.made,
+            lambda-expr_nostruct_no_first_bar =>  $<lambda-expr_nostruct_no_first_bar>.made,
+        )
+    }
+}
+
+#-------------------------------------
+our class VecRepeat {
+    has $.expr;
+    has $.exprs;
+}
+
+our class VecExpr::G {
+
+    proto rule vec-expr { * }
+
+    rule vec-expr:sym<a> {
+        <maybe-exprs>
+    }
+
+    rule vec-expr:sym<b> {
+        <exprs> ';' <expr>
+    }
+}
+
+our class VecExpr::A {
+
+    method vec-expr:sym<a>($/) {
+        make $<maybe-exprs>.made
+    }
+
+    method vec-expr:sym<b>($/) {
+        make VecRepeat.new(
+            exprs =>  $<exprs>.made,
+            expr  =>  $<expr>.made,
+        )
+    }
+}
+
+#-------------------------------------
+our class DefaultFieldInit {
+    has $.expr;
+}
+
+our class FieldInit {
+    has $.ident;
+    has $.expr;
+}
+
+our class FieldInits {
+    has $.field_init;
+}
+
+our class StructExpr::G {
+
+    proto rule struct-expr_fields { * }
+
+    rule struct-expr_fields:sym<a> {
+        <field-inits>
+    }
+
+    rule struct-expr_fields:sym<b> {
+        <field-inits> ','
+    }
+
+    rule struct-expr_fields:sym<c> {
+        <maybe-field_inits> <default-field_init>
+    }
+
+    rule struct-expr_fields:sym<d> {
+
+    }
+
+    proto rule maybe-field_inits { * }
+
+    rule maybe-field_inits:sym<a> {
+        <field-inits>
+    }
+
+    rule maybe-field_inits:sym<b> {
+        <field-inits> ','
+    }
+
+    rule maybe-field_inits:sym<c> {
+
+    }
+
+    proto rule field-inits { * }
+
+    rule field-inits:sym<a> {
+        <field-init>
+    }
+
+    rule field-inits:sym<b> {
+        <field-inits> ',' <field-init>
+    }
+
+    proto rule field-init { * }
+
+    rule field-init:sym<a> {
+        <ident>
+    }
+
+    rule field-init:sym<b> {
+        <ident> ':' <expr>
+    }
+
+    rule field-init:sym<c> {
+        <LIT-INTEGER> ':' <expr>
+    }
+
+    rule default-field_init {
+        <DOTDOT> <expr>
+    }
+}
+
+our class StructExpr::A {
+
+    method struct-expr_fields:sym<a>($/) {
+        make $<field-inits>.made
+    }
+
+    method struct-expr_fields:sym<b>($/) {
+
+    }
+
+    method struct-expr_fields:sym<c>($/) {
+        ExtNode<140520912503920>
+    }
+
+    method struct-expr_fields:sym<d>($/) {
+        MkNone<140520354460832>
+    }
+
+    method maybe-field_inits:sym<a>($/) {
+        make $<field-inits>.made
+    }
+
+    method maybe-field_inits:sym<b>($/) {
+
+    }
+
+    method maybe-field_inits:sym<c>($/) {
+        MkNone<140520354460864>
+    }
+
+    method field-inits:sym<a>($/) {
+        make FieldInits.new(
+            field-init =>  $<field-init>.made,
+        )
+    }
+
+    method field-inits:sym<b>($/) {
+        ExtNode<140520912504200>
+    }
+
+    method field-init:sym<a>($/) {
+        make FieldInit.new(
+            ident =>  $<ident>.made,
+        )
+    }
+
+    method field-init:sym<b>($/) {
+        make FieldInit.new(
+            ident =>  $<ident>.made,
+            expr  =>  $<expr>.made,
+        )
+    }
+
+    method field-init:sym<c>($/) {
+        make FieldInit.new(
+            expr =>  $<expr>.made,
+        )
+    }
+
+    method default-field_init($/) {
+        make DefaultFieldInit.new(
+            expr =>  $<expr>.made,
+        )
+    }
+}
+
+#-------------------------------------
+our class ExprCall {
+    has $.block_expr_dot;
+    has $.maybe_exprs;
+    has $.path_generic_args_with_colons;
+    has $.block_expr;
+}
+
+our class ExprField {
+    has $.block_expr;
+    has $.block_expr_dot;
+    has $.path_generic_args_with_colons;
+}
+
+our class ExprIndex {
+    has $.maybe_expr;
+    has $.block_expr;
+    has $.path_generic_args_with_colons;
+    has $.block_expr_dot;
+}
+
+our class ExprTupleIndex {
+    has $.block_expr;
+    has $.block_expr_dot;
+}
+
+our class Macro {
+    has $.braces_delimited_token_trees;
+    has $.path_expr;
+    has $.maybe_ident;
+}
+
+our class UnsafeBlock {
+    has $.block;
+}
+
+our class BlockExpr::G {
+
+    proto rule block-expr { * }
+
+    rule block-expr:sym<a> {
+        <expr-match>
+    }
+
+    rule block-expr:sym<b> {
+        <expr-if>
+    }
+
+    rule block-expr:sym<c> {
+        <expr-if_let>
+    }
+
+    rule block-expr:sym<d> {
+        <expr-while>
+    }
+
+    rule block-expr:sym<e> {
+        <expr-while_let>
+    }
+
+    rule block-expr:sym<f> {
+        <expr-loop>
+    }
+
+    rule block-expr:sym<g> {
+        <expr-for>
+    }
+
+    rule block-expr:sym<h> {
+        <UNSAFE> <block>
+    }
+
+    rule block-expr:sym<i> {
+        <path-expr> '!' <maybe-ident> <braces-delimited_token_trees>
+    }
+
+    proto rule full-block_expr { * }
+
+    rule full-block_expr:sym<a> {
+        <block-expr>
+    }
+
+    rule full-block_expr:sym<b> {
+        <block-expr_dot>
+    }
+
+    proto rule block-expr_dot { * }
+
+    rule block-expr_dot:sym<a> {
+        <block-expr> '.' <path-generic_args_with_colons> {self.set-prec(IDENT)}
+    }
+
+    rule block-expr_dot:sym<b> {
+        <block-expr_dot> '.' <path-generic_args_with_colons> {self.set-prec(IDENT)}
+    }
+
+    rule block-expr_dot:sym<c> {
+        <block-expr> '.' <path-generic_args_with_colons> '[' <maybe-expr> ']'
+    }
+
+    rule block-expr_dot:sym<d> {
+        <block-expr_dot> '.' <path-generic_args_with_colons> '[' <maybe-expr> ']'
+    }
+
+    rule block-expr_dot:sym<e> {
+        <block-expr> '.' <path-generic_args_with_colons> '(' <maybe-exprs> ')'
+    }
+
+    rule block-expr_dot:sym<f> {
+        <block-expr_dot> '.' <path-generic_args_with_colons> '(' <maybe-exprs> ')'
+    }
+
+    rule block-expr_dot:sym<g> {
+        <block-expr> '.' <LIT-INTEGER>
+    }
+
+    rule block-expr_dot:sym<h> {
+        <block-expr_dot> '.' <LIT-INTEGER>
+    }
+}
+
+our class BlockExpr::A {
+
+    method block-expr:sym<a>($/) {
+        make $<expr-match>.made
+    }
+
+    method block-expr:sym<b>($/) {
+        make $<expr-if>.made
+    }
+
+    method block-expr:sym<c>($/) {
+        make $<expr-if_let>.made
+    }
+
+    method block-expr:sym<d>($/) {
+        make $<expr-while>.made
+    }
+
+    method block-expr:sym<e>($/) {
+        make $<expr-while_let>.made
+    }
+
+    method block-expr:sym<f>($/) {
+        make $<expr-loop>.made
+    }
+
+    method block-expr:sym<g>($/) {
+        make $<expr-for>.made
+    }
+
+    method block-expr:sym<h>($/) {
+        make UnsafeBlock.new(
+            block =>  $<block>.made,
+        )
+    }
+
+    method block-expr:sym<i>($/) {
+        make Macro.new(
+            path-expr                    =>  $<path-expr>.made,
+            maybe-ident                  =>  $<maybe-ident>.made,
+            braces-delimited_token_trees =>  $<braces-delimited_token_trees>.made,
+        )
+    }
+
+    method full-block_expr:sym<a>($/) {
+        make $<block-expr>.made
+    }
+
+    method full-block_expr:sym<b>($/) {
+        make $<block-expr_dot>.made
+    }
+
+    method block-expr_dot:sym<a>($/) {
+        make ExprField.new(
+            block-expr                    =>  $<block-expr>.made,
+            path-generic_args_with_colons =>  $<path-generic_args_with_colons>.made,
+        )
+    }
+
+    method block-expr_dot:sym<b>($/) {
+        make ExprField.new(
+            block-expr_dot                =>  $<block-expr_dot>.made,
+            path-generic_args_with_colons =>  $<path-generic_args_with_colons>.made,
+        )
+    }
+
+    method block-expr_dot:sym<c>($/) {
+        make ExprIndex.new(
+            block-expr                    =>  $<block-expr>.made,
+            path-generic_args_with_colons =>  $<path-generic_args_with_colons>.made,
+            maybe-expr                    =>  $<maybe-expr>.made,
+        )
+    }
+
+    method block-expr_dot:sym<d>($/) {
+        make ExprIndex.new(
+            block-expr_dot                =>  $<block-expr_dot>.made,
+            path-generic_args_with_colons =>  $<path-generic_args_with_colons>.made,
+            maybe-expr                    =>  $<maybe-expr>.made,
+        )
+    }
+
+    method block-expr_dot:sym<e>($/) {
+        make ExprCall.new(
+            block-expr                    =>  $<block-expr>.made,
+            path-generic_args_with_colons =>  $<path-generic_args_with_colons>.made,
+            maybe-exprs                   =>  $<maybe-exprs>.made,
+        )
+    }
+
+    method block-expr_dot:sym<f>($/) {
+        make ExprCall.new(
+            block-expr_dot                =>  $<block-expr_dot>.made,
+            path-generic_args_with_colons =>  $<path-generic_args_with_colons>.made,
+            maybe-exprs                   =>  $<maybe-exprs>.made,
+        )
+    }
+
+    method block-expr_dot:sym<g>($/) {
+        make ExprTupleIndex.new(
+            block-expr =>  $<block-expr>.made,
+        )
+    }
+
+    method block-expr_dot:sym<h>($/) {
+        make ExprTupleIndex.new(
+            block-expr_dot =>  $<block-expr_dot>.made,
+        )
+    }
+}
+
+#-------------------------------------
+
+expr_match
+: MATCH expr_nostruct '{' '}'                                     { $$ = mk_node("ExprMatch", 1, $2); }
+| MATCH expr_nostruct '{' match_clauses                       '}' { $$ = mk_node("ExprMatch", 2, $2, $4); }
+| MATCH expr_nostruct '{' match_clauses nonblock_match_clause '}' { $$ = mk_node("ExprMatch", 2, $2, ext_node($4, 1, $5)); }
+| MATCH expr_nostruct '{'               nonblock_match_clause '}' { $$ = mk_node("ExprMatch", 2, $2, mk_node("Arms", 1, $4)); }
+;
+
+match_clauses
+: match_clause               { $$ = mk_node("Arms", 1, $1); }
+| match_clauses match_clause { $$ = ext_node($1, 1, $2); }
+;
+
+match_clause
+: nonblock_match_clause ','
+| block_match_clause
+| block_match_clause ','
+;
+
+nonblock_match_clause
+: maybe_outer_attrs pats_or maybe_guard FAT_ARROW nonblock_expr  { $$ = mk_node("ArmNonblock", 4, $1, $2, $3, $5); }
+| maybe_outer_attrs pats_or maybe_guard FAT_ARROW block_expr_dot { $$ = mk_node("ArmNonblock", 4, $1, $2, $3, $5); }
+;
+
+block_match_clause
+: maybe_outer_attrs pats_or maybe_guard FAT_ARROW block      { $$ = mk_node("ArmBlock", 4, $1, $2, $3, $5); }
+| maybe_outer_attrs pats_or maybe_guard FAT_ARROW block_expr { $$ = mk_node("ArmBlock", 4, $1, $2, $3, $5); }
+;
+
