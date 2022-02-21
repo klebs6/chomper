@@ -843,7 +843,9 @@ our class ViewPath::A {
 
 #------------------------------
 our class ItemForeignMod {
+    has $.inner_attrs;
     has $.item_foreign_mod;
+    has $.maybe_foreign_items;
 }
 
 our class BlockItem::G {
@@ -1324,11 +1326,6 @@ our class ItemUnion::A {
 }
 
 #------------------------------
-our class ItemForeignMod {
-    has $.inner_attrs;
-    has $.maybe_foreign_items;
-}
-
 our class ItemMod {
     has $.ident;
     has $.maybe_mod_items;
@@ -1561,7 +1558,10 @@ our class ForeignFn::A {
 
 #------------------------------
 our class FnDecl {
+    has $.fn_anon_params_with_self;
+    has $.fn_params;
     has $.fn_params_allow_variadic;
+    has $.fn_params_with_self;
     has $.ret_ty;
 }
 
@@ -2654,13 +2654,6 @@ our class ItemFn::A {
 }
 
 #--------------------------
-our class FnDecl {
-    has $.ret_ty;
-    has $.fn_params;
-    has $.fn_params_with_self;
-    has $.fn_anon_params_with_self;
-}
-
 our class FnDeclWithSelf::G {
 
     rule fn-decl {
@@ -3006,12 +2999,12 @@ our class InferrableParams::A {
 }
 
 #--------------------------
-our class Arg {
+our class AnonArg {
     has $.named_arg;
     has $.ty;
 }
 
-our class Args {
+our class AnonArgs {
     has $.anon_params_allow_variadic_tail;
     has $.anon_param;
 }
@@ -3118,7 +3111,7 @@ our class AnonParams::A {
     }
 
     method anon-params:sym<a>($/) {
-        make Args.new(
+        make AnonArgs.new(
             anon-param =>  $<anon-param>.made,
         )
     }
@@ -3128,7 +3121,7 @@ our class AnonParams::A {
     }
 
     method anon-param:sym<a>($/) {
-        make Arg.new(
+        make AnonArg.new(
             named-arg =>  $<named-arg>.made,
             ty        =>  $<ty>.made,
         )
@@ -3143,7 +3136,7 @@ our class AnonParams::A {
     }
 
     method anon-params_allow_variadic_tail:sym<b>($/) {
-        make Args.new(
+        make AnonArgs.new(
             anon-param                      =>  $<anon-param>.made,
             anon-params_allow_variadic_tail =>  $<anon-params_allow_variadic_tail>.made,
         )
@@ -3696,6 +3689,7 @@ our class PathNoTypesAllowed::A {
 
 #--------------------------
 our class GenericValues {
+    has $.maybe_bindings;
     has $.maybe_ty_sums_and_or_bindings;
 }
 
@@ -3857,12 +3851,14 @@ our class PatRegion {
 }
 
 our class PatStruct {
-    has $.path_expr;
+    has $.pat_fields;
     has $.pat_struct;
+    has $.path_expr;
 }
 
 our class PatTup {
     has $.pat_tup;
+    has $.pat_tup_elts;
 }
 
 our class PatUniq {
@@ -3871,6 +3867,7 @@ our class PatUniq {
 
 our class PatVec {
     has $.pat_vec;
+    has $.pat_vec_elts;
 }
 
 our class Pats {
@@ -4299,10 +4296,6 @@ our class PatField::A {
 }
 
 #-----------------------------------
-our class PatStruct {
-    has $.pat_fields;
-}
-
 our class PatStruct::G {
 
     proto rule pat-struct { * }
@@ -4362,10 +4355,6 @@ our class PatStruct::A {
 }
 
 #-----------------------------------
-our class PatTup {
-    has $.pat_tup_elts;
-}
-
 our class PatTupElts {
     has $.pat;
 }
@@ -4513,10 +4502,6 @@ our class PatTup::A {
 }
 
 #-----------------------------------
-our class PatVec {
-    has $.pat_vec_elts;
-}
-
 our class PatVecElts {
     has $.pat;
 }
@@ -4677,9 +4662,10 @@ our class PatVec::A {
 # Part 3: Types
 #//////////////////////////////////////////////////////////////////////
 our class TyQualifiedPath {
-    has $.ty_sum;
-    has $.maybe_as_trait_ref;
     has $.ident;
+    has $.maybe_as_trait_ref;
+    has $.trait_ref;
+    has $.ty_sum;
 }
 
 our class TyTup {
@@ -5240,16 +5226,6 @@ our class MutOrConst::A {
 }
 
 #---------------------------------
-our class GenericValues {
-    has $.maybe_bindings;
-}
-
-our class TyQualifiedPath {
-    has $.ident;
-    has $.ty_sum;
-    has $.trait_ref;
-}
-
 our class TyQualifiedPath::G {
 
     proto rule ty-qualified_path_and_generic_values { * }
@@ -5934,9 +5910,6 @@ our class InnerAttrsAndBlock::A {
 }
 
 #---------------------------------
-our class ExprBlock {
-    has $.maybe_stmts;
-}
 
 our class Block::G {
 
@@ -6251,10 +6224,6 @@ our class PathExpr::A {
 #
 # These show up in expr context, in order to
 # disambiguate from "less-than" expressions.
-our class Components {
-    has $.ident;
-}
-
 our class PathGenericArgsWithColons::G {
 
     proto rule path-generic_args_with_colons { * }
@@ -6349,68 +6318,52 @@ our class MacroExpr::A {
 
 #-------------------------------------
 
-our class ExprAgain {
-    has $.lifetime;
-}
-
 our class ExprAssign {
     has $.expr;
     has $.nonblock_expr;
+    has $.expr_nostruct;
 }
 
 our class ExprAssignAdd {
     has $.expr;
+    has $.expr_nostruct;
     has $.nonblock_expr;
 }
 
 our class ExprAssignBitAnd {
     has $.expr;
+    has $.expr_nostruct;
     has $.nonblock_expr;
 }
 
 our class ExprAssignBitOr {
     has $.nonblock_expr;
     has $.expr;
+    has $.expr_nostruct;
 }
 
 our class ExprAssignBitXor {
     has $.expr;
+    has $.expr_nostruct;
     has $.nonblock_expr;
 }
 
 our class ExprAssignDiv {
     has $.expr;
     has $.nonblock_expr;
-}
-
-our class ExprAssignMul {
-    has $.nonblock_expr;
-    has $.expr;
+    has $.expr_nostruct;
 }
 
 our class ExprAssignRem {
     has $.expr;
+    has $.expr_nostruct;
     has $.nonblock_expr;
 }
 
 our class ExprAssignShl {
     has $.nonblock_expr;
     has $.expr;
-}
-
-our class ExprAssignShr {
-    has $.nonblock_expr;
-    has $.expr;
-}
-
-our class ExprAssignSub {
-    has $.expr;
-    has $.nonblock_expr;
-}
-
-our class ExprBinary {
-    has $.expr;
-    has $.nonblock_expr;
+    has $.expr_nostruct;
 }
 
 our class ExprBox {
@@ -6421,28 +6374,23 @@ our class ExprBreak {
     has $.lifetime;
 }
 
-our class ExprCall {
-    has $.maybe_exprs;
-    has $.nonblock_expr;
-}
-
-our class ExprCast {
-    has $.ty;
-    has $.nonblock_expr;
-}
-
 our class ExprField {
-    has $.path_generic_args_with_colons;
+    has $.block_expr;
+    has $.block_expr_dot;
+    has $.expr;
+    has $.expr_nostruct;
     has $.nonblock_expr;
+    has $.path_generic_args_with_colons;
 }
 
 our class ExprIndex {
+    has $.block_expr;
+    has $.block_expr_dot;
+    has $.expr;
+    has $.expr_nostruct;
     has $.maybe_expr;
     has $.nonblock_expr;
-}
-
-our class ExprLit {
-    has $.lit;
+    has $.path_generic_args_with_colons;
 }
 
 our class ExprMac {
@@ -6459,6 +6407,7 @@ our class ExprPath {
 
 our class ExprRange {
     has $.expr;
+    has $.expr_nostruct;
     has $.nonblock_expr;
 }
 
@@ -6467,21 +6416,29 @@ our class ExprRet {
 }
 
 our class ExprStruct {
-    has $.struct_expr_fields;
     has $.path_expr;
+    has $.struct_expr_fields;
 }
 
 our class ExprTry {
+    has $.expr;
+    has $.expr_nostruct;
     has $.nonblock_expr;
 }
 
 our class ExprTupleIndex {
+    has $.block_expr;
+    has $.block_expr_dot;
+    has $.expr;
+    has $.expr_nostruct;
     has $.nonblock_expr;
 }
 
 our class ExprTypeAscr {
-    has $.ty;
+    has $.expr;
+    has $.expr_nostruct;
     has $.nonblock_expr;
+    has $.ty;
 }
 
 our class ExprVec {
@@ -7114,59 +7071,26 @@ our class NonBlockExpr::A {
 
 #-------------------------------------
 our class ExprAgain {
+    has $.lifetime;
     has $.ident;
 }
 
-our class ExprAssign {
-    has $.expr;
-}
-
-our class ExprAssignAdd {
-    has $.expr;
-}
-
-our class ExprAssignBitAnd {
-    has $.expr;
-}
-
-our class ExprAssignBitOr {
-    has $.expr;
-}
-
-our class ExprAssignBitXor {
-    has $.expr;
-}
-
-our class ExprAssignDiv {
-    has $.expr;
-}
-
 our class ExprAssignMul {
+    has $.nonblock_expr;
     has $.expr;
-}
-
-our class ExprAssignRem {
-    has $.expr;
-}
-
-our class ExprAssignShl {
-    has $.expr;
-}
-
-our class ExprAssignShr {
-    has $.expr;
+    has $.expr_nostruct;
 }
 
 our class ExprAssignSub {
     has $.expr;
+    has $.expr_nostruct;
+    has $.nonblock_expr;
 }
 
 our class ExprBinary {
     has $.expr;
-}
-
-our class ExprBox {
-    has $.expr;
+    has $.expr_nostruct;
+    has $.nonblock_expr;
 }
 
 our class ExprBreak {
@@ -7174,73 +7098,17 @@ our class ExprBreak {
 }
 
 our class ExprCall {
+    has $.block_expr;
+    has $.block_expr_dot;
     has $.expr;
+    has $.expr_nostruct;
     has $.maybe_exprs;
-}
-
-our class ExprCast {
-    has $.ty;
-    has $.expr;
-}
-
-our class ExprField {
+    has $.nonblock_expr;
     has $.path_generic_args_with_colons;
-    has $.expr;
-}
-
-our class ExprIndex {
-    has $.maybe_expr;
-    has $.expr;
 }
 
 our class ExprLit {
     has $.lit;
-}
-
-our class ExprMac {
-    has $.macro_expr;
-}
-
-our class ExprParen {
-    has $.maybe_exprs;
-}
-
-our class ExprPath {
-    has $.path_expr;
-}
-
-our class ExprRange {
-    has $.expr;
-}
-
-our class ExprRet {
-    has $.expr;
-}
-
-our class ExprStruct {
-    has $.path_expr;
-    has $.struct_expr_fields;
-}
-
-our class ExprTry {
-    has $.expr;
-}
-
-our class ExprTupleIndex {
-    has $.expr;
-}
-
-our class ExprTypeAscr {
-    has $.expr;
-    has $.ty;
-}
-
-our class ExprVec {
-    has $.vec_expr;
-}
-
-our class ExprYield {
-    has $.expr;
 }
 
 our class Expr::G {
@@ -7880,129 +7748,17 @@ our class Expr::A {
 }
 
 #-------------------------------------
-our class ExprAgain {
-    has $.ident;
-}
-
-our class ExprAssign {
-    has $.expr_nostruct;
-}
-
-our class ExprAssignAdd {
-    has $.expr_nostruct;
-}
-
-our class ExprAssignBitAnd {
-    has $.expr_nostruct;
-}
-
-our class ExprAssignBitOr {
-    has $.expr_nostruct;
-}
-
-our class ExprAssignBitXor {
-    has $.expr_nostruct;
-}
-
-our class ExprAssignDiv {
-    has $.expr_nostruct;
-}
-
-our class ExprAssignMul {
-    has $.expr_nostruct;
-}
-
-our class ExprAssignRem {
-    has $.expr_nostruct;
-}
-
-our class ExprAssignShl {
-    has $.expr_nostruct;
-}
-
 our class ExprAssignShr {
-    has $.expr_nostruct;
-}
-
-our class ExprAssignSub {
-    has $.expr_nostruct;
-}
-
-our class ExprBinary {
-    has $.expr_nostruct;
-}
-
-our class ExprBox {
     has $.expr;
-}
-
-our class ExprBreak {
-    has $.ident;
-}
-
-our class ExprCall {
     has $.expr_nostruct;
-    has $.maybe_exprs;
+    has $.nonblock_expr;
 }
 
 our class ExprCast {
-    has $.expr_nostruct;
-    has $.ty;
-}
-
-our class ExprField {
-    has $.expr_nostruct;
-    has $.path_generic_args_with_colons;
-}
-
-our class ExprIndex {
-    has $.maybe_expr;
-    has $.expr_nostruct;
-}
-
-our class ExprLit {
-    has $.lit;
-}
-
-our class ExprMac {
-    has $.macro_expr;
-}
-
-our class ExprParen {
-    has $.maybe_exprs;
-}
-
-our class ExprPath {
-    has $.path_expr;
-}
-
-our class ExprRange {
-    has $.expr_nostruct;
-}
-
-our class ExprRet {
     has $.expr;
-}
-
-our class ExprTry {
     has $.expr_nostruct;
-}
-
-our class ExprTupleIndex {
-    has $.expr_nostruct;
-}
-
-our class ExprTypeAscr {
+    has $.nonblock_expr;
     has $.ty;
-    has $.expr_nostruct;
-}
-
-our class ExprVec {
-    has $.vec_expr;
-}
-
-our class ExprYield {
-    has $.expr;
 }
 
 our class ExprNoStruct::G {
@@ -9268,32 +9024,7 @@ our class StructExpr::A {
     }
 }
 
-#-------------------------------------
-our class ExprCall {
-    has $.block_expr_dot;
-    has $.maybe_exprs;
-    has $.path_generic_args_with_colons;
-    has $.block_expr;
-}
-
-our class ExprField {
-    has $.block_expr;
-    has $.block_expr_dot;
-    has $.path_generic_args_with_colons;
-}
-
-our class ExprIndex {
-    has $.maybe_expr;
-    has $.block_expr;
-    has $.path_generic_args_with_colons;
-    has $.block_expr_dot;
-}
-
-our class ExprTupleIndex {
-    has $.block_expr;
-    has $.block_expr_dot;
-}
-
+#---------------------------------------------
 our class Macro {
     has $.braces_delimited_token_trees;
     has $.path_expr;
@@ -9500,33 +9231,561 @@ our class BlockExpr::A {
     }
 }
 
-#-------------------------------------
+#---------------------------------------------
+our class BlockOrIf::G {
 
-expr_match
-: MATCH expr_nostruct '{' '}'                                     { $$ = mk_node("ExprMatch", 1, $2); }
-| MATCH expr_nostruct '{' match_clauses                       '}' { $$ = mk_node("ExprMatch", 2, $2, $4); }
-| MATCH expr_nostruct '{' match_clauses nonblock_match_clause '}' { $$ = mk_node("ExprMatch", 2, $2, ext_node($4, 1, $5)); }
-| MATCH expr_nostruct '{'               nonblock_match_clause '}' { $$ = mk_node("ExprMatch", 2, $2, mk_node("Arms", 1, $4)); }
-;
+    proto rule block-or_if { * }
 
-match_clauses
-: match_clause               { $$ = mk_node("Arms", 1, $1); }
-| match_clauses match_clause { $$ = ext_node($1, 1, $2); }
-;
+    rule block-or_if:sym<a> {
+        <block>
+    }
 
-match_clause
-: nonblock_match_clause ','
-| block_match_clause
-| block_match_clause ','
-;
+    rule block-or_if:sym<b> {
+        <expr-if>
+    }
 
-nonblock_match_clause
-: maybe_outer_attrs pats_or maybe_guard FAT_ARROW nonblock_expr  { $$ = mk_node("ArmNonblock", 4, $1, $2, $3, $5); }
-| maybe_outer_attrs pats_or maybe_guard FAT_ARROW block_expr_dot { $$ = mk_node("ArmNonblock", 4, $1, $2, $3, $5); }
-;
+    rule block-or_if:sym<c> {
+        <expr-if_let>
+    }
+}
 
-block_match_clause
-: maybe_outer_attrs pats_or maybe_guard FAT_ARROW block      { $$ = mk_node("ArmBlock", 4, $1, $2, $3, $5); }
-| maybe_outer_attrs pats_or maybe_guard FAT_ARROW block_expr { $$ = mk_node("ArmBlock", 4, $1, $2, $3, $5); }
-;
+our class BlockOrIf::A {
 
+    method block-or_if:sym<a>($/) {
+        make $<block>.made
+    }
+
+    method block-or_if:sym<b>($/) {
+        make $<expr-if>.made
+    }
+
+    method block-or_if:sym<c>($/) {
+        make $<expr-if_let>.made
+    }
+}
+
+#------------------------------
+our class ExprForLoop {
+    has $.expr_nostruct;
+    has $.block;
+    has $.pat;
+    has $.maybe_label;
+}
+
+our class ExprFor::G {
+
+    rule expr-for {
+        <maybe-label> <FOR> <pat> <IN> <expr-nostruct> <block>
+    }
+}
+
+our class ExprFor::A {
+
+    method expr-for($/) {
+        make ExprForLoop.new(
+            maybe-label   =>  $<maybe-label>.made,
+            pat           =>  $<pat>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+            block         =>  $<block>.made,
+        )
+    }
+}
+
+#-----------------------------------------
+our class ExprIfLet {
+    has $.expr_nostruct;
+    has $.block;
+    has $.pat;
+    has $.block_or_if;
+}
+
+our class ExprIfLet::G {
+
+    proto rule expr-if_let { * }
+
+    rule expr-if_let:sym<a> {
+        <IF> <LET> <pat> '=' <expr-nostruct> <block>
+    }
+
+    rule expr-if_let:sym<b> {
+        <IF> <LET> <pat> '=' <expr-nostruct> <block> <ELSE> <block-or_if>
+    }
+}
+
+our class ExprIfLet::A {
+
+    method expr-if_let:sym<a>($/) {
+        make ExprIfLet.new(
+            pat           =>  $<pat>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+            block         =>  $<block>.made,
+        )
+    }
+
+    method expr-if_let:sym<b>($/) {
+        make ExprIfLet.new(
+            pat           =>  $<pat>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+            block         =>  $<block>.made,
+            block-or_if   =>  $<block-or_if>.made,
+        )
+    }
+}
+
+
+#----------------------------------
+our class ExprIf {
+    has $.block_or_if;
+    has $.block;
+    has $.expr_nostruct;
+}
+
+our class ExprIf::G {
+
+    proto rule expr-if { * }
+
+    rule expr-if:sym<a> {
+        <IF> <expr-nostruct> <block>
+    }
+
+    rule expr-if:sym<b> {
+        <IF> <expr-nostruct> <block> <ELSE> <block-or_if>
+    }
+}
+
+our class ExprIf::A {
+
+    method expr-if:sym<a>($/) {
+        make ExprIf.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            block         =>  $<block>.made,
+        )
+    }
+
+    method expr-if:sym<b>($/) {
+        make ExprIf.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            block         =>  $<block>.made,
+            block-or_if   =>  $<block-or_if>.made,
+        )
+    }
+}
+
+
+#------------------------------------
+our class ExprLoop {
+    has $.block;
+    has $.maybe_label;
+}
+
+our class ExprLoop::G {
+
+    rule expr-loop {
+        <maybe-label> <LOOP> <block>
+    }
+}
+
+our class ExprLoop::A {
+
+    method expr-loop($/) {
+        make ExprLoop.new(
+            maybe-label =>  $<maybe-label>.made,
+            block       =>  $<block>.made,
+        )
+    }
+}
+
+#--------------------------
+our class ExprWhileLet {
+    has $.expr_nostruct;
+    has $.pat;
+    has $.block;
+    has $.maybe_label;
+}
+
+our class ExprWhileLet::G {
+
+    rule expr-while_let {
+        <maybe-label> <WHILE> <LET> <pat> '=' <expr-nostruct> <block>
+    }
+}
+
+our class ExprWhileLet::A {
+
+    method expr-while_let($/) {
+        make ExprWhileLet.new(
+            maybe-label   =>  $<maybe-label>.made,
+            pat           =>  $<pat>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+            block         =>  $<block>.made,
+        )
+    }
+}
+
+
+#---------------------------------------
+our class ExprWhile {
+    has $.expr_nostruct;
+    has $.block;
+    has $.maybe_label;
+}
+
+our class ExprWhile::G {
+
+    rule expr-while {
+        <maybe-label> <WHILE> <expr-nostruct> <block>
+    }
+}
+
+our class ExprWhile::A {
+
+    method expr-while($/) {
+        make ExprWhile.new(
+            maybe-label   =>  $<maybe-label>.made,
+            expr-nostruct =>  $<expr-nostruct>.made,
+            block         =>  $<block>.made,
+        )
+    }
+}
+
+#--------------------------
+our class Guard::G {
+
+    proto rule maybe-guard { * }
+
+    rule maybe-guard:sym<a> {
+        <IF> <expr-nostruct>
+    }
+
+    rule maybe-guard:sym<b> {
+
+    }
+}
+
+our class Guard::A {
+
+    method maybe-guard:sym<a>($/) {
+        make $<expr_nostruct>.made
+    }
+
+    method maybe-guard:sym<b>($/) {
+        MkNone<140269876955936>
+    }
+}
+
+#--------------------------------
+our class DeclLocal {
+    has $.pat;
+    has $.maybe_init_expr;
+    has $.maybe_ty_ascription;
+}
+
+our class Let::G {
+
+    rule let {
+        <LET> <pat> <maybe-ty_ascription> <maybe-init_expr> ';'
+    }
+}
+
+our class Let::A {
+
+    method let($/) {
+        make DeclLocal.new(
+            pat                 =>  $<pat>.made,
+            maybe-ty_ascription =>  $<maybe-ty_ascription>.made,
+            maybe-init_expr     =>  $<maybe-init_expr>.made,
+        )
+    }
+}
+
+
+#----------------------------------
+our class ArmBlock {
+    has $.block_expr;
+    has $.block;
+    has $.pats_or;
+    has $.maybe_guard;
+    has $.maybe_outer_attrs;
+}
+
+our class ArmNonblock {
+    has $.nonblock_expr;
+    has $.maybe_outer_attrs;
+    has $.block_expr_dot;
+    has $.maybe_guard;
+    has $.pats_or;
+}
+
+our class Arms {
+    has $.match_clause;
+}
+
+our class ExprMatch {
+    has $.match_clauses;
+    has $.nonblock_match_clause;
+    has $.expr_nostruct;
+}
+
+our class ExprMatch::G {
+
+    proto rule expr-match { * }
+
+    rule expr-match:sym<a> {
+        <MATCH> <expr-nostruct> '{' '}'
+    }
+
+    rule expr-match:sym<b> {
+        <MATCH> <expr-nostruct> '{' <match-clauses> '}'
+    }
+
+    rule expr-match:sym<c> {
+        <MATCH> <expr-nostruct> '{' <match-clauses> <nonblock-match_clause> '}'
+    }
+
+    rule expr-match:sym<d> {
+        <MATCH> <expr-nostruct> '{' <nonblock-match_clause> '}'
+    }
+
+    proto rule match-clauses { * }
+
+    rule match-clauses:sym<a> {
+        <match-clause>
+    }
+
+    rule match-clauses:sym<b> {
+        <match-clauses> <match-clause>
+    }
+
+    proto rule match-clause { * }
+
+    rule match-clause:sym<a> {
+        <nonblock-match_clause> ','
+    }
+
+    rule match-clause:sym<b> {
+        <block-match_clause>
+    }
+
+    rule match-clause:sym<c> {
+        <block-match_clause> ','
+    }
+
+    proto rule nonblock-match_clause { * }
+
+    rule nonblock-match_clause:sym<a> {
+        <maybe-outer_attrs> <pats-or> <maybe-guard> <FAT-ARROW> <nonblock-expr>
+    }
+
+    rule nonblock-match_clause:sym<b> {
+        <maybe-outer_attrs> <pats-or> <maybe-guard> <FAT-ARROW> <block-expr_dot>
+    }
+
+    proto rule block-match_clause { * }
+
+    rule block-match_clause:sym<a> {
+        <maybe-outer_attrs> <pats-or> <maybe-guard> <FAT-ARROW> <block>
+    }
+
+    rule block-match_clause:sym<b> {
+        <maybe-outer_attrs> <pats-or> <maybe-guard> <FAT-ARROW> <block-expr>
+    }
+}
+
+our class ExprMatch::A {
+
+    method expr-match:sym<a>($/) {
+        make ExprMatch.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method expr-match:sym<b>($/) {
+        make ExprMatch.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+            match-clauses =>  $<match-clauses>.made,
+        )
+    }
+
+    method expr-match:sym<c>($/) {
+        make ExprMatch.new(
+            expr-nostruct         =>  $<expr-nostruct>.made,
+            match-clauses         =>  $<match-clauses>.made,
+            nonblock-match_clause =>  $<nonblock-match_clause>.made,
+        )
+    }
+
+    method expr-match:sym<d>($/) {
+        make ExprMatch.new(
+            expr-nostruct =>  $<expr-nostruct>.made,
+        )
+    }
+
+    method match-clauses:sym<a>($/) {
+        make Arms.new(
+            match-clause =>  $<match-clause>.made,
+        )
+    }
+
+    method match-clauses:sym<b>($/) {
+        ExtNode<140195582985864>
+    }
+
+    method match-clause:sym<a>($/) {
+
+    }
+
+    method match-clause:sym<b>($/) {
+        make $<block-match_clause>.made
+    }
+
+    method match-clause:sym<c>($/) {
+
+    }
+
+    method nonblock-match_clause:sym<a>($/) {
+        make ArmNonblock.new(
+            maybe-outer_attrs =>  $<maybe-outer_attrs>.made,
+            pats-or           =>  $<pats-or>.made,
+            maybe-guard       =>  $<maybe-guard>.made,
+            nonblock-expr     =>  $<nonblock-expr>.made,
+        )
+    }
+
+    method nonblock-match_clause:sym<b>($/) {
+        make ArmNonblock.new(
+            maybe-outer_attrs =>  $<maybe-outer_attrs>.made,
+            pats-or           =>  $<pats-or>.made,
+            maybe-guard       =>  $<maybe-guard>.made,
+            block-expr_dot    =>  $<block-expr_dot>.made,
+        )
+    }
+
+    method block-match_clause:sym<a>($/) {
+        make ArmBlock.new(
+            maybe-outer_attrs =>  $<maybe-outer_attrs>.made,
+            pats-or           =>  $<pats-or>.made,
+            maybe-guard       =>  $<maybe-guard>.made,
+            block             =>  $<block>.made,
+        )
+    }
+
+    method block-match_clause:sym<b>($/) {
+        make ArmBlock.new(
+            maybe-outer_attrs =>  $<maybe-outer_attrs>.made,
+            pats-or           =>  $<pats-or>.made,
+            maybe-guard       =>  $<maybe-guard>.made,
+            block-expr        =>  $<block-expr>.made,
+        )
+    }
+}
+
+#------------------------------------------
+our class TTDelim {
+    has $.token_trees;
+}
+
+our class TTTok {
+    has $.unpaired_token;
+}
+
+our class TokenTree::G {
+
+    proto rule token-trees { * }
+
+    rule token-trees:sym<a> {
+
+    }
+
+    rule token-trees:sym<b> {
+        <token-trees> <token-tree>
+    }
+
+    proto rule token-tree { * }
+
+    rule token-tree:sym<a> {
+        <delimited-token_trees>
+    }
+
+    rule token-tree:sym<b> {
+        <unpaired-token>
+    }
+
+    proto rule delimited-token_trees { * }
+
+    rule delimited-token_trees:sym<a> {
+        <parens-delimited_token_trees>
+    }
+
+    rule delimited-token_trees:sym<b> {
+        <braces-delimited_token_trees>
+    }
+
+    rule delimited-token_trees:sym<c> {
+        <brackets-delimited_token_trees>
+    }
+
+    rule parens-delimited_token_trees {
+        '(' <token-trees> ')'
+    }
+
+    rule braces-delimited_token_trees {
+        '{' <token-trees> '}'
+    }
+
+    rule brackets-delimited_token_trees {
+        '[' <token-trees> ']'
+    }
+}
+
+our class TokenTree::A {
+
+    method token-trees:sym<a>($/) {
+        make TokenTrees.new(
+
+        )
+    }
+
+    method token-trees:sym<b>($/) {
+        ExtNode<140250172947112>
+    }
+
+    method token-tree:sym<a>($/) {
+        make $<delimited-token_trees>.made
+    }
+
+    method token-tree:sym<b>($/) {
+        make TTTok.new(
+            unpaired-token =>  $<unpaired-token>.made,
+        )
+    }
+
+    method delimited-token_trees:sym<a>($/) {
+        make $<parens-delimited_token_trees>.made
+    }
+
+    method delimited-token_trees:sym<b>($/) {
+        make $<braces-delimited_token_trees>.made
+    }
+
+    method delimited-token_trees:sym<c>($/) {
+        make $<brackets-delimited_token_trees>.made
+    }
+
+    method parens-delimited_token_trees($/) {
+        make TTDelim.new(
+            token-trees =>  $<token-trees>.made,
+        )
+    }
+
+    method braces-delimited_token_trees($/) {
+        make TTDelim.new(
+            token-trees =>  $<token-trees>.made,
+        )
+    }
+
+    method brackets-delimited_token_trees($/) {
+        make TTDelim.new(
+            token-trees =>  $<token-trees>.made,
+        )
+    }
+}

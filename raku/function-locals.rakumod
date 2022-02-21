@@ -85,7 +85,7 @@ sub extract-function-local-data($submatch, $mock = False) {
             "let mut my_float:   f32 = 0.0",
         )
 
-    }else {
+    } else {
         get-rcomments-list($submatch),
         get-rust-decls($submatch)
     }
