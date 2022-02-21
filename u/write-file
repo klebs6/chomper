@@ -1,0 +1,14 @@
+#!/usr/bin/env raku
+
+my $base = "./raku/grust-";
+
+sub MAIN(:$name) {
+    my $fn = $base ~ $name ~ ".rakumod";
+    my $in = $*IN.slurp;
+
+    if not $fn.IO.e {
+        spurt $fn, $in;
+    } else {
+        say "file $fn exists!";
+    }
+}

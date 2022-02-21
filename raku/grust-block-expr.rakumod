@@ -13,15 +13,15 @@ our role BlockExpr::Rules {
 
     proto rule block-expr { * }
 
-    rule block-expr:sym<a> { <expr-match> }
-    rule block-expr:sym<b> { <expr-if> }
-    rule block-expr:sym<c> { <expr-if_let> }
-    rule block-expr:sym<d> { <expr-while> }
-    rule block-expr:sym<e> { <expr-while_let> }
-    rule block-expr:sym<f> { <expr-loop> }
-    rule block-expr:sym<g> { <expr-for> }
-    rule block-expr:sym<h> { <UNSAFE> <block> }
-    rule block-expr:sym<i> { <path-expr> '!' <maybe-ident> <braces-delimited_token_trees> }
+    rule block-expr:sym<match>        { <expr-match> }
+    rule block-expr:sym<if>           { <expr-if> }
+    rule block-expr:sym<if-let>       { <expr-if_let> }
+    rule block-expr:sym<while>        { <expr-while> }
+    rule block-expr:sym<while-let>    { <expr-while_let> }
+    rule block-expr:sym<expr-loop>    { <expr-loop> }
+    rule block-expr:sym<expr-for>     { <expr-for> }
+    rule block-expr:sym<unsafe-block> { <UNSAFE> <block> }
+    rule block-expr:sym<macro>        { <path-expr> '!' <maybe-ident> <braces-delimited_token_trees> }
 
     proto rule full-block_expr { * }
 
@@ -42,41 +42,41 @@ our role BlockExpr::Rules {
 
 our class BlockExpr::Actions {
 
-    method block-expr:sym<a>($/) {
+    method block-expr:sym<match>($/) {
         make $<expr-match>.made
     }
 
-    method block-expr:sym<b>($/) {
+    method block-expr:sym<if>($/) {
         make $<expr-if>.made
     }
 
-    method block-expr:sym<c>($/) {
+    method block-expr:sym<if-let>($/) {
         make $<expr-if_let>.made
     }
 
-    method block-expr:sym<d>($/) {
+    method block-expr:sym<expr-while>($/) {
         make $<expr-while>.made
     }
 
-    method block-expr:sym<e>($/) {
+    method block-expr:sym<while-let>($/) {
         make $<expr-while_let>.made
     }
 
-    method block-expr:sym<f>($/) {
+    method block-expr:sym<loop>($/) {
         make $<expr-loop>.made
     }
 
-    method block-expr:sym<g>($/) {
+    method block-expr:sym<for>($/) {
         make $<expr-for>.made
     }
 
-    method block-expr:sym<h>($/) {
+    method block-expr:sym<unsafe-block>($/) {
         make UnsafeBlock.new(
             block =>  $<block>.made,
         )
     }
 
-    method block-expr:sym<i>($/) {
+    method block-expr:sym<macro>($/) {
         make Macro.new(
             path-expr                    =>  $<path-expr>.made,
             maybe-ident                  =>  $<maybe-ident>.made,

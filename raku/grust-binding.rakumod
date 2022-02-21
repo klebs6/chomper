@@ -3,10 +3,6 @@ our class Binding {
     has $.ident;
 }
 
-our class Bindings {
-    has $.binding;
-}
-
 our role Binding::Rules {
 
     rule bindings {
