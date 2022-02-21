@@ -19,4 +19,3 @@ our class AttrsAndVis::Actions {
         )
     }
 }
-

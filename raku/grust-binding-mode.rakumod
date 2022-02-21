@@ -2,37 +2,14 @@
 our class BindingMode::Rules {
 
     proto rule binding-mode { * }
-
-    rule binding-mode:sym<a> {
-        <REF>
-    }
-
-    rule binding-mode:sym<b> {
-        <REF> <MUT>
-    }
-
-    rule binding-mode:sym<c> {
-        <MUT>
-    }
+    rule binding-mode:sym<ref>     { <REF> }
+    rule binding-mode:sym<ref-mut> { <REF> <MUT> }
+    rule binding-mode:sym<mut>     { <MUT> }
 }
 
 our class BindingMode::Actions {
 
-    method binding-mode:sym<a>($/) {
-        make BindByRef.new(
-
-        )
-    }
-
-    method binding-mode:sym<b>($/) {
-        make BindByRef.new(
-
-        )
-    }
-
-    method binding-mode:sym<c>($/) {
-        make BindByValue.new(
-
-        )
-    }
+    method binding-mode:sym<ref>($/)     { make BindByRef.new() }
+    method binding-mode:sym<ref-mut>($/) { make BindByRef.new() }
+    method binding-mode:sym<mut>($/)     { make BindByValue.new() }
 }
