@@ -7,81 +7,32 @@ our class ItemForeignMod {
 our class BlockItem::Rules {
 
     proto rule block-item { * }
-
-    rule block-item:sym<a> {
-        <item-fn>
-    }
-
-    rule block-item:sym<b> {
-        <item-unsafe_fn>
-    }
-
-    rule block-item:sym<c> {
-        <item-mod>
-    }
-
-    rule block-item:sym<d> {
-        <item-foreign_mod>
-    }
-
-    rule block-item:sym<e> {
-        <item-struct>
-    }
-
-    rule block-item:sym<f> {
-        <item-enum>
-    }
-
-    rule block-item:sym<g> {
-        <item-union>
-    }
-
-    rule block-item:sym<h> {
-        <item-trait>
-    }
-
-    rule block-item:sym<i> {
-        <item-impl>
-    }
+    rule block-item:sym<fn>          { <item-fn> }
+    rule block-item:sym<unsafe-fn>   { <item-unsafe_fn> }
+    rule block-item:sym<mod>         { <item-mod> }
+    rule block-item:sym<foreign-mod> { <item-foreign_mod> }
+    rule block-item:sym<struct>      { <item-struct> }
+    rule block-item:sym<enum>        { <item-enum> }
+    rule block-item:sym<union>       { <item-union> }
+    rule block-item:sym<trait>       { <item-trait> }
+    rule block-item:sym<impl>        { <item-impl> }
 }
 
 our class BlockItem::Actions {
 
-    method block-item:sym<a>($/) {
-        make $<item-fn>.made
-    }
+    method block-item:sym<fn>($/)        { make $<item-fn>.made }
+    method block-item:sym<unsafe-fn>($/) { make $<item-unsafe_fn>.made }
+    method block-item:sym<mod>($/)       { make $<item-mod>.made }
 
-    method block-item:sym<b>($/) {
-        make $<item-unsafe_fn>.made
-    }
-
-    method block-item:sym<c>($/) {
-        make $<item-mod>.made
-    }
-
-    method block-item:sym<d>($/) {
+    method block-item:sym<foreign-mod>($/) {
         make ItemForeignMod.new(
             item-foreign_mod =>  $<item-foreign_mod>.made,
         )
     }
 
-    method block-item:sym<e>($/) {
-        make $<item-struct>.made
-    }
-
-    method block-item:sym<f>($/) {
-        make $<item-enum>.made
-    }
-
-    method block-item:sym<g>($/) {
-        make $<item-union>.made
-    }
-
-    method block-item:sym<h>($/) {
-        make $<item-trait>.made
-    }
-
-    method block-item:sym<i>($/) {
-        make $<item-impl>.made
-    }
+    method block-item:sym<struct>($/) { make $<item-struct>.made }
+    method block-item:sym<enum>($/)   { make $<item-enum>.made }
+    method block-item:sym<union>($/)  { make $<item-union>.made }
+    method block-item:sym<trait>($/)  { make $<item-trait>.made }
+    method block-item:sym<impl>($/)   { make $<item-impl>.made }
 }
