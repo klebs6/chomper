@@ -28,46 +28,19 @@ our class ExprMatch::Rules {
 
     proto rule expr-match { * }
 
-    rule expr-match:sym<a> {
-        <MATCH> <expr-nostruct> '{' '}'
-    }
+    rule expr-match:sym<a> { <MATCH> <expr-nostruct> '{' '}' }
+    rule expr-match:sym<b> { <MATCH> <expr-nostruct> '{' <match-clauses> '}' }
+    rule expr-match:sym<c> { <MATCH> <expr-nostruct> '{' <match-clauses> <nonblock-match_clause> '}' }
+    rule expr-match:sym<d> { <MATCH> <expr-nostruct> '{' <nonblock-match_clause> '}' }
 
-    rule expr-match:sym<b> {
-        <MATCH> <expr-nostruct> '{' <match-clauses> '}'
-    }
+    rule match-clauses { <match-clause>+ }
 
-    rule expr-match:sym<c> {
-        <MATCH> <expr-nostruct> '{' <match-clauses> <nonblock-match_clause> '}'
-    }
-
-    rule expr-match:sym<d> {
-        <MATCH> <expr-nostruct> '{' <nonblock-match_clause> '}'
-    }
-
-    proto rule match-clauses { * }
-
-    rule match-clauses:sym<a> {
-        <match-clause>
-    }
-
-    rule match-clauses:sym<b> {
-        <match-clauses> <match-clause>
-    }
-
+    #--------------------
     proto rule match-clause { * }
+    rule match-clause:sym<a> { <nonblock-match_clause> ',' }
+    rule match-clause:sym<b> { <block-match_clause> ','? }
 
-    rule match-clause:sym<a> {
-        <nonblock-match_clause> ','
-    }
-
-    rule match-clause:sym<b> {
-        <block-match_clause>
-    }
-
-    rule match-clause:sym<c> {
-        <block-match_clause> ','
-    }
-
+    #--------------------
     proto rule nonblock-match_clause { * }
 
     rule nonblock-match_clause:sym<a> {
@@ -78,6 +51,7 @@ our class ExprMatch::Rules {
         <maybe-outer_attrs> <pats-or> <maybe-guard> <FAT-ARROW> <block-expr_dot>
     }
 
+    #--------------------
     proto rule block-match_clause { * }
 
     rule block-match_clause:sym<a> {
@@ -118,14 +92,8 @@ our class ExprMatch::Actions {
         )
     }
 
-    method match-clauses:sym<a>($/) {
-        make Arms.new(
-            match-clause =>  $<match-clause>.made,
-        )
-    }
-
-    method match-clauses:sym<b>($/) {
-        ExtNode<140195582985864>
+    method match-clauses($/) {
+        make $<match-clause>>>.made
     }
 
     method match-clause:sym<a>($/) {
@@ -136,10 +104,7 @@ our class ExprMatch::Actions {
         make $<block-match_clause>.made
     }
 
-    method match-clause:sym<c>($/) {
-
-    }
-
+    #-----------------
     method nonblock-match_clause:sym<a>($/) {
         make ArmNonblock.new(
             maybe-outer_attrs =>  $<maybe-outer_attrs>.made,
@@ -176,4 +141,3 @@ our class ExprMatch::Actions {
         )
     }
 }
-
