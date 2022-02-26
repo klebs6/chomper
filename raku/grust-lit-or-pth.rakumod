@@ -7,17 +7,9 @@ our class LitOrPath::Rules {
 
     proto rule lit-or_path { * }
 
-    rule lit-or_path:sym<a> {
-        <path-expr>
-    }
-
-    rule lit-or_path:sym<b> {
-        <lit>
-    }
-
-    rule lit-or_path:sym<c> {
-        '-' <lit>
-    }
+    rule lit-or_path:sym<a> { <path-expr> }
+    rule lit-or_path:sym<b> { <lit> }
+    rule lit-or_path:sym<c> { '-' <lit> }
 }
 
 our class LitOrPath::Actions {
