@@ -1,57 +1,13 @@
 our class PatStruct::Rules {
 
-    proto rule pat-struct { * }
-
-    rule pat-struct:sym<a> {
-        <pat-fields>
-    }
-
-    rule pat-struct:sym<b> {
-        <pat-fields> ','
-    }
-
-    rule pat-struct:sym<c> {
-        <pat-fields> ',' <DOTDOT>
-    }
-
-    rule pat-struct:sym<d> {
-        <DOTDOT>
-    }
-
-    rule pat-struct:sym<e> {
-
-    }
+    rule pat-struct { [[<pat-fields> ','?]? <DOTDOT>?]? }
 }
 
 our class PatStruct::Actions {
 
-    method pat-struct:sym<a>($/) {
+    method pat-struct($/) {
         make PatStruct.new(
             pat-fields =>  $<pat-fields>.made,
-        )
-    }
-
-    method pat-struct:sym<b>($/) {
-        make PatStruct.new(
-            pat-fields =>  $<pat-fields>.made,
-        )
-    }
-
-    method pat-struct:sym<c>($/) {
-        make PatStruct.new(
-            pat-fields =>  $<pat-fields>.made,
-        )
-    }
-
-    method pat-struct:sym<d>($/) {
-        make PatStruct.new(
-
-        )
-    }
-
-    method pat-struct:sym<e>($/) {
-        make PatStruct.new(
-
         )
     }
 }
