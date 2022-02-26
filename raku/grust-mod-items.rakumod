@@ -28,44 +28,22 @@ our class ModItem::Actions {
 #-----------------------
 our class ModItems::Rules {
 
-    proto rule maybe-mod_items { * }
-
-    rule maybe-mod_items:sym<a> {
-        <mod-items>
+    rule maybe-mod_items {
+        <mod-items>?
     }
 
-    rule maybe-mod_items:sym<b> {
-
-    }
-
-    proto rule mod-items { * }
-
-    rule mod-items:sym<a> {
-        <mod-item>
-    }
-
-    rule mod-items:sym<b> {
-        <mod-items> <mod-item>
+    rule mod-items {
+        <mod-item>+
     }
 }
 
 our class ModItems::Actions {
 
-    method maybe-mod_items:sym<a>($/) {
+    method maybe-mod_items($/) {
         make $<mod-items>.made
     }
 
-    method maybe-mod_items:sym<b>($/) {
-        MkNone<140677866772384>
-    }
-
-    method mod-items:sym<a>($/) {
-        make Items.new(
-            mod-item =>  $<mod-item>.made,
-        )
-    }
-
-    method mod-items:sym<b>($/) {
-        ExtNode<140679773399960>
+    method mod-items($/) {
+        make $<mod-item>.made
     }
 }

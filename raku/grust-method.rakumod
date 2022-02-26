@@ -45,43 +45,118 @@ our class Method::Rules {
     proto rule type-method { * }
 
     rule type-method:sym<a> {
-        <maybe-outer_attrs> <maybe-unsafe> <FN> <ident> <generic-params> <fn-decl_with_self_allow_anon_params> <maybe-where_clause> ';'
+        <maybe-outer_attrs> 
+        <maybe-unsafe> 
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl_with_self_allow_anon_params> 
+        <maybe-where_clause> 
+        ';'
     }
 
     rule type-method:sym<b> {
-        <maybe-outer_attrs> <CONST> <maybe-unsafe> <FN> <ident> <generic-params> <fn-decl_with_self_allow_anon_params> <maybe-where_clause> ';'
+        <maybe-outer_attrs> 
+        <CONST> 
+        <maybe-unsafe> 
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl_with_self_allow_anon_params> 
+        <maybe-where_clause> 
+        ';'
     }
 
     rule type-method:sym<c> {
-        <maybe-outer_attrs> <maybe-unsafe> <EXTERN> <maybe-abi> <FN> <ident> <generic-params> <fn-decl_with_self_allow_anon_params> <maybe-where_clause> ';'
+        <maybe-outer_attrs> 
+        <maybe-unsafe> 
+        <EXTERN> 
+        <maybe-abi> 
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl_with_self_allow_anon_params> 
+        <maybe-where_clause> 
+        ';'
     }
 
     proto rule method { * }
 
     rule method:sym<a> {
-        <maybe-outer_attrs> <maybe-unsafe> <FN> <ident> <generic-params> <fn-decl_with_self_allow_anon_params> <maybe-where_clause> <inner-attrs_and_block>
+        <maybe-outer_attrs> 
+        <maybe-unsafe> 
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl_with_self_allow_anon_params> 
+        <maybe-where_clause> 
+        <inner-attrs_and_block>
     }
 
     rule method:sym<b> {
-        <maybe-outer_attrs> <CONST> <maybe-unsafe> <FN> <ident> <generic-params> <fn-decl_with_self_allow_anon_params> <maybe-where_clause> <inner-attrs_and_block>
+        <maybe-outer_attrs> 
+        <CONST> 
+        <maybe-unsafe> 
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl_with_self_allow_anon_params> 
+        <maybe-where_clause> 
+        <inner-attrs_and_block>
     }
 
     rule method:sym<c> {
-        <maybe-outer_attrs> <maybe-unsafe> <EXTERN> <maybe-abi> <FN> <ident> <generic-params> <fn-decl_with_self_allow_anon_params> <maybe-where_clause> <inner-attrs_and_block>
+        <maybe-outer_attrs> 
+        <maybe-unsafe> 
+        <EXTERN> 
+        <maybe-abi> 
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl_with_self_allow_anon_params> 
+        <maybe-where_clause> 
+        <inner-attrs_and_block>
     }
 
     proto rule impl-method { * }
 
     rule impl-method:sym<a> {
-        <attrs-and_vis> <maybe-default> <maybe-unsafe> <FN> <ident> <generic-params> <fn-decl_with_self> <maybe-where_clause> <inner-attrs_and_block>
+        <attrs-and_vis> 
+        <maybe-default> 
+        <maybe-unsafe> 
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl_with_self> 
+        <maybe-where_clause> 
+        <inner-attrs_and_block>
     }
 
     rule impl-method:sym<b> {
-        <attrs-and_vis> <maybe-default> <CONST> <maybe-unsafe> <FN> <ident> <generic-params> <fn-decl_with_self> <maybe-where_clause> <inner-attrs_and_block>
+        <attrs-and_vis> 
+        <maybe-default> 
+        <CONST> 
+        <maybe-unsafe> 
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl_with_self> 
+        <maybe-where_clause> 
+        <inner-attrs_and_block>
     }
 
     rule impl-method:sym<c> {
-        <attrs-and_vis> <maybe-default> <maybe-unsafe> <EXTERN> <maybe-abi> <FN> <ident> <generic-params> <fn-decl_with_self> <maybe-where_clause> <inner-attrs_and_block>
+        <attrs-and_vis> 
+        <maybe-default> 
+        <maybe-unsafe> 
+        <EXTERN> 
+        <maybe-abi> 
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl_with_self> 
+        <maybe-where_clause> 
+        <inner-attrs_and_block>
     }
 }
 
