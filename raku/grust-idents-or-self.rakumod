@@ -1,61 +1,44 @@
 our class IdentsOrSelf {
-    has $.idents_or_self;
-    has $.ident_or_self;
+    has $.idents-or-self;
+    has $.ident-or-self;
     has $.ident;
 }
 
 our class IdentsOrSelf::Rules {
 
-    proto rule idents-or_self { * }
-
-    rule idents-or_self:sym<a> {
-        <ident-or_self>
+    rule idents-or-self {
+        <ident-or-self> 
+        <idents-or-self-tail>* 
     }
 
-    rule idents-or_self:sym<b> {
-        <idents-or_self> <AS> <ident>
-    }
+    proto rule idents-or-self-tail  { * }
+    rule idents-or-self-tail:sym<a> { <AS> <ident> }
+    rule idents-or-self-tail:sym<b> { ',' <ident-or-self> }
 
-    rule idents-or_self:sym<c> {
-        <idents-or_self> ',' <ident-or_self>
-    }
-
-    proto rule ident-or_self { * }
-
-    rule ident-or_self:sym<a> {
-        <ident>
-    }
-
-    rule ident-or_self:sym<b> {
-        <SELF>
-    }
+    proto rule ident-or-self        { * }
+    rule ident-or-self:sym<ident>   { <ident> }
+    rule ident-or-self:sym<self>    { <SELF>  }
 }
 
 our class IdentsOrSelf::Actions {
 
-    method idents-or_self:sym<a>($/) {
+    method idents-or-self($/) {
         make IdentsOrSelf.new(
-            ident-or_self =>  $<ident-or_self>.made,
+            ident-or-self => $<ident-or-self>.made,
+            tail          => $<idents-or-self-tail>>>.made,
         )
     }
 
-    method idents-or_self:sym<b>($/) {
-        make IdentsOrSelf.new(
-            idents-or_self =>  $<idents-or_self>.made,
-            ident          =>  $<ident>.made,
+    method idents-or-self-tail:sym<a>($/) {
+        make As.new(
+            ident => $<ident>.made
         )
     }
 
-    method idents-or_self:sym<c>($/) {
-        ExtNode<140683188573432>
+    method idents-or-self-tail:sym<b>($/) {
+        make $<ident-or-self>.made
     }
 
-    method ident-or_self:sym<a>($/) {
-        make $<ident>.made
-    }
-
-    method ident-or_self:sym<b>($/) {
-        make yytext.new
-    }
+    method ident-or-self:sym<ident>($/) { make $<ident>.made }
+    method ident-or-self:sym<self>($/)  { make ~$/ }
 }
-
