@@ -1,23 +1,13 @@
 our class QPathParams::Rules {
 
-    proto rule maybe-qpath_params { * }
-
-    rule maybe-qpath_params:sym<a> {
-        <MOD-SEP> <generic-args>
-    }
-
-    rule maybe-qpath_params:sym<b> {
-
+    rule maybe-qpath-params {
+        [<MOD-SEP> <generic-args>]?
     }
 }
 
 our class QPathParams::Actions {
 
-    method maybe-qpath_params:sym<a>($/) {
-        make $<generic_args>.made
-    }
-
-    method maybe-qpath_params:sym<b>($/) {
-        MkNone<140654400390368>
+    method maybe-qpath-params:sym<a>($/) {
+        make $<generic-args>.made
     }
 }
