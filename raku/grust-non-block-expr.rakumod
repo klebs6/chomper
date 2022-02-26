@@ -135,237 +135,64 @@ our class NonBlockExpr::Rules {
 
     proto rule nonblock-expr { * }
 
-    rule nonblock-expr:sym<a> {
-        <lit>
-    }
-
-    rule nonblock-expr:sym<b> {
-        {self.set-prec(IDENT)} <path-expr>
-    }
-
-    rule nonblock-expr:sym<c> {
-        <SELF>
-    }
-
-    rule nonblock-expr:sym<d> {
-        <macro-expr>
-    }
-
-    rule nonblock-expr:sym<e> {
-        <path-expr> '{' <struct-expr_fields> '}'
-    }
-
-    rule nonblock-expr:sym<f> {
-        <nonblock-expr> '?'
-    }
-
-    rule nonblock-expr:sym<g> {
-        <nonblock-expr> '.' <path-generic_args_with_colons>
-    }
-
-    rule nonblock-expr:sym<h> {
-        <nonblock-expr> '.' <LIT-INTEGER>
-    }
-
-    rule nonblock-expr:sym<i> {
-        <nonblock-expr> '[' <maybe-expr> ']'
-    }
-
-    rule nonblock-expr:sym<j> {
-        <nonblock-expr> '(' <maybe-exprs> ')'
-    }
-
-    rule nonblock-expr:sym<k> {
-        '[' <vec-expr> ']'
-    }
-
-    rule nonblock-expr:sym<l> {
-        '(' <maybe-exprs> ')'
-    }
-
-    rule nonblock-expr:sym<m> {
-        <CONTINUE>
-    }
-
-    rule nonblock-expr:sym<n> {
-        <CONTINUE> <lifetime>
-    }
-
-    rule nonblock-expr:sym<o> {
-        <RETURN>
-    }
-
-    rule nonblock-expr:sym<p> {
-        <RETURN> <expr>
-    }
-
-    rule nonblock-expr:sym<q> {
-        <BREAK>
-    }
-
-    rule nonblock-expr:sym<r> {
-        <BREAK> <lifetime>
-    }
-
-    rule nonblock-expr:sym<s> {
-        <YIELD>
-    }
-
-    rule nonblock-expr:sym<t> {
-        <YIELD> <expr>
-    }
-
-    rule nonblock-expr:sym<u> {
-        <nonblock-expr> '=' <expr>
-    }
-
-    rule nonblock-expr:sym<v> {
-        <nonblock-expr> <SHLEQ> <expr>
-    }
-
-    rule nonblock-expr:sym<w> {
-        <nonblock-expr> <SHREQ> <expr>
-    }
-
-    rule nonblock-expr:sym<x> {
-        <nonblock-expr> <MINUSEQ> <expr>
-    }
-
-    rule nonblock-expr:sym<y> {
-        <nonblock-expr> <ANDEQ> <expr>
-    }
-
-    rule nonblock-expr:sym<z> {
-        <nonblock-expr> <OREQ> <expr>
-    }
-
-    rule nonblock-expr:sym<aa> {
-        <nonblock-expr> <PLUSEQ> <expr>
-    }
-
-    rule nonblock-expr:sym<ab> {
-        <nonblock-expr> <STAREQ> <expr>
-    }
-
-    rule nonblock-expr:sym<ac> {
-        <nonblock-expr> <SLASHEQ> <expr>
-    }
-
-    rule nonblock-expr:sym<ad> {
-        <nonblock-expr> <CARETEQ> <expr>
-    }
-
-    rule nonblock-expr:sym<ae> {
-        <nonblock-expr> <PERCENTEQ> <expr>
-    }
-
-    rule nonblock-expr:sym<af> {
-        <nonblock-expr> <OROR> <expr>
-    }
-
-    rule nonblock-expr:sym<ag> {
-        <nonblock-expr> <ANDAND> <expr>
-    }
-
-    rule nonblock-expr:sym<ah> {
-        <nonblock-expr> <EQEQ> <expr>
-    }
-
-    rule nonblock-expr:sym<ai> {
-        <nonblock-expr> <NE> <expr>
-    }
-
-    rule nonblock-expr:sym<aj> {
-        <nonblock-expr> '<' <expr>
-    }
-
-    rule nonblock-expr:sym<ak> {
-        <nonblock-expr> '>' <expr>
-    }
-
-    rule nonblock-expr:sym<al> {
-        <nonblock-expr> <LE> <expr>
-    }
-
-    rule nonblock-expr:sym<am> {
-        <nonblock-expr> <GE> <expr>
-    }
-
-    rule nonblock-expr:sym<an> {
-        <nonblock-expr> '|' <expr>
-    }
-
-    rule nonblock-expr:sym<ao> {
-        <nonblock-expr> '^' <expr>
-    }
-
-    rule nonblock-expr:sym<ap> {
-        <nonblock-expr> '&' <expr>
-    }
-
-    rule nonblock-expr:sym<aq> {
-        <nonblock-expr> <SHL> <expr>
-    }
-
-    rule nonblock-expr:sym<ar> {
-        <nonblock-expr> <SHR> <expr>
-    }
-
-    rule nonblock-expr:sym<as> {
-        <nonblock-expr> '+' <expr>
-    }
-
-    rule nonblock-expr:sym<at> {
-        <nonblock-expr> '-' <expr>
-    }
-
-    rule nonblock-expr:sym<au> {
-        <nonblock-expr> '*' <expr>
-    }
-
-    rule nonblock-expr:sym<av> {
-        <nonblock-expr> '/' <expr>
-    }
-
-    rule nonblock-expr:sym<aw> {
-        <nonblock-expr> '%' <expr>
-    }
-
-    rule nonblock-expr:sym<ax> {
-        <nonblock-expr> <DOTDOT>
-    }
-
-    rule nonblock-expr:sym<ay> {
-        <nonblock-expr> <DOTDOT> <expr>
-    }
-
-    rule nonblock-expr:sym<az> {
-        <DOTDOT> <expr>
-    }
-
-    rule nonblock-expr:sym<ba> {
-        <DOTDOT>
-    }
-
-    rule nonblock-expr:sym<bb> {
-        <nonblock-expr> <AS> <ty>
-    }
-
-    rule nonblock-expr:sym<bc> {
-        <nonblock-expr> ':' <ty>
-    }
-
-    rule nonblock-expr:sym<bd> {
-        <BOX> <expr>
-    }
-
-    rule nonblock-expr:sym<be> {
-        <expr-qualified_path>
-    }
-
-    rule nonblock-expr:sym<bf> {
-        <nonblock-prefix_expr>
-    }
+    rule nonblock-expr:sym<a>  { <lit> }
+    rule nonblock-expr:sym<b>  { {self.set-prec(IDENT)} <path-expr> }
+    rule nonblock-expr:sym<c>  { <SELF> }
+    rule nonblock-expr:sym<d>  { <macro-expr> }
+    rule nonblock-expr:sym<e>  { <path-expr> '{' <struct-expr_fields> '}' }
+    rule nonblock-expr:sym<f>  { <nonblock-expr> '?' }
+    rule nonblock-expr:sym<g>  { <nonblock-expr> '.' <path-generic_args_with_colons> }
+    rule nonblock-expr:sym<h>  { <nonblock-expr> '.' <LIT-INTEGER> }
+    rule nonblock-expr:sym<i>  { <nonblock-expr> '[' <maybe-expr> ']' }
+    rule nonblock-expr:sym<j>  { <nonblock-expr> '(' <maybe-exprs> ')' }
+    rule nonblock-expr:sym<k>  { '[' <vec-expr> ']' }
+    rule nonblock-expr:sym<l>  { '(' <maybe-exprs> ')' }
+    rule nonblock-expr:sym<m>  { <CONTINUE> }
+    rule nonblock-expr:sym<n>  { <CONTINUE> <lifetime> }
+    rule nonblock-expr:sym<o>  { <RETURN> }
+    rule nonblock-expr:sym<p>  { <RETURN> <expr> }
+    rule nonblock-expr:sym<q>  { <BREAK> }
+    rule nonblock-expr:sym<r>  { <BREAK> <lifetime> }
+    rule nonblock-expr:sym<s>  { <YIELD> }
+    rule nonblock-expr:sym<t>  { <YIELD> <expr> }
+    rule nonblock-expr:sym<u>  { <nonblock-expr> '=' <expr> }
+    rule nonblock-expr:sym<v>  { <nonblock-expr> <SHLEQ> <expr> }
+    rule nonblock-expr:sym<w>  { <nonblock-expr> <SHREQ> <expr> }
+    rule nonblock-expr:sym<x>  { <nonblock-expr> <MINUSEQ> <expr> }
+    rule nonblock-expr:sym<y>  { <nonblock-expr> <ANDEQ> <expr> }
+    rule nonblock-expr:sym<z>  { <nonblock-expr> <OREQ> <expr> }
+    rule nonblock-expr:sym<aa> { <nonblock-expr> <PLUSEQ> <expr> }
+    rule nonblock-expr:sym<ab> { <nonblock-expr> <STAREQ> <expr> }
+    rule nonblock-expr:sym<ac> { <nonblock-expr> <SLASHEQ> <expr> }
+    rule nonblock-expr:sym<ad> { <nonblock-expr> <CARETEQ> <expr> }
+    rule nonblock-expr:sym<ae> { <nonblock-expr> <PERCENTEQ> <expr> }
+    rule nonblock-expr:sym<af> { <nonblock-expr> <OROR> <expr> }
+    rule nonblock-expr:sym<ag> { <nonblock-expr> <ANDAND> <expr> }
+    rule nonblock-expr:sym<ah> { <nonblock-expr> <EQEQ> <expr> }
+    rule nonblock-expr:sym<ai> { <nonblock-expr> <NE> <expr> }
+    rule nonblock-expr:sym<aj> { <nonblock-expr> '<' <expr> }
+    rule nonblock-expr:sym<ak> { <nonblock-expr> '>' <expr> }
+    rule nonblock-expr:sym<al> { <nonblock-expr> <LE> <expr> }
+    rule nonblock-expr:sym<am> { <nonblock-expr> <GE> <expr> }
+    rule nonblock-expr:sym<an> { <nonblock-expr> '|' <expr> }
+    rule nonblock-expr:sym<ao> { <nonblock-expr> '^' <expr> }
+    rule nonblock-expr:sym<ap> { <nonblock-expr> '&' <expr> }
+    rule nonblock-expr:sym<aq> { <nonblock-expr> <SHL> <expr> }
+    rule nonblock-expr:sym<ar> { <nonblock-expr> <SHR> <expr> }
+    rule nonblock-expr:sym<as> { <nonblock-expr> '+' <expr> }
+    rule nonblock-expr:sym<at> { <nonblock-expr> '-' <expr> }
+    rule nonblock-expr:sym<au> { <nonblock-expr> '*' <expr> }
+    rule nonblock-expr:sym<av> { <nonblock-expr> '/' <expr> }
+    rule nonblock-expr:sym<aw> { <nonblock-expr> '%' <expr> }
+    rule nonblock-expr:sym<ax> { <nonblock-expr> <DOTDOT> }
+    rule nonblock-expr:sym<ay> { <nonblock-expr> <DOTDOT> <expr> }
+    rule nonblock-expr:sym<az> { <DOTDOT> <expr> }
+    rule nonblock-expr:sym<ba> { <DOTDOT> }
+    rule nonblock-expr:sym<bb> { <nonblock-expr> <AS> <ty> }
+    rule nonblock-expr:sym<bc> { <nonblock-expr> ':' <ty> }
+    rule nonblock-expr:sym<bd> { <BOX> <expr> }
+    rule nonblock-expr:sym<be> { <expr-qualified_path> }
+    rule nonblock-expr:sym<bf> { <nonblock-prefix_expr> }
 }
 
 our class NonBlockExpr::Actions {
