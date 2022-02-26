@@ -8,50 +8,41 @@
 # disambiguate from "less-than" expressions.
 our class PathGenericArgsWithColons::Rules {
 
-    proto rule path-generic_args_with_colons { * }
-
-    rule path-generic_args_with_colons:sym<a> {
-        <ident>
+    rule path-generic-args-with-colons {  
+        <path-generic-args-with-colons-prefix>
+        <path-generic-args-with-colons-tail>*
     }
 
-    rule path-generic_args_with_colons:sym<b> {
-        <SUPER>
-    }
+    proto rule path-generic-args-with-colons-prefix { * }
+    rule path-generic-args-with-colons-prefix:sym<a> { <ident> }
+    rule path-generic-args-with-colons-prefix:sym<b> { <SUPER> }
 
-    rule path-generic_args_with_colons:sym<c> {
-        <path-generic_args_with_colons> <MOD-SEP> <ident>
-    }
-
-    rule path-generic_args_with_colons:sym<d> {
-        <path-generic_args_with_colons> <MOD-SEP> <SUPER>
-    }
-
-    rule path-generic_args_with_colons:sym<e> {
-        <path-generic_args_with_colons> <MOD-SEP> <generic-args>
-    }
+    proto rule path-generic-args-with-colons-tail { * }
+    rule path-generic-args-with-colons-tail:sym<c> { <MOD-SEP> <ident> }
+    rule path-generic-args-with-colons-tail:sym<d> { <MOD-SEP> <SUPER> }
+    rule path-generic-args-with-colons-tail:sym<e> { <MOD-SEP> <generic-args> }
 }
 
 our class PathGenericArgsWithColons::Actions {
 
-    method path-generic_args_with_colons:sym<a>($/) {
+    method path-generic-args-with-colons($/) {
+        make PathGenericArgsWithColons.new(
+            prefix => $<path-generic-args-with-colons-prefix>.made,
+            tail   => $<path-generic-args-with-colons-tail>>>.made,
+        )
+    }
+
+    method path-generic-args-with-colons-prefix:sym<a>($/) {
         make components.new(
             ident =>  $<ident>.made,
         )
     }
 
-    method path-generic_args_with_colons:sym<b>($/) {
+    method path-generic-args-with-colons-prefix:sym<b>($/) {
         make Super.new
     }
 
-    method path-generic_args_with_colons:sym<c>($/) {
-        ExtNode<140425165463024>
-    }
-
-    method path-generic_args_with_colons:sym<d>($/) {
-        ExtNode<140425165463064>
-    }
-
-    method path-generic_args_with_colons:sym<e>($/) {
-        ExtNode<140425165463104>
-    }
+    method path-generic-args-with-colons-tail:sym<c>($/) { make $<ident>.made }
+    method path-generic-args-with-colons-tail:sym<d>($/) { make $<SUPER>.made }
+    method path-generic-args-with-colons-tail:sym<e>($/) { make $<generic-args>.made }
 }
