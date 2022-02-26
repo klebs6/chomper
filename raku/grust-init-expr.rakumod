@@ -1,24 +1,14 @@
 our class InitExpr::Rules {
 
-    proto rule maybe-init_expr { * }
-
-    rule maybe-init_expr:sym<a> {
-        '=' <expr>
-    }
-
-    rule maybe-init_expr:sym<b> {
-
+    rule maybe-init-expr {
+        [ '=' <expr> ]?
     }
 }
 
 our class InitExpr::Actions {
 
-    method maybe-init_expr:sym<a>($/) {
+    method maybe-init-expr($/) {
         make $<expr>.made
-    }
-
-    method maybe-init_expr:sym<b>($/) {
-        MkNone<140530961453856>
     }
 }
 
