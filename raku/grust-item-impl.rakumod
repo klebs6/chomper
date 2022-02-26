@@ -65,52 +65,83 @@ our class ItemImplNeg {
 
 our class ItemImpl::Rules {
 
+    #---------------------------
     proto rule item-impl { * }
 
     rule item-impl:sym<a> {
-        <maybe-default_maybe_unsafe> <IMPL> <generic-params> <ty-prim_sum> <maybe-where_clause> '{' <maybe-inner_attrs> <maybe-impl_items> '}'
+        <maybe-default_maybe_unsafe> 
+        <IMPL> 
+        <generic-params> 
+        <ty-prim_sum> 
+        <maybe-where_clause> 
+        '{' 
+        <maybe-inner_attrs> 
+        <maybe-impl_items> 
+        '}'
     }
 
     rule item-impl:sym<b> {
-        <maybe-default_maybe_unsafe> <IMPL> <generic-params> '(' <ty> ')' <maybe-where_clause> '{' <maybe-inner_attrs> <maybe-impl_items> '}'
+        <maybe-default_maybe_unsafe> 
+        <IMPL> 
+        <generic-params> 
+        '(' <ty> ')' 
+        <maybe-where_clause> 
+        '{' <maybe-inner_attrs> <maybe-impl_items> '}'
     }
 
     rule item-impl:sym<c> {
-        <maybe-default_maybe_unsafe> <IMPL> <generic-params> <trait-ref> <FOR> <ty-sum> <maybe-where_clause> '{' <maybe-inner_attrs> <maybe-impl_items> '}'
+        <maybe-default_maybe_unsafe> 
+        <IMPL> 
+        <generic-params> 
+        <trait-ref> 
+        <FOR> 
+        <ty-sum> 
+        <maybe-where_clause> 
+        '{' <maybe-inner_attrs> <maybe-impl_items> '}'
     }
 
     rule item-impl:sym<d> {
-        <maybe-default_maybe_unsafe> <IMPL> <generic-params> '!' <trait-ref> <FOR> <ty-sum> <maybe-where_clause> '{' <maybe-inner_attrs> <maybe-impl_items> '}'
+        <maybe-default_maybe_unsafe> 
+        <IMPL> <generic-params> '!' 
+        <trait-ref> 
+        <FOR> 
+        <ty-sum> 
+        <maybe-where_clause> 
+        '{' <maybe-inner_attrs> <maybe-impl_items> '}'
     }
 
     rule item-impl:sym<e> {
-        <maybe-default_maybe_unsafe> <IMPL> <generic-params> <trait-ref> <FOR> <DOTDOT> '{' '}'
+        <maybe-default_maybe_unsafe> 
+        <IMPL> 
+        <generic-params> 
+        <trait-ref> 
+        <FOR> 
+        <DOTDOT> 
+        '{' '}'
     }
 
     rule item-impl:sym<f> {
-        <maybe-default_maybe_unsafe> <IMPL> <generic-params> '!' <trait-ref> <FOR> <DOTDOT> '{' '}'
+        <maybe-default_maybe_unsafe> 
+        <IMPL> 
+        <generic-params> 
+        '!' 
+        <trait-ref> 
+        <FOR> 
+        <DOTDOT> 
+        '{' '}'
     }
 
-    proto rule maybe-impl_items { * }
-
-    rule maybe-impl_items:sym<a> {
-        <impl-items>
+    #---------------------------
+    rule maybe-impl_items {
+        <impl-items>?
     }
 
-    rule maybe-impl_items:sym<b> {
-
+    #---------------------------
+    rule impl-items {
+        <impl-item>+
     }
 
-    proto rule impl-items { * }
-
-    rule impl-items:sym<a> {
-        <impl-item>
-    }
-
-    rule impl-items:sym<b> {
-        <impl-item> <impl-items>
-    }
-
+    #---------------------------
     proto rule impl-item { * }
 
     rule impl-item:sym<a> {
@@ -197,18 +228,9 @@ our class ItemImpl::Actions {
         make $<impl-items>.made
     }
 
-    method maybe-impl_items:sym<b>($/) {
-        MkNone<140235326792160>
-    }
-
+    #---------------------
     method impl-items:sym<a>($/) {
-        make ImplItems.new(
-            impl-item =>  $<impl-item>.made,
-        )
-    }
-
-    method impl-items:sym<b>($/) {
-        ExtNode<140235329240080>
+        make $<impl-item>>>.made
     }
 
     method impl-item:sym<a>($/) {
