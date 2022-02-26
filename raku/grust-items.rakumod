@@ -4,24 +4,13 @@
 our class Item::Rules {
 
     proto rule item { * }
-
-    rule item:sym<a> {
-        <stmt-item>
-    }
-
-    rule item:sym<b> {
-        <item-macro>
-    }
+    rule item:sym<stmt>  { <stmt-item> }
+    rule item:sym<macro> { <item-macro> }
 }
 
 our class Item::Actions {
 
-    method item:sym<a>($/) {
-        make $<stmt-item>.made
-    }
-
-    method item:sym<b>($/) {
-        make $<item-macro>.made
-    }
+    method item:sym<stmt>($/)  { make $<stmt-item>.made }
+    method item:sym<macro>($/) { make $<item-macro>.made }
 }
 
