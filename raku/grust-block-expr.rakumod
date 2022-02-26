@@ -127,9 +127,7 @@ our class BlockExpr::Actions {
         )
     }
 
-    method block-expr-dot:sym<g>($/) {
-        make ExprTupleIndex.new(
-            block-expr =>  $<block-expr>.made,
-        )
+    method block-expr-dot-tail:sym<lit-int>($/) {
+        make $<LIT-INTEGER>.made
     }
 }
