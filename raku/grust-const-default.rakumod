@@ -4,26 +4,14 @@ our class ConstDefault {
 
 our class ConstDefault::Rules {
 
-    proto rule maybe-const_default { * }
-
-    rule maybe-const_default:sym<a> {
-        '=' <expr>
-    }
-
-    rule maybe-const_default:sym<b> {
-
-    }
+    rule maybe-const-default { [ '=' <expr> ]? }
 }
 
 our class ConstDefault::Actions {
 
-    method maybe-const_default:sym<a>($/) {
+    method maybe-const-default($/) {
         make ConstDefault.new(
             expr =>  $<expr>.made,
         )
-    }
-
-    method maybe-const_default:sym<b>($/) {
-        MkNone<140324429464512>
     }
 }
