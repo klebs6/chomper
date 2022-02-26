@@ -1,7 +1,7 @@
 
 our class Crate {
-    has $.maybe_mod-items;
-    has $.inner_attrs;
+    has $.maybe-mod-items;
+    has $.inner-attrs;
 }
 
 our class Crate::Rules {
