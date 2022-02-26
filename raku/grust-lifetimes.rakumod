@@ -8,73 +8,30 @@ our class Lifetime {
 
 our class Lifetimes::Rules {
 
-    proto rule maybe-lifetimes { * }
+    rule maybe-lifetimes { [<lifetimes> ','?]? }
 
-    rule maybe-lifetimes:sym<a> {
-        <lifetimes>
+    rule lifetimes {
+        <lifetime-and_bounds>+ %% ","
     }
 
-    rule maybe-lifetimes:sym<b> {
-        <lifetimes> ','
-    }
-
-    rule maybe-lifetimes:sym<c> {
-
-    }
-
-    proto rule lifetimes { * }
-
-    rule lifetimes:sym<a> {
-        <lifetime-and_bounds>
-    }
-
-    rule lifetimes:sym<b> {
-        <lifetimes> ',' <lifetime-and_bounds>
-    }
-
+    #---------------------
     proto rule lifetime-and_bounds { * }
-
-    rule lifetime-and_bounds:sym<a> {
-        <LIFETIME> <maybe-ltbounds>
-    }
-
-    rule lifetime-and_bounds:sym<b> {
-        <STATIC-LIFETIME>
-    }
+    rule lifetime-and_bounds:sym<a> { <LIFETIME> <maybe-ltbounds> }
+    rule lifetime-and_bounds:sym<b> { <STATIC-LIFETIME> }
 
     proto rule lifetime { * }
-
-    rule lifetime:sym<a> {
-        <LIFETIME>
-    }
-
-    rule lifetime:sym<b> {
-        <STATIC-LIFETIME>
-    }
+    rule lifetime:sym<a> { <LIFETIME> }
+    rule lifetime:sym<b> { <STATIC-LIFETIME> }
 }
 
 our class Lifetimes::Actions {
 
-    method maybe-lifetimes:sym<a>($/) {
+    method maybe-lifetimes($/) {
         make $<lifetimes>.made
     }
 
-    method maybe-lifetimes:sym<b>($/) {
-
-    }
-
-    method maybe-lifetimes:sym<c>($/) {
-        MkNone<140203792891008>
-    }
-
-    method lifetimes:sym<a>($/) {
-        make Lifetimes.new(
-            lifetime-and_bounds =>  $<lifetime-and_bounds>.made,
-        )
-    }
-
-    method lifetimes:sym<b>($/) {
-        ExtNode<140203790912376>
+    method lifetimes($/) {
+        make $<lifetime-and_bounds>>>.made
     }
 
     method lifetime-and_bounds:sym<a>($/) {
@@ -87,13 +44,7 @@ our class Lifetimes::Actions {
         make static_lifetime.new
     }
 
-    method lifetime:sym<a>($/) {
-        make lifetime.new(
-
-        )
-    }
-
-    method lifetime:sym<b>($/) {
-        make static_lifetime.new
-    }
+    #------------------
+    method lifetime:sym<a>($/) { make lifetime.new() }
+    method lifetime:sym<b>($/) { make static_lifetime.new }
 }

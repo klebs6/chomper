@@ -9,6 +9,7 @@ our class ExprFnBlock {
 
 our class LambdaExpr::Rules {
 
+    #---------------------
     proto rule lambda-expr { * }
 
     rule lambda-expr:sym<a> {
@@ -27,6 +28,7 @@ our class LambdaExpr::Rules {
         {self.set-prec(LAMBDA)} '|' <inferrable-params> <OROR> <lambda-expr_no_first_bar>
     }
 
+    #---------------------
     proto rule lambda-expr_no_first_bar { * }
 
     rule lambda-expr_no_first_bar:sym<a> {
@@ -41,6 +43,7 @@ our class LambdaExpr::Rules {
         {self.set-prec(LAMBDA)} <inferrable-params> <OROR> <lambda-expr_no_first_bar>
     }
 
+    #---------------------
     proto rule lambda-expr_nostruct { * }
 
     rule lambda-expr_nostruct:sym<a> {
@@ -59,6 +62,7 @@ our class LambdaExpr::Rules {
         {self.set-prec(LAMBDA)} '|' <inferrable-params> <OROR> <lambda-expr_nostruct_no_first_bar>
     }
 
+    #---------------------
     proto rule lambda-expr_nostruct_no_first_bar { * }
 
     rule lambda-expr_nostruct_no_first_bar:sym<a> {

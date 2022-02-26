@@ -7,7 +7,10 @@ our class DeclLocal {
 our class Let::Rules {
 
     rule let {
-        <LET> <pat> <maybe-ty_ascription> <maybe-init_expr> ';'
+        <LET> 
+        <pat> 
+        <maybe-ty_ascription> 
+        <maybe-init_expr> ';'
     }
 }
 
@@ -21,4 +24,3 @@ our class Let::Actions {
         )
     }
 }
-
