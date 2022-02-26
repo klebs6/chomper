@@ -44,6 +44,6 @@ our class ModItems::Actions {
     }
 
     method mod-items($/) {
-        make $<mod-item>.made
+        make $<mod-item>>>.made
     }
 }
