@@ -10,8 +10,9 @@ our class ConstDefault::Rules {
 our class ConstDefault::Actions {
 
     method maybe-const-default($/) {
-        make ConstDefault.new(
-            expr =>  $<expr>.made,
-        )
+
+        my $expr = $<expr>.made;
+
+        make $expr ?? ConstDefault.new( :$expr,) !! Nil
     }
 }
