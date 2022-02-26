@@ -8,7 +8,11 @@ our class ItemTy {
 our class ItemType::Rules {
 
     rule item-type {
-        <TYPE> <ident> <generic-params> <maybe-where_clause> '=' <ty-sum> ';'
+        <TYPE> 
+        <ident> 
+        <generic-params> 
+        <maybe-where_clause> 
+        '=' <ty-sum> ';'
     }
 }
 
@@ -23,4 +27,3 @@ our class ItemType::Actions {
         )
     }
 }
-

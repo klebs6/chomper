@@ -1,28 +1,19 @@
 
 our class ItemUnion::Rules {
 
-    proto rule item-union { * }
-
-    rule item-union:sym<a> {
-        <UNION> <ident> <generic-params> <maybe-where_clause> '{' <struct-decl_fields> '}'
-    }
-
-    rule item-union:sym<b> {
-        <UNION> <ident> <generic-params> <maybe-where_clause> '{' <struct-decl_fields> ',' '}'
+    rule item-union {
+        <UNION> <ident> <generic-params> <maybe-where-clause> '{' <struct-decl-fields> ','? '}'
     }
 }
 
 our class ItemUnion::Actions {
 
-    method item-union:sym<a>($/) {
+    method item-union($/) {
         make ItemUnion.new(
-
-        )
-    }
-
-    method item-union:sym<b>($/) {
-        make ItemUnion.new(
-
+            ident              => $<ident>.made,
+            generic-params     => $<generic-params>.made,
+            maybe-where-clause => $<maybe-where-clause>.made,
+            struct-decl-fields => $<struct-decl-fields>.made,
         )
     }
 }

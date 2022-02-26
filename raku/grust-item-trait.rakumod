@@ -30,24 +30,12 @@ our class ItemTrait::Rules {
         '{' <maybe-trait_items> '}'
     }
 
-    proto rule maybe-trait_items { * }
-
-    rule maybe-trait_items:sym<a> {
-        <trait-items>
+    rule maybe-trait_items {
+        <trait-items>?
     }
 
-    rule maybe-trait_items:sym<b> {
-
-    }
-
-    proto rule trait-items { * }
-
-    rule trait-items:sym<a> {
-        <trait-item>
-    }
-
-    rule trait-items:sym<b> {
-        <trait-items> <trait-item>
+    rule trait-items {
+        <trait-item>+
     }
 
     proto rule trait-item { * }
@@ -83,24 +71,15 @@ our class ItemTrait::Actions {
         )
     }
 
-    method maybe-trait_items:sym<a>($/) {
+    method maybe-trait_items($/) {
         make $<trait-items>.made
     }
 
-    method maybe-trait_items:sym<b>($/) {
-        MkNone<140215433189312>
+    method trait-items($/) {
+        make $<trait-item>>>.made
     }
 
-    method trait-items:sym<a>($/) {
-        make TraitItems.new(
-            trait-item =>  $<trait-item>.made,
-        )
-    }
-
-    method trait-items:sym<b>($/) {
-        ExtNode<140215424168608>
-    }
-
+    #----------
     method trait-item:sym<a>($/) {
         make $<trait-const>.made
     }
@@ -120,4 +99,3 @@ our class ItemTrait::Actions {
         )
     }
 }
-
