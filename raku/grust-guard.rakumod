@@ -1,24 +1,14 @@
 our class Guard::Rules {
 
-    proto rule maybe-guard { * }
-
-    rule maybe-guard:sym<a> {
-        <IF> <expr-nostruct>
-    }
-
-    rule maybe-guard:sym<b> {
-
+    rule maybe-guard {
+        [ <IF> <expr-nostruct> ]?
     }
 }
 
 our class Guard::Actions {
 
-    method maybe-guard:sym<a>($/) {
+    method maybe-guard($/) {
         make $<expr_nostruct>.made
-    }
-
-    method maybe-guard:sym<b>($/) {
-        MkNone<140269876955936>
     }
 }
 

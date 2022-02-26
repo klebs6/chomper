@@ -7,37 +7,14 @@ our class GenericParams::Rules {
 
     proto rule generic-params { * }
 
-    rule generic-params:sym<a> {
-        '<' '>'
-    }
-
-    rule generic-params:sym<b> {
-        '<' <lifetimes> '>'
-    }
-
-    rule generic-params:sym<c> {
-        '<' <lifetimes> ',' '>'
-    }
-
-    rule generic-params:sym<f> {
-        '<' <lifetimes> ',' <ty-params> '>'
-    }
-
-    rule generic-params:sym<g> {
-        '<' <lifetimes> ',' <ty-params> ',' '>'
-    }
-
-    rule generic-params:sym<j> {
-        '<' <ty-params> '>'
-    }
-
-    rule generic-params:sym<k> {
-        '<' <ty-params> ',' '>'
-    }
-
-    rule generic-params:sym<n> {
-
-    }
+    rule generic-params:sym<a> { '<' '>' }
+    rule generic-params:sym<b> { '<' <lifetimes> '>' }
+    rule generic-params:sym<c> { '<' <lifetimes> ',' '>' }
+    rule generic-params:sym<f> { '<' <lifetimes> ',' <ty-params> '>' }
+    rule generic-params:sym<g> { '<' <lifetimes> ',' <ty-params> ',' '>' }
+    rule generic-params:sym<j> { '<' <ty-params> '>' }
+    rule generic-params:sym<k> { '<' <ty-params> ',' '>' }
+    rule generic-params:sym<n> { }
 }
 
 our class GenericParams::Actions {
