@@ -20,70 +20,50 @@ our class StructFields {
 
 our class ItemStruct::Rules {
 
+    #-------------------------
     proto rule item-struct { * }
 
     rule item-struct:sym<a> {
-        <STRUCT> <ident> <generic-params> <maybe-where_clause> <struct-decl_args>
+        <STRUCT> 
+        <ident> 
+        <generic-params> 
+        <maybe-where_clause> 
+        <struct-decl_args>
     }
 
     rule item-struct:sym<b> {
-        <STRUCT> <ident> <generic-params> <struct-tuple_args> <maybe-where_clause> ';'
+        <STRUCT> 
+        <ident> 
+        <generic-params> 
+        <struct-tuple_args> 
+        <maybe-where_clause> ';'
     }
 
     rule item-struct:sym<c> {
-        <STRUCT> <ident> <generic-params> <maybe-where_clause> ';'
+        <STRUCT> 
+        <ident> 
+        <generic-params> 
+        <maybe-where_clause> ';'
     }
 
-    proto rule struct-decl_args { * }
+    #-------------------------
+    rule struct-decl_args  { '{' <struct-decl_fields> ','? '}' }
 
-    rule struct-decl_args:sym<a> {
-        '{' <struct-decl_fields> '}'
-    }
+    #-------------------------
+    rule struct-tuple_args { '(' <struct-tuple_fields> ','? ')' }
 
-    rule struct-decl_args:sym<b> {
-        '{' <struct-decl_fields> ',' '}'
-    }
-
-    proto rule struct-tuple_args { * }
-
-    rule struct-tuple_args:sym<a> {
-        '(' <struct-tuple_fields> ')'
-    }
-
-    rule struct-tuple_args:sym<b> {
-        '(' <struct-tuple_fields> ',' ')'
-    }
-
-    proto rule struct-decl_fields { * }
-
-    rule struct-decl_fields:sym<a> {
-        <struct-decl_field>
-    }
-
-    rule struct-decl_fields:sym<b> {
-        <struct-decl_fields> ',' <struct-decl_field>
-    }
-
-    rule struct-decl_fields:sym<c> {
-
+    #-------------------------
+    rule struct-decl_fields {
+        <struct-decl_field>* %% ","
     }
 
     rule struct-decl_field {
         <attrs-and_vis> <ident> ':' <ty-sum>
     }
 
-    proto rule struct-tuple_fields { * }
-
-    rule struct-tuple_fields:sym<a> {
-        <struct-tuple_field>
-    }
-
-    rule struct-tuple_fields:sym<b> {
-        <struct-tuple_fields> ',' <struct-tuple_field>
-    }
-
-    rule struct-tuple_fields:sym<c> {
-
+    #-------------------------
+    rule struct-tuple_fields {
+        <struct-tuple_field>* %% ","
     }
 
     rule struct-tuple_field {
@@ -119,34 +99,16 @@ our class ItemStruct::Actions {
         )
     }
 
-    method struct-decl_args:sym<a>($/) {
+    method struct-decl_args($/) {
         make $<struct_decl_fields>.made
     }
 
-    method struct-decl_args:sym<b>($/) {
-        make $<struct_decl_fields>.made
-    }
-
-    method struct-tuple_args:sym<a>($/) {
+    method struct-tuple_args($/) {
         make $<struct_tuple_fields>.made
     }
 
-    method struct-tuple_args:sym<b>($/) {
-        make $<struct_tuple_fields>.made
-    }
-
-    method struct-decl_fields:sym<a>($/) {
-        make StructFields.new(
-            struct-decl_field =>  $<struct-decl_field>.made,
-        )
-    }
-
-    method struct-decl_fields:sym<b>($/) {
-        ExtNode<140604918384136>
-    }
-
-    method struct-decl_fields:sym<c>($/) {
-        MkNone<140604948239904>
+    method struct-decl_fields($/) {
+        make $<struct-decl_field>>>.made
     }
 
     method struct-decl_field($/) {
@@ -157,18 +119,8 @@ our class ItemStruct::Actions {
         )
     }
 
-    method struct-tuple_fields:sym<a>($/) {
-        make StructFields.new(
-            struct-tuple_field =>  $<struct-tuple_field>.made,
-        )
-    }
-
-    method struct-tuple_fields:sym<b>($/) {
-        ExtNode<140604918384176>
-    }
-
-    method struct-tuple_fields:sym<c>($/) {
-        MkNone<140604948239936>
+    method struct-tuple_fields($/) {
+        make $<struct-tuple_field>>>.made
     }
 
     method struct-tuple_field($/) {
@@ -178,4 +130,3 @@ our class ItemStruct::Actions {
         )
     }
 }
-
