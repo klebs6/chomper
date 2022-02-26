@@ -14,39 +14,27 @@ our class Lit::Rules {
 our class Lit::Actions {
 
     method lit:sym<a>($/) {
-        make LitByte.new(
-
-        )
+        make LitByte.new( val => ~$/)
     }
 
     method lit:sym<b>($/) {
-        make LitChar.new(
-
-        )
+        make LitChar.new( val => ~$/)
     }
 
     method lit:sym<c>($/) {
-        make LitInteger.new(
-
-        )
+        make LitInteger.new( val => ~$/)
     }
 
     method lit:sym<d>($/) {
-        make LitFloat.new(
-
-        )
+        make LitFloat.new( val => ~$/)
     }
 
     method lit:sym<e>($/) {
-        make LitBool.new(
-
-        )
+        make LitBool.new( val => ~$/)
     }
 
     method lit:sym<f>($/) {
-        make LitBool.new(
-
-        )
+        make LitBool.new( val => ~$/)
     }
 
     method lit:sym<g>($/) {
