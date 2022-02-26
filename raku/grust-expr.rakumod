@@ -43,245 +43,66 @@ our class Expr::Rules {
 
     proto rule expr { * }
 
-    rule expr:sym<a> {
-        <lit>
-    }
-
-    rule expr:sym<b> {
-        {self.set-prec(IDENT)} <path-expr>
-    }
-
-    rule expr:sym<c> {
-        <SELF>
-    }
-
-    rule expr:sym<d> {
-        <macro-expr>
-    }
-
-    rule expr:sym<e> {
-        <path-expr> '{' <struct-expr_fields> '}'
-    }
-
-    rule expr:sym<f> {
-        <expr> '?'
-    }
-
-    rule expr:sym<g> {
-        <expr> '.' <path-generic_args_with_colons>
-    }
-
-    rule expr:sym<h> {
-        <expr> '.' <LIT-INTEGER>
-    }
-
-    rule expr:sym<i> {
-        <expr> '[' <maybe-expr> ']'
-    }
-
-    rule expr:sym<j> {
-        <expr> '(' <maybe-exprs> ')'
-    }
-
-    rule expr:sym<k> {
-        '(' <maybe-exprs> ')'
-    }
-
-    rule expr:sym<l> {
-        '[' <vec-expr> ']'
-    }
-
-    rule expr:sym<m> {
-        <CONTINUE>
-    }
-
-    rule expr:sym<n> {
-        <CONTINUE> <ident>
-    }
-
-    rule expr:sym<o> {
-        <RETURN>
-    }
-
-    rule expr:sym<p> {
-        <RETURN> <expr>
-    }
-
-    rule expr:sym<q> {
-        <BREAK>
-    }
-
-    rule expr:sym<r> {
-        <BREAK> <ident>
-    }
-
-    rule expr:sym<s> {
-        <YIELD>
-    }
-
-    rule expr:sym<t> {
-        <YIELD> <expr>
-    }
-
-    rule expr:sym<u> {
-        <expr> '=' <expr>
-    }
-
-    rule expr:sym<v> {
-        <expr> <SHLEQ> <expr>
-    }
-
-    rule expr:sym<w> {
-        <expr> <SHREQ> <expr>
-    }
-
-    rule expr:sym<x> {
-        <expr> <MINUSEQ> <expr>
-    }
-
-    rule expr:sym<y> {
-        <expr> <ANDEQ> <expr>
-    }
-
-    rule expr:sym<z> {
-        <expr> <OREQ> <expr>
-    }
-
-    rule expr:sym<aa> {
-        <expr> <PLUSEQ> <expr>
-    }
-
-    rule expr:sym<ab> {
-        <expr> <STAREQ> <expr>
-    }
-
-    rule expr:sym<ac> {
-        <expr> <SLASHEQ> <expr>
-    }
-
-    rule expr:sym<ad> {
-        <expr> <CARETEQ> <expr>
-    }
-
-    rule expr:sym<ae> {
-        <expr> <PERCENTEQ> <expr>
-    }
-
-    rule expr:sym<af> {
-        <expr> <OROR> <expr>
-    }
-
-    rule expr:sym<ag> {
-        <expr> <ANDAND> <expr>
-    }
-
-    rule expr:sym<ah> {
-        <expr> <EQEQ> <expr>
-    }
-
-    rule expr:sym<ai> {
-        <expr> <NE> <expr>
-    }
-
-    rule expr:sym<aj> {
-        <expr> '<' <expr>
-    }
-
-    rule expr:sym<ak> {
-        <expr> '>' <expr>
-    }
-
-    rule expr:sym<al> {
-        <expr> <LE> <expr>
-    }
-
-    rule expr:sym<am> {
-        <expr> <GE> <expr>
-    }
-
-    rule expr:sym<an> {
-        <expr> '|' <expr>
-    }
-
-    rule expr:sym<ao> {
-        <expr> '^' <expr>
-    }
-
-    rule expr:sym<ap> {
-        <expr> '&' <expr>
-    }
-
-    rule expr:sym<aq> {
-        <expr> <SHL> <expr>
-    }
-
-    rule expr:sym<ar> {
-        <expr> <SHR> <expr>
-    }
-
-    rule expr:sym<as> {
-        <expr> '+' <expr>
-    }
-
-    rule expr:sym<at> {
-        <expr> '-' <expr>
-    }
-
-    rule expr:sym<au> {
-        <expr> '*' <expr>
-    }
-
-    rule expr:sym<av> {
-        <expr> '/' <expr>
-    }
-
-    rule expr:sym<aw> {
-        <expr> '%' <expr>
-    }
-
-    rule expr:sym<ax> {
-        <expr> <DOTDOT>
-    }
-
-    rule expr:sym<ay> {
-        <expr> <DOTDOT> <expr>
-    }
-
-    rule expr:sym<az> {
-        <DOTDOT> <expr>
-    }
-
-    rule expr:sym<ba> {
-        <DOTDOT>
-    }
-
-    rule expr:sym<bb> {
-        <expr> <AS> <ty>
-    }
-
-    rule expr:sym<bc> {
-        <expr> ':' <ty>
-    }
-
-    rule expr:sym<bd> {
-        <BOX> <expr>
-    }
-
-    rule expr:sym<be> {
-        <expr-qualified_path>
-    }
-
-    rule expr:sym<bf> {
-        <block-expr>
-    }
-
-    rule expr:sym<bg> {
-        <block>
-    }
-
-    rule expr:sym<bh> {
-        <nonblock-prefix_expr>
-    }
+    rule expr:sym<a>  { <lit> }
+    rule expr:sym<b>  { {self.set-prec(IDENT)} <path-expr> }
+    rule expr:sym<c>  { <SELF> }
+    rule expr:sym<d>  { <macro-expr> }
+    rule expr:sym<e>  { <path-expr> '{' <struct-expr_fields> '}' }
+    rule expr:sym<f>  { <expr> '?' }
+    rule expr:sym<g>  { <expr> '.' <path-generic_args_with_colons> }
+    rule expr:sym<h>  { <expr> '.' <LIT-INTEGER> }
+    rule expr:sym<i>  { <expr> '[' <maybe-expr> ']' }
+    rule expr:sym<j>  { <expr> '(' <maybe-exprs> ')' }
+    rule expr:sym<k>  { '(' <maybe-exprs> ')' }
+    rule expr:sym<l>  { '[' <vec-expr> ']' }
+    rule expr:sym<m>  { <CONTINUE> }
+    rule expr:sym<n>  { <CONTINUE> <ident> }
+    rule expr:sym<o>  { <RETURN> }
+    rule expr:sym<p>  { <RETURN> <expr> }
+    rule expr:sym<q>  { <BREAK> }
+    rule expr:sym<r>  { <BREAK> <ident> }
+    rule expr:sym<s>  { <YIELD> }
+    rule expr:sym<t>  { <YIELD> <expr> }
+    rule expr:sym<u>  { <expr> '=' <expr> }
+    rule expr:sym<v>  { <expr> <SHLEQ> <expr> }
+    rule expr:sym<w>  { <expr> <SHREQ> <expr> }
+    rule expr:sym<x>  { <expr> <MINUSEQ> <expr> }
+    rule expr:sym<y>  { <expr> <ANDEQ> <expr> }
+    rule expr:sym<z>  { <expr> <OREQ> <expr> }
+    rule expr:sym<aa> { <expr> <PLUSEQ> <expr> }
+    rule expr:sym<ab> { <expr> <STAREQ> <expr> }
+    rule expr:sym<ac> { <expr> <SLASHEQ> <expr> }
+    rule expr:sym<ad> { <expr> <CARETEQ> <expr> }
+    rule expr:sym<ae> { <expr> <PERCENTEQ> <expr> }
+    rule expr:sym<af> { <expr> <OROR> <expr> }
+    rule expr:sym<ag> { <expr> <ANDAND> <expr> }
+    rule expr:sym<ah> { <expr> <EQEQ> <expr> }
+    rule expr:sym<ai> { <expr> <NE> <expr> }
+    rule expr:sym<aj> { <expr> '<' <expr> }
+    rule expr:sym<ak> { <expr> '>' <expr> }
+    rule expr:sym<al> { <expr> <LE> <expr> }
+    rule expr:sym<am> { <expr> <GE> <expr> }
+    rule expr:sym<an> { <expr> '|' <expr> }
+    rule expr:sym<ao> { <expr> '^' <expr> }
+    rule expr:sym<ap> { <expr> '&' <expr> }
+    rule expr:sym<aq> { <expr> <SHL> <expr> }
+    rule expr:sym<ar> { <expr> <SHR> <expr> }
+    rule expr:sym<as> { <expr> '+' <expr> }
+    rule expr:sym<at> { <expr> '-' <expr> }
+    rule expr:sym<au> { <expr> '*' <expr> }
+    rule expr:sym<av> { <expr> '/' <expr> }
+    rule expr:sym<aw> { <expr> '%' <expr> }
+    rule expr:sym<ax> { <expr> <DOTDOT> }
+    rule expr:sym<ay> { <expr> <DOTDOT> <expr> }
+    rule expr:sym<az> { <DOTDOT> <expr> }
+    rule expr:sym<ba> { <DOTDOT> }
+    rule expr:sym<bb> { <expr> <AS> <ty> }
+    rule expr:sym<bc> { <expr> ':' <ty> }
+    rule expr:sym<bd> { <BOX> <expr> }
+    rule expr:sym<be> { <expr-qualified_path> }
+    rule expr:sym<bf> { <block-expr> }
+    rule expr:sym<bg> { <block> }
+    rule expr:sym<bh> { <nonblock-prefix_expr> }
 }
 
 our class Expr::Actions {
