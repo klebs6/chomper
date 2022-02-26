@@ -1,66 +1,38 @@
 our class Ident::Rules {
 
-    proto rule maybe-ident { * }
-
-    rule maybe-ident:sym<a> {
-
-    }
-
-    rule maybe-ident:sym<b> {
-        <ident>
+    rule maybe-ident {
+        <ident>?
     }
 
     proto rule ident { * }
 
-    rule ident:sym<a> {
-        <IDENT>
-    }
+    rule ident:sym<ident>   { <IDENT> }
 
     # Weak keywords that can be used as identifiers
-    rule ident:sym<b> {
-        <CATCH>
-    }
-
-    rule ident:sym<c> {
-        <DEFAULT>
-    }
-
-    rule ident:sym<d> {
-        <UNION>
-    }
+    rule ident:sym<catch>   { <CATCH> }
+    rule ident:sym<default> { <DEFAULT> }
+    rule ident:sym<union>   { <UNION> }
 }
 
 our class Ident::Actions {
 
-    method maybe-ident:sym<a>($/) {
-        MkNone<140277797979904>
-    }
-
-    method maybe-ident:sym<b>($/) {
+    method maybe-ident($/) {
         make $<ident>.made
     }
 
-    method ident:sym<a>($/) {
-        make ident.new(
-
-        )
+    method ident:sym<ident>($/) {
+        make ident.new(value => ~$/)
     }
 
-    method ident:sym<b>($/) {
-        make ident.new(
-
-        )
+    method ident:sym<catch>($/) {
+        make ident.new(value => ~$/)
     }
 
-    method ident:sym<c>($/) {
-        make ident.new(
-
-        )
+    method ident:sym<default>($/) {
+        make ident.new(value => ~$/)
     }
 
-    method ident:sym<d>($/) {
-        make ident.new(
-
-        )
+    method ident:sym<union>($/) {
+        make ident.new(value => ~$/)
     }
 }

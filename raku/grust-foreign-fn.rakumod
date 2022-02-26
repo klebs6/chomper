@@ -8,7 +8,11 @@ our class ForeignFn {
 our class ForeignFn::Rules {
 
     rule item-foreign_fn {
-        <FN> <ident> <generic-params> <fn-decl_allow_variadic> <maybe-where_clause> ';'
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl_allow_variadic> 
+        <maybe-where_clause> ';'
     }
 }
 
