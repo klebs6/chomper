@@ -1,37 +1,26 @@
-our class Ret-ty {
+our class RetTy {
     has $.ty;
+    has $.panic;
 }
 
 our class RetTy::Rules {
 
     proto rule ret-ty { * }
-
-    rule ret-ty:sym<a> {
-        <RARROW> '!'
-    }
-
-    rule ret-ty:sym<b> {
-        <RARROW> <ty>
-    }
-
-    rule ret-ty:sym<c> {
-        #%prec IDENT 
-    }
+    rule ret-ty:sym<panic> { <RARROW> '!' }
+    rule ret-ty:sym<ty>    { <RARROW> <ty> }
 }
 
 our class RetTy::Actions {
 
     method ret-ty:sym<a>($/) {
-        MkNone<140295749868448>
-    }
-
-    method ret-ty:sym<b>($/) {
-        make ret-ty.new(
-            ty =>  $<ty>.made,
+        make RetTy.new(
+            ty =>  $<panic>.made,
         )
     }
 
-    method ret-ty:sym<c>($/) {
-        MkNone<140295749870336>
+    method ret-ty:sym<b>($/) {
+        make RetTy.new(
+            ty =>  $<ty>.made,
+        )
     }
 }
