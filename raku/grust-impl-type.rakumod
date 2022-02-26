@@ -9,7 +9,14 @@ our class ImplType {
 our class ImplType::Rules {
 
     rule impl-type {
-        <attrs-and_vis> <maybe-default> <TYPE> <ident> <generic-params> '=' <ty-sum> ';'
+        <attrs-and_vis> 
+        <maybe-default> 
+        <TYPE> 
+        <ident> 
+        <generic-params> 
+        '=' 
+        <ty-sum> 
+        ';'
     }
 }
 

@@ -9,14 +9,8 @@ our class InferrableParams {
 
 our class InferrableParams::Rules {
 
-    proto rule inferrable-params { * }
-
-    rule inferrable-params:sym<a> {
-        <inferrable-param>
-    }
-
-    rule inferrable-params:sym<b> {
-        <inferrable-params> ',' <inferrable-param>
+    rule inferrable-params {
+        <inferrable-param>+ %% ","
     }
 
     rule inferrable-param {
@@ -26,14 +20,8 @@ our class InferrableParams::Rules {
 
 our class InferrableParams::Actions {
 
-    method inferrable-params:sym<a>($/) {
-        make InferrableParams.new(
-            inferrable-param =>  $<inferrable-param>.made,
-        )
-    }
-
-    method inferrable-params:sym<b>($/) {
-        ExtNode<140499837100840>
+    method inferrable-params($/) {
+        make $<inferrable-param>>>.made
     }
 
     method inferrable-param($/) {
