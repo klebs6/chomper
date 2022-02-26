@@ -2,7 +2,11 @@
 our class ItemUnion::Rules {
 
     rule item-union {
-        <UNION> <ident> <generic-params> <maybe-where-clause> '{' <struct-decl-fields> ','? '}'
+        <UNION> 
+        <ident> 
+        <generic-params> 
+        <maybe-where-clause> 
+        '{' <struct-decl-fields> ','? '}'
     }
 }
 
