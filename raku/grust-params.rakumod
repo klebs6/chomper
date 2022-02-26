@@ -1,5 +1,5 @@
 our class Arg {
-    has $.ty_sum;
+    has $.ty-sum;
     has $.pat;
 }
 
@@ -9,98 +9,43 @@ our class Args {
 
 our class Params::Rules {
 
-    proto rule maybe-params { * }
-
-    rule maybe-params:sym<a> {
-        <params>
+    rule maybe-params {
+        [<params> ','? ]?
     }
 
-    rule maybe-params:sym<b> {
-        <params> ','
-    }
-
-    rule maybe-params:sym<c> {
-
-    }
-
-    proto rule params { * }
-
-    rule params:sym<a> {
-        <param>
-    }
-
-    rule params:sym<b> {
-        <params> ',' <param>
+    rule params {
+        <param>+ %% ","
     }
 
     rule param {
         <pat> ':' <ty-sum>
     }
 
-    proto rule maybe-comma_params { * }
+    proto rule maybe-comma-params { * }
 
-    rule maybe-comma_params:sym<a> {
-        ','
-    }
-
-    rule maybe-comma_params:sym<b> {
-        ',' <params>
-    }
-
-    rule maybe-comma_params:sym<c> {
-        ',' <params> ','
-    }
-
-    rule maybe-comma_params:sym<d> {
-
+    rule maybe-comma-params {
+        [ ',' [<params> ','?]? ]?
     }
 }
 
 our class Params::Actions {
 
-    method maybe-params:sym<a>($/) {
+    method maybe-params($/) {
         make $<params>.made
     }
 
-    method maybe-params:sym<b>($/) {
-
-    }
-
-    method maybe-params:sym<c>($/) {
-        MkNone<140389581740544>
-    }
-
-    method params:sym<a>($/) {
-        make Args.new(
-            param =>  $<param>.made,
-        )
-    }
-
-    method params:sym<b>($/) {
-        ExtNode<140389582675544>
+    method params($/) {
+        make $<param>>>.made
     }
 
     method param($/) {
         make Arg.new(
-            pat    =>  $<pat>.made,
-            ty-sum =>  $<ty-sum>.made,
+            pat    => $<pat>.made,
+            ty-sum => $<ty-sum>.made,
         )
     }
 
-    method maybe-comma_params:sym<a>($/) {
-        MkNone<140389582707232>
-    }
-
-    method maybe-comma_params:sym<b>($/) {
+    method maybe-comma-params($/) {
         make $<params>.made
-    }
-
-    method maybe-comma_params:sym<c>($/) {
-        make $<params>.made
-    }
-
-    method maybe-comma_params:sym<d>($/) {
-        MkNone<140389582707264>
     }
 }
-
