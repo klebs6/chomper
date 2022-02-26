@@ -535,5 +535,3 @@ rule elementOption
 	}
 }
  
-# vim: ft=perl6
-

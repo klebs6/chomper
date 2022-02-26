@@ -234,5 +234,3 @@ class ANTLR4::Grammar:ver<0.6.2> {
 		return self.to-lines( $ast ).join( "\n" ) ~ "\n";
 	}
 }
-
-# vim: ft=perl6

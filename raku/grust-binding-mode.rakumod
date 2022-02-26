@@ -1,3 +1,5 @@
+our class BindByRef {}
+our class BindByValue {}
 
 our role BindingMode::Rules {
 

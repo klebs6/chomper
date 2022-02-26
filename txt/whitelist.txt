@@ -16601,3 +16601,15 @@ HighsDebugStatus
 HighsDebugStatus
 HighsModelObject
 SimplexAlgorithm
+AnimationBlendingParams
+AnimationBlendingParams
+AnimationBlendingParams
+AnimationBlendingParams
+AnimationBlendingParams
+AnimationBlendingParams
+AnimationBlendingParams
+AnimationBlendingParams
+AnimationBlendingParams
+AnimationBlendingParams
+AnimationBlendingParams
+AnimationBlendingParams

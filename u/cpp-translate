@@ -3,13 +3,17 @@ use cpp-translate;
 use cpp-actions;
 use Data::Dump::Tree;
 
-my $in = $*IN.slurp.chomp;
+sub MAIN(:$stdin = Nil) {
 
-my $translated = cpp-translate($in);
+    my $in = $stdin 
+        ?? $stdin.IO.slurp.chomp 
+        !! $*IN.slurp.chomp;
 
-if $translated {
-    say $translated;
-    #say $translated.made;
-    ddt $translated.made;
+    my $translated = cpp-translate($in);
+
+    if $translated {
+        say $translated;
+        #say $translated.made;
+        ddt $translated.made;
+    }
 }
-

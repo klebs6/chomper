@@ -882,6 +882,7 @@ SetOption set_option
 SetOutput set_output
 SetOverriddenMotionParameters set_overridden_motion_parameters
 SetParamForReallocateTest set_param_for_reallocate_test
+SetParamTarget set_param_target
 SetParams set_params
 SetParentActionMap set_parent_action_map
 SetPartitonMBNum set_partiton_mb_num
@@ -1260,6 +1261,7 @@ baseAnimTrackFactor base_anim_track_factor
 bbDrawStyle bb_draw_style
 blendPos blend_pos
 blendPosition blend_position
+blendRate blend_rate
 branchNum branch_num
 breakEvent break_event
 breakIndex break_index
@@ -2108,6 +2110,8 @@ p_SLostSim lost_sim
 p_dst dst
 p_nlhs nlhs
 p_y_data y_data
+paramCRC paramcrc
+paramTarget param_target
 parseSVG parsesvg
 pastMovement past_movement
 pfBilateralLumaFilter8 pf_bilateral_luma_filter8
@@ -2186,6 +2190,7 @@ s_analogCompareOpGreaterThanStr analog_compare_op_greater_than_str
 s_analogCompareOpLessThanStr analog_compare_op_less_than_str
 s_analogCompareOpNotEqualsStr analog_compare_op_not_equals_str
 sampleRate sample_rate
+scopeContextId scope_context_id
 selectTheta select_theta
 skeletonAnim skeleton_anim
 skeletonPose skeleton_pose
@@ -2288,5 +2293,3 @@ xyMove xy_move
 zMove z_move
 zoomUsage zoom_usage
 
-__dir__ dir
-__dir__ dir

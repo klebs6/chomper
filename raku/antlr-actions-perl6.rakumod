@@ -779,5 +779,3 @@ $_.<terminal><STRING_LITERAL>.ast
 	}
 }
 
-# vim: ft=perl6
-

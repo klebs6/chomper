@@ -27,4 +27,3 @@ our class ConstDefault::Actions {
         MkNone<140324429464512>
     }
 }
-
