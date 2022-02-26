@@ -4,24 +4,12 @@ our class OuterAttrs {
 
 our class OuterAttrs::Rules {
 
-    proto rule maybe-outer_attrs { * }
-
-    rule maybe-outer_attrs:sym<a> {
-        <outer-attrs>
+    rule maybe-outer_attrs {
+        <outer-attrs>?
     }
 
-    rule maybe-outer_attrs:sym<b> {
-
-    }
-
-    proto rule outer-attrs { * }
-
-    rule outer-attrs:sym<a> {
-        <outer-attr>
-    }
-
-    rule outer-attrs:sym<b> {
-        <outer-attrs> <outer-attr>
+    rule outer-attrs {
+        <outer-attr>+
     }
 
     proto rule outer-attr { * }
@@ -41,18 +29,8 @@ our class OuterAttrs::Actions {
         make $<outer-attrs>.made
     }
 
-    method maybe-outer_attrs:sym<b>($/) {
-        MkNone<140662032925984>
-    }
-
-    method outer-attrs:sym<a>($/) {
-        make OuterAttrs.new(
-            outer-attr =>  $<outer-attr>.made,
-        )
-    }
-
-    method outer-attrs:sym<b>($/) {
-        ExtNode<140662815349104>
+    method outer-attrs($/) {
+        make $<outer-attr>>>.made
     }
 
     method outer-attr:sym<a>($/) {
@@ -65,4 +43,3 @@ our class OuterAttrs::Actions {
         )
     }
 }
-
