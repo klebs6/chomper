@@ -32,73 +32,39 @@ our class FnParams::Rules {
         <fn-params_allow_variadic> <ret-ty>
     }
 
-    proto rule fn-params_allow_variadic { * }
-
-    rule fn-params_allow_variadic:sym<a> {
-        '(' ')'
-    }
-
-    rule fn-params_allow_variadic:sym<b> {
-        '(' <params> ')'
-    }
-
-    rule fn-params_allow_variadic:sym<c> {
-        '(' <params> ',' ')'
-    }
-
-    rule fn-params_allow_variadic:sym<d> {
-        '(' <params> ',' <DOTDOTDOT> ')'
-    }
-
     rule fn-params {
         '(' <maybe-params> ')'
     }
 
+    #---------------------------
+    proto rule fn-params_allow_variadic { * }
+
+    rule fn-params_allow_variadic:sym<a> { '(' ')' }
+    rule fn-params_allow_variadic:sym<b> { '(' <params> ')' }
+    rule fn-params_allow_variadic:sym<c> { '(' <params> ',' ')' }
+    rule fn-params_allow_variadic:sym<d> { '(' <params> ',' <DOTDOTDOT> ')' }
+
+    #---------------------------
     proto rule fn-anon_params { * }
 
-    rule fn-anon_params:sym<a> {
-        '(' <anon-param> <anon-params_allow_variadic_tail> ')'
-    }
+    rule fn-anon_params:sym<a> { '(' <anon-param> <anon-params_allow_variadic_tail> ')' }
+    rule fn-anon_params:sym<b> { '(' ')' }
 
-    rule fn-anon_params:sym<b> {
-        '(' ')'
-    }
-
+    #---------------------------
     proto rule fn-params_with_self { * }
 
-    rule fn-params_with_self:sym<a> {
-        '(' <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_params> ')'
-    }
+    rule fn-params_with_self:sym<a> { '(' <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_params> ')' }
+    rule fn-params_with_self:sym<b> { '(' '&' <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_params> ')' }
+    rule fn-params_with_self:sym<c> { '(' '&' <lifetime> <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_params> ')' }
+    rule fn-params_with_self:sym<d> { '(' <maybe-params> ')' }
 
-    rule fn-params_with_self:sym<b> {
-        '(' '&' <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_params> ')'
-    }
-
-    rule fn-params_with_self:sym<c> {
-        '(' '&' <lifetime> <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_params> ')'
-    }
-
-    rule fn-params_with_self:sym<d> {
-        '(' <maybe-params> ')'
-    }
-
+    #---------------------------
     proto rule fn-anon_params_with_self { * }
 
-    rule fn-anon_params_with_self:sym<a> {
-        '(' <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_anon_params> ')'
-    }
-
-    rule fn-anon_params_with_self:sym<b> {
-        '(' '&' <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_anon_params> ')'
-    }
-
-    rule fn-anon_params_with_self:sym<c> {
-        '(' '&' <lifetime> <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_anon_params> ')'
-    }
-
-    rule fn-anon_params_with_self:sym<d> {
-        '(' <maybe-anon_params> ')'
-    }
+    rule fn-anon_params_with_self:sym<a> { '(' <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_anon_params> ')' }
+    rule fn-anon_params_with_self:sym<b> { '(' '&' <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_anon_params> ')' }
+    rule fn-anon_params_with_self:sym<c> { '(' '&' <lifetime> <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_anon_params> ')' }
+    rule fn-anon_params_with_self:sym<d> { '(' <maybe-anon_params> ')' }
 }
 
 our class FnParams::Actions {
@@ -110,34 +76,21 @@ our class FnParams::Actions {
         )
     }
 
-    method fn-params_allow_variadic:sym<a>($/) {
-        MkNone<140402526985760>
-    }
-
-    method fn-params_allow_variadic:sym<b>($/) {
-        make $<params>.made
-    }
-
-    method fn-params_allow_variadic:sym<c>($/) {
-        make $<params>.made
-    }
-
-    method fn-params_allow_variadic:sym<d>($/) {
-        make $<params>.made
-    }
-
     method fn-params($/) {
         make $<maybe_params>.made
     }
 
+    #---------------------------
+    method fn-params_allow_variadic:sym<b>($/) { make $<params>.made }
+    method fn-params_allow_variadic:sym<c>($/) { make $<params>.made }
+    method fn-params_allow_variadic:sym<d>($/) { make $<params>.made }
+
+    #---------------------------
     method fn-anon_params:sym<a>($/) {
-        ExtNode<140218049450816>
+        #ExtNode<140218049450816>
     }
 
-    method fn-anon_params:sym<b>($/) {
-        MkNone<140218049468352>
-    }
-
+    #---------------------------
     method fn-params_with_self:sym<a>($/) {
         make SelfLower.new(
             maybe-mut           =>  $<maybe-mut>.made,
@@ -169,6 +122,7 @@ our class FnParams::Actions {
         )
     }
 
+    #---------------------------
     method fn-anon_params_with_self:sym<a>($/) {
         make SelfLower.new(
             maybe-mut               =>  $<maybe-mut>.made,
