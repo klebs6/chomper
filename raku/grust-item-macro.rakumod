@@ -49,4 +49,3 @@ our class ItemMacro::Actions {
         )
     }
 }
-

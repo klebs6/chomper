@@ -13,31 +13,15 @@ our class ItemMod::Rules {
     }
 
     rule item-mod:sym<b> {
-        <MOD> <ident> '{' <maybe-mod_items> '}'
+        <MOD> <ident> '{' <inner-attrs>? <maybe-mod_items> '}'
     }
 
-    rule item-mod:sym<c> {
-        <MOD> <ident> '{' <inner-attrs> <maybe-mod_items> '}'
+    rule item-foreign_mod {
+        <EXTERN> <maybe-abi> '{' <inner-attrs>? <maybe-foreign_items> '}'
     }
 
-    proto rule item-foreign_mod { * }
-
-    rule item-foreign_mod:sym<a> {
-        <EXTERN> <maybe-abi> '{' <maybe-foreign_items> '}'
-    }
-
-    rule item-foreign_mod:sym<b> {
-        <EXTERN> <maybe-abi> '{' <inner-attrs> <maybe-foreign_items> '}'
-    }
-
-    proto rule maybe-abi { * }
-
-    rule maybe-abi:sym<a> {
-        <str>
-    }
-
-    rule maybe-abi:sym<b> {
-
+    rule maybe-abi {
+        <str>?
     }
 }
 
@@ -52,37 +36,19 @@ our class ItemMod::Actions {
     method item-mod:sym<b>($/) {
         make ItemMod.new(
             ident           =>  $<ident>.made,
-            maybe-mod_items =>  $<maybe-mod_items>.made,
-        )
-    }
-
-    method item-mod:sym<c>($/) {
-        make ItemMod.new(
-            ident           =>  $<ident>.made,
             inner-attrs     =>  $<inner-attrs>.made,
             maybe-mod_items =>  $<maybe-mod_items>.made,
         )
     }
 
-    method item-foreign_mod:sym<a>($/) {
-        make ItemForeignMod.new(
-            maybe-foreign_items =>  $<maybe-foreign_items>.made,
-        )
-    }
-
-    method item-foreign_mod:sym<b>($/) {
+    method item-foreign_mod($/) {
         make ItemForeignMod.new(
             inner-attrs         =>  $<inner-attrs>.made,
             maybe-foreign_items =>  $<maybe-foreign_items>.made,
         )
     }
 
-    method maybe-abi:sym<a>($/) {
+    method maybe-abi($/) {
         make $<str>.made
     }
-
-    method maybe-abi:sym<b>($/) {
-        MkNone<140304314189184>
-    }
 }
-
