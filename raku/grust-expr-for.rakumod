@@ -1,8 +1,8 @@
 our class ExprForLoop {
-    has $.expr_nostruct;
+    has $.expr-nostruct;
     has $.block;
     has $.pat;
-    has $.maybe_label;
+    has $.maybe-label;
 }
 
 our class ExprFor::Rules {

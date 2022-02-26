@@ -1,6 +1,6 @@
 our class ExprLoop {
     has $.block;
-    has $.maybe_label;
+    has $.maybe-label;
 }
 
 our class ExprLoop::Rules {

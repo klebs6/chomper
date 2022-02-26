@@ -16,241 +16,65 @@ our class ExprNoStruct::Rules {
 
     proto rule expr-nostruct { * }
 
-    rule expr-nostruct:sym<a> {
-        <lit>
-    }
-
-    rule expr-nostruct:sym<b> {
-        {self.set-prec(IDENT)} <path-expr>
-    }
-
-    rule expr-nostruct:sym<c> {
-        <SELF>
-    }
-
-    rule expr-nostruct:sym<d> {
-        <macro-expr>
-    }
-
-    rule expr-nostruct:sym<e> {
-        <expr-nostruct> '?'
-    }
-
-    rule expr-nostruct:sym<f> {
-        <expr-nostruct> '.' <path-generic_args_with_colons>
-    }
-
-    rule expr-nostruct:sym<g> {
-        <expr-nostruct> '.' <LIT-INTEGER>
-    }
-
-    rule expr-nostruct:sym<h> {
-        <expr-nostruct> '[' <maybe-expr> ']'
-    }
-
-    rule expr-nostruct:sym<i> {
-        <expr-nostruct> '(' <maybe-exprs> ')'
-    }
-
-    rule expr-nostruct:sym<j> {
-        '[' <vec-expr> ']'
-    }
-
-    rule expr-nostruct:sym<k> {
-        '(' <maybe-exprs> ')'
-    }
-
-    rule expr-nostruct:sym<l> {
-        <CONTINUE>
-    }
-
-    rule expr-nostruct:sym<m> {
-        <CONTINUE> <ident>
-    }
-
-    rule expr-nostruct:sym<n> {
-        <RETURN>
-    }
-
-    rule expr-nostruct:sym<o> {
-        <RETURN> <expr>
-    }
-
-    rule expr-nostruct:sym<p> {
-        <BREAK>
-    }
-
-    rule expr-nostruct:sym<q> {
-        <BREAK> <ident>
-    }
-
-    rule expr-nostruct:sym<r> {
-        <YIELD>
-    }
-
-    rule expr-nostruct:sym<s> {
-        <YIELD> <expr>
-    }
-
-    rule expr-nostruct:sym<t> {
-        <expr-nostruct> '=' <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<u> {
-        <expr-nostruct> <SHLEQ> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<v> {
-        <expr-nostruct> <SHREQ> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<w> {
-        <expr-nostruct> <MINUSEQ> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<x> {
-        <expr-nostruct> <ANDEQ> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<y> {
-        <expr-nostruct> <OREQ> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<z> {
-        <expr-nostruct> <PLUSEQ> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<aa> {
-        <expr-nostruct> <STAREQ> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<ab> {
-        <expr-nostruct> <SLASHEQ> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<ac> {
-        <expr-nostruct> <CARETEQ> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<ad> {
-        <expr-nostruct> <PERCENTEQ> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<ae> {
-        <expr-nostruct> <OROR> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<af> {
-        <expr-nostruct> <ANDAND> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<ag> {
-        <expr-nostruct> <EQEQ> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<ah> {
-        <expr-nostruct> <NE> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<ai> {
-        <expr-nostruct> '<' <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<aj> {
-        <expr-nostruct> '>' <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<ak> {
-        <expr-nostruct> <LE> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<al> {
-        <expr-nostruct> <GE> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<am> {
-        <expr-nostruct> '|' <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<an> {
-        <expr-nostruct> '^' <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<ao> {
-        <expr-nostruct> '&' <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<ap> {
-        <expr-nostruct> <SHL> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<aq> {
-        <expr-nostruct> <SHR> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<ar> {
-        <expr-nostruct> '+' <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<as> {
-        <expr-nostruct> '-' <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<at> {
-        <expr-nostruct> '*' <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<au> {
-        <expr-nostruct> '/' <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<av> {
-        <expr-nostruct> '%' <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<aw> {
-        <expr-nostruct> <DOTDOT> {self.set-prec(RANGE)}
-    }
-
-    rule expr-nostruct:sym<ax> {
-        <expr-nostruct> <DOTDOT> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<ay> {
-        <DOTDOT> <expr-nostruct>
-    }
-
-    rule expr-nostruct:sym<az> {
-        <DOTDOT>
-    }
-
-    rule expr-nostruct:sym<ba> {
-        <expr-nostruct> <AS> <ty>
-    }
-
-    rule expr-nostruct:sym<bb> {
-        <expr-nostruct> ':' <ty>
-    }
-
-    rule expr-nostruct:sym<bc> {
-        <BOX> <expr>
-    }
-
-    rule expr-nostruct:sym<bd> {
-        <expr-qualified_path>
-    }
-
-    rule expr-nostruct:sym<be> {
-        <block-expr>
-    }
-
-    rule expr-nostruct:sym<bf> {
-        <block>
-    }
-
-    rule expr-nostruct:sym<bg> {
-        <nonblock-prefix_expr_nostruct>
-    }
+    rule expr-nostruct:sym<a>  { <lit> }
+    rule expr-nostruct:sym<b>  { { self.set-prec(IDENT) } <path-expr> }
+    rule expr-nostruct:sym<c>  { <SELF> }
+    rule expr-nostruct:sym<d>  { <macro-expr> }
+    rule expr-nostruct:sym<e>  { <expr-nostruct> '?' }
+    rule expr-nostruct:sym<f>  { <expr-nostruct> '.' <path-generic_args_with_colons> }
+    rule expr-nostruct:sym<g>  { <expr-nostruct> '.' <LIT-INTEGER> }
+    rule expr-nostruct:sym<h>  { <expr-nostruct> '[' <maybe-expr> ']' }
+    rule expr-nostruct:sym<i>  { <expr-nostruct> '(' <maybe-exprs> ')' }
+    rule expr-nostruct:sym<j>  { '[' <vec-expr> ']' }
+    rule expr-nostruct:sym<k>  { '(' <maybe-exprs> ')' }
+    rule expr-nostruct:sym<l>  { <CONTINUE> }
+    rule expr-nostruct:sym<m>  { <CONTINUE> <ident> }
+    rule expr-nostruct:sym<n>  { <RETURN> }
+    rule expr-nostruct:sym<o>  { <RETURN> <expr> }
+    rule expr-nostruct:sym<p>  { <BREAK> }
+    rule expr-nostruct:sym<q>  { <BREAK> <ident> }
+    rule expr-nostruct:sym<r>  { <YIELD> }
+    rule expr-nostruct:sym<s>  { <YIELD> <expr> }
+    rule expr-nostruct:sym<t>  { <expr-nostruct> '='           <expr-nostruct> }
+    rule expr-nostruct:sym<u>  { <expr-nostruct> <SHLEQ>       <expr-nostruct> }
+    rule expr-nostruct:sym<v>  { <expr-nostruct> <SHREQ>       <expr-nostruct> }
+    rule expr-nostruct:sym<w>  { <expr-nostruct> <MINUSEQ>     <expr-nostruct> }
+    rule expr-nostruct:sym<x>  { <expr-nostruct> <ANDEQ>       <expr-nostruct> }
+    rule expr-nostruct:sym<y>  { <expr-nostruct> <OREQ>        <expr-nostruct> }
+    rule expr-nostruct:sym<z>  { <expr-nostruct> <PLUSEQ>      <expr-nostruct> }
+    rule expr-nostruct:sym<aa> { <expr-nostruct> <STAREQ>      <expr-nostruct> }
+    rule expr-nostruct:sym<ab> { <expr-nostruct> <SLASHEQ>     <expr-nostruct> }
+    rule expr-nostruct:sym<ac> { <expr-nostruct> <CARETEQ>     <expr-nostruct> }
+    rule expr-nostruct:sym<ad> { <expr-nostruct> <PERCENTEQ>   <expr-nostruct> }
+    rule expr-nostruct:sym<ae> { <expr-nostruct> <OROR>        <expr-nostruct> }
+    rule expr-nostruct:sym<af> { <expr-nostruct> <ANDAND>      <expr-nostruct> }
+    rule expr-nostruct:sym<ag> { <expr-nostruct> <EQEQ>        <expr-nostruct> }
+    rule expr-nostruct:sym<ah> { <expr-nostruct> <NE>          <expr-nostruct> }
+    rule expr-nostruct:sym<ai> { <expr-nostruct> '<'           <expr-nostruct> }
+    rule expr-nostruct:sym<aj> { <expr-nostruct> '>'           <expr-nostruct> }
+    rule expr-nostruct:sym<ak> { <expr-nostruct> <LE>          <expr-nostruct> }
+    rule expr-nostruct:sym<al> { <expr-nostruct> <GE>          <expr-nostruct> }
+    rule expr-nostruct:sym<am> { <expr-nostruct> '|'           <expr-nostruct> }
+    rule expr-nostruct:sym<an> { <expr-nostruct> '^'           <expr-nostruct> }
+    rule expr-nostruct:sym<ao> { <expr-nostruct> '&'           <expr-nostruct> }
+    rule expr-nostruct:sym<ap> { <expr-nostruct> <SHL>         <expr-nostruct> }
+    rule expr-nostruct:sym<aq> { <expr-nostruct> <SHR>         <expr-nostruct> }
+    rule expr-nostruct:sym<ar> { <expr-nostruct> '+'           <expr-nostruct> }
+    rule expr-nostruct:sym<as> { <expr-nostruct> '-'           <expr-nostruct> }
+    rule expr-nostruct:sym<at> { <expr-nostruct> '*'           <expr-nostruct> }
+    rule expr-nostruct:sym<au> { <expr-nostruct> '/'           <expr-nostruct> }
+    rule expr-nostruct:sym<av> { <expr-nostruct> '%'           <expr-nostruct> }
+    rule expr-nostruct:sym<aw> { <expr-nostruct> <DOTDOT>      { self.set-prec(RANGE)} }
+    rule expr-nostruct:sym<ax> { <expr-nostruct> <DOTDOT> <expr-nostruct> }
+    rule expr-nostruct:sym<ay> { <DOTDOT> <expr-nostruct> }
+    rule expr-nostruct:sym<az> { <DOTDOT> }
+    rule expr-nostruct:sym<ba> { <expr-nostruct> <AS> <ty> }
+    rule expr-nostruct:sym<bb> { <expr-nostruct> ':' <ty> }
+    rule expr-nostruct:sym<bc> { <BOX> <expr> }
+    rule expr-nostruct:sym<bd> { <expr-qualified_path> }
+    rule expr-nostruct:sym<be> { <block-expr> }
+    rule expr-nostruct:sym<bf> { <block> }
+    rule expr-nostruct:sym<bg> { <nonblock-prefix_expr_nostruct> }
 }
 
 our class ExprNoStruct::Actions {
