@@ -4,47 +4,18 @@ our class StmtItem::Rules {
 
     proto rule stmt-item { * }
 
-    rule stmt-item:sym<a> {
-        <item-static>
-    }
-
-    rule stmt-item:sym<b> {
-        <item-const>
-    }
-
-    rule stmt-item:sym<c> {
-        <item-type>
-    }
-
-    rule stmt-item:sym<d> {
-        <block-item>
-    }
-
-    rule stmt-item:sym<e> {
-        <view-item>
-    }
+    rule stmt-item:sym<static> { <item-static> }
+    rule stmt-item:sym<const>  { <item-const> }
+    rule stmt-item:sym<type>   { <item-type> }
+    rule stmt-item:sym<block>  { <block-item> }
+    rule stmt-item:sym<view>   { <view-item> }
 }
 
 our class StmtItem::Actions {
 
-    method stmt-item:sym<a>($/) {
-        make $<item-static>.made
-    }
-
-    method stmt-item:sym<b>($/) {
-        make $<item-const>.made
-    }
-
-    method stmt-item:sym<c>($/) {
-        make $<item-type>.made
-    }
-
-    method stmt-item:sym<d>($/) {
-        make $<block-item>.made
-    }
-
-    method stmt-item:sym<e>($/) {
-        make $<view-item>.made
-    }
+    method stmt-item:sym<static>($/) { make $<item-static>.made }
+    method stmt-item:sym<const>($/)  { make $<item-const>.made }
+    method stmt-item:sym<type>($/)   { make $<item-type>.made }
+    method stmt-item:sym<block>($/)  { make $<block-item>.made }
+    method stmt-item:sym<view>($/)   { make $<view-item>.made }
 }
-
