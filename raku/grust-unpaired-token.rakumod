@@ -2,32 +2,32 @@ our class UnpairedToken::Rules {
 
     proto rule unpaired-token { * }
 
-    rule unpaired-token:sym<a> { <SHL> }
-    rule unpaired-token:sym<b> { <SHR> }
-    rule unpaired-token:sym<c> { <LE> }
-    rule unpaired-token:sym<d> { <EQEQ> }
-    rule unpaired-token:sym<e> { <NE> }
-    rule unpaired-token:sym<f> { <GE> }
-    rule unpaired-token:sym<g> { <ANDAND> }
-    rule unpaired-token:sym<h> { <OROR> }
-    rule unpaired-token:sym<i> { <LARROW> }
-    rule unpaired-token:sym<j> { <SHLEQ> }
-    rule unpaired-token:sym<k> { <SHREQ> }
-    rule unpaired-token:sym<l> { <MINUSEQ> }
-    rule unpaired-token:sym<m> { <ANDEQ> }
-    rule unpaired-token:sym<n> { <OREQ> }
-    rule unpaired-token:sym<o> { <PLUSEQ> }
-    rule unpaired-token:sym<p> { <STAREQ> }
-    rule unpaired-token:sym<q> { <SLASHEQ> }
-    rule unpaired-token:sym<r> { <CARETEQ> }
-    rule unpaired-token:sym<s> { <PERCENTEQ> }
-    rule unpaired-token:sym<t> { <DOTDOT> }
-    rule unpaired-token:sym<u> { <DOTDOTDOT> }
-    rule unpaired-token:sym<v> { <MOD-SEP> }
-    rule unpaired-token:sym<w> { <RARROW> }
-    rule unpaired-token:sym<x> { <FAT-ARROW> }
-    rule unpaired-token:sym<y> { <LIT-BYTE> }
-    rule unpaired-token:sym<z> { <LIT-CHAR> }
+    rule unpaired-token:sym<a>  { <SHL> }
+    rule unpaired-token:sym<b>  { <SHR> }
+    rule unpaired-token:sym<c>  { <LE> }
+    rule unpaired-token:sym<d>  { <EQEQ> }
+    rule unpaired-token:sym<e>  { <NE> }
+    rule unpaired-token:sym<f>  { <GE> }
+    rule unpaired-token:sym<g>  { <ANDAND> }
+    rule unpaired-token:sym<h>  { <OROR> }
+    rule unpaired-token:sym<i>  { <LARROW> }
+    rule unpaired-token:sym<j>  { <SHLEQ> }
+    rule unpaired-token:sym<k>  { <SHREQ> }
+    rule unpaired-token:sym<l>  { <MINUSEQ> }
+    rule unpaired-token:sym<m>  { <ANDEQ> }
+    rule unpaired-token:sym<n>  { <OREQ> }
+    rule unpaired-token:sym<o>  { <PLUSEQ> }
+    rule unpaired-token:sym<p>  { <STAREQ> }
+    rule unpaired-token:sym<q>  { <SLASHEQ> }
+    rule unpaired-token:sym<r>  { <CARETEQ> }
+    rule unpaired-token:sym<s>  { <PERCENTEQ> }
+    rule unpaired-token:sym<t>  { <DOTDOT> }
+    rule unpaired-token:sym<u>  { <DOTDOTDOT> }
+    rule unpaired-token:sym<v>  { <MOD-SEP> }
+    rule unpaired-token:sym<w>  { <RARROW> }
+    rule unpaired-token:sym<x>  { <FAT-ARROW> }
+    rule unpaired-token:sym<y>  { <LIT-BYTE> }
+    rule unpaired-token:sym<z>  { <LIT-CHAR> }
     rule unpaired-token:sym<aa> { <LIT-INTEGER> }
     rule unpaired-token:sym<ab> { <LIT-FLOAT> }
     rule unpaired-token:sym<ac> { <LIT-STR> }
@@ -115,122 +115,122 @@ our class UnpairedToken::Rules {
     rule unpaired-token:sym<dg> { '*' }
     rule unpaired-token:sym<dh> { '/' }
     rule unpaired-token:sym<di> { '^' }
-    rule unpaired-token:sym<dj> { '%' } 
+    rule unpaired-token:sym<dj> { '%' }
 }
 
 our class UnpairedToken::Actions {
-    method unpaired-token:sym<a>($/) { make yytext.new }
-    method unpaired-token:sym<b>($/) { make yytext.new }
-    method unpaired-token:sym<c>($/) { make yytext.new }
-    method unpaired-token:sym<d>($/) { make yytext.new }
-    method unpaired-token:sym<e>($/) { make yytext.new }
-    method unpaired-token:sym<f>($/) { make yytext.new }
-    method unpaired-token:sym<g>($/) { make yytext.new }
-    method unpaired-token:sym<h>($/) { make yytext.new }
-    method unpaired-token:sym<i>($/) { make yytext.new }
-    method unpaired-token:sym<j>($/) { make yytext.new }
-    method unpaired-token:sym<k>($/) { make yytext.new }
-    method unpaired-token:sym<l>($/) { make yytext.new }
-    method unpaired-token:sym<m>($/) { make yytext.new }
-    method unpaired-token:sym<n>($/) { make yytext.new }
-    method unpaired-token:sym<o>($/) { make yytext.new }
-    method unpaired-token:sym<p>($/) { make yytext.new }
-    method unpaired-token:sym<q>($/) { make yytext.new }
-    method unpaired-token:sym<r>($/) { make yytext.new }
-    method unpaired-token:sym<s>($/) { make yytext.new }
-    method unpaired-token:sym<t>($/) { make yytext.new }
-    method unpaired-token:sym<u>($/) { make yytext.new }
-    method unpaired-token:sym<v>($/) { make yytext.new }
-    method unpaired-token:sym<w>($/) { make yytext.new }
-    method unpaired-token:sym<x>($/) { make yytext.new }
-    method unpaired-token:sym<y>($/) { make yytext.new }
-    method unpaired-token:sym<z>($/) { make yytext.new }
-    method unpaired-token:sym<aa>($/) { make yytext.new }
-    method unpaired-token:sym<ab>($/) { make yytext.new }
-    method unpaired-token:sym<ac>($/) { make yytext.new }
-    method unpaired-token:sym<ad>($/) { make yytext.new }
-    method unpaired-token:sym<ae>($/) { make yytext.new }
-    method unpaired-token:sym<af>($/) { make yytext.new }
-    method unpaired-token:sym<ag>($/) { make yytext.new }
-    method unpaired-token:sym<ah>($/) { make yytext.new }
-    method unpaired-token:sym<ai>($/) { make yytext.new }
-    method unpaired-token:sym<aj>($/) { make yytext.new }
-    method unpaired-token:sym<ak>($/) { make yytext.new }
-    method unpaired-token:sym<al>($/) { make yytext.new }
-    method unpaired-token:sym<am>($/) { make yytext.new }
-    method unpaired-token:sym<an>($/) { make yytext.new }
-    method unpaired-token:sym<ao>($/) { make yytext.new }
-    method unpaired-token:sym<ap>($/) { make yytext.new }
-    method unpaired-token:sym<aq>($/) { make yytext.new }
-    method unpaired-token:sym<ar>($/) { make yytext.new }
-    method unpaired-token:sym<as>($/) { make yytext.new }
-    method unpaired-token:sym<at>($/) { make yytext.new }
-    method unpaired-token:sym<au>($/) { make yytext.new }
-    method unpaired-token:sym<av>($/) { make yytext.new }
-    method unpaired-token:sym<aw>($/) { make yytext.new }
-    method unpaired-token:sym<ax>($/) { make yytext.new }
-    method unpaired-token:sym<ay>($/) { make yytext.new }
-    method unpaired-token:sym<az>($/) { make yytext.new }
-    method unpaired-token:sym<ba>($/) { make yytext.new }
-    method unpaired-token:sym<bb>($/) { make yytext.new }
-    method unpaired-token:sym<bc>($/) { make yytext.new }
-    method unpaired-token:sym<bd>($/) { make yytext.new }
-    method unpaired-token:sym<be>($/) { make yytext.new }
-    method unpaired-token:sym<bf>($/) { make yytext.new }
-    method unpaired-token:sym<bg>($/) { make yytext.new }
-    method unpaired-token:sym<bh>($/) { make yytext.new }
-    method unpaired-token:sym<bi>($/) { make yytext.new }
-    method unpaired-token:sym<bj>($/) { make yytext.new }
-    method unpaired-token:sym<bk>($/) { make yytext.new }
-    method unpaired-token:sym<bl>($/) { make yytext.new }
-    method unpaired-token:sym<bm>($/) { make yytext.new }
-    method unpaired-token:sym<bn>($/) { make yytext.new }
-    method unpaired-token:sym<bo>($/) { make yytext.new }
-    method unpaired-token:sym<bp>($/) { make yytext.new }
-    method unpaired-token:sym<bq>($/) { make yytext.new }
-    method unpaired-token:sym<br>($/) { make yytext.new }
-    method unpaired-token:sym<bs>($/) { make yytext.new }
-    method unpaired-token:sym<bt>($/) { make yytext.new }
-    method unpaired-token:sym<bu>($/) { make yytext.new }
-    method unpaired-token:sym<bv>($/) { make yytext.new }
-    method unpaired-token:sym<bw>($/) { make yytext.new }
-    method unpaired-token:sym<bx>($/) { make yytext.new }
-    method unpaired-token:sym<by>($/) { make yytext.new }
-    method unpaired-token:sym<bz>($/) { make yytext.new }
-    method unpaired-token:sym<ca>($/) { make yytext.new }
-    method unpaired-token:sym<cb>($/) { make yytext.new }
-    method unpaired-token:sym<cc>($/) { make yytext.new }
-    method unpaired-token:sym<cd>($/) { make yytext.new }
-    method unpaired-token:sym<ce>($/) { make yytext.new }
-    method unpaired-token:sym<cf>($/) { make yytext.new }
-    method unpaired-token:sym<cg>($/) { make yytext.new }
-    method unpaired-token:sym<ch>($/) { make yytext.new }
-    method unpaired-token:sym<ci>($/) { make yytext.new }
-    method unpaired-token:sym<cj>($/) { make yytext.new }
-    method unpaired-token:sym<ck>($/) { make yytext.new }
-    method unpaired-token:sym<cl>($/) { make yytext.new }
-    method unpaired-token:sym<cm>($/) { make yytext.new }
-    method unpaired-token:sym<cn>($/) { make yytext.new }
-    method unpaired-token:sym<co>($/) { make yytext.new }
-    method unpaired-token:sym<cp>($/) { make yytext.new }
-    method unpaired-token:sym<cq>($/) { make yytext.new }
-    method unpaired-token:sym<cr>($/) { make yytext.new }
-    method unpaired-token:sym<cs>($/) { make yytext.new }
-    method unpaired-token:sym<ct>($/) { make yytext.new }
-    method unpaired-token:sym<cu>($/) { make yytext.new }
-    method unpaired-token:sym<cv>($/) { make yytext.new }
-    method unpaired-token:sym<cw>($/) { make yytext.new }
-    method unpaired-token:sym<cx>($/) { make yytext.new }
-    method unpaired-token:sym<cy>($/) { make yytext.new }
-    method unpaired-token:sym<cz>($/) { make yytext.new }
-    method unpaired-token:sym<da>($/) { make yytext.new }
-    method unpaired-token:sym<db>($/) { make yytext.new }
-    method unpaired-token:sym<dc>($/) { make yytext.new }
-    method unpaired-token:sym<dd>($/) { make yytext.new }
-    method unpaired-token:sym<de>($/) { make yytext.new }
-    method unpaired-token:sym<df>($/) { make yytext.new }
-    method unpaired-token:sym<dg>($/) { make yytext.new }
-    method unpaired-token:sym<dh>($/) { make yytext.new }
-    method unpaired-token:sym<di>($/) { make yytext.new }
-    method unpaired-token:sym<dj>($/) { make yytext.new } 
+    method unpaired-token:sym<a>($/)  { make ~$/ }
+    method unpaired-token:sym<b>($/)  { make ~$/ }
+    method unpaired-token:sym<c>($/)  { make ~$/ }
+    method unpaired-token:sym<d>($/)  { make ~$/ }
+    method unpaired-token:sym<e>($/)  { make ~$/ }
+    method unpaired-token:sym<f>($/)  { make ~$/ }
+    method unpaired-token:sym<g>($/)  { make ~$/ }
+    method unpaired-token:sym<h>($/)  { make ~$/ }
+    method unpaired-token:sym<i>($/)  { make ~$/ }
+    method unpaired-token:sym<j>($/)  { make ~$/ }
+    method unpaired-token:sym<k>($/)  { make ~$/ }
+    method unpaired-token:sym<l>($/)  { make ~$/ }
+    method unpaired-token:sym<m>($/)  { make ~$/ }
+    method unpaired-token:sym<n>($/)  { make ~$/ }
+    method unpaired-token:sym<o>($/)  { make ~$/ }
+    method unpaired-token:sym<p>($/)  { make ~$/ }
+    method unpaired-token:sym<q>($/)  { make ~$/ }
+    method unpaired-token:sym<r>($/)  { make ~$/ }
+    method unpaired-token:sym<s>($/)  { make ~$/ }
+    method unpaired-token:sym<t>($/)  { make ~$/ }
+    method unpaired-token:sym<u>($/)  { make ~$/ }
+    method unpaired-token:sym<v>($/)  { make ~$/ }
+    method unpaired-token:sym<w>($/)  { make ~$/ }
+    method unpaired-token:sym<x>($/)  { make ~$/ }
+    method unpaired-token:sym<y>($/)  { make ~$/ }
+    method unpaired-token:sym<z>($/)  { make ~$/ }
+    method unpaired-token:sym<aa>($/) { make ~$/ }
+    method unpaired-token:sym<ab>($/) { make ~$/ }
+    method unpaired-token:sym<ac>($/) { make ~$/ }
+    method unpaired-token:sym<ad>($/) { make ~$/ }
+    method unpaired-token:sym<ae>($/) { make ~$/ }
+    method unpaired-token:sym<af>($/) { make ~$/ }
+    method unpaired-token:sym<ag>($/) { make ~$/ }
+    method unpaired-token:sym<ah>($/) { make ~$/ }
+    method unpaired-token:sym<ai>($/) { make ~$/ }
+    method unpaired-token:sym<aj>($/) { make ~$/ }
+    method unpaired-token:sym<ak>($/) { make ~$/ }
+    method unpaired-token:sym<al>($/) { make ~$/ }
+    method unpaired-token:sym<am>($/) { make ~$/ }
+    method unpaired-token:sym<an>($/) { make ~$/ }
+    method unpaired-token:sym<ao>($/) { make ~$/ }
+    method unpaired-token:sym<ap>($/) { make ~$/ }
+    method unpaired-token:sym<aq>($/) { make ~$/ }
+    method unpaired-token:sym<ar>($/) { make ~$/ }
+    method unpaired-token:sym<as>($/) { make ~$/ }
+    method unpaired-token:sym<at>($/) { make ~$/ }
+    method unpaired-token:sym<au>($/) { make ~$/ }
+    method unpaired-token:sym<av>($/) { make ~$/ }
+    method unpaired-token:sym<aw>($/) { make ~$/ }
+    method unpaired-token:sym<ax>($/) { make ~$/ }
+    method unpaired-token:sym<ay>($/) { make ~$/ }
+    method unpaired-token:sym<az>($/) { make ~$/ }
+    method unpaired-token:sym<ba>($/) { make ~$/ }
+    method unpaired-token:sym<bb>($/) { make ~$/ }
+    method unpaired-token:sym<bc>($/) { make ~$/ }
+    method unpaired-token:sym<bd>($/) { make ~$/ }
+    method unpaired-token:sym<be>($/) { make ~$/ }
+    method unpaired-token:sym<bf>($/) { make ~$/ }
+    method unpaired-token:sym<bg>($/) { make ~$/ }
+    method unpaired-token:sym<bh>($/) { make ~$/ }
+    method unpaired-token:sym<bi>($/) { make ~$/ }
+    method unpaired-token:sym<bj>($/) { make ~$/ }
+    method unpaired-token:sym<bk>($/) { make ~$/ }
+    method unpaired-token:sym<bl>($/) { make ~$/ }
+    method unpaired-token:sym<bm>($/) { make ~$/ }
+    method unpaired-token:sym<bn>($/) { make ~$/ }
+    method unpaired-token:sym<bo>($/) { make ~$/ }
+    method unpaired-token:sym<bp>($/) { make ~$/ }
+    method unpaired-token:sym<bq>($/) { make ~$/ }
+    method unpaired-token:sym<br>($/) { make ~$/ }
+    method unpaired-token:sym<bs>($/) { make ~$/ }
+    method unpaired-token:sym<bt>($/) { make ~$/ }
+    method unpaired-token:sym<bu>($/) { make ~$/ }
+    method unpaired-token:sym<bv>($/) { make ~$/ }
+    method unpaired-token:sym<bw>($/) { make ~$/ }
+    method unpaired-token:sym<bx>($/) { make ~$/ }
+    method unpaired-token:sym<by>($/) { make ~$/ }
+    method unpaired-token:sym<bz>($/) { make ~$/ }
+    method unpaired-token:sym<ca>($/) { make ~$/ }
+    method unpaired-token:sym<cb>($/) { make ~$/ }
+    method unpaired-token:sym<cc>($/) { make ~$/ }
+    method unpaired-token:sym<cd>($/) { make ~$/ }
+    method unpaired-token:sym<ce>($/) { make ~$/ }
+    method unpaired-token:sym<cf>($/) { make ~$/ }
+    method unpaired-token:sym<cg>($/) { make ~$/ }
+    method unpaired-token:sym<ch>($/) { make ~$/ }
+    method unpaired-token:sym<ci>($/) { make ~$/ }
+    method unpaired-token:sym<cj>($/) { make ~$/ }
+    method unpaired-token:sym<ck>($/) { make ~$/ }
+    method unpaired-token:sym<cl>($/) { make ~$/ }
+    method unpaired-token:sym<cm>($/) { make ~$/ }
+    method unpaired-token:sym<cn>($/) { make ~$/ }
+    method unpaired-token:sym<co>($/) { make ~$/ }
+    method unpaired-token:sym<cp>($/) { make ~$/ }
+    method unpaired-token:sym<cq>($/) { make ~$/ }
+    method unpaired-token:sym<cr>($/) { make ~$/ }
+    method unpaired-token:sym<cs>($/) { make ~$/ }
+    method unpaired-token:sym<ct>($/) { make ~$/ }
+    method unpaired-token:sym<cu>($/) { make ~$/ }
+    method unpaired-token:sym<cv>($/) { make ~$/ }
+    method unpaired-token:sym<cw>($/) { make ~$/ }
+    method unpaired-token:sym<cx>($/) { make ~$/ }
+    method unpaired-token:sym<cy>($/) { make ~$/ }
+    method unpaired-token:sym<cz>($/) { make ~$/ }
+    method unpaired-token:sym<da>($/) { make ~$/ }
+    method unpaired-token:sym<db>($/) { make ~$/ }
+    method unpaired-token:sym<dc>($/) { make ~$/ }
+    method unpaired-token:sym<dd>($/) { make ~$/ }
+    method unpaired-token:sym<de>($/) { make ~$/ }
+    method unpaired-token:sym<df>($/) { make ~$/ }
+    method unpaired-token:sym<dg>($/) { make ~$/ }
+    method unpaired-token:sym<dh>($/) { make ~$/ }
+    method unpaired-token:sym<di>($/) { make ~$/ }
+    method unpaired-token:sym<dj>($/) { make ~$/ }
 }
