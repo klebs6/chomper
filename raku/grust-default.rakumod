@@ -1,23 +1,17 @@
 our class Default::Rules {
 
-    proto rule maybe-default { * }
-
-    rule maybe-default:sym<a> {
-        <DEFAULT>
-    }
-
-    rule maybe-default:sym<b> {
-
+    rule maybe-default {
+        <DEFAULT>?
     }
 }
 
 our class Default::Actions {
 
-    method maybe-default:sym<a>($/) {
+    method default($/) {
         make Default.new
     }
 
-    method maybe-default:sym<b>($/) {
-        MkNone<140252405044640>
+    method maybe-default($/) {
+        make $<default>.made
     }
 }

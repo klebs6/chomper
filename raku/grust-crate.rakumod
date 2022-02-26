@@ -1,4 +1,3 @@
-
 our class Crate {
     has $.maybe-mod-items;
     has $.inner-attrs;
