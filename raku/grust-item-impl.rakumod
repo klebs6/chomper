@@ -229,7 +229,7 @@ our class ItemImpl::Actions {
     }
 
     #---------------------
-    method impl-items:sym<a>($/) {
+    method impl-items($/) {
         make $<impl-item>>>.made
     }
 
