@@ -15,63 +15,23 @@ our class NonblockPrefixExpr::Rules {
 
     proto rule nonblock-prefix_expr_nostruct { * }
 
-    rule nonblock-prefix_expr_nostruct:sym<a> {
-        '-' <expr-nostruct>
-    }
-
-    rule nonblock-prefix_expr_nostruct:sym<b> {
-        '!' <expr-nostruct>
-    }
-
-    rule nonblock-prefix_expr_nostruct:sym<c> {
-        '*' <expr-nostruct>
-    }
-
-    rule nonblock-prefix_expr_nostruct:sym<d> {
-        '&' <maybe-mut> <expr-nostruct>
-    }
-
-    rule nonblock-prefix_expr_nostruct:sym<e> {
-        <ANDAND> <maybe-mut> <expr-nostruct>
-    }
-
-    rule nonblock-prefix_expr_nostruct:sym<f> {
-        <lambda-expr_nostruct>
-    }
-
-    rule nonblock-prefix_expr_nostruct:sym<g> {
-        <MOVE> <lambda-expr_nostruct>
-    }
+    rule nonblock-prefix_expr_nostruct:sym<a> { '-' <expr-nostruct> }
+    rule nonblock-prefix_expr_nostruct:sym<b> { '!' <expr-nostruct> }
+    rule nonblock-prefix_expr_nostruct:sym<c> { '*' <expr-nostruct> }
+    rule nonblock-prefix_expr_nostruct:sym<d> { '&' <maybe-mut> <expr-nostruct> }
+    rule nonblock-prefix_expr_nostruct:sym<e> { <ANDAND> <maybe-mut> <expr-nostruct> }
+    rule nonblock-prefix_expr_nostruct:sym<f> { <lambda-expr_nostruct> }
+    rule nonblock-prefix_expr_nostruct:sym<g> { <MOVE> <lambda-expr_nostruct> }
 
     proto rule nonblock-prefix_expr { * }
 
-    rule nonblock-prefix_expr:sym<a> {
-        '-' <expr>
-    }
-
-    rule nonblock-prefix_expr:sym<b> {
-        '!' <expr>
-    }
-
-    rule nonblock-prefix_expr:sym<c> {
-        '*' <expr>
-    }
-
-    rule nonblock-prefix_expr:sym<d> {
-        '&' <maybe-mut> <expr>
-    }
-
-    rule nonblock-prefix_expr:sym<e> {
-        <ANDAND> <maybe-mut> <expr>
-    }
-
-    rule nonblock-prefix_expr:sym<f> {
-        <lambda-expr>
-    }
-
-    rule nonblock-prefix_expr:sym<g> {
-        <MOVE> <lambda-expr>
-    }
+    rule nonblock-prefix_expr:sym<a> { '-' <expr> }
+    rule nonblock-prefix_expr:sym<b> { '!' <expr> }
+    rule nonblock-prefix_expr:sym<c> { '*' <expr> }
+    rule nonblock-prefix_expr:sym<d> { '&' <maybe-mut> <expr> }
+    rule nonblock-prefix_expr:sym<e> { <ANDAND> <maybe-mut> <expr> }
+    rule nonblock-prefix_expr:sym<f> { <lambda-expr> }
+    rule nonblock-prefix_expr:sym<g> { <MOVE> <lambda-expr> }
 }
 
 our class NonblockPrefixExpr::Actions {
@@ -154,4 +114,3 @@ our class NonblockPrefixExpr::Actions {
         make $<lambda_expr>.made
     }
 }
-
