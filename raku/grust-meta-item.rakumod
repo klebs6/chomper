@@ -16,21 +16,9 @@ our class MetaItem::Rules {
 
     proto rule meta-item { * }
 
-    rule meta-item:sym<a> {
-        <ident>
-    }
-
-    rule meta-item:sym<b> {
-        <ident> '=' <lit>
-    }
-
-    rule meta-item:sym<c> {
-        <ident> '(' <meta-seq> ')'
-    }
-
-    rule meta-item:sym<d> {
-        <ident> '(' <meta-seq> ',' ')'
-    }
+    rule meta-item:sym<a> { <ident> }
+    rule meta-item:sym<b> { <ident> '=' <lit> }
+    rule meta-item:sym<c> { <ident> '(' <meta-seq> ','? ')' }
 }
 
 our class MetaItem::Actions {
@@ -54,12 +42,4 @@ our class MetaItem::Actions {
             meta-seq =>  $<meta-seq>.made,
         )
     }
-
-    method meta-item:sym<d>($/) {
-        make MetaList.new(
-            ident    =>  $<ident>.made,
-            meta-seq =>  $<meta-seq>.made,
-        )
-    }
 }
-
