@@ -5,81 +5,53 @@ our class ForeignItem {
 }
 
 our class ForeignItems {
-    has $.foreign_item;
+    has $.foreign_items;
 }
 
 our class ForeignItems::Rules {
 
-    proto rule maybe-foreign_items { * }
-
-    rule maybe-foreign_items:sym<a> {
-        <foreign-items>
+    rule maybe-foreign_items {
+        <foreign-items>?
     }
 
-    rule maybe-foreign_items:sym<b> {
-
+    rule foreign-items {
+        <foreign-item>+
     }
 
-    proto rule foreign-items { * }
-
-    rule foreign-items:sym<a> {
-        <foreign-item>
-    }
-
-    rule foreign-items:sym<b> {
-        <foreign-items> <foreign-item>
-    }
-
+    #------------------------
     proto rule foreign-item { * }
-
-    rule foreign-item:sym<a> {
-        <attrs-and_vis> <STATIC> <item-foreign_static>
-    }
-
-    rule foreign-item:sym<b> {
-        <attrs-and_vis> <item-foreign_fn>
-    }
-
-    rule foreign-item:sym<c> {
-        <attrs-and_vis> <UNSAFE> <item-foreign_fn>
-    }
+    rule foreign-item:sym<a> { <attrs-and_vis> <STATIC> <item-foreign_static> }
+    rule foreign-item:sym<b> { <attrs-and_vis> <item-foreign_fn> }
+    rule foreign-item:sym<c> { <attrs-and_vis> <UNSAFE> <item-foreign_fn> }
 }
 
 our class ForeignItems::Actions {
 
-    method maybe-foreign_items:sym<a>($/) {
+    method maybe-foreign_items($/) {
         make $<foreign-items>.made
     }
 
-    method maybe-foreign_items:sym<b>($/) {
-        MkNone<140372880377344>
-    }
-
-    method foreign-items:sym<a>($/) {
+    method foreign-items($/) {
         make ForeignItems.new(
-            foreign-item =>  $<foreign-item>.made,
+            foreign-items =>  $<foreign-item>>>.made,
         )
     }
 
-    method foreign-items:sym<b>($/) {
-        ExtNode<140373133060288>
-    }
-
-    method foreign-item:sym<a>($/) {
+    method foreign-item($/) {
         make ForeignItem.new(
             attrs-and_vis       =>  $<attrs-and_vis>.made,
             item-foreign_static =>  $<item-foreign_static>.made,
         )
     }
 
-    method foreign-item:sym<b>($/) {
+    method foreign-item($/) {
         make ForeignItem.new(
             attrs-and_vis   =>  $<attrs-and_vis>.made,
             item-foreign_fn =>  $<item-foreign_fn>.made,
         )
     }
 
-    method foreign-item:sym<c>($/) {
+    method foreign-item($/) {
         make ForeignItem.new(
             attrs-and_vis   =>  $<attrs-and_vis>.made,
             item-foreign_fn =>  $<item-foreign_fn>.made,
