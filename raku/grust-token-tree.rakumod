@@ -8,63 +8,28 @@ our class TTTok {
 
 our class TokenTree::Rules {
 
-    proto rule token-trees { * }
-
-    rule token-trees:sym<a> {
-
-    }
-
-    rule token-trees:sym<b> {
-        <token-trees> <token-tree>
-    }
+    rule token-trees { <token-tree>* }
 
     proto rule token-tree { * }
 
-    rule token-tree:sym<a> {
-        <delimited-token_trees>
-    }
-
-    rule token-tree:sym<b> {
-        <unpaired-token>
-    }
+    rule token-tree:sym<a> { <delimited-token_trees> }
+    rule token-tree:sym<b> { <unpaired-token> }
 
     proto rule delimited-token_trees { * }
 
-    rule delimited-token_trees:sym<a> {
-        <parens-delimited_token_trees>
-    }
+    rule delimited-token_trees:sym<a> { <parens-delimited_token_trees> }
+    rule delimited-token_trees:sym<b> { <braces-delimited_token_trees> }
+    rule delimited-token_trees:sym<c> { <brackets-delimited_token_trees> }
 
-    rule delimited-token_trees:sym<b> {
-        <braces-delimited_token_trees>
-    }
-
-    rule delimited-token_trees:sym<c> {
-        <brackets-delimited_token_trees>
-    }
-
-    rule parens-delimited_token_trees {
-        '(' <token-trees> ')'
-    }
-
-    rule braces-delimited_token_trees {
-        '{' <token-trees> '}'
-    }
-
-    rule brackets-delimited_token_trees {
-        '[' <token-trees> ']'
-    }
+    rule parens-delimited_token_trees   { '(' <token-trees> ')' }
+    rule braces-delimited_token_trees   { '{' <token-trees> '}' }
+    rule brackets-delimited_token_trees { '[' <token-trees> ']' }
 }
 
 our class TokenTree::Actions {
 
-    method token-trees:sym<a>($/) {
-        make TokenTrees.new(
-
-        )
-    }
-
-    method token-trees:sym<b>($/) {
-        ExtNode<140250172947112>
+    method token-trees($/) {
+        make $<token-tree>>.made
     }
 
     method token-tree:sym<a>($/) {
@@ -72,9 +37,7 @@ our class TokenTree::Actions {
     }
 
     method token-tree:sym<b>($/) {
-        make TTTok.new(
-            unpaired-token =>  $<unpaired-token>.made,
-        )
+        make $<unpaired-token>.made
     }
 
     method delimited-token_trees:sym<a>($/) {
@@ -90,21 +53,14 @@ our class TokenTree::Actions {
     }
 
     method parens-delimited_token_trees($/) {
-        make TTDelim.new(
-            token-trees =>  $<token-trees>.made,
-        )
+        make $<token-trees>.made
     }
 
     method braces-delimited_token_trees($/) {
-        make TTDelim.new(
-            token-trees =>  $<token-trees>.made,
-        )
+        make $<token-trees>.made
     }
 
     method brackets-delimited_token_trees($/) {
-        make TTDelim.new(
-            token-trees =>  $<token-trees>.made,
-        )
+        make $<token-trees>.made
     }
 }
-
