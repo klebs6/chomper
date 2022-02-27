@@ -1,50 +1,16 @@
-our class ExprAgain {
-    has $.lifetime;
-    has $.ident;
-}
+use grust-model;
 
-our class ExprAssignMul {
-    has $.nonblock_expr;
-    has $.expr;
-    has $.expr_nostruct;
-}
-
-our class ExprAssignSub {
-    has $.expr;
-    has $.expr_nostruct;
-    has $.nonblock_expr;
-}
-
-our class ExprBinary {
-    has $.expr;
-    has $.expr_nostruct;
-    has $.nonblock_expr;
-}
-
-our class ExprBreak {
-    has $.ident;
-}
-
-our class ExprCall {
-    has $.block_expr;
-    has $.block_expr_dot;
-    has $.expr;
-    has $.expr_nostruct;
-    has $.maybe_exprs;
-    has $.nonblock_expr;
-    has $.path_generic_args_with_colons;
-}
-
-our class ExprLit {
-    has $.lit;
-}
-
-our class Expr::Rules {
+our role Expr::Rules {
 
     proto rule expr { * }
 
     rule expr:sym<a>  { <lit> }
-    rule expr:sym<b>  { {self.set-prec(IDENT)} <path-expr> }
+
+    rule expr:sym<b>  { 
+        #{self.set-prec(IDENT)} 
+        <path-expr> 
+    }
+
     rule expr:sym<c>  { <SELF> }
     rule expr:sym<d>  { <macro-expr> }
     rule expr:sym<e>  { <path-expr> '{' <struct-expr_fields> '}' }
@@ -105,7 +71,7 @@ our class Expr::Rules {
     rule expr:sym<bh> { <nonblock-prefix_expr> }
 }
 
-our class Expr::Actions {
+our role Expr::Actions {
 
     method expr:sym<a>($/) {
         make ExprLit.new(

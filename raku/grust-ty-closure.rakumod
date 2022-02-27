@@ -1,10 +1,6 @@
-our class TyClosure {
-    has $.anon-params;
-    has $.ret-ty;
-    has $.maybe-bounds;
-}
+use grust-model;
 
-our class TyClosure::Rules {
+our role TyClosure::Rules {
 
     proto rule ty-closure { * }
 
@@ -35,7 +31,7 @@ our class TyClosure::Rules {
     }
 }
 
-our class TyClosure::Actions {
+our role TyClosure::Actions {
 
     method ty-closure:sym<a>($/) {
         make TyClosure.new(
@@ -67,4 +63,3 @@ our class TyClosure::Actions {
         )
     }
 }
-

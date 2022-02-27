@@ -1,9 +1,6 @@
-our class VecRepeat {
-    has $.expr;
-    has $.exprs;
-}
+use grust-model;
 
-our class VecExpr::Rules {
+our role VecExpr::Rules {
 
     proto rule vec-expr { * }
 
@@ -16,7 +13,7 @@ our class VecExpr::Rules {
     }
 }
 
-our class VecExpr::Actions {
+our role VecExpr::Actions {
 
     method vec-expr:sym<a>($/) {
         make $<maybe-exprs>.made

@@ -1,4 +1,6 @@
-our class UnpairedToken::Rules {
+use grust-model;
+
+our role UnpairedToken::Rules {
 
     proto rule unpaired-token { * }
 
@@ -118,7 +120,7 @@ our class UnpairedToken::Rules {
     rule unpaired-token:sym<dj> { '%' }
 }
 
-our class UnpairedToken::Actions {
+our role UnpairedToken::Actions {
     method unpaired-token:sym<a>($/)  { make ~$/ }
     method unpaired-token:sym<b>($/)  { make ~$/ }
     method unpaired-token:sym<c>($/)  { make ~$/ }

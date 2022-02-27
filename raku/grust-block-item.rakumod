@@ -1,10 +1,6 @@
-our class ItemForeignMod {
-    has $.inner_attrs;
-    has $.item_foreign_mod;
-    has $.maybe_foreign_items;
-}
+use grust-model;
 
-our class BlockItem::Rules {
+our role BlockItem::Rules {
 
     proto rule block-item { * }
     rule block-item:sym<fn>          { <item-fn> }
@@ -18,7 +14,7 @@ our class BlockItem::Rules {
     rule block-item:sym<impl>        { <item-impl> }
 }
 
-our class BlockItem::Actions {
+our role BlockItem::Actions {
 
     method block-item:sym<fn>($/)        { make $<item-fn>.made }
     method block-item:sym<unsafe-fn>($/) { make $<item-unsafe_fn>.made }

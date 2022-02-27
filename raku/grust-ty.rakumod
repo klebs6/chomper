@@ -1,15 +1,7 @@
-our class TyQualifiedPath {
-    has $.ident;
-    has $.maybe-as-trait-ref;
-    has $.trait-ref;
-    has $.ty-sum;
-}
+use grust-model;
 
-our class TyTup {
-    has $.ty-sums;
-}
 
-our class Ty::Rules {
+our role Ty::Rules {
 
     proto rule ty { * }
     rule ty:sym<a> { <ty-prim> }
@@ -21,7 +13,7 @@ our class Ty::Rules {
     rule ty:sym<g> { '(' ')' }
 }
 
-our class Ty::Actions {
+our role Ty::Actions {
 
     method ty:sym<a>($/) {
         make $<ty-prim>.made

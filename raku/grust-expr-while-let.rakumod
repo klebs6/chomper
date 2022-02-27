@@ -1,18 +1,13 @@
-our class ExprWhileLet {
-    has $.expr_nostruct;
-    has $.pat;
-    has $.block;
-    has $.maybe_label;
-}
+use grust-model;
 
-our class ExprWhileLet::Rules {
+our role ExprWhileLet::Rules {
 
     rule expr-while_let {
         <maybe-label> <WHILE> <LET> <pat> '=' <expr-nostruct> <block>
     }
 }
 
-our class ExprWhileLet::Actions {
+our role ExprWhileLet::Actions {
 
     method expr-while_let($/) {
         make ExprWhileLet.new(

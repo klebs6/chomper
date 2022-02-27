@@ -1,21 +1,17 @@
-our class Items {
-    has $.mod_item;
-}
+use grust-model;
 
-our class Item {
-    has $.item;
-    has $.attrs_and_vis;
-}
+use grust-model;
+
 
 #-----------------------
-our class ModItem::Rules {
+our role ModItem::Rules {
 
     rule mod-item {
         <attrs-and_vis> <item>
     }
 }
 
-our class ModItem::Actions {
+our role ModItem::Actions {
 
     method mod-item($/) {
         make Item.new(
@@ -26,7 +22,7 @@ our class ModItem::Actions {
 }
 
 #-----------------------
-our class ModItems::Rules {
+our role ModItems::Rules {
 
     rule maybe-mod_items {
         <mod-items>?
@@ -37,7 +33,7 @@ our class ModItems::Rules {
     }
 }
 
-our class ModItems::Actions {
+our role ModItems::Actions {
 
     method maybe-mod_items($/) {
         make $<mod-items>.made

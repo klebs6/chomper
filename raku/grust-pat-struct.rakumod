@@ -1,9 +1,11 @@
-our class PatStruct::Rules {
+use grust-model;
+
+our role PatStruct::Rules {
 
     rule pat-struct { [[<pat-fields> ','?]? <DOTDOT>?]? }
 }
 
-our class PatStruct::Actions {
+our role PatStruct::Actions {
 
     method pat-struct($/) {
         make PatStruct.new(

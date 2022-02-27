@@ -1,8 +1,7 @@
-our class ForSized {
-    has $.ident;
-}
+use grust-model;
 
-our class ForSized::Rules {
+
+our role ForSized::Rules {
 
     rule for-sized {
         [
@@ -15,7 +14,7 @@ our class ForSized::Rules {
     }
 }
 
-our class ForSized::Actions {
+our role ForSized::Actions {
 
     method for-sized($/) {
         make ForSized.new(

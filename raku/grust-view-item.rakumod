@@ -1,8 +1,7 @@
-our class ViewItemExternCrate {
-    has $.ident;
-}
+use grust-model;
 
-our class ViewItem::Rules {
+
+our role ViewItem::Rules {
 
     proto rule view-item { * }
 
@@ -12,7 +11,7 @@ our class ViewItem::Rules {
     rule view-item:sym<d> { <EXTERN> <CRATE> <ident> <AS> <ident> ';' }
 }
 
-our class ViewItem::Actions {
+our role ViewItem::Actions {
 
     method view-item:sym<a>($/) {
         make $<use-item>.made

@@ -1,13 +1,7 @@
-our class InferrableParam {
-    has $.pat;
-    has $.maybe_ty_ascription;
-}
+use grust-model;
 
-our class InferrableParams {
-    has $.inferrable_param;
-}
 
-our class InferrableParams::Rules {
+our role InferrableParams::Rules {
 
     rule inferrable-params {
         <inferrable-param>+ %% ","
@@ -18,7 +12,7 @@ our class InferrableParams::Rules {
     }
 }
 
-our class InferrableParams::Actions {
+our role InferrableParams::Actions {
 
     method inferrable-params($/) {
         make $<inferrable-param>>>.made

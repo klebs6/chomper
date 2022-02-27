@@ -1,12 +1,7 @@
-our class ItemMacro {
-    has $.braces_delimited_token_trees;
-    has $.parens_delimited_token_trees;
-    has $.maybe_ident;
-    has $.path_expr;
-    has $.brackets_delimited_token_trees;
-}
+use grust-model;
 
-our class ItemMacro::Rules {
+
+our role ItemMacro::Rules {
 
     proto rule item-macro { * }
 
@@ -23,7 +18,7 @@ our class ItemMacro::Rules {
     }
 }
 
-our class ItemMacro::Actions {
+our role ItemMacro::Actions {
 
     method item-macro:sym<a>($/) {
         make ItemMacro.new(

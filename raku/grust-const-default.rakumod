@@ -1,13 +1,11 @@
-our class ConstDefault {
-    has $.expr;
-}
+use grust-model;
 
-our class ConstDefault::Rules {
+our role ConstDefault::Rules {
 
     rule maybe-const-default { [ '=' <expr> ]? }
 }
 
-our class ConstDefault::Actions {
+our role ConstDefault::Actions {
 
     method maybe-const-default($/) {
 

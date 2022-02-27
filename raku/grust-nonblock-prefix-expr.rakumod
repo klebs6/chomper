@@ -1,17 +1,8 @@
+use grust-model;
 
 #-------------------------------------
-our class ExprAddrOf {
-    has $.expr_nostruct;
-    has $.maybe_mut;
-    has $.expr;
-}
 
-our class ExprUnary {
-    has $.expr;
-    has $.expr_nostruct;
-}
-
-our class NonblockPrefixExpr::Rules {
+our role NonblockPrefixExpr::Rules {
 
     proto rule nonblock-prefix_expr_nostruct { * }
 
@@ -34,7 +25,7 @@ our class NonblockPrefixExpr::Rules {
     rule nonblock-prefix_expr:sym<g> { <MOVE> <lambda-expr> }
 }
 
-our class NonblockPrefixExpr::Actions {
+our role NonblockPrefixExpr::Actions {
 
     method nonblock-prefix_expr_nostruct:sym<a>($/) {
         make ExprUnary.new(

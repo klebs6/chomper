@@ -1,42 +1,7 @@
-our class TyBox {
-    has $.ty;
-}
+use grust-model;
 
-our class TyFixedLengthVec {
-    has $.expr;
-    has $.ty;
-}
 
-our class TyMacro {
-    has $.path-generic-args-without-colons;
-    has $.delimited-token-trees;
-    has $.maybe-ident;
-}
-
-our class TyPath {
-    has $.path-generic-args-without-colons;
-}
-
-our class TyPtr {
-    has $.maybe-mut-or-const;
-    has $.ty;
-}
-
-our class TyRptr {
-    has $.ty;
-    has $.maybe-mut;
-    has $.lifetime;
-}
-
-our class TyTypeof {
-    has $.expr;
-}
-
-our class TyVec {
-    has $.ty;
-}
-
-our class TyPrim::Rules {
+our role TyPrim::Rules {
 
     proto rule ty-prim { * }
 
@@ -62,7 +27,7 @@ our class TyPrim::Rules {
     rule ty-prim:sym<t> { <for-in-type> }
 }
 
-our class TyPrim::Actions {
+our role TyPrim::Actions {
 
     method ty-prim:sym<a>($/) {
         make TyPath.new(

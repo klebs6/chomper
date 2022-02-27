@@ -1,3 +1,5 @@
+use grust-model;
+
 
 our role Rust::Keyword {
     #-------------------------------

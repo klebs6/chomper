@@ -1,11 +1,7 @@
-our class ConstTraitItem {
-    has $.maybe-ty-ascription;
-    has $.maybe-const-default;
-    has $.ident;
-    has $.maybe-outer-attrs;
-}
+use grust-model;
 
-our class TraitConst::Rules {
+
+our role TraitConst::Rules {
 
     rule trait-const {
         <maybe-outer-attrs> 
@@ -17,7 +13,7 @@ our class TraitConst::Rules {
     }
 }
 
-our class TraitConst::Actions {
+our role TraitConst::Actions {
 
     method trait-const($/) {
         make ConstTraitItem.new(

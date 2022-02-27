@@ -1,3 +1,5 @@
+use grust-model;
+
 
 #-------------------------------------
 # A path with a lifetime and type parameters with
@@ -6,7 +8,7 @@
 #
 # These show up in expr context, in order to
 # disambiguate from "less-than" expressions.
-our class PathGenericArgsWithColons::Rules {
+our role PathGenericArgsWithColons::Rules {
 
     rule path-generic-args-with-colons {  
         <path-generic-args-with-colons-prefix>
@@ -23,7 +25,7 @@ our class PathGenericArgsWithColons::Rules {
     rule path-generic-args-with-colons-tail:sym<e> { <MOD-SEP> <generic-args> }
 }
 
-our class PathGenericArgsWithColons::Actions {
+our role PathGenericArgsWithColons::Actions {
 
     method path-generic-args-with-colons($/) {
         make PathGenericArgsWithColons.new(

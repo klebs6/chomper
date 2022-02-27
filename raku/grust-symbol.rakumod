@@ -1,5 +1,7 @@
+use grust-model;
 
-our class Rust::Symbol {
+
+our role Rust::Symbol {
     token semicolon  { ';'    } 
     token comma      { ','    } 
     token dotdotdot  { \.\.\. } 

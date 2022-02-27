@@ -1,9 +1,6 @@
-our class Crate {
-    has $.maybe-mod-items;
-    has $.inner-attrs;
-}
+use grust-model;
 
-our class Crate::Rules {
+our role Crate::Rules {
 
     rule crate {
         <maybe-shebang> 
@@ -16,10 +13,10 @@ our class Crate::Rules {
     }
 }
 
-our class Crate::Actions {
+our role Crate::Actions {
 
     method crate($/) {
-        make crate.new(
+        make Crate.new(
             inner-attrs     =>  $<inner-attrs>.made // Nil,
             maybe-mod-items =>  $<maybe-mod-items>.made,
         )

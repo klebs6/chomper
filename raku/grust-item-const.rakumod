@@ -1,17 +1,13 @@
-our class ItemConst {
-    has $.ty;
-    has $.ident;
-    has $.expr;
-}
+use grust-model;
 
-our class ItemConst::Rules {
+our role ItemConst::Rules {
 
     rule item-const {
         <CONST> <ident> ':' <ty> '=' <expr> ';'
     }
 }
 
-our class ItemConst::Actions {
+our role ItemConst::Actions {
 
     method item-const($/) {
         make ItemConst.new(

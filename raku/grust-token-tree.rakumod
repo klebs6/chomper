@@ -1,12 +1,7 @@
-our class TTDelim {
-    has $.token_trees;
-}
+use grust-model;
 
-our class TTTok {
-    has $.unpaired_token;
-}
 
-our class TokenTree::Rules {
+our role TokenTree::Rules {
 
     rule token-trees { <token-tree>* }
 
@@ -26,7 +21,7 @@ our class TokenTree::Rules {
     rule brackets-delimited_token_trees { '[' <token-trees> ']' }
 }
 
-our class TokenTree::Actions {
+our role TokenTree::Actions {
 
     method token-trees($/) {
         make $<token-tree>>.made

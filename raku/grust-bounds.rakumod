@@ -1,11 +1,10 @@
-our class Bounds {
-    has $.bound;
-}
+use grust-model;
 
-our class Bounds::Rules {
+our role Bounds::Rules {
 
     rule maybe-bounds {
-        {self.set-prec(SHIFTPLUS)} [':' <bounds>]?
+        #{self.set-prec(SHIFTPLUS)} 
+        [':' <bounds>]?
     }
 
     #--------------------------
@@ -18,7 +17,7 @@ our class Bounds::Rules {
     rule bound:sym<trait-ref> { <trait-ref> }
 }
 
-our class Bounds::Actions {
+our role Bounds::Actions {
 
     method maybe-bounds($/) {
         make $<bounds>.made

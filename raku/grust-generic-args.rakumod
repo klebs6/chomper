@@ -1,9 +1,6 @@
-our class GenericValues {
-    has $.maybe_bindings;
-    has $.maybe_ty_sums_and_or_bindings;
-}
+use grust-model;
 
-our class GenericArgs::Rules {
+our role GenericArgs::Rules {
 
     proto rule generic-args { * }
 
@@ -26,7 +23,7 @@ our class GenericArgs::Rules {
     }
 }
 
-our class GenericArgs::Actions {
+our role GenericArgs::Actions {
 
     method generic-args:sym<a>($/) {
         make $<generic_values>.made

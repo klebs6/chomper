@@ -1,10 +1,6 @@
-our class IdentsOrSelf {
-    has $.idents-or-self;
-    has $.ident-or-self;
-    has $.ident;
-}
+use grust-model;
 
-our class IdentsOrSelf::Rules {
+our role IdentsOrSelf::Rules {
 
     rule idents-or-self {
         <ident-or-self> 
@@ -20,7 +16,7 @@ our class IdentsOrSelf::Rules {
     rule ident-or-self:sym<self>    { <SELF>  }
 }
 
-our class IdentsOrSelf::Actions {
+our role IdentsOrSelf::Actions {
 
     method idents-or-self($/) {
         make IdentsOrSelf.new(

@@ -1,14 +1,12 @@
-our class WhereClause {
-    has $.where-predicates;
-}
+use grust-model;
 
-our class WhereClause::Rules {
+our role WhereClause::Rules {
 
     rule maybe-where-clause { <where-clause>? }
     rule where-clause       { <WHERE> <where-predicates> ','? }
 }
 
-our class WhereClause::Actions {
+our role WhereClause::Actions {
 
     method maybe-where-clause($/) {
         make $<where-clause>.made

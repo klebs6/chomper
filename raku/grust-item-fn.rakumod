@@ -1,56 +1,41 @@
-our class Fn {
-    has $.fn_decl;
-    has $.inner_attrs_and_block;
-    has $.ident;
-    has $.generic_params;
-    has $.maybe_where_clause;
-}
+use grust-model;
 
-our class UnsafeFn {
-    has $.maybe_abi;
-    has $.generic_params;
-    has $.fn_decl;
-    has $.ident;
-    has $.maybe_where_clause;
-    has $.inner_attrs_and_block;
-}
-
-our class Fn::Rules {
+our role Fn::Rules {
 
     proto rule item-fn { * }
 
     rule item-fn:sym<a> {
-        <FN> <ident> <generic-params> <fn-decl> <maybe-where_clause> <inner-attrs_and_block>
+        <FN> <ident> <generic-params> <fn-decl> <maybe-where-clause> <inner-attrs-and-block>
     }
 
     rule item-fn:sym<b> {
-        <CONST> <FN> <ident> <generic-params> <fn-decl> <maybe-where_clause> <inner-attrs_and_block>
+        <CONST> <FN> <ident> <generic-params> <fn-decl> <maybe-where-clause> <inner-attrs-and-block>
     }
 
-    proto rule item-unsafe_fn { * }
+    proto rule item-unsafe-fn { * }
 
-    rule item-unsafe_fn:sym<a> {
-        <UNSAFE> <FN> <ident> <generic-params> <fn-decl> <maybe-where_clause> <inner-attrs_and_block>
+    rule item-unsafe-fn:sym<a> {
+        <UNSAFE> <FN> <ident> <generic-params> <fn-decl> <maybe-where-clause> <inner-attrs-and-block>
     }
 
-    rule item-unsafe_fn:sym<b> {
-        <CONST> <UNSAFE> <FN> <ident> <generic-params> <fn-decl> <maybe-where_clause> <inner-attrs_and_block>
+    rule item-unsafe-fn:sym<b> {
+        <CONST> <UNSAFE> <FN> <ident> <generic-params> <fn-decl> <maybe-where-clause> <inner-attrs-and-block>
     }
 
-    rule item-unsafe_fn:sym<c> {
-        <UNSAFE> <EXTERN> <maybe-abi> <FN> <ident> <generic-params> <fn-decl> <maybe-where_clause> <inner-attrs_and_block>
+    rule item-unsafe-fn:sym<c> {
+        <UNSAFE> <EXTERN> <maybe-abi> <FN> <ident> <generic-params> <fn-decl> <maybe-where-clause> <inner-attrs-and-block>
     }
 }
 
-our class Fn::Actions {
+our role Fn::Actions {
 
     method item-fn:sym<a>($/) {
         make ItemFn.new(
             ident                 =>  $<ident>.made,
             generic-params        =>  $<generic-params>.made,
             fn-decl               =>  $<fn-decl>.made,
-            maybe-where_clause    =>  $<maybe-where_clause>.made,
-            inner-attrs_and_block =>  $<inner-attrs_and_block>.made,
+            maybe-where-clause    =>  $<maybe-where-clause>.made,
+            inner-attrs-and-block =>  $<inner-attrs-and-block>.made,
         )
     }
 
@@ -59,39 +44,40 @@ our class Fn::Actions {
             ident                 =>  $<ident>.made,
             generic-params        =>  $<generic-params>.made,
             fn-decl               =>  $<fn-decl>.made,
-            maybe-where_clause    =>  $<maybe-where_clause>.made,
-            inner-attrs_and_block =>  $<inner-attrs_and_block>.made,
+            maybe-where-clause    =>  $<maybe-where-clause>.made,
+            inner-attrs-and-block =>  $<inner-attrs-and-block>.made,
         )
     }
 
-    method item-unsafe_fn:sym<a>($/) {
+    method item-unsafe-fn:sym<a>($/) {
         make ItemUnsafeFn.new(
             ident                 =>  $<ident>.made,
             generic-params        =>  $<generic-params>.made,
             fn-decl               =>  $<fn-decl>.made,
-            maybe-where_clause    =>  $<maybe-where_clause>.made,
-            inner-attrs_and_block =>  $<inner-attrs_and_block>.made,
+            maybe-where-clause    =>  $<maybe-where-clause>.made,
+            inner-attrs-and-block =>  $<inner-attrs-and-block>.made,
         )
     }
 
-    method item-unsafe_fn:sym<b>($/) {
+    method item-unsafe-fn:sym<b>($/) {
         make ItemUnsafeFn.new(
             ident                 =>  $<ident>.made,
             generic-params        =>  $<generic-params>.made,
             fn-decl               =>  $<fn-decl>.made,
-            maybe-where_clause    =>  $<maybe-where_clause>.made,
-            inner-attrs_and_block =>  $<inner-attrs_and_block>.made,
+            maybe-where-clause    =>  $<maybe-where-clause>.made,
+            inner-attrs-and-block =>  $<inner-attrs-and-block>.made,
         )
     }
 
-    method item-unsafe_fn:sym<c>($/) {
+    method item-unsafe-fn:sym<c>($/) {
         make ItemUnsafeFn.new(
             maybe-abi             =>  $<maybe-abi>.made,
             ident                 =>  $<ident>.made,
             generic-params        =>  $<generic-params>.made,
             fn-decl               =>  $<fn-decl>.made,
-            maybe-where_clause    =>  $<maybe-where_clause>.made,
-            inner-attrs_and_block =>  $<inner-attrs_and_block>.made,
+            maybe-where-clause    =>  $<maybe-where-clause>.made,
+            inner-attrs-and-block =>  $<inner-attrs-and-block>.made,
         )
     }
 }
+

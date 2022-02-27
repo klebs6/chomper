@@ -1,5 +1,7 @@
+use grust-model;
 
-our class ItemUnion::Rules {
+
+our role ItemUnion::Rules {
 
     rule item-union {
         <UNION> 
@@ -10,7 +12,7 @@ our class ItemUnion::Rules {
     }
 }
 
-our class ItemUnion::Actions {
+our role ItemUnion::Actions {
 
     method item-union($/) {
         make ItemUnion.new(

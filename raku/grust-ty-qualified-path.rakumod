@@ -1,4 +1,6 @@
-our class TyQualifiedPath::Rules {
+use grust-model;
+
+our role TyQualifiedPath::Rules {
 
     proto rule ty-qualified-path-and-generic-values { * }
 
@@ -21,7 +23,7 @@ our class TyQualifiedPath::Rules {
     }
 }
 
-our class TyQualifiedPath::Actions {
+our role TyQualifiedPath::Actions {
 
     method ty-qualified-path-and-generic-values:sym<a>($/) {
         make GenericValues.new(

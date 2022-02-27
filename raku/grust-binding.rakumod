@@ -1,7 +1,4 @@
-our class Binding {
-    has $.ty;
-    has $.ident;
-}
+use grust-model;
 
 our role Binding::Rules {
 

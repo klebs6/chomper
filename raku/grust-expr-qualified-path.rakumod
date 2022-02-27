@@ -1,12 +1,6 @@
-our class ExprQualifiedPath {
-    has $.ty_sum;
-    has $.maybe_qpath_params;
-    has $.generic_args;
-    has $.maybe_as_trait_ref;
-    has $.ident;
-}
+use grust-model;
 
-our class ExprQualifiedPath::Rules {
+our role ExprQualifiedPath::Rules {
 
     proto rule expr-qualified_path { * }
 
@@ -31,7 +25,7 @@ our class ExprQualifiedPath::Rules {
     }
 }
 
-our class ExprQualifiedPath::Actions {
+our role ExprQualifiedPath::Actions {
 
     method expr-qualified_path:sym<a>($/) {
         make ExprQualifiedPath.new(

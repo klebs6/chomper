@@ -1,9 +1,7 @@
-our class PatLit {
-    has $.lit;
-    has $.path_expr;
-}
+use grust-model;
 
-our class LitOrPath::Rules {
+
+our role LitOrPath::Rules {
 
     proto rule lit-or_path { * }
 
@@ -12,7 +10,7 @@ our class LitOrPath::Rules {
     rule lit-or_path:sym<c> { '-' <lit> }
 }
 
-our class LitOrPath::Actions {
+our role LitOrPath::Actions {
 
     method lit-or_path:sym<a>($/) {
         make PatLit.new(

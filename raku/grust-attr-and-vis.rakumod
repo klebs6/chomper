@@ -1,7 +1,4 @@
-our class AttrsAndVis {
-    has $.maybe_outer_attrs;
-    has $.visibility;
-}
+use grust-model;
 
 our role AttrsAndVis::Rules {
 

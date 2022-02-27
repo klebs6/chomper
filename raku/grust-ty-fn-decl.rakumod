@@ -1,10 +1,7 @@
-our class TyFnDecl {
-    has $.fn-anon-params;
-    has $.ret-ty;
-    has $.generic-params;
-}
+use grust-model;
 
-our class TyFnDecl::Rules {
+
+our role TyFnDecl::Rules {
 
     rule ty-fn-decl {
         <generic-params> 
@@ -13,7 +10,7 @@ our class TyFnDecl::Rules {
     }
 }
 
-our class TyFnDecl::Actions {
+our role TyFnDecl::Actions {
 
     method ty-fn-decl($/) {
         make TyFnDecl.new(

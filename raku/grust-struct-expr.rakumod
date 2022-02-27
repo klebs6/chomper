@@ -1,17 +1,7 @@
-our class DefaultFieldInit {
-    has $.expr;
-}
+use grust-model;
 
-our class FieldInit {
-    has $.ident;
-    has $.expr;
-}
 
-our class FieldInits {
-    has $.field-init;
-}
-
-our class StructExpr::Rules {
+our role StructExpr::Rules {
 
     #----------------
     proto rule struct-expr-fields { * }
@@ -37,7 +27,7 @@ our class StructExpr::Rules {
     rule default-field-init { <DOTDOT> <expr> }
 }
 
-our class StructExpr::Actions {
+our role StructExpr::Actions {
 
     method struct-expr-fields:sym<b>($/) {
         make $<field-inits>.made

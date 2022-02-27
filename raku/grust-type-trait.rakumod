@@ -1,16 +1,14 @@
-our class TypeTraitItem {
-    has $.maybe-outer-attrs;
-    has $.ty-param;
-}
+use grust-model;
 
-our class TraitType::Rules {
+
+our role TraitType::Rules {
 
     rule trait-type {
         <maybe-outer-attrs> <TYPE> <ty-param> ';'
     }
 }
 
-our class TraitType::Actions {
+our role TraitType::Actions {
 
     method trait-type($/) {
         make TypeTraitItem.new(

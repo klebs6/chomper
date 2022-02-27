@@ -1,4 +1,6 @@
-our class Visibility::Rules {
+use grust-model;
+
+our role Visibility::Rules {
 
     proto rule visibility { * }
 
@@ -6,7 +8,7 @@ our class Visibility::Rules {
     rule visibility:sym<b> { }
 }
 
-our class Visibility::Actions {
+our role Visibility::Actions {
 
     method visibility:sym<a>($/) { make Public.new }
     method visibility:sym<b>($/) { make Inherited.new }

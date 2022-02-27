@@ -1,11 +1,6 @@
-our class ExprIfLet {
-    has $.expr_nostruct;
-    has $.block;
-    has $.pat;
-    has $.block_or_if;
-}
+use grust-model;
 
-our class ExprIfLet::Rules {
+our role ExprIfLet::Rules {
 
     proto rule expr-if_let { * }
 
@@ -18,7 +13,7 @@ our class ExprIfLet::Rules {
     }
 }
 
-our class ExprIfLet::Actions {
+our role ExprIfLet::Actions {
 
     method expr-if_let:sym<a>($/) {
         make ExprIfLet.new(

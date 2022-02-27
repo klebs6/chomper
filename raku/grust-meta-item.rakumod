@@ -1,18 +1,7 @@
-our class MetaList {
-    has $.ident;
-    has $.meta_seq;
-}
+use grust-model;
 
-our class MetaNameValue {
-    has $.lit;
-    has $.ident;
-}
 
-our class MetaWord {
-    has $.ident;
-}
-
-our class MetaItem::Rules {
+our role MetaItem::Rules {
 
     proto rule meta-item { * }
 
@@ -21,7 +10,7 @@ our class MetaItem::Rules {
     rule meta-item:sym<c> { <ident> '(' <meta-seq> ','? ')' }
 }
 
-our class MetaItem::Actions {
+our role MetaItem::Actions {
 
     method meta-item:sym<a>($/) {
         make MetaWord.new(

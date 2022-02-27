@@ -1,8 +1,7 @@
-our class PatTupElts {
-    has $.pat;
-}
+use grust-model;
 
-our class PatTup::Rules {
+
+our role PatTup::Rules {
 
     proto rule pat-tup { * }
 
@@ -13,7 +12,7 @@ our class PatTup::Rules {
     rule pat-tup-elts { <pat>+ %% "," }
 }
 
-our class PatTup::Actions {
+our role PatTup::Actions {
 
     method pat-tup:sym<a>($/) {
         make PatTup.new(

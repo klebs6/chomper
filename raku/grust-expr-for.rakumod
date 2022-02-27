@@ -1,18 +1,13 @@
-our class ExprForLoop {
-    has $.expr-nostruct;
-    has $.block;
-    has $.pat;
-    has $.maybe-label;
-}
+use grust-model;
 
-our class ExprFor::Rules {
+our role ExprFor::Rules {
 
     rule expr-for {
         <maybe-label> <FOR> <pat> <IN> <expr-nostruct> <block>
     }
 }
 
-our class ExprFor::Actions {
+our role ExprFor::Actions {
 
     method expr-for($/) {
         make ExprForLoop.new(

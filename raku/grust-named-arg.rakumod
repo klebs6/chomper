@@ -1,4 +1,6 @@
-our class NamedArg::Rules {
+use grust-model;
+
+our role NamedArg::Rules {
 
     proto rule named-arg { * }
     rule named-arg:sym<a> { <ident> }
@@ -10,7 +12,7 @@ our class NamedArg::Rules {
     rule named-arg:sym<g> { <MUT> <ident> }
 }
 
-our class NamedArg::Actions {
+our role NamedArg::Actions {
 
     method named-arg:sym<a>($/) { make $<ident>.made }
     method named-arg:sym<b>($/) { make PatWild.new }
@@ -20,4 +22,3 @@ our class NamedArg::Actions {
     method named-arg:sym<f>($/) { make PatWild.new }
     method named-arg:sym<g>($/) { make $<ident>.made }
 }
-

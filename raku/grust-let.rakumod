@@ -1,10 +1,7 @@
-our class DeclLocal {
-    has $.pat;
-    has $.maybe_init_expr;
-    has $.maybe_ty_ascription;
-}
+use grust-model;
 
-our class Let::Rules {
+
+our role Let::Rules {
 
     rule let {
         <LET> 
@@ -14,7 +11,7 @@ our class Let::Rules {
     }
 }
 
-our class Let::Actions {
+our role Let::Actions {
 
     method let($/) {
         make DeclLocal.new(

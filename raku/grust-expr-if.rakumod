@@ -1,10 +1,6 @@
-our class ExprIf {
-    has $.block_or_if;
-    has $.block;
-    has $.expr_nostruct;
-}
+use grust-model;
 
-our class ExprIf::Rules {
+our role ExprIf::Rules {
 
     proto rule expr-if { * }
 
@@ -17,7 +13,7 @@ our class ExprIf::Rules {
     }
 }
 
-our class ExprIf::Actions {
+our role ExprIf::Actions {
 
     method expr-if:sym<a>($/) {
         make ExprIf.new(

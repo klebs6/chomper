@@ -1,11 +1,13 @@
-our class TyAscription::Rules {
+use grust-model;
+
+our role TyAscription::Rules {
 
     rule maybe-ty-ascription {
         [':' <ty-sum>]?
     }
 }
 
-our class TyAscription::Actions {
+our role TyAscription::Actions {
 
     method maybe-ty-ascription($/) {
         make $<ty-sum>.made

@@ -1,69 +1,7 @@
+use grust-model;
 
-#------------------------------
-# There are two forms of impl:
-#
-# impl (<...>)? TY { ... }
-# impl (<...>)? TRAIT for TY { ... }
-#
-# Unfortunately since TY can begin with '<' itself
-# -- as part of a TyQualifiedPath type -- there's
-# an s/r conflict when we see '<' after IMPL:
-#
-# should we reduce one of the early rules of TY
-# (such as maybe_once) or shall we continue
-# shifting into the generic_params list for the
-# impl?
-#
-# The production parser disambiguates a different
-# case here by permitting / requiring the user to
-# provide parens around types when they are
-# ambiguous with traits. We do the same here,
-# regrettably, by splitting ty into ty and
-# ty_prim.
-our class ImplItems {
-    has $.impl_item;
-}
 
-our class ImplMacroItem {
-    has $.item_macro;
-    has $.attrs_and_vis;
-}
-
-our class ItemImpl {
-    has $.trait_ref;
-    has $.ty_prim_sum;
-    has $.maybe_default_maybe_unsafe;
-    has $.maybe_where_clause;
-    has $.ty;
-    has $.maybe_impl_items;
-    has $.ty_sum;
-    has $.generic_params;
-    has $.maybe_inner_attrs;
-}
-
-our class ItemImplDefault {
-    has $.maybe_default_maybe_unsafe;
-    has $.generic_params;
-    has $.trait_ref;
-}
-
-our class ItemImplDefaultNeg {
-    has $.trait_ref;
-    has $.maybe_default_maybe_unsafe;
-    has $.generic_params;
-}
-
-our class ItemImplNeg {
-    has $.maybe_default_maybe_unsafe;
-    has $.maybe_inner_attrs;
-    has $.trait_ref;
-    has $.maybe_impl_items;
-    has $.maybe_where_clause;
-    has $.ty_sum;
-    has $.generic_params;
-}
-
-our class ItemImpl::Rules {
+our role ItemImpl::Rules {
 
     #---------------------------
     proto rule item-impl { * }
@@ -161,7 +99,7 @@ our class ItemImpl::Rules {
     }
 }
 
-our class ItemImpl::Actions {
+our role ItemImpl::Actions {
 
     method item-impl:sym<a>($/) {
         make ItemImpl.new(

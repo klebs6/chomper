@@ -1,18 +1,7 @@
-our class ViewPathGlob {
-    has $.path-no-types-allowed;
-}
+use grust-model;
 
-our class ViewPathList {
-    has $.idents-or-self;
-    has $.path-no-types-allowed;
-}
 
-our class ViewPathSimple {
-    has $.path-no-types-allowed;
-    has $.ident;
-}
-
-our class ViewPath::Rules {
+our role ViewPath::Rules {
 
     proto rule view-path { * }
 
@@ -32,7 +21,7 @@ our class ViewPath::Rules {
     rule view-path:sym<n> { <path-no-types-allowed> <AS> <ident> }
 }
 
-our class ViewPath::Actions {
+our role ViewPath::Actions {
 
     method view-path:sym<a>($/) {
         make ViewPathSimple.new(

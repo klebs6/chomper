@@ -1,4 +1,6 @@
-our class FnDeclWithSelf::Rules {
+use grust-model;
+
+our role FnDeclWithSelf::Rules {
 
     rule fn-decl {
         <fn-params> <ret-ty>
@@ -13,7 +15,7 @@ our class FnDeclWithSelf::Rules {
     }
 }
 
-our class FnDeclWithSelf::Actions {
+our role FnDeclWithSelf::Actions {
 
     method fn-decl($/) {
         make FnDecl.new(

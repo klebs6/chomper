@@ -1,5 +1,7 @@
+use grust-model;
 
-our class Label::Rules {
+
+our role Label::Rules {
     rule maybe-label {  
         [<lifetime> ':']?
     }

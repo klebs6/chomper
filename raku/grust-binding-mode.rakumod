@@ -1,5 +1,4 @@
-our class BindByRef {}
-our class BindByValue {}
+use grust-model;
 
 our role BindingMode::Rules {
 

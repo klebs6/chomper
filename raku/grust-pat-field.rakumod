@@ -1,14 +1,7 @@
-our class PatField {
-    has $.ident;
-    has $.pat;
-    has $.binding_mode;
-}
+use grust-model;
 
-our class PatFields {
-    has $.items;
-}
 
-our class PatField::Rules {
+our role PatField::Rules {
 
     proto rule pat-field { * }
 
@@ -23,7 +16,7 @@ our class PatField::Rules {
     rule pat-fields { <pat-field>+ %% <comma> }
 }
 
-our class PatField::Actions {
+our role PatField::Actions {
 
     method pat-field:sym<ident>($/) {
         make PatField.new(

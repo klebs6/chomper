@@ -1,11 +1,11 @@
-our class Ltbounds {
-    has $.lifetime;
-}
+use grust-model;
 
-our class LtBounds::Rules {
+
+our role LtBounds::Rules {
 
     rule maybe-ltbounds {
-        {self.set-prec(SHIFTPLUS)} [':' <ltbounds>]?
+        #{self.set-prec(SHIFTPLUS)} 
+        [':' <ltbounds>]?
     }
 
     rule ltbounds {
@@ -13,7 +13,7 @@ our class LtBounds::Rules {
     }
 }
 
-our class LtBounds::Actions {
+our role LtBounds::Actions {
 
     method maybe-ltbounds($/) {
         make $<ltbounds>.made

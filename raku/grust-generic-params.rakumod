@@ -1,69 +1,67 @@
-our class Generics {
-    has $.ty_params;
-    has $.lifetimes;
+use grust-model;
+
+our role GenericParams::Rules {
+
+    rule generic-params { <generic-params-base>? }
+
+    proto rule generic-params-base { * }
+
+    rule generic-params-base:sym<a> { '<' '>' }
+    rule generic-params-base:sym<b> { '<' <lifetimes> '>' }
+    rule generic-params-base:sym<c> { '<' <lifetimes> ',' '>' }
+    rule generic-params-base:sym<f> { '<' <lifetimes> ',' <ty-params> '>' }
+    rule generic-params-base:sym<g> { '<' <lifetimes> ',' <ty-params> ',' '>' }
+    rule generic-params-base:sym<j> { '<' <ty-params> '>' }
+    rule generic-params-base:sym<k> { '<' <ty-params> ',' '>' }
 }
 
-our class GenericParams::Rules {
+our role GenericParams::Actions {
 
-    proto rule generic-params { * }
+    method generic-params($/) {
+        make $<generic-params-base>.made
+    }
 
-    rule generic-params:sym<a> { '<' '>' }
-    rule generic-params:sym<b> { '<' <lifetimes> '>' }
-    rule generic-params:sym<c> { '<' <lifetimes> ',' '>' }
-    rule generic-params:sym<f> { '<' <lifetimes> ',' <ty-params> '>' }
-    rule generic-params:sym<g> { '<' <lifetimes> ',' <ty-params> ',' '>' }
-    rule generic-params:sym<j> { '<' <ty-params> '>' }
-    rule generic-params:sym<k> { '<' <ty-params> ',' '>' }
-    rule generic-params:sym<n> { }
-}
-
-our class GenericParams::Actions {
-
-    method generic-params:sym<a>($/) {
+    method generic-params-base:sym<a>($/) {
         make Generics.new(
 
         )
     }
 
-    method generic-params:sym<b>($/) {
+    method generic-params-base:sym<b>($/) {
         make Generics.new(
             lifetimes =>  $<lifetimes>.made,
         )
     }
 
-    method generic-params:sym<c>($/) {
+    method generic-params-base:sym<c>($/) {
         make Generics.new(
             lifetimes =>  $<lifetimes>.made,
         )
     }
 
-    method generic-params:sym<f>($/) {
+    method generic-params-base:sym<f>($/) {
         make Generics.new(
             lifetimes =>  $<lifetimes>.made,
             ty-params =>  $<ty-params>.made,
         )
     }
 
-    method generic-params:sym<g>($/) {
+    method generic-params-base:sym<g>($/) {
         make Generics.new(
             lifetimes =>  $<lifetimes>.made,
             ty-params =>  $<ty-params>.made,
         )
     }
 
-    method generic-params:sym<j>($/) {
+    method generic-params-base:sym<j>($/) {
         make Generics.new(
             ty-params =>  $<ty-params>.made,
         )
     }
 
-    method generic-params:sym<k>($/) {
+    method generic-params-base:sym<k>($/) {
         make Generics.new(
             ty-params =>  $<ty-params>.made,
         )
-    }
-
-    method generic-params:sym<n>($/) {
-        MkNone<140527400197696>
     }
 }

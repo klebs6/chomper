@@ -1,4 +1,6 @@
-our class Unsafe::Rules {
+use grust-model;
+
+our role Unsafe::Rules {
 
     rule maybe-unsafe {
         <UNSAFE>?
@@ -12,7 +14,7 @@ our class Unsafe::Rules {
     rule maybe-default_maybe_unsafe:sym<d> { }
 }
 
-our class Unsafe::Actions {
+our role Unsafe::Actions {
 
     method maybe-unsafe:sym<a>($/) {
         make Unsafe.new

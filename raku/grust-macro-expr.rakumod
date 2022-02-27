@@ -1,15 +1,7 @@
+use grust-model;
 
-#-------------------------------------
-# the braces-delimited macro is a block_expr so it
-# doesn't appear here
-our class MacroExpr {
-    has $.path_expr;
-    has $.parens_delimited_token_trees;
-    has $.maybe_ident;
-    has $.brackets_delimited_token_trees;
-}
 
-our class MacroExpr::Rules {
+our role MacroExpr::Rules {
 
     proto rule macro-expr { * }
 
@@ -22,7 +14,7 @@ our class MacroExpr::Rules {
     }
 }
 
-our class MacroExpr::Actions {
+our role MacroExpr::Actions {
 
     method macro-expr:sym<a>($/) {
         make MacroExpr.new(

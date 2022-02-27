@@ -1,17 +1,13 @@
-our class ImplConst {
-    has $.maybe_default;
-    has $.attrs_and_vis;
-    has $.item_const;
-}
+use grust-model;
 
-our class ImplConst::Rules {
+our role ImplConst::Rules {
 
     rule impl-const {
         <attrs-and_vis> <maybe-default> <item-const>
     }
 }
 
-our class ImplConst::Actions {
+our role ImplConst::Actions {
 
     method impl-const($/) {
         make ImplConst.new(

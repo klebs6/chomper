@@ -1,11 +1,7 @@
-our class ItemTy {
-    has $.generic_params;
-    has $.maybe_where_clause;
-    has $.ty_sum;
-    has $.ident;
-}
+use grust-model;
 
-our class ItemType::Rules {
+
+our role ItemType::Rules {
 
     rule item-type {
         <TYPE> 
@@ -16,7 +12,7 @@ our class ItemType::Rules {
     }
 }
 
-our class ItemType::Actions {
+our role ItemType::Actions {
 
     method item-type($/) {
         make ItemTy.new(

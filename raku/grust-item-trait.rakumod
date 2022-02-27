@@ -1,23 +1,7 @@
-our class ItemTrait {
-    has $.maybe_where_clause;
-    has $.maybe_unsafe;
-    has $.generic_params;
-    has $.for_sized;
-    has $.maybe_ty_param_bounds;
-    has $.maybe_trait_items;
-    has $.ident;
-}
+use grust-model;
 
-our class TraitItems {
-    has $.trait_item;
-}
 
-our class TraitMacroItem {
-    has $.maybe_outer_attrs;
-    has $.item_macro;
-}
-
-our class ItemTrait::Rules {
+our role ItemTrait::Rules {
 
     rule item-trait {
         <maybe-unsafe> 
@@ -57,7 +41,7 @@ our class ItemTrait::Rules {
     }
 }
 
-our class ItemTrait::Actions {
+our role ItemTrait::Actions {
 
     method item-trait($/) {
         make ItemTrait.new(

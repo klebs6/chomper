@@ -1,16 +1,13 @@
-our class ViewItemExternFn {
-    has $.item_fn;
-    has $.maybe_abi;
-}
+use grust-model;
 
-our class ExternFnItem::Rules {
+our role ExternFnItem::Rules {
 
     rule extern-fn_item {
         <EXTERN> <maybe-abi> <item-fn>
     }
 }
 
-our class ExternFnItem::Actions {
+our role ExternFnItem::Actions {
 
     method extern-fn_item($/) {
         make ViewItemExternFn.new(

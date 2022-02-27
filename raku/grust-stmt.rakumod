@@ -1,6 +1,8 @@
+use grust-model;
+
 #------------------------------
 # items that can appear in "stmts"
-our class StmtItem::Rules {
+our role StmtItem::Rules {
 
     proto rule stmt-item { * }
 
@@ -11,7 +13,7 @@ our class StmtItem::Rules {
     rule stmt-item:sym<view>   { <view-item> }
 }
 
-our class StmtItem::Actions {
+our role StmtItem::Actions {
 
     method stmt-item:sym<static>($/) { make $<item-static>.made }
     method stmt-item:sym<const>($/)  { make $<item-const>.made }

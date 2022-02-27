@@ -1,12 +1,4 @@
-our class AnonArg {
-    has $.named_arg;
-    has $.ty;
-}
-
-our class AnonArgs {
-    has Bool $.variadic-tail;
-    has @.anon_params;
-}
+use grust-model;
 
 # anon means it's allowed to be anonymous
 # (type-only), but it can still have a name

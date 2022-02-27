@@ -1,137 +1,8 @@
+use grust-model;
+
 #-------------------------------------
 
-our class ExprAssign {
-    has $.expr;
-    has $.nonblock_expr;
-    has $.expr_nostruct;
-}
-
-our class ExprAssignAdd {
-    has $.expr;
-    has $.expr_nostruct;
-    has $.nonblock_expr;
-}
-
-our class ExprAssignBitAnd {
-    has $.expr;
-    has $.expr_nostruct;
-    has $.nonblock_expr;
-}
-
-our class ExprAssignBitOr {
-    has $.nonblock_expr;
-    has $.expr;
-    has $.expr_nostruct;
-}
-
-our class ExprAssignBitXor {
-    has $.expr;
-    has $.expr_nostruct;
-    has $.nonblock_expr;
-}
-
-our class ExprAssignDiv {
-    has $.expr;
-    has $.nonblock_expr;
-    has $.expr_nostruct;
-}
-
-our class ExprAssignRem {
-    has $.expr;
-    has $.expr_nostruct;
-    has $.nonblock_expr;
-}
-
-our class ExprAssignShl {
-    has $.nonblock_expr;
-    has $.expr;
-    has $.expr_nostruct;
-}
-
-our class ExprBox {
-    has $.expr;
-}
-
-our class ExprBreak {
-    has $.lifetime;
-}
-
-our class ExprField {
-    has $.block_expr;
-    has $.block_expr_dot;
-    has $.expr;
-    has $.expr_nostruct;
-    has $.nonblock_expr;
-    has $.path_generic_args_with_colons;
-}
-
-our class ExprIndex {
-    has $.block_expr;
-    has $.block_expr_dot;
-    has $.expr;
-    has $.expr_nostruct;
-    has $.maybe_expr;
-    has $.nonblock_expr;
-    has $.path_generic_args_with_colons;
-}
-
-our class ExprMac {
-    has $.macro_expr;
-}
-
-our class ExprParen {
-    has $.maybe_exprs;
-}
-
-our class ExprPath {
-    has $.path_expr;
-}
-
-our class ExprRange {
-    has $.expr;
-    has $.expr_nostruct;
-    has $.nonblock_expr;
-}
-
-our class ExprRet {
-    has $.expr;
-}
-
-our class ExprStruct {
-    has $.path_expr;
-    has $.struct_expr_fields;
-}
-
-our class ExprTry {
-    has $.expr;
-    has $.expr_nostruct;
-    has $.nonblock_expr;
-}
-
-our class ExprTupleIndex {
-    has $.block_expr;
-    has $.block_expr_dot;
-    has $.expr;
-    has $.expr_nostruct;
-    has $.nonblock_expr;
-}
-
-our class ExprTypeAscr {
-    has $.expr;
-    has $.expr_nostruct;
-    has $.nonblock_expr;
-    has $.ty;
-}
-
-our class ExprVec {
-    has $.vec_expr;
-}
-
-our class ExprYield {
-    has $.expr;
-}
-
-our class NonBlockExpr::Rules {
+our role NonBlockExpr::Rules {
 
     proto rule nonblock-expr { * }
 
@@ -195,7 +66,7 @@ our class NonBlockExpr::Rules {
     rule nonblock-expr:sym<bf> { <nonblock-prefix_expr> }
 }
 
-our class NonBlockExpr::Actions {
+our role NonBlockExpr::Actions {
 
     method nonblock-expr:sym<a>($/) {
         make ExprLit.new(

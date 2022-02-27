@@ -1,84 +1,105 @@
-our class ExprFnBlock {
-    has $.ret_ty;
-    has $.expr;
-    has $.inferrable_params;
-    has $.lambda_expr_nostruct_no_first_bar;
-    has $.lambda_expr_no_first_bar;
-    has $.expr_nostruct;
-}
+use grust-model;
 
-our class LambdaExpr::Rules {
+our role LambdaExpr::Rules {
 
     #---------------------
     proto rule lambda-expr { * }
 
     rule lambda-expr:sym<a> {
-        {self.set-prec(LAMBDA)} <OROR> <ret-ty> <expr>
+        #{self.set-prec(LAMBDA)} 
+        <OROR> <ret-ty> <expr>
     }
 
     rule lambda-expr:sym<b> {
-        {self.set-prec(LAMBDA)} '|' '|' <ret-ty> <expr>
+        #{self.set-prec(LAMBDA)} 
+        '|' '|' <ret-ty> <expr>
     }
 
     rule lambda-expr:sym<c> {
-        {self.set-prec(LAMBDA)} '|' <inferrable-params> '|' <ret-ty> <expr>
+        #{self.set-prec(LAMBDA)} 
+        '|' <inferrable-params> '|' <ret-ty> <expr>
     }
 
     rule lambda-expr:sym<d> {
-        {self.set-prec(LAMBDA)} '|' <inferrable-params> <OROR> <lambda-expr_no_first_bar>
+        #{self.set-prec(LAMBDA)} 
+        '|' <inferrable-params> <OROR> <lambda-expr-no-first-bar>
     }
 
     #---------------------
-    proto rule lambda-expr_no_first_bar { * }
+    proto rule lambda-expr-no-first-bar { * }
 
-    rule lambda-expr_no_first_bar:sym<a> {
-        {self.set-prec(LAMBDA)} '|' <ret-ty> <expr>
+    rule lambda-expr-no-first-bar:sym<a> {
+        #{self.set-prec(LAMBDA)} 
+        '|' 
+        <ret-ty> 
+        <expr>
     }
 
-    rule lambda-expr_no_first_bar:sym<b> {
-        {self.set-prec(LAMBDA)} <inferrable-params> '|' <ret-ty> <expr>
+    rule lambda-expr-no-first-bar:sym<b> {
+        #{self.set-prec(LAMBDA)} 
+        <inferrable-params> 
+        '|' 
+        <ret-ty> 
+        <expr>
     }
 
-    rule lambda-expr_no_first_bar:sym<c> {
-        {self.set-prec(LAMBDA)} <inferrable-params> <OROR> <lambda-expr_no_first_bar>
-    }
-
-    #---------------------
-    proto rule lambda-expr_nostruct { * }
-
-    rule lambda-expr_nostruct:sym<a> {
-        {self.set-prec(LAMBDA)} <OROR> <expr-nostruct>
-    }
-
-    rule lambda-expr_nostruct:sym<b> {
-        {self.set-prec(LAMBDA)} '|' '|' <ret-ty> <expr-nostruct>
-    }
-
-    rule lambda-expr_nostruct:sym<c> {
-        {self.set-prec(LAMBDA)} '|' <inferrable-params> '|' <expr-nostruct>
-    }
-
-    rule lambda-expr_nostruct:sym<d> {
-        {self.set-prec(LAMBDA)} '|' <inferrable-params> <OROR> <lambda-expr_nostruct_no_first_bar>
+    rule lambda-expr-no-first-bar:sym<c> {
+        #{self.set-prec(LAMBDA)} 
+        <inferrable-params> 
+        <OROR> 
+        <lambda-expr-no-first-bar>
     }
 
     #---------------------
-    proto rule lambda-expr_nostruct_no_first_bar { * }
+    proto rule lambda-expr-nostruct { * }
 
-    rule lambda-expr_nostruct_no_first_bar:sym<a> {
-        {self.set-prec(LAMBDA)} '|' <ret-ty> <expr-nostruct>
+    rule lambda-expr-nostruct:sym<a> {
+        #{self.set-prec(LAMBDA)} 
+        <OROR> 
+        <expr-nostruct>
     }
 
-    rule lambda-expr_nostruct_no_first_bar:sym<b> {
-        {self.set-prec(LAMBDA)} <inferrable-params> '|' <ret-ty> <expr-nostruct>
+    rule lambda-expr-nostruct:sym<b> {
+        #{self.set-prec(LAMBDA)} 
+        '|' '|' <ret-ty> <expr-nostruct>
     }
 
-    rule lambda-expr_nostruct_no_first_bar:sym<c> {
-        {self.set-prec(LAMBDA)} <inferrable-params> <OROR> <lambda-expr_nostruct_no_first_bar>
+    rule lambda-expr-nostruct:sym<c> {
+        #{self.set-prec(LAMBDA)} 
+        '|' <inferrable-params> '|' <expr-nostruct>
+    }
+
+    rule lambda-expr-nostruct:sym<d> {
+        #{self.set-prec(LAMBDA)} 
+        '|' 
+        <inferrable-params> 
+        <OROR> 
+        <lambda-expr-nostruct-no-first-bar>
+    }
+
+    #---------------------
+    proto rule lambda-expr-nostruct-no-first-bar { * }
+
+    rule lambda-expr-nostruct-no-first-bar:sym<a> {
+        #{self.set-prec(LAMBDA)} 
+        '|' <ret-ty> <expr-nostruct>
+    }
+
+    rule lambda-expr-nostruct-no-first-bar:sym<b> {
+        #{self.set-prec(LAMBDA)} 
+        <inferrable-params> 
+        '|' <ret-ty> <expr-nostruct>
+    }
+
+    rule lambda-expr-nostruct-no-first-bar:sym<c> {
+        #{self.set-prec(LAMBDA)} 
+        <inferrable-params> 
+        <OROR> 
+        <lambda-expr-nostruct-no-first-bar>
     }
 }
 
-our class LambdaExpr::Actions {
+our role LambdaExpr::Actions {
 
     method lambda-expr:sym<a>($/) {
         make ExprFnBlock.new(
@@ -105,18 +126,18 @@ our class LambdaExpr::Actions {
     method lambda-expr:sym<d>($/) {
         make ExprFnBlock.new(
             inferrable-params        =>  $<inferrable-params>.made,
-            lambda-expr_no_first_bar =>  $<lambda-expr_no_first_bar>.made,
+            lambda-expr-no-first-bar =>  $<lambda-expr-no-first-bar>.made,
         )
     }
 
-    method lambda-expr_no_first_bar:sym<a>($/) {
+    method lambda-expr-no-first-bar:sym<a>($/) {
         make ExprFnBlock.new(
             ret-ty =>  $<ret-ty>.made,
             expr   =>  $<expr>.made,
         )
     }
 
-    method lambda-expr_no_first_bar:sym<b>($/) {
+    method lambda-expr-no-first-bar:sym<b>($/) {
         make ExprFnBlock.new(
             inferrable-params =>  $<inferrable-params>.made,
             ret-ty            =>  $<ret-ty>.made,
@@ -124,48 +145,48 @@ our class LambdaExpr::Actions {
         )
     }
 
-    method lambda-expr_no_first_bar:sym<c>($/) {
+    method lambda-expr-no-first-bar:sym<c>($/) {
         make ExprFnBlock.new(
             inferrable-params        =>  $<inferrable-params>.made,
-            lambda-expr_no_first_bar =>  $<lambda-expr_no_first_bar>.made,
+            lambda-expr-no-first-bar =>  $<lambda-expr-no-first-bar>.made,
         )
     }
 
-    method lambda-expr_nostruct:sym<a>($/) {
+    method lambda-expr-nostruct:sym<a>($/) {
         make ExprFnBlock.new(
             expr-nostruct =>  $<expr-nostruct>.made,
         )
     }
 
-    method lambda-expr_nostruct:sym<b>($/) {
+    method lambda-expr-nostruct:sym<b>($/) {
         make ExprFnBlock.new(
             ret-ty        =>  $<ret-ty>.made,
             expr-nostruct =>  $<expr-nostruct>.made,
         )
     }
 
-    method lambda-expr_nostruct:sym<c>($/) {
+    method lambda-expr-nostruct:sym<c>($/) {
         make ExprFnBlock.new(
             inferrable-params =>  $<inferrable-params>.made,
             expr-nostruct     =>  $<expr-nostruct>.made,
         )
     }
 
-    method lambda-expr_nostruct:sym<d>($/) {
+    method lambda-expr-nostruct:sym<d>($/) {
         make ExprFnBlock.new(
             inferrable-params                 =>  $<inferrable-params>.made,
-            lambda-expr_nostruct_no_first_bar =>  $<lambda-expr_nostruct_no_first_bar>.made,
+            lambda-expr-nostruct-no-first-bar =>  $<lambda-expr-nostruct-no-first-bar>.made,
         )
     }
 
-    method lambda-expr_nostruct_no_first_bar:sym<a>($/) {
+    method lambda-expr-nostruct-no-first-bar:sym<a>($/) {
         make ExprFnBlock.new(
             ret-ty        =>  $<ret-ty>.made,
             expr-nostruct =>  $<expr-nostruct>.made,
         )
     }
 
-    method lambda-expr_nostruct_no_first_bar:sym<b>($/) {
+    method lambda-expr-nostruct-no-first-bar:sym<b>($/) {
         make ExprFnBlock.new(
             inferrable-params =>  $<inferrable-params>.made,
             ret-ty            =>  $<ret-ty>.made,
@@ -173,10 +194,10 @@ our class LambdaExpr::Actions {
         )
     }
 
-    method lambda-expr_nostruct_no_first_bar:sym<c>($/) {
+    method lambda-expr-nostruct-no-first-bar:sym<c>($/) {
         make ExprFnBlock.new(
             inferrable-params                 =>  $<inferrable-params>.made,
-            lambda-expr_nostruct_no_first_bar =>  $<lambda-expr_nostruct_no_first_bar>.made,
+            lambda-expr-nostruct-no-first-bar =>  $<lambda-expr-nostruct-no-first-bar>.made,
         )
     }
 }

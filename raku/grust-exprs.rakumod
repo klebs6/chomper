@@ -1,14 +1,12 @@
-our class Exprs {
-    has $.expr;
-}
+use grust-model;
 
-our class Exprs::Rules {
+our role Exprs::Rules {
     rule maybe-exprs { <exprs>? ','? }
     rule maybe-expr  { <expr>? }
     rule exprs       { <expr>+ %% "," }
 }
 
-our class Exprs::Actions {
+our role Exprs::Actions {
 
     method maybe-exprs($/) { make $<exprs>.made }
     method maybe-expr($/)  { make $<expr>.made }

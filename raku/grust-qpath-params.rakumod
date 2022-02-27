@@ -1,11 +1,13 @@
-our class QPathParams::Rules {
+use grust-model;
+
+our role QPathParams::Rules {
 
     rule maybe-qpath-params {
         [<MOD-SEP> <generic-args>]?
     }
 }
 
-our class QPathParams::Actions {
+our role QPathParams::Actions {
 
     method maybe-qpath-params:sym<a>($/) {
         make $<generic-args>.made

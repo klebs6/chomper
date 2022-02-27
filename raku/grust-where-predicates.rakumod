@@ -1,16 +1,6 @@
-our class WherePredicate {
-    has $.maybe-for-lifetimes;
-    has $.bounds;
-    has $.lifetime;
-    has $.ty-param-bounds;
-    has $.ty;
-}
+use grust-model;
 
-our class WherePredicates {
-    has $.where-predicate;
-}
-
-our class WherePredicates::Rules {
+our role WherePredicates::Rules {
 
     proto rule where-predicates { * }
 
@@ -29,7 +19,7 @@ our class WherePredicates::Rules {
     }
 }
 
-our class WherePredicates::Actions {
+our role WherePredicates::Actions {
 
     method where-predicates($/) {
         make $<where-predicate>>>.made

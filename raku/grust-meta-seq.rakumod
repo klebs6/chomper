@@ -1,15 +1,14 @@
-our class MetaItems {
-    has $.meta_item;
-}
+use grust-model;
 
-our class MetaSeq::Rules {
+
+our role MetaSeq::Rules {
 
     rule meta-seq {
         <meta-item>* %% ","
     }
 }
 
-our class MetaSeq::Actions {
+our role MetaSeq::Actions {
 
     method meta-seq($/) {
         make $<meta-item>.made

@@ -1,11 +1,13 @@
-our class Guard::Rules {
+use grust-model;
+
+our role Guard::Rules {
 
     rule maybe-guard {
         [ <IF> <expr-nostruct> ]?
     }
 }
 
-our class Guard::Actions {
+our role Guard::Actions {
 
     method maybe-guard($/) {
         make $<expr_nostruct>.made

@@ -1,8 +1,7 @@
-our class OuterAttrs {
-    has $.outer_attr;
-}
+use grust-model;
 
-our class OuterAttrs::Rules {
+
+our role OuterAttrs::Rules {
 
     rule maybe-outer_attrs {
         <outer-attrs>?
@@ -23,7 +22,7 @@ our class OuterAttrs::Rules {
     }
 }
 
-our class OuterAttrs::Actions {
+our role OuterAttrs::Actions {
 
     method maybe-outer_attrs:sym<a>($/) {
         make $<outer-attrs>.made

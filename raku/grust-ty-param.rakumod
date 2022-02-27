@@ -1,10 +1,7 @@
-our class TyParam {
-    has $.maybe-ty-param-bounds;
-    has $.maybe-ty-default;
-    has $.ident;
-}
+use grust-model;
 
-our class TyParam::Rules {
+
+our role TyParam::Rules {
 
     proto rule ty-param { * }
 
@@ -22,7 +19,7 @@ our class TyParam::Rules {
     }
 }
 
-our class TyParam::Actions {
+our role TyParam::Actions {
 
     method ty-param:sym<a>($/) {
         make TyParam.new(

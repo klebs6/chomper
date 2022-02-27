@@ -1,16 +1,14 @@
-our class RetTy {
-    has $.ty;
-    has $.panic;
-}
+use grust-model;
 
-our class RetTy::Rules {
+
+our role RetTy::Rules {
 
     proto rule ret-ty { * }
     rule ret-ty:sym<panic> { <RARROW> '!' }
     rule ret-ty:sym<ty>    { <RARROW> <ty> }
 }
 
-our class RetTy::Actions {
+our role RetTy::Actions {
 
     method ret-ty:sym<a>($/) {
         make RetTy.new(

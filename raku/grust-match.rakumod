@@ -1,30 +1,7 @@
-our class ArmBlock {
-    has $.block_expr;
-    has $.block;
-    has $.pats_or;
-    has $.maybe_guard;
-    has $.maybe_outer_attrs;
-}
+use grust-model;
 
-our class ArmNonblock {
-    has $.nonblock_expr;
-    has $.maybe_outer_attrs;
-    has $.block_expr_dot;
-    has $.maybe_guard;
-    has $.pats_or;
-}
 
-our class Arms {
-    has $.match_clause;
-}
-
-our class ExprMatch {
-    has $.match_clauses;
-    has $.nonblock_match_clause;
-    has $.expr_nostruct;
-}
-
-our class ExprMatch::Rules {
+our role ExprMatch::Rules {
 
     proto rule expr-match { * }
 
@@ -63,7 +40,7 @@ our class ExprMatch::Rules {
     }
 }
 
-our class ExprMatch::Actions {
+our role ExprMatch::Actions {
 
     method expr-match:sym<a>($/) {
         make ExprMatch.new(

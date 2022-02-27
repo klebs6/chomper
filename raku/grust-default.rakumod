@@ -1,11 +1,13 @@
-our class Default::Rules {
+use grust-model;
+
+our role Default::Rules {
 
     rule maybe-default {
         <DEFAULT>?
     }
 }
 
-our class Default::Actions {
+our role Default::Actions {
 
     method default($/) {
         make Default.new

@@ -1,32 +1,7 @@
-our class FnDecl {
-    has $.fn_anon_params_with_self;
-    has $.fn_params;
-    has $.fn_params_allow_variadic;
-    has $.fn_params_with_self;
-    has $.ret_ty;
-}
+use grust-model;
 
-our class SelfLower {
-    has $.maybe_ty_ascription;
-    has $.maybe_comma_anon_params;
-    has $.maybe_comma_params;
-    has $.maybe_mut;
-}
 
-our class SelfRegion {
-    has $.maybe_comma_anon_params;
-    has $.maybe_comma_params;
-    has $.lifetime;
-    has $.maybe_mut;
-    has $.maybe_ty_ascription;
-}
-
-our class SelfStatic {
-    has $.maybe_params;
-    has $.maybe_anon_params;
-}
-
-our class FnParams::Rules {
+our role FnParams::Rules {
 
     rule fn-decl_allow_variadic {
         <fn-params_allow_variadic> <ret-ty>
@@ -67,7 +42,7 @@ our class FnParams::Rules {
     rule fn-anon_params_with_self:sym<d> { '(' <maybe-anon_params> ')' }
 }
 
-our class FnParams::Actions {
+our role FnParams::Actions {
 
     method fn-decl_allow_variadic($/) {
         make FnDecl.new(

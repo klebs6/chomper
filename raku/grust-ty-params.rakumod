@@ -1,15 +1,14 @@
-our class TyParams {
-    has $.ty_param;
-}
+use grust-model;
 
-our class TyParams::Rules {
+
+our role TyParams::Rules {
 
     rule ty-params {
         <ty-param>+ %% ","
     }
 }
 
-our class TyParams::Actions {
+our role TyParams::Actions {
 
     method ty-params($/) {
         make $<ty-param>.made

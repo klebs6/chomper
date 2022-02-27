@@ -1,4 +1,6 @@
-our class TyBareFn::Rules {
+use grust-model;
+
+our role TyBareFn::Rules {
 
     proto rule ty-bare-fn { * }
 
@@ -8,7 +10,7 @@ our class TyBareFn::Rules {
     rule ty-bare-fn:sym<unsafe-extern> { <UNSAFE> <EXTERN> <maybe-abi> <FN> <ty-fn-decl> }
 }
 
-our class TyBareFn::Actions {
+our role TyBareFn::Actions {
 
     method ty-bare-fn:sym<fn>($/)            { make $<ty-fn-decl>.made }
     method ty-bare-fn:sym<unsafe-fn>($/)     { make $<ty-fn-decl>.made }

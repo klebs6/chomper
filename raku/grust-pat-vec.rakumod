@@ -1,8 +1,7 @@
-our class PatVecElts {
-    has $.pat;
-}
+use grust-model;
 
-our class PatVec::Rules {
+
+our role PatVec::Rules {
 
     proto rule pat-vec { * }
 
@@ -13,7 +12,7 @@ our class PatVec::Rules {
     rule pat-vec-elts { <pat>+ %% "," }
 }
 
-our class PatVec::Actions {
+our role PatVec::Actions {
 
     method pat-vec:sym<d>($/) {
         make PatVec.new(

@@ -1,17 +1,13 @@
-our class ExprWhile {
-    has $.expr_nostruct;
-    has $.block;
-    has $.maybe_label;
-}
+use grust-model;
 
-our class ExprWhile::Rules {
+our role ExprWhile::Rules {
 
     rule expr-while {
         <maybe-label> <WHILE> <expr-nostruct> <block>
     }
 }
 
-our class ExprWhile::Actions {
+our role ExprWhile::Actions {
 
     method expr-while($/) {
         make ExprWhile.new(

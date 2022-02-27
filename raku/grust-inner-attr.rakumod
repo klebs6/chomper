@@ -1,12 +1,7 @@
-our class InnerAttr {
-    has $.meta_item;
-}
+use grust-model;
 
-our class InnerAttrs {
-    has $.inner_attr;
-}
 
-our class InnerAttrs::Rules {
+our role InnerAttrs::Rules {
 
     rule maybe-inner-attrs {
         <inner-attrs>?
@@ -27,7 +22,7 @@ our class InnerAttrs::Rules {
     }
 }
 
-our class InnerAttrs::Actions {
+our role InnerAttrs::Actions {
 
     method maybe-inner-attrs($/) {
         make $<inner-attrs>.made

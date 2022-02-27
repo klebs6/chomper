@@ -1,11 +1,13 @@
-our class InitExpr::Rules {
+use grust-model;
+
+our role InitExpr::Rules {
 
     rule maybe-init-expr {
         [ '=' <expr> ]?
     }
 }
 
-our class InitExpr::Actions {
+our role InitExpr::Actions {
 
     method maybe-init-expr($/) {
         make $<expr>.made

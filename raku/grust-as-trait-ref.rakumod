@@ -1,3 +1,5 @@
+use grust-model;
+
 our role AsTraitRef::Rules {
     rule maybe-as_trait_ref {
         [<AS> <trait-ref>]?

@@ -1,36 +1,7 @@
-our class Method {
-    has $.ident;
-    has $.fn_decl_with_self;
-    has $.maybe_outer_attrs;
-    has $.maybe_abi;
-    has $.generic_params;
-    has $.maybe_where_clause;
-    has $.attrs_and_vis;
-    has $.fn_decl_with_self_allow_anon_params;
-    has $.maybe_unsafe;
-    has $.maybe_default;
-    has $.inner_attrs_and_block;
-}
+use grust-model;
 
-our class Provided {
-    has $.method;
-}
 
-our class Required {
-    has $.type_method;
-}
-
-our class TypeMethod {
-    has $.fn_decl_with_self_allow_anon_params;
-    has $.maybe_abi;
-    has $.maybe_outer_attrs;
-    has $.maybe_where_clause;
-    has $.generic_params;
-    has $.maybe_unsafe;
-    has $.ident;
-}
-
-our class Method::Rules {
+our role Method::Rules {
 
     proto rule trait-method { * }
 
@@ -160,7 +131,7 @@ our class Method::Rules {
     }
 }
 
-our class Method::Actions {
+our role Method::Actions {
 
     method trait-method:sym<a>($/) {
         make Required.new(

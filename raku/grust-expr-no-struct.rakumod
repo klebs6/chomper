@@ -1,23 +1,18 @@
+use grust-model;
+
 #-------------------------------------
-our class ExprAssignShr {
-    has $.expr;
-    has $.expr_nostruct;
-    has $.nonblock_expr;
-}
 
-our class ExprCast {
-    has $.expr;
-    has $.expr_nostruct;
-    has $.nonblock_expr;
-    has $.ty;
-}
-
-our class ExprNoStruct::Rules {
+our role ExprNoStruct::Rules {
 
     proto rule expr-nostruct { * }
 
     rule expr-nostruct:sym<a>  { <lit> }
-    rule expr-nostruct:sym<b>  { { self.set-prec(IDENT) } <path-expr> }
+
+    rule expr-nostruct:sym<b>  { 
+        #{ self.set-prec(IDENT) } 
+        <path-expr> 
+    }
+
     rule expr-nostruct:sym<c>  { <SELF> }
     rule expr-nostruct:sym<d>  { <macro-expr> }
     rule expr-nostruct:sym<e>  { <expr-nostruct> '?' }
@@ -64,7 +59,13 @@ our class ExprNoStruct::Rules {
     rule expr-nostruct:sym<at> { <expr-nostruct> '*'           <expr-nostruct> }
     rule expr-nostruct:sym<au> { <expr-nostruct> '/'           <expr-nostruct> }
     rule expr-nostruct:sym<av> { <expr-nostruct> '%'           <expr-nostruct> }
-    rule expr-nostruct:sym<aw> { <expr-nostruct> <DOTDOT>      { self.set-prec(RANGE)} }
+
+    rule expr-nostruct:sym<aw> { 
+        <expr-nostruct> 
+        <DOTDOT>      
+        #{ self.set-prec(RANGE) } 
+    }
+
     rule expr-nostruct:sym<ax> { <expr-nostruct> <DOTDOT> <expr-nostruct> }
     rule expr-nostruct:sym<ay> { <DOTDOT> <expr-nostruct> }
     rule expr-nostruct:sym<az> { <DOTDOT> }
@@ -77,7 +78,7 @@ our class ExprNoStruct::Rules {
     rule expr-nostruct:sym<bg> { <nonblock-prefix_expr_nostruct> }
 }
 
-our class ExprNoStruct::Actions {
+our role ExprNoStruct::Actions {
 
     method expr-nostruct:sym<a>($/) {
         make ExprLit.new(

@@ -1,13 +1,7 @@
-our class TySum {
-    has $.ty-sum-elt;
-    has $.ty-prim-sum-elt;
-}
+use grust-model;
 
-our class TySums {
-    has $.ty-sum;
-}
 
-our class TySums::Rules {
+our role TySums::Rules {
 
     rule maybe-ty-sums { [<ty-sums> ','?]? }
     rule ty-sums       { <ty-sum>+ %% "," }
@@ -27,7 +21,7 @@ our class TySums::Rules {
     rule ty-prim-sum-elt:sym<b> { <lifetime> }
 }
 
-our class TySums::Actions {
+our role TySums::Actions {
 
     method maybe-ty-sums($/) {
         make $<ty-sums>.made

@@ -1,9 +1,7 @@
-our class PolyBound {
-    has $.maybe-lifetimes;
-    has $.bound;
-}
+use grust-model;
 
-our class TyParamBounds::Rules {
+
+our role TyParamBounds::Rules {
 
     rule maybe-ty-param-bounds { [':' <ty-param-bounds>]? }
     rule ty-param-bounds       { <boundseq>? }
@@ -19,7 +17,7 @@ our class TyParamBounds::Rules {
     rule polybound:sym<d> { '?' <bound> }
 }
 
-our class TyParamBounds::Actions {
+our role TyParamBounds::Actions {
 
     method maybe-ty-param-bounds($/) {
         make $<ty-param-bounds>.made

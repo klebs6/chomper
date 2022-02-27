@@ -1,4 +1,6 @@
-our class String::Rules {
+use grust-model;
+
+our role String::Rules {
 
     proto rule str { * }
 
@@ -8,7 +10,7 @@ our class String::Rules {
     rule str:sym<d> { <LIT-BYTE_STR_RAW> }
 }
 
-our class String::Actions {
+our role String::Actions {
 
     method str:sym<a>($/) {
         make LitStr.new( value => ~$/)

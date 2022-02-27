@@ -1,9 +1,8 @@
-#-------------------------------------
-our class SelfPath {
-    has $.path-generic-args-with-colons;
-}
+use grust-model;
 
-our class PathExpr::Rules {
+#-------------------------------------
+
+our role PathExpr::Rules {
 
     proto rule path-expr { * }
 
@@ -11,7 +10,7 @@ our class PathExpr::Rules {
     rule path-expr:sym<c> { <SELF> <MOD-SEP> <path-generic-args-with-colons> }
 }
 
-our class PathExpr::Actions {
+our role PathExpr::Actions {
 
     method path-expr:sym<b>($/) {
         make $<path-generic-args-with-colons>.made

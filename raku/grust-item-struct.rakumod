@@ -1,24 +1,7 @@
+use grust-model;
 
-our class ItemStruct {
-    has $.struct_tuple_args;
-    has $.struct_decl_args;
-    has $.maybe_where_clause;
-    has $.ident;
-    has $.generic_params;
-}
 
-our class StructField {
-    has $.attrs_and_vis;
-    has $.ty_sum;
-    has $.ident;
-}
-
-our class StructFields {
-    has $.struct_decl_field;
-    has $.struct_tuple_field;
-}
-
-our class ItemStruct::Rules {
+our role ItemStruct::Rules {
 
     #-------------------------
     proto rule item-struct { * }
@@ -71,7 +54,7 @@ our class ItemStruct::Rules {
     }
 }
 
-our class ItemStruct::Actions {
+our role ItemStruct::Actions {
 
     method item-struct:sym<a>($/) {
         make ItemStruct.new(

@@ -1,23 +1,4 @@
-our class Macro {
-    has $.braces_delimited-token-trees;
-    has $.path_expr;
-    has $.maybe_ident;
-}
-
-our class UnsafeBlock {
-    has $.block;
-}
-
-our class BlockExprDotTail {
-    has $.path-generic-args-with-colons;
-    has @.maybe-exprs;
-    has $.lit-integer;
-}
-
-our class BlockExprDot {
-    has @.block-exprs;
-    has $.block-expr-dot-tail;
-}
+use grust-model;
 
 our role BlockExpr::Rules {
 
@@ -48,7 +29,8 @@ our role BlockExpr::Rules {
     proto rule block-expr-dot-tail { * }
 
     rule block-expr-dot-tail:sym<base> {
-        <path-generic-args-with-colons> {self.set-prec(IDENT)} 
+        <path-generic-args-with-colons> 
+        #{self.set-prec(IDENT)} 
     }
 
     rule block-expr-dot-tail:sym<brack> {

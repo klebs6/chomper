@@ -1,16 +1,9 @@
-our class ForeignItem {
-    has $.item_foreign_fn;
-    has $.attrs_and_vis;
-    has $.item_foreign_static;
-}
+use grust-model;
 
-our class ForeignItems {
-    has $.foreign_items;
-}
 
-our class ForeignItems::Rules {
+our role ForeignItems::Rules {
 
-    rule maybe-foreign_items {
+    rule maybe-foreign-items {
         <foreign-items>?
     }
 
@@ -20,14 +13,14 @@ our class ForeignItems::Rules {
 
     #------------------------
     proto rule foreign-item { * }
-    rule foreign-item:sym<a> { <attrs-and_vis> <STATIC> <item-foreign_static> }
-    rule foreign-item:sym<b> { <attrs-and_vis> <item-foreign_fn> }
-    rule foreign-item:sym<c> { <attrs-and_vis> <UNSAFE> <item-foreign_fn> }
+    rule foreign-item:sym<a> { <attrs-and-vis> <STATIC> <item-foreign-static> }
+    rule foreign-item:sym<b> { <attrs-and-vis> <item-foreign-fn> }
+    rule foreign-item:sym<c> { <attrs-and-vis> <UNSAFE> <item-foreign-fn> }
 }
 
-our class ForeignItems::Actions {
+our role ForeignItems::Actions {
 
-    method maybe-foreign_items($/) {
+    method maybe-foreign-items($/) {
         make $<foreign-items>.made
     }
 
@@ -37,24 +30,25 @@ our class ForeignItems::Actions {
         )
     }
 
-    method foreign-item($/) {
+    method foreign-item:sym<a>($/) {
         make ForeignItem.new(
-            attrs-and_vis       =>  $<attrs-and_vis>.made,
-            item-foreign_static =>  $<item-foreign_static>.made,
+            attrs-and-vis       =>  $<attrs-and-vis>.made,
+            item-foreign-static =>  $<item-foreign-static>.made,
         )
     }
 
-    method foreign-item($/) {
+     method foreign-item:sym<b>($/) {
         make ForeignItem.new(
-            attrs-and_vis   =>  $<attrs-and_vis>.made,
-            item-foreign_fn =>  $<item-foreign_fn>.made,
+            attrs-and-vis   =>  $<attrs-and-vis>.made,
+            item-foreign-fn =>  $<item-foreign-fn>.made,
         )
     }
 
-    method foreign-item($/) {
+    method foreign-item:sym<c>($/) {
         make ForeignItem.new(
-            attrs-and_vis   =>  $<attrs-and_vis>.made,
-            item-foreign_fn =>  $<item-foreign_fn>.made,
+            attrs-and-vis   =>  $<attrs-and-vis>.made,
+            item-foreign-fn =>  $<item-foreign-fn>.made,
         )
     }
 }
+

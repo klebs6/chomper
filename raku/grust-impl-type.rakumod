@@ -1,12 +1,6 @@
-our class ImplType {
-    has $.generic_params;
-    has $.attrs_and_vis;
-    has $.ty_sum;
-    has $.ident;
-    has $.maybe_default;
-}
+use grust-model;
 
-our class ImplType::Rules {
+our role ImplType::Rules {
 
     rule impl-type {
         <attrs-and_vis> 
@@ -20,7 +14,7 @@ our class ImplType::Rules {
     }
 }
 
-our class ImplType::Actions {
+our role ImplType::Actions {
 
     method impl-type($/) {
         make ImplType.new(

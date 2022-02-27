@@ -1,11 +1,7 @@
-our class ForeignFn {
-    has $.maybe_where_clause;
-    has $.fn_decl_allow_variadic;
-    has $.ident;
-    has $.generic_params;
-}
+use grust-model;
 
-our class ForeignFn::Rules {
+
+our role ForeignFn::Rules {
 
     rule item-foreign_fn {
         <FN> 
@@ -16,7 +12,7 @@ our class ForeignFn::Rules {
     }
 }
 
-our class ForeignFn::Actions {
+our role ForeignFn::Actions {
 
     method item-foreign_fn($/) {
         make ForeignFn.new(

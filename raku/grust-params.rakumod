@@ -1,13 +1,7 @@
-our class Arg {
-    has $.ty-sum;
-    has $.pat;
-}
+use grust-model;
 
-our class Args {
-    has $.param;
-}
 
-our class Params::Rules {
+our role Params::Rules {
 
     rule maybe-params {
         [<params> ','? ]?
@@ -28,7 +22,7 @@ our class Params::Rules {
     }
 }
 
-our class Params::Actions {
+our role Params::Actions {
 
     method maybe-params($/) {
         make $<params>.made

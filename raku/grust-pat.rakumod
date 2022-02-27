@@ -1,59 +1,7 @@
-our class PatEnum {
-    has $.path-expr;
-    has $.pat-tup;
-}
+use grust-model;
 
-our class PatIdent {
-    has $.pat;
-    has $.ident;
-    has $.binding-mode;
-}
 
-our class PatMac {
-    has $.maybe-ident;
-    has $.path-expr;
-    has $.delimited-token-trees;
-}
-
-our class PatQualifiedPath {
-    has $.maybe-as-trait-ref;
-    has $.ident;
-    has $.ty-sum;
-}
-
-our class PatRange {
-    has $.lit-or-path;
-}
-
-our class PatRegion {
-    has $.pat;
-}
-
-our class PatStruct {
-    has $.pat-fields;
-    has $.pat-struct;
-    has $.path-expr;
-}
-
-our class PatTup {
-    has $.pat-tup;
-    has $.pat-tup-elts;
-}
-
-our class PatUniq {
-    has $.pat;
-}
-
-our class PatVec {
-    has $.pat-vec;
-    has $.pat-vec-elts;
-}
-
-our class Pats {
-    has $.pat;
-}
-
-our class Pat::Rules {
+our role Pat::Rules {
 
     proto rule pat { * }
 
@@ -82,7 +30,7 @@ our class Pat::Rules {
     }
 }
 
-our class Pat::Actions {
+our role Pat::Actions {
 
     method pat:sym<a>($/) {
         make PatWild.new

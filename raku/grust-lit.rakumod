@@ -1,4 +1,6 @@
-our class Lit::Rules {
+use grust-model;
+
+our role Lit::Rules {
 
     proto rule lit { * }
 
@@ -11,7 +13,7 @@ our class Lit::Rules {
     rule lit:sym<g> { <str> }
 }
 
-our class Lit::Actions {
+our role Lit::Actions {
 
     method lit:sym<a>($/) {
         make LitByte.new( val => ~$/)

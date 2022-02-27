@@ -1,4 +1,6 @@
-our class Ident::Rules {
+use grust-model;
+
+our role Ident::Rules {
 
     rule maybe-ident {
         <ident>?
@@ -14,25 +16,25 @@ our class Ident::Rules {
     rule ident:sym<union>   { <UNION> }
 }
 
-our class Ident::Actions {
+our role Ident::Actions {
 
     method maybe-ident($/) {
         make $<ident>.made
     }
 
     method ident:sym<ident>($/) {
-        make ident.new(value => ~$/)
+        make Ident.new(value => ~$/)
     }
 
     method ident:sym<catch>($/) {
-        make ident.new(value => ~$/)
+        make Ident.new(value => ~$/)
     }
 
     method ident:sym<default>($/) {
-        make ident.new(value => ~$/)
+        make Ident.new(value => ~$/)
     }
 
     method ident:sym<union>($/) {
-        make ident.new(value => ~$/)
+        make Ident.new(value => ~$/)
     }
 }

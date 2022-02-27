@@ -1,10 +1,7 @@
-our class ItemStatic {
-    has $.ty;
-    has $.expr;
-    has $.ident;
-}
+use grust-model;
 
-our class ItemStatic::Rules {
+
+our role ItemStatic::Rules {
 
     proto rule item-static { * }
 
@@ -17,7 +14,7 @@ our class ItemStatic::Rules {
     }
 }
 
-our class ItemStatic::Actions {
+our role ItemStatic::Actions {
 
     method item-static:sym<a>($/) {
         make ItemStatic.new(

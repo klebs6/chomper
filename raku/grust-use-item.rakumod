@@ -1,15 +1,14 @@
-our class ViewItemUse {
-    has $.view_path;
-}
+use grust-model;
 
-our class UseItem::Rules {
+
+our role UseItem::Rules {
 
     rule use-item {
         <USE> <view-path> ';'
     }
 }
 
-our class UseItem::Actions {
+our role UseItem::Actions {
 
     method use-item($/) {
         make ViewItemUse.new(

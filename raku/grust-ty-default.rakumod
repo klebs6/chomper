@@ -1,15 +1,14 @@
-our class TyDefault {
-    has $.ty-sum;
-}
+use grust-model;
 
-our class TyDefault::Rules {
+
+our role TyDefault::Rules {
 
     rule maybe-ty-default {
         ['=' <ty-sum>]?
     }
 }
 
-our class TyDefault::Actions {
+our role TyDefault::Actions {
 
     method maybe-ty-default($/) {
         make TyDefault.new(

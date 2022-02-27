@@ -1,17 +1,14 @@
-our class StaticItem {
-    has $.maybe_mut;
-    has $.ident;
-    has $.ty;
-}
+use grust-model;
 
-our class ForeignStatic::Rules {
+
+our role ForeignStatic::Rules {
 
     rule item-foreign_static {
         <maybe-mut> <ident> ':' <ty> ';'
     }
 }
 
-our class ForeignStatic::Actions {
+our role ForeignStatic::Actions {
 
     method item-foreign_static($/) {
         make StaticItem.new(

@@ -1,9 +1,6 @@
-our class ForInType {
-    has $.for_in_type_suffix;
-    has $.maybe_lifetimes;
-}
+use grust-model;
 
-our class ForInType::Rules {
+our role ForInType::Rules {
 
     rule for-in_type {
         <FOR> '<' <maybe-lifetimes> '>' <for-in_type_suffix>
@@ -16,7 +13,7 @@ our class ForInType::Rules {
     rule for-in_type_suffix:sym<ty-closure> { <ty-closure> }
 }
 
-our class ForInType::Actions {
+our role ForInType::Actions {
 
     method for-in_type($/) {
         make ForInType.new(

@@ -1,10 +1,7 @@
-our class ItemMod {
-    has $.ident;
-    has $.maybe_mod_items;
-    has $.inner_attrs;
-}
+use grust-model;
 
-our class ItemMod::Rules {
+
+our role ItemMod::Rules {
 
     proto rule item-mod { * }
 
@@ -25,7 +22,7 @@ our class ItemMod::Rules {
     }
 }
 
-our class ItemMod::Actions {
+our role ItemMod::Actions {
 
     method item-mod:sym<a>($/) {
         make ItemMod.new(

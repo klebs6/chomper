@@ -1,9 +1,7 @@
-our class TySumsAndBindings {
-    has $.bindings;
-    has $.ty-sums;
-}
+use grust-model;
 
-our class TySumsAndBindings::Rules {
+
+our role TySumsAndBindings::Rules {
 
     proto rule maybe-ty-sums-and-or-bindings { * }
     rule maybe-ty-sums-and-or-bindings:sym<c> { <ty-sums> [',' <bindings>?]? }
@@ -12,7 +10,7 @@ our class TySumsAndBindings::Rules {
     rule maybe-bindings:sym<a> { [',' <bindings>]? }
 }
 
-our class TySumsAndBindings::Actions {
+our role TySumsAndBindings::Actions {
 
     method maybe-ty-sums-and-or-bindings:sym<c>($/) {
         make TySumsAndBindings.new(

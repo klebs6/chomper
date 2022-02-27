@@ -1,39 +1,7 @@
-#---------------------------------
-# There are two sub-grammars within a "stmts:
-# exprs" derivation depending on whether each
-# stmt-expr is a block-expr form; this is to
-# handle the "semicolon rule" for stmt sequencing
-# that permits writing
-#
-#     if foo { bar } 10
-#
-# as a sequence of two stmts (one if-expr stmt,
-# one lit-10-expr stmt). Unfortunately by
-# permitting juxtaposition of exprs in sequence
-# like that, the non-block expr grammar has to
-# have a second limited sub-grammar that excludes
-# the prefix exprs that are ambiguous with
-# binops. That is to say:
-#
-#     {10} - 1
-#
-# should parse as (progn (progn 10) (- 1)) not (-
-# (progn 10) 1), that is to say, two statements
-# rather than one, at least according to the
-# mainline rust parser.
-#
-# So we wind up with a 3-way split in exprs that
-# occur in stmt lists: block, nonblock-prefix, and
-# nonblock-nonprefix.
-#
-# In non-stmts contexts, expr can relax this
-# trichotomy.
-our class Stmts {
-    has @.stmts;
-    has $.nonblock-expr;
-}
+use grust-model;
 
-our class Stmts::Rules {
+
+our role Stmts::Rules {
 
     rule maybe-stmts { <stmts>? <nonblock-expr>? }
 
@@ -52,7 +20,7 @@ our class Stmts::Rules {
     rule stmt:sym<j> { ';' }
 }
 
-our class Stmts::Actions {
+our role Stmts::Actions {
 
     method maybe-stmts:sym<a>($/) {
         make Stmts.new(

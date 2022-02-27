@@ -1,20 +1,7 @@
-our class EnumArgs {
-    has $.struct_decl-fields;
-    has $.maybe_ty-sums;
-    has $.expr;
-}
+use grust-model;
 
-our class EnumDef {
-    has $.attrs_and_vis;
-    has $.enum_args;
-    has $.ident;
-}
 
-our class EnumDefs {
-    has $.enum_def;
-}
-
-our class ItemEnum::Rules {
+our role ItemEnum::Rules {
 
     rule item-enum { 
         <ENUM> 
@@ -31,16 +18,17 @@ our class ItemEnum::Rules {
     }
 
     #----------------------------
-    proto rule enum-args { * }
+    rule enum-args { <enum-args-body>? }
 
-    rule enum-args:sym<a> { '{' <struct-decl-fields> '}' }
-    rule enum-args:sym<b> { '{' <struct-decl-fields> ',' '}' }
-    rule enum-args:sym<c> { '(' <maybe-ty-sums> ')' }
-    rule enum-args:sym<d> { '=' <expr> }
-    rule enum-args:sym<e> { }
+    proto rule enum-args-body { * }
+
+    rule enum-args-body:sym<a> { '{' <struct-decl-fields> '}' }
+    rule enum-args-body:sym<b> { '{' <struct-decl-fields> ',' '}' }
+    rule enum-args-body:sym<c> { '(' <maybe-ty-sums> ')' }
+    rule enum-args-body:sym<d> { '=' <expr> }
 }
 
-our class ItemEnum::Actions {
+our role ItemEnum::Actions {
 
     method item-enum($/) {
         make ItemEnum.new(
