@@ -8,23 +8,23 @@ our class TyFixedLengthVec {
 }
 
 our class TyMacro {
-    has $.path_generic_args_without_colons;
-    has $.delimited_token_trees;
-    has $.maybe_ident;
+    has $.path-generic-args-without-colons;
+    has $.delimited-token-trees;
+    has $.maybe-ident;
 }
 
 our class TyPath {
-    has $.path_generic_args_without_colons;
+    has $.path-generic-args-without-colons;
 }
 
 our class TyPtr {
-    has $.maybe_mut_or_const;
+    has $.maybe-mut-or-const;
     has $.ty;
 }
 
 our class TyRptr {
     has $.ty;
-    has $.maybe_mut;
+    has $.maybe-mut;
     has $.lifetime;
 }
 
@@ -40,13 +40,13 @@ our class TyPrim::Rules {
 
     proto rule ty-prim { * }
 
-    rule ty-prim:sym<a> { {self.set-prec(IDENT)} <path-generic_args_without_colons> }
-    rule ty-prim:sym<b> { {self.set-prec(IDENT)} <MOD-SEP> <path-generic_args_without_colons> }
-    rule ty-prim:sym<c> { {self.set-prec(IDENT)} <SELF> <MOD-SEP> <path-generic_args_without_colons> }
-    rule ty-prim:sym<d> { {self.set-prec(IDENT)} <path-generic_args_without_colons> '!' <maybe-ident> <delimited-token_trees> }
-    rule ty-prim:sym<e> { {self.set-prec(IDENT)} <MOD-SEP> <path-generic_args_without_colons> '!' <maybe-ident> <delimited-token_trees> }
+    rule ty-prim:sym<a> { {self.set-prec(IDENT)} <path-generic-args-without-colons> }
+    rule ty-prim:sym<b> { {self.set-prec(IDENT)} <MOD-SEP> <path-generic-args-without-colons> }
+    rule ty-prim:sym<c> { {self.set-prec(IDENT)} <SELF> <MOD-SEP> <path-generic-args-without-colons> }
+    rule ty-prim:sym<d> { {self.set-prec(IDENT)} <path-generic-args-without-colons> '!' <maybe-ident> <delimited-token-trees> }
+    rule ty-prim:sym<e> { {self.set-prec(IDENT)} <MOD-SEP> <path-generic-args-without-colons> '!' <maybe-ident> <delimited-token-trees> }
     rule ty-prim:sym<f> { <BOX> <ty> }
-    rule ty-prim:sym<g> { '*' <maybe-mut_or_const> <ty> }
+    rule ty-prim:sym<g> { '*' <maybe-mut-or-const> <ty> }
     rule ty-prim:sym<h> { '&' <ty> }
     rule ty-prim:sym<i> { '&' <MUT> <ty> }
     rule ty-prim:sym<j> { <ANDAND> <ty> }
@@ -58,43 +58,43 @@ our class TyPrim::Rules {
     rule ty-prim:sym<p> { '[' <ty> ';' <expr> ']' }
     rule ty-prim:sym<q> { <TYPEOF> '(' <expr> ')' }
     rule ty-prim:sym<r> { <UNDERSCORE> }
-    rule ty-prim:sym<s> { <ty-bare_fn> }
-    rule ty-prim:sym<t> { <for-in_type> }
+    rule ty-prim:sym<s> { <ty-bare-fn> }
+    rule ty-prim:sym<t> { <for-in-type> }
 }
 
 our class TyPrim::Actions {
 
     method ty-prim:sym<a>($/) {
         make TyPath.new(
-            path-generic_args_without_colons =>  $<path-generic_args_without_colons>.made,
+            path-generic-args-without-colons =>  $<path-generic-args-without-colons>.made,
         )
     }
 
     method ty-prim:sym<b>($/) {
         make TyPath.new(
-            path-generic_args_without_colons =>  $<path-generic_args_without_colons>.made,
+            path-generic-args-without-colons =>  $<path-generic-args-without-colons>.made,
         )
     }
 
     method ty-prim:sym<c>($/) {
         make TyPath.new(
-            path-generic_args_without_colons =>  $<path-generic_args_without_colons>.made,
+            path-generic-args-without-colons =>  $<path-generic-args-without-colons>.made,
         )
     }
 
     method ty-prim:sym<d>($/) {
         make TyMacro.new(
-            path-generic_args_without_colons =>  $<path-generic_args_without_colons>.made,
+            path-generic-args-without-colons =>  $<path-generic-args-without-colons>.made,
             maybe-ident                      =>  $<maybe-ident>.made,
-            delimited-token_trees            =>  $<delimited-token_trees>.made,
+            delimited-token-trees            =>  $<delimited-token-trees>.made,
         )
     }
 
     method ty-prim:sym<e>($/) {
         make TyMacro.new(
-            path-generic_args_without_colons =>  $<path-generic_args_without_colons>.made,
+            path-generic-args-without-colons =>  $<path-generic-args-without-colons>.made,
             maybe-ident                      =>  $<maybe-ident>.made,
-            delimited-token_trees            =>  $<delimited-token_trees>.made,
+            delimited-token-trees            =>  $<delimited-token-trees>.made,
         )
     }
 
@@ -106,7 +106,7 @@ our class TyPrim::Actions {
 
     method ty-prim:sym<g>($/) {
         make TyPtr.new(
-            maybe-mut_or_const =>  $<maybe-mut_or_const>.made,
+            maybe-mut-or-const =>  $<maybe-mut-or-const>.made,
             ty                 =>  $<ty>.made,
         )
     }
@@ -180,10 +180,10 @@ our class TyPrim::Actions {
     }
 
     method ty-prim:sym<s>($/) {
-        make $<ty-bare_fn>.made
+        make $<ty-bare-fn>.made
     }
 
     method ty-prim:sym<t>($/) {
-        make $<for-in_type>.made
+        make $<for-in-type>.made
     }
 }
