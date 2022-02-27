@@ -1,41 +1,41 @@
 our class TyQualifiedPath::Rules {
 
-    proto rule ty-qualified_path_and_generic_values { * }
+    proto rule ty-qualified-path-and-generic-values { * }
 
-    rule ty-qualified_path_and_generic_values:sym<a> {
-        <ty-qualified_path> <maybe-bindings>
+    rule ty-qualified-path-and-generic-values:sym<a> {
+        <ty-qualified-path> <maybe-bindings>
     }
 
-    rule ty-qualified_path_and_generic_values:sym<b> {
-        <ty-qualified_path> ',' <ty-sums> <maybe-bindings>
+    rule ty-qualified-path-and-generic-values:sym<b> {
+        <ty-qualified-path> ',' <ty-sums> <maybe-bindings>
     }
 
-    proto rule ty-qualified_path { * }
+    proto rule ty-qualified-path { * }
 
-    rule ty-qualified_path:sym<a> {
+    rule ty-qualified-path:sym<a> {
         <ty-sum> <AS> <trait-ref> '>' <MOD-SEP> <ident>
     }
 
-    rule ty-qualified_path:sym<b> {
-        <ty-sum> <AS> <trait-ref> '>' <MOD-SEP> <ident> '+' <ty-param_bounds>
+    rule ty-qualified-path:sym<b> {
+        <ty-sum> <AS> <trait-ref> '>' <MOD-SEP> <ident> '+' <ty-param-bounds>
     }
 }
 
 our class TyQualifiedPath::Actions {
 
-    method ty-qualified_path_and_generic_values:sym<a>($/) {
+    method ty-qualified-path-and-generic-values:sym<a>($/) {
         make GenericValues.new(
             maybe-bindings =>  $<maybe-bindings>.made,
         )
     }
 
-    method ty-qualified_path_and_generic_values:sym<b>($/) {
+    method ty-qualified-path-and-generic-values:sym<b>($/) {
         make GenericValues.new(
             maybe-bindings =>  $<maybe-bindings>.made,
         )
     }
 
-    method ty-qualified_path:sym<a>($/) {
+    method ty-qualified-path:sym<a>($/) {
         make TyQualifiedPath.new(
             ty-sum    =>  $<ty-sum>.made,
             trait-ref =>  $<trait-ref>.made,
@@ -43,7 +43,7 @@ our class TyQualifiedPath::Actions {
         )
     }
 
-    method ty-qualified_path:sym<b>($/) {
+    method ty-qualified-path:sym<b>($/) {
         make TyQualifiedPath.new(
             ty-sum    =>  $<ty-sum>.made,
             trait-ref =>  $<trait-ref>.made,
