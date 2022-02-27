@@ -40,85 +40,26 @@ our class TyPrim::Rules {
 
     proto rule ty-prim { * }
 
-    rule ty-prim:sym<a> {
-        {self.set-prec(IDENT)} <path-generic_args_without_colons>
-    }
-
-    rule ty-prim:sym<b> {
-        {self.set-prec(IDENT)} <MOD-SEP> <path-generic_args_without_colons>
-    }
-
-    rule ty-prim:sym<c> {
-        {self.set-prec(IDENT)} <SELF> <MOD-SEP> <path-generic_args_without_colons>
-    }
-
-    rule ty-prim:sym<d> {
-        {self.set-prec(IDENT)} <path-generic_args_without_colons> '!' <maybe-ident> <delimited-token_trees>
-    }
-
-    rule ty-prim:sym<e> {
-        {self.set-prec(IDENT)} <MOD-SEP> <path-generic_args_without_colons> '!' <maybe-ident> <delimited-token_trees>
-    }
-
-    rule ty-prim:sym<f> {
-        <BOX> <ty>
-    }
-
-    rule ty-prim:sym<g> {
-        '*' <maybe-mut_or_const> <ty>
-    }
-
-    rule ty-prim:sym<h> {
-        '&' <ty>
-    }
-
-    rule ty-prim:sym<i> {
-        '&' <MUT> <ty>
-    }
-
-    rule ty-prim:sym<j> {
-        <ANDAND> <ty>
-    }
-
-    rule ty-prim:sym<k> {
-        <ANDAND> <MUT> <ty>
-    }
-
-    rule ty-prim:sym<l> {
-        '&' <lifetime> <maybe-mut> <ty>
-    }
-
-    rule ty-prim:sym<m> {
-        <ANDAND> <lifetime> <maybe-mut> <ty>
-    }
-
-    rule ty-prim:sym<n> {
-        '[' <ty> ']'
-    }
-
-    rule ty-prim:sym<o> {
-        '[' <ty> ',' <DOTDOT> <expr> ']'
-    }
-
-    rule ty-prim:sym<p> {
-        '[' <ty> ';' <expr> ']'
-    }
-
-    rule ty-prim:sym<q> {
-        <TYPEOF> '(' <expr> ')'
-    }
-
-    rule ty-prim:sym<r> {
-        <UNDERSCORE>
-    }
-
-    rule ty-prim:sym<s> {
-        <ty-bare_fn>
-    }
-
-    rule ty-prim:sym<t> {
-        <for-in_type>
-    }
+    rule ty-prim:sym<a> { {self.set-prec(IDENT)} <path-generic_args_without_colons> }
+    rule ty-prim:sym<b> { {self.set-prec(IDENT)} <MOD-SEP> <path-generic_args_without_colons> }
+    rule ty-prim:sym<c> { {self.set-prec(IDENT)} <SELF> <MOD-SEP> <path-generic_args_without_colons> }
+    rule ty-prim:sym<d> { {self.set-prec(IDENT)} <path-generic_args_without_colons> '!' <maybe-ident> <delimited-token_trees> }
+    rule ty-prim:sym<e> { {self.set-prec(IDENT)} <MOD-SEP> <path-generic_args_without_colons> '!' <maybe-ident> <delimited-token_trees> }
+    rule ty-prim:sym<f> { <BOX> <ty> }
+    rule ty-prim:sym<g> { '*' <maybe-mut_or_const> <ty> }
+    rule ty-prim:sym<h> { '&' <ty> }
+    rule ty-prim:sym<i> { '&' <MUT> <ty> }
+    rule ty-prim:sym<j> { <ANDAND> <ty> }
+    rule ty-prim:sym<k> { <ANDAND> <MUT> <ty> }
+    rule ty-prim:sym<l> { '&' <lifetime> <maybe-mut> <ty> }
+    rule ty-prim:sym<m> { <ANDAND> <lifetime> <maybe-mut> <ty> }
+    rule ty-prim:sym<n> { '[' <ty> ']' }
+    rule ty-prim:sym<o> { '[' <ty> ',' <DOTDOT> <expr> ']' }
+    rule ty-prim:sym<p> { '[' <ty> ';' <expr> ']' }
+    rule ty-prim:sym<q> { <TYPEOF> '(' <expr> ')' }
+    rule ty-prim:sym<r> { <UNDERSCORE> }
+    rule ty-prim:sym<s> { <ty-bare_fn> }
+    rule ty-prim:sym<t> { <for-in_type> }
 }
 
 our class TyPrim::Actions {
