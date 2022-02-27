@@ -1,23 +1,26 @@
 our class TyFnDecl {
-    has $.fn_anon_params;
-    has $.ret_ty;
-    has $.generic_params;
+    has $.fn-anon-params;
+    has $.ret-ty;
+    has $.generic-params;
 }
 
 our class TyFnDecl::Rules {
 
-    rule ty-fn_decl {
-        <generic-params> <fn-anon_params> <ret-ty>
+    rule ty-fn-decl {
+        <generic-params> 
+        <fn-anon-params> 
+        <ret-ty>
     }
 }
 
 our class TyFnDecl::Actions {
 
-    method ty-fn_decl($/) {
+    method ty-fn-decl($/) {
         make TyFnDecl.new(
             generic-params =>  $<generic-params>.made,
-            fn-anon_params =>  $<fn-anon_params>.made,
+            fn-anon-params =>  $<fn-anon-params>.made,
             ret-ty         =>  $<ret-ty>.made,
         )
     }
 }
+
