@@ -16,61 +16,20 @@ our class ViewPath::Rules {
 
     proto rule view-path { * }
 
-    rule view-path:sym<a> {
-        <path-no_types_allowed>
-    }
-
-    rule view-path:sym<b> {
-        <path-no_types_allowed> <MOD-SEP> '{' '}'
-    }
-
-    rule view-path:sym<c> {
-        <MOD-SEP> '{' '}'
-    }
-
-    rule view-path:sym<d> {
-        <path-no_types_allowed> <MOD-SEP> '{' <idents-or_self> '}'
-    }
-
-    rule view-path:sym<e> {
-        <MOD-SEP> '{' <idents-or_self> '}'
-    }
-
-    rule view-path:sym<f> {
-        <path-no_types_allowed> <MOD-SEP> '{' <idents-or_self> ',' '}'
-    }
-
-    rule view-path:sym<g> {
-        <MOD-SEP> '{' <idents-or_self> ',' '}'
-    }
-
-    rule view-path:sym<h> {
-        <path-no_types_allowed> <MOD-SEP> '*'
-    }
-
-    rule view-path:sym<i> {
-        <MOD-SEP> '*'
-    }
-
-    rule view-path:sym<j> {
-        '*'
-    }
-
-    rule view-path:sym<k> {
-        '{' '}'
-    }
-
-    rule view-path:sym<l> {
-        '{' <idents-or_self> '}'
-    }
-
-    rule view-path:sym<m> {
-        '{' <idents-or_self> ',' '}'
-    }
-
-    rule view-path:sym<n> {
-        <path-no_types_allowed> <AS> <ident>
-    }
+    rule view-path:sym<a> { <path-no_types_allowed> }
+    rule view-path:sym<b> { <path-no_types_allowed> <MOD-SEP> '{' '}' }
+    rule view-path:sym<c> { <MOD-SEP> '{' '}' }
+    rule view-path:sym<d> { <path-no_types_allowed> <MOD-SEP> '{' <idents-or_self> '}' }
+    rule view-path:sym<e> { <MOD-SEP> '{' <idents-or_self> '}' }
+    rule view-path:sym<f> { <path-no_types_allowed> <MOD-SEP> '{' <idents-or_self> ',' '}' }
+    rule view-path:sym<g> { <MOD-SEP> '{' <idents-or_self> ',' '}' }
+    rule view-path:sym<h> { <path-no_types_allowed> <MOD-SEP> '*' }
+    rule view-path:sym<i> { <MOD-SEP> '*' }
+    rule view-path:sym<j> { '*' }
+    rule view-path:sym<k> { '{' '}' }
+    rule view-path:sym<l> { '{' <idents-or_self> '}' }
+    rule view-path:sym<m> { '{' <idents-or_self> ',' '}' }
+    rule view-path:sym<n> { <path-no_types_allowed> <AS> <ident> }
 }
 
 our class ViewPath::Actions {
