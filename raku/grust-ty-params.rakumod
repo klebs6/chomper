@@ -4,26 +4,14 @@ our class TyParams {
 
 our class TyParams::Rules {
 
-    proto rule ty-params { * }
-
-    rule ty-params:sym<a> {
-        <ty-param>
-    }
-
-    rule ty-params:sym<b> {
-        <ty-params> ',' <ty-param>
+    rule ty-params {
+        <ty-param>+ %% ","
     }
 }
 
 our class TyParams::Actions {
 
-    method ty-params:sym<a>($/) {
-        make TyParams.new(
-            ty-param =>  $<ty-param>.made,
-        )
-    }
-
-    method ty-params:sym<b>($/) {
-        ExtNode<140699547191112>
+    method ty-params($/) {
+        make $<ty-param>.made
     }
 }
