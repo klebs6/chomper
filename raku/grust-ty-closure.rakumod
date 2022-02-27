@@ -1,7 +1,7 @@
 our class TyClosure {
-    has $.anon_params;
-    has $.ret_ty;
-    has $.maybe_bounds;
+    has $.anon-params;
+    has $.ret-ty;
+    has $.maybe-bounds;
 }
 
 our class TyClosure::Rules {
@@ -9,19 +9,29 @@ our class TyClosure::Rules {
     proto rule ty-closure { * }
 
     rule ty-closure:sym<a> {
-        <UNSAFE> '|' <anon-params> '|' <maybe-bounds> <ret-ty>
+        <UNSAFE> 
+        '|' <anon-params> '|' 
+        <maybe-bounds> 
+        <ret-ty>
     }
 
     rule ty-closure:sym<b> {
-        '|' <anon-params> '|' <maybe-bounds> <ret-ty>
+        '|' <anon-params> '|' 
+        <maybe-bounds> 
+        <ret-ty>
     }
 
     rule ty-closure:sym<c> {
-        <UNSAFE> <OROR> <maybe-bounds> <ret-ty>
+        <UNSAFE> 
+        <OROR> 
+        <maybe-bounds> 
+        <ret-ty>
     }
 
     rule ty-closure:sym<d> {
-        <OROR> <maybe-bounds> <ret-ty>
+        <OROR> 
+        <maybe-bounds> 
+        <ret-ty>
     }
 }
 
@@ -57,3 +67,4 @@ our class TyClosure::Actions {
         )
     }
 }
+
