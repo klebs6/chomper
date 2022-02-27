@@ -1,6 +1,6 @@
 our class TyParam {
-    has $.maybe_ty_param_bounds;
-    has $.maybe_ty_default;
+    has $.maybe-ty-param-bounds;
+    has $.maybe-ty-default;
     has $.ident;
 }
 
@@ -9,11 +9,16 @@ our class TyParam::Rules {
     proto rule ty-param { * }
 
     rule ty-param:sym<a> {
-        <ident> <maybe-ty_param_bounds> <maybe-ty_default>
+        <ident> 
+        <maybe-ty-param-bounds> 
+        <maybe-ty-default>
     }
 
     rule ty-param:sym<b> {
-        <ident> '?' <ident> <maybe-ty_param_bounds> <maybe-ty_default>
+        <ident> '?' 
+        <ident> 
+        <maybe-ty-param-bounds> 
+        <maybe-ty-default>
     }
 }
 
@@ -22,8 +27,8 @@ our class TyParam::Actions {
     method ty-param:sym<a>($/) {
         make TyParam.new(
             ident                 =>  $<ident>.made,
-            maybe-ty_param_bounds =>  $<maybe-ty_param_bounds>.made,
-            maybe-ty_default      =>  $<maybe-ty_default>.made,
+            maybe-ty-param-bounds =>  $<maybe-ty-param-bounds>.made,
+            maybe-ty-default      =>  $<maybe-ty-default>.made,
         )
     }
 
@@ -31,8 +36,8 @@ our class TyParam::Actions {
         make TyParam.new(
             ident                 =>  $<ident>.made,
             ident                 =>  $<ident>.made,
-            maybe-ty_param_bounds =>  $<maybe-ty_param_bounds>.made,
-            maybe-ty_default      =>  $<maybe-ty_default>.made,
+            maybe-ty-param-bounds =>  $<maybe-ty-param-bounds>.made,
+            maybe-ty-default      =>  $<maybe-ty-default>.made,
         )
     }
 }
