@@ -1,4 +1,3 @@
-
 our class ViewItemUse {
     has $.view_path;
 }

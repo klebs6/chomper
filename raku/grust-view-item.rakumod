@@ -6,21 +6,10 @@ our class ViewItem::Rules {
 
     proto rule view-item { * }
 
-    rule view-item:sym<a> {
-        <use-item>
-    }
-
-    rule view-item:sym<b> {
-        <extern-fn_item>
-    }
-
-    rule view-item:sym<c> {
-        <EXTERN> <CRATE> <ident> ';'
-    }
-
-    rule view-item:sym<d> {
-        <EXTERN> <CRATE> <ident> <AS> <ident> ';'
-    }
+    rule view-item:sym<a> { <use-item> }
+    rule view-item:sym<b> { <extern-fn_item> }
+    rule view-item:sym<c> { <EXTERN> <CRATE> <ident> ';' }
+    rule view-item:sym<d> { <EXTERN> <CRATE> <ident> <AS> <ident> ';' }
 }
 
 our class ViewItem::Actions {
@@ -46,4 +35,3 @@ our class ViewItem::Actions {
         )
     }
 }
-
