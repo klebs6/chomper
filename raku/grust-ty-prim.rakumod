@@ -5,11 +5,41 @@ our role TyPrim::Rules {
 
     proto rule ty-prim { * }
 
-    rule ty-prim:sym<a> { {self.set-prec(IDENT)} <path-generic-args-without-colons> }
-    rule ty-prim:sym<b> { {self.set-prec(IDENT)} <MOD-SEP> <path-generic-args-without-colons> }
-    rule ty-prim:sym<c> { {self.set-prec(IDENT)} <SELF> <MOD-SEP> <path-generic-args-without-colons> }
-    rule ty-prim:sym<d> { {self.set-prec(IDENT)} <path-generic-args-without-colons> '!' <maybe-ident> <delimited-token-trees> }
-    rule ty-prim:sym<e> { {self.set-prec(IDENT)} <MOD-SEP> <path-generic-args-without-colons> '!' <maybe-ident> <delimited-token-trees> }
+    rule ty-prim:sym<a> { 
+        #{self.set-prec(IDENT)} 
+        <path-generic-args-without-colons> 
+    }
+
+    rule ty-prim:sym<b> { 
+        #{self.set-prec(IDENT)} 
+        <MOD-SEP> 
+        <path-generic-args-without-colons> 
+    }
+
+    rule ty-prim:sym<c> { 
+        #{self.set-prec(IDENT)} 
+        <SELF> 
+        <MOD-SEP> 
+        <path-generic-args-without-colons> 
+    }
+
+    rule ty-prim:sym<d> { 
+        #{self.set-prec(IDENT)} 
+        <path-generic-args-without-colons> 
+        '!' 
+        <maybe-ident> 
+        <delimited-token-trees> 
+    }
+
+    rule ty-prim:sym<e> { 
+        #{self.set-prec(IDENT)} 
+        <MOD-SEP> 
+        <path-generic-args-without-colons> 
+        '!' 
+        <maybe-ident> 
+        <delimited-token-trees> 
+    }
+
     rule ty-prim:sym<f> { <BOX> <ty> }
     rule ty-prim:sym<g> { '*' <maybe-mut-or-const> <ty> }
     rule ty-prim:sym<h> { '&' <ty> }

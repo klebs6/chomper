@@ -4,11 +4,14 @@ use grust-model;
 our role StructExpr::Rules {
 
     #----------------
-    proto rule struct-expr-fields { * }
+    rule struct-expr-fields {  
+        <struct-expr-fields-base>?
+    }
 
-    rule struct-expr-fields:sym<b> { <field-inits> ','? }
-    rule struct-expr-fields:sym<c> { <maybe-field-inits> <default-field-init> }
-    rule struct-expr-fields:sym<d> { }
+    proto rule struct-expr-fields-base { * }
+
+    rule struct-expr-fields-base:sym<b> { <field-inits> ','? }
+    rule struct-expr-fields-base:sym<c> { <maybe-field-inits> <default-field-init> }
 
     #----------------
     rule maybe-field-inits { [<field-inits> ','?]? }
@@ -29,11 +32,11 @@ our role StructExpr::Rules {
 
 our role StructExpr::Actions {
 
-    method struct-expr-fields:sym<b>($/) {
+    method struct-expr-fields-base:sym<b>($/) {
         make $<field-inits>.made
     }
 
-    method struct-expr-fields:sym<c>($/) {
+    method struct-expr-fields-base:sym<c>($/) {
         make StructExprFields.new(
             maybe-field-inits  => $<maybe-field-inits>.made,
             default-field-init => $<default-field-init>.made,

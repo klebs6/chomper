@@ -6,22 +6,25 @@ our role Unsafe::Rules {
         <UNSAFE>?
     }
 
-    proto rule maybe-default_maybe_unsafe { * }
+    rule maybe-default-maybe-unsafe { <maybe-default-maybe-unsafe>? }
 
-    rule maybe-default_maybe_unsafe:sym<a> { <DEFAULT> <UNSAFE> }
-    rule maybe-default_maybe_unsafe:sym<b> { <DEFAULT> }
-    rule maybe-default_maybe_unsafe:sym<c> { <UNSAFE> }
-    rule maybe-default_maybe_unsafe:sym<d> { }
+    #---------------
+    proto rule maybe-default-maybe-unsafe-base { * }
+
+    rule maybe-default-maybe-unsafe-base:sym<a> { <DEFAULT> <UNSAFE> }
+    rule maybe-default-maybe-unsafe-base:sym<b> { <DEFAULT> }
+    rule maybe-default-maybe-unsafe-base:sym<c> { <UNSAFE> }
 }
 
 our role Unsafe::Actions {
 
-    method maybe-unsafe:sym<a>($/) {
-        make Unsafe.new
+    method maybe-unsafe($/) {
+        make $/<UNSAFE>:exists ?? Unsafe.new !! Nil
     }
 
-    method maybe-default_maybe_unsafe:sym<a>($/) { make DefaultUnsafe.new }
-    method maybe-default_maybe_unsafe:sym<b>($/) { make Default.new }
-    method maybe-default_maybe_unsafe:sym<c>($/) { make Unsafe.new }
-    method maybe-default_maybe_unsafe:sym<d>($/) { }
+    method maybe-default-maybe-unsafe($/) { made $<maybe-default-maybe-unsafe-base>.made }
+
+    method maybe-default-maybe-unsafe-base:sym<a>($/) { make DefaultUnsafe.new }
+    method maybe-default-maybe-unsafe-base:sym<b>($/) { make Default.new }
+    method maybe-default-maybe-unsafe-base:sym<c>($/) { make Unsafe.new }
 }

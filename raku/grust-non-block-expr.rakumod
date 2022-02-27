@@ -7,7 +7,12 @@ our role NonBlockExpr::Rules {
     proto rule nonblock-expr { * }
 
     rule nonblock-expr:sym<a>  { <lit> }
-    rule nonblock-expr:sym<b>  { {self.set-prec(IDENT)} <path-expr> }
+
+    rule nonblock-expr:sym<b>  { 
+        #{self.set-prec(IDENT)} 
+        <path-expr> 
+    }
+
     rule nonblock-expr:sym<c>  { <SELF> }
     rule nonblock-expr:sym<d>  { <macro-expr> }
     rule nonblock-expr:sym<e>  { <path-expr> '{' <struct-expr_fields> '}' }

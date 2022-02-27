@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role Pat::Rules {
 
     proto rule pat { * }
@@ -31,6 +30,7 @@ our role Pat::Rules {
 }
 
 our role Pat::Actions {
+    =begin comment
 
     method pat:sym<a>($/) {
         make PatWild.new
@@ -155,4 +155,5 @@ our role Pat::Actions {
     method pats-or:sym($/) {
         make $<pat>>>.made
     }
+    =end comment
 }

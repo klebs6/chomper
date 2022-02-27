@@ -1,6 +1,5 @@
 use grust-model;
 
-
 #-------------------------------------
 # A path with a lifetime and type parameters with
 # double colons before the type parameters;
@@ -35,7 +34,7 @@ our role PathGenericArgsWithColons::Actions {
     }
 
     method path-generic-args-with-colons-prefix:sym<a>($/) {
-        make components.new(
+        make Components.new(
             ident =>  $<ident>.made,
         )
     }

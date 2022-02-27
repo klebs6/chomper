@@ -37,7 +37,7 @@ our role OuterAttrs::Actions {
     }
 
     method outer-attr:sym<b>($/) {
-        make doc-comment.new(
+        make DocComment.new(
 
         )
     }

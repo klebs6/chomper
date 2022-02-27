@@ -23,23 +23,23 @@ our role PathNoTypesAllowed::Actions {
         )
     }
 
-    method path-no-types-allowed:sym-base<a>($/) { make $<ident>.made }
-    method path-no-types-allowed:sym<b>($/)      { make $<SELF>.made }
-    method path-no-types-allowed:sym<c>($/)      { make $<SUPER>.made }
+    method path-no-types-allowed-base:sym<a>($/) { make $<ident>.made }
+    method path-no-types-allowed-base:sym<b>($/) { make $<SELF>.made }
+    method path-no-types-allowed-base:sym<c>($/) { make $<SUPER>.made }
 }
 
 our role PathGenericArgsWithoutColons::Rules {
 
     rule path-generic-args-without-colons {  
-        {self.set-prec(IDENT)}
+        #{self.set-prec(IDENT)}
         <path-generic-args-without-colons-item>+ %% <MOD-SEP>
     }
 
     proto rule path-generic-args-without-colons-item { * }
 
-    rule path-generic-args-without-colons-item<a> { <ident> }
-    rule path-generic-args-without-colons-item<b> { <ident> <generic-args> }
-    rule path-generic-args-without-colons-item<c> { <ident> '(' <maybe-ty-sums> ')' <ret-ty> }
+    rule path-generic-args-without-colons-item:sym<a> { <ident> }
+    rule path-generic-args-without-colons-item:sym<b> { <ident> <generic-args> }
+    rule path-generic-args-without-colons-item:sym<c> { <ident> '(' <maybe-ty-sums> ')' <ret-ty> }
 }
 
 our role PathGenericArgsWithoutColons::Actions {

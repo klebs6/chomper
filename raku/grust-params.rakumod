@@ -15,8 +15,6 @@ our role Params::Rules {
         <pat> ':' <ty-sum>
     }
 
-    proto rule maybe-comma-params { * }
-
     rule maybe-comma-params {
         [ ',' [<params> ','?]? ]?
     }
