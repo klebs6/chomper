@@ -1,29 +1,19 @@
 our class TyDefault {
-    has $.ty_sum;
+    has $.ty-sum;
 }
 
 our class TyDefault::Rules {
 
-    proto rule maybe-ty_default { * }
-
-    rule maybe-ty_default:sym<a> {
-        '=' <ty-sum>
-    }
-
-    rule maybe-ty_default:sym<b> {
-
+    rule maybe-ty-default {
+        ['=' <ty-sum>]?
     }
 }
 
 our class TyDefault::Actions {
 
-    method maybe-ty_default:sym<a>($/) {
+    method maybe-ty-default($/) {
         make TyDefault.new(
             ty-sum =>  $<ty-sum>.made,
         )
-    }
-
-    method maybe-ty_default:sym<b>($/) {
-        MkNone<140350942994944>
     }
 }
