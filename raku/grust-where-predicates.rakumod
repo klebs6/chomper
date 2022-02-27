@@ -51,4 +51,3 @@ our class WherePredicates::Actions {
         )
     }
 }
-
