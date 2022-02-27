@@ -22,7 +22,7 @@ our role Unsafe::Actions {
         make $/<UNSAFE>:exists ?? Unsafe.new !! Nil
     }
 
-    method maybe-default-maybe-unsafe($/) { made $<maybe-default-maybe-unsafe-base>.made }
+    method maybe-default-maybe-unsafe($/) { make $<maybe-default-maybe-unsafe-base>.made }
 
     method maybe-default-maybe-unsafe-base:sym<a>($/) { make DefaultUnsafe.new }
     method maybe-default-maybe-unsafe-base:sym<b>($/) { make Default.new }
