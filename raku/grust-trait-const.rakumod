@@ -28,5 +28,3 @@ our class TraitConst::Actions {
         )
     }
 }
-
-
