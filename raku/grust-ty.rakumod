@@ -1,45 +1,24 @@
 our class TyQualifiedPath {
     has $.ident;
-    has $.maybe_as_trait_ref;
-    has $.trait_ref;
-    has $.ty_sum;
+    has $.maybe-as-trait-ref;
+    has $.trait-ref;
+    has $.ty-sum;
 }
 
 our class TyTup {
-    has $.ty_sums;
+    has $.ty-sums;
 }
 
 our class Ty::Rules {
 
     proto rule ty { * }
-
-    rule ty:sym<a> {
-        <ty-prim>
-    }
-
-    rule ty:sym<b> {
-        <ty-closure>
-    }
-
-    rule ty:sym<c> {
-        '<' <ty-sum> <maybe-as_trait_ref> '>' <MOD-SEP> <ident>
-    }
-
-    rule ty:sym<d> {
-        <SHL> <ty-sum> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <maybe-as_trait_ref> '>' <MOD-SEP> <ident>
-    }
-
-    rule ty:sym<e> {
-        '(' <ty-sums> ')'
-    }
-
-    rule ty:sym<f> {
-        '(' <ty-sums> ',' ')'
-    }
-
-    rule ty:sym<g> {
-        '(' ')'
-    }
+    rule ty:sym<a> { <ty-prim> }
+    rule ty:sym<b> { <ty-closure> }
+    rule ty:sym<c> { '<' <ty-sum> <maybe-as-trait-ref> '>' <MOD-SEP> <ident> }
+    rule ty:sym<d> { <SHL> <ty-sum> <maybe-as-trait-ref> '>' <MOD-SEP> <ident> <maybe-as-trait-ref> '>' <MOD-SEP> <ident> }
+    rule ty:sym<e> { '(' <ty-sums> ')' }
+    rule ty:sym<f> { '(' <ty-sums> ',' ')' }
+    rule ty:sym<g> { '(' ')' }
 }
 
 our class Ty::Actions {
@@ -55,14 +34,14 @@ our class Ty::Actions {
     method ty:sym<c>($/) {
         make TyQualifiedPath.new(
             ty-sum             =>  $<ty-sum>.made,
-            maybe-as_trait_ref =>  $<maybe-as_trait_ref>.made,
+            maybe-as-trait-ref =>  $<maybe-as-trait-ref>.made,
             ident              =>  $<ident>.made,
         )
     }
 
     method ty:sym<d>($/) {
         make TyQualifiedPath.new(
-            maybe-as_trait_ref =>  $<maybe-as_trait_ref>.made,
+            maybe-as-trait-ref =>  $<maybe-as-trait-ref>.made,
             ident              =>  $<ident>.made,
         )
     }
@@ -83,4 +62,3 @@ our class Ty::Actions {
         make TyNil.new
     }
 }
-
