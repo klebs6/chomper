@@ -1,11 +1,10 @@
 use grust-model;
 
-
 our role TraitConst::Rules {
 
     rule trait-const {
         <maybe-outer-attrs> 
-        <CONST> 
+        <const> 
         <ident> 
         <maybe-ty-ascription> 
         <maybe-const-default> 
@@ -24,4 +23,3 @@ our role TraitConst::Actions {
         )
     }
 }
-

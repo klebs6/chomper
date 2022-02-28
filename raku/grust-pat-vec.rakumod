@@ -1,13 +1,12 @@
 use grust-model;
 
-
 our role PatVec::Rules {
 
     proto rule pat-vec { * }
 
-    rule pat-vec:sym<d> { <pat-vec-elts> ','? <DOTDOT>? }
-    rule pat-vec:sym<h> { <pat-vec-elts> ','? <DOTDOT> ',' <pat-vec-elts> ','? }
-    rule pat-vec:sym<j> { [<DOTDOT> [',' <pat-vec-elts> ','?]?]? }
+    rule pat-vec:sym<d> { <pat-vec-elts> ','? <dotdot>? }
+    rule pat-vec:sym<h> { <pat-vec-elts> ','? <dotdot> ',' <pat-vec-elts> ','? }
+    rule pat-vec:sym<j> { [<dotdot> [',' <pat-vec-elts> ','?]?]? }
 
     rule pat-vec-elts { <pat>+ %% "," }
 }
@@ -37,4 +36,3 @@ our role PatVec::Actions {
         make $<pat>.made
     }
 }
-

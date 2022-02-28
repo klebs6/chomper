@@ -10,9 +10,9 @@ our role NonblockPrefixExpr::Rules {
     rule nonblock-prefix-expr-nostruct:sym<b> { '!' <expr-nostruct> }
     rule nonblock-prefix-expr-nostruct:sym<c> { '*' <expr-nostruct> }
     rule nonblock-prefix-expr-nostruct:sym<d> { '&' <maybe-mut> <expr-nostruct> }
-    rule nonblock-prefix-expr-nostruct:sym<e> { <ANDAND> <maybe-mut> <expr-nostruct> }
+    rule nonblock-prefix-expr-nostruct:sym<e> { <andand> <maybe-mut> <expr-nostruct> }
     rule nonblock-prefix-expr-nostruct:sym<f> { <lambda-expr-nostruct> }
-    rule nonblock-prefix-expr-nostruct:sym<g> { <MOVE> <lambda-expr-nostruct> }
+    rule nonblock-prefix-expr-nostruct:sym<g> { <move> <lambda-expr-nostruct> }
 
     proto rule nonblock-prefix-expr { * }
 
@@ -20,9 +20,9 @@ our role NonblockPrefixExpr::Rules {
     rule nonblock-prefix-expr:sym<b> { '!' <expr> }
     rule nonblock-prefix-expr:sym<c> { '*' <expr> }
     rule nonblock-prefix-expr:sym<d> { '&' <maybe-mut> <expr> }
-    rule nonblock-prefix-expr:sym<e> { <ANDAND> <maybe-mut> <expr> }
+    rule nonblock-prefix-expr:sym<e> { <andand> <maybe-mut> <expr> }
     rule nonblock-prefix-expr:sym<f> { <lambda-expr> }
-    rule nonblock-prefix-expr:sym<g> { <MOVE> <lambda-expr> }
+    rule nonblock-prefix-expr:sym<g> { <move> <lambda-expr> }
 }
 
 our role NonblockPrefixExpr::Actions {

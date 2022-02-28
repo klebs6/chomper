@@ -24,13 +24,13 @@ our role ExprNoStruct::Rules {
     rule expr-nostruct-base:sym<continue-ident>                { <continue_> <ident> }
     rule expr-nostruct-base:sym<return>                        { <return_> }
     rule expr-nostruct-base:sym<return-expr>                   { <return_> <expr> }
-    rule expr-nostruct-base:sym<break>                         { <break_> }
-    rule expr-nostruct-base:sym<break-ident>                   { <break_> <ident> }
+    rule expr-nostruct-base:sym<break>                         { <kw-break> }
+    rule expr-nostruct-base:sym<break-ident>                   { <kw-break> <ident> }
     rule expr-nostruct-base:sym<yield>                         { <yield> }
     rule expr-nostruct-base:sym<yield-expr>                    { <yield> <expr> }
     rule expr-nostruct-base:sym<dotdot-expr-nostruct>          { <dotdot> <expr-nostruct> }
     rule expr-nostruct-base:sym<dotdot>                        { <dotdot> }
-    rule expr-nostruct-base:sym<box-expr>                      { <box> <expr> }
+    rule expr-nostruct-base:sym<box-expr>                      { <kw-box> <expr> }
     rule expr-nostruct-base:sym<expr-qualified-path>           { <expr-qualified-path> }
 
     rule expr-nostruct-base:sym<block-expr>                    { <block-expr> }
@@ -82,7 +82,7 @@ our role ExprNoStruct::Rules {
         #{ self.set-prec(RANGE) } 
     }
 
-    rule expr-nostruct-tail:sym<as-try>    { <as_> <ty> }
+    rule expr-nostruct-tail:sym<as-try>    { <kw-as> <ty> }
     rule expr-nostruct-tail:sym<colon-try> { ':' <ty> }
 }
 

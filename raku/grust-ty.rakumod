@@ -1,13 +1,12 @@
 use grust-model;
 
-
 our role Ty::Rules {
 
     proto rule ty { * }
     rule ty:sym<a> { <ty-prim> }
     rule ty:sym<b> { <ty-closure> }
-    rule ty:sym<c> { '<' <ty-sum> <maybe-as-trait-ref> '>' <MOD-SEP> <ident> }
-    rule ty:sym<d> { <SHL> <ty-sum> <maybe-as-trait-ref> '>' <MOD-SEP> <ident> <maybe-as-trait-ref> '>' <MOD-SEP> <ident> }
+    rule ty:sym<c> { '<' <ty-sum> <maybe-as-trait-ref> '>' <mod-sep> <ident> }
+    rule ty:sym<d> { <shl> <ty-sum> <maybe-as-trait-ref> '>' <mod-sep> <ident> <maybe-as-trait-ref> '>' <mod-sep> <ident> }
     rule ty:sym<e> { '(' <ty-sums> ')' }
     rule ty:sym<f> { '(' <ty-sums> ',' ')' }
     rule ty:sym<g> { '(' ')' }
@@ -54,4 +53,3 @@ our role Ty::Actions {
         make TyNil.new
     }
 }
-

@@ -11,7 +11,7 @@ our role Stmts::Rules {
 
     proto rule stmt  { * }
     rule stmt:sym<a> { <maybe-outer-attrs> <let> }
-    rule stmt:sym<e> { <outer-attrs>? <PUB>? <stmt-item> }
+    rule stmt:sym<e> { <outer-attrs>? <pub>? <stmt-item> }
     rule stmt:sym<f> { <full-block-expr> }
     rule stmt:sym<g> { <maybe-outer-attrs> <block> }
     rule stmt:sym<i> { <outer-attrs>? <nonblock-expr> ';' }
@@ -37,4 +37,3 @@ our role Stmts::Actions {
     method stmt:sym<g>($/) { make $<block>.made }
     method stmt:sym<i>($/) { make $<nonblock-expr>.made }
 }
-

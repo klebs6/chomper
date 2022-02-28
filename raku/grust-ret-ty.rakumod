@@ -1,11 +1,10 @@
 use grust-model;
 
-
 our role RetTy::Rules {
 
     proto rule ret-ty { * }
-    rule ret-ty:sym<panic> { <RARROW> '!' }
-    rule ret-ty:sym<ty>    { <RARROW> <ty> }
+    rule ret-ty:sym<panic> { <rarrow> '!' }
+    rule ret-ty:sym<ty>    { <rarrow> <ty> }
 }
 
 our role RetTy::Actions {
@@ -22,4 +21,3 @@ our role RetTy::Actions {
         )
     }
 }
-

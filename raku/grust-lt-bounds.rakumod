@@ -23,4 +23,3 @@ our role LtBounds::Actions {
         make $<lifetime>>>.made
     }
 }
-

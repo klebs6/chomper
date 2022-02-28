@@ -1,17 +1,16 @@
 use grust-model;
 
-
 our role PatField::Rules {
 
     proto rule pat-field { * }
 
     rule pat-field:sym<ident>           {                                        <ident>  }
     rule pat-field:sym<bound-ident>     {                        <binding-mode>  <ident>  }
-    rule pat-field:sym<box-ident>       {                 <BOX>                  <ident>  }
-    rule pat-field:sym<box-bound-ident> {                 <BOX>  <binding-mode>  <ident>  }
+    rule pat-field:sym<box-ident>       {                 <kw-box>                  <ident>  }
+    rule pat-field:sym<box-bound-ident> {                 <kw-box>  <binding-mode>  <ident>  }
     rule pat-field:sym<ident-pat>       {                                        <ident>  ':' <pat> }
     rule pat-field:sym<bound-ident-pat> {                        <binding-mode>  <ident>  ':' <pat> }
-    rule pat-field:sym<lit-pat>         { <LIT-INT>                                   ':' <pat> }
+    rule pat-field:sym<lit-pat>         { <lit-int>                                   ':' <pat> }
 
     rule pat-fields { <pat-field>+ %% <comma> }
 }
@@ -72,4 +71,3 @@ our role PatField::Actions {
         )
     }
 }
-

@@ -1,14 +1,13 @@
 use grust-model;
 
-
 our role ViewItem::Rules {
 
     proto rule view-item { * }
 
     rule view-item:sym<a> { <use-item> }
     rule view-item:sym<b> { <extern-fn-item> }
-    rule view-item:sym<c> { <EXTERN> <CRATE> <ident> ';' }
-    rule view-item:sym<d> { <EXTERN> <CRATE> <ident> <AS> <ident> ';' }
+    rule view-item:sym<c> { <extern> <kw-crate> <ident> ';' }
+    rule view-item:sym<d> { <extern> <kw-crate> <ident> <kw-as> <ident> ';' }
 }
 
 our role ViewItem::Actions {
@@ -34,4 +33,3 @@ our role ViewItem::Actions {
         )
     }
 }
-

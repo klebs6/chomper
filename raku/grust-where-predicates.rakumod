@@ -39,4 +39,3 @@ our role WherePredicates::Actions {
         )
     }
 }
-

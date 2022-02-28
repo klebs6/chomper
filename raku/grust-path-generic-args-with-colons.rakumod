@@ -3,7 +3,7 @@ use grust-model;
 #-------------------------------------
 # A path with a lifetime and type parameters with
 # double colons before the type parameters;
-# e.g. `foo::bar::<'a>::Baz::<T>`
+# e.g. `foo::bar::<'a>::Baz::<t>`
 #
 # These show up in expr context, in order to
 # disambiguate from "less-than" expressions.
@@ -16,12 +16,12 @@ our role PathGenericArgsWithColons::Rules {
 
     proto rule path-generic-args-with-colons-prefix { * }
     rule path-generic-args-with-colons-prefix:sym<a> { <ident> }
-    rule path-generic-args-with-colons-prefix:sym<b> { <SUPER> }
+    rule path-generic-args-with-colons-prefix:sym<b> { <super> }
 
     proto rule path-generic-args-with-colons-tail { * }
-    rule path-generic-args-with-colons-tail:sym<c> { <MOD-SEP> <ident> }
-    rule path-generic-args-with-colons-tail:sym<d> { <MOD-SEP> <SUPER> }
-    rule path-generic-args-with-colons-tail:sym<e> { <MOD-SEP> <generic-args> }
+    rule path-generic-args-with-colons-tail:sym<c> { <mod-sep> <ident> }
+    rule path-generic-args-with-colons-tail:sym<d> { <mod-sep> <super> }
+    rule path-generic-args-with-colons-tail:sym<e> { <mod-sep> <generic-args> }
 }
 
 our role PathGenericArgsWithColons::Actions {
@@ -44,7 +44,6 @@ our role PathGenericArgsWithColons::Actions {
     }
 
     method path-generic-args-with-colons-tail:sym<c>($/) { make $<ident>.made }
-    method path-generic-args-with-colons-tail:sym<d>($/) { make $<SUPER>.made }
+    method path-generic-args-with-colons-tail:sym<d>($/) { make $<super>.made }
     method path-generic-args-with-colons-tail:sym<e>($/) { make $<generic-args>.made }
 }
-

@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role TyParams::Rules {
 
     rule ty-params {
@@ -14,4 +13,3 @@ our role TyParams::Actions {
         make $<ty-param>.made
     }
 }
-

@@ -3,7 +3,7 @@ use grust-model;
 our role WhereClause::Rules {
 
     rule maybe-where-clause { <where-clause>? }
-    rule where-clause       { <WHERE> <where-predicates> ','? }
+    rule where-clause       { <where_> <where-predicates> ','? }
 }
 
 our role WhereClause::Actions {
@@ -18,4 +18,3 @@ our role WhereClause::Actions {
         )
     }
 }
-

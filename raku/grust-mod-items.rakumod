@@ -1,8 +1,5 @@
 use grust-model;
 
-use grust-model;
-
-
 #-----------------------
 our role ModItem::Rules {
 
@@ -43,4 +40,3 @@ our role ModItems::Actions {
         make $<mod-item>>>.made
     }
 }
-

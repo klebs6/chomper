@@ -29,5 +29,3 @@ our role LitOrPath::Actions {
         )
     }
 }
-
-

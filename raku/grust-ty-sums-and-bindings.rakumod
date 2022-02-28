@@ -26,5 +26,3 @@ our role TySumsAndBindings::Actions {
         make $<bindings>.made
     }
 }
-
-

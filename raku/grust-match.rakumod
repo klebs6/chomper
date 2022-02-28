@@ -5,10 +5,10 @@ our role ExprMatch::Rules {
 
     proto rule expr-match { * }
 
-    rule expr-match:sym<a> { <MATCH_> <expr-nostruct> '{' '}' }
-    rule expr-match:sym<b> { <MATCH_> <expr-nostruct> '{' <match-clauses> '}' }
-    rule expr-match:sym<c> { <MATCH_> <expr-nostruct> '{' <match-clauses> <nonblock-match-clause> '}' }
-    rule expr-match:sym<d> { <MATCH_> <expr-nostruct> '{' <nonblock-match-clause> '}' }
+    rule expr-match:sym<a> { <match_> <expr-nostruct> '{' '}' }
+    rule expr-match:sym<b> { <match_> <expr-nostruct> '{' <match-clauses> '}' }
+    rule expr-match:sym<c> { <match_> <expr-nostruct> '{' <match-clauses> <nonblock-match-clause> '}' }
+    rule expr-match:sym<d> { <match_> <expr-nostruct> '{' <nonblock-match-clause> '}' }
 
     rule match-clauses { <match-clause>+ }
 
@@ -21,22 +21,22 @@ our role ExprMatch::Rules {
     proto rule nonblock-match-clause { * }
 
     rule nonblock-match-clause:sym<a> {
-        <maybe-outer-attrs> <pats-or> <maybe-guard> <FAT-ARROW> <nonblock-expr>
+        <maybe-outer-attrs> <pats-or> <maybe-guard> <fat-arrow> <nonblock-expr>
     }
 
     rule nonblock-match-clause:sym<b> {
-        <maybe-outer-attrs> <pats-or> <maybe-guard> <FAT-ARROW> <block-expr-dot>
+        <maybe-outer-attrs> <pats-or> <maybe-guard> <fat-arrow> <block-expr-dot>
     }
 
     #--------------------
     proto rule block-match-clause { * }
 
     rule block-match-clause:sym<a> {
-        <maybe-outer-attrs> <pats-or> <maybe-guard> <FAT-ARROW> <block>
+        <maybe-outer-attrs> <pats-or> <maybe-guard> <fat-arrow> <block>
     }
 
     rule block-match-clause:sym<b> {
-        <maybe-outer-attrs> <pats-or> <maybe-guard> <FAT-ARROW> <block-expr>
+        <maybe-outer-attrs> <pats-or> <maybe-guard> <fat-arrow> <block-expr>
     }
 }
 
@@ -118,4 +118,3 @@ our role ExprMatch::Actions {
         )
     }
 }
-

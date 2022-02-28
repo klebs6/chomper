@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role TyFnDecl::Rules {
 
     rule ty-fn-decl {
@@ -20,5 +19,3 @@ our role TyFnDecl::Actions {
         )
     }
 }
-
-

@@ -13,7 +13,7 @@ our role OuterAttrs::Rules {
     proto rule outer-attr { * }
 
     rule outer-attr:sym<a> { '#' '[' <meta-item> ']' }
-    rule outer-attr:sym<b> { <OUTER-DOC-COMMENT> }
+    rule outer-attr:sym<b> { <outer-doc-comment> }
 }
 
 our role OuterAttrs::Actions {
@@ -36,4 +36,3 @@ our role OuterAttrs::Actions {
         )
     }
 }
-

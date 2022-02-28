@@ -15,11 +15,11 @@ our role TyQualifiedPath::Rules {
     proto rule ty-qualified-path { * }
 
     rule ty-qualified-path:sym<a> {
-        <ty-sum> <AS> <trait-ref> '>' <MOD-SEP> <ident>
+        <ty-sum> <kw-as> <trait-ref> '>' <mod-sep> <ident>
     }
 
     rule ty-qualified-path:sym<b> {
-        <ty-sum> <AS> <trait-ref> '>' <MOD-SEP> <ident> '+' <ty-param-bounds>
+        <ty-sum> <kw-as> <trait-ref> '>' <mod-sep> <ident> '+' <ty-param-bounds>
     }
 }
 
@@ -53,4 +53,3 @@ our role TyQualifiedPath::Actions {
         )
     }
 }
-

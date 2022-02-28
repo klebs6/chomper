@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role TyParam::Rules {
 
     proto rule ty-param { * }
@@ -38,4 +37,3 @@ our role TyParam::Actions {
         )
     }
 }
-

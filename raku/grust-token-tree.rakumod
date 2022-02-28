@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role TokenTree::Rules {
 
     rule token-trees { <token-tree>* }
@@ -59,4 +58,3 @@ our role TokenTree::Actions {
         make $<token-trees>.made
     }
 }
-

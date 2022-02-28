@@ -179,8 +179,7 @@ our role Lex::ByteStr {
         <byte-str-end>
     }
 
-    token LIT-BYTE-STR {
-        <byte-str>
+    token lit-byte-str { <byte-str>
     }
 }
 
@@ -210,8 +209,7 @@ our role Lex::RawByteStrNoHash {
         <raw-byte-str-no-hash-continue>*
         <raw-byte-str-no-hash-end>
     }
-    token LIT-BYTE-STR-RAW {
-        <raw-byte-str-no-hash>
+    token lit-byte-str-raw { <raw-byte-str-no-hash>
     }
 }
 
@@ -360,7 +358,7 @@ our role Lex::Byte {
         <byte-begin><byte-end>
     }
 
-    token LIT-BYTE { <byte> }
+    token lit-byte { <byte> }
 }
 
 #--------------------------------------
@@ -389,8 +387,7 @@ our role Lex::RawStr {
         <raw-str-end>
     }
 
-    token LIT-STR-RAW {
-        <raw-str>
+    token lit-str-raw { <raw-str>
     }
 }
 
@@ -585,4 +582,3 @@ our role Lex::BlockComment {
         <block-comment-end>
     }
 }
-

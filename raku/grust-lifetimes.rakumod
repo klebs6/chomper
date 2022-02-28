@@ -10,12 +10,12 @@ our role Lifetimes::Rules {
 
     #---------------------
     proto rule lifetime-and-bounds { * }
-    rule lifetime-and-bounds:sym<a> { <LIFETIME> <maybe-ltbounds> }
-    rule lifetime-and-bounds:sym<b> { <STATIC-LIFETIME> }
+    rule lifetime-and-bounds:sym<a> { <lifetime> <maybe-ltbounds> }
+    rule lifetime-and-bounds:sym<b> { <static-lifetime> }
 
     proto rule lifetime { * }
-    rule lifetime:sym<a> { <LIFETIME> }
-    rule lifetime:sym<b> { <STATIC-LIFETIME> }
+    rule lifetime:sym<a> { <kw-lifetime> }
+    rule lifetime:sym<b> { <static-lifetime> }
 }
 
 our role Lifetimes::Actions {
@@ -42,5 +42,3 @@ our role Lifetimes::Actions {
     method lifetime:sym<a>($/) { make Lifetime.new() }
     method lifetime:sym<b>($/) { make StaticLifetime.new }
 }
-
-

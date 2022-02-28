@@ -5,11 +5,11 @@ our role PathNoTypesAllowed::Rules {
     proto rule path-no-types-allowed-base { * }
 
     rule path-no-types-allowed-base:sym<a> { <ident> }
-    rule path-no-types-allowed-base:sym<b> { <MOD-SEP>? <SELF> }
-    rule path-no-types-allowed-base:sym<c> { <MOD-SEP>? <SUPER> }
+    rule path-no-types-allowed-base:sym<b> { <mod-sep>? <self_> }
+    rule path-no-types-allowed-base:sym<c> { <mod-sep>? <super> }
 
     rule path-no-types-allowed {  
-        <path-no-types-allowed-base> [<MOD-SEP> <ident>]*
+        <path-no-types-allowed-base> [<mod-sep> <ident>]*
     }
 }
 
@@ -23,15 +23,15 @@ our role PathNoTypesAllowed::Actions {
     }
 
     method path-no-types-allowed-base:sym<a>($/) { make $<ident>.made }
-    method path-no-types-allowed-base:sym<b>($/) { make $<SELF>.made }
-    method path-no-types-allowed-base:sym<c>($/) { make $<SUPER>.made }
+    method path-no-types-allowed-base:sym<b>($/) { make $<self_>.made }
+    method path-no-types-allowed-base:sym<c>($/) { make $<super>.made }
 }
 
 our role PathGenericArgsWithoutColons::Rules {
 
     rule path-generic-args-without-colons {  
         #{self.set-prec(IDENT)}
-        <path-generic-args-without-colons-item>+ %% <MOD-SEP>
+        <path-generic-args-without-colons-item>+ %% <mod-sep>
     }
 
     proto rule path-generic-args-without-colons-item { * }
@@ -68,4 +68,3 @@ our role PathGenericArgsWithoutColons::Actions {
         )
     }
 }
-

@@ -8,7 +8,7 @@ our role IdentsOrSelf::Rules {
     }
 
     proto rule idents-or-self-tail  { * }
-    rule idents-or-self-tail:sym<a> { <as_> <ident> }
+    rule idents-or-self-tail:sym<a> { <kw-as> <ident> }
     rule idents-or-self-tail:sym<b> { ',' <ident-or-self> }
 
     proto rule ident-or-self        { * }

@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role MetaItem::Rules {
 
     proto rule meta-item { * }
@@ -32,4 +31,3 @@ our role MetaItem::Actions {
         )
     }
 }
-

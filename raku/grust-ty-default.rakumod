@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role TyDefault::Rules {
 
     rule maybe-ty-default {
@@ -16,4 +15,3 @@ our role TyDefault::Actions {
         )
     }
 }
-

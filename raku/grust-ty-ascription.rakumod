@@ -13,6 +13,3 @@ our role TyAscription::Actions {
         make $<ty-sum>.made
     }
 }
-
-
-

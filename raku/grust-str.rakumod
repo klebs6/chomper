@@ -4,10 +4,10 @@ our role String::Rules {
 
     proto rule str { * }
 
-    rule str:sym<a> { <LIT-STR> }
-    rule str:sym<b> { <LIT-STR-RAW> }
-    rule str:sym<c> { <LIT-BYTE-STR> }
-    rule str:sym<d> { <LIT-BYTE-STR-RAW> }
+    rule str:sym<a> { <lit-str> }
+    rule str:sym<b> { <lit-str-raw> }
+    rule str:sym<c> { <lit-byte-str> }
+    rule str:sym<d> { <lit-byte-str-raw> }
 }
 
 our role String::Actions {
@@ -28,5 +28,3 @@ our role String::Actions {
         make LitByteStr.new( value => ~$/)
     }
 }
-
-

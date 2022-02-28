@@ -40,7 +40,7 @@ our role Expr::Rules {
     rule expr-tail:sym<expr-mod-expr>                 { '%' <expr> }
     rule expr-tail:sym<expr-dotdot>                   { <dotdot> }
     rule expr-tail:sym<expr-dotdot-expr>              { <dotdot> <expr> }
-    rule expr-tail:sym<expr-as-ty>                    { <as_> <ty> }
+    rule expr-tail:sym<expr-as-ty>                    { <kw-as> <ty> }
     rule expr-tail:sym<expr-ty>                       { ':' <ty> }
 
     proto rule expr-base { * }
@@ -61,8 +61,8 @@ our role Expr::Rules {
     rule expr-base:sym<continue>                      { <continue_> }
     rule expr-base:sym<continue-ident>                { <continue_> <ident> }
     rule expr-base:sym<return>                        { <return_> }
-    rule expr-base:sym<break>                         { <break_> }
-    rule expr-base:sym<break-ident>                   { <break_> <ident> }
+    rule expr-base:sym<break>                         { <kw-break> }
+    rule expr-base:sym<break-ident>                   { <kw-break> <ident> }
     rule expr-base:sym<yield>                         { <yield> }
     rule expr-base:sym<dotdot>                        { <dotdot> }
     rule expr-base:sym<expr-qualified-path>           { <expr-qualified-path> }
@@ -74,7 +74,7 @@ our role Expr::Rules {
     rule expr-prefix:sym<return-expr>   { <return_> }
     rule expr-prefix:sym<yield-expr>    { <yield>  }
     rule expr-prefix:sym<dotdot-expr>   { <dotdot> }
-    rule expr-prefix:sym<box-expr>      { <box>    }
+    rule expr-prefix:sym<box-expr>      { <kw-box>    }
 
     rule expr {
         <expr-prefix>* 

@@ -4,7 +4,7 @@ our role TraitRef::Rules {
 
     rule trait-ref {
         #{self.set-prec(IDENT)} 
-        <MOD-SEP>? 
+        <mod-sep>? 
         <path-generic-args-without-colons>
     }
 }
@@ -15,4 +15,3 @@ our role TraitRef::Actions {
         make $<path-generic-args-without-colons>.made
     }
 }
-

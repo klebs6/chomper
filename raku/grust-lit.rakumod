@@ -4,12 +4,12 @@ our role Lit::Rules {
 
     proto rule lit { * }
 
-    rule lit:sym<a> { <LIT-BYTE> }
-    rule lit:sym<b> { <LIT-CHAR> }
-    rule lit:sym<c> { <LIT-INT> }
-    rule lit:sym<d> { <LIT-FLOAT> }
-    rule lit:sym<e> { <TRUE> }
-    rule lit:sym<f> { <FALSE> }
+    rule lit:sym<a> { <lit-byte> }
+    rule lit:sym<b> { <lit-char> }
+    rule lit:sym<c> { <lit-int> }
+    rule lit:sym<d> { <lit-float> }
+    rule lit:sym<e> { <true> }
+    rule lit:sym<f> { <false> }
     rule lit:sym<g> { <str> }
 }
 
@@ -43,4 +43,3 @@ our role Lit::Actions {
         make $<str>.made
     }
 }
-

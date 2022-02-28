@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role Rust::Symbol {
     token semicolon  { ';'    } 
     token comma      { ','    } 
@@ -53,4 +52,3 @@ our role Rust::Symbol {
     token percent    { '%'    } 
     token percent-eq { '%='   } 
 }
-

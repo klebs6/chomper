@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role StructExpr::Rules {
 
     #----------------
@@ -25,9 +24,9 @@ our role StructExpr::Rules {
 
     rule field-init:sym<a>  { <ident> }
     rule field-init:sym<b>  { <ident> ':' <expr> }
-    rule field-init:sym<c>  { <LIT-INT> ':' <expr> }
+    rule field-init:sym<c>  { <lit-int> ':' <expr> }
 
-    rule default-field-init { <DOTDOT> <expr> }
+    rule default-field-init { <dotdot> <expr> }
 }
 
 our role StructExpr::Actions {
@@ -76,4 +75,3 @@ our role StructExpr::Actions {
         )
     }
 }
-

@@ -3,7 +3,7 @@ use grust-model;
 our role Let::Rules {
 
     rule let {
-        <LET> 
+        <let_> 
         <pat> 
         <maybe-ty-ascription> 
         <maybe-init-expr> ';'
@@ -20,5 +20,3 @@ our role Let::Actions {
         )
     }
 }
-
-

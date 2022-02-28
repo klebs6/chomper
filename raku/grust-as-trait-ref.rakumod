@@ -2,7 +2,7 @@ use grust-model;
 
 our role AsTraitRef::Rules {
     rule maybe-as-trait-ref {
-        [<as_> <trait-ref>]?
+        [<kw-as> <trait-ref>]?
     }
 }
 

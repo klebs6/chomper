@@ -3,23 +3,23 @@ use grust-model;
 our role Rust::Keyword {
 
     #-------------------------------
-    token abstract       { abstract } 
-    token alignof        { alignof  } 
+    token kw-abstract    { abstract } 
+    token kw-alignof     { alignof  } 
     token and_           { '&'      } 
     token andand         { \&\&     } 
-    token as_            { as       } 
+    token kw-as          { as       } 
     token at             { '@'      } 
-    token become         { become   } 
-    token box            { box      } 
-    token break_         { break    } 
+    token kw-become      { become   } 
+    token kw-box         { box      } 
+    token kw-break       { break    } 
     token caret          { '^'      } 
-    token catch          { catch    } 
+    token kw-catch       { catch    } 
     token colon          { ':'      } 
     token comma          { ','      } 
-    token const          { const    } 
-    token continue_      { continue } 
+    token kw-const       { const    } 
+    token kw-continue    { continue } 
     token copytok        { 'copy'   } 
-    token crate          { crate    } 
+    token kw-crate       { crate    } 
     token darrow         { '<->'    } 
     token default_       { default  } 
     token div_           { '/'      } 
@@ -673,7 +673,7 @@ our role Rust::Keyword {
 
     token static-lifetime { '\'static' }
 
-    token lifetime { 
+    token kw-lifetime { 
         || '\'' <ident>
         || '\'' <self>
     }
@@ -737,10 +737,9 @@ our role Rust::Keyword {
     token shebang { '#' }
 
     token shebang-line { 
-        #|{at-beginning-of-file()}?
+        #{at-beginning-of-file()}?
         '#!' <-[ \n ]>* '\n'
     }
-
 
     token intlit-ty { 
         [    

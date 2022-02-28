@@ -1,10 +1,9 @@
 use grust-model;
 
-
 our role UseItem::Rules {
 
     rule use-item {
-        <USE> <view-path> ';'
+        <use_> <view-path> ';'
     }
 }
 
@@ -16,4 +15,3 @@ our role UseItem::Actions {
         )
     }
 }
-

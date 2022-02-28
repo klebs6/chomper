@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role TyParamBounds::Rules {
 
     rule maybe-ty-param-bounds { [':' <ty-param-bounds>]? }
@@ -11,9 +10,9 @@ our role TyParamBounds::Rules {
 
     #-----------------
     proto rule polybound  { * }
-    rule polybound:sym<a> { <FOR> '<' <maybe-lifetimes> '>' <bound> }
+    rule polybound:sym<a> { <for_> '<' <maybe-lifetimes> '>' <bound> }
     rule polybound:sym<b> { <bound> }
-    rule polybound:sym<c> { '?' <FOR> '<' <maybe-lifetimes> '>' <bound> }
+    rule polybound:sym<c> { '?' <for_> '<' <maybe-lifetimes> '>' <bound> }
     rule polybound:sym<d> { '?' <bound> }
 }
 
@@ -53,4 +52,3 @@ our role TyParamBounds::Actions {
         make $<bound>.made
     }
 }
-

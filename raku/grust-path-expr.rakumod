@@ -7,12 +7,12 @@ our role PathExpr::Rules {
     proto rule path-expr { * }
 
     rule path-expr:sym<b> { 
-        <MOD-SEP>? 
+        <mod-sep>? 
         <path-generic-args-with-colons> 
     }
     rule path-expr:sym<c> { 
-        <SELF> 
-        <MOD-SEP> 
+        <self_> 
+        <mod-sep> 
         <path-generic-args-with-colons> 
     }
 }
@@ -29,4 +29,3 @@ our role PathExpr::Actions {
         )
     }
 }
-

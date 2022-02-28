@@ -26,4 +26,3 @@ our role VecExpr::Actions {
         )
     }
 }
-

@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role TySums::Rules {
 
     rule maybe-ty-sums { [<ty-sums> ','?]? }
@@ -59,4 +58,3 @@ our role TySums::Actions {
         make $<lifetime>.made
     }
 }
-

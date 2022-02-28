@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role Params::Rules {
 
     rule maybe-params {
@@ -41,4 +40,3 @@ our role Params::Actions {
         make $<params>.made
     }
 }
-

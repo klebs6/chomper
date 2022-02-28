@@ -1,17 +1,16 @@
 use grust-model;
 
 our role Visibility::Rules {
-    rule visibility { <PUB>? }
+    rule visibility { <pub>? }
 }
 
 our role Visibility::Actions {
 
     method visibility($/) { 
-        if $/<PUB>:exists {
+        if $/<pub>:exists {
             make Public.new 
         } else {
             make Inherited.new 
         }
     }
 }
-

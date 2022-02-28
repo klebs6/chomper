@@ -38,4 +38,3 @@ our role MacroExpr::Actions {
         )
     }
 }
-

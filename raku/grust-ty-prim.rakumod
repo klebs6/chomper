@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role TyPrim::Rules {
 
     proto rule ty-prim { * }
@@ -12,14 +11,14 @@ our role TyPrim::Rules {
 
     rule ty-prim:sym<b> { 
         #{self.set-prec(IDENT)} 
-        <MOD-SEP> 
+        <mod-sep> 
         <path-generic-args-without-colons> 
     }
 
     rule ty-prim:sym<c> { 
         #{self.set-prec(IDENT)} 
-        <SELF> 
-        <MOD-SEP> 
+        <self_> 
+        <mod-sep> 
         <path-generic-args-without-colons> 
     }
 
@@ -33,26 +32,26 @@ our role TyPrim::Rules {
 
     rule ty-prim:sym<e> {
         #{self.set-prec(IDENT)} 
-        <MOD-SEP> 
+        <mod-sep> 
         <path-generic-args-without-colons> 
         '!' 
         <maybe-ident> 
         <delimited-token-trees> 
     }
 
-    rule ty-prim:sym<f> { <BOX> <ty> }
+    rule ty-prim:sym<f> { <kw-box> <ty> }
     rule ty-prim:sym<g> { '*' <maybe-mut-or-const> <ty> }
     rule ty-prim:sym<h> { '&' <ty> }
-    rule ty-prim:sym<i> { '&' <MUT> <ty> }
-    rule ty-prim:sym<j> { <ANDAND> <ty> }
-    rule ty-prim:sym<k> { <ANDAND> <MUT> <ty> }
+    rule ty-prim:sym<i> { '&' <mut> <ty> }
+    rule ty-prim:sym<j> { <andand> <ty> }
+    rule ty-prim:sym<k> { <andand> <mut> <ty> }
     rule ty-prim:sym<l> { '&' <lifetime> <maybe-mut> <ty> }
-    rule ty-prim:sym<m> { <ANDAND> <lifetime> <maybe-mut> <ty> }
+    rule ty-prim:sym<m> { <andand> <lifetime> <maybe-mut> <ty> }
     rule ty-prim:sym<n> { '[' <ty> ']' }
-    rule ty-prim:sym<o> { '[' <ty> ',' <DOTDOT> <expr> ']' }
+    rule ty-prim:sym<o> { '[' <ty> ',' <dotdot> <expr> ']' }
     rule ty-prim:sym<p> { '[' <ty> ';' <expr> ']' }
-    rule ty-prim:sym<q> { <TYPEOF> '(' <expr> ')' }
-    rule ty-prim:sym<r> { <UNDERSCORE> }
+    rule ty-prim:sym<q> { <typeof> '(' <expr> ')' }
+    rule ty-prim:sym<r> { <underscore> }
     rule ty-prim:sym<s> { <ty-bare-fn> }
     rule ty-prim:sym<t> { <for-in-type> }
 }
@@ -182,4 +181,3 @@ our role TyPrim::Actions {
         make $<for-in-type>.made
     }
 }
-

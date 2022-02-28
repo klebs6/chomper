@@ -4,12 +4,12 @@ our role NamedArg::Rules {
 
     proto rule named-arg { * }
     rule named-arg:sym<a> { <ident> }
-    rule named-arg:sym<b> { <UNDERSCORE> }
+    rule named-arg:sym<b> { <underscore> }
     rule named-arg:sym<c> { '&' <ident> }
-    rule named-arg:sym<d> { '&' <UNDERSCORE> }
-    rule named-arg:sym<e> { <ANDAND> <ident> }
-    rule named-arg:sym<f> { <ANDAND> <UNDERSCORE> }
-    rule named-arg:sym<g> { <MUT> <ident> }
+    rule named-arg:sym<d> { '&' <underscore> }
+    rule named-arg:sym<e> { <andand> <ident> }
+    rule named-arg:sym<f> { <andand> <underscore> }
+    rule named-arg:sym<g> { <mut> <ident> }
 }
 
 our role NamedArg::Actions {
@@ -22,4 +22,3 @@ our role NamedArg::Actions {
     method named-arg:sym<f>($/) { make PatWild.new }
     method named-arg:sym<g>($/) { make $<ident>.made }
 }
-
