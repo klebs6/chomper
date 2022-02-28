@@ -48,12 +48,13 @@ our role Expr::Rules {
     rule expr-base:sym<lit>  { <lit> }
     rule expr-base:sym<self> { <SELF> }
 
-    rule expr-base:sym<path-expr> {
+    rule expr-base:sym<macro-expr>                    { <macro-expr> }
+
+    rule expr-base:sym<path-expr> { 
         #{self.set-prec(IDENT)} 
         <path-expr> 
     }
 
-    rule expr-base:sym<macro-expr>                    { <macro-expr> }
     rule expr-base:sym<struct-expr>                   { <path-expr> '{' <struct-expr-fields> '}' }
     rule expr-base:sym<paren-tail>                    { '(' <maybe-exprs> ')' }
     rule expr-base:sym<brack-tail>                    { '[' <vec-expr> ']' }

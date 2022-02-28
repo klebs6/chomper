@@ -7,7 +7,7 @@ our role Stmts::Rules {
     rule stmts { <stmt>+ }
 
     proto rule stmt { * }
-    #rule stmt:sym<a> { <maybe-outer-attrs> <let> }
+    rule stmt:sym<a> { <maybe-outer-attrs> <let> }
     rule stmt:sym<b> { <stmt-item> }
     rule stmt:sym<c> { <PUB> <stmt-item> }
     rule stmt:sym<d> { <outer-attrs> <stmt-item> }

@@ -6,8 +6,15 @@ our role PathExpr::Rules {
 
     proto rule path-expr { * }
 
-    rule path-expr:sym<b> { <MOD-SEP>? <path-generic-args-with-colons> }
-    rule path-expr:sym<c> { <SELF> <MOD-SEP> <path-generic-args-with-colons> }
+    rule path-expr:sym<b> { 
+        <MOD-SEP>? 
+        <path-generic-args-with-colons> 
+    }
+    rule path-expr:sym<c> { 
+        <SELF> 
+        <MOD-SEP> 
+        <path-generic-args-with-colons> 
+    }
 }
 
 our role PathExpr::Actions {
