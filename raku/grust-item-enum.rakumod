@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role ItemEnum::Rules {
 
     rule item-enum { 
@@ -75,4 +74,3 @@ our role ItemEnum::Actions {
         )
     }
 }
-

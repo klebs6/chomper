@@ -31,7 +31,7 @@ our role TyPrim::Rules {
         <delimited-token-trees> 
     }
 
-    rule ty-prim:sym<e> { 
+    rule ty-prim:sym<e> {
         #{self.set-prec(IDENT)} 
         <MOD-SEP> 
         <path-generic-args-without-colons> 

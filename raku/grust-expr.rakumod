@@ -76,7 +76,9 @@ our role Expr::Rules {
     rule expr-prefix:sym<box-expr>      { <BOX>    }
 
     rule expr {
-        <expr-prefix>* <expr-base> <expr-tail>*
+        <expr-prefix>* 
+        <expr-base> 
+        <expr-tail>*
     }
 }
 

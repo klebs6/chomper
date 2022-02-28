@@ -709,17 +709,17 @@ our role Rust::Keyword {
     }
 
     token INNER-DOC-COMMENT {
-        ||    '//!'
-            <-[ \n ]>*
-        ||    '/*!'
-            (    ||    <-[ * ]>
-                ||    (    ||    '*'+
-                            <-[ * / ]>
-                    )
-            )*
-            '*'+
-            '/'
+        || '//!' <-[ \n ]>*
+        || 
+        '/*!' 
+        [ 
+            <-[ * ]> 
+            [ '*'+ <-[ * / ]> ] 
+        ]* 
+        '*'+ 
+        \/
     }
+
     token WS {
         ||    <[   \t \r \n ]>+
     }
@@ -737,6 +737,11 @@ our role Rust::Keyword {
             '*'+
             '/'
     }
+
+    token SHEBANG {
+        '#'
+    }
+
     token SHEBANG-LINE {
         ||    #|{at-beginning-of-file()}?
             '#!'

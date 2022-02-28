@@ -2,6 +2,8 @@ use grust-model;
 
 our role UnpairedToken::Rules {
 
+    rule unpaired-tokens { <unpaired-token>* }
+
     proto rule unpaired-token { * }
 
     rule unpaired-token:sym<a>  { <SHL> }
@@ -63,7 +65,7 @@ our role UnpairedToken::Rules {
     rule unpaired-token:sym<be> { <LET> }
     rule unpaired-token:sym<bf> { <LOOP> }
     rule unpaired-token:sym<bg> { <MACRO> }
-    rule unpaired-token:sym<bh> { <MATCH> }
+    rule unpaired-token:sym<bh> { <MATCH_> }
     rule unpaired-token:sym<bi> { <MOD> }
     rule unpaired-token:sym<bj> { <MOVE> }
     rule unpaired-token:sym<bk> { <MUT> }

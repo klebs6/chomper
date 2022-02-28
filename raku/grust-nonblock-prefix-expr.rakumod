@@ -105,4 +105,3 @@ our role NonblockPrefixExpr::Actions {
         make $<lambda-expr>.made
     }
 }
-

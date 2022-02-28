@@ -6,11 +6,17 @@ our role MacroExpr::Rules {
     proto rule macro-expr { * }
 
     rule macro-expr:sym<a> {
-        <path-expr> '!' <maybe-ident> <parens-delimited-token-trees>
+        <path-expr> 
+        '!' 
+        <maybe-ident> 
+        <parens-delimited-token-trees>
     }
 
     rule macro-expr:sym<b> {
-        <path-expr> '!' <maybe-ident> <brackets-delimited-token-trees>
+        <path-expr> 
+        '!' 
+        <maybe-ident> 
+        <brackets-delimited-token-trees>
     }
 }
 

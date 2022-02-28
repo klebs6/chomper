@@ -1,20 +1,30 @@
 use grust-model;
 
-
 our role ItemMacro::Rules {
 
     proto rule item-macro { * }
 
     rule item-macro:sym<a> {
-        <path-expr> '!' <maybe-ident> <parens-delimited-token-trees> ';'
+        <path-expr> 
+        '!' 
+        <maybe-ident> 
+        <parens-delimited-token-trees> 
+        ';'
     }
 
     rule item-macro:sym<b> {
-        <path-expr> '!' <maybe-ident> <braces-delimited-token-trees>
+        <path-expr> 
+        '!' 
+        <maybe-ident> 
+        <braces-delimited-token-trees>
     }
 
     rule item-macro:sym<c> {
-        <path-expr> '!' <maybe-ident> <brackets-delimited-token-trees> ';'
+        <path-expr> 
+        '!' 
+        <maybe-ident> 
+        <brackets-delimited-token-trees> 
+        ';'
     }
 }
 
