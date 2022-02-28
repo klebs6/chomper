@@ -5,7 +5,7 @@ our role Fn::Rules {
     proto rule item-fn { * }
 
     rule item-fn:sym<a> {
-        <fn> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl> 
@@ -14,8 +14,8 @@ our role Fn::Rules {
     }
 
     rule item-fn:sym<b> {
-        <const> 
-        <fn> 
+        <kw-const> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl> 
@@ -26,8 +26,8 @@ our role Fn::Rules {
     proto rule item-unsafe-fn { * }
 
     rule item-unsafe-fn:sym<a> {
-        <unsafe> 
-        <fn> 
+        <kw-unsafe> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl> 
@@ -36,9 +36,9 @@ our role Fn::Rules {
     }
 
     rule item-unsafe-fn:sym<b> {
-        <const> 
-        <unsafe> 
-        <fn> 
+        <kw-const> 
+        <kw-unsafe> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl> 
@@ -47,10 +47,10 @@ our role Fn::Rules {
     }
 
     rule item-unsafe-fn:sym<c> {
-        <unsafe> 
-        <extern> 
+        <kw-unsafe> 
+        <kw-extern> 
         <maybe-abi> 
-        <fn> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl> 

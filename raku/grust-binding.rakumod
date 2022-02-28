@@ -3,7 +3,7 @@ use grust-model;
 our role Binding::Rules {
 
     rule bindings {
-        <binding>+ %% <comma>
+        <binding>+ %% <tok-comma>
     }
 
     rule binding {

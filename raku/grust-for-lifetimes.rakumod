@@ -3,7 +3,7 @@ use grust-model;
 our role ForLifetimes::Rules {
 
     rule maybe-for-lifetimes {
-        [<for_> '<' <lifetimes> '>']?
+        [<kw-for> '<' <lifetimes> '>']?
     }
 }
 

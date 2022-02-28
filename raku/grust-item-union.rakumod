@@ -3,7 +3,7 @@ use grust-model;
 our role ItemUnion::Rules {
 
     rule item-union {
-        <union> 
+        <kw-union> 
         <ident> 
         <generic-params> 
         <maybe-where-clause> 

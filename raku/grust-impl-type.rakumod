@@ -5,7 +5,7 @@ our role ImplType::Rules {
     rule impl-type {
         <attrs-and-vis> 
         <maybe-default> 
-        <type> 
+        <kw-type> 
         <ident> 
         <generic-params> 
         '=' 

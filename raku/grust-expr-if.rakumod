@@ -5,11 +5,17 @@ our role ExprIf::Rules {
     proto rule expr-if { * }
 
     rule expr-if:sym<a> {
-        <if_> <expr-nostruct> <block>
+        <kw-if> 
+        <expr-nostruct> 
+        <block>
     }
 
     rule expr-if:sym<b> {
-        <if_> <expr-nostruct> <block> <else_> <block-or-if>
+        <kw-if> 
+        <expr-nostruct> 
+        <block> 
+        <kw-else> 
+        <block-or-if>
     }
 }
 

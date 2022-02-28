@@ -11,9 +11,9 @@ our role Ident::Rules {
     rule ident:sym<ident>   { <ident_> }
 
     # Weak keywords that can be used as identifiers
-    rule ident:sym<catch>   { <catch> }
-    rule ident:sym<default> { <default_> }
-    rule ident:sym<union>   { <union> }
+    rule ident:sym<catch>   { <kw-catch> }
+    rule ident:sym<default> { <kw-default> }
+    rule ident:sym<union>   { <kw-union> }
 }
 
 our role Ident::Actions {

@@ -8,8 +8,8 @@ our role Lit::Rules {
     rule lit:sym<b> { <lit-char> }
     rule lit:sym<c> { <lit-int> }
     rule lit:sym<d> { <lit-float> }
-    rule lit:sym<e> { <true> }
-    rule lit:sym<f> { <false> }
+    rule lit:sym<e> { <kw-true> }
+    rule lit:sym<f> { <kw-false> }
     rule lit:sym<g> { <str> }
 }
 

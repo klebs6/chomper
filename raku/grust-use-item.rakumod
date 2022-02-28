@@ -3,7 +3,7 @@ use grust-model;
 our role UseItem::Rules {
 
     rule use-item {
-        <use_> <view-path> ';'
+        <kw-use> <view-path> ';'
     }
 }
 

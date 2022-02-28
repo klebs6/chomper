@@ -5,7 +5,7 @@ our role TyClosure::Rules {
     proto rule ty-closure { * }
 
     rule ty-closure:sym<a> {
-        <unsafe> 
+        <kw-unsafe> 
         '|' <anon-params> '|' 
         <maybe-bounds> 
         <ret-ty>
@@ -18,14 +18,14 @@ our role TyClosure::Rules {
     }
 
     rule ty-closure:sym<c> {
-        <unsafe> 
-        <oror> 
+        <kw-unsafe> 
+        <tok-oror> 
         <maybe-bounds> 
         <ret-ty>
     }
 
     rule ty-closure:sym<d> {
-        <oror> 
+        <tok-oror> 
         <maybe-bounds> 
         <ret-ty>
     }

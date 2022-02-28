@@ -2,7 +2,7 @@ use grust-model;
 
 our role PatStruct::Rules {
 
-    rule pat-struct { [[<pat-fields> ','?]? <dotdot>?]? }
+    rule pat-struct { [[<pat-fields> ','?]? <tok-dotdot>?]? }
 }
 
 our role PatStruct::Actions {

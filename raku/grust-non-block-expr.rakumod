@@ -16,21 +16,21 @@ our role NonBlockExpr::Rules {
         <path-expr> 
     }
 
-    rule nonblock-expr-base:sym<self>                  { <self_> }
+    rule nonblock-expr-base:sym<self>                  { <kw-self> }
     rule nonblock-expr-base:sym<macro-expr>            { <macro-expr> }
     rule nonblock-expr-base:sym<struct-expr>           { <path-expr> '{' <struct-expr-fields> '}' }
     rule nonblock-expr-base:sym<vec-expr>              { '[' <vec-expr> ']' }
     rule nonblock-expr-base:sym<paren-expr>            { '(' <maybe-exprs> ')' }
-    rule nonblock-expr-base:sym<continue>              { <continue_> }
-    rule nonblock-expr-base:sym<continue-lt>           { <continue_> <lifetime> }
-    rule nonblock-expr-base:sym<return>                { <return_> }
-    rule nonblock-expr-base:sym<return-expr>           { <return_> <expr> }
+    rule nonblock-expr-base:sym<continue>              { <kw-continue> }
+    rule nonblock-expr-base:sym<continue-lt>           { <kw-continue> <lifetime> }
+    rule nonblock-expr-base:sym<return>                { <kw-return> }
+    rule nonblock-expr-base:sym<return-expr>           { <kw-return> <expr> }
     rule nonblock-expr-base:sym<break>                 { <kw-break> }
     rule nonblock-expr-base:sym<break-lt>              { <kw-break> <lifetime> }
-    rule nonblock-expr-base:sym<yield>                 { <yield> }
-    rule nonblock-expr-base:sym<yield-expr>            { <yield> <expr> }
-    rule nonblock-expr-base:sym<dotdot-expr>           { <dotdot> <expr> }
-    rule nonblock-expr-base:sym<dotdot>                { <dotdot> }
+    rule nonblock-expr-base:sym<yield>                 { <kw-yield> }
+    rule nonblock-expr-base:sym<yield-expr>            { <kw-yield> <expr> }
+    rule nonblock-expr-base:sym<dotdot-expr>           { <tok-dotdot> <expr> }
+    rule nonblock-expr-base:sym<dotdot>                { <tok-dotdot> }
     rule nonblock-expr-base:sym<box-expr>              { <kw-box> <expr> }
     rule nonblock-expr-base:sym<expr-qualified-path>   { <expr-qualified-path> }
     rule nonblock-expr-base:sym<nonblock-prefix-expr>  { <nonblock-prefix-expr> }
@@ -43,36 +43,36 @@ our role NonBlockExpr::Rules {
     rule nonblock-expr-tail:sym<brack-expr>         { '[' <maybe-expr> ']' }
     rule nonblock-expr-tail:sym<parens-expr>        { '(' <maybe-exprs> ')' }
     rule nonblock-expr-tail:sym<eq-expr>            { '=' <expr> }
-    rule nonblock-expr-tail:sym<shleq-expr>         { <shleq> <expr> }
-    rule nonblock-expr-tail:sym<shreq-expr>         { <shreq> <expr> }
-    rule nonblock-expr-tail:sym<minuseq-expr>       { <minuseq> <expr> }
-    rule nonblock-expr-tail:sym<andeq-expr>         { <andeq> <expr> }
-    rule nonblock-expr-tail:sym<oreq-expr>          { <oreq> <expr> }
-    rule nonblock-expr-tail:sym<pluseq-expr>        { <pluseq> <expr> }
-    rule nonblock-expr-tail:sym<stareq-expr>        { <stareq> <expr> }
-    rule nonblock-expr-tail:sym<slasheq-expr>       { <slasheq> <expr> }
-    rule nonblock-expr-tail:sym<careteq-expr>       { <careteq> <expr> }
-    rule nonblock-expr-tail:sym<percenteq-expr>     { <percenteq> <expr> }
-    rule nonblock-expr-tail:sym<oror-expr>          { <oror> <expr> }
-    rule nonblock-expr-tail:sym<andand-expr>        { <andand> <expr> }
-    rule nonblock-expr-tail:sym<eqeq-expr>          { <eqeq> <expr> }
-    rule nonblock-expr-tail:sym<ne-expr>            { <ne_> <expr> }
+    rule nonblock-expr-tail:sym<shleq-expr>         { <tok-shleq> <expr> }
+    rule nonblock-expr-tail:sym<shreq-expr>         { <tok-shreq> <expr> }
+    rule nonblock-expr-tail:sym<minuseq-expr>       { <tok-minuseq> <expr> }
+    rule nonblock-expr-tail:sym<andeq-expr>         { <tok-andeq> <expr> }
+    rule nonblock-expr-tail:sym<oreq-expr>          { <tok-oreq> <expr> }
+    rule nonblock-expr-tail:sym<pluseq-expr>        { <tok-pluseq> <expr> }
+    rule nonblock-expr-tail:sym<stareq-expr>        { <tok-stareq> <expr> }
+    rule nonblock-expr-tail:sym<slasheq-expr>       { <tok-slasheq> <expr> }
+    rule nonblock-expr-tail:sym<careteq-expr>       { <tok-careteq> <expr> }
+    rule nonblock-expr-tail:sym<percenteq-expr>     { <tok-percenteq> <expr> }
+    rule nonblock-expr-tail:sym<oror-expr>          { <tok-oror> <expr> }
+    rule nonblock-expr-tail:sym<andand-expr>        { <tok-andand> <expr> }
+    rule nonblock-expr-tail:sym<eqeq-expr>          { <tok-eqeq> <expr> }
+    rule nonblock-expr-tail:sym<ne-expr>            { <tok-ne> <expr> }
     rule nonblock-expr-tail:sym<lt-expr>            { '<' <expr> }
     rule nonblock-expr-tail:sym<gt-expr>            { '>' <expr> }
-    rule nonblock-expr-tail:sym<le-expr>            { <le_> <expr> }
-    rule nonblock-expr-tail:sym<ge-expr>            { <ge_> <expr> }
+    rule nonblock-expr-tail:sym<le-expr>            { <tok-le> <expr> }
+    rule nonblock-expr-tail:sym<ge-expr>            { <tok-ge> <expr> }
     rule nonblock-expr-tail:sym<pipe-expr>          { '|' <expr> }
     rule nonblock-expr-tail:sym<caret-expr>         { '^' <expr> }
     rule nonblock-expr-tail:sym<amp-expr>           { '&' <expr> }
-    rule nonblock-expr-tail:sym<shl-expr>           { <shl> <expr> }
-    rule nonblock-expr-tail:sym<shr-expr>           { <shr> <expr> }
+    rule nonblock-expr-tail:sym<shl-expr>           { <tok-shl> <expr> }
+    rule nonblock-expr-tail:sym<shr-expr>           { <tok-shr> <expr> }
     rule nonblock-expr-tail:sym<plus-expr>          { '+' <expr> }
     rule nonblock-expr-tail:sym<minus-expr>         { '-' <expr> }
     rule nonblock-expr-tail:sym<star-expr>          { '*' <expr> }
     rule nonblock-expr-tail:sym<slash-expr>         { '/' <expr> }
     rule nonblock-expr-tail:sym<mod-expr>           { '%' <expr> }
-    rule nonblock-expr-tail:sym<dotdot>             { <dotdot> }
-    rule nonblock-expr-tail:sym<dotdot-expr>        { <dotdot> <expr> }
+    rule nonblock-expr-tail:sym<dotdot>             { <tok-dotdot> }
+    rule nonblock-expr-tail:sym<dotdot-expr>        { <tok-dotdot> <expr> }
     rule nonblock-expr-tail:sym<as-ty>              { <kw-as> <ty> }
     rule nonblock-expr-tail:sym<colon-ty>           { ':' <ty> }
 }

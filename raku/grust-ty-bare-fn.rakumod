@@ -4,10 +4,10 @@ our role TyBareFn::Rules {
 
     proto rule ty-bare-fn { * }
 
-    rule ty-bare-fn:sym<fn>            { <fn> <ty-fn-decl> }
-    rule ty-bare-fn:sym<unsafe-fn>     { <unsafe> <fn> <ty-fn-decl> }
-    rule ty-bare-fn:sym<extern>        { <extern> <maybe-abi> <fn> <ty-fn-decl> }
-    rule ty-bare-fn:sym<unsafe-extern> { <unsafe> <extern> <maybe-abi> <fn> <ty-fn-decl> }
+    rule ty-bare-fn:sym<fn>            { <kw-fn> <ty-fn-decl> }
+    rule ty-bare-fn:sym<unsafe-fn>     { <kw-unsafe> <kw-fn> <ty-fn-decl> }
+    rule ty-bare-fn:sym<extern>        { <kw-extern> <maybe-abi> <kw-fn> <ty-fn-decl> }
+    rule ty-bare-fn:sym<unsafe-extern> { <kw-unsafe> <kw-extern> <maybe-abi> <kw-fn> <ty-fn-decl> }
 }
 
 our role TyBareFn::Actions {

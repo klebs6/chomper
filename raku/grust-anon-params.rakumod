@@ -13,7 +13,7 @@ our role AnonParams::Rules {
     }
 
     rule anon-params {
-        <anon-param>+ %% <comma>
+        <anon-param>+ %% <tok-comma>
     }
 
     #-----------------------
@@ -30,7 +30,7 @@ our role AnonParams::Rules {
     rule anon-params-allow-variadic-tail {
         [
             [',' <anon-param>]*
-            [',' <dotdotdot>]?
+            [',' <tok-dotdotdot>]?
         ]?
     }
 }
@@ -63,7 +63,7 @@ our role AnonParams::Actions {
     method anon-params-allow-variadic-tail($/) {
         make AnonArgs.new(
             anon-params   => $<anon-param>>>.made,
-            variadic-tail => so $<dotdotdot>.made,
+            variadic-tail => so $<tok-dotdotdot>.made,
         )
     }
 }

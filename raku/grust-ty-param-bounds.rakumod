@@ -10,9 +10,9 @@ our role TyParamBounds::Rules {
 
     #-----------------
     proto rule polybound  { * }
-    rule polybound:sym<a> { <for_> '<' <maybe-lifetimes> '>' <bound> }
+    rule polybound:sym<a> { <kw-for> '<' <maybe-lifetimes> '>' <bound> }
     rule polybound:sym<b> { <bound> }
-    rule polybound:sym<c> { '?' <for_> '<' <maybe-lifetimes> '>' <bound> }
+    rule polybound:sym<c> { '?' <kw-for> '<' <maybe-lifetimes> '>' <bound> }
     rule polybound:sym<d> { '?' <bound> }
 }
 

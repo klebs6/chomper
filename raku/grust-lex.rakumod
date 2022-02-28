@@ -394,7 +394,7 @@ our role Lex::RawStr {
 #--------------------------------------
 =begin comment
 # { BEGIN(pound); yymore(); }
-<pound>\! { BEGIN(shebang-or-attr); yymore(); }
+<tok-pound>\! { BEGIN(shebang-or-attr); yymore(); }
 <shebang-or-attr>\[ {
   BEGIN(INITIAL);
   yyless(2);
@@ -414,7 +414,7 @@ our role Lex::RawStr {
     return SHEBANG;
   }
 }
-<pound>. { BEGIN(INITIAL); yyless(1); return '#'; }
+<tok-pound>. { BEGIN(INITIAL); yyless(1); return '#'; }
 =end comment
 our role Lex::Pound {
     token pound {

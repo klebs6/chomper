@@ -7,12 +7,12 @@ our role PathExpr::Rules {
     proto rule path-expr { * }
 
     rule path-expr:sym<b> { 
-        <mod-sep>? 
+        <tok-mod-sep>? 
         <path-generic-args-with-colons> 
     }
     rule path-expr:sym<c> { 
-        <self_> 
-        <mod-sep> 
+        <kw-self> 
+        <tok-mod-sep> 
         <path-generic-args-with-colons> 
     }
 }

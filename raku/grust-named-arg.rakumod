@@ -4,12 +4,12 @@ our role NamedArg::Rules {
 
     proto rule named-arg { * }
     rule named-arg:sym<a> { <ident> }
-    rule named-arg:sym<b> { <underscore> }
+    rule named-arg:sym<b> { <tok-underscore> }
     rule named-arg:sym<c> { '&' <ident> }
-    rule named-arg:sym<d> { '&' <underscore> }
-    rule named-arg:sym<e> { <andand> <ident> }
-    rule named-arg:sym<f> { <andand> <underscore> }
-    rule named-arg:sym<g> { <mut> <ident> }
+    rule named-arg:sym<d> { '&' <tok-underscore> }
+    rule named-arg:sym<e> { <tok-andand> <ident> }
+    rule named-arg:sym<f> { <tok-andand> <tok-underscore> }
+    rule named-arg:sym<g> { <kw-mut> <ident> }
 }
 
 our role NamedArg::Actions {

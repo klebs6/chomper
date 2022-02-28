@@ -16,12 +16,12 @@ our role PathGenericArgsWithColons::Rules {
 
     proto rule path-generic-args-with-colons-prefix { * }
     rule path-generic-args-with-colons-prefix:sym<a> { <ident> }
-    rule path-generic-args-with-colons-prefix:sym<b> { <super> }
+    rule path-generic-args-with-colons-prefix:sym<b> { <kw-super> }
 
     proto rule path-generic-args-with-colons-tail { * }
-    rule path-generic-args-with-colons-tail:sym<c> { <mod-sep> <ident> }
-    rule path-generic-args-with-colons-tail:sym<d> { <mod-sep> <super> }
-    rule path-generic-args-with-colons-tail:sym<e> { <mod-sep> <generic-args> }
+    rule path-generic-args-with-colons-tail:sym<c> { <tok-mod-sep> <ident> }
+    rule path-generic-args-with-colons-tail:sym<d> { <tok-mod-sep> <kw-super> }
+    rule path-generic-args-with-colons-tail:sym<e> { <tok-mod-sep> <generic-args> }
 }
 
 our role PathGenericArgsWithColons::Actions {
@@ -44,6 +44,6 @@ our role PathGenericArgsWithColons::Actions {
     }
 
     method path-generic-args-with-colons-tail:sym<c>($/) { make $<ident>.made }
-    method path-generic-args-with-colons-tail:sym<d>($/) { make $<super>.made }
+    method path-generic-args-with-colons-tail:sym<d>($/) { make $<kw-super>.made }
     method path-generic-args-with-colons-tail:sym<e>($/) { make $<generic-args>.made }
 }

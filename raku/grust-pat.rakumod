@@ -4,15 +4,15 @@ our role Pat::Rules {
 
     proto rule pat { * }
 
-    rule pat:sym<a> { <underscore> }
+    rule pat:sym<a> { <tok-underscore> }
     rule pat:sym<b> { '&' <pat> }
-    rule pat:sym<c> { '&' <mut> <pat> }
-    rule pat:sym<d> { <andand> <pat> }
+    rule pat:sym<c> { '&' <kw-mut> <pat> }
+    rule pat:sym<d> { <tok-andand> <pat> }
     rule pat:sym<e> { '(' ')' }
     rule pat:sym<f> { '(' <pat-tup> ')' }
     rule pat:sym<g> { '[' <pat-vec> ']' }
     rule pat:sym<h> { <lit-or-path> }
-    rule pat:sym<i> { <lit-or-path> <dotdotdot> <lit-or-path> }
+    rule pat:sym<i> { <lit-or-path> <tok-dotdotdot> <lit-or-path> }
     rule pat:sym<j> { <path-expr> '{' <pat-struct> '}' }
     rule pat:sym<k> { <path-expr> '(' ')' }
     rule pat:sym<l> { <path-expr> '(' <pat-tup> ')' }
@@ -21,8 +21,8 @@ our role Pat::Rules {
     rule pat:sym<o> { <ident> '@' <pat> }
     rule pat:sym<p> { <binding-mode> <ident> '@' <pat> }
     rule pat:sym<q> { <kw-box> <pat> }
-    rule pat:sym<r> { '<' <ty-sum> <maybe-as-trait-ref> '>' <mod-sep> <ident> }
-    rule pat:sym<s> { <shl> <ty-sum> <maybe-as-trait-ref> '>' <mod-sep> <ident> <maybe-as-trait-ref> '>' <mod-sep> <ident> }
+    rule pat:sym<r> { '<' <ty-sum> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident> }
+    rule pat:sym<s> { <tok-shl> <ty-sum> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident> }
 
     rule pats-or {
         <pat>+ %% "|"

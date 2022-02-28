@@ -5,15 +5,15 @@ our role ItemMod::Rules {
     proto rule item-mod { * }
 
     rule item-mod:sym<a> {
-        <mod_> <ident> ';'
+        <kw-mod> <ident> ';'
     }
 
     rule item-mod:sym<b> {
-        <mod_> <ident> '{' <inner-attrs>? <maybe-mod-items> '}'
+        <kw-mod> <ident> '{' <inner-attrs>? <maybe-mod-items> '}'
     }
 
     rule item-foreign-mod {
-        <extern> <maybe-abi> '{' <inner-attrs>? <maybe-foreign-items> '}'
+        <kw-extern> <maybe-abi> '{' <inner-attrs>? <maybe-foreign-items> '}'
     }
 
     rule maybe-abi {

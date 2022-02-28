@@ -3,7 +3,9 @@ use grust-model;
 our role ExprLoop::Rules {
 
     rule expr-loop {
-        <maybe-label> <loop_> <block>
+        <maybe-label> 
+        <kw-loop> 
+        <block>
     }
 }
 

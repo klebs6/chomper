@@ -13,7 +13,7 @@ our role IdentsOrSelf::Rules {
 
     proto rule ident-or-self        { * }
     rule ident-or-self:sym<ident>   { <ident> }
-    rule ident-or-self:sym<self>    { <self_>  }
+    rule ident-or-self:sym<self>    { <kw-self>  }
 }
 
 our role IdentsOrSelf::Actions {

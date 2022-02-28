@@ -4,7 +4,7 @@ our role ItemTrait::Rules {
 
     rule item-trait {
         <maybe-unsafe> 
-        <trait> 
+        <kw-trait> 
         <ident> 
         <generic-params> 
         <for-sized> 

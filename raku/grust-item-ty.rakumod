@@ -3,7 +3,7 @@ use grust-model;
 our role ItemType::Rules {
 
     rule item-type {
-        <type> 
+        <kw-type> 
         <ident> 
         <generic-params> 
         <maybe-where-clause> 

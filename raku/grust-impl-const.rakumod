@@ -17,4 +17,3 @@ our role ImplConst::Actions {
         )
     }
 }
-

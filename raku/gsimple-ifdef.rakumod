@@ -1,4 +1,3 @@
-
 our role SimpleIfdef {
 
     token ifdef  { '#ifdef' | '#if' }

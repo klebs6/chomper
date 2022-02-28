@@ -4,7 +4,7 @@ our role TraitRef::Rules {
 
     rule trait-ref {
         #{self.set-prec(IDENT)} 
-        <mod-sep>? 
+        <tok-mod-sep>? 
         <path-generic-args-without-colons>
     }
 }

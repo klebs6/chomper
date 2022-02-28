@@ -3,7 +3,10 @@ use grust-model;
 our role ExprWhile::Rules {
 
     rule expr-while {
-        <maybe-label> <while_> <expr-nostruct> <block>
+        <maybe-label> 
+        <kw-while> 
+        <expr-nostruct> 
+        <block>
     }
 }
 

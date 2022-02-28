@@ -3,7 +3,7 @@ use grust-model;
 our role ForInType::Rules {
 
     rule for-in-type {
-        <for_> '<' <maybe-lifetimes> '>' <for-in-type-suffix>
+        <kw-for> '<' <maybe-lifetimes> '>' <for-in-type-suffix>
     }
 
     proto rule for-in-type-suffix { * }

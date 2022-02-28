@@ -16,20 +16,20 @@ our role ExprNoStruct::Rules {
         <path-expr> 
     }
 
-    rule expr-nostruct-base:sym<self>                          { <self_> }
+    rule expr-nostruct-base:sym<self>                          { <kw-self> }
     rule expr-nostruct-base:sym<macro-expr>                    { <macro-expr> }
     rule expr-nostruct-base:sym<vec-expr>                      { '[' <vec-expr> ']' }
     rule expr-nostruct-base:sym<paren-expr>                    { '(' <maybe-exprs> ')' }
-    rule expr-nostruct-base:sym<continue>                      { <continue_> }
-    rule expr-nostruct-base:sym<continue-ident>                { <continue_> <ident> }
-    rule expr-nostruct-base:sym<return>                        { <return_> }
-    rule expr-nostruct-base:sym<return-expr>                   { <return_> <expr> }
+    rule expr-nostruct-base:sym<continue>                      { <kw-continue> }
+    rule expr-nostruct-base:sym<continue-ident>                { <kw-continue> <ident> }
+    rule expr-nostruct-base:sym<return>                        { <kw-return> }
+    rule expr-nostruct-base:sym<return-expr>                   { <kw-return> <expr> }
     rule expr-nostruct-base:sym<break>                         { <kw-break> }
     rule expr-nostruct-base:sym<break-ident>                   { <kw-break> <ident> }
-    rule expr-nostruct-base:sym<yield>                         { <yield> }
-    rule expr-nostruct-base:sym<yield-expr>                    { <yield> <expr> }
-    rule expr-nostruct-base:sym<dotdot-expr-nostruct>          { <dotdot> <expr-nostruct> }
-    rule expr-nostruct-base:sym<dotdot>                        { <dotdot> }
+    rule expr-nostruct-base:sym<yield>                         { <kw-yield> }
+    rule expr-nostruct-base:sym<yield-expr>                    { <kw-yield> <expr> }
+    rule expr-nostruct-base:sym<dotdot-expr-nostruct>          { <tok-dotdot> <expr-nostruct> }
+    rule expr-nostruct-base:sym<dotdot>                        { <tok-dotdot> }
     rule expr-nostruct-base:sym<box-expr>                      { <kw-box> <expr> }
     rule expr-nostruct-base:sym<expr-qualified-path>           { <expr-qualified-path> }
 
@@ -47,38 +47,38 @@ our role ExprNoStruct::Rules {
     rule expr-nostruct-tail:sym<paren-expr>        { '(' <maybe-exprs> ')' }
 
     rule expr-nostruct-tail:sym<eq-expr>           { '='           <expr-nostruct> }
-    rule expr-nostruct-tail:sym<shleq-expr>        { <shleq>       <expr-nostruct> }
-    rule expr-nostruct-tail:sym<shreq-expr>        { <shreq>       <expr-nostruct> }
-    rule expr-nostruct-tail:sym<minuseq-expr>      { <minuseq>     <expr-nostruct> }
-    rule expr-nostruct-tail:sym<andeq-expr>        { <andeq>       <expr-nostruct> }
-    rule expr-nostruct-tail:sym<oreq-expr>         { <oreq>        <expr-nostruct> }
-    rule expr-nostruct-tail:sym<pluseq-expr>       { <pluseq>      <expr-nostruct> }
-    rule expr-nostruct-tail:sym<stareq-expr>       { <stareq>      <expr-nostruct> }
-    rule expr-nostruct-tail:sym<slasheq-expr>      { <slasheq>     <expr-nostruct> }
-    rule expr-nostruct-tail:sym<careteq-expr>      { <careteq>     <expr-nostruct> }
-    rule expr-nostruct-tail:sym<percenteq-expr>    { <percenteq>   <expr-nostruct> }
-    rule expr-nostruct-tail:sym<oror-expr>         { <oror>        <expr-nostruct> }
-    rule expr-nostruct-tail:sym<andand-expr>       { <andand>      <expr-nostruct> }
-    rule expr-nostruct-tail:sym<eqeq-expr>         { <eqeq>        <expr-nostruct> }
-    rule expr-nostruct-tail:sym<ne-expr>           { <ne_>          <expr-nostruct> }
+    rule expr-nostruct-tail:sym<shleq-expr>        { <tok-shleq>       <expr-nostruct> }
+    rule expr-nostruct-tail:sym<shreq-expr>        { <tok-shreq>       <expr-nostruct> }
+    rule expr-nostruct-tail:sym<minuseq-expr>      { <tok-minuseq>     <expr-nostruct> }
+    rule expr-nostruct-tail:sym<andeq-expr>        { <tok-andeq>       <expr-nostruct> }
+    rule expr-nostruct-tail:sym<oreq-expr>         { <tok-oreq>        <expr-nostruct> }
+    rule expr-nostruct-tail:sym<pluseq-expr>       { <tok-pluseq>      <expr-nostruct> }
+    rule expr-nostruct-tail:sym<stareq-expr>       { <tok-stareq>      <expr-nostruct> }
+    rule expr-nostruct-tail:sym<slasheq-expr>      { <tok-slasheq>     <expr-nostruct> }
+    rule expr-nostruct-tail:sym<careteq-expr>      { <tok-careteq>     <expr-nostruct> }
+    rule expr-nostruct-tail:sym<percenteq-expr>    { <tok-percenteq>   <expr-nostruct> }
+    rule expr-nostruct-tail:sym<oror-expr>         { <tok-oror>        <expr-nostruct> }
+    rule expr-nostruct-tail:sym<andand-expr>       { <tok-andand>      <expr-nostruct> }
+    rule expr-nostruct-tail:sym<eqeq-expr>         { <tok-eqeq>        <expr-nostruct> }
+    rule expr-nostruct-tail:sym<ne-expr>           { <tok-ne>          <expr-nostruct> }
     rule expr-nostruct-tail:sym<lt-expr>           { '<'           <expr-nostruct> }
     rule expr-nostruct-tail:sym<gt-expr>           { '>'           <expr-nostruct> }
-    rule expr-nostruct-tail:sym<le-expr>           { <le_>          <expr-nostruct> }
-    rule expr-nostruct-tail:sym<ge-expr>           { <ge_>          <expr-nostruct> }
+    rule expr-nostruct-tail:sym<le-expr>           { <tok-le>          <expr-nostruct> }
+    rule expr-nostruct-tail:sym<ge-expr>           { <tok-ge>          <expr-nostruct> }
     rule expr-nostruct-tail:sym<pipe-expr>         { '|'           <expr-nostruct> }
     rule expr-nostruct-tail:sym<caret-expr>        { '^'           <expr-nostruct> }
     rule expr-nostruct-tail:sym<amp-expr>          { '&'           <expr-nostruct> }
-    rule expr-nostruct-tail:sym<shl-expr>          { <shl>         <expr-nostruct> }
-    rule expr-nostruct-tail:sym<shr-expr>          { <shr>         <expr-nostruct> }
+    rule expr-nostruct-tail:sym<shl-expr>          { <tok-shl>         <expr-nostruct> }
+    rule expr-nostruct-tail:sym<shr-expr>          { <tok-shr>         <expr-nostruct> }
     rule expr-nostruct-tail:sym<plus-expr>         { '+'           <expr-nostruct> }
     rule expr-nostruct-tail:sym<minus-expr>        { '-'           <expr-nostruct> }
     rule expr-nostruct-tail:sym<star-expr>         { '*'           <expr-nostruct> }
     rule expr-nostruct-tail:sym<slash-expr>        { '/'           <expr-nostruct> }
     rule expr-nostruct-tail:sym<mod-expr>          { '%'           <expr-nostruct> }
-    rule expr-nostruct-tail:sym<dotdot-nostruct>   { <dotdot>      <expr-nostruct> }
+    rule expr-nostruct-tail:sym<dotdot-nostruct>   { <tok-dotdot>      <expr-nostruct> }
 
     rule expr-nostruct-tail:sym<dotdot> { 
-        <dotdot>      
+        <tok-dotdot>      
         #{ self.set-prec(RANGE) } 
     }
 

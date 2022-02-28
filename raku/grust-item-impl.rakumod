@@ -7,7 +7,7 @@ our role ItemImpl::Rules {
 
     rule item-impl:sym<a> {
         <maybe-default-maybe-unsafe> 
-        <impl> 
+        <kw-impl> 
         <generic-params> 
         <ty-prim-sum> 
         <maybe-where-clause> 
@@ -19,7 +19,7 @@ our role ItemImpl::Rules {
 
     rule item-impl:sym<b> {
         <maybe-default-maybe-unsafe> 
-        <impl> 
+        <kw-impl> 
         <generic-params> 
         '(' <ty> ')' 
         <maybe-where-clause> 
@@ -28,10 +28,10 @@ our role ItemImpl::Rules {
 
     rule item-impl:sym<c> {
         <maybe-default-maybe-unsafe> 
-        <impl> 
+        <kw-impl> 
         <generic-params> 
         <trait-ref> 
-        <for_> 
+        <kw-for> 
         <ty-sum> 
         <maybe-where-clause> 
         '{' <maybe-inner-attrs> <maybe-impl-items> '}'
@@ -39,9 +39,9 @@ our role ItemImpl::Rules {
 
     rule item-impl:sym<d> {
         <maybe-default-maybe-unsafe> 
-        <impl> <generic-params> '!' 
+        <kw-impl> <generic-params> '!' 
         <trait-ref> 
-        <for_> 
+        <kw-for> 
         <ty-sum> 
         <maybe-where-clause> 
         '{' <maybe-inner-attrs> <maybe-impl-items> '}'
@@ -49,22 +49,22 @@ our role ItemImpl::Rules {
 
     rule item-impl:sym<e> {
         <maybe-default-maybe-unsafe> 
-        <impl> 
+        <kw-impl> 
         <generic-params> 
         <trait-ref> 
-        <for_> 
-        <dotdot> 
+        <kw-for> 
+        <tok-dotdot> 
         '{' '}'
     }
 
     rule item-impl:sym<f> {
         <maybe-default-maybe-unsafe> 
-        <impl> 
+        <kw-impl> 
         <generic-params> 
         '!' 
         <trait-ref> 
-        <for_> 
-        <dotdot> 
+        <kw-for> 
+        <tok-dotdot> 
         '{' '}'
     }
 

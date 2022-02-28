@@ -10,43 +10,43 @@ our role Expr::Rules {
     rule expr-tail:sym<expr-bracket-tail>             { '[' <maybe-expr> ']' }
     rule expr-tail:sym<expr-paren-tail>               { '(' <maybe-exprs> ')' }
     rule expr-tail:sym<expr-eq-expr>                  { '=' <expr> }
-    rule expr-tail:sym<expr-shleq-expr>               { <shleq> <expr> }
-    rule expr-tail:sym<expr-shreq-expr>               { <shreq> <expr> }
-    rule expr-tail:sym<expr-minuseq-expr>             { <minuseq> <expr> }
-    rule expr-tail:sym<expr-andeq-expr>               { <andeq> <expr> }
-    rule expr-tail:sym<expr-oreq-expr>                { <oreq> <expr> }
-    rule expr-tail:sym<expr-pluseq-expr>              { <pluseq> <expr> }
-    rule expr-tail:sym<expr-stareq-expr>              { <stareq> <expr> }
-    rule expr-tail:sym<expr-slasheq-expr>             { <slasheq> <expr> }
-    rule expr-tail:sym<expr-careteq-expr>             { <careteq> <expr> }
-    rule expr-tail:sym<expr-percenteq-expr>           { <percenteq> <expr> }
-    rule expr-tail:sym<expr-oror-expr>                { <oror> <expr> }
-    rule expr-tail:sym<expr-andand-expr>              { <andand> <expr> }
-    rule expr-tail:sym<expr-eqeq-expr>                { <eqeq> <expr> }
-    rule expr-tail:sym<expr-ne-expr>                  { <ne_> <expr> }
+    rule expr-tail:sym<expr-shleq-expr>               { <tok-shleq> <expr> }
+    rule expr-tail:sym<expr-shreq-expr>               { <tok-shreq> <expr> }
+    rule expr-tail:sym<expr-minuseq-expr>             { <tok-minuseq> <expr> }
+    rule expr-tail:sym<expr-andeq-expr>               { <tok-andeq> <expr> }
+    rule expr-tail:sym<expr-oreq-expr>                { <tok-oreq> <expr> }
+    rule expr-tail:sym<expr-pluseq-expr>              { <tok-pluseq> <expr> }
+    rule expr-tail:sym<expr-stareq-expr>              { <tok-stareq> <expr> }
+    rule expr-tail:sym<expr-slasheq-expr>             { <tok-slasheq> <expr> }
+    rule expr-tail:sym<expr-careteq-expr>             { <tok-careteq> <expr> }
+    rule expr-tail:sym<expr-percenteq-expr>           { <tok-percenteq> <expr> }
+    rule expr-tail:sym<expr-oror-expr>                { <tok-oror> <expr> }
+    rule expr-tail:sym<expr-andand-expr>              { <tok-andand> <expr> }
+    rule expr-tail:sym<expr-eqeq-expr>                { <tok-eqeq> <expr> }
+    rule expr-tail:sym<expr-ne-expr>                  { <tok-ne> <expr> }
     rule expr-tail:sym<expr-lt-expr>                  { '<' <expr> }
     rule expr-tail:sym<expr-gt-expr>                  { '>' <expr> }
-    rule expr-tail:sym<expr-le-expr>                  { <le_> <expr> }
-    rule expr-tail:sym<expr-ge-expr>                  { <ge_> <expr> }
+    rule expr-tail:sym<expr-le-expr>                  { <tok-le> <expr> }
+    rule expr-tail:sym<expr-ge-expr>                  { <tok-ge> <expr> }
     rule expr-tail:sym<expr-pipe-expr>                { '|' <expr> }
     rule expr-tail:sym<expr-caret-expr>               { '^' <expr> }
     rule expr-tail:sym<expr-amp-expr>                 { '&' <expr> }
-    rule expr-tail:sym<expr-shl-expr>                 { <shl> <expr> }
-    rule expr-tail:sym<expr-shr-expr>                 { <shr> <expr> }
+    rule expr-tail:sym<expr-shl-expr>                 { <tok-shl> <expr> }
+    rule expr-tail:sym<expr-shr-expr>                 { <tok-shr> <expr> }
     rule expr-tail:sym<expr-plus-expr>                { '+' <expr> }
     rule expr-tail:sym<expr-minus-expr>               { '-' <expr> }
     rule expr-tail:sym<expr-star-expr>                { '*' <expr> }
     rule expr-tail:sym<expr-slash-expr>               { '/' <expr> }
     rule expr-tail:sym<expr-mod-expr>                 { '%' <expr> }
-    rule expr-tail:sym<expr-dotdot>                   { <dotdot> }
-    rule expr-tail:sym<expr-dotdot-expr>              { <dotdot> <expr> }
+    rule expr-tail:sym<expr-dotdot>                   { <tok-dotdot> }
+    rule expr-tail:sym<expr-dotdot-expr>              { <tok-dotdot> <expr> }
     rule expr-tail:sym<expr-as-ty>                    { <kw-as> <ty> }
     rule expr-tail:sym<expr-ty>                       { ':' <ty> }
 
     proto rule expr-base { * }
 
     rule expr-base:sym<lit>  { <lit> }
-    rule expr-base:sym<self> { <self_> }
+    rule expr-base:sym<self> { <kw-self> }
 
     rule expr-base:sym<macro-expr>                    { <macro-expr> }
 
@@ -58,22 +58,22 @@ our role Expr::Rules {
     rule expr-base:sym<struct-expr>                   { <path-expr> '{' <struct-expr-fields> '}' }
     rule expr-base:sym<paren-tail>                    { '(' <maybe-exprs> ')' }
     rule expr-base:sym<brack-tail>                    { '[' <vec-expr> ']' }
-    rule expr-base:sym<continue>                      { <continue_> }
-    rule expr-base:sym<continue-ident>                { <continue_> <ident> }
-    rule expr-base:sym<return>                        { <return_> }
+    rule expr-base:sym<continue>                      { <kw-continue> }
+    rule expr-base:sym<continue-ident>                { <kw-continue> <ident> }
+    rule expr-base:sym<return>                        { <kw-return> }
     rule expr-base:sym<break>                         { <kw-break> }
     rule expr-base:sym<break-ident>                   { <kw-break> <ident> }
-    rule expr-base:sym<yield>                         { <yield> }
-    rule expr-base:sym<dotdot>                        { <dotdot> }
+    rule expr-base:sym<yield>                         { <kw-yield> }
+    rule expr-base:sym<dotdot>                        { <tok-dotdot> }
     rule expr-base:sym<expr-qualified-path>           { <expr-qualified-path> }
     rule expr-base:sym<block-expr>                    { <block-expr> }
     rule expr-base:sym<block>                         { <block> }
     rule expr-base:sym<nonblock-prefix-expr>          { <nonblock-prefix-expr> }
 
     proto rule expr-prefix { * }
-    rule expr-prefix:sym<return-expr>   { <return_> }
-    rule expr-prefix:sym<yield-expr>    { <yield>  }
-    rule expr-prefix:sym<dotdot-expr>   { <dotdot> }
+    rule expr-prefix:sym<return-expr>   { <kw-return> }
+    rule expr-prefix:sym<yield-expr>    { <kw-yield>  }
+    rule expr-prefix:sym<dotdot-expr>   { <tok-dotdot> }
     rule expr-prefix:sym<box-expr>      { <kw-box>    }
 
     rule expr {

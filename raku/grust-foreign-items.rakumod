@@ -12,9 +12,9 @@ our role ForeignItems::Rules {
 
     #------------------------
     proto rule foreign-item { * }
-    rule foreign-item:sym<a> { <attrs-and-vis> <static> <item-foreign-static> }
+    rule foreign-item:sym<a> { <attrs-and-vis> <kw-static> <item-foreign-static> }
     rule foreign-item:sym<b> { <attrs-and-vis> <item-foreign-fn> }
-    rule foreign-item:sym<c> { <attrs-and-vis> <unsafe> <item-foreign-fn> }
+    rule foreign-item:sym<c> { <attrs-and-vis> <kw-unsafe> <item-foreign-fn> }
 }
 
 our role ForeignItems::Actions {

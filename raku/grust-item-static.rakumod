@@ -5,11 +5,11 @@ our role ItemStatic::Rules {
     proto rule item-static { * }
 
     rule item-static:sym<a> {
-        <static> <ident> ':' <ty> '=' <expr> ';'
+        <kw-static> <ident> ':' <ty> '=' <expr> ';'
     }
 
     rule item-static:sym<b> {
-        <static> <mut> <ident> ':' <ty> '=' <expr> ';'
+        <kw-static> <kw-mut> <ident> ':' <ty> '=' <expr> ';'
     }
 }
 

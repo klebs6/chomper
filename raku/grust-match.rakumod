@@ -1,14 +1,13 @@
 use grust-model;
 
-
 our role ExprMatch::Rules {
 
     proto rule expr-match { * }
 
-    rule expr-match:sym<a> { <match_> <expr-nostruct> '{' '}' }
-    rule expr-match:sym<b> { <match_> <expr-nostruct> '{' <match-clauses> '}' }
-    rule expr-match:sym<c> { <match_> <expr-nostruct> '{' <match-clauses> <nonblock-match-clause> '}' }
-    rule expr-match:sym<d> { <match_> <expr-nostruct> '{' <nonblock-match-clause> '}' }
+    rule expr-match:sym<a> { <kw-match> <expr-nostruct> '{' '}' }
+    rule expr-match:sym<b> { <kw-match> <expr-nostruct> '{' <match-clauses> '}' }
+    rule expr-match:sym<c> { <kw-match> <expr-nostruct> '{' <match-clauses> <nonblock-match-clause> '}' }
+    rule expr-match:sym<d> { <kw-match> <expr-nostruct> '{' <nonblock-match-clause> '}' }
 
     rule match-clauses { <match-clause>+ }
 
@@ -21,22 +20,22 @@ our role ExprMatch::Rules {
     proto rule nonblock-match-clause { * }
 
     rule nonblock-match-clause:sym<a> {
-        <maybe-outer-attrs> <pats-or> <maybe-guard> <fat-arrow> <nonblock-expr>
+        <maybe-outer-attrs> <pats-or> <maybe-guard> <tok-fat-arrow> <nonblock-expr>
     }
 
     rule nonblock-match-clause:sym<b> {
-        <maybe-outer-attrs> <pats-or> <maybe-guard> <fat-arrow> <block-expr-dot>
+        <maybe-outer-attrs> <pats-or> <maybe-guard> <tok-fat-arrow> <block-expr-dot>
     }
 
     #--------------------
     proto rule block-match-clause { * }
 
     rule block-match-clause:sym<a> {
-        <maybe-outer-attrs> <pats-or> <maybe-guard> <fat-arrow> <block>
+        <maybe-outer-attrs> <pats-or> <maybe-guard> <tok-fat-arrow> <block>
     }
 
     rule block-match-clause:sym<b> {
-        <maybe-outer-attrs> <pats-or> <maybe-guard> <fat-arrow> <block-expr>
+        <maybe-outer-attrs> <pats-or> <maybe-guard> <tok-fat-arrow> <block-expr>
     }
 }
 

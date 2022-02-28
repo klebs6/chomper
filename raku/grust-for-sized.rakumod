@@ -4,7 +4,7 @@ our role ForSized::Rules {
 
     rule for-sized {
         [
-            <for_> 
+            <kw-for> 
             [
                 | [ '?' <ident> ]
                 | [ <ident> '?' ]

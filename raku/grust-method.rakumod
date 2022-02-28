@@ -17,7 +17,7 @@ our role Method::Rules {
     rule type-method:sym<a> {
         <maybe-outer-attrs> 
         <maybe-unsafe> 
-        <fn> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl-with-self-allow-anon-params> 
@@ -27,9 +27,9 @@ our role Method::Rules {
 
     rule type-method:sym<b> {
         <maybe-outer-attrs> 
-        <const> 
+        <kw-const> 
         <maybe-unsafe> 
-        <fn> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl-with-self-allow-anon-params> 
@@ -40,9 +40,9 @@ our role Method::Rules {
     rule type-method:sym<c> {
         <maybe-outer-attrs> 
         <maybe-unsafe> 
-        <extern> 
+        <kw-extern> 
         <maybe-abi> 
-        <fn> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl-with-self-allow-anon-params> 
@@ -55,7 +55,7 @@ our role Method::Rules {
     rule method:sym<a> {
         <maybe-outer-attrs> 
         <maybe-unsafe> 
-        <fn> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl-with-self-allow-anon-params> 
@@ -65,9 +65,9 @@ our role Method::Rules {
 
     rule method:sym<b> {
         <maybe-outer-attrs> 
-        <const> 
+        <kw-const> 
         <maybe-unsafe> 
-        <fn> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl-with-self-allow-anon-params> 
@@ -78,9 +78,9 @@ our role Method::Rules {
     rule method:sym<c> {
         <maybe-outer-attrs> 
         <maybe-unsafe> 
-        <extern> 
+        <kw-extern> 
         <maybe-abi> 
-        <fn> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl-with-self-allow-anon-params> 
@@ -94,7 +94,7 @@ our role Method::Rules {
         <attrs-and-vis> 
         <maybe-default> 
         <maybe-unsafe> 
-        <fn> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl-with-self> 
@@ -105,9 +105,9 @@ our role Method::Rules {
     rule impl-method:sym<b> {
         <attrs-and-vis> 
         <maybe-default> 
-        <const> 
+        <kw-const> 
         <maybe-unsafe> 
-        <fn> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl-with-self> 
@@ -119,9 +119,9 @@ our role Method::Rules {
         <attrs-and-vis> 
         <maybe-default> 
         <maybe-unsafe> 
-        <extern> 
+        <kw-extern> 
         <maybe-abi> 
-        <fn> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl-with-self> 

@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role MacroExpr::Rules {
 
     proto rule macro-expr { * }

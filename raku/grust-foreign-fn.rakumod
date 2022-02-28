@@ -3,7 +3,7 @@ use grust-model;
 our role ForeignFn::Rules {
 
     rule item-foreign-fn {
-        <fn> 
+        <kw-fn> 
         <ident> 
         <generic-params> 
         <fn-decl-allow-variadic> 

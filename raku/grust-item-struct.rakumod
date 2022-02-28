@@ -6,7 +6,7 @@ our role ItemStruct::Rules {
     proto rule item-struct { * }
 
     rule item-struct:sym<a> {
-        <struct> 
+        <kw-struct> 
         <ident> 
         <generic-params> 
         <maybe-where-clause> 
@@ -14,7 +14,7 @@ our role ItemStruct::Rules {
     }
 
     rule item-struct:sym<b> {
-        <struct> 
+        <kw-struct> 
         <ident> 
         <generic-params> 
         <struct-tuple-args> 
@@ -22,7 +22,7 @@ our role ItemStruct::Rules {
     }
 
     rule item-struct:sym<c> {
-        <struct> 
+        <kw-struct> 
         <ident> 
         <generic-params> 
         <maybe-where-clause> ';'

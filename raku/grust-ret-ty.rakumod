@@ -3,8 +3,8 @@ use grust-model;
 our role RetTy::Rules {
 
     proto rule ret-ty { * }
-    rule ret-ty:sym<panic> { <rarrow> '!' }
-    rule ret-ty:sym<ty>    { <rarrow> <ty> }
+    rule ret-ty:sym<panic> { <tok-rarrow> '!' }
+    rule ret-ty:sym<ty>    { <tok-rarrow> <ty> }
 }
 
 our role RetTy::Actions {

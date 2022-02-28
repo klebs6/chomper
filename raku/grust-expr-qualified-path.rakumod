@@ -5,23 +5,23 @@ our role ExprQualifiedPath::Rules {
     proto rule expr-qualified-path { * }
 
     rule expr-qualified-path:sym<a> {
-        '<' <ty-sum> <maybe-as-trait-ref> '>' <mod-sep> <ident> <maybe-qpath-params>
+        '<' <ty-sum> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident> <maybe-qpath-params>
     }
 
     rule expr-qualified-path:sym<b> {
-        <shl> <ty-sum> <maybe-as-trait-ref> '>' <mod-sep> <ident> <maybe-as-trait-ref> '>' <mod-sep> <ident>
+        <tok-shl> <ty-sum> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident>
     }
 
     rule expr-qualified-path:sym<c> {
-        <shl> <ty-sum> <maybe-as-trait-ref> '>' <mod-sep> <ident> <generic-args> <maybe-as-trait-ref> '>' <mod-sep> <ident>
+        <tok-shl> <ty-sum> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident> <generic-args> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident>
     }
 
     rule expr-qualified-path:sym<d> {
-        <shl> <ty-sum> <maybe-as-trait-ref> '>' <mod-sep> <ident> <maybe-as-trait-ref> '>' <mod-sep> <ident> <generic-args>
+        <tok-shl> <ty-sum> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident> <generic-args>
     }
 
     rule expr-qualified-path:sym<e> {
-        <shl> <ty-sum> <maybe-as-trait-ref> '>' <mod-sep> <ident> <generic-args> <maybe-as-trait-ref> '>' <mod-sep> <ident> <generic-args>
+        <tok-shl> <ty-sum> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident> <generic-args> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident> <generic-args>
     }
 }
 

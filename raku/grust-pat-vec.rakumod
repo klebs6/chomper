@@ -4,9 +4,9 @@ our role PatVec::Rules {
 
     proto rule pat-vec { * }
 
-    rule pat-vec:sym<d> { <pat-vec-elts> ','? <dotdot>? }
-    rule pat-vec:sym<h> { <pat-vec-elts> ','? <dotdot> ',' <pat-vec-elts> ','? }
-    rule pat-vec:sym<j> { [<dotdot> [',' <pat-vec-elts> ','?]?]? }
+    rule pat-vec:sym<d> { <pat-vec-elts> ','? <tok-dotdot>? }
+    rule pat-vec:sym<h> { <pat-vec-elts> ','? <tok-dotdot> ',' <pat-vec-elts> ','? }
+    rule pat-vec:sym<j> { [<tok-dotdot> [',' <pat-vec-elts> ','?]?]? }
 
     rule pat-vec-elts { <pat>+ %% "," }
 }

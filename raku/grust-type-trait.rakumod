@@ -3,7 +3,7 @@ use grust-model;
 our role TraitType::Rules {
 
     rule trait-type {
-        <maybe-outer-attrs> <type> <ty-param> ';'
+        <maybe-outer-attrs> <kw-type> <ty-param> ';'
     }
 }
 

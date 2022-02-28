@@ -3,7 +3,7 @@ use grust-model;
 our role ItemConst::Rules {
 
     rule item-const {
-        <const> <ident> ':' <ty> '=' <expr> ';'
+        <kw-const> <ident> ':' <ty> '=' <expr> ';'
     }
 }
 

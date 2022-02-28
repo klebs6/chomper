@@ -3,7 +3,7 @@ use grust-model;
 our role Default::Rules {
 
     rule maybe-default {
-        <default_>?
+        <kw-default>?
     }
 }
 
@@ -14,6 +14,6 @@ our role Default::Actions {
     }
 
     method maybe-default($/) {
-        make $<default>.made
+        make $<kw-default>.made
     }
 }

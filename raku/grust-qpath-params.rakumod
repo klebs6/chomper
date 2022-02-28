@@ -3,7 +3,7 @@ use grust-model;
 our role QPathParams::Rules {
 
     rule maybe-qpath-params {
-        [<mod-sep> <generic-args>]?
+        [<tok-mod-sep> <generic-args>]?
     }
 }
 

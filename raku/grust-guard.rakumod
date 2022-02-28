@@ -3,7 +3,7 @@ use grust-model;
 our role Guard::Rules {
 
     rule maybe-guard {
-        [ <if_> <expr-nostruct> ]?
+        [ <kw-if> <expr-nostruct> ]?
     }
 }
 

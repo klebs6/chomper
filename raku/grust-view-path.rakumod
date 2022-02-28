@@ -5,14 +5,14 @@ our role ViewPath::Rules {
     proto rule view-path { * }
 
     rule view-path:sym<a> { <path-no-types-allowed> }
-    rule view-path:sym<b> { <path-no-types-allowed> <mod-sep> '{' '}' }
-    rule view-path:sym<c> { <mod-sep> '{' '}' }
-    rule view-path:sym<d> { <path-no-types-allowed> <mod-sep> '{' <idents-or-self> '}' }
-    rule view-path:sym<e> { <mod-sep> '{' <idents-or-self> '}' }
-    rule view-path:sym<f> { <path-no-types-allowed> <mod-sep> '{' <idents-or-self> ',' '}' }
-    rule view-path:sym<g> { <mod-sep> '{' <idents-or-self> ',' '}' }
-    rule view-path:sym<h> { <path-no-types-allowed> <mod-sep> '*' }
-    rule view-path:sym<i> { <mod-sep> '*' }
+    rule view-path:sym<b> { <path-no-types-allowed> <tok-mod-sep> '{' '}' }
+    rule view-path:sym<c> { <tok-mod-sep> '{' '}' }
+    rule view-path:sym<d> { <path-no-types-allowed> <tok-mod-sep> '{' <idents-or-self> '}' }
+    rule view-path:sym<e> { <tok-mod-sep> '{' <idents-or-self> '}' }
+    rule view-path:sym<f> { <path-no-types-allowed> <tok-mod-sep> '{' <idents-or-self> ',' '}' }
+    rule view-path:sym<g> { <tok-mod-sep> '{' <idents-or-self> ',' '}' }
+    rule view-path:sym<h> { <path-no-types-allowed> <tok-mod-sep> '*' }
+    rule view-path:sym<i> { <tok-mod-sep> '*' }
     rule view-path:sym<j> { '*' }
     rule view-path:sym<k> { '{' '}' }
     rule view-path:sym<l> { '{' <idents-or-self> '}' }

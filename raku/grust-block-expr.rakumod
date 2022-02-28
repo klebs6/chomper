@@ -12,7 +12,7 @@ our role BlockExpr::Rules {
     rule block-expr:sym<while-let>    { <expr-while-let> } 
     rule block-expr:sym<expr-loop>    { <expr-loop>      } 
     rule block-expr:sym<expr-for>     { <expr-for>       } 
-    rule block-expr:sym<unsafe-block> { <unsafe> <block> } 
+    rule block-expr:sym<unsafe-block> { <kw-unsafe> <block> } 
     rule block-expr:sym<macro>        { 
         <path-expr> '!' 
         <maybe-ident> 

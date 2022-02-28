@@ -16,7 +16,7 @@ our role FnParams::Rules {
     rule fn-params-allow-variadic:sym<a> { '(' ')' }
     rule fn-params-allow-variadic:sym<b> { '(' <params> ')' }
     rule fn-params-allow-variadic:sym<c> { '(' <params> ',' ')' }
-    rule fn-params-allow-variadic:sym<d> { '(' <params> ',' <dotdotdot> ')' }
+    rule fn-params-allow-variadic:sym<d> { '(' <params> ',' <tok-dotdotdot> ')' }
 
     #---------------------------
     proto rule fn-anon-params { * }
@@ -27,17 +27,17 @@ our role FnParams::Rules {
     #---------------------------
     proto rule fn-params-with-self { * }
 
-    rule fn-params-with-self:sym<a> { '(' <maybe-mut> <self_> <maybe-ty-ascription> <maybe-comma-params> ')' }
-    rule fn-params-with-self:sym<b> { '(' '&' <maybe-mut> <self_> <maybe-ty-ascription> <maybe-comma-params> ')' }
-    rule fn-params-with-self:sym<c> { '(' '&' <lifetime> <maybe-mut> <self_> <maybe-ty-ascription> <maybe-comma-params> ')' }
+    rule fn-params-with-self:sym<a> { '(' <maybe-mut> <kw-self> <maybe-ty-ascription> <maybe-comma-params> ')' }
+    rule fn-params-with-self:sym<b> { '(' '&' <maybe-mut> <kw-self> <maybe-ty-ascription> <maybe-comma-params> ')' }
+    rule fn-params-with-self:sym<c> { '(' '&' <lifetime> <maybe-mut> <kw-self> <maybe-ty-ascription> <maybe-comma-params> ')' }
     rule fn-params-with-self:sym<d> { '(' <maybe-params> ')' }
 
     #---------------------------
     proto rule fn-anon-params-with-self { * }
 
-    rule fn-anon-params-with-self:sym<a> { '(' <maybe-mut> <self_> <maybe-ty-ascription> <maybe-comma-anon-params> ')' }
-    rule fn-anon-params-with-self:sym<b> { '(' '&' <maybe-mut> <self_> <maybe-ty-ascription> <maybe-comma-anon-params> ')' }
-    rule fn-anon-params-with-self:sym<c> { '(' '&' <lifetime> <maybe-mut> <self_> <maybe-ty-ascription> <maybe-comma-anon-params> ')' }
+    rule fn-anon-params-with-self:sym<a> { '(' <maybe-mut> <kw-self> <maybe-ty-ascription> <maybe-comma-anon-params> ')' }
+    rule fn-anon-params-with-self:sym<b> { '(' '&' <maybe-mut> <kw-self> <maybe-ty-ascription> <maybe-comma-anon-params> ')' }
+    rule fn-anon-params-with-self:sym<c> { '(' '&' <lifetime> <maybe-mut> <kw-self> <maybe-ty-ascription> <maybe-comma-anon-params> ')' }
     rule fn-anon-params-with-self:sym<d> { '(' <maybe-anon-params> ')' }
 }
 

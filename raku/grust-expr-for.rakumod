@@ -4,9 +4,9 @@ our role ExprFor::Rules {
 
     rule expr-for {
         <maybe-label> 
-        <for_> 
+        <kw-for> 
         <pat> 
-        <in> 
+        <kw-in> 
         <expr-nostruct> 
         <block>
     }

@@ -7,7 +7,7 @@ our role LambdaExpr::Rules {
 
     rule lambda-expr:sym<a> {
         #{self.set-prec(LAMBDA)} 
-        <oror> <ret-ty> <expr>
+        <tok-oror> <ret-ty> <expr>
     }
 
     rule lambda-expr:sym<b> {
@@ -22,7 +22,7 @@ our role LambdaExpr::Rules {
 
     rule lambda-expr:sym<d> {
         #{self.set-prec(LAMBDA)} 
-        '|' <inferrable-params> <oror> <lambda-expr-no-first-bar>
+        '|' <inferrable-params> <tok-oror> <lambda-expr-no-first-bar>
     }
 
     #---------------------
@@ -46,7 +46,7 @@ our role LambdaExpr::Rules {
     rule lambda-expr-no-first-bar:sym<c> {
         #{self.set-prec(LAMBDA)} 
         <inferrable-params> 
-        <oror> 
+        <tok-oror> 
         <lambda-expr-no-first-bar>
     }
 
@@ -55,7 +55,7 @@ our role LambdaExpr::Rules {
 
     rule lambda-expr-nostruct:sym<a> {
         #{self.set-prec(LAMBDA)} 
-        <oror> 
+        <tok-oror> 
         <expr-nostruct>
     }
 
@@ -73,7 +73,7 @@ our role LambdaExpr::Rules {
         #{self.set-prec(LAMBDA)} 
         '|' 
         <inferrable-params> 
-        <oror> 
+        <tok-oror> 
         <lambda-expr-nostruct-no-first-bar>
     }
 
@@ -94,7 +94,7 @@ our role LambdaExpr::Rules {
     rule lambda-expr-nostruct-no-first-bar:sym<c> {
         #{self.set-prec(LAMBDA)} 
         <inferrable-params> 
-        <oror> 
+        <tok-oror> 
         <lambda-expr-nostruct-no-first-bar>
     }
 }

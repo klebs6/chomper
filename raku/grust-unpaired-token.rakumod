@@ -6,30 +6,30 @@ our role UnpairedToken::Rules {
 
     proto rule unpaired-token { * }
 
-    rule unpaired-token:sym<a>  { <shl> }
-    rule unpaired-token:sym<b>  { <shr> }
-    rule unpaired-token:sym<c>  { <le_> }
-    rule unpaired-token:sym<d>  { <eqeq> }
-    rule unpaired-token:sym<e>  { <ne_> }
-    rule unpaired-token:sym<f>  { <ge_> }
-    rule unpaired-token:sym<g>  { <andand> }
-    rule unpaired-token:sym<h>  { <oror> }
-    rule unpaired-token:sym<i>  { <larrow> }
-    rule unpaired-token:sym<j>  { <shleq> }
-    rule unpaired-token:sym<k>  { <shreq> }
-    rule unpaired-token:sym<l>  { <minuseq> }
-    rule unpaired-token:sym<m>  { <andeq> }
-    rule unpaired-token:sym<n>  { <oreq> }
-    rule unpaired-token:sym<o>  { <pluseq> }
-    rule unpaired-token:sym<p>  { <stareq> }
-    rule unpaired-token:sym<q>  { <slasheq> }
-    rule unpaired-token:sym<r>  { <careteq> }
-    rule unpaired-token:sym<s>  { <percenteq> }
-    rule unpaired-token:sym<t>  { <dotdot> }
-    rule unpaired-token:sym<u>  { <dotdotdot> }
-    rule unpaired-token:sym<v>  { <mod-sep> }
-    rule unpaired-token:sym<w>  { <rarrow> }
-    rule unpaired-token:sym<x>  { <fat-arrow> }
+    rule unpaired-token:sym<a>  { <tok-shl> }
+    rule unpaired-token:sym<b>  { <tok-shr> }
+    rule unpaired-token:sym<c>  { <tok-le> }
+    rule unpaired-token:sym<d>  { <tok-eqeq> }
+    rule unpaired-token:sym<e>  { <tok-ne> }
+    rule unpaired-token:sym<f>  { <tok-ge> }
+    rule unpaired-token:sym<g>  { <tok-andand> }
+    rule unpaired-token:sym<h>  { <tok-oror> }
+    rule unpaired-token:sym<i>  { <tok-larrow> }
+    rule unpaired-token:sym<j>  { <tok-shleq> }
+    rule unpaired-token:sym<k>  { <tok-shreq> }
+    rule unpaired-token:sym<l>  { <tok-minuseq> }
+    rule unpaired-token:sym<m>  { <tok-andeq> }
+    rule unpaired-token:sym<n>  { <tok-oreq> }
+    rule unpaired-token:sym<o>  { <tok-pluseq> }
+    rule unpaired-token:sym<p>  { <tok-stareq> }
+    rule unpaired-token:sym<q>  { <tok-slasheq> }
+    rule unpaired-token:sym<r>  { <tok-careteq> }
+    rule unpaired-token:sym<s>  { <tok-percenteq> }
+    rule unpaired-token:sym<t>  { <tok-dotdot> }
+    rule unpaired-token:sym<u>  { <tok-dotdotdot> }
+    rule unpaired-token:sym<v>  { <tok-mod-sep> }
+    rule unpaired-token:sym<w>  { <tok-rarrow> }
+    rule unpaired-token:sym<x>  { <tok-fat-arrow> }
     rule unpaired-token:sym<y>  { <lit-byte> }
     rule unpaired-token:sym<z>  { <lit-char> }
     rule unpaired-token:sym<aa> { <lit-int> }
@@ -39,62 +39,62 @@ our role UnpairedToken::Rules {
     rule unpaired-token:sym<ae> { <lit-byte-str> }
     rule unpaired-token:sym<af> { <lit-byte-str-raw> }
     rule unpaired-token:sym<ag> { <ident_> }
-    rule unpaired-token:sym<ah> { <underscore> }
+    rule unpaired-token:sym<ah> { <tok-underscore> }
     rule unpaired-token:sym<ai> { <lifetime> }
-    rule unpaired-token:sym<aj> { <self_> }
-    rule unpaired-token:sym<ak> { <static> }
+    rule unpaired-token:sym<aj> { <kw-self> }
+    rule unpaired-token:sym<ak> { <kw-static> }
     rule unpaired-token:sym<al> { <kw-abstract> }
     rule unpaired-token:sym<am> { <kw-alignof> }
     rule unpaired-token:sym<an> { <kw-as> }
     rule unpaired-token:sym<ao> { <kw-become> }
     rule unpaired-token:sym<ap> { <kw-break> }
-    rule unpaired-token:sym<aq> { <catch> }
+    rule unpaired-token:sym<aq> { <kw-catch> }
     rule unpaired-token:sym<ar> { <kw-crate> }
-    rule unpaired-token:sym<as> { <default_> }
-    rule unpaired-token:sym<at> { <do_> }
-    rule unpaired-token:sym<au> { <else_> }
-    rule unpaired-token:sym<av> { <enum_> }
-    rule unpaired-token:sym<aw> { <extern> }
-    rule unpaired-token:sym<ax> { <false> }
-    rule unpaired-token:sym<ay> { <final> }
-    rule unpaired-token:sym<az> { <fn> }
-    rule unpaired-token:sym<ba> { <for_> }
-    rule unpaired-token:sym<bb> { <if_> }
-    rule unpaired-token:sym<bc> { <impl> }
-    rule unpaired-token:sym<bd> { <in> }
-    rule unpaired-token:sym<be> { <let_> }
-    rule unpaired-token:sym<bf> { <loop_> }
-    rule unpaired-token:sym<bg> { <macro_> }
-    rule unpaired-token:sym<bh> { <match_> }
-    rule unpaired-token:sym<bi> { <mod_> }
-    rule unpaired-token:sym<bj> { <move> }
-    rule unpaired-token:sym<bk> { <mut> }
-    rule unpaired-token:sym<bl> { <offsetof> }
-    rule unpaired-token:sym<bm> { <override> }
-    rule unpaired-token:sym<bn> { <priv> }
-    rule unpaired-token:sym<bo> { <pub> }
-    rule unpaired-token:sym<bp> { <pure> }
-    rule unpaired-token:sym<bq> { <ref> }
-    rule unpaired-token:sym<br> { <return_> }
-    rule unpaired-token:sym<bs> { <struct> }
-    rule unpaired-token:sym<bt> { <sizeof> }
-    rule unpaired-token:sym<bu> { <super> }
-    rule unpaired-token:sym<bv> { <true> }
-    rule unpaired-token:sym<bw> { <trait> }
-    rule unpaired-token:sym<bx> { <type> }
-    rule unpaired-token:sym<by> { <union> }
-    rule unpaired-token:sym<bz> { <unsafe> }
-    rule unpaired-token:sym<ca> { <unsized> }
-    rule unpaired-token:sym<cb> { <use_> }
-    rule unpaired-token:sym<cc> { <virtual> }
-    rule unpaired-token:sym<cd> { <while_> }
-    rule unpaired-token:sym<ce> { <yield> }
-    rule unpaired-token:sym<cf> { <continue_> }
-    rule unpaired-token:sym<cg> { <proc> }
+    rule unpaired-token:sym<as> { <kw-default> }
+    rule unpaired-token:sym<at> { <kw-do> }
+    rule unpaired-token:sym<au> { <kw-else> }
+    rule unpaired-token:sym<av> { <kw-enum> }
+    rule unpaired-token:sym<aw> { <kw-extern> }
+    rule unpaired-token:sym<ax> { <kw-false> }
+    rule unpaired-token:sym<ay> { <kw-final> }
+    rule unpaired-token:sym<az> { <kw-fn> }
+    rule unpaired-token:sym<ba> { <kw-for> }
+    rule unpaired-token:sym<bb> { <kw-if> }
+    rule unpaired-token:sym<bc> { <kw-impl> }
+    rule unpaired-token:sym<bd> { <kw-in> }
+    rule unpaired-token:sym<be> { <kw-let> }
+    rule unpaired-token:sym<bf> { <kw-loop> }
+    rule unpaired-token:sym<bg> { <kw-macro> }
+    rule unpaired-token:sym<bh> { <kw-match> }
+    rule unpaired-token:sym<bi> { <kw-mod> }
+    rule unpaired-token:sym<bj> { <kw-move> }
+    rule unpaired-token:sym<bk> { <kw-mut> }
+    rule unpaired-token:sym<bl> { <kw-offsetof> }
+    rule unpaired-token:sym<bm> { <kw-override> }
+    rule unpaired-token:sym<bn> { <kw-priv> }
+    rule unpaired-token:sym<bo> { <kw-pub> }
+    rule unpaired-token:sym<bp> { <kw-pure> }
+    rule unpaired-token:sym<bq> { <kw-ref> }
+    rule unpaired-token:sym<br> { <kw-return> }
+    rule unpaired-token:sym<bs> { <kw-struct> }
+    rule unpaired-token:sym<bt> { <kw-sizeof> }
+    rule unpaired-token:sym<bu> { <kw-super> }
+    rule unpaired-token:sym<bv> { <kw-true> }
+    rule unpaired-token:sym<bw> { <kw-trait> }
+    rule unpaired-token:sym<bx> { <kw-type> }
+    rule unpaired-token:sym<by> { <kw-union> }
+    rule unpaired-token:sym<bz> { <kw-unsafe> }
+    rule unpaired-token:sym<ca> { <kw-unsized> }
+    rule unpaired-token:sym<cb> { <kw-use> }
+    rule unpaired-token:sym<cc> { <kw-virtual> }
+    rule unpaired-token:sym<cd> { <kw-while> }
+    rule unpaired-token:sym<ce> { <kw-yield> }
+    rule unpaired-token:sym<cf> { <kw-continue> }
+    rule unpaired-token:sym<cg> { <kw-proc> }
     rule unpaired-token:sym<ch> { <kw-box> }
-    rule unpaired-token:sym<ci> { <const> }
-    rule unpaired-token:sym<cj> { <where_> }
-    rule unpaired-token:sym<ck> { <typeof> }
+    rule unpaired-token:sym<ci> { <kw-const> }
+    rule unpaired-token:sym<cj> { <kw-where> }
+    rule unpaired-token:sym<ck> { <kw-typeof> }
     rule unpaired-token:sym<cl> { <inner-doc-comment> }
     rule unpaired-token:sym<cm> { <outer-doc-comment> }
     rule unpaired-token:sym<cn> { <shebang> }

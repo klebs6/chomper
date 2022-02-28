@@ -3,7 +3,7 @@ use grust-model;
 our role ItemEnum::Rules {
 
     rule item-enum { 
-        <enum_> 
+        <kw-enum> 
         <ident> 
         <generic-params> 
         <maybe-where-clause> 

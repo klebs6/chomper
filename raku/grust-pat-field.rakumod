@@ -12,7 +12,7 @@ our role PatField::Rules {
     rule pat-field:sym<bound-ident-pat> {                        <binding-mode>  <ident>  ':' <pat> }
     rule pat-field:sym<lit-pat>         { <lit-int>                                   ':' <pat> }
 
-    rule pat-fields { <pat-field>+ %% <comma> }
+    rule pat-fields { <pat-field>+ %% <tok-comma> }
 }
 
 our role PatField::Actions {

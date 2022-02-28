@@ -2,130 +2,132 @@ use grust-model;
 
 our role Rust::Keyword {
 
-    #-------------------------------
-    token kw-abstract    { abstract } 
-    token kw-alignof     { alignof  } 
-    token and_           { '&'      } 
-    token andand         { \&\&     } 
-    token kw-as          { as       } 
-    token at             { '@'      } 
-    token kw-become      { become   } 
-    token kw-box         { box      } 
-    token kw-break       { break    } 
-    token caret          { '^'      } 
-    token kw-catch       { catch    } 
-    token colon          { ':'      } 
-    token comma          { ','      } 
-    token kw-const       { const    } 
-    token kw-continue    { continue } 
-    token copytok        { 'copy'   } 
-    token kw-crate       { crate    } 
-    token darrow         { '<->'    } 
-    token default_       { default  } 
-    token div_           { '/'      } 
-    token do_            { do       } 
-    token dollar         { '$'      } 
-    token dot            { '.'      } 
-    token dotdot         { '..'     } 
-    token dotdotdot      { '...'    } 
-    token drop           { 'drop'   } 
-    token else_          { else     } 
-    token enum_          { enum     } 
-    token eq_            { '='      } 
-    token shleq          { '<<='    } 
-    token shreq          { '>>='    } 
-    token eqeq           { '=='     } 
-    token minuseq        { '-='     } 
-    token pluseq         { '+='     } 
-    token andeq          { '&='     } 
-    token oreq           { '|='     } 
-    token stareq         { '*='     } 
-    token slasheq        { '/='     } 
-    token careteq        { '^='     } 
-    token percenteq      { '%='     } 
-    token extern         { extern   } 
-    token false          { false    } 
-    token fat-arrow      { '=>'     } 
-    token final          { final    } 
-    token fn             { fn       } 
-    token for_           { for      } 
-    token ge_            { '>='     } 
-    token gt_            { '>'      } 
-    token if_            { if       } 
-    token impl           { impl     } 
-    token in             { in       } 
-    token larrow         { '<-'     } 
-    token lbrace         { '{'      } 
-    token lbracket       { '['      } 
-    token le_            { '<='     } 
-    token let_           { let      } 
-    token log            { '__log'  } 
-    token loop_          { loop     } 
-    token lparen         { '('      } 
-    token lt_            { '<'      } 
-    token macro_         { macro    } 
-    token match_         { match    } 
-    token minus          { '-'      } 
-    token mod_           { mod      } 
-    token mod-sep        { '::'     } 
-    token move           { move     } 
-    token mut            { mut      } 
-    token ne_            { '!='     } 
-    token not_           { '!'      } 
-    token offsetof       { offsetof } 
-    token once_          { 'once'   } 
-    token or_            { '|'      } 
-    token oror           { '||'     } 
-    token shl            { '<<'     } 
-    token shr            { '>>'     } 
-    token override       { override } 
-    token plus           { '+'      } 
-    token pound          { '#'      } 
-    token priv           { priv     } 
-    token proc           { proc     } 
-    token pub            { pub      } 
-    token pure           { pure     } 
-    token rarrow         { '->'     } 
-    token rbrace         { '}'      } 
-    token rbracket       { ']'      } 
-    token ref            { ref      } 
-    token rem            { '%'      } 
-    token return_        { return   } 
-    token rparen         { ')'      } 
-    token self_          { self     } 
-    token semi           { ';'      } 
-    token sizeof         { sizeof   } 
-    token star           { '*'      } 
-    token static         { static   } 
-    token struct         { struct   } 
-    token super          { super    } 
-    token tilde          { '~'      } 
-    token trait          { trait    } 
-    token true           { true     } 
-    token type           { type     } 
-    token typeof         { typeof   } 
-    token underscore     { _        } 
-    token union          { union    } 
-    token unsafe         { unsafe   } 
-    token unsized        { unsized  } 
-    token use_           { use      } 
-    token virtual        { virtual  } 
-    token where_         { where    } 
-    token while_         { while    } 
-    token yield          { yield    } 
+    token kw-abstract      { abstract } 
+    token kw-alignof       { alignof  } 
+    token kw-as            { as       } 
+    token kw-become        { become   } 
+    token kw-box           { box      } 
+    token kw-break         { break    } 
+    token kw-catch         { catch    } 
+    token kw-const         { const    } 
+    token kw-continue      { continue } 
+    token kw-crate         { crate    } 
+    token kw-default       { default  } 
+    token kw-do            { do       } 
+    token kw-else          { else     } 
+    token kw-enum          { enum     } 
+    token kw-extern        { extern   } 
+    token kw-false         { false    } 
+    token kw-final         { final    } 
+    token kw-fn            { fn       } 
+    token kw-for           { for      } 
+    token kw-if            { if       } 
+    token kw-impl          { impl     } 
+    token kw-in            { in       } 
+    token kw-let           { let      } 
+    token kw-loop          { loop     } 
+    token kw-macro         { macro    } 
+    token kw-match         { match    } 
+    token kw-mod           { mod      } 
+    token kw-move          { move     } 
+    token kw-mut           { mut      } 
+    token kw-offsetof      { offsetof } 
+    token kw-override      { override } 
+    token kw-priv          { priv     } 
+    token kw-proc          { proc     } 
+    token kw-pub           { pub      } 
+    token kw-pure          { pure     } 
+    token kw-ref           { ref      } 
+    token kw-return        { return   } 
+    token kw-self          { self     } 
+    token kw-sizeof        { sizeof   } 
+    token kw-static        { static   } 
+    token kw-struct        { struct   } 
+    token kw-super         { super    } 
+    token kw-trait         { trait    } 
+    token kw-true          { true     } 
+    token kw-type          { type     } 
+    token kw-typeof        { typeof   } 
+    token kw-union         { union    } 
+    token kw-unsafe        { unsafe   } 
+    token kw-unsized       { unsized  } 
+    token kw-use           { use      } 
+    token kw-virtual       { virtual  } 
+    token kw-where         { where    } 
+    token kw-while         { while    } 
+    token kw-yield         { yield    } 
 
-    token binopeq { 
-        || '/='
-        || '%='
-        || '^='
-        || '|='
-        || '-='
-        || '*='
-        || '&='
-        || '+='
-        || '<<='
-        || '>>='
-    }
+
+    #-------------------------------
+
+    token tok-and              { '&'      } 
+    token tok-andand           { \&\&     } 
+    token tok-andeq            { '&='     } 
+    token tok-at               { '@'      } 
+    token tok-caret            { '^'      } 
+    token tok-careteq          { '^='     } 
+    token tok-colon            { ':'      } 
+    token tok-comma            { ','      } 
+    token tok-copytok          { 'copy'   } 
+    token tok-darrow           { '<->'    } 
+    token tok-div              { '/'      } 
+    token tok-dollar           { '$'      } 
+    token tok-dot              { '.'      } 
+    token tok-dotdot           { '..'     } 
+    token tok-dotdotdot        { '...'    } 
+    token tok-drop             { 'drop'   } 
+    token tok-eq               { '='      } 
+    token tok-eqeq             { '=='     } 
+    token tok-fat-arrow        { '=>'     } 
+    token tok-ge               { '>='     } 
+    token tok-gt               { '>'      } 
+    token tok-larrow           { '<-'     } 
+    token tok-lbrace           { '{'      } 
+    token tok-lbracket         { '['      } 
+    token tok-le               { '<='     } 
+    token tok-log              { '_log'  } 
+    token tok-lparen           { '('      } 
+    token tok-lt               { '<'      } 
+    token tok-minus            { '-'      } 
+    token tok-minuseq          { '-='     } 
+    token tok-mod-sep          { '::'     } 
+    token tok-ne               { '!='     } 
+    token tok-not              { '!'      } 
+    token tok-once             { 'once'   } 
+    token tok-or               { '|'      } 
+    token tok-oreq             { '|='     } 
+    token tok-oror             { '||'     } 
+    token tok-percenteq        { '%='     } 
+    token tok-plus             { '+'      } 
+    token tok-pluseq           { '+='     } 
+    token tok-pound            { '#'      } 
+    token tok-rarrow           { '->'     } 
+    token tok-rbrace           { '}'      } 
+    token tok-rbracket         { ']'      } 
+    token tok-rem              { '%'      } 
+    token tok-rparen           { ')'      } 
+    token tok-semi             { ';'      } 
+    token tok-shl              { '<<'     } 
+    token tok-shleq            { '<<='    } 
+    token tok-shr              { '>>'     } 
+    token tok-shreq            { '>>='    } 
+    token tok-slasheq          { '/='     } 
+    token tok-star             { '*'      } 
+    token tok-stareq           { '*='     } 
+    token tok-tilde            { '~'      } 
+    token tok-underscore       { '_'      } 
+
+    proto token tok-binopeq { * }
+    token tok-binopeq:sym<div-eq>    { '/=' }
+    token tok-binopeq:sym<mod-eq>    { '%=' }
+    token tok-binopeq:sym<caret-eq>  { '^=' }
+    token tok-binopeq:sym<pipe-eq>   { '|=' }
+    token tok-binopeq:sym<minus-eq>  { '-=' }
+    token tok-binopeq:sym<star-eq>   { '*=' }
+    token tok-binopeq:sym<amp-eq>    { '&=' }
+    token tok-binopeq:sym<plus-eq>   { '+=' }
+    token tok-binopeq:sym<lshift-eq> { '<<=' }
+    token tok-binopeq:sym<rshift-eq> { '>>=' }
 
     token idstart { 
         ||    <[ _ a..z A..Z ]>
@@ -675,7 +677,7 @@ our role Rust::Keyword {
 
     token kw-lifetime { 
         || '\'' <ident>
-        || '\'' <self>
+        || '\'' <kw-self>
     }
 
     proto token outer-doc-comment { * }
