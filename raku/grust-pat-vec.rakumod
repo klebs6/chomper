@@ -37,3 +37,4 @@ our role PatVec::Actions {
         make $<pat>.made
     }
 }
+

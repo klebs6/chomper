@@ -5,25 +5,57 @@ our role Fn::Rules {
     proto rule item-fn { * }
 
     rule item-fn:sym<a> {
-        <FN> <ident> <generic-params> <fn-decl> <maybe-where-clause> <inner-attrs-and-block>
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl> 
+        <maybe-where-clause> 
+        <inner-attrs-and-block>
     }
 
     rule item-fn:sym<b> {
-        <CONST> <FN> <ident> <generic-params> <fn-decl> <maybe-where-clause> <inner-attrs-and-block>
+        <CONST> 
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl> 
+        <maybe-where-clause> 
+        <inner-attrs-and-block>
     }
 
     proto rule item-unsafe-fn { * }
 
     rule item-unsafe-fn:sym<a> {
-        <UNSAFE> <FN> <ident> <generic-params> <fn-decl> <maybe-where-clause> <inner-attrs-and-block>
+        <UNSAFE> 
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl> 
+        <maybe-where-clause> 
+        <inner-attrs-and-block>
     }
 
     rule item-unsafe-fn:sym<b> {
-        <CONST> <UNSAFE> <FN> <ident> <generic-params> <fn-decl> <maybe-where-clause> <inner-attrs-and-block>
+        <CONST> 
+        <UNSAFE> 
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl> 
+        <maybe-where-clause> 
+        <inner-attrs-and-block>
     }
 
     rule item-unsafe-fn:sym<c> {
-        <UNSAFE> <EXTERN> <maybe-abi> <FN> <ident> <generic-params> <fn-decl> <maybe-where-clause> <inner-attrs-and-block>
+        <UNSAFE> 
+        <EXTERN> 
+        <maybe-abi> 
+        <FN> 
+        <ident> 
+        <generic-params> 
+        <fn-decl> 
+        <maybe-where-clause> 
+        <inner-attrs-and-block>
     }
 }
 

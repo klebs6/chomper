@@ -6,12 +6,12 @@ our role FnDeclWithSelf::Rules {
         <fn-params> <ret-ty>
     }
 
-    rule fn-decl_with_self {
-        <fn-params_with_self> <ret-ty>
+    rule fn-decl-with-self {
+        <fn-params-with-self> <ret-ty>
     }
 
-    rule fn-decl_with_self_allow_anon_params {
-        <fn-anon_params_with_self> <ret-ty>
+    rule fn-decl-with-self-allow-anon-params {
+        <fn-anon-params-with-self> <ret-ty>
     }
 }
 
@@ -24,17 +24,18 @@ our role FnDeclWithSelf::Actions {
         )
     }
 
-    method fn-decl_with_self($/) {
+    method fn-decl-with-self($/) {
         make FnDecl.new(
-            fn-params_with_self =>  $<fn-params_with_self>.made,
+            fn-params-with-self =>  $<fn-params-with-self>.made,
             ret-ty              =>  $<ret-ty>.made,
         )
     }
 
-    method fn-decl_with_self_allow_anon_params($/) {
+    method fn-decl-with-self-allow-anon-params($/) {
         make FnDecl.new(
-            fn-anon_params_with_self =>  $<fn-anon_params_with_self>.made,
+            fn-anon-params-with-self =>  $<fn-anon-params-with-self>.made,
             ret-ty                   =>  $<ret-ty>.made,
         )
     }
 }
+

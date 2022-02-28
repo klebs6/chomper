@@ -15,10 +15,10 @@ our role NonBlockExpr::Rules {
 
     rule nonblock-expr:sym<c>  { <SELF> }
     rule nonblock-expr:sym<d>  { <macro-expr> }
-    rule nonblock-expr:sym<e>  { <path-expr> '{' <struct-expr_fields> '}' }
+    rule nonblock-expr:sym<e>  { <path-expr> '{' <struct-expr-fields> '}' }
     rule nonblock-expr:sym<f>  { <nonblock-expr> '?' }
-    rule nonblock-expr:sym<g>  { <nonblock-expr> '.' <path-generic_args_with_colons> }
-    rule nonblock-expr:sym<h>  { <nonblock-expr> '.' <LIT-INTEGER> }
+    rule nonblock-expr:sym<g>  { <nonblock-expr> '.' <path-generic-args-with-colons> }
+    rule nonblock-expr:sym<h>  { <nonblock-expr> '.' <LIT-INT> }
     rule nonblock-expr:sym<i>  { <nonblock-expr> '[' <maybe-expr> ']' }
     rule nonblock-expr:sym<j>  { <nonblock-expr> '(' <maybe-exprs> ')' }
     rule nonblock-expr:sym<k>  { '[' <vec-expr> ']' }
@@ -67,8 +67,8 @@ our role NonBlockExpr::Rules {
     rule nonblock-expr:sym<bb> { <nonblock-expr> <AS> <ty> }
     rule nonblock-expr:sym<bc> { <nonblock-expr> ':' <ty> }
     rule nonblock-expr:sym<bd> { <BOX> <expr> }
-    rule nonblock-expr:sym<be> { <expr-qualified_path> }
-    rule nonblock-expr:sym<bf> { <nonblock-prefix_expr> }
+    rule nonblock-expr:sym<be> { <expr-qualified-path> }
+    rule nonblock-expr:sym<bf> { <nonblock-prefix-expr> }
 }
 
 our role NonBlockExpr::Actions {
@@ -100,7 +100,7 @@ our role NonBlockExpr::Actions {
     method nonblock-expr:sym<e>($/) {
         make ExprStruct.new(
             path-expr          =>  $<path-expr>.made,
-            struct-expr_fields =>  $<struct-expr_fields>.made,
+            struct-expr-fields =>  $<struct-expr-fields>.made,
         )
     }
 
@@ -113,7 +113,7 @@ our role NonBlockExpr::Actions {
     method nonblock-expr:sym<g>($/) {
         make ExprField.new(
             nonblock-expr                 =>  $<nonblock-expr>.made,
-            path-generic_args_with_colons =>  $<path-generic_args_with_colons>.made,
+            path-generic-args-with-colons =>  $<path-generic-args-with-colons>.made,
         )
     }
 
@@ -446,10 +446,11 @@ our role NonBlockExpr::Actions {
     }
 
     method nonblock-expr:sym<be>($/) {
-        make $<expr-qualified_path>.made
+        make $<expr-qualified-path>.made
     }
 
     method nonblock-expr:sym<bf>($/) {
-        make $<nonblock-prefix_expr>.made
+        make $<nonblock-prefix-expr>.made
     }
 }
+

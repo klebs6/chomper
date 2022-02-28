@@ -18,7 +18,7 @@ our role InnerAttrs::Rules {
     }
 
     rule inner-attr:sym<b> {
-        <INNER-DOC_COMMENT>
+        <INNER-DOC-COMMENT>
     }
 }
 
@@ -44,3 +44,4 @@ our role InnerAttrs::Actions {
         )
     }
 }
+

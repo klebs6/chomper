@@ -6,7 +6,7 @@ our role Unsafe::Rules {
         <UNSAFE>?
     }
 
-    rule maybe-default-maybe-unsafe { <maybe-default-maybe-unsafe>? }
+    rule maybe-default-maybe-unsafe { <maybe-default-maybe-unsafe-base>? }
 
     #---------------
     proto rule maybe-default-maybe-unsafe-base { * }
@@ -28,3 +28,4 @@ our role Unsafe::Actions {
     method maybe-default-maybe-unsafe-base:sym<b>($/) { make Default.new }
     method maybe-default-maybe-unsafe-base:sym<c>($/) { make Unsafe.new }
 }
+

@@ -2,16 +2,16 @@ use grust-model;
 
 our role InnerAttrsAndBlock::Rules {
 
-    rule inner-attrs_and_block {
-        '{' <maybe-inner_attrs> <maybe-stmts> '}'
+    rule inner-attrs-and-block {
+        '{' <maybe-inner-attrs> <maybe-stmts> '}'
     }
 }
 
 our role InnerAttrsAndBlock::Actions {
 
-    method inner-attrs_and_block($/) {
+    method inner-attrs-and-block($/) {
         make ExprBlock.new(
-            maybe-inner_attrs =>  $<maybe-inner_attrs>.made,
+            maybe-inner-attrs =>  $<maybe-inner-attrs>.made,
             maybe-stmts       =>  $<maybe-stmts>.made,
         )
     }
@@ -34,3 +34,4 @@ our role Block::Actions {
         )
     }
 }
+

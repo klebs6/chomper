@@ -2,67 +2,68 @@ use grust-model;
 
 our role ExprQualifiedPath::Rules {
 
-    proto rule expr-qualified_path { * }
+    proto rule expr-qualified-path { * }
 
-    rule expr-qualified_path:sym<a> {
-        '<' <ty-sum> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <maybe-qpath_params>
+    rule expr-qualified-path:sym<a> {
+        '<' <ty-sum> <maybe-as-trait-ref> '>' <MOD-SEP> <ident> <maybe-qpath-params>
     }
 
-    rule expr-qualified_path:sym<b> {
-        <SHL> <ty-sum> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <maybe-as_trait_ref> '>' <MOD-SEP> <ident>
+    rule expr-qualified-path:sym<b> {
+        <SHL> <ty-sum> <maybe-as-trait-ref> '>' <MOD-SEP> <ident> <maybe-as-trait-ref> '>' <MOD-SEP> <ident>
     }
 
-    rule expr-qualified_path:sym<c> {
-        <SHL> <ty-sum> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <generic-args> <maybe-as_trait_ref> '>' <MOD-SEP> <ident>
+    rule expr-qualified-path:sym<c> {
+        <SHL> <ty-sum> <maybe-as-trait-ref> '>' <MOD-SEP> <ident> <generic-args> <maybe-as-trait-ref> '>' <MOD-SEP> <ident>
     }
 
-    rule expr-qualified_path:sym<d> {
-        <SHL> <ty-sum> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <generic-args>
+    rule expr-qualified-path:sym<d> {
+        <SHL> <ty-sum> <maybe-as-trait-ref> '>' <MOD-SEP> <ident> <maybe-as-trait-ref> '>' <MOD-SEP> <ident> <generic-args>
     }
 
-    rule expr-qualified_path:sym<e> {
-        <SHL> <ty-sum> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <generic-args> <maybe-as_trait_ref> '>' <MOD-SEP> <ident> <generic-args>
+    rule expr-qualified-path:sym<e> {
+        <SHL> <ty-sum> <maybe-as-trait-ref> '>' <MOD-SEP> <ident> <generic-args> <maybe-as-trait-ref> '>' <MOD-SEP> <ident> <generic-args>
     }
 }
 
 our role ExprQualifiedPath::Actions {
 
-    method expr-qualified_path:sym<a>($/) {
+    method expr-qualified-path:sym<a>($/) {
         make ExprQualifiedPath.new(
             ty-sum             =>  $<ty-sum>.made,
-            maybe-as_trait_ref =>  $<maybe-as_trait_ref>.made,
+            maybe-as-trait-ref =>  $<maybe-as-trait-ref>.made,
             ident              =>  $<ident>.made,
-            maybe-qpath_params =>  $<maybe-qpath_params>.made,
+            maybe-qpath-params =>  $<maybe-qpath-params>.made,
         )
     }
 
-    method expr-qualified_path:sym<b>($/) {
+    method expr-qualified-path:sym<b>($/) {
         make ExprQualifiedPath.new(
-            maybe-as_trait_ref =>  $<maybe-as_trait_ref>.made,
-            ident              =>  $<ident>.made,
-        )
-    }
-
-    method expr-qualified_path:sym<c>($/) {
-        make ExprQualifiedPath.new(
-            maybe-as_trait_ref =>  $<maybe-as_trait_ref>.made,
+            maybe-as-trait-ref =>  $<maybe-as-trait-ref>.made,
             ident              =>  $<ident>.made,
         )
     }
 
-    method expr-qualified_path:sym<d>($/) {
+    method expr-qualified-path:sym<c>($/) {
         make ExprQualifiedPath.new(
-            maybe-as_trait_ref =>  $<maybe-as_trait_ref>.made,
+            maybe-as-trait-ref =>  $<maybe-as-trait-ref>.made,
+            ident              =>  $<ident>.made,
+        )
+    }
+
+    method expr-qualified-path:sym<d>($/) {
+        make ExprQualifiedPath.new(
+            maybe-as-trait-ref =>  $<maybe-as-trait-ref>.made,
             ident              =>  $<ident>.made,
             generic-args       =>  $<generic-args>.made,
         )
     }
 
-    method expr-qualified_path:sym<e>($/) {
+    method expr-qualified-path:sym<e>($/) {
         make ExprQualifiedPath.new(
-            maybe-as_trait_ref =>  $<maybe-as_trait_ref>.made,
+            maybe-as-trait-ref =>  $<maybe-as-trait-ref>.made,
             ident              =>  $<ident>.made,
             generic-args       =>  $<generic-args>.made,
         )
     }
 }
+

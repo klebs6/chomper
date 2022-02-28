@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role PathNoTypesAllowed::Rules {
 
     proto rule path-no-types-allowed-base { * }
@@ -69,3 +68,4 @@ our role PathGenericArgsWithoutColons::Actions {
         )
     }
 }
+

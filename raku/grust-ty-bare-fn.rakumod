@@ -17,3 +17,4 @@ our role TyBareFn::Actions {
     method ty-bare-fn:sym<extern>($/)        { make $<ty-fn-decl>.made }
     method ty-bare-fn:sym<unsafe-extern>($/) { make $<ty-fn-decl>.made }
 }
+

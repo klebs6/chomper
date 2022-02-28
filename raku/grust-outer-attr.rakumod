@@ -1,9 +1,8 @@
 use grust-model;
 
-
 our role OuterAttrs::Rules {
 
-    rule maybe-outer_attrs {
+    rule maybe-outer-attrs {
         <outer-attrs>?
     }
 
@@ -13,18 +12,13 @@ our role OuterAttrs::Rules {
 
     proto rule outer-attr { * }
 
-    rule outer-attr:sym<a> {
-        '#' '[' <meta-item> ']'
-    }
-
-    rule outer-attr:sym<b> {
-        <OUTER-DOC_COMMENT>
-    }
+    rule outer-attr:sym<a> { '#' '[' <meta-item> ']' }
+    rule outer-attr:sym<b> { <OUTER-DOC-COMMENT> }
 }
 
 our role OuterAttrs::Actions {
 
-    method maybe-outer_attrs:sym<a>($/) {
+    method maybe-outer-attrs:sym<a>($/) {
         make $<outer-attrs>.made
     }
 
@@ -33,7 +27,7 @@ our role OuterAttrs::Actions {
     }
 
     method outer-attr:sym<a>($/) {
-        make $<meta_item>.made
+        make $<meta-item>.made
     }
 
     method outer-attr:sym<b>($/) {
@@ -42,3 +36,4 @@ our role OuterAttrs::Actions {
         )
     }
 }
+

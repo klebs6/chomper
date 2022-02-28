@@ -47,3 +47,4 @@ our role PathGenericArgsWithColons::Actions {
     method path-generic-args-with-colons-tail:sym<d>($/) { make $<SUPER>.made }
     method path-generic-args-with-colons-tail:sym<e>($/) { make $<generic-args>.made }
 }
+

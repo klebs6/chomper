@@ -7,36 +7,36 @@ our role ExprMatch::Rules {
 
     rule expr-match:sym<a> { <MATCH> <expr-nostruct> '{' '}' }
     rule expr-match:sym<b> { <MATCH> <expr-nostruct> '{' <match-clauses> '}' }
-    rule expr-match:sym<c> { <MATCH> <expr-nostruct> '{' <match-clauses> <nonblock-match_clause> '}' }
-    rule expr-match:sym<d> { <MATCH> <expr-nostruct> '{' <nonblock-match_clause> '}' }
+    rule expr-match:sym<c> { <MATCH> <expr-nostruct> '{' <match-clauses> <nonblock-match-clause> '}' }
+    rule expr-match:sym<d> { <MATCH> <expr-nostruct> '{' <nonblock-match-clause> '}' }
 
     rule match-clauses { <match-clause>+ }
 
     #--------------------
     proto rule match-clause { * }
-    rule match-clause:sym<a> { <nonblock-match_clause> ',' }
-    rule match-clause:sym<b> { <block-match_clause> ','? }
+    rule match-clause:sym<a> { <nonblock-match-clause> ',' }
+    rule match-clause:sym<b> { <block-match-clause> ','? }
 
     #--------------------
-    proto rule nonblock-match_clause { * }
+    proto rule nonblock-match-clause { * }
 
-    rule nonblock-match_clause:sym<a> {
-        <maybe-outer_attrs> <pats-or> <maybe-guard> <FAT-ARROW> <nonblock-expr>
+    rule nonblock-match-clause:sym<a> {
+        <maybe-outer-attrs> <pats-or> <maybe-guard> <FAT-ARROW> <nonblock-expr>
     }
 
-    rule nonblock-match_clause:sym<b> {
-        <maybe-outer_attrs> <pats-or> <maybe-guard> <FAT-ARROW> <block-expr_dot>
+    rule nonblock-match-clause:sym<b> {
+        <maybe-outer-attrs> <pats-or> <maybe-guard> <FAT-ARROW> <block-expr-dot>
     }
 
     #--------------------
-    proto rule block-match_clause { * }
+    proto rule block-match-clause { * }
 
-    rule block-match_clause:sym<a> {
-        <maybe-outer_attrs> <pats-or> <maybe-guard> <FAT-ARROW> <block>
+    rule block-match-clause:sym<a> {
+        <maybe-outer-attrs> <pats-or> <maybe-guard> <FAT-ARROW> <block>
     }
 
-    rule block-match_clause:sym<b> {
-        <maybe-outer_attrs> <pats-or> <maybe-guard> <FAT-ARROW> <block-expr>
+    rule block-match-clause:sym<b> {
+        <maybe-outer-attrs> <pats-or> <maybe-guard> <FAT-ARROW> <block-expr>
     }
 }
 
@@ -59,7 +59,7 @@ our role ExprMatch::Actions {
         make ExprMatch.new(
             expr-nostruct         =>  $<expr-nostruct>.made,
             match-clauses         =>  $<match-clauses>.made,
-            nonblock-match_clause =>  $<nonblock-match_clause>.made,
+            nonblock-match-clause =>  $<nonblock-match-clause>.made,
         )
     }
 
@@ -78,43 +78,44 @@ our role ExprMatch::Actions {
     }
 
     method match-clause:sym<b>($/) {
-        make $<block-match_clause>.made
+        make $<block-match-clause>.made
     }
 
     #-----------------
-    method nonblock-match_clause:sym<a>($/) {
+    method nonblock-match-clause:sym<a>($/) {
         make ArmNonblock.new(
-            maybe-outer_attrs =>  $<maybe-outer_attrs>.made,
+            maybe-outer-attrs =>  $<maybe-outer-attrs>.made,
             pats-or           =>  $<pats-or>.made,
             maybe-guard       =>  $<maybe-guard>.made,
             nonblock-expr     =>  $<nonblock-expr>.made,
         )
     }
 
-    method nonblock-match_clause:sym<b>($/) {
+    method nonblock-match-clause:sym<b>($/) {
         make ArmNonblock.new(
-            maybe-outer_attrs =>  $<maybe-outer_attrs>.made,
+            maybe-outer-attrs =>  $<maybe-outer-attrs>.made,
             pats-or           =>  $<pats-or>.made,
             maybe-guard       =>  $<maybe-guard>.made,
-            block-expr_dot    =>  $<block-expr_dot>.made,
+            block-expr-dot    =>  $<block-expr-dot>.made,
         )
     }
 
-    method block-match_clause:sym<a>($/) {
+    method block-match-clause:sym<a>($/) {
         make ArmBlock.new(
-            maybe-outer_attrs =>  $<maybe-outer_attrs>.made,
+            maybe-outer-attrs =>  $<maybe-outer-attrs>.made,
             pats-or           =>  $<pats-or>.made,
             maybe-guard       =>  $<maybe-guard>.made,
             block             =>  $<block>.made,
         )
     }
 
-    method block-match_clause:sym<b>($/) {
+    method block-match-clause:sym<b>($/) {
         make ArmBlock.new(
-            maybe-outer_attrs =>  $<maybe-outer_attrs>.made,
+            maybe-outer-attrs =>  $<maybe-outer-attrs>.made,
             pats-or           =>  $<pats-or>.made,
             maybe-guard       =>  $<maybe-guard>.made,
             block-expr        =>  $<block-expr>.made,
         )
     }
 }
+

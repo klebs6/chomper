@@ -8,7 +8,7 @@ our role InferrableParams::Rules {
     }
 
     rule inferrable-param {
-        <pat> <maybe-ty_ascription>
+        <pat> <maybe-ty-ascription>
     }
 }
 
@@ -21,7 +21,8 @@ our role InferrableParams::Actions {
     method inferrable-param($/) {
         make InferrableParam.new(
             pat                 =>  $<pat>.made,
-            maybe-ty_ascription =>  $<maybe-ty_ascription>.made,
+            maybe-ty-ascription =>  $<maybe-ty-ascription>.made,
         )
     }
 }
+

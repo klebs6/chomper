@@ -43,3 +43,4 @@ our role Lifetimes::Actions {
     method lifetime:sym<b>($/) { make StaticLifetime.new }
 }
 
+

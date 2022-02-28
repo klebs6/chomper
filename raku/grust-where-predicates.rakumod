@@ -2,8 +2,6 @@ use grust-model;
 
 our role WherePredicates::Rules {
 
-    proto rule where-predicates { * }
-
     rule where-predicates {
         <where-predicate>+ %% ","
     }
@@ -41,3 +39,4 @@ our role WherePredicates::Actions {
         )
     }
 }
+

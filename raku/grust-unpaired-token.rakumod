@@ -30,12 +30,12 @@ our role UnpairedToken::Rules {
     rule unpaired-token:sym<x>  { <FAT-ARROW> }
     rule unpaired-token:sym<y>  { <LIT-BYTE> }
     rule unpaired-token:sym<z>  { <LIT-CHAR> }
-    rule unpaired-token:sym<aa> { <LIT-INTEGER> }
+    rule unpaired-token:sym<aa> { <LIT-INT> }
     rule unpaired-token:sym<ab> { <LIT-FLOAT> }
     rule unpaired-token:sym<ac> { <LIT-STR> }
-    rule unpaired-token:sym<ad> { <LIT-STR_RAW> }
-    rule unpaired-token:sym<ae> { <LIT-BYTE_STR> }
-    rule unpaired-token:sym<af> { <LIT-BYTE_STR_RAW> }
+    rule unpaired-token:sym<ad> { <LIT-STR-RAW> }
+    rule unpaired-token:sym<ae> { <LIT-BYTE-STR> }
+    rule unpaired-token:sym<af> { <LIT-BYTE-STR-RAW> }
     rule unpaired-token:sym<ag> { <IDENT> }
     rule unpaired-token:sym<ah> { <UNDERSCORE> }
     rule unpaired-token:sym<ai> { <LIFETIME> }
@@ -93,8 +93,8 @@ our role UnpairedToken::Rules {
     rule unpaired-token:sym<ci> { <CONST> }
     rule unpaired-token:sym<cj> { <WHERE> }
     rule unpaired-token:sym<ck> { <TYPEOF> }
-    rule unpaired-token:sym<cl> { <INNER-DOC_COMMENT> }
-    rule unpaired-token:sym<cm> { <OUTER-DOC_COMMENT> }
+    rule unpaired-token:sym<cl> { <INNER-DOC-COMMENT> }
+    rule unpaired-token:sym<cm> { <OUTER-DOC-COMMENT> }
     rule unpaired-token:sym<cn> { <SHEBANG> }
     rule unpaired-token:sym<co> { <STATIC-LIFETIME> }
     rule unpaired-token:sym<cp> { ';' }
@@ -236,3 +236,4 @@ our role UnpairedToken::Actions {
     method unpaired-token:sym<di>($/) { make ~$/ }
     method unpaired-token:sym<dj>($/) { make ~$/ }
 }
+

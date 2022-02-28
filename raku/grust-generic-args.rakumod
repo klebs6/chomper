@@ -8,34 +8,35 @@ our role GenericArgs::Rules {
         '<' <generic-values> '>'
     }
 
-    # If generic_args starts with "<<", the first
+    # If generic-args starts with "<<", the first
     # arg must be a TyQualifiedPath because that's
     # the only type that can start with
     # a '<'. This rule parses that as the first
-    # ty_sum and then continues with the rest of
-    # generic_values.
+    # ty-sum and then continues with the rest of
+    # generic-values.
     rule generic-args:sym<b> {
-        <SHL> <ty-qualified_path_and_generic_values> '>'
+        <SHL> <ty-qualified-path-and-generic-values> '>'
     }
 
     rule generic-values {
-        <maybe-ty_sums_and_or_bindings>
+        <maybe-ty-sums-and-or-bindings>
     }
 }
 
 our role GenericArgs::Actions {
 
     method generic-args:sym<a>($/) {
-        make $<generic_values>.made
+        make $<generic-values>.made
     }
 
     method generic-args:sym<b>($/) {
-        make $<ty_qualified_path_and_generic_values>.made
+        make $<ty-qualified-path-and-generic-values>.made
     }
 
     method generic-values($/) {
         make GenericValues.new(
-            maybe-ty_sums_and_or_bindings =>  $<maybe-ty_sums_and_or_bindings>.made,
+            maybe-ty-sums-and-or-bindings =>  $<maybe-ty-sums-and-or-bindings>.made,
         )
     }
 }
+

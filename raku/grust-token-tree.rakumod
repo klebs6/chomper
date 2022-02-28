@@ -7,18 +7,18 @@ our role TokenTree::Rules {
 
     proto rule token-tree { * }
 
-    rule token-tree:sym<a> { <delimited-token_trees> }
+    rule token-tree:sym<a> { <delimited-token-trees> }
     rule token-tree:sym<b> { <unpaired-token> }
 
-    proto rule delimited-token_trees { * }
+    proto rule delimited-token-trees { * }
 
-    rule delimited-token_trees:sym<a> { <parens-delimited_token_trees> }
-    rule delimited-token_trees:sym<b> { <braces-delimited_token_trees> }
-    rule delimited-token_trees:sym<c> { <brackets-delimited_token_trees> }
+    rule delimited-token-trees:sym<a> { <parens-delimited-token-trees> }
+    rule delimited-token-trees:sym<b> { <braces-delimited-token-trees> }
+    rule delimited-token-trees:sym<c> { <brackets-delimited-token-trees> }
 
-    rule parens-delimited_token_trees   { '(' <token-trees> ')' }
-    rule braces-delimited_token_trees   { '{' <token-trees> '}' }
-    rule brackets-delimited_token_trees { '[' <token-trees> ']' }
+    rule parens-delimited-token-trees   { '(' <token-trees> ')' }
+    rule braces-delimited-token-trees   { '{' <token-trees> '}' }
+    rule brackets-delimited-token-trees { '[' <token-trees> ']' }
 }
 
 our role TokenTree::Actions {
@@ -28,34 +28,35 @@ our role TokenTree::Actions {
     }
 
     method token-tree:sym<a>($/) {
-        make $<delimited-token_trees>.made
+        make $<delimited-token-trees>.made
     }
 
     method token-tree:sym<b>($/) {
         make $<unpaired-token>.made
     }
 
-    method delimited-token_trees:sym<a>($/) {
-        make $<parens-delimited_token_trees>.made
+    method delimited-token-trees:sym<a>($/) {
+        make $<parens-delimited-token-trees>.made
     }
 
-    method delimited-token_trees:sym<b>($/) {
-        make $<braces-delimited_token_trees>.made
+    method delimited-token-trees:sym<b>($/) {
+        make $<braces-delimited-token-trees>.made
     }
 
-    method delimited-token_trees:sym<c>($/) {
-        make $<brackets-delimited_token_trees>.made
+    method delimited-token-trees:sym<c>($/) {
+        make $<brackets-delimited-token-trees>.made
     }
 
-    method parens-delimited_token_trees($/) {
+    method parens-delimited-token-trees($/) {
         make $<token-trees>.made
     }
 
-    method braces-delimited_token_trees($/) {
+    method braces-delimited-token-trees($/) {
         make $<token-trees>.made
     }
 
-    method brackets-delimited_token_trees($/) {
+    method brackets-delimited-token-trees($/) {
         make $<token-trees>.made
     }
 }
+

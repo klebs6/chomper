@@ -10,11 +10,11 @@ our role ItemMod::Rules {
     }
 
     rule item-mod:sym<b> {
-        <MOD> <ident> '{' <inner-attrs>? <maybe-mod_items> '}'
+        <MOD> <ident> '{' <inner-attrs>? <maybe-mod-items> '}'
     }
 
-    rule item-foreign_mod {
-        <EXTERN> <maybe-abi> '{' <inner-attrs>? <maybe-foreign_items> '}'
+    rule item-foreign-mod {
+        <EXTERN> <maybe-abi> '{' <inner-attrs>? <maybe-foreign-items> '}'
     }
 
     rule maybe-abi {
@@ -34,14 +34,14 @@ our role ItemMod::Actions {
         make ItemMod.new(
             ident           =>  $<ident>.made,
             inner-attrs     =>  $<inner-attrs>.made,
-            maybe-mod_items =>  $<maybe-mod_items>.made,
+            maybe-mod-items =>  $<maybe-mod-items>.made,
         )
     }
 
-    method item-foreign_mod($/) {
+    method item-foreign-mod($/) {
         make ItemForeignMod.new(
             inner-attrs         =>  $<inner-attrs>.made,
-            maybe-foreign_items =>  $<maybe-foreign_items>.made,
+            maybe-foreign-items =>  $<maybe-foreign-items>.made,
         )
     }
 
@@ -49,3 +49,5 @@ our role ItemMod::Actions {
         make $<str>.made
     }
 }
+
+

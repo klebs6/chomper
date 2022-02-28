@@ -1,25 +1,45 @@
 use grust-model;
 
+enum XState <
+str
+rawstr
+rawstr-esc-begin
+rawstr-esc-body
+rawstr-esc-end
+byte
+bytestr
+rawbytestr
+rawbytestr-nohash
+pound
+shebang-or-attr
+ltorchar
+linecomment
+doc-line
+blockcomment
+doc-block
+suffix
+INITIAL
+>;
 
 #--------------------------------------
 =begin comment
-\/\*(\*|\!)[^*]       { yy_push_state(INITIAL); yy_push_state(doc_block); yymore(); }
-<doc_block>\/\*       { yy_push_state(doc_block); yymore(); }
-<doc_block>\*\/       {
-    yy_pop_state();
-    if (yy_top_state() == doc_block) {
+\/\*(\*|\!)[^*]       { yy-push-state(INITIAL); yy-push-state(doc-block); yymore(); }
+<doc-block>\/\*       { yy-push-state(doc-block); yymore(); }
+<doc-block>\*\/       {
+    yy-pop-state();
+    if (yy-top-state() == doc-block) {
         yymore();
     } else {
-        return ((yytext[2] == '!') ? INNER_DOC_COMMENT : OUTER_DOC_COMMENT);
+        return ((yytext[2] == '!') ? INNER-DOC-COMMENT : OUTER-DOC-COMMENT);
     }
 }
-<doc_block>(.|\n)     { yymore(); }
+<doc-block>(.|\n)     { yymore(); }
 =end comment
-our role DocBlock {
+our role Lex::DocBlock {
 
     token doc-block {
         \/\*(\*|\!)<[^*]>
-        {self.push-state("INITIAL"); self.push-state("doc_block");}
+        {self.push-state("INITIAL"); self.push-state("doc-block");}
         [
             | <doc-block-open>
             | <doc-block-close>
@@ -29,13 +49,13 @@ our role DocBlock {
     }
 
     token doc-block-open {
-        <?{$*CURRENT-STATE eq "doc_block"}>
+        <?{$*CURRENT-STATE eq "doc-block"}>
         \/\*
-        {self.push-state("doc_block");}
+        {self.push-state("doc-block");}
     }
 
     token doc-block-close {
-        <?{$*CURRENT-STATE eq doc_block}>
+        <?{$*CURRENT-STATE eq doc-block}>
         \*\/
         {
             self.pop-state();
@@ -43,7 +63,7 @@ our role DocBlock {
     }
 
     token doc-block-continue {
-        <?{$*CURRENT-STATE eq doc_block}>
+        <?{$*CURRENT-STATE eq doc-block}>
         | .
         | \n
     }
@@ -51,19 +71,19 @@ our role DocBlock {
 
 #--------------------------------------
 =begin comment
-\/\/(\/|\!)           { BEGIN(doc_line); yymore(); }
-<doc_line>\n          { BEGIN(INITIAL);
+\/\/(\/|\!)           { BEGIN(doc-line); yymore(); }
+<doc-line>\n          { BEGIN(INITIAL);
                         yyleng--;
                         yytext[yyleng] = 0;
-                        return ((yytext[2] == '!') ? INNER_DOC_COMMENT : OUTER_DOC_COMMENT);
+                        return ((yytext[2] == '!') ? INNER-DOC-COMMENT : OUTER-DOC-COMMENT);
                       }
-<doc_line>[^\n]*      { yymore(); }
+<doc-line>[^\n]*      { yymore(); }
 =end comment
-our role DocLine {
+our role Lex::DocLine {
 
     token doc-line {
         \/\/[\/|\!]
-        { self.push-state("doc_line") }
+        { self.push-state("doc-line") }
         [
             | <doc-line-terminator>
             | <doc-line-body>
@@ -72,13 +92,13 @@ our role DocLine {
     }
 
     token doc-line-terminator {
-        <?{$*CURRENT-STATE eq "doc_line"}>
+        <?{$*CURRENT-STATE eq "doc-line"}>
         \n
         { self.push-state("INITIAL") }
     }
 
     token doc-line-body {
-        <?{$*CURRENT-STATE eq "doc_line"}>
+        <?{$*CURRENT-STATE eq "doc-line"}>
         <[^\n]>*
     }
 }
@@ -86,16 +106,16 @@ our role DocLine {
 #--------------------------------------
 =begin comment
 \x27                                      { BEGIN(ltorchar); yymore(); }
-<ltorchar>static                          { BEGIN(INITIAL); return STATIC_LIFETIME; }
+<ltorchar>static                          { BEGIN(INITIAL); return STATIC-LIFETIME; }
 <ltorchar>{ident}                         { BEGIN(INITIAL); return LIFETIME; }
 
-<ltorchar>\\[nrt\\\x27\x220]\x27          { BEGIN(suffix); return LIT_CHAR; }
-<ltorchar>\\x[0-9a-fA-F]{2}\x27           { BEGIN(suffix); return LIT_CHAR; }
-<ltorchar>\\u\{([0-9a-fA-F]_*){1,6}\}\x27 { BEGIN(suffix); return LIT_CHAR; }
-<ltorchar>.\x27                           { BEGIN(suffix); return LIT_CHAR; }
-<ltorchar>[\x80-\xff]{2,4}\x27            { BEGIN(suffix); return LIT_CHAR; }
+<ltorchar>\\[nrt\\\x27\x220]\x27          { BEGIN(suffix); return LIT-CHAR; }
+<ltorchar>\\x[0-9a-fA-F]{2}\x27           { BEGIN(suffix); return LIT-CHAR; }
+<ltorchar>\\u\{([0-9a-fA-F]_*){1,6}\}\x27 { BEGIN(suffix); return LIT-CHAR; }
+<ltorchar>.\x27                           { BEGIN(suffix); return LIT-CHAR; }
+<ltorchar>[\x80-\xff]{2,4}\x27            { BEGIN(suffix); return LIT-CHAR; }
 =end comment
-our role LifetimeOrChar {
+our role Lex::LifetimeOrChar {
 
     proto token lifetime-or-char { * }
 
@@ -116,11 +136,11 @@ our role LifetimeOrChar {
     token lifetime-or-char:sym<char> {
         <lifetime-or-char-begin>
         [
-            \\<[nrt\\\x27\x220]>\x27          
-            \\x<[0..9 a..f A..F]>{2}\x27           
-            \\u\{(<[0..9 a..f A..F]>_*){1,6}\}\x27 
+            \\<[nrt\\\x27\x220]> \x27
+            \\x<[0..9 a..f A..F]> ** {2} \x27           
+            \\u\{(<[0..9 a..f A..F]>_*) ** {1,6}\} \x27 
             .\x27                           
-            <[\x80..\xff]>{2,4}\x27           
+            <[\x80..\xff]> ** {2,4} \x27           
         ]
         {self.begin(XState::suffix)}
     }
@@ -129,14 +149,14 @@ our role LifetimeOrChar {
 #--------------------------------------
 =begin comment
 b\x22                                     { BEGIN(bytestr); yymore(); }
-<bytestr>\x22                             { BEGIN(suffix); return LIT_BYTE_STR; }
+<bytestr>\x22                             { BEGIN(suffix); return LIT-BYTE-STR; }
 <bytestr>\\[n\nrt\\\x27\x220]             { yymore(); }
 <bytestr>\\x[0-9a-fA-F]{2}                { yymore(); }
 <bytestr>\\u\{([0-9a-fA-F]_*){1,6}\}      { yymore(); }
 <bytestr>\\[^n\nrt\\\x27\x220]            { return -1; }
 <bytestr>(.|\n)                           { yymore(); }
 =end comment
-our role ByteStr {
+our role Lex::ByteStr {
 
     token byte-str-begin {
         b\x22
@@ -148,8 +168,8 @@ our role ByteStr {
 
     token byte-str-continue {
         | \\[n\nrt\\\x27\x220]
-        | \\x<[0..9 a..f A..F]>{2}
-        | \\u\{(<[0..9 a..f A..F]>_*){1,6}\}
+        | \\x<[0..9 a..f A..F]> ** {2}
+        | \\u\{(<[0..9 a..f A..F]>_*) ** {1,6}\}
         | (.|\n)
     }
 
@@ -158,15 +178,19 @@ our role ByteStr {
         <byte-str-continue>* 
         <byte-str-end>
     }
+
+    token LIT-BYTE-STR {
+        <byte-str>
+    }
 }
 
 #--------------------------------------
 =begin comment
-br\x22                                    { BEGIN(rawbytestr_nohash); yymore(); }
-<rawbytestr_nohash>\x22                   { BEGIN(suffix); return LIT_BYTE_STR_RAW; }
-<rawbytestr_nohash>(.|\n)                 { yymore(); }
+br\x22                                    { BEGIN(rawbytestr-nohash); yymore(); }
+<rawbytestr-nohash>\x22                   { BEGIN(suffix); return LIT-BYTE-STR-RAW; }
+<rawbytestr-nohash>(.|\n)                 { yymore(); }
 =end comment
-our role RawByteStrNoHash {
+our role Lex::RawByteStrNoHash {
 
     token raw-byte-str-no-hash-begin {
         br\x22
@@ -186,6 +210,9 @@ our role RawByteStrNoHash {
         <raw-byte-str-no-hash-continue>*
         <raw-byte-str-no-hash-end>
     }
+    token LIT-BYTE-STR-RAW {
+        <raw-byte-str-no-hash>
+    }
 }
 
 #--------------------------------------
@@ -193,45 +220,45 @@ our role RawByteStrNoHash {
 br/# {
     BEGIN(rawbytestr);
     yymore();
-    num_hashes = 0;
-    saw_non_hash = 0;
-    end_hashes = 0;
+    num-hashes = 0;
+    saw-non-hash = 0;
+    end-hashes = 0;
 }
 
 <rawbytestr># {
-    if (!saw_non_hash) {
-        num_hashes++;
-    } else if (end_hashes != 0) {
-        end_hashes++;
-        if (end_hashes == num_hashes) {
+    if (!saw-non-hash) {
+        num-hashes++;
+    } elsif (end-hashes != 0) {
+        end-hashes++;
+        if (end-hashes == num-hashes) {
             BEGIN(INITIAL);
-            return LIT_BYTE_STR_RAW;
+            return LIT-BYTE-STR-RAW;
         }
     }
     yymore();
 }
 
 <rawbytestr>\x22# {
-    end_hashes = 1;
-    if (end_hashes == num_hashes) {
+    end-hashes = 1;
+    if (end-hashes == num-hashes) {
         BEGIN(INITIAL);
-        return LIT_BYTE_STR_RAW;
+        return LIT-BYTE-STR-RAW;
     }
     yymore();
 }
 
 <rawbytestr>(.|\n) {
-    if (!saw_non_hash) {
-        saw_non_hash = 1;
+    if (!saw-non-hash) {
+        saw-non-hash = 1;
     }
-    if (end_hashes != 0) {
-        end_hashes = 0;
+    if (end-hashes != 0) {
+        end-hashes = 0;
     }
     yymore();
 }
 
 =end comment
-our role RawByteStr {
+our role Lex::RawByteStr {
 
     token raw-byte-str-begin {
         :my $*RAW-BYTE-STR-EXIT = False;
@@ -250,7 +277,7 @@ our role RawByteStr {
         {
             if !$*SAW-NON-HASH {
                 $*NUM-HASHES++;
-            } else if $*END-HASHES != 0 {
+            } elsif $*END-HASHES != 0 {
                 $*END-HASHES++;
                 if $*END-HASHES eq $*NUM-HASHES {
                     self.begin(XState::<initial>);
@@ -264,7 +291,7 @@ our role RawByteStr {
         <?{!$*RAW-BYTE-STR-EXIT}>
         \x22\#
         {
-            $*END-HASHES = 1
+            $*END-HASHES = 1;
             if $*END-HASHES eq $*NUM-HASHES {
                 self.begin(XState::<initial>);
                 $*RAW-BYTE-STR-EXIT = True;
@@ -309,13 +336,13 @@ our role RawByteStr {
 #--------------------------------------
 =begin comment
 b\x27                           { BEGIN(byte); yymore(); }
-<byte>\\[nrt\\\x27\x220]\x27    { BEGIN(INITIAL); return LIT_BYTE; }
-<byte>\\x[0-9a-fA-F]{2}\x27     { BEGIN(INITIAL); return LIT_BYTE; }
-<byte>\\u([0-9a-fA-F]_*){4}\x27 { BEGIN(INITIAL); return LIT_BYTE; }
-<byte>\\U([0-9a-fA-F]_*){8}\x27 { BEGIN(INITIAL); return LIT_BYTE; }
-<byte>.\x27                     { BEGIN(INITIAL); return LIT_BYTE; }
+<byte>\\[nrt\\\x27\x220]\x27    { BEGIN(INITIAL); return LIT-BYTE; }
+<byte>\\x[0-9a-fA-F]{2}\x27     { BEGIN(INITIAL); return LIT-BYTE; }
+<byte>\\u([0-9a-fA-F]_*){4}\x27 { BEGIN(INITIAL); return LIT-BYTE; }
+<byte>\\U([0-9a-fA-F]_*){8}\x27 { BEGIN(INITIAL); return LIT-BYTE; }
+<byte>.\x27                     { BEGIN(INITIAL); return LIT-BYTE; }
 =end comment
-our role Byte {
+our role Lex::Byte {
 
     token byte-begin {
         b\x27
@@ -332,15 +359,17 @@ our role Byte {
     token byte {
         <byte-begin><byte-end>
     }
+
+    token LIT-BYTE { <byte> }
 }
 
 #--------------------------------------
 =begin comment
 r\x22           { BEGIN(rawstr); yymore(); }
-<rawstr>\x22    { BEGIN(suffix); return LIT_STR_RAW; }
+<rawstr>\x22    { BEGIN(suffix); return LIT-STR-RAW; }
 <rawstr>(.|\n)  { yymore(); }
 =end comment
-our role RawStr {
+our role Lex::RawStr {
     token raw-str-begin {
         r\x22
     }
@@ -359,25 +388,29 @@ our role RawStr {
         <raw-str-continue>* 
         <raw-str-end>
     }
+
+    token LIT-STR-RAW {
+        <raw-str>
+    }
 }
 
 #--------------------------------------
 =begin comment
 # { BEGIN(pound); yymore(); }
-<pound>\! { BEGIN(shebang_or_attr); yymore(); }
-<shebang_or_attr>\[ {
+<pound>\! { BEGIN(shebang-or-attr); yymore(); }
+<shebang-or-attr>\[ {
   BEGIN(INITIAL);
   yyless(2);
   return SHEBANG;
 }
-<shebang_or_attr>[^\[\n]*\n {
+<shebang-or-attr>[^\[\n]*\n {
   // Since the \n was eaten as part of the token, yylineno will have
   // been incremented to the value 2 if the shebang was on the first
   // line. This yyless undoes that, setting yylineno back to 1.
   yyless(yyleng - 1);
-  if (yyget_lineno() == 1) {
+  if (yyget-lineno() == 1) {
     BEGIN(INITIAL);
-    return SHEBANG_LINE;
+    return SHEBANG-LINE;
   } else {
     BEGIN(INITIAL);
     yyless(2);
@@ -386,8 +419,9 @@ our role RawStr {
 }
 <pound>. { BEGIN(INITIAL); yyless(1); return '#'; }
 =end comment
-our role Pound {
+our role Lex::Pound {
     token pound {
+        'TODO'
 
     }
 }
@@ -395,51 +429,52 @@ our role Pound {
 #--------------------------------------
 =begin comment
 r/#             {
-    BEGIN(rawstr_esc_begin);
+    BEGIN(rawstr-esc-begin);
     yymore();
-    num_hashes = 0;
-    saw_non_hash = 0;
-    end_hashes = 0;
+    num-hashes = 0;
+    saw-non-hash = 0;
+    end-hashes = 0;
 }
 
-<rawstr_esc_begin># {
-    num_hashes++;
-    yymore();
-}
-
-<rawstr_esc_begin>\x22 {
-    BEGIN(rawstr_esc_body);
+<rawstr-esc-begin># {
+    num-hashes++;
     yymore();
 }
 
-<rawstr_esc_begin>(.|\n) { return -1; }
-<rawstr_esc_body>\x22/# {
-    BEGIN(rawstr_esc_end);
+<rawstr-esc-begin>\x22 {
+    BEGIN(rawstr-esc-body);
     yymore();
 }
 
-<rawstr_esc_body>(.|\n) {
+<rawstr-esc-begin>(.|\n) { return -1; }
+<rawstr-esc-body>\x22/# {
+    BEGIN(rawstr-esc-end);
     yymore();
 }
 
-<rawstr_esc_end># {
-    end_hashes++;
-    if (end_hashes == num_hashes) {
+<rawstr-esc-body>(.|\n) {
+    yymore();
+}
+
+<rawstr-esc-end># {
+    end-hashes++;
+    if (end-hashes == num-hashes) {
         BEGIN(INITIAL);
-        return LIT_STR_RAW;
+        return LIT-STR-RAW;
     }
     yymore();
 }
 
-<rawstr_esc_end>[^#] {
-    end_hashes = 0;
-    BEGIN(rawstr_esc_body);
+<rawstr-esc-end>[^#] {
+    end-hashes = 0;
+    BEGIN(rawstr-esc-body);
     yymore();
 }
 =end comment
-our role RawStrEsc {
+our role Lex::RawStrEsc {
 
     token raw-str-esc-end {
+        'TODO'
 
     }
 }
@@ -447,16 +482,16 @@ our role RawStrEsc {
 #--------------------------------------
 =begin comment
 \x22                             { BEGIN(str); yymore(); }
-<str>\x22                        { BEGIN(suffix); return LIT_STR; }
+<str>\x22                        { BEGIN(suffix); return LIT-STR; }
 <str>\\[n\nr\rt\\\x27\x220]      { yymore(); }
 <str>\\x[0-9a-fA-F]{2}           { yymore(); }
 <str>\\u\{([0-9a-fA-F]_*){1,6}\} { yymore(); }
 <str>\\[^n\nrt\\\x27\x220]       { return -1; }
 <str>(.|\n)                      { yymore(); }
 =end comment
-our role Str_ {
+our role Lex::Str_ {
     token rust-string {
-
+        'TODO'
     }
 }
 
@@ -466,7 +501,7 @@ our role Str_ {
 <linecomment>\n       { BEGIN(INITIAL); }
 <linecomment>[^\n]*   { }
 =end comment
-our role LineComment {
+our role Lex::LineComment {
 
     token line-comment-begin {
         || \/\/\/
@@ -493,29 +528,29 @@ our role LineComment {
 <suffix>{ident}       { BEGIN(INITIAL); }
 <suffix>(.|\n)        { yyless(0); BEGIN(INITIAL); }
 =end comment
-our role Suffix {
+our role Lex::Suffix {
 
     token suffix {
         | <identifier> 
         | .
-        | \n) 
+        | \n
     }
 }
 
 #--------------------------------------
 =begin comment
-\/\*                  { yy_push_state(blockcomment); }
-<blockcomment>\/\*    { yy_push_state(blockcomment); }
-<blockcomment>\*\/    { yy_pop_state(); }
+\/\*                  { yy-push-state(blockcomment); }
+<blockcomment>\/\*    { yy-push-state(blockcomment); }
+<blockcomment>\*\/    { yy-pop-state(); }
 <blockcomment>(.|\n)  { }
 =end comment
-our role BlockComment {
+our role Lex::BlockComment {
 
     token block-comment-begin {
         \/\*
         { 
-            self.push-state(XState::<initial>)
-            self.push-state(XState::<blockcomment>) 
+            self.push-state(XState::<initial>);
+            self.push-state(XState::<blockcomment>);
         }
     }
 
@@ -550,3 +585,4 @@ our role BlockComment {
         <block-comment-end>
     }
 }
+

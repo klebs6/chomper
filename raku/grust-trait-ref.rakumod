@@ -15,3 +15,4 @@ our role TraitRef::Actions {
         make $<path-generic-args-without-colons>.made
     }
 }
+

@@ -14,7 +14,7 @@ our role ItemEnum::Rules {
     rule enum-defs { <enum-def>* %% "," }
 
     rule enum-def {
-        <attrs-and_vis> <ident> <enum-args>
+        <attrs-and-vis> <ident> <enum-args>
     }
 
     #----------------------------
@@ -45,7 +45,7 @@ our role ItemEnum::Actions {
 
     method enum-def($/) {
         make EnumDef.new(
-            attrs-and_vis =>  $<attrs-and_vis>.made,
+            attrs-and-vis =>  $<attrs-and-vis>.made,
             ident         =>  $<ident>.made,
             enum-args     =>  $<enum-args>.made,
         )
@@ -75,3 +75,4 @@ our role ItemEnum::Actions {
         )
     }
 }
+

@@ -14,3 +14,4 @@ our role BindingMode::Actions {
     method binding-mode:sym<ref-mut>($/) { make BindByRef.new() }
     method binding-mode:sym<mut>($/)     { make BindByValue.new() }
 }
+

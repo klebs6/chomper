@@ -38,3 +38,4 @@ our role Ident::Actions {
         make Ident.new(value => ~$/)
     }
 }
+

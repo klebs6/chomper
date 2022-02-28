@@ -14,3 +14,4 @@ our role ConstDefault::Actions {
         make $expr ?? ConstDefault.new( :$expr,) !! Nil
     }
 }
+

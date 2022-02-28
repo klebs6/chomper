@@ -6,7 +6,7 @@ our role ViewItem::Rules {
     proto rule view-item { * }
 
     rule view-item:sym<a> { <use-item> }
-    rule view-item:sym<b> { <extern-fn_item> }
+    rule view-item:sym<b> { <extern-fn-item> }
     rule view-item:sym<c> { <EXTERN> <CRATE> <ident> ';' }
     rule view-item:sym<d> { <EXTERN> <CRATE> <ident> <AS> <ident> ';' }
 }
@@ -18,7 +18,7 @@ our role ViewItem::Actions {
     }
 
     method view-item:sym<b>($/) {
-        make $<extern-fn_item>.made
+        make $<extern-fn-item>.made
     }
 
     method view-item:sym<c>($/) {
@@ -34,3 +34,4 @@ our role ViewItem::Actions {
         )
     }
 }
+

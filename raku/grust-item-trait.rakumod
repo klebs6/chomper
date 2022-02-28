@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role ItemTrait::Rules {
 
     rule item-trait {
@@ -9,12 +8,12 @@ our role ItemTrait::Rules {
         <ident> 
         <generic-params> 
         <for-sized> 
-        <maybe-ty_param_bounds> 
-        <maybe-where_clause> 
-        '{' <maybe-trait_items> '}'
+        <maybe-ty-param-bounds> 
+        <maybe-where-clause> 
+        '{' <maybe-trait-items> '}'
     }
 
-    rule maybe-trait_items {
+    rule maybe-trait-items {
         <trait-items>?
     }
 
@@ -22,6 +21,7 @@ our role ItemTrait::Rules {
         <trait-item>+
     }
 
+    #----------------------
     proto rule trait-item { * }
 
     rule trait-item:sym<a> {
@@ -37,7 +37,8 @@ our role ItemTrait::Rules {
     }
 
     rule trait-item:sym<d> {
-        <maybe-outer_attrs> <item-macro>
+        <maybe-outer-attrs>
+        <item-macro>
     }
 }
 
@@ -49,13 +50,13 @@ our role ItemTrait::Actions {
             ident                 =>  $<ident>.made,
             generic-params        =>  $<generic-params>.made,
             for-sized             =>  $<for-sized>.made,
-            maybe-ty_param_bounds =>  $<maybe-ty_param_bounds>.made,
-            maybe-where_clause    =>  $<maybe-where_clause>.made,
-            maybe-trait_items     =>  $<maybe-trait_items>.made,
+            maybe-ty-param-bounds =>  $<maybe-ty-param-bounds>.made,
+            maybe-where-clause    =>  $<maybe-where-clause>.made,
+            maybe-trait-items     =>  $<maybe-trait-items>.made,
         )
     }
 
-    method maybe-trait_items($/) {
+    method maybe-trait-items($/) {
         make $<trait-items>.made
     }
 
@@ -78,8 +79,9 @@ our role ItemTrait::Actions {
 
     method trait-item:sym<d>($/) {
         make TraitMacroItem.new(
-            maybe-outer_attrs =>  $<maybe-outer_attrs>.made,
+            maybe-outer-attrs =>  $<maybe-outer-attrs>.made,
             item-macro        =>  $<item-macro>.made,
         )
     }
 }
+

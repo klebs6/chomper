@@ -7,7 +7,7 @@ use grust-model;
 our role ModItem::Rules {
 
     rule mod-item {
-        <attrs-and_vis> <item>
+        <attrs-and-vis> <item>
     }
 }
 
@@ -15,7 +15,7 @@ our role ModItem::Actions {
 
     method mod-item($/) {
         make Item.new(
-            attrs-and_vis =>  $<attrs-and_vis>.made,
+            attrs-and-vis =>  $<attrs-and-vis>.made,
             item          =>  $<item>.made,
         )
     }
@@ -24,7 +24,7 @@ our role ModItem::Actions {
 #-----------------------
 our role ModItems::Rules {
 
-    rule maybe-mod_items {
+    rule maybe-mod-items {
         <mod-items>?
     }
 
@@ -35,7 +35,7 @@ our role ModItems::Rules {
 
 our role ModItems::Actions {
 
-    method maybe-mod_items($/) {
+    method maybe-mod-items($/) {
         make $<mod-items>.made
     }
 
@@ -43,3 +43,4 @@ our role ModItems::Actions {
         make $<mod-item>>>.made
     }
 }
+

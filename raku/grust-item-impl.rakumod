@@ -1,55 +1,54 @@
 use grust-model;
 
-
 our role ItemImpl::Rules {
 
     #---------------------------
     proto rule item-impl { * }
 
     rule item-impl:sym<a> {
-        <maybe-default_maybe_unsafe> 
+        <maybe-default-maybe-unsafe> 
         <IMPL> 
         <generic-params> 
-        <ty-prim_sum> 
-        <maybe-where_clause> 
+        <ty-prim-sum> 
+        <maybe-where-clause> 
         '{' 
-        <maybe-inner_attrs> 
-        <maybe-impl_items> 
+        <maybe-inner-attrs> 
+        <maybe-impl-items> 
         '}'
     }
 
     rule item-impl:sym<b> {
-        <maybe-default_maybe_unsafe> 
+        <maybe-default-maybe-unsafe> 
         <IMPL> 
         <generic-params> 
         '(' <ty> ')' 
-        <maybe-where_clause> 
-        '{' <maybe-inner_attrs> <maybe-impl_items> '}'
+        <maybe-where-clause> 
+        '{' <maybe-inner-attrs> <maybe-impl-items> '}'
     }
 
     rule item-impl:sym<c> {
-        <maybe-default_maybe_unsafe> 
+        <maybe-default-maybe-unsafe> 
         <IMPL> 
         <generic-params> 
         <trait-ref> 
         <FOR> 
         <ty-sum> 
-        <maybe-where_clause> 
-        '{' <maybe-inner_attrs> <maybe-impl_items> '}'
+        <maybe-where-clause> 
+        '{' <maybe-inner-attrs> <maybe-impl-items> '}'
     }
 
     rule item-impl:sym<d> {
-        <maybe-default_maybe_unsafe> 
+        <maybe-default-maybe-unsafe> 
         <IMPL> <generic-params> '!' 
         <trait-ref> 
         <FOR> 
         <ty-sum> 
-        <maybe-where_clause> 
-        '{' <maybe-inner_attrs> <maybe-impl_items> '}'
+        <maybe-where-clause> 
+        '{' <maybe-inner-attrs> <maybe-impl-items> '}'
     }
 
     rule item-impl:sym<e> {
-        <maybe-default_maybe_unsafe> 
+        <maybe-default-maybe-unsafe> 
         <IMPL> 
         <generic-params> 
         <trait-ref> 
@@ -59,7 +58,7 @@ our role ItemImpl::Rules {
     }
 
     rule item-impl:sym<f> {
-        <maybe-default_maybe_unsafe> 
+        <maybe-default-maybe-unsafe> 
         <IMPL> 
         <generic-params> 
         '!' 
@@ -70,7 +69,7 @@ our role ItemImpl::Rules {
     }
 
     #---------------------------
-    rule maybe-impl_items {
+    rule maybe-impl-items {
         <impl-items>?
     }
 
@@ -87,7 +86,8 @@ our role ItemImpl::Rules {
     }
 
     rule impl-item:sym<b> {
-        <attrs-and_vis> <item-macro>
+        <attrs-and-vis> 
+        <item-macro>
     }
 
     rule impl-item:sym<c> {
@@ -103,23 +103,23 @@ our role ItemImpl::Actions {
 
     method item-impl:sym<a>($/) {
         make ItemImpl.new(
-            maybe-default_maybe_unsafe =>  $<maybe-default_maybe_unsafe>.made,
+            maybe-default-maybe-unsafe =>  $<maybe-default-maybe-unsafe>.made,
             generic-params             =>  $<generic-params>.made,
-            ty-prim_sum                =>  $<ty-prim_sum>.made,
-            maybe-where_clause         =>  $<maybe-where_clause>.made,
-            maybe-inner_attrs          =>  $<maybe-inner_attrs>.made,
-            maybe-impl_items           =>  $<maybe-impl_items>.made,
+            ty-prim-sum                =>  $<ty-prim-sum>.made,
+            maybe-where-clause         =>  $<maybe-where-clause>.made,
+            maybe-inner-attrs          =>  $<maybe-inner-attrs>.made,
+            maybe-impl-items           =>  $<maybe-impl-items>.made,
         )
     }
 
     method item-impl:sym<b>($/) {
         make ItemImpl.new(
-            maybe-default_maybe_unsafe =>  $<maybe-default_maybe_unsafe>.made,
+            maybe-default-maybe-unsafe =>  $<maybe-default-maybe-unsafe>.made,
             generic-params             =>  $<generic-params>.made,
             ty                         =>  $<ty>.made,
-            maybe-where_clause         =>  $<maybe-where_clause>.made,
-            maybe-inner_attrs          =>  $<maybe-inner_attrs>.made,
-            maybe-impl_items           =>  $<maybe-impl_items>.made,
+            maybe-where-clause         =>  $<maybe-where-clause>.made,
+            maybe-inner-attrs          =>  $<maybe-inner-attrs>.made,
+            maybe-impl-items           =>  $<maybe-impl-items>.made,
         )
     }
 
@@ -128,27 +128,27 @@ our role ItemImpl::Actions {
             generic-params     =>  $<generic-params>.made,
             trait-ref          =>  $<trait-ref>.made,
             ty-sum             =>  $<ty-sum>.made,
-            maybe-where_clause =>  $<maybe-where_clause>.made,
-            maybe-inner_attrs  =>  $<maybe-inner_attrs>.made,
-            maybe-impl_items   =>  $<maybe-impl_items>.made,
+            maybe-where-clause =>  $<maybe-where-clause>.made,
+            maybe-inner-attrs  =>  $<maybe-inner-attrs>.made,
+            maybe-impl-items   =>  $<maybe-impl-items>.made,
         )
     }
 
     method item-impl:sym<d>($/) {
         make ItemImplNeg.new(
-            maybe-default_maybe_unsafe =>  $<maybe-default_maybe_unsafe>.made,
+            maybe-default-maybe-unsafe =>  $<maybe-default-maybe-unsafe>.made,
             generic-params             =>  $<generic-params>.made,
             trait-ref                  =>  $<trait-ref>.made,
             ty-sum                     =>  $<ty-sum>.made,
-            maybe-where_clause         =>  $<maybe-where_clause>.made,
-            maybe-inner_attrs          =>  $<maybe-inner_attrs>.made,
-            maybe-impl_items           =>  $<maybe-impl_items>.made,
+            maybe-where-clause         =>  $<maybe-where-clause>.made,
+            maybe-inner-attrs          =>  $<maybe-inner-attrs>.made,
+            maybe-impl-items           =>  $<maybe-impl-items>.made,
         )
     }
 
     method item-impl:sym<e>($/) {
         make ItemImplDefault.new(
-            maybe-default_maybe_unsafe =>  $<maybe-default_maybe_unsafe>.made,
+            maybe-default-maybe-unsafe =>  $<maybe-default-maybe-unsafe>.made,
             generic-params             =>  $<generic-params>.made,
             trait-ref                  =>  $<trait-ref>.made,
         )
@@ -156,13 +156,13 @@ our role ItemImpl::Actions {
 
     method item-impl:sym<f>($/) {
         make ItemImplDefaultNeg.new(
-            maybe-default_maybe_unsafe =>  $<maybe-default_maybe_unsafe>.made,
+            maybe-default-maybe-unsafe =>  $<maybe-default-maybe-unsafe>.made,
             generic-params             =>  $<generic-params>.made,
             trait-ref                  =>  $<trait-ref>.made,
         )
     }
 
-    method maybe-impl_items:sym<a>($/) {
+    method maybe-impl-items:sym<a>($/) {
         make $<impl-items>.made
     }
 
@@ -177,7 +177,7 @@ our role ItemImpl::Actions {
 
     method impl-item:sym<b>($/) {
         make ImplMacroItem.new(
-            attrs-and_vis =>  $<attrs-and_vis>.made,
+            attrs-and-vis =>  $<attrs-and-vis>.made,
             item-macro    =>  $<item-macro>.made,
         )
     }

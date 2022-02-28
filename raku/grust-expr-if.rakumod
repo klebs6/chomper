@@ -9,7 +9,7 @@ our role ExprIf::Rules {
     }
 
     rule expr-if:sym<b> {
-        <IF> <expr-nostruct> <block> <ELSE> <block-or_if>
+        <IF> <expr-nostruct> <block> <ELSE> <block-or-if>
     }
 }
 
@@ -26,7 +26,8 @@ our role ExprIf::Actions {
         make ExprIf.new(
             expr-nostruct =>  $<expr-nostruct>.made,
             block         =>  $<block>.made,
-            block-or_if   =>  $<block-or_if>.made,
+            block-or-if   =>  $<block-or-if>.made,
         )
     }
 }
+

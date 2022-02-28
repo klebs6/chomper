@@ -7,7 +7,7 @@ our role ItemType::Rules {
         <TYPE> 
         <ident> 
         <generic-params> 
-        <maybe-where_clause> 
+        <maybe-where-clause> 
         '=' <ty-sum> ';'
     }
 }
@@ -18,8 +18,9 @@ our role ItemType::Actions {
         make ItemTy.new(
             ident              =>  $<ident>.made,
             generic-params     =>  $<generic-params>.made,
-            maybe-where_clause =>  $<maybe-where_clause>.made,
+            maybe-where-clause =>  $<maybe-where-clause>.made,
             ty-sum             =>  $<ty-sum>.made,
         )
     }
 }
+

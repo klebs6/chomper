@@ -17,3 +17,4 @@ our role TraitType::Actions {
         )
     }
 }
+

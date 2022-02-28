@@ -3,8 +3,8 @@ use grust-model;
 
 our role FnParams::Rules {
 
-    rule fn-decl_allow_variadic {
-        <fn-params_allow_variadic> <ret-ty>
+    rule fn-decl-allow-variadic {
+        <fn-params-allow-variadic> <ret-ty>
     }
 
     rule fn-params {
@@ -12,120 +12,121 @@ our role FnParams::Rules {
     }
 
     #---------------------------
-    proto rule fn-params_allow_variadic { * }
+    proto rule fn-params-allow-variadic { * }
 
-    rule fn-params_allow_variadic:sym<a> { '(' ')' }
-    rule fn-params_allow_variadic:sym<b> { '(' <params> ')' }
-    rule fn-params_allow_variadic:sym<c> { '(' <params> ',' ')' }
-    rule fn-params_allow_variadic:sym<d> { '(' <params> ',' <DOTDOTDOT> ')' }
-
-    #---------------------------
-    proto rule fn-anon_params { * }
-
-    rule fn-anon_params:sym<a> { '(' <anon-param> <anon-params_allow_variadic_tail> ')' }
-    rule fn-anon_params:sym<b> { '(' ')' }
+    rule fn-params-allow-variadic:sym<a> { '(' ')' }
+    rule fn-params-allow-variadic:sym<b> { '(' <params> ')' }
+    rule fn-params-allow-variadic:sym<c> { '(' <params> ',' ')' }
+    rule fn-params-allow-variadic:sym<d> { '(' <params> ',' <DOTDOTDOT> ')' }
 
     #---------------------------
-    proto rule fn-params_with_self { * }
+    proto rule fn-anon-params { * }
 
-    rule fn-params_with_self:sym<a> { '(' <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_params> ')' }
-    rule fn-params_with_self:sym<b> { '(' '&' <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_params> ')' }
-    rule fn-params_with_self:sym<c> { '(' '&' <lifetime> <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_params> ')' }
-    rule fn-params_with_self:sym<d> { '(' <maybe-params> ')' }
+    rule fn-anon-params:sym<a> { '(' <anon-param> <anon-params-allow-variadic-tail> ')' }
+    rule fn-anon-params:sym<b> { '(' ')' }
 
     #---------------------------
-    proto rule fn-anon_params_with_self { * }
+    proto rule fn-params-with-self { * }
 
-    rule fn-anon_params_with_self:sym<a> { '(' <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_anon_params> ')' }
-    rule fn-anon_params_with_self:sym<b> { '(' '&' <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_anon_params> ')' }
-    rule fn-anon_params_with_self:sym<c> { '(' '&' <lifetime> <maybe-mut> <SELF> <maybe-ty_ascription> <maybe-comma_anon_params> ')' }
-    rule fn-anon_params_with_self:sym<d> { '(' <maybe-anon_params> ')' }
+    rule fn-params-with-self:sym<a> { '(' <maybe-mut> <SELF> <maybe-ty-ascription> <maybe-comma-params> ')' }
+    rule fn-params-with-self:sym<b> { '(' '&' <maybe-mut> <SELF> <maybe-ty-ascription> <maybe-comma-params> ')' }
+    rule fn-params-with-self:sym<c> { '(' '&' <lifetime> <maybe-mut> <SELF> <maybe-ty-ascription> <maybe-comma-params> ')' }
+    rule fn-params-with-self:sym<d> { '(' <maybe-params> ')' }
+
+    #---------------------------
+    proto rule fn-anon-params-with-self { * }
+
+    rule fn-anon-params-with-self:sym<a> { '(' <maybe-mut> <SELF> <maybe-ty-ascription> <maybe-comma-anon-params> ')' }
+    rule fn-anon-params-with-self:sym<b> { '(' '&' <maybe-mut> <SELF> <maybe-ty-ascription> <maybe-comma-anon-params> ')' }
+    rule fn-anon-params-with-self:sym<c> { '(' '&' <lifetime> <maybe-mut> <SELF> <maybe-ty-ascription> <maybe-comma-anon-params> ')' }
+    rule fn-anon-params-with-self:sym<d> { '(' <maybe-anon-params> ')' }
 }
 
 our role FnParams::Actions {
 
-    method fn-decl_allow_variadic($/) {
+    method fn-decl-allow-variadic($/) {
         make FnDecl.new(
-            fn-params_allow_variadic =>  $<fn-params_allow_variadic>.made,
+            fn-params-allow-variadic =>  $<fn-params-allow-variadic>.made,
             ret-ty                   =>  $<ret-ty>.made,
         )
     }
 
     method fn-params($/) {
-        make $<maybe_params>.made
+        make $<maybe-params>.made
     }
 
     #---------------------------
-    method fn-params_allow_variadic:sym<b>($/) { make $<params>.made }
-    method fn-params_allow_variadic:sym<c>($/) { make $<params>.made }
-    method fn-params_allow_variadic:sym<d>($/) { make $<params>.made }
+    method fn-params-allow-variadic:sym<b>($/) { make $<params>.made }
+    method fn-params-allow-variadic:sym<c>($/) { make $<params>.made }
+    method fn-params-allow-variadic:sym<d>($/) { make $<params>.made }
 
     #---------------------------
-    method fn-anon_params:sym<a>($/) {
+    method fn-anon-params:sym<a>($/) {
         #ExtNode<140218049450816>
     }
 
     #---------------------------
-    method fn-params_with_self:sym<a>($/) {
+    method fn-params-with-self:sym<a>($/) {
         make SelfLower.new(
             maybe-mut           =>  $<maybe-mut>.made,
-            maybe-ty_ascription =>  $<maybe-ty_ascription>.made,
-            maybe-comma_params  =>  $<maybe-comma_params>.made,
+            maybe-ty-ascription =>  $<maybe-ty-ascription>.made,
+            maybe-comma-params  =>  $<maybe-comma-params>.made,
         )
     }
 
-    method fn-params_with_self:sym<b>($/) {
+    method fn-params-with-self:sym<b>($/) {
         make SelfRegion.new(
             maybe-mut           =>  $<maybe-mut>.made,
-            maybe-ty_ascription =>  $<maybe-ty_ascription>.made,
-            maybe-comma_params  =>  $<maybe-comma_params>.made,
+            maybe-ty-ascription =>  $<maybe-ty-ascription>.made,
+            maybe-comma-params  =>  $<maybe-comma-params>.made,
         )
     }
 
-    method fn-params_with_self:sym<c>($/) {
+    method fn-params-with-self:sym<c>($/) {
         make SelfRegion.new(
             lifetime            =>  $<lifetime>.made,
             maybe-mut           =>  $<maybe-mut>.made,
-            maybe-ty_ascription =>  $<maybe-ty_ascription>.made,
-            maybe-comma_params  =>  $<maybe-comma_params>.made,
+            maybe-ty-ascription =>  $<maybe-ty-ascription>.made,
+            maybe-comma-params  =>  $<maybe-comma-params>.made,
         )
     }
 
-    method fn-params_with_self:sym<d>($/) {
+    method fn-params-with-self:sym<d>($/) {
         make SelfStatic.new(
             maybe-params =>  $<maybe-params>.made,
         )
     }
 
     #---------------------------
-    method fn-anon_params_with_self:sym<a>($/) {
+    method fn-anon-params-with-self:sym<a>($/) {
         make SelfLower.new(
             maybe-mut               =>  $<maybe-mut>.made,
-            maybe-ty_ascription     =>  $<maybe-ty_ascription>.made,
-            maybe-comma_anon_params =>  $<maybe-comma_anon_params>.made,
+            maybe-ty-ascription     =>  $<maybe-ty-ascription>.made,
+            maybe-comma-anon-params =>  $<maybe-comma-anon-params>.made,
         )
     }
 
-    method fn-anon_params_with_self:sym<b>($/) {
+    method fn-anon-params-with-self:sym<b>($/) {
         make SelfRegion.new(
             maybe-mut               =>  $<maybe-mut>.made,
-            maybe-ty_ascription     =>  $<maybe-ty_ascription>.made,
-            maybe-comma_anon_params =>  $<maybe-comma_anon_params>.made,
+            maybe-ty-ascription     =>  $<maybe-ty-ascription>.made,
+            maybe-comma-anon-params =>  $<maybe-comma-anon-params>.made,
         )
     }
 
-    method fn-anon_params_with_self:sym<c>($/) {
+    method fn-anon-params-with-self:sym<c>($/) {
         make SelfRegion.new(
             lifetime                =>  $<lifetime>.made,
             maybe-mut               =>  $<maybe-mut>.made,
-            maybe-ty_ascription     =>  $<maybe-ty_ascription>.made,
-            maybe-comma_anon_params =>  $<maybe-comma_anon_params>.made,
+            maybe-ty-ascription     =>  $<maybe-ty-ascription>.made,
+            maybe-comma-anon-params =>  $<maybe-comma-anon-params>.made,
         )
     }
 
-    method fn-anon_params_with_self:sym<d>($/) {
+    method fn-anon-params-with-self:sym<d>($/) {
         make SelfStatic.new(
-            maybe-anon_params =>  $<maybe-anon_params>.made,
+            maybe-anon-params =>  $<maybe-anon-params>.made,
         )
     }
 }
+

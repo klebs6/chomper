@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role TySumsAndBindings::Rules {
 
     proto rule maybe-ty-sums-and-or-bindings { * }
@@ -27,4 +26,5 @@ our role TySumsAndBindings::Actions {
         make $<bindings>.made
     }
 }
+
 

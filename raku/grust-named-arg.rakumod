@@ -22,3 +22,4 @@ our role NamedArg::Actions {
     method named-arg:sym<f>($/) { make PatWild.new }
     method named-arg:sym<g>($/) { make $<ident>.made }
 }
+

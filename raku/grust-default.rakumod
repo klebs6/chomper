@@ -17,3 +17,4 @@ our role Default::Actions {
         make $<default>.made
     }
 }
+

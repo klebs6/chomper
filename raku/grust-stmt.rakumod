@@ -21,3 +21,4 @@ our role StmtItem::Actions {
     method stmt-item:sym<block>($/)  { make $<block-item>.made }
     method stmt-item:sym<view>($/)   { make $<view-item>.made }
 }
+

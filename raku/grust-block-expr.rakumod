@@ -20,10 +20,10 @@ our role BlockExpr::Rules {
     }
 
     #------------------------
-    proto rule full-block_expr { * }
+    proto rule full-block-expr { * }
 
-    rule full-block_expr:sym<basic> { <block-expr>     }
-    rule full-block_expr:sym<dot>   { <block-expr-dot> }
+    rule full-block-expr:sym<basic> { <block-expr>     }
+    rule full-block-expr:sym<dot>   { <block-expr-dot> }
 
     #------------------------
     proto rule block-expr-dot-tail { * }
@@ -42,7 +42,7 @@ our role BlockExpr::Rules {
     }
 
     rule block-expr-dot-tail:sym<lit-int> {
-        <LIT-INTEGER>
+        <LIT-INT>
     }
 
     #------------------------
@@ -51,7 +51,7 @@ our role BlockExpr::Rules {
     }
 }
 
-our class BlockExpr::Actions {
+our role BlockExpr::Actions {
 
     #-------------------------
     method block-expr:sym<match>($/)      { make $<expr-match>.made }
@@ -76,8 +76,8 @@ our class BlockExpr::Actions {
         )
     }
 
-    method full-block_expr:sym<basic>($/) { make $<block-expr>.made }
-    method full-block_expr:sym<dot>($/)   { make $<block-expr-dot>.made }
+    method full-block-expr:sym<basic>($/) { make $<block-expr>.made }
+    method full-block-expr:sym<dot>($/)   { make $<block-expr-dot>.made }
 
     #-------------------------
     method block-expr-dot($/) {
@@ -110,6 +110,8 @@ our class BlockExpr::Actions {
     }
 
     method block-expr-dot-tail:sym<lit-int>($/) {
-        make $<LIT-INTEGER>.made
+        make $<LIT-INT>.made
     }
 }
+
+

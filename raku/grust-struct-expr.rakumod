@@ -25,7 +25,7 @@ our role StructExpr::Rules {
 
     rule field-init:sym<a>  { <ident> }
     rule field-init:sym<b>  { <ident> ':' <expr> }
-    rule field-init:sym<c>  { <LIT-INTEGER> ':' <expr> }
+    rule field-init:sym<c>  { <LIT-INT> ':' <expr> }
 
     rule default-field-init { <DOTDOT> <expr> }
 }
@@ -76,3 +76,4 @@ our role StructExpr::Actions {
         )
     }
 }
+

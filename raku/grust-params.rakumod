@@ -41,3 +41,4 @@ our role Params::Actions {
         make $<params>.made
     }
 }
+

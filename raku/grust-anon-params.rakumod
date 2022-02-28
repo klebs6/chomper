@@ -4,11 +4,11 @@ use grust-model;
 # (type-only), but it can still have a name
 our role AnonParams::Rules {
 
-    rule maybe-comma_anon_params {
+    rule maybe-comma-anon-params {
         ','? <anon-params>?
     }
 
-    rule maybe-anon_params {
+    rule maybe-anon-params {
         <anon-params>? ','?
     }
 
@@ -27,7 +27,7 @@ our role AnonParams::Rules {
         <ty>
     }
 
-    rule anon-params_allow_variadic_tail {
+    rule anon-params-allow-variadic-tail {
         [
             [',' <anon-param>]*
             [',' <DOTDOTDOT>]?
@@ -37,11 +37,11 @@ our role AnonParams::Rules {
 
 our role AnonParams::Actions {
 
-    method maybe-comma_anon_params($/) {
-        make $<anon_params>.made
+    method maybe-comma-anon-params($/) {
+        make $<anon-params>.made
     }
 
-    method maybe-anon_params($/) {
+    method maybe-anon-params($/) {
         make $<anon-params>.made
     }
 
@@ -60,10 +60,11 @@ our role AnonParams::Actions {
         make $<ty>.made
     }
 
-    method anon-params_allow_variadic_tail($/) {
+    method anon-params-allow-variadic-tail($/) {
         make AnonArgs.new(
             anon-params   => $<anon-param>>>.made,
             variadic-tail => so $<DOTDOTDOT>.made,
         )
     }
 }
+

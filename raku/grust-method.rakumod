@@ -16,108 +16,108 @@ our role Method::Rules {
     proto rule type-method { * }
 
     rule type-method:sym<a> {
-        <maybe-outer_attrs> 
+        <maybe-outer-attrs> 
         <maybe-unsafe> 
         <FN> 
         <ident> 
         <generic-params> 
-        <fn-decl_with_self_allow_anon_params> 
-        <maybe-where_clause> 
+        <fn-decl-with-self-allow-anon-params> 
+        <maybe-where-clause> 
         ';'
     }
 
     rule type-method:sym<b> {
-        <maybe-outer_attrs> 
+        <maybe-outer-attrs> 
         <CONST> 
         <maybe-unsafe> 
         <FN> 
         <ident> 
         <generic-params> 
-        <fn-decl_with_self_allow_anon_params> 
-        <maybe-where_clause> 
+        <fn-decl-with-self-allow-anon-params> 
+        <maybe-where-clause> 
         ';'
     }
 
     rule type-method:sym<c> {
-        <maybe-outer_attrs> 
+        <maybe-outer-attrs> 
         <maybe-unsafe> 
         <EXTERN> 
         <maybe-abi> 
         <FN> 
         <ident> 
         <generic-params> 
-        <fn-decl_with_self_allow_anon_params> 
-        <maybe-where_clause> 
+        <fn-decl-with-self-allow-anon-params> 
+        <maybe-where-clause> 
         ';'
     }
 
     proto rule method { * }
 
     rule method:sym<a> {
-        <maybe-outer_attrs> 
+        <maybe-outer-attrs> 
         <maybe-unsafe> 
         <FN> 
         <ident> 
         <generic-params> 
-        <fn-decl_with_self_allow_anon_params> 
-        <maybe-where_clause> 
-        <inner-attrs_and_block>
+        <fn-decl-with-self-allow-anon-params> 
+        <maybe-where-clause> 
+        <inner-attrs-and-block>
     }
 
     rule method:sym<b> {
-        <maybe-outer_attrs> 
+        <maybe-outer-attrs> 
         <CONST> 
         <maybe-unsafe> 
         <FN> 
         <ident> 
         <generic-params> 
-        <fn-decl_with_self_allow_anon_params> 
-        <maybe-where_clause> 
-        <inner-attrs_and_block>
+        <fn-decl-with-self-allow-anon-params> 
+        <maybe-where-clause> 
+        <inner-attrs-and-block>
     }
 
     rule method:sym<c> {
-        <maybe-outer_attrs> 
+        <maybe-outer-attrs> 
         <maybe-unsafe> 
         <EXTERN> 
         <maybe-abi> 
         <FN> 
         <ident> 
         <generic-params> 
-        <fn-decl_with_self_allow_anon_params> 
-        <maybe-where_clause> 
-        <inner-attrs_and_block>
+        <fn-decl-with-self-allow-anon-params> 
+        <maybe-where-clause> 
+        <inner-attrs-and-block>
     }
 
     proto rule impl-method { * }
 
     rule impl-method:sym<a> {
-        <attrs-and_vis> 
+        <attrs-and-vis> 
         <maybe-default> 
         <maybe-unsafe> 
         <FN> 
         <ident> 
         <generic-params> 
-        <fn-decl_with_self> 
-        <maybe-where_clause> 
-        <inner-attrs_and_block>
+        <fn-decl-with-self> 
+        <maybe-where-clause> 
+        <inner-attrs-and-block>
     }
 
     rule impl-method:sym<b> {
-        <attrs-and_vis> 
+        <attrs-and-vis> 
         <maybe-default> 
         <CONST> 
         <maybe-unsafe> 
         <FN> 
         <ident> 
         <generic-params> 
-        <fn-decl_with_self> 
-        <maybe-where_clause> 
-        <inner-attrs_and_block>
+        <fn-decl-with-self> 
+        <maybe-where-clause> 
+        <inner-attrs-and-block>
     }
 
     rule impl-method:sym<c> {
-        <attrs-and_vis> 
+        <attrs-and-vis> 
         <maybe-default> 
         <maybe-unsafe> 
         <EXTERN> 
@@ -125,9 +125,9 @@ our role Method::Rules {
         <FN> 
         <ident> 
         <generic-params> 
-        <fn-decl_with_self> 
-        <maybe-where_clause> 
-        <inner-attrs_and_block>
+        <fn-decl-with-self> 
+        <maybe-where-clause> 
+        <inner-attrs-and-block>
     }
 }
 
@@ -147,112 +147,113 @@ our role Method::Actions {
 
     method type-method:sym<a>($/) {
         make TypeMethod.new(
-            maybe-outer_attrs                   =>  $<maybe-outer_attrs>.made,
+            maybe-outer-attrs                   =>  $<maybe-outer-attrs>.made,
             maybe-unsafe                        =>  $<maybe-unsafe>.made,
             ident                               =>  $<ident>.made,
             generic-params                      =>  $<generic-params>.made,
-            fn-decl_with_self_allow_anon_params =>  $<fn-decl_with_self_allow_anon_params>.made,
-            maybe-where_clause                  =>  $<maybe-where_clause>.made,
+            fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
+            maybe-where-clause                  =>  $<maybe-where-clause>.made,
         )
     }
 
     method type-method:sym<b>($/) {
         make TypeMethod.new(
-            maybe-outer_attrs                   =>  $<maybe-outer_attrs>.made,
+            maybe-outer-attrs                   =>  $<maybe-outer-attrs>.made,
             maybe-unsafe                        =>  $<maybe-unsafe>.made,
             ident                               =>  $<ident>.made,
             generic-params                      =>  $<generic-params>.made,
-            fn-decl_with_self_allow_anon_params =>  $<fn-decl_with_self_allow_anon_params>.made,
-            maybe-where_clause                  =>  $<maybe-where_clause>.made,
+            fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
+            maybe-where-clause                  =>  $<maybe-where-clause>.made,
         )
     }
 
     method type-method:sym<c>($/) {
         make TypeMethod.new(
-            maybe-outer_attrs                   =>  $<maybe-outer_attrs>.made,
+            maybe-outer-attrs                   =>  $<maybe-outer-attrs>.made,
             maybe-unsafe                        =>  $<maybe-unsafe>.made,
             maybe-abi                           =>  $<maybe-abi>.made,
             ident                               =>  $<ident>.made,
             generic-params                      =>  $<generic-params>.made,
-            fn-decl_with_self_allow_anon_params =>  $<fn-decl_with_self_allow_anon_params>.made,
-            maybe-where_clause                  =>  $<maybe-where_clause>.made,
+            fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
+            maybe-where-clause                  =>  $<maybe-where-clause>.made,
         )
     }
 
     method method:sym<a>($/) {
         make Method.new(
-            maybe-outer_attrs                   =>  $<maybe-outer_attrs>.made,
+            maybe-outer-attrs                   =>  $<maybe-outer-attrs>.made,
             maybe-unsafe                        =>  $<maybe-unsafe>.made,
             ident                               =>  $<ident>.made,
             generic-params                      =>  $<generic-params>.made,
-            fn-decl_with_self_allow_anon_params =>  $<fn-decl_with_self_allow_anon_params>.made,
-            maybe-where_clause                  =>  $<maybe-where_clause>.made,
-            inner-attrs_and_block               =>  $<inner-attrs_and_block>.made,
+            fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
+            maybe-where-clause                  =>  $<maybe-where-clause>.made,
+            inner-attrs-and-block               =>  $<inner-attrs-and-block>.made,
         )
     }
 
     method method:sym<b>($/) {
         make Method.new(
-            maybe-outer_attrs                   =>  $<maybe-outer_attrs>.made,
+            maybe-outer-attrs                   =>  $<maybe-outer-attrs>.made,
             maybe-unsafe                        =>  $<maybe-unsafe>.made,
             ident                               =>  $<ident>.made,
             generic-params                      =>  $<generic-params>.made,
-            fn-decl_with_self_allow_anon_params =>  $<fn-decl_with_self_allow_anon_params>.made,
-            maybe-where_clause                  =>  $<maybe-where_clause>.made,
-            inner-attrs_and_block               =>  $<inner-attrs_and_block>.made,
+            fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
+            maybe-where-clause                  =>  $<maybe-where-clause>.made,
+            inner-attrs-and-block               =>  $<inner-attrs-and-block>.made,
         )
     }
 
     method method:sym<c>($/) {
         make Method.new(
-            maybe-outer_attrs                   =>  $<maybe-outer_attrs>.made,
+            maybe-outer-attrs                   =>  $<maybe-outer-attrs>.made,
             maybe-unsafe                        =>  $<maybe-unsafe>.made,
             maybe-abi                           =>  $<maybe-abi>.made,
             ident                               =>  $<ident>.made,
             generic-params                      =>  $<generic-params>.made,
-            fn-decl_with_self_allow_anon_params =>  $<fn-decl_with_self_allow_anon_params>.made,
-            maybe-where_clause                  =>  $<maybe-where_clause>.made,
-            inner-attrs_and_block               =>  $<inner-attrs_and_block>.made,
+            fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
+            maybe-where-clause                  =>  $<maybe-where-clause>.made,
+            inner-attrs-and-block               =>  $<inner-attrs-and-block>.made,
         )
     }
 
     method impl-method:sym<a>($/) {
         make Method.new(
-            attrs-and_vis         =>  $<attrs-and_vis>.made,
+            attrs-and-vis         =>  $<attrs-and-vis>.made,
             maybe-default         =>  $<maybe-default>.made,
             maybe-unsafe          =>  $<maybe-unsafe>.made,
             ident                 =>  $<ident>.made,
             generic-params        =>  $<generic-params>.made,
-            fn-decl_with_self     =>  $<fn-decl_with_self>.made,
-            maybe-where_clause    =>  $<maybe-where_clause>.made,
-            inner-attrs_and_block =>  $<inner-attrs_and_block>.made,
+            fn-decl-with-self     =>  $<fn-decl-with-self>.made,
+            maybe-where-clause    =>  $<maybe-where-clause>.made,
+            inner-attrs-and-block =>  $<inner-attrs-and-block>.made,
         )
     }
 
     method impl-method:sym<b>($/) {
         make Method.new(
-            attrs-and_vis         =>  $<attrs-and_vis>.made,
+            attrs-and-vis         =>  $<attrs-and-vis>.made,
             maybe-default         =>  $<maybe-default>.made,
             maybe-unsafe          =>  $<maybe-unsafe>.made,
             ident                 =>  $<ident>.made,
             generic-params        =>  $<generic-params>.made,
-            fn-decl_with_self     =>  $<fn-decl_with_self>.made,
-            maybe-where_clause    =>  $<maybe-where_clause>.made,
-            inner-attrs_and_block =>  $<inner-attrs_and_block>.made,
+            fn-decl-with-self     =>  $<fn-decl-with-self>.made,
+            maybe-where-clause    =>  $<maybe-where-clause>.made,
+            inner-attrs-and-block =>  $<inner-attrs-and-block>.made,
         )
     }
 
     method impl-method:sym<c>($/) {
         make Method.new(
-            attrs-and_vis         =>  $<attrs-and_vis>.made,
+            attrs-and-vis         =>  $<attrs-and-vis>.made,
             maybe-default         =>  $<maybe-default>.made,
             maybe-unsafe          =>  $<maybe-unsafe>.made,
             maybe-abi             =>  $<maybe-abi>.made,
             ident                 =>  $<ident>.made,
             generic-params        =>  $<generic-params>.made,
-            fn-decl_with_self     =>  $<fn-decl_with_self>.made,
-            maybe-where_clause    =>  $<maybe-where_clause>.made,
-            inner-attrs_and_block =>  $<inner-attrs_and_block>.made,
+            fn-decl-with-self     =>  $<fn-decl-with-self>.made,
+            maybe-where-clause    =>  $<maybe-where-clause>.made,
+            inner-attrs-and-block =>  $<inner-attrs-and-block>.made,
         )
     }
 }
+

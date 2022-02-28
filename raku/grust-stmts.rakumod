@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role Stmts::Rules {
 
     rule maybe-stmts { <stmts>? <nonblock-expr>? }
@@ -8,7 +7,7 @@ our role Stmts::Rules {
     rule stmts { <stmt>+ }
 
     proto rule stmt { * }
-    rule stmt:sym<a> { <maybe-outer-attrs> <let> }
+    #rule stmt:sym<a> { <maybe-outer-attrs> <let> }
     rule stmt:sym<b> { <stmt-item> }
     rule stmt:sym<c> { <PUB> <stmt-item> }
     rule stmt:sym<d> { <outer-attrs> <stmt-item> }
@@ -44,3 +43,4 @@ our role Stmts::Actions {
     method stmt:sym<i>($/) { make $<nonblock-expr>.made }
     method stmt:sym<j>($/) { }
 }
+

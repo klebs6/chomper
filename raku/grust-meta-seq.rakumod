@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role MetaSeq::Rules {
 
     rule meta-seq {
@@ -14,4 +13,5 @@ our role MetaSeq::Actions {
         make $<meta-item>.made
     }
 }
+
 

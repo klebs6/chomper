@@ -11,7 +11,7 @@ our role PatField::Rules {
     rule pat-field:sym<box-bound-ident> {                 <BOX>  <binding-mode>  <ident>  }
     rule pat-field:sym<ident-pat>       {                                        <ident>  ':' <pat> }
     rule pat-field:sym<bound-ident-pat> {                        <binding-mode>  <ident>  ':' <pat> }
-    rule pat-field:sym<lit-pat>         { <LIT-INTEGER>                                   ':' <pat> }
+    rule pat-field:sym<lit-pat>         { <LIT-INT>                                   ':' <pat> }
 
     rule pat-fields { <pat-field>+ %% <comma> }
 }
@@ -72,3 +72,4 @@ our role PatField::Actions {
         )
     }
 }
+

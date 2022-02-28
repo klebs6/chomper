@@ -3,24 +3,25 @@ use grust-model;
 
 our role ForeignFn::Rules {
 
-    rule item-foreign_fn {
+    rule item-foreign-fn {
         <FN> 
         <ident> 
         <generic-params> 
-        <fn-decl_allow_variadic> 
-        <maybe-where_clause> ';'
+        <fn-decl-allow-variadic> 
+        <maybe-where-clause> ';'
     }
 }
 
 our role ForeignFn::Actions {
 
-    method item-foreign_fn($/) {
+    method item-foreign-fn($/) {
         make ForeignFn.new(
             ident                  =>  $<ident>.made,
             generic-params         =>  $<generic-params>.made,
-            fn-decl_allow_variadic =>  $<fn-decl_allow_variadic>.made,
-            maybe-where_clause     =>  $<maybe-where_clause>.made,
+            fn-decl-allow-variadic =>  $<fn-decl-allow-variadic>.made,
+            maybe-where-clause     =>  $<maybe-where-clause>.made,
         )
     }
 }
+
 

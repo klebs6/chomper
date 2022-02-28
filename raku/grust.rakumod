@@ -2,27 +2,6 @@ unit package Rust::Lexer;
 
 my $pushback-len = 4;
 
-enum XState <
-str
-rawstr
-rawstr_esc_begin
-rawstr_esc_body
-rawstr_esc_end
-byte
-bytestr
-rawbytestr
-rawbytestr_nohash
-pound
-shebang_or_attr
-ltorchar
-linecomment
-doc_line
-blockcomment
-doc_block
-suffix
-INITIAL
->;
-
 class XStateStack {
     has XState @.start-condition-stack = [];
     method peek(-->XState) {
@@ -47,11 +26,11 @@ grammar G {
 
     }
 
-    method push_state(XState $.state) {
+    method push-state(XState $.state) {
 
     }
 
-    method pop_state {
+    method pop-state {
 
     }
 
@@ -146,3 +125,4 @@ grammar G {
     }
 
 }
+

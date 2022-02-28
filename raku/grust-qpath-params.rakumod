@@ -13,3 +13,4 @@ our role QPathParams::Actions {
         make $<generic-args>.made
     }
 }
+

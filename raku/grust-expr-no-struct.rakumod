@@ -16,8 +16,8 @@ our role ExprNoStruct::Rules {
     rule expr-nostruct:sym<c>  { <SELF> }
     rule expr-nostruct:sym<d>  { <macro-expr> }
     rule expr-nostruct:sym<e>  { <expr-nostruct> '?' }
-    rule expr-nostruct:sym<f>  { <expr-nostruct> '.' <path-generic_args_with_colons> }
-    rule expr-nostruct:sym<g>  { <expr-nostruct> '.' <LIT-INTEGER> }
+    rule expr-nostruct:sym<f>  { <expr-nostruct> '.' <path-generic-args-with-colons> }
+    rule expr-nostruct:sym<g>  { <expr-nostruct> '.' <LIT-INT> }
     rule expr-nostruct:sym<h>  { <expr-nostruct> '[' <maybe-expr> ']' }
     rule expr-nostruct:sym<i>  { <expr-nostruct> '(' <maybe-exprs> ')' }
     rule expr-nostruct:sym<j>  { '[' <vec-expr> ']' }
@@ -72,10 +72,10 @@ our role ExprNoStruct::Rules {
     rule expr-nostruct:sym<ba> { <expr-nostruct> <AS> <ty> }
     rule expr-nostruct:sym<bb> { <expr-nostruct> ':' <ty> }
     rule expr-nostruct:sym<bc> { <BOX> <expr> }
-    rule expr-nostruct:sym<bd> { <expr-qualified_path> }
+    rule expr-nostruct:sym<bd> { <expr-qualified-path> }
     rule expr-nostruct:sym<be> { <block-expr> }
     rule expr-nostruct:sym<bf> { <block> }
-    rule expr-nostruct:sym<bg> { <nonblock-prefix_expr_nostruct> }
+    rule expr-nostruct:sym<bg> { <nonblock-prefix-expr-nostruct> }
 }
 
 our role ExprNoStruct::Actions {
@@ -113,7 +113,7 @@ our role ExprNoStruct::Actions {
     method expr-nostruct:sym<f>($/) {
         make ExprField.new(
             expr-nostruct                 =>  $<expr-nostruct>.made,
-            path-generic_args_with_colons =>  $<path-generic_args_with_colons>.made,
+            path-generic-args-with-colons =>  $<path-generic-args-with-colons>.made,
         )
     }
 
@@ -446,7 +446,7 @@ our role ExprNoStruct::Actions {
     }
 
     method expr-nostruct:sym<bd>($/) {
-        make $<expr-qualified_path>.made
+        make $<expr-qualified-path>.made
     }
 
     method expr-nostruct:sym<be>($/) {
@@ -458,6 +458,7 @@ our role ExprNoStruct::Actions {
     }
 
     method expr-nostruct:sym<bg>($/) {
-        make $<nonblock-prefix_expr_nostruct>.made
+        make $<nonblock-prefix-expr-nostruct>.made
     }
 }
+

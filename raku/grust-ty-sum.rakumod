@@ -59,3 +59,4 @@ our role TySums::Actions {
         make $<lifetime>.made
     }
 }
+

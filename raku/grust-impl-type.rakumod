@@ -3,7 +3,7 @@ use grust-model;
 our role ImplType::Rules {
 
     rule impl-type {
-        <attrs-and_vis> 
+        <attrs-and-vis> 
         <maybe-default> 
         <TYPE> 
         <ident> 
@@ -18,7 +18,7 @@ our role ImplType::Actions {
 
     method impl-type($/) {
         make ImplType.new(
-            attrs-and_vis  =>  $<attrs-and_vis>.made,
+            attrs-and-vis  =>  $<attrs-and-vis>.made,
             maybe-default  =>  $<maybe-default>.made,
             ident          =>  $<ident>.made,
             generic-params =>  $<generic-params>.made,
@@ -26,3 +26,4 @@ our role ImplType::Actions {
         )
     }
 }
+

@@ -26,3 +26,4 @@ our role Crate::Actions {
         make $<SHEBANG-LINE>.made
     }
 }
+

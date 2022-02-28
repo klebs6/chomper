@@ -22,3 +22,4 @@ our role ForSized::Actions {
         )
     }
 }
+

@@ -3,14 +3,14 @@ use grust-model;
 
 our role ForeignStatic::Rules {
 
-    rule item-foreign_static {
+    rule item-foreign-static {
         <maybe-mut> <ident> ':' <ty> ';'
     }
 }
 
 our role ForeignStatic::Actions {
 
-    method item-foreign_static($/) {
+    method item-foreign-static($/) {
         make StaticItem.new(
             maybe-mut =>  $<maybe-mut>.made,
             ident     =>  $<ident>.made,
@@ -18,4 +18,5 @@ our role ForeignStatic::Actions {
         )
     }
 }
+
 
