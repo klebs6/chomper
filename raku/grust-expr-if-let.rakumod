@@ -5,11 +5,11 @@ our role ExprIfLet::Rules {
     proto rule expr-if-let { * }
 
     rule expr-if-let:sym<a> {
-        <IF> <LET> <pat> '=' <expr-nostruct> <block>
+        <if_> <let_> <pat> '=' <expr-nostruct> <block>
     }
 
     rule expr-if-let:sym<b> {
-        <IF> <LET> <pat> '=' <expr-nostruct> <block> <ELSE> <block-or-if>
+        <if_> <let_> <pat> '=' <expr-nostruct> <block> <else_> <block-or-if>
     }
 }
 
@@ -32,5 +32,3 @@ our role ExprIfLet::Actions {
         )
     }
 }
-
-

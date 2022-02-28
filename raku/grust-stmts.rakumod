@@ -2,7 +2,10 @@ use grust-model;
 
 our role Stmts::Rules {
 
-    rule maybe-stmts { <stmts>? <nonblock-expr>? }
+    rule maybe-stmts { 
+        <stmts>? 
+        <nonblock-expr>? 
+    }
 
     rule stmts { <stmt>+ }
 
@@ -11,7 +14,8 @@ our role Stmts::Rules {
     rule stmt:sym<e> { <outer-attrs>? <PUB>? <stmt-item> }
     rule stmt:sym<f> { <full-block-expr> }
     rule stmt:sym<g> { <maybe-outer-attrs> <block> }
-    rule stmt:sym<i> { [<outer-attrs>? <nonblock-expr>]? ';' }
+    rule stmt:sym<i> { <outer-attrs>? <nonblock-expr> ';' }
+    rule stmt:sym<j> { ';' }
 }
 
 our role Stmts::Actions {

@@ -1,10 +1,9 @@
 use grust-model;
 
-
 our role ItemUnion::Rules {
 
     rule item-union {
-        <UNION> 
+        <union> 
         <ident> 
         <generic-params> 
         <maybe-where-clause> 
@@ -23,5 +22,3 @@ our role ItemUnion::Actions {
         )
     }
 }
-
-

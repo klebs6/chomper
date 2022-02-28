@@ -30,4 +30,3 @@ our role Bounds::Actions {
     method bound:sym<lifetime>($/)  { make $<lifetime>.made }
     method bound:sym<trait-ref>($/) { make $<trait-ref>.made }
 }
-

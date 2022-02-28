@@ -3,7 +3,7 @@ use grust-model;
 our role ExprWhileLet::Rules {
 
     rule expr-while-let {
-        <maybe-label> <WHILE> <LET> <pat> '=' <expr-nostruct> <block>
+        <maybe-label> <while_> <let_> <pat> '=' <expr-nostruct> <block>
     }
 }
 
@@ -18,5 +18,3 @@ our role ExprWhileLet::Actions {
         )
     }
 }
-
-

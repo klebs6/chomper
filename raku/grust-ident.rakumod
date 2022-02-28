@@ -8,12 +8,12 @@ our role Ident::Rules {
 
     proto rule ident { * }
 
-    rule ident:sym<ident>   { <IDENT> }
+    rule ident:sym<ident>   { <ident_> }
 
     # Weak keywords that can be used as identifiers
-    rule ident:sym<catch>   { <CATCH> }
-    rule ident:sym<default> { <DEFAULT> }
-    rule ident:sym<union>   { <UNION> }
+    rule ident:sym<catch>   { <catch> }
+    rule ident:sym<default> { <default_> }
+    rule ident:sym<union>   { <union> }
 }
 
 our role Ident::Actions {
@@ -38,4 +38,3 @@ our role Ident::Actions {
         make Ident.new(value => ~$/)
     }
 }
-

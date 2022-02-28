@@ -34,4 +34,3 @@ our role Block::Actions {
         )
     }
 }
-

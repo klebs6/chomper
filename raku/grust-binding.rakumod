@@ -24,4 +24,3 @@ our role Binding::Actions {
         )
     }
 }
-

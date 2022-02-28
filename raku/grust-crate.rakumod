@@ -9,7 +9,7 @@ our role Crate::Rules {
     }
 
     rule maybe-shebang {
-        <SHEBANG-LINE>?
+        <shebang-line>?
     }
 }
 
@@ -23,7 +23,6 @@ our role Crate::Actions {
     }
 
     method maybe-shebang($/) {
-        make $<SHEBANG-LINE>.made
+        make $<shebang-line>.made
     }
 }
-

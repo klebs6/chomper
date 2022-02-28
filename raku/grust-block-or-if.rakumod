@@ -12,4 +12,3 @@ our role BlockOrIf::Actions {
     method block-or-if:sym<expr-if>($/)     { make $<expr-if>.made }
     method block-or-if:sym<expr-if-let>($/) { make $<expr-if-let>.made }
 }
-

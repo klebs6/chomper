@@ -8,12 +8,12 @@ our role IdentsOrSelf::Rules {
     }
 
     proto rule idents-or-self-tail  { * }
-    rule idents-or-self-tail:sym<a> { <AS> <ident> }
+    rule idents-or-self-tail:sym<a> { <as_> <ident> }
     rule idents-or-self-tail:sym<b> { ',' <ident-or-self> }
 
     proto rule ident-or-self        { * }
     rule ident-or-self:sym<ident>   { <ident> }
-    rule ident-or-self:sym<self>    { <SELF>  }
+    rule ident-or-self:sym<self>    { <self_>  }
 }
 
 our role IdentsOrSelf::Actions {
@@ -38,4 +38,3 @@ our role IdentsOrSelf::Actions {
     method ident-or-self:sym<ident>($/) { make $<ident>.made }
     method ident-or-self:sym<self>($/)  { make ~$/ }
 }
-

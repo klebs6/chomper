@@ -1,10 +1,9 @@
 use grust-model;
 
-
 our role ForeignFn::Rules {
 
     rule item-foreign-fn {
-        <FN> 
+        <fn> 
         <ident> 
         <generic-params> 
         <fn-decl-allow-variadic> 
@@ -23,5 +22,3 @@ our role ForeignFn::Actions {
         )
     }
 }
-
-

@@ -1,16 +1,15 @@
 use grust-model;
 
-
 our role ItemStatic::Rules {
 
     proto rule item-static { * }
 
     rule item-static:sym<a> {
-        <STATIC> <ident> ':' <ty> '=' <expr> ';'
+        <static> <ident> ':' <ty> '=' <expr> ';'
     }
 
     rule item-static:sym<b> {
-        <STATIC> <MUT> <ident> ':' <ty> '=' <expr> ';'
+        <static> <mut> <ident> ':' <ty> '=' <expr> ';'
     }
 }
 
@@ -32,4 +31,3 @@ our role ItemStatic::Actions {
         )
     }
 }
-

@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role ForeignStatic::Rules {
 
     rule item-foreign-static {
@@ -18,5 +17,3 @@ our role ForeignStatic::Actions {
         )
     }
 }
-
-

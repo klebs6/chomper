@@ -3,7 +3,7 @@ use grust-model;
 our role Guard::Rules {
 
     rule maybe-guard {
-        [ <IF> <expr-nostruct> ]?
+        [ <if_> <expr-nostruct> ]?
     }
 }
 
@@ -13,5 +13,3 @@ our role Guard::Actions {
         make $<expr-nostruct>.made
     }
 }
-
-

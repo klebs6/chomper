@@ -15,7 +15,7 @@ our role GenericArgs::Rules {
     # ty-sum and then continues with the rest of
     # generic-values.
     rule generic-args:sym<b> {
-        <SHL> <ty-qualified-path-and-generic-values> '>'
+        <shl> <ty-qualified-path-and-generic-values> '>'
     }
 
     rule generic-values {
@@ -39,4 +39,3 @@ our role GenericArgs::Actions {
         )
     }
 }
-

@@ -5,7 +5,7 @@ our role ImplType::Rules {
     rule impl-type {
         <attrs-and-vis> 
         <maybe-default> 
-        <TYPE> 
+        <type> 
         <ident> 
         <generic-params> 
         '=' 
@@ -26,4 +26,3 @@ our role ImplType::Actions {
         )
     }
 }
-

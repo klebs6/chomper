@@ -6,47 +6,47 @@ our role Expr::Rules {
 
     rule expr-tail:sym<expr-q>                        { '?' }
     rule expr-tail:sym<dotted-expr>                   { '.' <path-generic-args-with-colons> }
-    rule expr-tail:sym<dotted-expr-lit>               { '.' <LIT-INT> }
+    rule expr-tail:sym<dotted-expr-lit>               { '.' <lit-int> }
     rule expr-tail:sym<expr-bracket-tail>             { '[' <maybe-expr> ']' }
     rule expr-tail:sym<expr-paren-tail>               { '(' <maybe-exprs> ')' }
     rule expr-tail:sym<expr-eq-expr>                  { '=' <expr> }
-    rule expr-tail:sym<expr-shleq-expr>               { <SHLEQ> <expr> }
-    rule expr-tail:sym<expr-shreq-expr>               { <SHREQ> <expr> }
-    rule expr-tail:sym<expr-minuseq-expr>             { <MINUSEQ> <expr> }
-    rule expr-tail:sym<expr-andeq-expr>               { <ANDEQ> <expr> }
-    rule expr-tail:sym<expr-oreq-expr>                { <OREQ> <expr> }
-    rule expr-tail:sym<expr-pluseq-expr>              { <PLUSEQ> <expr> }
-    rule expr-tail:sym<expr-stareq-expr>              { <STAREQ> <expr> }
-    rule expr-tail:sym<expr-slasheq-expr>             { <SLASHEQ> <expr> }
-    rule expr-tail:sym<expr-careteq-expr>             { <CARETEQ> <expr> }
-    rule expr-tail:sym<expr-percenteq-expr>           { <PERCENTEQ> <expr> }
-    rule expr-tail:sym<expr-oror-expr>                { <OROR> <expr> }
-    rule expr-tail:sym<expr-andand-expr>              { <ANDAND> <expr> }
-    rule expr-tail:sym<expr-eqeq-expr>                { <EQEQ> <expr> }
-    rule expr-tail:sym<expr-ne-expr>                  { <NE> <expr> }
+    rule expr-tail:sym<expr-shleq-expr>               { <shleq> <expr> }
+    rule expr-tail:sym<expr-shreq-expr>               { <shreq> <expr> }
+    rule expr-tail:sym<expr-minuseq-expr>             { <minuseq> <expr> }
+    rule expr-tail:sym<expr-andeq-expr>               { <andeq> <expr> }
+    rule expr-tail:sym<expr-oreq-expr>                { <oreq> <expr> }
+    rule expr-tail:sym<expr-pluseq-expr>              { <pluseq> <expr> }
+    rule expr-tail:sym<expr-stareq-expr>              { <stareq> <expr> }
+    rule expr-tail:sym<expr-slasheq-expr>             { <slasheq> <expr> }
+    rule expr-tail:sym<expr-careteq-expr>             { <careteq> <expr> }
+    rule expr-tail:sym<expr-percenteq-expr>           { <percenteq> <expr> }
+    rule expr-tail:sym<expr-oror-expr>                { <oror> <expr> }
+    rule expr-tail:sym<expr-andand-expr>              { <andand> <expr> }
+    rule expr-tail:sym<expr-eqeq-expr>                { <eqeq> <expr> }
+    rule expr-tail:sym<expr-ne-expr>                  { <ne_> <expr> }
     rule expr-tail:sym<expr-lt-expr>                  { '<' <expr> }
     rule expr-tail:sym<expr-gt-expr>                  { '>' <expr> }
-    rule expr-tail:sym<expr-le-expr>                  { <LE> <expr> }
-    rule expr-tail:sym<expr-ge-expr>                  { <GE> <expr> }
+    rule expr-tail:sym<expr-le-expr>                  { <le_> <expr> }
+    rule expr-tail:sym<expr-ge-expr>                  { <ge_> <expr> }
     rule expr-tail:sym<expr-pipe-expr>                { '|' <expr> }
     rule expr-tail:sym<expr-caret-expr>               { '^' <expr> }
     rule expr-tail:sym<expr-amp-expr>                 { '&' <expr> }
-    rule expr-tail:sym<expr-shl-expr>                 { <SHL> <expr> }
-    rule expr-tail:sym<expr-shr-expr>                 { <SHR> <expr> }
+    rule expr-tail:sym<expr-shl-expr>                 { <shl> <expr> }
+    rule expr-tail:sym<expr-shr-expr>                 { <shr> <expr> }
     rule expr-tail:sym<expr-plus-expr>                { '+' <expr> }
     rule expr-tail:sym<expr-minus-expr>               { '-' <expr> }
     rule expr-tail:sym<expr-star-expr>                { '*' <expr> }
     rule expr-tail:sym<expr-slash-expr>               { '/' <expr> }
     rule expr-tail:sym<expr-mod-expr>                 { '%' <expr> }
-    rule expr-tail:sym<expr-dotdot>                   { <DOTDOT> }
-    rule expr-tail:sym<expr-dotdot-expr>              { <DOTDOT> <expr> }
-    rule expr-tail:sym<expr-as-ty>                    { <AS> <ty> }
+    rule expr-tail:sym<expr-dotdot>                   { <dotdot> }
+    rule expr-tail:sym<expr-dotdot-expr>              { <dotdot> <expr> }
+    rule expr-tail:sym<expr-as-ty>                    { <as_> <ty> }
     rule expr-tail:sym<expr-ty>                       { ':' <ty> }
 
     proto rule expr-base { * }
 
     rule expr-base:sym<lit>  { <lit> }
-    rule expr-base:sym<self> { <SELF> }
+    rule expr-base:sym<self> { <self_> }
 
     rule expr-base:sym<macro-expr>                    { <macro-expr> }
 
@@ -58,23 +58,23 @@ our role Expr::Rules {
     rule expr-base:sym<struct-expr>                   { <path-expr> '{' <struct-expr-fields> '}' }
     rule expr-base:sym<paren-tail>                    { '(' <maybe-exprs> ')' }
     rule expr-base:sym<brack-tail>                    { '[' <vec-expr> ']' }
-    rule expr-base:sym<continue>                      { <CONTINUE> }
-    rule expr-base:sym<continue-ident>                { <CONTINUE> <ident> }
-    rule expr-base:sym<return>                        { <RETURN> }
-    rule expr-base:sym<break>                         { <BREAK> }
-    rule expr-base:sym<break-ident>                   { <BREAK> <ident> }
-    rule expr-base:sym<yield>                         { <YIELD> }
-    rule expr-base:sym<dotdot>                        { <DOTDOT> }
+    rule expr-base:sym<continue>                      { <continue_> }
+    rule expr-base:sym<continue-ident>                { <continue_> <ident> }
+    rule expr-base:sym<return>                        { <return_> }
+    rule expr-base:sym<break>                         { <break_> }
+    rule expr-base:sym<break-ident>                   { <break_> <ident> }
+    rule expr-base:sym<yield>                         { <yield> }
+    rule expr-base:sym<dotdot>                        { <dotdot> }
     rule expr-base:sym<expr-qualified-path>           { <expr-qualified-path> }
     rule expr-base:sym<block-expr>                    { <block-expr> }
     rule expr-base:sym<block>                         { <block> }
     rule expr-base:sym<nonblock-prefix-expr>          { <nonblock-prefix-expr> }
 
     proto rule expr-prefix { * }
-    rule expr-prefix:sym<return-expr>   { <RETURN> }
-    rule expr-prefix:sym<yield-expr>    { <YIELD>  }
-    rule expr-prefix:sym<dotdot-expr>   { <DOTDOT> }
-    rule expr-prefix:sym<box-expr>      { <BOX>    }
+    rule expr-prefix:sym<return-expr>   { <return_> }
+    rule expr-prefix:sym<yield-expr>    { <yield>  }
+    rule expr-prefix:sym<dotdot-expr>   { <dotdot> }
+    rule expr-prefix:sym<box-expr>      { <box>    }
 
     rule expr {
         <expr-prefix>* 

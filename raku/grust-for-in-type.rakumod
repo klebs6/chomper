@@ -3,7 +3,7 @@ use grust-model;
 our role ForInType::Rules {
 
     rule for-in-type {
-        <FOR> '<' <maybe-lifetimes> '>' <for-in-type-suffix>
+        <for_> '<' <maybe-lifetimes> '>' <for-in-type-suffix>
     }
 
     proto rule for-in-type-suffix { * }
@@ -26,4 +26,3 @@ our role ForInType::Actions {
     method for-in-type-suffix:sym<trait-ref>($/)  { make $<trait-ref>.made }
     method for-in-type-suffix:sym<ty-closure>($/) { make $<ty-closure>.made }
 }
-

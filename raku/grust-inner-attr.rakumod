@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role InnerAttrs::Rules {
 
     rule maybe-inner-attrs {
@@ -14,11 +13,11 @@ our role InnerAttrs::Rules {
     proto rule inner-attr { * }
 
     rule inner-attr:sym<a> {
-        <SHEBANG> '[' <meta-item> ']'
+        <shebang> '[' <meta-item> ']'
     }
 
     rule inner-attr:sym<b> {
-        <INNER-DOC-COMMENT>
+        <inner-doc-comment>
     }
 }
 
@@ -44,4 +43,3 @@ our role InnerAttrs::Actions {
         )
     }
 }
-

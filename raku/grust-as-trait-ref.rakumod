@@ -2,7 +2,7 @@ use grust-model;
 
 our role AsTraitRef::Rules {
     rule maybe-as-trait-ref {
-        [<AS> <trait-ref>]?
+        [<as_> <trait-ref>]?
     }
 }
 
@@ -11,4 +11,3 @@ our role AsTraitRef::Actions {
         make $<trait-ref>.made
     }
 }
-

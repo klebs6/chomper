@@ -5,11 +5,11 @@ our role ExprIf::Rules {
     proto rule expr-if { * }
 
     rule expr-if:sym<a> {
-        <IF> <expr-nostruct> <block>
+        <if_> <expr-nostruct> <block>
     }
 
     rule expr-if:sym<b> {
-        <IF> <expr-nostruct> <block> <ELSE> <block-or-if>
+        <if_> <expr-nostruct> <block> <else_> <block-or-if>
     }
 }
 
@@ -30,4 +30,3 @@ our role ExprIf::Actions {
         )
     }
 }
-

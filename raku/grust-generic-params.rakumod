@@ -65,4 +65,3 @@ our role GenericParams::Actions {
         )
     }
 }
-

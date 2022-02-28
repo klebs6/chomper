@@ -3,7 +3,7 @@ use grust-model;
 our role ExprWhile::Rules {
 
     rule expr-while {
-        <maybe-label> <WHILE> <expr-nostruct> <block>
+        <maybe-label> <while_> <expr-nostruct> <block>
     }
 }
 
@@ -17,5 +17,3 @@ our role ExprWhile::Actions {
         )
     }
 }
-
-

@@ -5,10 +5,10 @@ our role ExprMatch::Rules {
 
     proto rule expr-match { * }
 
-    rule expr-match:sym<a> { <MATCH> <expr-nostruct> '{' '}' }
-    rule expr-match:sym<b> { <MATCH> <expr-nostruct> '{' <match-clauses> '}' }
-    rule expr-match:sym<c> { <MATCH> <expr-nostruct> '{' <match-clauses> <nonblock-match-clause> '}' }
-    rule expr-match:sym<d> { <MATCH> <expr-nostruct> '{' <nonblock-match-clause> '}' }
+    rule expr-match:sym<a> { <MATCH_> <expr-nostruct> '{' '}' }
+    rule expr-match:sym<b> { <MATCH_> <expr-nostruct> '{' <match-clauses> '}' }
+    rule expr-match:sym<c> { <MATCH_> <expr-nostruct> '{' <match-clauses> <nonblock-match-clause> '}' }
+    rule expr-match:sym<d> { <MATCH_> <expr-nostruct> '{' <nonblock-match-clause> '}' }
 
     rule match-clauses { <match-clause>+ }
 

@@ -1,11 +1,10 @@
 use grust-model;
 
-
 our role ForSized::Rules {
 
     rule for-sized {
         [
-            <FOR> 
+            <for_> 
             [
                 | [ '?' <ident> ]
                 | [ <ident> '?' ]
@@ -22,4 +21,3 @@ our role ForSized::Actions {
         )
     }
 }
-

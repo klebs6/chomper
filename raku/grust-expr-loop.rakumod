@@ -3,7 +3,7 @@ use grust-model;
 our role ExprLoop::Rules {
 
     rule expr-loop {
-        <maybe-label> <LOOP> <block>
+        <maybe-label> <loop_> <block>
     }
 }
 
@@ -16,5 +16,3 @@ our role ExprLoop::Actions {
         )
     }
 }
-
-

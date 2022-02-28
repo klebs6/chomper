@@ -54,4 +54,3 @@ our role ItemMacro::Actions {
         )
     }
 }
-

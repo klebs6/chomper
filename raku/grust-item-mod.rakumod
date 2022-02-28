@@ -1,20 +1,19 @@
 use grust-model;
 
-
 our role ItemMod::Rules {
 
     proto rule item-mod { * }
 
     rule item-mod:sym<a> {
-        <MOD> <ident> ';'
+        <mod_> <ident> ';'
     }
 
     rule item-mod:sym<b> {
-        <MOD> <ident> '{' <inner-attrs>? <maybe-mod-items> '}'
+        <mod_> <ident> '{' <inner-attrs>? <maybe-mod-items> '}'
     }
 
     rule item-foreign-mod {
-        <EXTERN> <maybe-abi> '{' <inner-attrs>? <maybe-foreign-items> '}'
+        <extern> <maybe-abi> '{' <inner-attrs>? <maybe-foreign-items> '}'
     }
 
     rule maybe-abi {
@@ -49,5 +48,3 @@ our role ItemMod::Actions {
         make $<str>.made
     }
 }
-
-

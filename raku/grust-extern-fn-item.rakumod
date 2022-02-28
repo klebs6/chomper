@@ -3,7 +3,7 @@ use grust-model;
 our role ExternFnItem::Rules {
 
     rule extern-fn-item {
-        <EXTERN> <maybe-abi> <item-fn>
+        <extern> <maybe-abi> <item-fn>
     }
 }
 
@@ -16,5 +16,3 @@ our role ExternFnItem::Actions {
         )
     }
 }
-
-

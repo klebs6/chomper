@@ -3,7 +3,12 @@ use grust-model;
 our role ExprFor::Rules {
 
     rule expr-for {
-        <maybe-label> <FOR> <pat> <IN> <expr-nostruct> <block>
+        <maybe-label> 
+        <for_> 
+        <pat> 
+        <in> 
+        <expr-nostruct> 
+        <block>
     }
 }
 
@@ -18,5 +23,3 @@ our role ExprFor::Actions {
         )
     }
 }
-
-

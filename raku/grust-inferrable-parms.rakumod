@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role InferrableParams::Rules {
 
     rule inferrable-params {
@@ -25,4 +24,3 @@ our role InferrableParams::Actions {
         )
     }
 }
-

@@ -4,100 +4,107 @@ use grust-model;
 
 our role NonBlockExpr::Rules {
 
-    proto rule nonblock-expr { * }
+    rule nonblock-expr {  <nonblock-expr-base> <nonblock-expr-tail>* }
 
-    rule nonblock-expr:sym<a>  { <lit> }
+    #---------------------
+    proto rule nonblock-expr-base { * }
 
-    rule nonblock-expr:sym<b>  { 
+    rule nonblock-expr-base:sym<lit>  { <lit> }
+
+    rule nonblock-expr-base:sym<path-expr>  { 
         #{self.set-prec(IDENT)} 
         <path-expr> 
     }
 
-    rule nonblock-expr:sym<c>  { <SELF> }
-    rule nonblock-expr:sym<d>  { <macro-expr> }
-    rule nonblock-expr:sym<e>  { <path-expr> '{' <struct-expr-fields> '}' }
-    rule nonblock-expr:sym<f>  { <nonblock-expr> '?' }
-    rule nonblock-expr:sym<g>  { <nonblock-expr> '.' <path-generic-args-with-colons> }
-    rule nonblock-expr:sym<h>  { <nonblock-expr> '.' <LIT-INT> }
-    rule nonblock-expr:sym<i>  { <nonblock-expr> '[' <maybe-expr> ']' }
-    rule nonblock-expr:sym<j>  { <nonblock-expr> '(' <maybe-exprs> ')' }
-    rule nonblock-expr:sym<k>  { '[' <vec-expr> ']' }
-    rule nonblock-expr:sym<l>  { '(' <maybe-exprs> ')' }
-    rule nonblock-expr:sym<m>  { <CONTINUE> }
-    rule nonblock-expr:sym<n>  { <CONTINUE> <lifetime> }
-    rule nonblock-expr:sym<o>  { <RETURN> }
-    rule nonblock-expr:sym<p>  { <RETURN> <expr> }
-    rule nonblock-expr:sym<q>  { <BREAK> }
-    rule nonblock-expr:sym<r>  { <BREAK> <lifetime> }
-    rule nonblock-expr:sym<s>  { <YIELD> }
-    rule nonblock-expr:sym<t>  { <YIELD> <expr> }
-    rule nonblock-expr:sym<u>  { <nonblock-expr> '=' <expr> }
-    rule nonblock-expr:sym<v>  { <nonblock-expr> <SHLEQ> <expr> }
-    rule nonblock-expr:sym<w>  { <nonblock-expr> <SHREQ> <expr> }
-    rule nonblock-expr:sym<x>  { <nonblock-expr> <MINUSEQ> <expr> }
-    rule nonblock-expr:sym<y>  { <nonblock-expr> <ANDEQ> <expr> }
-    rule nonblock-expr:sym<z>  { <nonblock-expr> <OREQ> <expr> }
-    rule nonblock-expr:sym<aa> { <nonblock-expr> <PLUSEQ> <expr> }
-    rule nonblock-expr:sym<ab> { <nonblock-expr> <STAREQ> <expr> }
-    rule nonblock-expr:sym<ac> { <nonblock-expr> <SLASHEQ> <expr> }
-    rule nonblock-expr:sym<ad> { <nonblock-expr> <CARETEQ> <expr> }
-    rule nonblock-expr:sym<ae> { <nonblock-expr> <PERCENTEQ> <expr> }
-    rule nonblock-expr:sym<af> { <nonblock-expr> <OROR> <expr> }
-    rule nonblock-expr:sym<ag> { <nonblock-expr> <ANDAND> <expr> }
-    rule nonblock-expr:sym<ah> { <nonblock-expr> <EQEQ> <expr> }
-    rule nonblock-expr:sym<ai> { <nonblock-expr> <NE> <expr> }
-    rule nonblock-expr:sym<aj> { <nonblock-expr> '<' <expr> }
-    rule nonblock-expr:sym<ak> { <nonblock-expr> '>' <expr> }
-    rule nonblock-expr:sym<al> { <nonblock-expr> <LE> <expr> }
-    rule nonblock-expr:sym<am> { <nonblock-expr> <GE> <expr> }
-    rule nonblock-expr:sym<an> { <nonblock-expr> '|' <expr> }
-    rule nonblock-expr:sym<ao> { <nonblock-expr> '^' <expr> }
-    rule nonblock-expr:sym<ap> { <nonblock-expr> '&' <expr> }
-    rule nonblock-expr:sym<aq> { <nonblock-expr> <SHL> <expr> }
-    rule nonblock-expr:sym<ar> { <nonblock-expr> <SHR> <expr> }
-    rule nonblock-expr:sym<as> { <nonblock-expr> '+' <expr> }
-    rule nonblock-expr:sym<at> { <nonblock-expr> '-' <expr> }
-    rule nonblock-expr:sym<au> { <nonblock-expr> '*' <expr> }
-    rule nonblock-expr:sym<av> { <nonblock-expr> '/' <expr> }
-    rule nonblock-expr:sym<aw> { <nonblock-expr> '%' <expr> }
-    rule nonblock-expr:sym<ax> { <nonblock-expr> <DOTDOT> }
-    rule nonblock-expr:sym<ay> { <nonblock-expr> <DOTDOT> <expr> }
-    rule nonblock-expr:sym<az> { <DOTDOT> <expr> }
-    rule nonblock-expr:sym<ba> { <DOTDOT> }
-    rule nonblock-expr:sym<bb> { <nonblock-expr> <AS> <ty> }
-    rule nonblock-expr:sym<bc> { <nonblock-expr> ':' <ty> }
-    rule nonblock-expr:sym<bd> { <BOX> <expr> }
-    rule nonblock-expr:sym<be> { <expr-qualified-path> }
-    rule nonblock-expr:sym<bf> { <nonblock-prefix-expr> }
+    rule nonblock-expr-base:sym<self>                  { <SELF> }
+    rule nonblock-expr-base:sym<macro-expr>            { <macro-expr> }
+    rule nonblock-expr-base:sym<struct-expr>           { <path-expr> '{' <struct-expr-fields> '}' }
+    rule nonblock-expr-base:sym<vec-expr>              { '[' <vec-expr> ']' }
+    rule nonblock-expr-base:sym<paren-expr>            { '(' <maybe-exprs> ')' }
+    rule nonblock-expr-base:sym<continue>              { <CONTINUE> }
+    rule nonblock-expr-base:sym<continue-lt>           { <CONTINUE> <lifetime> }
+    rule nonblock-expr-base:sym<return>                { <RETURN> }
+    rule nonblock-expr-base:sym<return-expr>           { <RETURN> <expr> }
+    rule nonblock-expr-base:sym<break>                 { <BREAK> }
+    rule nonblock-expr-base:sym<break-lt>              { <BREAK> <lifetime> }
+    rule nonblock-expr-base:sym<yield>                 { <YIELD> }
+    rule nonblock-expr-base:sym<yield-expr>            { <YIELD> <expr> }
+    rule nonblock-expr-base:sym<dotdot-expr>           { <DOTDOT> <expr> }
+    rule nonblock-expr-base:sym<dotdot>                { <DOTDOT> }
+    rule nonblock-expr-base:sym<box-expr>              { <BOX> <expr> }
+    rule nonblock-expr-base:sym<expr-qualified-path>   { <expr-qualified-path> }
+    rule nonblock-expr-base:sym<nonblock-prefix-expr>  { <nonblock-prefix-expr> }
+
+    #------------------------
+    proto rule nonblock-expr-tail { * }
+    rule nonblock-expr-tail:sym<qmark>              { '?' }
+    rule nonblock-expr-tail:sym<dot-path>           { '.' <path-generic-args-with-colons> }
+    rule nonblock-expr-tail:sym<dot-lit-int>        { '.' <LIT-INT> }
+    rule nonblock-expr-tail:sym<brack-expr>         { '[' <maybe-expr> ']' }
+    rule nonblock-expr-tail:sym<parens-expr>        { '(' <maybe-exprs> ')' }
+    rule nonblock-expr-tail:sym<eq-expr>            { '=' <expr> }
+    rule nonblock-expr-tail:sym<shleq-expr>         { <SHLEQ> <expr> }
+    rule nonblock-expr-tail:sym<shreq-expr>         { <SHREQ> <expr> }
+    rule nonblock-expr-tail:sym<minuseq-expr>       { <MINUSEQ> <expr> }
+    rule nonblock-expr-tail:sym<andeq-expr>         { <ANDEQ> <expr> }
+    rule nonblock-expr-tail:sym<oreq-expr>          { <OREQ> <expr> }
+    rule nonblock-expr-tail:sym<pluseq-expr>        { <PLUSEQ> <expr> }
+    rule nonblock-expr-tail:sym<stareq-expr>        { <STAREQ> <expr> }
+    rule nonblock-expr-tail:sym<slasheq-expr>       { <SLASHEQ> <expr> }
+    rule nonblock-expr-tail:sym<careteq-expr>       { <CARETEQ> <expr> }
+    rule nonblock-expr-tail:sym<percenteq-expr>     { <PERCENTEQ> <expr> }
+    rule nonblock-expr-tail:sym<oror-expr>          { <OROR> <expr> }
+    rule nonblock-expr-tail:sym<andand-expr>        { <ANDAND> <expr> }
+    rule nonblock-expr-tail:sym<eqeq-expr>          { <EQEQ> <expr> }
+    rule nonblock-expr-tail:sym<ne-expr>            { <NE> <expr> }
+    rule nonblock-expr-tail:sym<lt-expr>            { '<' <expr> }
+    rule nonblock-expr-tail:sym<gt-expr>            { '>' <expr> }
+    rule nonblock-expr-tail:sym<le-expr>            { <LE> <expr> }
+    rule nonblock-expr-tail:sym<ge-expr>            { <GE> <expr> }
+    rule nonblock-expr-tail:sym<pipe-expr>          { '|' <expr> }
+    rule nonblock-expr-tail:sym<caret-expr>         { '^' <expr> }
+    rule nonblock-expr-tail:sym<amp-expr>           { '&' <expr> }
+    rule nonblock-expr-tail:sym<shl-expr>           { <SHL> <expr> }
+    rule nonblock-expr-tail:sym<shr-expr>           { <SHR> <expr> }
+    rule nonblock-expr-tail:sym<plus-expr>          { '+' <expr> }
+    rule nonblock-expr-tail:sym<minus-expr>         { '-' <expr> }
+    rule nonblock-expr-tail:sym<star-expr>          { '*' <expr> }
+    rule nonblock-expr-tail:sym<slash-expr>         { '/' <expr> }
+    rule nonblock-expr-tail:sym<mod-expr>           { '%' <expr> }
+    rule nonblock-expr-tail:sym<dotdot>             { <DOTDOT> }
+    rule nonblock-expr-tail:sym<dotdot-expr>        { <DOTDOT> <expr> }
+    rule nonblock-expr-tail:sym<as-ty>              { <AS> <ty> }
+    rule nonblock-expr-tail:sym<colon-ty>           { ':' <ty> }
 }
 
 our role NonBlockExpr::Actions {
 
-    method nonblock-expr:sym<a>($/) {
+=begin comment
+    method nonblock-expr:sym<lit>($/) {
         make ExprLit.new(
             lit =>  $<lit>.made,
         )
     }
 
-    method nonblock-expr:sym<b>($/) {
+    method nonblock-expr:sym<path-expr>($/) {
         make ExprPath.new(
             path-expr =>  $<path-expr>.made,
         )
     }
 
-    method nonblock-expr:sym<c>($/) {
+    method nonblock-expr:sym<self>($/) {
         make ExprPath.new(
 
         )
     }
 
-    method nonblock-expr:sym<d>($/) {
+    method nonblock-expr:sym<macro-expr>($/) {
         make ExprMac.new(
             macro-expr =>  $<macro-expr>.made,
         )
     }
 
-    method nonblock-expr:sym<e>($/) {
+    method nonblock-expr:sym<struct-expr>($/) {
         make ExprStruct.new(
             path-expr          =>  $<path-expr>.made,
             struct-expr-fields =>  $<struct-expr-fields>.made,
@@ -110,347 +117,347 @@ our role NonBlockExpr::Actions {
         )
     }
 
-    method nonblock-expr:sym<g>($/) {
+    method nonblock-expr:sym<dot-path>($/) {
         make ExprField.new(
             nonblock-expr                 =>  $<nonblock-expr>.made,
             path-generic-args-with-colons =>  $<path-generic-args-with-colons>.made,
         )
     }
 
-    method nonblock-expr:sym<h>($/) {
+    method nonblock-expr:sym<dot-lit-int>($/) {
         make ExprTupleIndex.new(
             nonblock-expr =>  $<nonblock-expr>.made,
         )
     }
 
-    method nonblock-expr:sym<i>($/) {
+    method nonblock-expr:sym<brack-expr>($/) {
         make ExprIndex.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             maybe-expr    =>  $<maybe-expr>.made,
         )
     }
 
-    method nonblock-expr:sym<j>($/) {
+    method nonblock-expr:sym<parens-expr>($/) {
         make ExprCall.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             maybe-exprs   =>  $<maybe-exprs>.made,
         )
     }
 
-    method nonblock-expr:sym<k>($/) {
+    method nonblock-expr:sym<vec-expr>($/) {
         make ExprVec.new(
             vec-expr =>  $<vec-expr>.made,
         )
     }
 
-    method nonblock-expr:sym<l>($/) {
+    method nonblock-expr:sym<paren-expr>($/) {
         make ExprParen.new(
             maybe-exprs =>  $<maybe-exprs>.made,
         )
     }
 
-    method nonblock-expr:sym<m>($/) {
+    method nonblock-expr:sym<continue>($/) {
         make ExprAgain.new(
 
         )
     }
 
-    method nonblock-expr:sym<n>($/) {
+    method nonblock-expr:sym<continue-lt>($/) {
         make ExprAgain.new(
             lifetime =>  $<lifetime>.made,
         )
     }
 
-    method nonblock-expr:sym<o>($/) {
+    method nonblock-expr:sym<return>($/) {
         make ExprRet.new(
 
         )
     }
 
-    method nonblock-expr:sym<p>($/) {
+    method nonblock-expr:sym<return-expr>($/) {
         make ExprRet.new(
             expr =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<q>($/) {
+    method nonblock-expr:sym<break>($/) {
         make ExprBreak.new(
 
         )
     }
 
-    method nonblock-expr:sym<r>($/) {
+    method nonblock-expr:sym<break-lt>($/) {
         make ExprBreak.new(
             lifetime =>  $<lifetime>.made,
         )
     }
 
-    method nonblock-expr:sym<s>($/) {
+    method nonblock-expr:sym<yield>($/) {
         make ExprYield.new(
 
         )
     }
 
-    method nonblock-expr:sym<t>($/) {
+    method nonblock-expr:sym<yield-expr>($/) {
         make ExprYield.new(
             expr =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<u>($/) {
+    method nonblock-expr:sym<eq-expr>($/) {
         make ExprAssign.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<v>($/) {
+    method nonblock-expr:sym<shleq-expr>($/) {
         make ExprAssignShl.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<w>($/) {
+    method nonblock-expr:sym<shreq-expr>($/) {
         make ExprAssignShr.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<x>($/) {
+    method nonblock-expr:sym<minuseq-expr>($/) {
         make ExprAssignSub.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<y>($/) {
+    method nonblock-expr:sym<andeq-expr>($/) {
         make ExprAssignBitAnd.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<z>($/) {
+    method nonblock-expr:sym<oreq-expr>($/) {
         make ExprAssignBitOr.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<aa>($/) {
+    method nonblock-expr:sym<pluseq-expr>($/) {
         make ExprAssignAdd.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<ab>($/) {
+    method nonblock-expr:sym<stareq-expr>($/) {
         make ExprAssignMul.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<ac>($/) {
+    method nonblock-expr:sym<slasheq-expr>($/) {
         make ExprAssignDiv.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<ad>($/) {
+    method nonblock-expr:sym<careteq-expr>($/) {
         make ExprAssignBitXor.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<ae>($/) {
+    method nonblock-expr:sym<percenteq-expr>($/) {
         make ExprAssignRem.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<af>($/) {
+    method nonblock-expr:sym<oror-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<ag>($/) {
+    method nonblock-expr:sym<andand-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<ah>($/) {
+    method nonblock-expr:sym<eqeq-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<ai>($/) {
+    method nonblock-expr:sym<ne-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<aj>($/) {
+    method nonblock-expr:sym<lt-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<ak>($/) {
+    method nonblock-expr:sym<gt-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<al>($/) {
+    method nonblock-expr:sym<le-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<am>($/) {
+    method nonblock-expr:sym<ge-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<an>($/) {
+    method nonblock-expr:sym<pipe-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<ao>($/) {
+    method nonblock-expr:sym<caret-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<ap>($/) {
+    method nonblock-expr:sym<amp-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<aq>($/) {
+    method nonblock-expr:sym<shl-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<ar>($/) {
+    method nonblock-expr:sym<shr-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<as>($/) {
+    method nonblock-expr:sym<plus-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<at>($/) {
+    method nonblock-expr:sym<minus-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<au>($/) {
+    method nonblock-expr:sym<star-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<av>($/) {
+    method nonblock-expr:sym<slash-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<aw>($/) {
+    method nonblock-expr:sym<mod-expr>($/) {
         make ExprBinary.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<ax>($/) {
+    method nonblock-expr:sym<dotdot>($/) {
         make ExprRange.new(
             nonblock-expr =>  $<nonblock-expr>.made,
         )
     }
 
-    method nonblock-expr:sym<ay>($/) {
+    method nonblock-expr:sym<dotdot-expr>($/) {
         make ExprRange.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             expr          =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<az>($/) {
+    method nonblock-expr:sym<dotdot-expr>($/) {
         make ExprRange.new(
             expr =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<ba>($/) {
+    method nonblock-expr:sym<dotdot>($/) {
         make ExprRange.new(
 
         )
     }
 
-    method nonblock-expr:sym<bb>($/) {
+    method nonblock-expr:sym<as-ty>($/) {
         make ExprCast.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             ty            =>  $<ty>.made,
         )
     }
 
-    method nonblock-expr:sym<bc>($/) {
+    method nonblock-expr:sym<colon-ty>($/) {
         make ExprTypeAscr.new(
             nonblock-expr =>  $<nonblock-expr>.made,
             ty            =>  $<ty>.made,
         )
     }
 
-    method nonblock-expr:sym<bd>($/) {
+    method nonblock-expr:sym<box-expr>($/) {
         make ExprBox.new(
             expr =>  $<expr>.made,
         )
     }
 
-    method nonblock-expr:sym<be>($/) {
+    method nonblock-expr:sym<expr-qualified-path>($/) {
         make $<expr-qualified-path>.made
     }
 
-    method nonblock-expr:sym<bf>($/) {
+    method nonblock-expr:sym<nonblock-prefix-expr>($/) {
         make $<nonblock-prefix-expr>.made
     }
+=end comment
 }
-

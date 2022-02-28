@@ -1,6 +1,5 @@
 use grust-model;
 
-
 our role ForeignItems::Rules {
 
     rule maybe-foreign-items {
@@ -13,9 +12,9 @@ our role ForeignItems::Rules {
 
     #------------------------
     proto rule foreign-item { * }
-    rule foreign-item:sym<a> { <attrs-and-vis> <STATIC> <item-foreign-static> }
+    rule foreign-item:sym<a> { <attrs-and-vis> <static> <item-foreign-static> }
     rule foreign-item:sym<b> { <attrs-and-vis> <item-foreign-fn> }
-    rule foreign-item:sym<c> { <attrs-and-vis> <UNSAFE> <item-foreign-fn> }
+    rule foreign-item:sym<c> { <attrs-and-vis> <unsafe> <item-foreign-fn> }
 }
 
 our role ForeignItems::Actions {
@@ -51,5 +50,3 @@ our role ForeignItems::Actions {
         )
     }
 }
-
-

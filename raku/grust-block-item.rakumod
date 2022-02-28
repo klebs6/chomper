@@ -32,5 +32,3 @@ our role BlockItem::Actions {
     method block-item:sym<trait>($/)  { make $<item-trait>.made }
     method block-item:sym<impl>($/)   { make $<item-impl>.made }
 }
-
-

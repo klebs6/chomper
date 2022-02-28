@@ -4,7 +4,7 @@ our role ItemTrait::Rules {
 
     rule item-trait {
         <maybe-unsafe> 
-        <TRAIT> 
+        <trait> 
         <ident> 
         <generic-params> 
         <for-sized> 
@@ -84,4 +84,3 @@ our role ItemTrait::Actions {
         )
     }
 }
-

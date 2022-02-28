@@ -3,118 +3,118 @@ use grust-model;
 our role Rust::Keyword {
 
     #-------------------------------
-    token ABSTRACT   { abstract } 
-    token ALIGNOF    { alignof  } 
-    token AND        { '&' }
-    token ANDAND     { \&\&     } 
-    token AS         { as       } 
-    token AT         { '@' }
-    token BECOME     { become   } 
-    token BOX        { box      } 
-    token BREAK      { break    } 
-    token CARET      { '^' }
-    token CATCH      { catch    } 
-    token COLON      { ':' }
-    token COMMA      { ',' }
-    token CONST      { const    } 
-    token CONTINUE   { continue } 
-    token COPYTOK    { 'copy' }
-    token CRATE      { crate    } 
-    token DARROW     { '<->' }
-    token DEFAULT    { default  } 
-    token DIV        { '/' }
-    token DO         { do       } 
-    token DOLLAR     { '$' }
-    token DOT        { '.' }
-    token DOTDOT     { '..' }
-    token DOTDOTDOT  { '...' }
-    token DROP       { 'drop' }
-    token ELSE       { else     } 
-    token ENUM       { enum     } 
-    token EQ         { '=' }
-    token SHLEQ      { '<<=' }
-    token SHREQ      { '>>=' }
-    token EQEQ       { '==' }
-    token MINUSEQ    { '-=' }
-    token PLUSEQ     { '+=' }
-    token ANDEQ      { '&=' }
-    token OREQ       { '|=' }
-    token STAREQ     { '*=' }
-    token SLASHEQ    { '/=' }
-    token CARETEQ    { '^=' }
-    token PERCENTEQ  { '%=' }
-    token EXTERN     { extern   } 
-    token FALSE      { false    } 
-    token FAT-ARROW  { '=>' }
-    token FINAL      { final    } 
-    token FN         { fn       } 
-    token FOR        { for      } 
-    token GE         { '>=' }
-    token GT         { '>' }
-    token IF         { if       } 
-    token IMPL       { impl     } 
-    token IN         { in       } 
-    token LARROW     { '<-' }
-    token LBRACE     { '{' }
-    token LBRACKET   { '[' }
-    token LE         { '<=' }
-    token LET        { let      } 
-    token LOG        { '__log' }
-    token LOOP       { loop     } 
-    token LPAREN     { '(' }
-    token LT         { '<' }
-    token MACRO      { macro    } 
-    token MATCH_     { match    } 
-    token MINUS      { '-' }
-    token MOD        { mod      } 
-    token MOD-SEP    { '::' }
-    token MOVE       { move     } 
-    token MUT        { mut      } 
-    token NE         { '!=' }
-    token NOT        { '!' }
-    token OFFSETOF   { offsetof } 
-    token ONCE       { 'once' }
-    token OR         { '|' }
-    token OROR       { '||' }
-    token SHL        { '<<' }
-    token SHR        { '>>' }
-    token OVERRIDE   { override } 
-    token PLUS       { '+' }
-    token POUND      { '#' }
-    token PRIV       { priv     } 
-    token PROC       { proc     } 
-    token PUB        { pub      } 
-    token PURE       { pure     } 
-    token RARROW     { '->' }
-    token RBRACE     { '}' }
-    token RBRACKET   { ']' }
-    token REF        { ref      } 
-    token REM        { '%' }
-    token RETURN     { return   } 
-    token RPAREN     { ')' }
-    token SELF       { self     } 
-    token SEMI       { ';' }
-    token SIZEOF     { sizeof   } 
-    token STAR       { '*' }
-    token STATIC     { static   } 
-    token STRUCT     { struct   } 
-    token SUPER      { super    } 
-    token TILDE      { '~' }
-    token TRAIT      { trait    } 
-    token TRUE       { true     } 
-    token TYPE       { type     } 
-    token TYPEOF     { typeof   } 
-    token UNDERSCORE { _        } 
-    token UNION      { union    } 
-    token UNSAFE     { unsafe   } 
-    token UNSIZED    { unsized  } 
-    token USE        { use      } 
-    token VIRTUAL    { virtual  } 
-    token WHERE      { where    } 
-    token WHILE      { while    } 
-    token YIELD      { yield    } 
+    token abstract       { abstract } 
+    token alignof        { alignof  } 
+    token and_           { '&'      } 
+    token andand         { \&\&     } 
+    token as_            { as       } 
+    token at             { '@'      } 
+    token become         { become   } 
+    token box            { box      } 
+    token break_         { break    } 
+    token caret          { '^'      } 
+    token catch          { catch    } 
+    token colon          { ':'      } 
+    token comma          { ','      } 
+    token const          { const    } 
+    token continue_      { continue } 
+    token copytok        { 'copy'   } 
+    token crate          { crate    } 
+    token darrow         { '<->'    } 
+    token default_       { default  } 
+    token div_           { '/'      } 
+    token do_            { do       } 
+    token dollar         { '$'      } 
+    token dot            { '.'      } 
+    token dotdot         { '..'     } 
+    token dotdotdot      { '...'    } 
+    token drop           { 'drop'   } 
+    token else_          { else     } 
+    token enum_          { enum     } 
+    token eq_            { '='      } 
+    token shleq          { '<<='    } 
+    token shreq          { '>>='    } 
+    token eqeq           { '=='     } 
+    token minuseq        { '-='     } 
+    token pluseq         { '+='     } 
+    token andeq          { '&='     } 
+    token oreq           { '|='     } 
+    token stareq         { '*='     } 
+    token slasheq        { '/='     } 
+    token careteq        { '^='     } 
+    token percenteq      { '%='     } 
+    token extern         { extern   } 
+    token false          { false    } 
+    token fat-arrow      { '=>'     } 
+    token final          { final    } 
+    token fn             { fn       } 
+    token for_           { for      } 
+    token ge_            { '>='     } 
+    token gt_            { '>'      } 
+    token if_            { if       } 
+    token impl           { impl     } 
+    token in             { in       } 
+    token larrow         { '<-'     } 
+    token lbrace         { '{'      } 
+    token lbracket       { '['      } 
+    token le_            { '<='     } 
+    token let_           { let      } 
+    token log            { '__log'  } 
+    token loop_          { loop     } 
+    token lparen         { '('      } 
+    token lt_            { '<'      } 
+    token macro_         { macro    } 
+    token match_         { match    } 
+    token minus          { '-'      } 
+    token mod_           { mod      } 
+    token mod-sep        { '::'     } 
+    token move           { move     } 
+    token mut            { mut      } 
+    token ne_            { '!='     } 
+    token not_           { '!'      } 
+    token offsetof       { offsetof } 
+    token once_          { 'once'   } 
+    token or_            { '|'      } 
+    token oror           { '||'     } 
+    token shl            { '<<'     } 
+    token shr            { '>>'     } 
+    token override       { override } 
+    token plus           { '+'      } 
+    token pound          { '#'      } 
+    token priv           { priv     } 
+    token proc           { proc     } 
+    token pub            { pub      } 
+    token pure           { pure     } 
+    token rarrow         { '->'     } 
+    token rbrace         { '}'      } 
+    token rbracket       { ']'      } 
+    token ref            { ref      } 
+    token rem            { '%'      } 
+    token return_        { return   } 
+    token rparen         { ')'      } 
+    token self_          { self     } 
+    token semi           { ';'      } 
+    token sizeof         { sizeof   } 
+    token star           { '*'      } 
+    token static         { static   } 
+    token struct         { struct   } 
+    token super          { super    } 
+    token tilde          { '~'      } 
+    token trait          { trait    } 
+    token true           { true     } 
+    token type           { type     } 
+    token typeof         { typeof   } 
+    token underscore     { _        } 
+    token union          { union    } 
+    token unsafe         { unsafe   } 
+    token unsized        { unsized  } 
+    token use_           { use      } 
+    token virtual        { virtual  } 
+    token where_         { where    } 
+    token while_         { while    } 
+    token yield          { yield    } 
 
-    token BINOPEQ {
+    token binopeq { 
         || '/='
         || '%='
         || '^='
@@ -127,12 +127,12 @@ our role Rust::Keyword {
         || '>>='
     }
 
-    token IDSTART {
+    token idstart { 
         ||    <[ _ a..z A..Z ]>
-        ||    <XIDSTART>
+        ||    <xidstart>
     }
 
-    token XIDSTART {
+    token xidstart { 
         ||    <[ \x[0041] .. \x[005a] ]>
         ||    <[ \x[0061] .. \x[007a] ]>
         ||    \x[00aa]
@@ -634,57 +634,54 @@ our role Rust::Keyword {
         ||    <[ \x[0002f800] .. \x[0002fa1d] ]>
     }
 
-    token LIT-INT {
-        || <LIT-CHAR>
-        || '0x' <HEXDIGIT>+ <INTLIT-TY>?
-        || '0b' <BINDIGIT>+ <INTLIT-TY>?
-        || <DECDIGIT> <DECDIGIT-CONT>* <INTLIT-TY>?
+    token lit-int { 
+        || <lit-char>
+        || '0x' <hexdigit>+ <intlit-ty>?
+        || '0b' <bindigit>+ <intlit-ty>?
+        || <decdigit> <decdigit-cont>* <intlit-ty>?
     }
 
-    token LIT-FLOAT {
-        |  <DECDIGIT>
-            <DECDIGIT-CONT>*
+    token lit-float { 
+        |  <decdigit>
+            <decdigit-cont>*
             '.'
             #|{!followed-by-ident-or-dot()}
 
-        |  <DECDIGIT>
-            <DECDIGIT-CONT>*
+        |  <decdigit>
+            <decdigit-cont>*
             '.'
-            <DECDIGIT>
-            <DECDIGIT-CONT>*
-            <LITFLOAT-EXP>?
-            <LITFLOAT-TY>?
+            <decdigit>
+            <decdigit-cont>*
+            <litfloat-exp>?
+            <litfloat-ty>?
 
-        |  <DECDIGIT>
-            <DECDIGIT-CONT>*
-            <LITFLOAT-EXP>
-            <LITFLOAT-TY>?
+        |  <decdigit>
+            <decdigit-cont>*
+            <litfloat-exp>
+            <litfloat-ty>?
 
-        |  <DECDIGIT>
-            <DECDIGIT-CONT>*
-            <LITFLOAT-TY>
+        |  <decdigit>
+            <decdigit-cont>*
+            <litfloat-ty>
     }
 
-    token LIT-STR {
-        '\"' <STRCHAR>* '\"'
+    token lit-str { 
+        '\"' <strchar>* '\"'
     }
 
-    token IDENT {
-        <IDSTART> <IDCONT>*
+    token ident_ { <idstart> <idcont>* }
+
+    token static-lifetime { '\'static' }
+
+    token lifetime { 
+        || '\'' <ident>
+        || '\'' <self>
     }
 
-    token STATIC-LIFETIME {
-        || '\'static'
-    }
-    token LIFETIME {
-        || '\'' <IDENT>
-        || '\'' <SELF>
-    }
-
-    proto token OUTER-DOC-COMMENT { * }
+    proto token outer-doc-comment { * }
 
     token OUTER-DOC-COMMENT:sym<a> {
-        '///' '/'* <NON-SLASH-OR-WS> <-[ \n ]>*
+        '///' '/'* <non-slash-or-ws> <-[ \n ]>*
     }
 
     token OUTER-DOC-COMMENT:sym<b> {
@@ -708,8 +705,7 @@ our role Rust::Keyword {
         '/'
     }
 
-    token INNER-DOC-COMMENT {
-        || '//!' <-[ \n ]>*
+    token inner-doc-comment { || '//!' <-[ \n ]>*
         || 
         '/*!' 
         [ 
@@ -720,37 +716,33 @@ our role Rust::Keyword {
         \/
     }
 
-    token WS {
-        ||    <[   \t \r \n ]>+
-    }
-    token OTHER-LINE-COMMENT {
-        ||    '//'
-            <-[ \n ]>*
-    }
-    token OTHER-BLOCK-COMMENT {
-        ||    '/*'
-            (    ||    <-[ * ]>
-                ||    (    ||    '*'+
-                            <-[ * / ]>
-                    )
-            )
-            '*'+
-            '/'
+    token ws { 
+        <[   \t \r \n ]>+
     }
 
-    token SHEBANG {
-        '#'
+    token other-line-comment { 
+        '//' <-[ \n ]>*
     }
 
-    token SHEBANG-LINE {
-        ||    #|{at-beginning-of-file()}?
-            '#!'
-            <-[ \n ]>*
-            '\n'
+    token other-block-comment { 
+        '/*'
+        [    
+            || <-[ * ]>
+            || [ '*'+ <-[ * / ]> ]
+        ]
+        '*'+
+        '/'
+    }
+
+    token shebang { '#' }
+
+    token shebang-line { 
+        #|{at-beginning-of-file()}?
+        '#!' <-[ \n ]>* '\n'
     }
 
 
-    token INTLIT-TY {
+    token intlit-ty { 
         [    
             ||    'u'
             ||    'i'
@@ -763,58 +755,56 @@ our role Rust::Keyword {
         ]?
     }
 
-    token LITFLOAT-EXP {
+    token litfloat-exp { 
         <[ e E ]> 
         <[ + - ]>? 
-        <DECDIGIT-CONT>+
+        <decdigit-cont>+
     }
 
-    token LITFLOAT-TY {
-        'f' [ '32' || '64' ]?
-    }
+    token litfloat-ty { 'f' [ '32' || '64' ]? }
 
-    token BINDIGIT      { <[ 0 .. 1 ]> }
-    token DECDIGIT      { <[ 0 .. 9 ]> }
-    token DECDIGIT-CONT { <[ 0 .. 9 ]> }
-    token HEXDIGIT      { <[ 0 .. 9 ]> }
+    token bindigit      { <[ 0 .. 1 ]> }
+    token decdigit      { <[ 0 .. 9 ]> }
+    token decdigit-cont { <[ 0 .. 9 ]> }
+    token hexdigit      { <[ 0 .. 9 ]> }
 
-    token ESCAPEDCHAR {
+    token escapedchar { 
         || n
         || r
         || t
         || \\
         || \'
         || \"
-        || x <HEXDIGIT> ** 2
-        || u <HEXDIGIT> ** 4
-        || U <HEXDIGIT> ** 8
+        || x <hexdigit> ** 2
+        || u <hexdigit> ** 4
+        || U <hexdigit> ** 8
     }
 
-    token LIT-CHAR {
-        || \' <ESCAPEDCHAR> \'
+    token lit-char { 
+        || \' <escapedchar> \'
         || \' . \'
     }
 
-    token STRCHAR {
+    token strchar { 
         || <-[ \\ " ]>
-        || '\\' <STRESCAPE>
+        || '\\' <strescape>
     }
 
-    token STRESCAPE {
+    token strescape { 
         || '\n'
-        || <ESCAPEDCHAR>
+        || <escapedchar>
     }
 
-    token IDCONT {
+    token idcont { 
         ||    <[ _ a..z A..Z 0..9 ]>
-        ||    <XIDCONT>
+        ||    <xidcont>
     }
 
-    token NON-SLASH-OR-WS {
-        ||    <-[   \t \r \n / ]>
+    token non-slash-or-ws { 
+        <-[   \t \r \n / ]>
     }
 
-    token XIDCONT {
+    token xidcont { 
         ||    <[ \x[0030] .. \x[0039] ]>
         ||    <[ \x[0041] .. \x[005a] ]>
         ||    \x[005f]
