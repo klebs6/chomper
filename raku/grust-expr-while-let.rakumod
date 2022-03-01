@@ -4,7 +4,7 @@ our role ExprWhileLet::Rules {
 
     rule expr-while-let {
         <maybe-label> 
-        <while_> 
+        <kw-while> 
         <kw-let> 
         <pat> 
         '=' 

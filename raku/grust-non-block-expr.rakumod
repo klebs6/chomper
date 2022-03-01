@@ -11,10 +11,6 @@ our role NonBlockExpr::Rules {
 
     rule nonblock-expr-base:sym<lit>  { <lit> }
 
-    rule nonblock-expr-base:sym<path-expr>  { 
-        #{self.set-prec(IDENT)} 
-        <path-expr> 
-    }
 
     rule nonblock-expr-base:sym<self>                  { <kw-self> }
     rule nonblock-expr-base:sym<macro-expr>            { <macro-expr> }
@@ -34,6 +30,9 @@ our role NonBlockExpr::Rules {
     rule nonblock-expr-base:sym<box-expr>              { <kw-box> <expr> }
     rule nonblock-expr-base:sym<expr-qualified-path>   { <expr-qualified-path> }
     rule nonblock-expr-base:sym<nonblock-prefix-expr>  { <nonblock-prefix-expr> }
+
+    #{self.set-prec(IDENT)} 
+    rule nonblock-expr-base:sym<path-expr>  { <path-expr> }
 
     #------------------------
     proto rule nonblock-expr-tail { * }

@@ -38,8 +38,8 @@ our role Expr::Rules {
     rule expr-tail:sym<expr-star-expr>                { '*' <expr> }
     rule expr-tail:sym<expr-slash-expr>               { '/' <expr> }
     rule expr-tail:sym<expr-mod-expr>                 { '%' <expr> }
-    rule expr-tail:sym<expr-dotdot>                   { <tok-dotdot> }
     rule expr-tail:sym<expr-dotdot-expr>              { <tok-dotdot> <expr> }
+    rule expr-tail:sym<expr-dotdot>                   { <tok-dotdot> }
     rule expr-tail:sym<expr-as-ty>                    { <kw-as> <ty> }
     rule expr-tail:sym<expr-ty>                       { ':' <ty> }
 
@@ -49,11 +49,6 @@ our role Expr::Rules {
     rule expr-base:sym<self> { <kw-self> }
 
     rule expr-base:sym<macro-expr>                    { <macro-expr> }
-
-    rule expr-base:sym<path-expr> { 
-        #{self.set-prec(IDENT)} 
-        <path-expr> 
-    }
 
     rule expr-base:sym<struct-expr>                   { <path-expr> '{' <struct-expr-fields> '}' }
     rule expr-base:sym<paren-tail>                    { '(' <maybe-exprs> ')' }
@@ -69,6 +64,11 @@ our role Expr::Rules {
     rule expr-base:sym<block-expr>                    { <block-expr> }
     rule expr-base:sym<block>                         { <block> }
     rule expr-base:sym<nonblock-prefix-expr>          { <nonblock-prefix-expr> }
+
+    rule expr-base:sym<path-expr> { 
+        #{self.set-prec(IDENT)} 
+        <path-expr> 
+    }
 
     proto rule expr-prefix { * }
     rule expr-prefix:sym<return-expr>   { <kw-return> }

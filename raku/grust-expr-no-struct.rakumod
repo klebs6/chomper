@@ -11,11 +11,6 @@ our role ExprNoStruct::Rules {
 
     rule expr-nostruct-base:sym<lit>  { <lit> }
 
-    rule expr-nostruct-base:sym<path-expr>  { 
-        #{ self.set-prec(IDENT) } 
-        <path-expr> 
-    }
-
     rule expr-nostruct-base:sym<self>                          { <kw-self> }
     rule expr-nostruct-base:sym<macro-expr>                    { <macro-expr> }
     rule expr-nostruct-base:sym<vec-expr>                      { '[' <vec-expr> ']' }
@@ -36,6 +31,9 @@ our role ExprNoStruct::Rules {
     rule expr-nostruct-base:sym<block-expr>                    { <block-expr> }
     rule expr-nostruct-base:sym<block>                         { <block> }
     rule expr-nostruct-base:sym<nonblock-prefix-expr-nostruct> { <nonblock-prefix-expr-nostruct> }
+
+    #{ self.set-prec(IDENT) } 
+    rule expr-nostruct-base:sym<path-expr>  { <path-expr> }
 
     #-------------------------
     proto rule expr-nostruct-tail { * }
