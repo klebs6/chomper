@@ -16,6 +16,13 @@ our role Lifetimes::Rules {
     proto rule lifetime { * }
     rule lifetime:sym<a> { <kw-lifetime> }
     rule lifetime:sym<b> { <static-lifetime> }
+
+    token static-lifetime { '\'static' }
+
+    token kw-lifetime { 
+        || '\'' <ident>
+        || '\'' <kw-self>
+    }
 }
 
 our role Lifetimes::Actions {

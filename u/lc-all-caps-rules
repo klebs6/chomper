@@ -1,0 +1,126 @@
+#!/usr/bin/env raku
+
+use global-subparse;
+
+my $bad-rules = SetHash.new;
+
+sub maybe-avoid-keywords($name) {
+    my %badmap = %(
+        and      => "and_",
+        as       => "as_",
+        break    => "break_",
+        continue => "continue_",
+        default  => "default_",
+        div      => "div_",
+        do       => "do_",
+        else     => "else_",
+        enum     => "enum_",
+        eq       => "eq_",
+        for      => "for_",
+        ge       => "ge_",
+        gt       => "gt_",
+        if       => "if_",
+        le       => "le_",
+        let      => "let_",
+        loop     => "loop_",
+        lt       => "lt_",
+        macro    => "macro_",
+        mod      => "mod_",
+        ne       => "ne_",
+        not      => "not_",
+        once     => "once_",
+        or       => "or_",
+        return   => "return_",
+        self     => "self_",
+        use      => "use_",
+        where    => "where_",
+        while    => "while_",
+        ident    => "ident_",
+        token    => "token_",
+    );
+
+    %badmap{$name} // $name
+}
+
+grammar AllCapsRule does GlobalSubparse {
+
+    token TOP {
+        <item>
+    }
+
+    proto token item { * }
+
+    token item:sym<usage> {  
+       '<' <all-caps-rule-name> '>'
+    }
+
+    rule item:sym<rule-def> {  
+       <rule-kw> <all-caps-rule-name> '{'
+    }
+
+    token rule-kw {
+        || 'token'
+        || 'rule'
+        || 'regex'
+    }
+
+    token all-caps-rule-name {
+        <[A..Z \- _]>+
+    }
+}
+
+class AllCapsRule::Actions {
+
+    method TOP($/) {
+       make $<item>.made
+    }
+
+    method item:sym<usage>($/) {
+        make '<' ~ $<all-caps-rule-name>.made ~ '>'
+    }
+
+    method item:sym<rule-def>($/) {
+        make 
+        $<rule-kw>.made 
+        ~ " " 
+        ~ $<all-caps-rule-name>.made 
+        ~ ' { '
+    }
+
+    method rule-kw($/) {
+        make $/.Str
+    }
+
+    method all-caps-rule-name($/) {
+        $bad-rules.set(~$/);
+        make maybe-avoid-keywords(~$/.lc)
+    }
+}
+
+sub MAIN(Bool :$a = False) {
+    my $in = $*IN.slurp;
+
+    for AllCapsRule.subparse(:g, $in, 
+        actions => AllCapsRule::Actions.new).reverse
+    {
+        if $a {
+            say .made;
+        } else {
+            $in.substr-rw(.from,.to -.from) = .made;
+        }
+    }
+
+    if $a {
+        exit;
+    }
+
+    my $badfile = "bad-rules.txt";
+
+    my @old-bad-rules = $badfile.IO.slurp.lines;
+    my @new-bad-rules = $bad-rules.keys.List.sort.unique;
+    my @bad-rules = [|@old-bad-rules, |@new-bad-rules].sort.unique;
+
+    spurt $badfile, @bad-rules.join("\n");
+
+    say $in.chomp.trim;
+}

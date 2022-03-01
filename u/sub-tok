@@ -1,0 +1,116 @@
+#!/usr/bin/env raku
+
+my @todo = <
+and
+andand           
+andeq            
+at               
+binopeq               
+caret            
+careteq          
+colon            
+comma            
+copytok          
+darrow           
+div
+dollar           
+dot              
+dotdot           
+dotdotdot        
+drop             
+eq
+eqeq             
+fat-arrow        
+ge
+gt
+larrow           
+lbrace           
+lbracket         
+le
+log              
+lparen           
+lt
+minus            
+minuseq          
+mod-sep          
+ne
+not
+once
+or
+oreq             
+oror             
+percenteq        
+plus             
+pluseq           
+pound            
+rarrow           
+rbrace           
+rbracket         
+rem              
+rparen           
+semi             
+shl              
+shleq            
+shr              
+shreq            
+slasheq          
+star             
+stareq           
+tilde            
+underscore       
+>;
+
+use global-subparse;
+
+my $bad-rules = SetHash.new;
+
+grammar TokUsage does GlobalSubparse {
+
+    token TOP {
+        <!after 'sym'> <tok-usage>
+    }
+
+    token tok-usage {  
+       '<' <tok-body> '_'? '>'
+    }
+
+    token tok-body {
+        @todo
+    }
+}
+
+class TokUsage::Actions {
+
+    method TOP($/) {
+       make $<tok-usage>.made
+    }
+
+    method tok-usage($/) {
+        make '<' ~ $<tok-body>.made ~ '>'
+    }
+
+    method tok-body($/) {
+        make "tok-" ~ $/.Str
+    }
+}
+
+sub MAIN(Bool :$a = False) {
+    my $in = $*IN.slurp;
+
+    for TokUsage.subparse(:g, $in, 
+        actions => TokUsage::Actions.new).reverse
+    {
+        if $a {
+            say .made;
+        } else {
+            $in.substr-rw(.from,.to -.from) = .made;
+        }
+    }
+
+    if $a {
+        exit;
+    }
+
+    say $in.chomp.trim;
+}
+

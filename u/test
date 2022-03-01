@@ -1,0 +1,27 @@
+#!/usr/bin/env raku
+
+use rust-grammar;
+use grust-keyword;
+use Data::Dump::Tree;
+
+use Grammar::Tracer;
+
+grammar G does Rust::Keyword { rule TOP {
+    <.ws>
+    <kw-match>
+}}
+
+sub MAIN(:$stdin = Nil) {
+
+    my $in = $stdin 
+        ?? $stdin.IO.slurp.chomp 
+        !! $*IN.slurp.chomp;
+
+    my $parsed = G.parse($in.trim);
+
+    if $parsed {
+        say $parsed;
+        #say $translated.made;
+        #ddt $translated.made;
+    }
+}

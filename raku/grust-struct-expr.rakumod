@@ -22,8 +22,8 @@ our role StructExpr::Rules {
     #----------------
     proto rule field-init { * }
 
-    rule field-init:sym<a>  { <ident> }
     rule field-init:sym<b>  { <ident> ':' <expr> }
+    rule field-init:sym<a>  { <ident> }
     rule field-init:sym<c>  { <lit-int> ':' <expr> }
 
     rule default-field-init { <tok-dotdot> <expr> }

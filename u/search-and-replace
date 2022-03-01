@@ -1,0 +1,57 @@
+#!/usr/bin/env raku
+
+my @pairs = [
+    ["<q>", "<break>"],
+    ["<r>", "<break-ident>"],
+    ["<s>", "<yield>"],
+    ["<t>", "<yield-expr>"],
+    ["<u>", "<expr-eq-expr>"],
+    ["<v>", "<expr-shleq-expr>"],
+    ["<w>", "<expr-shreq-expr>"],
+    ["<x>", "<expr-minuseq-expr>"],
+    ["<y>", "<expr-andeq-expr>"],
+    ["<z>", "<expr-oreq-expr>"],
+    ["<aa>", "<expr-pluseq-expr>"],
+    ["<ab>", "<expr-stareq-expr>"],
+    ["<ac>", "<expr-slasheq-expr>"],
+    ["<ad>", "<expr-careteq-expr>"],
+    ["<ae>", "<expr-percenteq-expr>"],
+    ["<af>", "<expr-oror-expr>"],
+    ["<ag>", "<expr-andand-expr>"],
+    ["<ah>", "<expr-eqeq-expr>"],
+    ["<ai>", "<expr-ne-expr>"],
+    ["<aj>", "<expr-lt-expr>"],
+    ["<ak>", "<expr-ge-expr>"],
+    ["<al>", "<expr-le-expr>"],
+    ["<am>", "<expr-ge-expr>"],
+    ["<an>", "<expr-pipe-expr>"],
+    ["<ao>", "<expr-caret-expr>"],
+    ["<ap>", "<expr-amp-expr>"],
+    ["<aq>", "<expr-shl-expr>"],
+    ["<ar>", "<expr-shr-expr>"],
+    ["<as>", "<expr-plus-expr>"],
+    ["<at>", "<expr-minus-expr>"],
+    ["<au>", "<expr-star-expr>"],
+    ["<av>", "<expr-slash-expr>"],
+    ["<aw>", "<expr-mod-expr>"],
+    ["<ax>", "<expr-dotdot>"],
+    ["<ay>", "<expr-dotdot-expr>"],
+    ["<az>", "<dotdot-expr>"],
+    ["<ba>", "<dotdot>"],
+    ["<bb>", "<expr-as-ty>"],
+    ["<bc>", "<expr-ty>"],
+    ["<bd>", "<box-expr>"],
+    ["<be>", "<expr-qualified-path>"],
+    ["<bf>", "<block-expr>"],
+    ["<bg>", "<block>"],
+    ["<bh>", "<nonblock-prefix-expr>"],
+];
+
+my $in = $*IN.slurp;
+
+for @pairs -> [$old, $new] {
+    $in = $in.subst(:g,$old,$new);
+}
+
+say $in;
+

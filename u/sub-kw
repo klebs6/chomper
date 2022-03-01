@@ -1,0 +1,107 @@
+#!/usr/bin/env raku
+
+my @todo = <
+catch
+const
+continue
+crate
+default
+do
+else
+enum
+extern
+false
+final
+fn
+for
+if
+impl
+in
+let
+loop
+macro
+match
+mod
+move
+mut
+offsetof
+once
+override
+priv
+proc
+pub
+pure
+ref
+return
+self
+sizeof
+static
+struct
+super
+trait
+true
+type
+typeof
+union
+unsafe
+unsized
+use
+virtual
+where
+while
+yield
+>;
+
+use global-subparse;
+
+my $bad-rules = SetHash.new;
+
+grammar KwUsage does GlobalSubparse {
+
+    token TOP {
+        <!after 'sym'> <kw-usage>
+    }
+
+    token kw-usage {  
+       '<' <kw-body> '_'? '>'
+    }
+
+    token kw-body {
+        @todo
+    }
+}
+
+class KwUsage::Actions {
+
+    method TOP($/) {
+       make $<kw-usage>.made
+    }
+
+    method kw-usage($/) {
+        make '<' ~ $<kw-body>.made ~ '>'
+    }
+
+    method kw-body($/) {
+        make "kw-" ~ $/.Str
+    }
+}
+
+sub MAIN(Bool :$a = False) {
+    my $in = $*IN.slurp;
+
+    for KwUsage.subparse(:g, $in, 
+        actions => KwUsage::Actions.new).reverse
+    {
+        if $a {
+            say .made;
+        } else {
+            $in.substr-rw(.from,.to -.from) = .made;
+        }
+    }
+
+    if $a {
+        exit;
+    }
+
+    say $in.chomp.trim;
+}

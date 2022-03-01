@@ -1,0 +1,58 @@
+#!/usr/bin/env raku
+
+use global-subparse;
+
+grammar KebabSnake does GlobalSubparse {
+    token TOP {
+        <kebab-snake>
+    }
+
+    token seg {
+        <[A..Z a..z]>+
+    }
+
+    token kebab-head {
+        [<seg> '-']+
+    }
+
+    token snake-tail {
+        <seg> "_" [<seg>+ %% "_"]
+    }
+
+    token kebab-snake {
+        <kebab-head>? <snake-tail>
+    }
+}
+
+class KebabSnake::Actions {
+
+    method TOP($/) {
+       make $<kebab-snake>.made
+    }
+
+    method kebab-snake($/) {
+        if $/<kebab-head>:exists {
+            make $<kebab-head>.made ~ $<snake-tail>.made
+        } else {
+            make $<snake-tail>.made
+        }
+    }
+
+    method kebab-head($/) {
+        make ~$/
+    }
+
+    method snake-tail($/) {
+        make ~$/.subst(:g, "_","-")
+    }
+}
+
+my $in = $*IN.slurp;
+
+for KebabSnake.subparse(:g, $in, 
+    actions => KebabSnake::Actions.new)
+{
+    $in.substr-rw(.from,.to -.from) = .made;
+}
+
+say $in;

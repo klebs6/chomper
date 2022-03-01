@@ -393,38 +393,6 @@ our role Lex::RawStr {
 
 #--------------------------------------
 =begin comment
-# { BEGIN(pound); yymore(); }
-<tok-pound>\! { BEGIN(shebang-or-attr); yymore(); }
-<shebang-or-attr>\[ {
-  BEGIN(INITIAL);
-  yyless(2);
-  return SHEBANG;
-}
-<shebang-or-attr>[^\[\n]*\n {
-  // Since the \n was eaten as part of the token, yylineno will have
-  // been incremented to the value 2 if the shebang was on the first
-  // line. This yyless undoes that, setting yylineno back to 1.
-  yyless(yyleng - 1);
-  if (yyget-lineno() == 1) {
-    BEGIN(INITIAL);
-    return SHEBANG-LINE;
-  } else {
-    BEGIN(INITIAL);
-    yyless(2);
-    return SHEBANG;
-  }
-}
-<tok-pound>. { BEGIN(INITIAL); yyless(1); return '#'; }
-=end comment
-our role Lex::Pound {
-    token pound {
-        'TODO'
-
-    }
-}
-
-#--------------------------------------
-=begin comment
 r/#             {
     BEGIN(rawstr-esc-begin);
     yymore();
@@ -492,33 +460,6 @@ our role Lex::Str_ {
     }
 }
 
-#--------------------------------------
-=begin comment
-\/\/|\/\/\/\/         { BEGIN(linecomment); }
-<linecomment>\n       { BEGIN(INITIAL); }
-<linecomment>[^\n]*   { }
-=end comment
-our role Lex::LineComment {
-
-    token line-comment-begin {
-        || \/\/\/
-        || \/\/
-    }
-
-    token line-comment-end {
-        \n
-    }
-
-    token line-comment-continue {
-        <[^\n]>*
-    }
-
-    token line-comment {
-        <line-comment-begin>
-        <line-comment-continue>*
-        <line-comment-end>
-    }
-}
 
 #--------------------------------------
 =begin comment
@@ -534,51 +475,3 @@ our role Lex::Suffix {
     }
 }
 
-#--------------------------------------
-=begin comment
-\/\*                  { yy-push-state(blockcomment); }
-<blockcomment>\/\*    { yy-push-state(blockcomment); }
-<blockcomment>\*\/    { yy-pop-state(); }
-<blockcomment>(.|\n)  { }
-=end comment
-our role Lex::BlockComment {
-
-    token block-comment-begin {
-        \/\*
-        { 
-            self.push-state(XState::<initial>);
-            self.push-state(XState::<blockcomment>);
-        }
-    }
-
-    token block-comment-continue {
-        | <block-comment-push>
-        | <block-comment-pop>
-        | <block-comment-inner>
-    }
-
-    token block-comment-push {
-        \/\*
-        { self.push-state(XState::<blockcomment>) }
-    }
-
-    token block-comment-pop {
-        \*\/
-        { self.pop-state() }
-    }
-
-    token block-comment-inner {
-        | .
-        | \n
-    }
-
-    token block-comment-end {
-        <?{self.peek-state() eq XState::<initial> }>
-    }
-
-    token block-comment {
-        <block-comment-begin> 
-        <block-comment-continue>* 
-        <block-comment-end>
-    }
-}

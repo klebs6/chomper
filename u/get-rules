@@ -1,0 +1,131 @@
+#!/usr/bin/env raku
+
+my @files = <
+    grust-anon-params
+    grust-as-trait-ref
+    grust-attr-and-vis
+    grust-binding-mode
+    grust-binding
+    grust-block-expr
+    grust-block-item
+    grust-block-or-if
+    grust-block
+    grust-bounds
+    grust-const-default
+    grust-crate
+    grust-default
+    grust-expr-for
+    grust-expr-if-let
+    grust-expr-if
+    grust-expr-loop
+    grust-expr-no-struct
+    grust-expr-qualified-path
+    grust-expr-while-let
+    grust-expr-while
+    grust-expr
+    grust-exprs
+    grust-extern-fn-item
+    grust-fn-decl-with-self
+    grust-fn-params
+    grust-for-in-type
+    grust-for-lifetimes
+    grust-for-sized
+    grust-foreign-fn
+    grust-foreign-items
+    grust-foreign-static
+    grust-from-antlr
+    grust-generic-args
+    grust-generic-params
+    grust-guard
+    grust-ident
+    grust-idents-or-self
+    grust-impl-const
+    grust-impl-type
+    grust-inferrable-parms
+    grust-init-expr
+    grust-inner-attr
+    grust-item-const
+    grust-item-enum
+    grust-item-fn
+    grust-item-impl
+    grust-item-macro
+    grust-item-mod
+    grust-item-static
+    grust-item-struct
+    grust-item-trait
+    grust-item-ty
+    grust-item-union
+    grust-items
+    grust-keyword
+    grust-label
+    grust-lambda-expr
+    grust-let
+    grust-lex
+    grust-lifetimes
+    grust-lit-or-pth
+    grust-lit
+    grust-lt-bounds
+    grust-macro-expr
+    grust-match
+    grust-meta-item
+    grust-meta-seq
+    grust-method
+    grust-mod-items
+    grust-mut-or-const
+    grust-named-arg
+    grust-non-block-expr
+    grust-nonblock-prefix-expr
+    grust-outer-attr
+    grust-params
+    grust-pat-field
+    grust-pat-struct
+    grust-pat-tup
+    grust-pat-vec
+    grust-pat
+    grust-path-expr
+    grust-path-generic-args-with-colons
+    grust-path-no-types-allowed
+    grust-qpath-params
+    grust-ret-ty
+    grust-stmt
+    grust-stmts
+    grust-str
+    grust-struct-expr
+    grust-symbol
+    grust-token-tree
+    grust-trait-const
+    grust-trait-ref
+    grust-ty-ascription
+    grust-ty-bare-fn
+    grust-ty-closure
+    grust-ty-default
+    grust-ty-fn-decl
+    grust-ty-param-bounds
+    grust-ty-param
+    grust-ty-params
+    grust-ty-prim
+    grust-ty-qualified-path
+    grust-ty-sum
+    grust-ty-sums-and-bindings
+    grust-ty
+    grust-type-trait
+    grust-unpaired-token
+    grust-unsafe
+    grust-use-item
+    grust-vec-expr
+    grust-view-item
+    grust-view-path
+    grust-visibility
+    grust-where-clause
+    grust-where-predicates
+>;
+
+my $ident = regex { <[A..Z a..z]>+ };
+
+my @matches = do for @files {
+    my $file    = "raku/$_.rakumod";
+    my @lines   = $file.IO.slurp.lines;
+    |@lines.grep: /:s our role $ident '::' Rules \{/
+};
+
+.say for @matches>>.split(" ")>>.[2].sort.unique;
