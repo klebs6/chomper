@@ -89,7 +89,6 @@ use grust-path-no-types-allowed;
 use grust-qpath-params;
 use grust-ret-ty;
 use grust-shebang;
-use grust-stmt;
 use grust-stmts;
 use grust-str;
 use grust-struct-expr;
@@ -138,6 +137,8 @@ does Lex::Pound
 does Lex::RawStrEsc
 does Lex::Str_
 does Lex::Suffix
+
+does Rust::Comments
 does Lex::LineComment
 does Lex::BlockComment
 does Lex::DocComment

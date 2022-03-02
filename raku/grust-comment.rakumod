@@ -1,6 +1,14 @@
 use grust-model;
 use grust-lex;
 
+our role Rust::Comments 
+{
+    proto rule comment { * }
+
+    rule comment:sym<line>  {  <line-comment>+ }
+    rule comment:sym<block> {  <block-comment> }
+}
+
 #--------------------------------------
 =begin comment
 \/\/|\/\/\/\/         { BEGIN(linecomment); }
@@ -14,18 +22,8 @@ our role Lex::LineComment {
         || \/\/
     }
 
-    token line-comment-end {
-        \n
-    }
-
-    token line-comment-continue {
-        <[^\n]>*
-    }
-
     token line-comment {
-        <line-comment-begin>
-        <line-comment-continue>*
-        <line-comment-end>
+        <.line-comment-begin> <-[ \r \n ]>*
     }
 }
 
