@@ -15,21 +15,28 @@ our role ExprNoStruct::Rules {
     rule expr-nostruct-base:sym<macro-expr>                    { <macro-expr> }
     rule expr-nostruct-base:sym<vec-expr>                      { '[' <vec-expr> ']' }
     rule expr-nostruct-base:sym<paren-expr>                    { '(' <maybe-exprs> ')' }
-    rule expr-nostruct-base:sym<continue>                      { <kw-continue> }
+
     rule expr-nostruct-base:sym<continue-ident>                { <kw-continue> <ident> }
-    rule expr-nostruct-base:sym<return>                        { <kw-return> }
+    rule expr-nostruct-base:sym<continue>                      { <kw-continue> }
+
     rule expr-nostruct-base:sym<return-expr>                   { <kw-return> <expr> }
-    rule expr-nostruct-base:sym<break>                         { <kw-break> }
+    rule expr-nostruct-base:sym<return>                        { <kw-return> }
+
     rule expr-nostruct-base:sym<break-ident>                   { <kw-break> <ident> }
-    rule expr-nostruct-base:sym<yield>                         { <kw-yield> }
+    rule expr-nostruct-base:sym<break>                         { <kw-break> }
+
     rule expr-nostruct-base:sym<yield-expr>                    { <kw-yield> <expr> }
+    rule expr-nostruct-base:sym<yield>                         { <kw-yield> }
+
     rule expr-nostruct-base:sym<dotdot-expr-nostruct>          { <tok-dotdot> <expr-nostruct> }
     rule expr-nostruct-base:sym<dotdot>                        { <tok-dotdot> }
+
     rule expr-nostruct-base:sym<box-expr>                      { <kw-box> <expr> }
     rule expr-nostruct-base:sym<expr-qualified-path>           { <expr-qualified-path> }
 
     rule expr-nostruct-base:sym<block-expr>                    { <block-expr> }
     rule expr-nostruct-base:sym<block>                         { <block> }
+
     rule expr-nostruct-base:sym<nonblock-prefix-expr-nostruct> { <nonblock-prefix-expr-nostruct> }
 
     #{ self.set-prec(IDENT) } 
@@ -43,8 +50,7 @@ our role ExprNoStruct::Rules {
     rule expr-nostruct-tail:sym<dot-lit-int>       { '.' <lit-int> }
     rule expr-nostruct-tail:sym<brack-expr>        { '[' <maybe-expr> ']' }
     rule expr-nostruct-tail:sym<paren-expr>        { '(' <maybe-exprs> ')' }
-
-    rule expr-nostruct-tail:sym<eq-expr>           { '='           <expr-nostruct> }
+    rule expr-nostruct-tail:sym<eq-expr>           { '=' <expr-nostruct> }
     rule expr-nostruct-tail:sym<shleq-expr>        { <tok-shleq>       <expr-nostruct> }
     rule expr-nostruct-tail:sym<shreq-expr>        { <tok-shreq>       <expr-nostruct> }
     rule expr-nostruct-tail:sym<minuseq-expr>      { <tok-minuseq>     <expr-nostruct> }

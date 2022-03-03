@@ -26,7 +26,7 @@ use grust-model;
 =end comment
 our role Lex::Pound {
 
-    token shebang { '#' }
+    token shebang { '#!' }
 
     token shebang-line { 
         #{at-beginning-of-file()}?

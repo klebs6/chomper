@@ -71,6 +71,7 @@ our role ItemImpl::Rules {
     #---------------------------
     rule maybe-impl-items {
         <impl-items>?
+        <comment>?
     }
 
     #---------------------------
@@ -79,22 +80,27 @@ our role ItemImpl::Rules {
     }
 
     #---------------------------
-    proto rule impl-item { * }
+    rule impl-item {  
+        <comment>?
+        <impl-item-base>
+    }
 
-    rule impl-item:sym<a> {
+    proto rule impl-item-base { * }
+
+    rule impl-item-base:sym<a> {
         <impl-method>
     }
 
-    rule impl-item:sym<b> {
+    rule impl-item-base:sym<b> {
         <attrs-and-vis> 
         <item-macro>
     }
 
-    rule impl-item:sym<c> {
+    rule impl-item-base:sym<c> {
         <impl-const>
     }
 
-    rule impl-item:sym<d> {
+    rule impl-item-base:sym<d> {
         <impl-type>
     }
 }

@@ -23,7 +23,7 @@ our role Lex::LineComment {
     }
 
     token line-comment {
-        <.line-comment-begin> <-[ \r \n ]>*
+        <.ws> <.line-comment-begin> <-[ \r \n ]>* 
     }
 }
 
@@ -34,7 +34,20 @@ our role Lex::LineComment {
 <blockcomment>\*\/    { yy-pop-state(); }
 <blockcomment>(.|\n)  { }
 =end comment
+my @block-comment-states;
 our role Lex::BlockComment {
+
+    method push-state($state) {
+        @block-comment-states.push: $state;
+    }
+
+    method pop-state {
+        try @block-comment-states.pop
+    }
+
+    method peek-state {
+        @block-comment-states[*-1]
+    }
 
     token block-comment-begin {
         \/\*
@@ -45,28 +58,40 @@ our role Lex::BlockComment {
     }
 
     token block-comment-continue {
-        | <block-comment-push>
-        | <block-comment-pop>
-        | <block-comment-inner>
+        || <block-comment-push>
+        || <block-comment-pop>
+        || <block-comment-inner>
     }
 
     token block-comment-push {
+        <?{self.peek-state().Str eq "blockcomment" }>
         \/\*
-        { self.push-state(XState::<blockcomment>) }
+        { 
+            self.push-state(XState::<blockcomment>) 
+        }
     }
 
     token block-comment-pop {
+        <?{self.peek-state().Str eq "blockcomment" }>
         \*\/
-        { self.pop-state() }
+        { 
+            self.pop-state();
+        }
     }
 
     token block-comment-inner {
-        | .
-        | \n
+        <?{self.peek-state().Str eq "blockcomment" }>
+        [
+            || .
+            || \n
+        ]
     }
 
     token block-comment-end {
-        <?{self.peek-state() eq XState::<initial> }>
+        <?{self.peek-state().Str eq "initial" }>
+        {
+            self.pop-state();
+        }
     }
 
     token block-comment {

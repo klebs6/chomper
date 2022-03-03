@@ -12,7 +12,7 @@ sub MAIN(:$stdin = Nil) {
     $in = $in.subst(/^\s+/,"");
 
     my $parsed = Rust::Grammar.parse($in, 
-        rule => "stmts");
+        rule => "crate");
 
     say $parsed;
 

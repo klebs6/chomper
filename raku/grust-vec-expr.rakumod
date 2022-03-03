@@ -4,13 +4,14 @@ our role VecExpr::Rules {
 
     proto rule vec-expr { * }
 
+    rule vec-expr:sym<b> {
+        <exprs> ';' <expr>
+    }
+
     rule vec-expr:sym<a> {
         <maybe-exprs>
     }
 
-    rule vec-expr:sym<b> {
-        <exprs> ';' <expr>
-    }
 }
 
 our role VecExpr::Actions {

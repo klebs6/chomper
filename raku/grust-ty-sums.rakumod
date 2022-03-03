@@ -8,15 +8,28 @@ our role TySums::Rules {
 
     #--------------------
     proto rule ty-sum-elt  { * }
-    rule ty-sum-elt:sym<a> { <ty> }
-    rule ty-sum-elt:sym<b> { <lifetime> }
+
+    rule ty-sum-elt:sym<type> { 
+        <ty> 
+
+        #can add to support trait_alias
+        #but it breaks some other stuff..
+        #
+        #<maybe-ty-default>? 
+    }
+
+    rule ty-sum-elt:sym<lifetime>      { <lifetime> }
+    rule ty-sum-elt:sym<const-generic> { <lit-int> }
 
     rule ty-prim-sum       { <ty-prim-sum-elt>+ %% "+" }
 
     #--------------------
     proto rule ty-prim-sum-elt { * }
 
-    rule ty-prim-sum-elt:sym<a> { <ty-prim> }
+    rule ty-prim-sum-elt:sym<a> { 
+        <ty-prim> 
+
+    }
     rule ty-prim-sum-elt:sym<b> { <lifetime> }
 }
 
@@ -37,12 +50,18 @@ our role TySums::Actions {
     }
 
     #-----------------
-    method ty-sum-elt:sym<a>($/) {
+    method ty-sum-elt:sym<type>($/) {
         make $<ty>.made
     }
 
-    method ty-sum-elt:sym<b>($/) {
+    method ty-sum-elt:sym<lifetime>($/) {
         make $<lifetime>.made
+    }
+
+    #this isn't in the official grammar, but we
+    #use it to help parse const-generics
+    method ty-sum-elt:sym<const-generic>($/) {
+        make $<lit-int>.made
     }
 
     #-----------------
@@ -58,3 +77,4 @@ our role TySums::Actions {
         make $<lifetime>.made
     }
 }
+

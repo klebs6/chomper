@@ -3,7 +3,7 @@ use grust-model;
 our role InnerAttrsAndBlock::Rules {
 
     rule inner-attrs-and-block {
-        '{' <maybe-inner-attrs> <maybe-stmts> '}'
+        '{' <maybe-inner-attrs> <maybe-stmts> <comment>? '}'
     }
 }
 
@@ -22,7 +22,7 @@ our role InnerAttrsAndBlock::Actions {
 our role Block::Rules {
 
     rule block {
-        '{' <maybe-stmts> '}'
+        '{' <maybe-stmts> <comment>? '}'
     }
 }
 

@@ -6,22 +6,18 @@ our role LambdaExpr::Rules {
     proto rule lambda-expr { * }
 
     rule lambda-expr:sym<a> {
-        #{self.set-prec(LAMBDA)} 
         <tok-oror> <ret-ty> <expr>
     }
 
     rule lambda-expr:sym<b> {
-        #{self.set-prec(LAMBDA)} 
         '|' '|' <ret-ty> <expr>
     }
 
     rule lambda-expr:sym<c> {
-        #{self.set-prec(LAMBDA)} 
         '|' <inferrable-params> '|' <ret-ty> <expr>
     }
 
     rule lambda-expr:sym<d> {
-        #{self.set-prec(LAMBDA)} 
         '|' <inferrable-params> <tok-oror> <lambda-expr-no-first-bar>
     }
 
@@ -29,14 +25,12 @@ our role LambdaExpr::Rules {
     proto rule lambda-expr-no-first-bar { * }
 
     rule lambda-expr-no-first-bar:sym<a> {
-        #{self.set-prec(LAMBDA)} 
         '|' 
         <ret-ty> 
         <expr>
     }
 
     rule lambda-expr-no-first-bar:sym<b> {
-        #{self.set-prec(LAMBDA)} 
         <inferrable-params> 
         '|' 
         <ret-ty> 
@@ -44,7 +38,6 @@ our role LambdaExpr::Rules {
     }
 
     rule lambda-expr-no-first-bar:sym<c> {
-        #{self.set-prec(LAMBDA)} 
         <inferrable-params> 
         <tok-oror> 
         <lambda-expr-no-first-bar>
@@ -54,23 +47,19 @@ our role LambdaExpr::Rules {
     proto rule lambda-expr-nostruct { * }
 
     rule lambda-expr-nostruct:sym<a> {
-        #{self.set-prec(LAMBDA)} 
         <tok-oror> 
         <expr-nostruct>
     }
 
     rule lambda-expr-nostruct:sym<b> {
-        #{self.set-prec(LAMBDA)} 
         '|' '|' <ret-ty> <expr-nostruct>
     }
 
     rule lambda-expr-nostruct:sym<c> {
-        #{self.set-prec(LAMBDA)} 
         '|' <inferrable-params> '|' <expr-nostruct>
     }
 
     rule lambda-expr-nostruct:sym<d> {
-        #{self.set-prec(LAMBDA)} 
         '|' 
         <inferrable-params> 
         <tok-oror> 
@@ -81,18 +70,15 @@ our role LambdaExpr::Rules {
     proto rule lambda-expr-nostruct-no-first-bar { * }
 
     rule lambda-expr-nostruct-no-first-bar:sym<a> {
-        #{self.set-prec(LAMBDA)} 
         '|' <ret-ty> <expr-nostruct>
     }
 
     rule lambda-expr-nostruct-no-first-bar:sym<b> {
-        #{self.set-prec(LAMBDA)} 
         <inferrable-params> 
         '|' <ret-ty> <expr-nostruct>
     }
 
     rule lambda-expr-nostruct-no-first-bar:sym<c> {
-        #{self.set-prec(LAMBDA)} 
         <inferrable-params> 
         <tok-oror> 
         <lambda-expr-nostruct-no-first-bar>

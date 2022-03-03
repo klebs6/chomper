@@ -9,7 +9,10 @@ our role PathNoTypesAllowed::Rules {
     rule path-no-types-allowed-base:sym<c> { <tok-mod-sep>? <kw-super> }
 
     rule path-no-types-allowed {  
-        <path-no-types-allowed-base> [<tok-mod-sep> <ident>]*
+        <tok-mod-sep>? #i added this here so we could parse things scoped globally
+
+        <path-no-types-allowed-base> 
+        [<tok-mod-sep> <ident>]*
     }
 }
 
@@ -36,9 +39,9 @@ our role PathGenericArgsWithoutColons::Rules {
 
     proto rule path-generic-args-without-colons-item { * }
 
-    rule path-generic-args-without-colons-item:sym<a> { <ident> }
-    rule path-generic-args-without-colons-item:sym<b> { <ident> <generic-args> }
     rule path-generic-args-without-colons-item:sym<c> { <ident> '(' <maybe-ty-sums> ')' <ret-ty> }
+    token path-generic-args-without-colons-item:sym<b> { <ident> <tok-mod-sep>? <generic-args> }
+    token path-generic-args-without-colons-item:sym<a> { <ident> }
 }
 
 our role PathGenericArgsWithoutColons::Actions {

@@ -18,7 +18,7 @@ doc-line
 blockcomment
 doc-block
 suffix
-INITIAL
+initial
 >;
 
 #--------------------------------------

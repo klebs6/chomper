@@ -2,6 +2,7 @@ use grust-model;
 
 our role Rust::Operator {
 
+    rule comma-comment    { ',' <comment>? } 
     #-------------------------------
 
     token tok-and              { '&'      } 

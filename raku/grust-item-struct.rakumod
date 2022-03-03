@@ -40,6 +40,7 @@ our role ItemStruct::Rules {
     }
 
     rule struct-decl-field {
+        <comment>?
         <attrs-and-vis> <ident> ':' <ty-sum>
     }
 

@@ -20,11 +20,16 @@ our role StructExpr::Rules {
     rule field-inits:sym<a> { <field-init>+ %% "," }
 
     #----------------
-    proto rule field-init { * }
+    rule field-init { 
+        <comment>? 
+        <field-init-item> 
+    }
 
-    rule field-init:sym<b>  { <ident> ':' <expr> }
-    rule field-init:sym<a>  { <ident> }
-    rule field-init:sym<c>  { <lit-int> ':' <expr> }
+    proto rule field-init-item { * }
+
+    rule field-init-item:sym<b>  { <ident> ':' <expr> }
+    rule field-init-item:sym<a>  { <ident> }
+    rule field-init-item:sym<c>  { <lit-int> ':' <expr> }
 
     rule default-field-init { <tok-dotdot> <expr> }
 }
@@ -50,20 +55,20 @@ our role StructExpr::Actions {
         make $<field-init>>>.made
     }
 
-    method field-init:sym<a>($/) {
+    method field-init-item:sym<a>($/) {
         make FieldInit.new(
             ident =>  $<ident>.made,
         )
     }
 
-    method field-init:sym<b>($/) {
+    method field-init-item:sym<b>($/) {
         make FieldInit.new(
             ident =>  $<ident>.made,
             expr  =>  $<expr>.made,
         )
     }
 
-    method field-init:sym<c>($/) {
+    method field-init-item:sym<c>($/) {
         make FieldInit.new(
             expr =>  $<expr>.made,
         )

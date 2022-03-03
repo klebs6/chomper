@@ -12,9 +12,11 @@ our role ExprMatch::Rules {
     rule match-clauses { <match-clause>+ }
 
     #--------------------
-    proto rule match-clause { * }
-    rule match-clause:sym<a> { <nonblock-match-clause> ',' }
-    rule match-clause:sym<b> { <block-match-clause> ','? }
+    rule match-clause { <comment>? <match-clause-base> }
+
+    proto rule match-clause-base { * }
+    rule match-clause-base:sym<a> { <nonblock-match-clause> ',' }
+    rule match-clause-base:sym<b> { <block-match-clause> ','? }
 
     #--------------------
     proto rule nonblock-match-clause { * }

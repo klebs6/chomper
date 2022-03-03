@@ -11,6 +11,10 @@ our role BlockItem::Rules {
     rule block-item:sym<enum>        { <item-enum> }
     rule block-item:sym<union>       { <item-union> }
     rule block-item:sym<trait>       { <item-trait> }
+
+    #not in the official grammar
+    rule block-item:sym<trait-alias> { <item-trait-alias> }
+
     rule block-item:sym<impl>        { <item-impl> }
 }
 

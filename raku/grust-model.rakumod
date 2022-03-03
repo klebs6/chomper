@@ -439,6 +439,12 @@ our class ItemTrait {
     has $.ident;
 }
 
+our class ItemTraitAlias {
+    has Bool $.unsafe;
+    has $.name;
+    has @.types;
+}
+
 our class TraitItems {
     has $.trait-item;
 }
@@ -914,6 +920,11 @@ our class ConstTraitItem {
     has $.maybe-const-default;
     has $.ident;
     has $.maybe-outer-attrs;
+}
+
+our class ConstGeneric {
+    has $.name is required;
+    has $.ty   is required;
 }
 
 our class TyClosure {

@@ -3,7 +3,6 @@ use grust-model;
 our role Expr::Rules {
 
     proto rule expr-tail{ * }
-
     rule expr-tail:sym<expr-q>                        { '?' }
     rule expr-tail:sym<dotted-expr>                   { '.' <path-generic-args-with-colons> }
     rule expr-tail:sym<dotted-expr-lit>               { '.' <lit-int> }
@@ -44,12 +43,9 @@ our role Expr::Rules {
     rule expr-tail:sym<expr-ty>                       { ':' <ty> }
 
     proto rule expr-base { * }
-
-    rule expr-base:sym<lit>  { <lit> }
-    rule expr-base:sym<self> { <kw-self> }
-
+    rule expr-base:sym<lit>                           { <lit> }
+    rule expr-base:sym<self>                          { <kw-self> }
     rule expr-base:sym<macro-expr>                    { <macro-expr> }
-
     rule expr-base:sym<struct-expr>                   { <path-expr> '{' <struct-expr-fields> '}' }
     rule expr-base:sym<paren-tail>                    { '(' <maybe-exprs> ')' }
     rule expr-base:sym<brack-tail>                    { '[' <vec-expr> ']' }

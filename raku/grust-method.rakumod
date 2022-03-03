@@ -4,14 +4,10 @@ our role Method::Rules {
 
     proto rule trait-method { * }
 
-    rule trait-method:sym<a> {
-        <type-method>
-    }
+    rule trait-method:sym<a> { <type-method> }
+    rule trait-method:sym<b> { <method> }
 
-    rule trait-method:sym<b> {
-        <method>
-    }
-
+    #-----------------------------
     proto rule type-method { * }
 
     rule type-method:sym<a> {
@@ -50,6 +46,7 @@ our role Method::Rules {
         ';'
     }
 
+    #-----------------------------
     proto rule method { * }
 
     rule method:sym<a> {
@@ -88,6 +85,7 @@ our role Method::Rules {
         <inner-attrs-and-block>
     }
 
+    #-----------------------------
     proto rule impl-method { * }
 
     rule impl-method:sym<a> {

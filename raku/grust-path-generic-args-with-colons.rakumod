@@ -15,13 +15,13 @@ our role PathGenericArgsWithColons::Rules {
     }
 
     proto rule path-generic-args-with-colons-prefix { * }
-    rule path-generic-args-with-colons-prefix:sym<a> { <ident> }
     rule path-generic-args-with-colons-prefix:sym<b> { <kw-super> }
+    rule path-generic-args-with-colons-prefix:sym<a> { <ident> }
 
     proto rule path-generic-args-with-colons-tail { * }
-    rule path-generic-args-with-colons-tail:sym<c> { <tok-mod-sep> <ident> }
-    rule path-generic-args-with-colons-tail:sym<d> { <tok-mod-sep> <kw-super> }
     rule path-generic-args-with-colons-tail:sym<e> { <tok-mod-sep> <generic-args> }
+    rule path-generic-args-with-colons-tail:sym<d> { <tok-mod-sep> <kw-super> }
+    rule path-generic-args-with-colons-tail:sym<c> { <tok-mod-sep> <ident> }
 }
 
 our role PathGenericArgsWithColons::Actions {

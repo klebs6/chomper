@@ -4,6 +4,7 @@ use grust-model;
 our role ModItem::Rules {
 
     rule mod-item {
+        <comment>?
         <attrs-and-vis> <item>
     }
 }

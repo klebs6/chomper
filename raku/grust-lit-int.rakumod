@@ -9,7 +9,9 @@ our role LitInt::Rules {
         || <decdigit> <decdigit-cont>* <intlit-ty>?
     }
 
-    token intlit-ty { 
+    proto token intlit-ty { * }
+
+    token intlit-ty:sym<prim> { 
         [    
             ||    'u'
             ||    'i'
@@ -22,9 +24,16 @@ our role LitInt::Rules {
         ]?
     }
 
+    token intlit-ty:sym<size> { 
+        [    
+            ||    'usize'
+            ||    'isize'
+        ]
+    }
 
-    token bindigit      { <[ 0 .. 1 ]> }
-    token decdigit      { <[ 0 .. 9 ]> }
-    token decdigit-cont { <[ 0 .. 9 ]> }
-    token hexdigit      { <[ 0 .. 9 ]> }
+
+    token bindigit      { <[ 0 .. 1 _ ]> }
+    token decdigit      { <[ 0 .. 9 _ ]> }
+    token decdigit-cont { <[ 0 .. 9 _ ]> }
+    token hexdigit      { <[ 0 .. 9 a..f A..F _ ]> }
 }

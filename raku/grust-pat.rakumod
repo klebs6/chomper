@@ -11,12 +11,12 @@ our role Pat::Rules {
     rule pat:sym<e> { '(' ')' }
     rule pat:sym<f> { '(' <pat-tup> ')' }
     rule pat:sym<g> { '[' <pat-vec> ']' }
-    rule pat:sym<h> { <lit-or-path> }
-    rule pat:sym<i> { <lit-or-path> <tok-dotdotdot> <lit-or-path> }
     rule pat:sym<j> { <path-expr> '{' <pat-struct> '}' }
     rule pat:sym<k> { <path-expr> '(' ')' }
     rule pat:sym<l> { <path-expr> '(' <pat-tup> ')' }
     rule pat:sym<m> { <path-expr> '!' <maybe-ident> <delimited-token-trees> }
+    rule pat:sym<h> { <lit-or-path> }
+    rule pat:sym<i> { <lit-or-path> <tok-dotdotdot> <lit-or-path> }
     rule pat:sym<n> { <binding-mode> <ident> }
     rule pat:sym<o> { <ident> '@' <pat> }
     rule pat:sym<p> { <binding-mode> <ident> '@' <pat> }

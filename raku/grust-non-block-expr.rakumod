@@ -4,7 +4,7 @@ use grust-model;
 
 our role NonBlockExpr::Rules {
 
-    rule nonblock-expr {  <nonblock-expr-base> <nonblock-expr-tail>* }
+    rule nonblock-expr {  <comment>? <nonblock-expr-base> <nonblock-expr-tail>* }
 
     #---------------------
     proto rule nonblock-expr-base { * }
@@ -17,16 +17,22 @@ our role NonBlockExpr::Rules {
     rule nonblock-expr-base:sym<struct-expr>           { <path-expr> '{' <struct-expr-fields> '}' }
     rule nonblock-expr-base:sym<vec-expr>              { '[' <vec-expr> ']' }
     rule nonblock-expr-base:sym<paren-expr>            { '(' <maybe-exprs> ')' }
-    rule nonblock-expr-base:sym<continue>              { <kw-continue> }
+
     rule nonblock-expr-base:sym<continue-lt>           { <kw-continue> <lifetime> }
-    rule nonblock-expr-base:sym<return>                { <kw-return> }
+    rule nonblock-expr-base:sym<continue>              { <kw-continue> }
+
     rule nonblock-expr-base:sym<return-expr>           { <kw-return> <expr> }
-    rule nonblock-expr-base:sym<break>                 { <kw-break> }
+    rule nonblock-expr-base:sym<return>                { <kw-return> }
+
     rule nonblock-expr-base:sym<break-lt>              { <kw-break> <lifetime> }
-    rule nonblock-expr-base:sym<yield>                 { <kw-yield> }
+    rule nonblock-expr-base:sym<break>                 { <kw-break> }
+
     rule nonblock-expr-base:sym<yield-expr>            { <kw-yield> <expr> }
+    rule nonblock-expr-base:sym<yield>                 { <kw-yield> }
+
     rule nonblock-expr-base:sym<dotdot-expr>           { <tok-dotdot> <expr> }
     rule nonblock-expr-base:sym<dotdot>                { <tok-dotdot> }
+
     rule nonblock-expr-base:sym<box-expr>              { <kw-box> <expr> }
     rule nonblock-expr-base:sym<expr-qualified-path>   { <expr-qualified-path> }
     rule nonblock-expr-base:sym<nonblock-prefix-expr>  { <nonblock-prefix-expr> }

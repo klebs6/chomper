@@ -4,23 +4,28 @@ our role TyPrim::Rules {
 
     proto rule ty-prim { * }
 
-    rule ty-prim:sym<a> { 
-        #{self.set-prec(IDENT)} 
-        <path-generic-args-without-colons> 
-    }
+    rule ty-prim:sym<f> { <kw-box> <ty> }
 
-    rule ty-prim:sym<b> { 
-        #{self.set-prec(IDENT)} 
-        <tok-mod-sep> 
-        <path-generic-args-without-colons> 
-    }
+    rule ty-prim:sym<g> { '*' <maybe-mut-or-const> <ty> }
 
-    rule ty-prim:sym<c> { 
-        #{self.set-prec(IDENT)} 
-        <kw-self> 
-        <tok-mod-sep> 
-        <path-generic-args-without-colons> 
-    }
+    rule ty-prim:sym<i> { '&' <kw-mut> <ty> }
+    rule ty-prim:sym<h> { '&' <ty> }
+
+    rule ty-prim:sym<k> { <tok-andand> <kw-mut> <ty> }
+    rule ty-prim:sym<j> { <tok-andand> <ty> }
+
+    rule ty-prim:sym<l> { '&' <lifetime> <maybe-mut> <ty> }
+
+    rule ty-prim:sym<m> { <tok-andand> <lifetime> <maybe-mut> <ty> }
+
+    rule ty-prim:sym<n> { '[' <ty> ']' }
+    rule ty-prim:sym<o> { '[' <ty> ',' <tok-dotdot> <expr> ']' }
+    rule ty-prim:sym<p> { '[' <ty> ';' <expr> ']' }
+
+    rule ty-prim:sym<q> { <kw-typeof> '(' <expr> ')' }
+    rule ty-prim:sym<r> { <tok-underscore> }
+    rule ty-prim:sym<s> { <ty-bare-fn> }
+    rule ty-prim:sym<t> { <for-in-type> }
 
     rule ty-prim:sym<d> { 
         #{self.set-prec(IDENT)} 
@@ -39,21 +44,23 @@ our role TyPrim::Rules {
         <delimited-token-trees> 
     }
 
-    rule ty-prim:sym<f> { <kw-box> <ty> }
-    rule ty-prim:sym<g> { '*' <maybe-mut-or-const> <ty> }
-    rule ty-prim:sym<h> { '&' <ty> }
-    rule ty-prim:sym<i> { '&' <kw-mut> <ty> }
-    rule ty-prim:sym<j> { <tok-andand> <ty> }
-    rule ty-prim:sym<k> { <tok-andand> <kw-mut> <ty> }
-    rule ty-prim:sym<l> { '&' <lifetime> <maybe-mut> <ty> }
-    rule ty-prim:sym<m> { <tok-andand> <lifetime> <maybe-mut> <ty> }
-    rule ty-prim:sym<n> { '[' <ty> ']' }
-    rule ty-prim:sym<o> { '[' <ty> ',' <tok-dotdot> <expr> ']' }
-    rule ty-prim:sym<p> { '[' <ty> ';' <expr> ']' }
-    rule ty-prim:sym<q> { <kw-typeof> '(' <expr> ')' }
-    rule ty-prim:sym<r> { <tok-underscore> }
-    rule ty-prim:sym<s> { <ty-bare-fn> }
-    rule ty-prim:sym<t> { <for-in-type> }
+    rule ty-prim:sym<a> { 
+        #{self.set-prec(IDENT)} 
+        <path-generic-args-without-colons> 
+    }
+
+    rule ty-prim:sym<b> { 
+        #{self.set-prec(IDENT)} 
+        <tok-mod-sep> 
+        <path-generic-args-without-colons> 
+    }
+
+    rule ty-prim:sym<c> { 
+        #{self.set-prec(IDENT)} 
+        <kw-self> 
+        <tok-mod-sep> 
+        <path-generic-args-without-colons> 
+    }
 }
 
 our role TyPrim::Actions {
