@@ -65,14 +65,18 @@ our class ExprLit {
     has $.lit;
 }
 
-our class AnonArg {
+our class AnonParam {
     has $.named-arg;
     has $.ty;
 }
 
-our class AnonArgs {
+our class AnonParams {
     has Bool $.variadic-tail;
     has @.anon-params;
+}
+
+our class AsTraitRef {
+    has $.trait-ref;
 }
 
 our class AttrsAndVis {
@@ -80,8 +84,13 @@ our class AttrsAndVis {
     has $.visibility;
 }
 
-our class BindByRef {}
-our class BindByValue {}
+our class BindByRef {
+    has Bool $.mut;
+}
+
+our class BindByValue {
+    has Bool $.mut;
+}
 
 our class Binding {
     has $.ty;

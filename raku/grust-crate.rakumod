@@ -17,8 +17,9 @@ our role Crate::Actions {
 
     method crate($/) {
         make Crate.new(
-            inner-attrs     =>  $<inner-attrs>.made // Nil,
-            maybe-mod-items =>  $<maybe-mod-items>.made,
+            shebang         => $<maybe-shebang>.made,
+            inner-attrs     => $<inner-attrs>.made // Nil,
+            maybe-mod-items => $<maybe-mod-items>.made,
         )
     }
 

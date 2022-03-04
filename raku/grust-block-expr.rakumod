@@ -26,7 +26,6 @@ our role BlockExpr::Rules {
 
     rule block-expr-dot-tail:sym<base> {
         <path-generic-args-with-colons> 
-        #{self.set-prec(IDENT)} 
     }
 
     rule block-expr-dot-tail:sym<brack> {
@@ -91,7 +90,6 @@ our role BlockExpr::Actions {
 
     method block-expr-dot-tail:sym<brack>($/) {
         make ExprIndex.new(
-            block-expr                    =>  $<block-expr>.made,
             path-generic-args-with-colons =>  $<path-generic-args-with-colons>.made,
             maybe-expr                    =>  $<maybe-expr>.made,
         )
@@ -99,7 +97,6 @@ our role BlockExpr::Actions {
 
     method block-expr-dot-tail:sym<parens>($/) {
         make ExprCall.new(
-            block-expr                    =>  $<block-expr>.made,
             path-generic-args-with-colons =>  $<path-generic-args-with-colons>.made,
             maybe-exprs                   =>  $<maybe-exprs>.made,
         )

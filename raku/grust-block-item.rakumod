@@ -20,19 +20,14 @@ our role BlockItem::Rules {
 
 our role BlockItem::Actions {
 
-    method block-item:sym<fn>($/)        { make $<item-fn>.made }
-    method block-item:sym<unsafe-fn>($/) { make $<item-unsafe-fn>.made }
-    method block-item:sym<mod>($/)       { make $<item-mod>.made }
-
-    method block-item:sym<foreign-mod>($/) {
-        make ItemForeignMod.new(
-            item-foreign-mod =>  $<item-foreign-mod>.made,
-        )
-    }
-
-    method block-item:sym<struct>($/) { make $<item-struct>.made }
-    method block-item:sym<enum>($/)   { make $<item-enum>.made }
-    method block-item:sym<union>($/)  { make $<item-union>.made }
-    method block-item:sym<trait>($/)  { make $<item-trait>.made }
-    method block-item:sym<impl>($/)   { make $<item-impl>.made }
+    method block-item:sym<fn>($/)           { make $<item-fn>.made }
+    method block-item:sym<unsafe-fn>($/)    { make $<item-unsafe-fn>.made }
+    method block-item:sym<mod>($/)          { make $<item-mod>.made }
+    method block-item:sym<foreign-mod>($/)  { make $<item-foreign-mod>.made }
+    method block-item:sym<struct>($/)       { make $<item-struct>.made }
+    method block-item:sym<enum>($/)         { make $<item-enum>.made }
+    method block-item:sym<union>($/)        { make $<item-union>.made }
+    method block-item:sym<trait>($/)        { make $<item-trait>.made }
+    method block-item:sym<trait-alias>($/)  { make $<item-trait-alias>.made }
+    method block-item:sym<impl>($/)         { make $<item-impl>.made }
 }

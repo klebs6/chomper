@@ -9,11 +9,9 @@ our role Default::Rules {
 
 our role Default::Actions {
 
-    method default($/) {
-        make Default.new
-    }
-
     method maybe-default($/) {
-        make $<kw-default>.made
+        if $/<kw-default>:exists {
+            make $<kw-default>
+        }
     }
 }

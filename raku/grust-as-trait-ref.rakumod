@@ -8,6 +8,10 @@ our role AsTraitRef::Rules {
 
 our role AsTraitRef::Actions {
     method maybe-as-trait-ref($/) {
-        make $<trait-ref>.made
+        if $/<trait-ref>:exists {
+            make AsTraitRef.new(
+                trait-ref => $<trait-ref>.made,
+            )
+        }
     }
 }

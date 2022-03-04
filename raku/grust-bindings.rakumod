@@ -36,8 +36,8 @@ our role BindingMode::Rules {
 
 our role BindingMode::Actions {
 
-    method binding-mode:sym<kw-ref>($/)  { make BindByRef.new() }
-    method binding-mode:sym<ref-mut>($/) { make BindByRef.new() }
-    method binding-mode:sym<kw-mut>($/)  { make BindByValue.new() }
+    method binding-mode:sym<kw-ref>($/)  { make BindByRef.new(  mut => False) }
+    method binding-mode:sym<ref-mut>($/) { make BindByRef.new(  mut => True) }
+    method binding-mode:sym<kw-mut>($/)  { make BindByValue.new(mut => True) }
 }
 

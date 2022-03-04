@@ -1,7 +1,7 @@
 use grust-model;
 use grust-lex;
 
-our role Rust::Comments 
+our role Comment::Rules 
 {
     proto rule comment { * }
 
@@ -9,36 +9,13 @@ our role Rust::Comments
     rule comment:sym<block> {  <block-comment> }
 }
 
-our role Comments::Actions {
+our role Comment::Actions {
     method comment:sym<line>($/)  { make $<line-comment>>>.made }
     method comment:sym<block>($/) { make $<block-comment>.made }
-
-    method line-comment($/) {
-        make $<line-comment-body>.made
-    }
-
-    method line-comment-body($/) {
-        make ~$/
-    }
-
-    method block-comment($/) {
-        make $<block-comment-continue>>>.made.join("")
-    }
-
-    method block-comment-continue($/) {
-        if ~$/.keys[0] eq "block-comment-inner" {
-            make ~$/
-        }
-    }
 }
 
 #--------------------------------------
-=begin comment
-\/\/|\/\/\/\/         { BEGIN(linecomment); }
-<linecomment>\n       { BEGIN(INITIAL); }
-<linecomment>[^\n]*   { }
-=end comment
-our role Lex::LineComment {
+our role LineComment::Rules {
 
     token line-comment-begin {
         || \/\/\/
@@ -54,15 +31,21 @@ our role Lex::LineComment {
     }
 }
 
+our role LineComment::Actions {
+
+    method line-comment($/) {
+        make $<line-comment-body>.made
+    }
+
+    method line-comment-body($/) {
+        make ~$/
+    }
+}
+
 #--------------------------------------
-=begin comment
-\/\*                  { yy-push-state(blockcomment); }
-<blockcomment>\/\*    { yy-push-state(blockcomment); }
-<blockcomment>\*\/    { yy-pop-state(); }
-<blockcomment>(.|\n)  { }
-=end comment
 my @block-comment-states;
-our role Lex::BlockComment {
+
+our role BlockComment::Rules {
 
     method push-state($state) {
         @block-comment-states.push: $state;
@@ -128,7 +111,21 @@ our role Lex::BlockComment {
     }
 }
 
-our role Lex::DocComment {
+our role BlockComment::Actions {
+
+    method block-comment($/) {
+        make $<block-comment-continue>>>.made.join("")
+    }
+
+    method block-comment-continue($/) {
+        if ~$/.keys[0] eq "block-comment-inner" {
+            make ~$/
+        }
+    }
+}
+
+#----------------------------
+our role DocComment::Rules {
 
     proto token outer-doc-comment { * }
 
@@ -180,5 +177,36 @@ our role Lex::DocComment {
         ]
         '*'+
         '/'
+    }
+}
+
+our role DocComment::Actions {
+
+    method OUTER-DOC-COMMENT:sym<a>($/) {
+        make $/.Str
+    }
+
+    method OUTER-DOC-COMMENT:sym<b> {
+        make $/.Str
+    }
+
+    method OUTER-DOC-COMMENT:sym<c>($/) {
+        make $/.Str
+    }
+
+    method OUTER-DOC-COMMENT:sym<d>($/) {
+        make $/.Str
+    }
+
+    method inner-doc-comment($/) { 
+        make $/.Str
+    }
+
+    method other-line-comment($/) { 
+        make $/.Str
+    }
+
+    method other-block-comment($/) { 
+        make $/.Str
     }
 }

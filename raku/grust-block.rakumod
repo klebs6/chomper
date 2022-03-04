@@ -17,7 +17,7 @@ our role InnerAttrsAndBlock::Actions {
         make ExprBlock.new(
             maybe-inner-attrs =>  $<maybe-inner-attrs>.made,
             maybe-stmts       =>  $<maybe-stmts>.made,
-            comment           =>  $<maybe-stmts>.made,
+            comment           =>  $<comment>.made,
         )
     }
 }
@@ -36,6 +36,7 @@ our role Block::Actions {
     method block($/) {
         make ExprBlock.new(
             maybe-stmts =>  $<maybe-stmts>.made,
+            comment     =>  $<comment>.made,
         )
     }
 }

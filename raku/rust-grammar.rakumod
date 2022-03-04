@@ -138,10 +138,10 @@ does Lex::RawStrEsc
 does Lex::Str_
 does Lex::Suffix
 
-does Rust::Comments
-does Lex::LineComment
-does Lex::BlockComment
-does Lex::DocComment
+does Comment::Rules
+does LineComment::Rules
+does BlockComment::Rules
+does DocComment::Rules
 
 #-----------------------------
 does Rust::Keyword
@@ -287,7 +287,10 @@ does Bounds::Actions
 does ConstDefault::Actions
 does ConstGenerics::Actions
 does Crate::Actions
-does Comments::Actions
+does Comment::Actions
+does LineComment::Actions
+does BlockComment::Actions
+does DocComment::Actions
 does Default::Actions
 does Expr::Actions
 does ExprFor::Actions

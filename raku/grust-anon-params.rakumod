@@ -50,18 +50,20 @@ our role AnonParams::Actions {
     }
 
     method anon-param:sym<named-arg-ty>($/) {
-        make AnonArg.new(
+        make AnonParam.new(
             named-arg =>  $<named-arg>.made,
             ty        =>  $<ty>.made,
         )
     }
 
     method anon-param:sym<just-ty>($/) {
-        make $<ty>.made
+        make AnonParam.new(
+            ty        =>  $<ty>.made,
+        )
     }
 
     method anon-params-allow-variadic-tail($/) {
-        make AnonArgs.new(
+        make AnonParams.new(
             anon-params   => $<anon-param>>>.made,
             variadic-tail => so $<tok-dotdotdot>.made,
         )
