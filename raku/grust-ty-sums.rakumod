@@ -19,7 +19,7 @@ our role TySums::Rules {
     rule ty-sum-elt:sym<lifetime>      { <lifetime> }
     rule ty-sum-elt:sym<const-generic> { <lit-int> }
 
-    rule ty-prim-sum       { <ty-prim-sum-elt>+ %% "+" }
+    rule ty-prim-sum { <ty-prim-sum-elt>+ %% "+" }
 
     #--------------------
     proto rule ty-prim-sum-elt { * }
@@ -41,13 +41,20 @@ our role TySums::Actions {
         make $<ty-sum>>>.made
     }
 
-    method ty-sum:sym<a>($/) {
+    method ty-sum($/) {
         make TySum.new(
-            ty-sum-elt =>  $<ty-sum-elt>>>.made,
+            ty-sum-elts =>  $<ty-sum-elt>>>.made,
         )
     }
 
     #-----------------
+    method ty-sum-elt:sym<type-with-default>($/) {
+        make TypeWithDefault.new(
+            ty      => $<ty>.made,
+            default => $<ty-sum>.made,
+        )
+    }
+
     method ty-sum-elt:sym<type>($/) {
         make $<ty>.made
     }
@@ -75,4 +82,3 @@ our role TySums::Actions {
         make $<lifetime>.made
     }
 }
-

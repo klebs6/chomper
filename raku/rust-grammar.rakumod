@@ -38,6 +38,7 @@ use grust-ident;
 use grust-idents-or-self;
 use grust-impl-const;
 use grust-impl-type;
+use grust-impl-item;
 use grust-inferrable-parms;
 use grust-init-expr;
 use grust-inner-attr;
@@ -195,6 +196,7 @@ does Item::Rules
 does ItemConst::Rules
 does ItemEnum::Rules
 does ItemImpl::Rules
+does ImplItem::Rules
 does ItemMacro::Rules
 does ItemMod::Rules
 does ItemStatic::Rules
@@ -285,6 +287,7 @@ does Bounds::Actions
 does ConstDefault::Actions
 does ConstGenerics::Actions
 does Crate::Actions
+does Comments::Actions
 does Default::Actions
 does Expr::Actions
 does ExprFor::Actions
@@ -322,6 +325,7 @@ does Item::Actions
 does ItemConst::Actions
 does ItemEnum::Actions
 does ItemImpl::Actions
+does ImplItem::Actions
 does ItemMacro::Actions
 does ItemMod::Actions
 does ItemStatic::Actions

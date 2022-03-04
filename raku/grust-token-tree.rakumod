@@ -23,7 +23,7 @@ our role TokenTree::Rules {
 our role TokenTree::Actions {
 
     method token-trees($/) {
-        make $<token-tree>>.made
+        make $<token-tree>>>.made
     }
 
     method token-tree:sym<a>($/) {

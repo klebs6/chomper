@@ -1,5 +1,10 @@
 use grust-model;
 
+our class PathGenericArgsWithColons {
+    has $.base;
+    has @.tail;
+}
+
 #-------------------------------------
 # A path with a lifetime and type parameters with
 # double colons before the type parameters;
@@ -10,13 +15,13 @@ use grust-model;
 our role PathGenericArgsWithColons::Rules {
 
     rule path-generic-args-with-colons {  
-        <path-generic-args-with-colons-prefix>
+        <path-generic-args-with-colons-base>
         <path-generic-args-with-colons-tail>*
     }
 
-    proto rule path-generic-args-with-colons-prefix { * }
-    rule path-generic-args-with-colons-prefix:sym<b> { <kw-super> }
-    rule path-generic-args-with-colons-prefix:sym<a> { <ident> }
+    proto rule path-generic-args-with-colons-base { * }
+    rule path-generic-args-with-colons-base:sym<b> { <kw-super> }
+    rule path-generic-args-with-colons-base:sym<a> { <ident> }
 
     proto rule path-generic-args-with-colons-tail { * }
     rule path-generic-args-with-colons-tail:sym<e> { <tok-mod-sep> <generic-args> }
@@ -28,18 +33,18 @@ our role PathGenericArgsWithColons::Actions {
 
     method path-generic-args-with-colons($/) {
         make PathGenericArgsWithColons.new(
-            prefix => $<path-generic-args-with-colons-prefix>.made,
-            tail   => $<path-generic-args-with-colons-tail>>>.made,
+            base => $<path-generic-args-with-colons-base>.made,
+            tail => $<path-generic-args-with-colons-tail>>>.made,
         )
     }
 
-    method path-generic-args-with-colons-prefix:sym<a>($/) {
+    method path-generic-args-with-colons-base:sym<a>($/) {
         make Components.new(
             ident =>  $<ident>.made,
         )
     }
 
-    method path-generic-args-with-colons-prefix:sym<b>($/) {
+    method path-generic-args-with-colons-base:sym<b>($/) {
         make Super.new
     }
 

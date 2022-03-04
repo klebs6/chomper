@@ -3,7 +3,11 @@ use grust-model;
 our role InnerAttrsAndBlock::Rules {
 
     rule inner-attrs-and-block {
-        '{' <maybe-inner-attrs> <maybe-stmts> <comment>? '}'
+        '{' 
+        <maybe-inner-attrs> 
+        <maybe-stmts> 
+        <comment>? 
+        '}'
     }
 }
 
@@ -13,6 +17,7 @@ our role InnerAttrsAndBlock::Actions {
         make ExprBlock.new(
             maybe-inner-attrs =>  $<maybe-inner-attrs>.made,
             maybe-stmts       =>  $<maybe-stmts>.made,
+            comment           =>  $<maybe-stmts>.made,
         )
     }
 }

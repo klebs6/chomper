@@ -10,6 +10,6 @@ our role MetaSeq::Rules {
 our role MetaSeq::Actions {
 
     method meta-seq($/) {
-        make $<meta-item>.made
+        make $<meta-item>>>.made
     }
 }

@@ -30,7 +30,6 @@ our role Pat::Rules {
 }
 
 our role Pat::Actions {
-    =begin comment
 
     method pat:sym<a>($/) {
         make PatWild.new
@@ -76,8 +75,8 @@ our role Pat::Actions {
 
     method pat:sym<i>($/) {
         make PatRange.new(
-            lit-or-path =>  $<lit-or-path>.made,
-            lit-or-path =>  $<lit-or-path>.made,
+            lit-or-pathA =>  $<lit-or-path>.made,
+            lit-or-pathB =>  $<lit-or-path>.made,
         )
     }
 
@@ -152,8 +151,7 @@ our role Pat::Actions {
         )
     }
 
-    method pats-or:sym($/) {
+    method pats-or($/) {
         make $<pat>>>.made
     }
-    =end comment
 }

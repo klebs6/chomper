@@ -1,4 +1,5 @@
 use grust-model;
+use Data::Dump::Tree;
 
 our role Stmts::Rules {
 
@@ -24,22 +25,49 @@ our role Stmts::Rules {
 
 our role Stmts::Actions {
 
-    method maybe-stmts:sym<a>($/) {
-        make Stmts.new(
-            stmts         => $<stmts>.made,
-            nonblock-expr => $<nonblock-expr>.made,
-        )
+    method maybe-stmts($/) {
+        my @stmts = $<stmts>.made.List;
+        my $last  = $<nonblock-expr>.made;
+
+        if @stmts[0] {
+
+            if $last {
+                @stmts.push: $last
+            }
+
+            make @stmts
+
+        } else {
+
+            if $last {
+                make $last
+            }
+        }
     }
 
     method stmts($/) {
         make $<stmt>>>.made
     }
 
-    method stmt:sym<a>($/) { make $<let>.made }
-    method stmt:sym<e>($/) { make $<stmt-item>.made }
-    method stmt:sym<f>($/) { make $<full-block-expr>.made }
-    method stmt:sym<g>($/) { make $<block>.made }
-    method stmt:sym<i>($/) { make $<nonblock-expr>.made }
+    method stmt:sym<a>($/) { 
+        make Stmt.new(
+            comment => $<comment>.made,
+            value   => $<stmt-body>.made,
+        )
+    }
+
+    method stmt:sym<b>($/) { 
+        make Stmt.new(
+            comment => $<block-comment>.made,
+            value   => Nil,
+        )
+    }
+
+    method stmt-body:sym<a>($/) { make $<let>.made }
+    method stmt-body:sym<e>($/) { make $<stmt-item>.made }
+    method stmt-body:sym<f>($/) { make $<full-block-expr>.made }
+    method stmt-body:sym<g>($/) { make $<block>.made }
+    method stmt-body:sym<i>($/) { make $<nonblock-expr>.made }
 }
 
 #------------------------------

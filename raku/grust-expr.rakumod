@@ -80,395 +80,399 @@ our role Expr::Rules {
 }
 
 our role Expr::Actions {
-=begin comment
+    method expr($/) {
+        make Expr.new(
+            prefix => $<expr-prefix>>>.made,
+            base   => $<expr-base>.made,
+            tail   => $<expr-tail>>>.made,
+        )
+    }
 
-    method expr:sym<lit>($/) {
+    method expr-base:sym<lit>($/) {
         make ExprLit.new(
             lit =>  $<lit>.made,
         )
     }
 
-    method expr:sym<self>($/) {
+    method expr-base:sym<self>($/) {
         make ExprPath.new(
 
         )
     }
 
-    method expr:sym<path-expr>($/) {
+    method expr-base:sym<path-expr>($/) {
         make ExprPath.new(
             path-expr =>  $<path-expr>.made,
         )
     }
 
-    method expr:sym<macro-expr>($/) {
+    method expr-base:sym<macro-expr>($/) {
         make ExprMac.new(
             macro-expr =>  $<macro-expr>.made,
         )
     }
 
-    method expr:sym<struct-expr>($/) {
+    method expr-base:sym<struct-expr>($/) {
         make ExprStruct.new(
             path-expr          =>  $<path-expr>.made,
             struct-expr-fields =>  $<struct-expr-fields>.made,
         )
     }
 
-    method expr:sym<expr-q>($/) {
+    method expr-tail:sym<expr-q>($/) {
         make ExprTry.new(
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<dotted-expr>($/) {
+    method expr-tail:sym<dotted-expr>($/) {
         make ExprField.new(
             expr                          =>  $<expr>.made,
             path-generic-args-with-colons =>  $<path-generic-args-with-colons>.made,
         )
     }
 
-    method expr:sym<dotted-expr-lit>($/) {
+    method expr-tail:sym<dotted-expr-lit>($/) {
         make ExprTupleIndex.new(
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-bracket-tail>($/) {
+    method expr-tail:sym<expr-bracket-tail>($/) {
         make ExprIndex.new(
             expr       =>  $<expr>.made,
             maybe-expr =>  $<maybe-expr>.made,
         )
     }
 
-    method expr:sym<expr-paren-tail>($/) {
+    method expr-tail:sym<expr-paren-tail>($/) {
         make ExprCall.new(
             expr        =>  $<expr>.made,
             maybe-exprs =>  $<maybe-exprs>.made,
         )
     }
 
-    method expr:sym<paren-tail>($/) {
+    method expr-base:sym<paren-tail>($/) {
         make ExprParen.new(
             maybe-exprs =>  $<maybe-exprs>.made,
         )
     }
 
-    method expr:sym<brack-tail>($/) {
+    method expr-base:sym<brack-tail>($/) {
         make ExprVec.new(
             vec-expr =>  $<vec-expr>.made,
         )
     }
 
-    method expr:sym<continue>($/) {
+    method expr-base:sym<continue>($/) {
         make ExprAgain.new(
 
         )
     }
 
-    method expr:sym<continue-ident>($/) {
+    method expr-base:sym<continue-ident>($/) {
         make ExprAgain.new(
             ident =>  $<ident>.made,
         )
     }
 
-    method expr:sym<return>($/) {
+    method expr-base:sym<return>($/) {
         make ExprRet.new(
 
         )
     }
 
-    method expr:sym<return-expr>($/) {
+    method expr-prefix:sym<return-expr>($/) {
         make ExprRet.new(
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<break>($/) {
+    method expr-base:sym<break>($/) {
         make ExprBreak.new(
 
         )
     }
 
-    method expr:sym<break-ident>($/) {
+    method expr-base:sym<break-ident>($/) {
         make ExprBreak.new(
             ident =>  $<ident>.made,
         )
     }
 
-    method expr:sym<yield>($/) {
+    method expr-base:sym<yield>($/) {
         make ExprYield.new(
 
         )
     }
 
-    method expr:sym<yield-expr>($/) {
+    method expr-prefix:sym<yield-expr>($/) {
         make ExprYield.new(
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-eq-expr>($/) {
+    method expr-tail:sym<expr-eq-expr>($/) {
         make ExprAssign.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-shleq-expr>($/) {
+    method expr-tail:sym<expr-shleq-expr>($/) {
         make ExprAssignShl.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-shreq-expr>($/) {
+    method expr-tail:sym<expr-shreq-expr>($/) {
         make ExprAssignShr.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-minuseq-expr>($/) {
+    method expr-tail:sym<expr-minuseq-expr>($/) {
         make ExprAssignSub.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-andeq-expr>($/) {
+    method expr-tail:sym<expr-andeq-expr>($/) {
         make ExprAssignBitAnd.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-oreq-expr>($/) {
+    method expr-tail:sym<expr-oreq-expr>($/) {
         make ExprAssignBitOr.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-pluseq-expr>($/) {
+    method expr-tail:sym<expr-pluseq-expr>($/) {
         make ExprAssignAdd.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-stareq-expr>($/) {
+    method expr-tail:sym<expr-stareq-expr>($/) {
         make ExprAssignMul.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-slasheq-expr>($/) {
+    method expr-tail:sym<expr-slasheq-expr>($/) {
         make ExprAssignDiv.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-careteq-expr>($/) {
+    method expr-tail:sym<expr-careteq-expr>($/) {
         make ExprAssignBitXor.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-percenteq-expr>($/) {
+    method expr-tail:sym<expr-percenteq-expr>($/) {
         make ExprAssignRem.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-oror-expr>($/) {
+    method expr-tail:sym<expr-oror-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-andand-expr>($/) {
+    method expr-tail:sym<expr-andand-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-eqeq-expr>($/) {
+    method expr-tail:sym<expr-eqeq-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-ne-expr>($/) {
+    method expr-tail:sym<expr-ne-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-lt-expr>($/) {
+    method expr-tail:sym<expr-lt-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-gt-expr>($/) {
+    method expr-tail:sym<expr-gt-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-le-expr>($/) {
+    method expr-tail:sym<expr-le-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-ge-expr>($/) {
+    method expr-tail:sym<expr-ge-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-pipe-expr>($/) {
+    method expr-tail:sym<expr-pipe-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-caret-expr>($/) {
+    method expr-tail:sym<expr-caret-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-amp-expr>($/) {
+    method expr-tail:sym<expr-amp-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-shl-expr>($/) {
+    method expr-tail:sym<expr-shl-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-shr-expr>($/) {
+    method expr-tail:sym<expr-shr-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-plus-expr>($/) {
+    method expr-tail:sym<expr-plus-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-minus-expr>($/) {
+    method expr-tail:sym<expr-minus-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-star-expr>($/) {
+    method expr-tail:sym<expr-star-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-slash-expr>($/) {
+    method expr-tail:sym<expr-slash-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-mod-expr>($/) {
+    method expr-tail:sym<expr-mod-expr>($/) {
         make ExprBinary.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-dotdot>($/) {
+    method expr-tail:sym<expr-dotdot>($/) {
         make ExprRange.new(
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-dotdot-expr>($/) {
+    method expr-tail:sym<expr-dotdot-expr>($/) {
         make ExprRange.new(
             expr =>  $<expr>.made,
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<dotdot-expr>($/) {
+    method expr-prefix:sym<dotdot-expr>($/) {
         make ExprRange.new(
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<dotdot>($/) {
+    method expr-base:sym<dotdot>($/) {
         make ExprRange.new(
 
         )
     }
 
-    method expr:sym<expr-as-ty>($/) {
+    method expr-tail:sym<expr-as-ty>($/) {
         make ExprCast.new(
             expr =>  $<expr>.made,
             ty   =>  $<ty>.made,
         )
     }
 
-    method expr:sym<expr-ty>($/) {
+    method expr-tail:sym<expr-ty>($/) {
         make ExprTypeAscr.new(
             expr =>  $<expr>.made,
             ty   =>  $<ty>.made,
         )
     }
 
-    method expr:sym<box-expr>($/) {
+    method expr-prefix:sym<box-expr>($/) {
         make ExprBox.new(
             expr =>  $<expr>.made,
         )
     }
 
-    method expr:sym<expr-qualified-path>($/) {
+    method expr-base:sym<expr-qualified-path>($/) {
         make $<expr-qualified-path>.made
     }
 
-    method expr:sym<block-expr>($/) {
+    method expr-base:sym<block-expr>($/) {
         make $<block-expr>.made
     }
 
-    method expr:sym<block>($/) {
+    method expr-base:sym<block>($/) {
         make $<block>.made
     }
 
-    method expr:sym<nonblock-prefix-expr>($/) {
+    method expr-base:sym<nonblock-prefix-expr>($/) {
         make $<nonblock-prefix-expr>.made
     }
-
-=end comment
 }

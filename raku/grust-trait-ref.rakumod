@@ -3,7 +3,6 @@ use grust-model;
 our role TraitRef::Rules {
 
     rule trait-ref {
-        #{self.set-prec(IDENT)} 
         <tok-mod-sep>? 
         <path-generic-args-without-colons>
     }

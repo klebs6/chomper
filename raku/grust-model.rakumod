@@ -1,5 +1,26 @@
+our class TypeWithDefault {
+    has $.ty;
+    has $.default;
+}
+
+our class Expr {
+    has @.prefix;
+    has $.base;
+    has @.tail;
+}
+
+our class NonBlockExpr {
+    has $.comment;
+    has $.base;
+    has @.tail;
+}
+
 our class As {
     has $.ident;
+}
+
+our class Label {
+    has $.value;
 }
 
 our class ExprAgain {
@@ -97,6 +118,7 @@ our class ItemForeignMod {
 our class ExprBlock {
     has $.maybe-stmts;
     has $.maybe-inner-attrs;
+    has $.comment;
 }
 
 our class Bounds {
@@ -349,6 +371,11 @@ our class UnsafeFn {
 # ty-prim.
 our class ImplItems {
     has $.impl-item;
+}
+
+our class ImplItem {
+    has $.value;
+    has $.comment;
 }
 
 our class ImplMacroItem {
@@ -787,7 +814,8 @@ our class PatQualifiedPath {
 }
 
 our class PatRange {
-    has $.lit-or-path;
+    has $.lit-or-pathA;
+    has $.lit-or-pathB;
 }
 
 our class PatRegion {
@@ -808,6 +836,8 @@ our class PatTup {
 our class PatUniq {
     has $.pat;
 }
+
+our class PatUnit { }
 
 our class PatVec {
     has $.pat-vec;
@@ -892,6 +922,13 @@ our class RetTy {
 our class Stmts {
     has @.stmts;
     has $.nonblock-expr;
+}
+
+our class Self {}
+
+our class Stmt {
+    has $.value;
+    has $.comment;
 }
 
 our class DefaultFieldInit {
@@ -997,12 +1034,7 @@ our class TyVec {
 }
 
 our class TySum {
-    has $.ty-sum-elt;
-    has $.ty-prim-sum-elt;
-}
-
-our class TySums {
-    has $.ty-sum;
+    has @.ty-sum-elts;
 }
 
 our class TySumsAndBindings {

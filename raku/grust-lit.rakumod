@@ -16,33 +16,29 @@ our role Lit::Rules {
 
 our role Lit::Actions {
 
-=begin comment
-    method lit:sym<a>($/) {
-        make LitByte.new( val => ~$/)
+    method lit($/) {
+        make do given ~$/.keys[0] {
+            when "lit-str" {
+                LitStr.new( val => ~$<lit-str>)
+            }
+            when "lit-byte" {
+                LitByte.new( val => ~$<lit-byte>)
+            }
+            when "lit-char" {
+                LitChar.new( val => ~$<lit-char>)
+            }
+            when "lit-float" {
+                LitFloat.new( val => ~$<lit-float>)
+            }
+            when "lit-int" {
+                LitInteger.new( val => ~$<lit-int>)
+            }
+            when "kw-true" {
+                LitBool.new( val => True)
+            }
+            when "kw-false" {
+                LitBool.new( val => False)
+            }
+        }
     }
-
-    method lit:sym<b>($/) {
-        make LitChar.new( val => ~$/)
-    }
-
-    method lit:sym<c>($/) {
-        make LitInteger.new( val => ~$/)
-    }
-
-    method lit:sym<d>($/) {
-        make LitFloat.new( val => ~$/)
-    }
-
-    method lit:sym<e>($/) {
-        make LitBool.new( val => ~$/)
-    }
-
-    method lit:sym<f>($/) {
-        make LitBool.new( val => ~$/)
-    }
-
-    method lit:sym<g>($/) {
-        make $<lit-str>.made
-    }
-=end comment
 }

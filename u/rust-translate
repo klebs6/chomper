@@ -11,12 +11,16 @@ sub MAIN(:$stdin = Nil) {
 
     $in = $in.subst(/^\s+/,"");
 
-    my $rule = "crate";
+    my $rule = "maybe-stmts";
+
+    my $actions = Rust::Actions.new;
 
     my $parsed = 
-    Rust::Grammar.parse($in, :$rule) 
-    // Rust::GrammarD.parse($in, :$rule);
+    Rust::Grammar.parse($in, :$rule, :$actions) 
+    // Rust::GrammarD.parse($in, :$rule, :$actions);
 
-    say $parsed;
-
+    if $parsed {
+        say $parsed;
+        ddt $parsed.made;
+    }
 }

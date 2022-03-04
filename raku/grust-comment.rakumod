@@ -9,6 +9,29 @@ our role Rust::Comments
     rule comment:sym<block> {  <block-comment> }
 }
 
+our role Comments::Actions {
+    method comment:sym<line>($/)  { make $<line-comment>>>.made }
+    method comment:sym<block>($/) { make $<block-comment>.made }
+
+    method line-comment($/) {
+        make $<line-comment-body>.made
+    }
+
+    method line-comment-body($/) {
+        make ~$/
+    }
+
+    method block-comment($/) {
+        make $<block-comment-continue>>>.made.join("")
+    }
+
+    method block-comment-continue($/) {
+        if ~$/.keys[0] eq "block-comment-inner" {
+            make ~$/
+        }
+    }
+}
+
 #--------------------------------------
 =begin comment
 \/\/|\/\/\/\/         { BEGIN(linecomment); }
@@ -22,8 +45,12 @@ our role Lex::LineComment {
         || \/\/
     }
 
+    token line-comment-body {
+        <-[ \r \n ]>* 
+    }
+
     token line-comment {
-        <.ws> <.line-comment-begin> <-[ \r \n ]>* 
+        <.ws> <.line-comment-begin> <line-comment-body>
     }
 }
 
