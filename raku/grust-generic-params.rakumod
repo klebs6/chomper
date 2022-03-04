@@ -4,9 +4,7 @@ our role GenericParams::Rules {
 
     rule generic-params { <generic-params-base>? }
 
-    proto rule generic-params-base { * }
-
-    rule generic-params-base:sym<g> { 
+    rule generic-params-base { 
         '<' 
         [
             [<lifetimes> ','?]? 
@@ -23,7 +21,7 @@ our role GenericParams::Actions {
         make $<generic-params-base>.made
     }
 
-    method generic-params-base:sym<g>($/) {
+    method generic-params-base($/) {
         make Generics.new(
             lifetimes      =>  $<lifetimes>.made,
             const-generics =>  $<const-generics>.made,

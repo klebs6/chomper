@@ -36,5 +36,5 @@ our role IdentsOrSelf::Actions {
     }
 
     method ident-or-self:sym<ident>($/) { make $<ident>.made }
-    method ident-or-self:sym<self>($/)  { make ~$/ }
+    method ident-or-self:sym<self>($/)  { make Self.new }
 }

@@ -96,9 +96,10 @@ our role ItemStruct::Actions {
 
     method struct-decl-field($/) {
         make StructField.new(
-            attrs-and-vis =>  $<attrs-and-vis>.made,
-            ident         =>  $<ident>.made,
-            ty-sum        =>  $<ty-sum>.made,
+            comment       => $<comment>.made,
+            attrs-and-vis => $<attrs-and-vis>.made,
+            ident         => $<ident>.made,
+            ty-sum        => $<ty-sum>.made,
         )
     }
 

@@ -13,7 +13,9 @@ our role ItemEnum::Rules {
     rule enum-defs { <enum-def>* %% "," }
 
     rule enum-def {
-        <attrs-and-vis> <ident> <enum-args>
+        <attrs-and-vis> 
+        <ident> 
+        <enum-args>
     }
 
     #----------------------------

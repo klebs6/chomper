@@ -38,8 +38,6 @@ our role InnerAttrs::Actions {
     }
 
     method inner-attr:sym<b>($/) {
-        make InnerAttr.new(
-
-        )
+        make $<inner-doc-comment>.made
     }
 }

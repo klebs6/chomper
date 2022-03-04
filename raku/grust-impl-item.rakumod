@@ -38,8 +38,11 @@ our role ImplItem::Rules {
 
 our role ImplItem::Actions {
 
-    method maybe-impl-items:sym<a>($/) {
-        make $<impl-items>.made
+    method maybe-impl-items($/) {
+        make ImplItems.new(
+            impl-items => $<impl-items>.made,
+            comment    => $<comment>.made,
+        )
     }
 
     method impl-items($/) {

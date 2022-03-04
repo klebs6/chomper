@@ -285,6 +285,10 @@ our class ForeignItems {
     has $.foreign-items;
 }
 
+our class Guard {
+    has $.expr-nostruct;
+}
+
 our class StaticItem {
     has $.maybe-mut;
     has $.ident;
@@ -399,7 +403,12 @@ our class UnsafeFn {
 # regrettably, by splitting ty into ty and
 # ty-prim.
 our class ImplItems {
-    has $.impl-item;
+    has $.impl-items;
+    has $.comment;
+}
+
+our class InitExpr {
+    has $.expr;
 }
 
 our class ImplItem {
@@ -461,6 +470,7 @@ our class ItemMod {
 }
 
 our class ItemStatic {
+    has Bool $.mut;
     has $.ty;
     has $.expr;
     has $.ident;
@@ -475,6 +485,7 @@ our class ItemStruct {
 }
 
 our class StructField {
+    has $.comment;
     has $.attrs-and-vis;
     has $.ty-sum;
     has $.ident;

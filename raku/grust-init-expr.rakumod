@@ -10,6 +10,8 @@ our role InitExpr::Rules {
 our role InitExpr::Actions {
 
     method maybe-init-expr($/) {
-        make $<expr>.made
+        make InitExpr.new(
+            expr => $<expr>.made
+        )
     }
 }

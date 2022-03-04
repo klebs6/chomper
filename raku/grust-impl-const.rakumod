@@ -3,7 +3,9 @@ use grust-model;
 our role ImplConst::Rules {
 
     rule impl-const {
-        <attrs-and-vis> <maybe-default> <item-const>
+        <attrs-and-vis> 
+        <maybe-default> 
+        <item-const>
     }
 }
 

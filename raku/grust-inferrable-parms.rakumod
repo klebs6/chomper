@@ -7,7 +7,8 @@ our role InferrableParams::Rules {
     }
 
     rule inferrable-param {
-        <pat> <maybe-ty-ascription>
+        <pat>
+        <maybe-ty-ascription>
     }
 }
 

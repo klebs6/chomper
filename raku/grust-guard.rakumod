@@ -10,6 +10,8 @@ our role Guard::Rules {
 our role Guard::Actions {
 
     method maybe-guard($/) {
-        make $<expr-nostruct>.made
+        make Guard.new(
+            expr-nostruct => $<expr-nostruct>.made
+        )
     }
 }
