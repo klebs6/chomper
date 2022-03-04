@@ -3,7 +3,9 @@ use grust-model;
 our role ExternFnItem::Rules {
 
     rule extern-fn-item {
-        <kw-extern> <maybe-abi> <item-fn>
+        <kw-extern> 
+        <maybe-abi> 
+        <item-fn>
     }
 }
 

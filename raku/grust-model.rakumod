@@ -1,3 +1,7 @@
+our class ForLifetimes {
+    has $.lifetimes;
+}
+
 our class TypeWithDefault {
     has $.ty;
     has $.default;
@@ -183,10 +187,16 @@ our class ExprCast {
 
 our class ExprQualifiedPath {
     has $.ty-sum;
+    has $.maybe-as-trait-ref0;
+
+    has $.identA;
+    has $.generic-argsA;
+    has $.maybe-as-trait-ref1;
+
+    has $.identB;
+    has $.generic-argsB;
+
     has $.maybe-qpath-params;
-    has $.generic-args;
-    has $.maybe-as-trait-ref;
-    has $.ident;
 }
 
 our class ExprWhileLet {
@@ -259,6 +269,16 @@ our class ForeignItem {
     has $.item-foreign-fn;
     has $.attrs-and-vis;
     has $.item-foreign-static;
+}
+
+our class ForeignItemStatic {
+    has $.attrs-and-vis;
+    has $.item-foreign-static;
+}
+
+our class ForeignItemUnsafe {
+    has $.item-foreign-fn;
+    has $.attrs-and-vis;
 }
 
 our class ForeignItems {
@@ -736,6 +756,7 @@ our class ExprTupleIndex {
     has $.expr;
     has $.expr-nostruct;
     has $.nonblock-expr;
+    has $.lit-int;
 }
 
 our class ExprTypeAscr {

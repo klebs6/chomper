@@ -5,13 +5,20 @@ our role Exprs::Rules {
     rule maybe-exprs { <exprs>? ','? }
     rule maybe-expr  { <expr>? }
 
-    rule exprs           { [<expr> || <expr-nostruct>]+ %% "," }
-    #old way: rule exprs { <expr>]+ %% "," }
+    rule exprs               { <exprs-item>+ %% "," }
+
+    proto method exprs-item  { * }
+    method exprs-item:sym<a> { <expr> }
+    method exprs-item:sym<b> { <expr-nostruct> } #not in original grammar
 }
 
 our role Exprs::Actions {
 
     method maybe-exprs($/) { make $<exprs>.made }
     method maybe-expr($/)  { make $<expr>.made }
-    method exprs($/)       { make $<expr>>>.made }
+
+    method exprs($/)       { make $<exprs-item>>>.made }
+
+    method exprs-item:sym<a>($/) { make $<expr>.made }
+    method exprs-item:sym<b>($/) { make $<expr-nostruct>.made }
 }

@@ -7,11 +7,13 @@ our role FnDeclWithSelf::Rules {
     }
 
     rule fn-decl-with-self {
-        <fn-params-with-self> <ret-ty>
+        <fn-params-with-self> 
+        <ret-ty>
     }
 
     rule fn-decl-with-self-allow-anon-params {
-        <fn-anon-params-with-self> <ret-ty>
+        <fn-anon-params-with-self> 
+        <ret-ty>
     }
 }
 

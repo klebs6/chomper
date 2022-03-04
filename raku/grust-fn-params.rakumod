@@ -11,18 +11,10 @@ our role FnParams::Rules {
     }
 
     #---------------------------
-    proto rule fn-params-allow-variadic { * }
-
-    rule fn-params-allow-variadic:sym<a> { '(' ')' }
-    rule fn-params-allow-variadic:sym<b> { '(' <params> ')' }
-    rule fn-params-allow-variadic:sym<c> { '(' <params> ',' ')' }
-    rule fn-params-allow-variadic:sym<d> { '(' <params> ',' <tok-dotdotdot> ')' }
+    rule fn-params-allow-variadic { '(' [<params> [',' <tok-dotdotdot>?]?]? ')' }
 
     #---------------------------
-    proto rule fn-anon-params { * }
-
-    rule fn-anon-params:sym<a> { '(' <anon-param> <anon-params-allow-variadic-tail> ')' }
-    rule fn-anon-params:sym<b> { '(' ')' }
+    rule fn-anon-params { '(' [<anon-param> <anon-params-allow-variadic-tail>]? ')' }
 
     #---------------------------
     proto rule fn-params-with-self { * }
@@ -55,13 +47,11 @@ our role FnParams::Actions {
     }
 
     #---------------------------
-    method fn-params-allow-variadic:sym<b>($/) { make $<params>.made }
-    method fn-params-allow-variadic:sym<c>($/) { make $<params>.made }
-    method fn-params-allow-variadic:sym<d>($/) { make $<params>.made }
+    method fn-params-allow-variadic($/) { make $<params>.made }
 
     #---------------------------
-    method fn-anon-params:sym<a>($/) {
-        #ExtNode<140218049450816>
+    method fn-anon-params($/) {
+        make [$<anon-param>.made, $<anon-params-allow-variadic-tail>.made]
     }
 
     #---------------------------

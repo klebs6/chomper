@@ -10,6 +10,8 @@ our role ForLifetimes::Rules {
 our role ForLifetimes::Actions {
 
     method maybe-for-lifetimes($/) {
-        #MkNone<140569789206720>
+        make ForLifetimes.new(
+            lifetimes => $<lifetimes>.made
+        )
     }
 }

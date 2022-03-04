@@ -12,9 +12,9 @@ our role ForeignItems::Rules {
 
     #------------------------
     proto rule foreign-item { * }
-    rule foreign-item:sym<a> { <attrs-and-vis> <kw-static> <item-foreign-static> }
-    rule foreign-item:sym<b> { <attrs-and-vis> <item-foreign-fn> }
-    rule foreign-item:sym<c> { <attrs-and-vis> <kw-unsafe> <item-foreign-fn> }
+    rule foreign-item:sym<static> { <attrs-and-vis> <kw-static> <item-foreign-static> }
+    rule foreign-item:sym<fn>     { <attrs-and-vis> <item-foreign-fn> }
+    rule foreign-item:sym<unsafe> { <attrs-and-vis> <kw-unsafe> <item-foreign-fn> }
 }
 
 our role ForeignItems::Actions {
@@ -24,27 +24,25 @@ our role ForeignItems::Actions {
     }
 
     method foreign-items($/) {
-        make ForeignItems.new(
-            foreign-items =>  $<foreign-item>>>.made,
-        )
+        make $<foreign-item>>>.made
     }
 
-    method foreign-item:sym<a>($/) {
-        make ForeignItem.new(
+    method foreign-item:sym<static>($/) {
+        make ForeignItemStatic.new(
             attrs-and-vis       =>  $<attrs-and-vis>.made,
             item-foreign-static =>  $<item-foreign-static>.made,
         )
     }
 
-     method foreign-item:sym<b>($/) {
+     method foreign-item:sym<fn>($/) {
         make ForeignItem.new(
             attrs-and-vis   =>  $<attrs-and-vis>.made,
             item-foreign-fn =>  $<item-foreign-fn>.made,
         )
     }
 
-    method foreign-item:sym<c>($/) {
-        make ForeignItem.new(
+    method foreign-item:sym<unsafe>($/) {
+        make ForeignItemUnsafe.new(
             attrs-and-vis   =>  $<attrs-and-vis>.made,
             item-foreign-fn =>  $<item-foreign-fn>.made,
         )
