@@ -13,8 +13,8 @@ our role Bounds::Rules {
     }
 
     proto rule bound { * }
-    rule bound:sym<lifetime>  { <lifetime> }
-    rule bound:sym<trait-ref> { <trait-ref> }
+    rule bound:sym<lifetime>      { <lifetime> }
+    rule bound:sym<trait-ref>     { <trait-ref> }
 }
 
 our role Bounds::Actions {

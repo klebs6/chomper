@@ -22,21 +22,23 @@ our role ItemTrait::Rules {
     }
 
     #----------------------
-    proto rule trait-item { * }
+    rule trait-item { <comment>? <trait-item-base> }
 
-    rule trait-item:sym<a> {
+    proto rule trait-item-base { * }
+
+    rule trait-item-base:sym<a> {
         <trait-const>
     }
 
-    rule trait-item:sym<b> {
+    rule trait-item-base:sym<b> {
         <trait-type>
     }
 
-    rule trait-item:sym<c> {
+    rule trait-item-base:sym<c> {
         <trait-method>
     }
 
-    rule trait-item:sym<d> {
+    rule trait-item-base:sym<d> {
         <maybe-outer-attrs>
         <item-macro>
     }

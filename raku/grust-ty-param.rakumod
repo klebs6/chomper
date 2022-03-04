@@ -11,7 +11,8 @@ our role TyParam::Rules {
     }
 
     rule ty-param:sym<b> {
-        <ident> '?' 
+        <ident> 
+        '?' 
         <ident> 
         <maybe-ty-param-bounds> 
         <maybe-ty-default>

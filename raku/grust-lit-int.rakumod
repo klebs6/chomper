@@ -3,10 +3,10 @@ use grust-model;
 our role LitInt::Rules {
 
     token lit-int { 
-        || <lit-char>
         || '0x' <hexdigit>+ <intlit-ty>?
         || '0b' <bindigit>+ <intlit-ty>?
         || <decdigit> <decdigit-cont>* <intlit-ty>?
+        #|| <lit-char>
     }
 
     proto token intlit-ty { * }

@@ -8,7 +8,9 @@ our role Ident::Rules {
 
     proto rule ident { * }
 
-    rule ident:sym<ident>   { <ident_> }
+    rule ident:sym<ident>   { 
+        <ident_> 
+    }
 
     # Weak keywords that can be used as identifiers
     rule ident:sym<catch>   { <kw-catch> }
@@ -25,7 +27,13 @@ our role Ident::Rules {
         ||    <xidcont>
     }
 
-    token ident_ { <idstart> <idcont>* }
+    token ident_ { 
+        <idstart> 
+        <idcont>* 
+
+        #allowing this kind of fucks things up
+        <?{~$/ ne "const"}>
+    }
 
     token xidstart { 
         ||    <[ \x[0041] .. \x[005a] ]>

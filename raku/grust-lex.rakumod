@@ -130,7 +130,7 @@ our role Lex::LifetimeOrChar {
 
     token lifetime-or-char:sym<lt> {
         <lifetime-or-char-begin>
-        <identifier>
+        <ident>
     }
 
     token lifetime-or-char:sym<char> {
@@ -383,12 +383,11 @@ our role Lex::RawStr {
 
     token raw-str {
         <raw-str-begin> 
-        <raw-str-continue>* 
+        <raw-str-continue>*?
         <raw-str-end>
     }
 
-    token lit-str-raw { <raw-str>
-    }
+    token lit-str-raw { <raw-str> }
 }
 
 #--------------------------------------
@@ -469,7 +468,7 @@ our role Lex::Str_ {
 our role Lex::Suffix {
 
     token suffix {
-        | <identifier> 
+        | <ident> 
         | .
         | \n
     }

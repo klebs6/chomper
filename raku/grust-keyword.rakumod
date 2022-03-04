@@ -27,6 +27,7 @@ our role Rust::Keyword {
     token kw-let           { 'let'      } 
     token kw-loop          { 'loop'     } 
     token kw-macro         { 'macro'    } 
+    token kw-dyn           { 'dyn'    } 
 
     token kw-match         { 'match'    } 
 

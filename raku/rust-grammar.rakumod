@@ -1,4 +1,3 @@
-#use Grammar::Tracer;
 use grust-anon-params;
 use grust-as-trait-ref;
 use grust-attr-and-vis;
@@ -122,7 +121,7 @@ use grust-where-predicates;
 
 use grust-lex;
 
-grammar Rust::Grammar 
+our role  Rust::Grammar::Role
 
 #-----------------------------
 does Lex::DocBlock
@@ -272,7 +271,7 @@ does WherePredicates::Rules {
     }
 }
 
-our class Rust::Actions 
+our role Rust::Actions::Role
 does AnonParams::Actions
 does AsTraitRef::Actions
 does AttrsAndVis::Actions
@@ -391,3 +390,9 @@ does ViewPath::Actions
 does Visibility::Actions
 does WhereClause::Actions
 does WherePredicates::Actions {}
+
+our grammar Rust::Grammar does Rust::Grammar::Role {}
+our class Rust::Actions does Rust::Actions::Role {}
+
+use Grammar::Tracer;
+our grammar Rust::GrammarD does Rust::Grammar::Role {}

@@ -10,8 +10,8 @@ our role GenericParams::Rules {
         '<' 
         [
             [<lifetimes> ','?]? 
-            [<const-generics> ','?]? 
             [<ty-params> ','?]?
+            [<const-generics> ','?]? 
         ]? 
         '>' 
     }

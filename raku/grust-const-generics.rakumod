@@ -4,7 +4,6 @@ our role ConstGenerics::Rules {
 
     rule const-generic {
         <kw-const> <ident> <ty-ascription>
-
     }
 
     rule const-generics {

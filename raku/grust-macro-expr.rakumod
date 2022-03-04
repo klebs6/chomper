@@ -6,14 +6,14 @@ our role MacroExpr::Rules {
 
     rule macro-expr:sym<a> {
         <path-expr> 
-        '!' 
+        <tok-bang>
         <maybe-ident> 
         <parens-delimited-token-trees>
     }
 
     rule macro-expr:sym<b> {
         <path-expr> 
-        '!' 
+        <tok-bang>
         <maybe-ident> 
         <brackets-delimited-token-trees>
     }

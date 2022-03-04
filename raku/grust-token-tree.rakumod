@@ -6,8 +6,8 @@ our role TokenTree::Rules {
 
     proto rule token-tree { * }
 
-    rule token-tree:sym<a> { <delimited-token-trees> }
     rule token-tree:sym<b> { <unpaired-token> }
+    rule token-tree:sym<a> { <delimited-token-trees> }
 
     proto rule delimited-token-trees { * }
 

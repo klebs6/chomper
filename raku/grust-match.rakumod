@@ -9,7 +9,7 @@ our role ExprMatch::Rules {
     rule expr-match:sym<c> { <kw-match> <expr-nostruct> '{' <match-clauses> <nonblock-match-clause> '}' }
     rule expr-match:sym<d> { <kw-match> <expr-nostruct> '{' <nonblock-match-clause> '}' }
 
-    rule match-clauses { <match-clause>+ }
+    regex match-clauses { <match-clause>+ <comment>? }
 
     #--------------------
     rule match-clause { <comment>? <match-clause-base> }

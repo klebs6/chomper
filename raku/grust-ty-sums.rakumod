@@ -9,15 +9,13 @@ our role TySums::Rules {
     #--------------------
     proto rule ty-sum-elt  { * }
 
-    rule ty-sum-elt:sym<type> { 
+    token ty-sum-elt:sym<type-with-default> { 
         <ty> 
-
-        #can add to support trait_alias
-        #but it breaks some other stuff..
-        #
-        #<maybe-ty-default>? 
+        '=' 
+        <ty-sum>
     }
 
+    rule ty-sum-elt:sym<type>          { <ty> }
     rule ty-sum-elt:sym<lifetime>      { <lifetime> }
     rule ty-sum-elt:sym<const-generic> { <lit-int> }
 

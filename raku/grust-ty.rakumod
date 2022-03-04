@@ -4,6 +4,10 @@ our role Ty::Rules {
 
     proto rule ty { * }
 
+    #should this be here? is this how we 
+    #want to handle "dyn"?
+    rule ty:sym<aa> { <kw-dyn> <ty-prim> }
+
     rule ty:sym<a> { <ty-prim> }
     rule ty:sym<b> { <ty-closure> }
 

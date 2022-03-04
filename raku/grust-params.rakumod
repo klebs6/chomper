@@ -11,6 +11,7 @@ our role Params::Rules {
     }
 
     rule param {
+        <comment>?
         <pat> ':' <ty-sum>
     }
 

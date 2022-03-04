@@ -4,12 +4,12 @@ our role ExprIfLet::Rules {
 
     proto rule expr-if-let { * }
 
-    rule expr-if-let:sym<a> {
-        <kw-if> <kw-let> <pat> '=' <expr-nostruct> <block>
-    }
-
     rule expr-if-let:sym<b> {
         <kw-if> <kw-let> <pat> '=' <expr-nostruct> <block> <kw-else> <block-or-if>
+    }
+
+    rule expr-if-let:sym<a> {
+        <kw-if> <kw-let> <pat> '=' <expr-nostruct> <block>
     }
 }
 

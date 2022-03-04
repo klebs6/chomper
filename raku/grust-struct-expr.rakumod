@@ -9,8 +9,8 @@ our role StructExpr::Rules {
 
     proto rule struct-expr-fields-base { * }
 
-    rule struct-expr-fields-base:sym<b> { <field-inits> ','? }
     rule struct-expr-fields-base:sym<c> { <maybe-field-inits> <default-field-init> }
+    rule struct-expr-fields-base:sym<b> { <field-inits> ','? }
 
     #----------------
     rule maybe-field-inits { [<field-inits> ','?]? }

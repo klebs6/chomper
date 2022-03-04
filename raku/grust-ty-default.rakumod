@@ -3,7 +3,11 @@ use grust-model;
 our role TyDefault::Rules {
 
     rule maybe-ty-default {
-        ['=' <ty-sum>]?
+        <ty-default>?
+    }
+
+    rule ty-default {
+        '=' <ty-sum>
     }
 }
 

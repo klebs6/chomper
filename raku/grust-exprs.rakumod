@@ -5,7 +5,7 @@ our role Exprs::Rules {
     rule maybe-exprs { <exprs>? ','? }
     rule maybe-expr  { <expr>? }
 
-    rule exprs           { [<expr> | <expr-nostruct>]+ %% "," }
+    rule exprs           { [<expr> || <expr-nostruct>]+ %% "," }
     #old way: rule exprs { <expr>]+ %% "," }
 }
 

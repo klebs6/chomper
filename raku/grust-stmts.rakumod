@@ -9,7 +9,9 @@ our role Stmts::Rules {
 
     rule stmts { <stmt>+ }
 
-    rule stmt  { <comment>? <stmt-body> }
+    proto rule stmt  { * }
+    rule stmt:sym<a> { <comment>? <stmt-body> }
+    rule stmt:sym<b> { <block-comment> }
 
     proto rule stmt-body  { * }
     rule stmt-body:sym<a> { <maybe-outer-attrs> <let> }

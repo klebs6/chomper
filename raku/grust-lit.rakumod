@@ -3,19 +3,20 @@ use grust-model;
 #----------------------------------
 our role Lit::Rules {
 
-    proto rule lit { * }
-
-    rule lit:sym<a> { <lit-byte> }
-    rule lit:sym<b> { <lit-char> }
-    rule lit:sym<c> { <lit-int> }
-    rule lit:sym<d> { <lit-float> }
-    rule lit:sym<e> { <kw-true> }
-    rule lit:sym<f> { <kw-false> }
-    rule lit:sym<g> { <str> }
+    token lit {  
+         || <lit-str> 
+         || <lit-byte> 
+         || <lit-char> 
+         || <lit-float> 
+         || <lit-int> 
+         || <kw-true> 
+         || <kw-false> 
+    }
 }
 
 our role Lit::Actions {
 
+=begin comment
     method lit:sym<a>($/) {
         make LitByte.new( val => ~$/)
     }
@@ -41,6 +42,7 @@ our role Lit::Actions {
     }
 
     method lit:sym<g>($/) {
-        make $<str>.made
+        make $<lit-str>.made
     }
+=end comment
 }

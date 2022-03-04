@@ -38,6 +38,7 @@ our role Rust::Operator {
     token tok-mod-sep          { '::'     } 
     token tok-ne               { '!='     } 
     token tok-not              { '!'      } 
+    token tok-bang             { '!'      } 
     token tok-once             { 'once'   } 
     token tok-or               { '|'      } 
     token tok-oreq             { '|='     } 
