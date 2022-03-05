@@ -29,26 +29,30 @@ our role NonblockPrefixExpr::Actions {
 
     method nonblock-prefix-expr-nostruct:sym<a>($/) {
         make ExprUnaryMinus.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct => $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method nonblock-prefix-expr-nostruct:sym<b>($/) {
         make ExprUnaryNot.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct => $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method nonblock-prefix-expr-nostruct:sym<c>($/) {
         make ExprUnaryStar.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct => $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method nonblock-prefix-expr-nostruct:sym<d>($/) {
         make ExprAddrOf.new(
-            maybe-mut     =>  $<maybe-mut>.made,
-            expr-nostruct =>  $<expr-nostruct>.made,
+            maybe-mut     => $<maybe-mut>.made,
+            expr-nostruct => $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
@@ -57,6 +61,7 @@ our role NonblockPrefixExpr::Actions {
             maybe-mut     => $<maybe-mut>.made,
             expr-nostruct => $<expr-nostruct>.made,
             count         => 2,
+            text          => ~$/,
         )
     }
 
@@ -70,19 +75,22 @@ our role NonblockPrefixExpr::Actions {
 
     method nonblock-prefix-expr:sym<a>($/) {
         make ExprUnaryMinus.new(
-            expr =>  $<expr>.made,
+            expr => $<expr>.made,
+            text => ~$/,
         )
     }
 
     method nonblock-prefix-expr:sym<b>($/) {
         make ExprUnaryNot.new(
             expr =>  $<expr>.made,
+            text => ~$/,
         )
     }
 
     method nonblock-prefix-expr:sym<c>($/) {
         make ExprUnaryStar.new(
             expr =>  $<expr>.made,
+            text => ~$/,
         )
     }
 
@@ -90,6 +98,7 @@ our role NonblockPrefixExpr::Actions {
         make ExprAddrOf.new(
             maybe-mut =>  $<maybe-mut>.made,
             expr      =>  $<expr>.made,
+            text      => ~$/,
         )
     }
 
@@ -98,6 +107,7 @@ our role NonblockPrefixExpr::Actions {
             maybe-mut => $<maybe-mut>.made,
             expr      => $<expr>.made,
             count     => 2,
+            text      => ~$/,
         )
     }
 

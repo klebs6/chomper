@@ -248,7 +248,7 @@ our role NonBlockExpr::Actions {
 
     method nonblock-expr-tail:sym<minuseq-expr>($/) {
         make ExprAssignSub.new(
-            expr =>  $<expr>.made,
+            expr => $<expr>.made,
             text => ~$/,
         )
     }
