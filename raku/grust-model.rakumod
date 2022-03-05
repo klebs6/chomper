@@ -310,6 +310,7 @@ our class StaticItem {
 }
 
 our class GenericValues {
+    has $.ty-qualified-path;
     has $.maybe-bindings;
     has $.maybe-ty-sums-and-or-bindings;
 }
@@ -1135,10 +1136,11 @@ our class TySumsAndBindings {
 }
 
 our class TyQualifiedPath {
+    has $.ty-sum;
+    has $.trait-ref;
     has $.ident;
     has $.maybe-as-trait-ref;
-    has $.trait-ref;
-    has $.ty-sum;
+    has $.ty-param-bounds;
 }
 
 our class TyTup {
