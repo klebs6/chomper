@@ -840,10 +840,7 @@ our class PatField {
     has $.ident;
     has $.pat;
     has $.binding-mode;
-}
-
-our class PatFields {
-    has $.items;
+    has $.lit-int;
 }
 
 our class PatTupElts {

@@ -14,22 +14,18 @@ our role PatTup::Rules {
 our role PatTup::Actions {
 
     method pat-tup:sym<a>($/) {
-        make PatTup.new(
-            pat-tup-elts =>  $<pat-tup-elts>.made,
-        )
+        make $<pat-tup-elts>.made
     }
 
     method pat-tup:sym<b>($/) {
-        make PatTup.new(
-            pat-tup-elts =>  $<pat-tup-elts>.made,
-            pat-tup-elts =>  $<pat-tup-elts>.made,
-        )
+        make [
+            $<pat-tup-elts>>>.made[0],
+            $<pat-tup-elts>>>.made[1],
+        ]
     }
 
     method pat-tup:sym<c>($/) {
-        make PatTup.new(
-            pat-tup-elts =>  $<pat-tup-elts>.made,
-        )
+        make $<pat-tup-elts>.made
     }
 
     method pat-tup-elts($/) {

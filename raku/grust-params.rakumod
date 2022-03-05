@@ -32,8 +32,9 @@ our role Params::Actions {
 
     method param($/) {
         make Arg.new(
-            pat    => $<pat>.made,
-            ty-sum => $<ty-sum>.made,
+            comment => $<comment>.made,
+            pat     => $<pat>.made,
+            ty-sum  => $<ty-sum>.made,
         )
     }
 
