@@ -13,8 +13,9 @@ our role ModItem::Actions {
 
     method mod-item($/) {
         make Item.new(
-            attrs-and-vis =>  $<attrs-and-vis>.made,
-            item          =>  $<item>.made,
+            comment       => $<comment>.made,
+            attrs-and-vis => $<attrs-and-vis>.made,
+            item          => $<item>.made,
         )
     }
 }

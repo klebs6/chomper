@@ -28,19 +28,19 @@ our role NonblockPrefixExpr::Rules {
 our role NonblockPrefixExpr::Actions {
 
     method nonblock-prefix-expr-nostruct:sym<a>($/) {
-        make ExprUnary.new(
+        make ExprUnaryMinus.new(
             expr-nostruct =>  $<expr-nostruct>.made,
         )
     }
 
     method nonblock-prefix-expr-nostruct:sym<b>($/) {
-        make ExprUnary.new(
+        make ExprUnaryNot.new(
             expr-nostruct =>  $<expr-nostruct>.made,
         )
     }
 
     method nonblock-prefix-expr-nostruct:sym<c>($/) {
-        make ExprUnary.new(
+        make ExprUnaryStar.new(
             expr-nostruct =>  $<expr-nostruct>.made,
         )
     }
@@ -54,7 +54,9 @@ our role NonblockPrefixExpr::Actions {
 
     method nonblock-prefix-expr-nostruct:sym<e>($/) {
         make ExprAddrOf.new(
-
+            maybe-mut     => $<maybe-mut>.made,
+            expr-nostruct => $<expr-nostruct>.made,
+            count         => 2,
         )
     }
 
@@ -67,19 +69,19 @@ our role NonblockPrefixExpr::Actions {
     }
 
     method nonblock-prefix-expr:sym<a>($/) {
-        make ExprUnary.new(
+        make ExprUnaryMinus.new(
             expr =>  $<expr>.made,
         )
     }
 
     method nonblock-prefix-expr:sym<b>($/) {
-        make ExprUnary.new(
+        make ExprUnaryBang.new(
             expr =>  $<expr>.made,
         )
     }
 
     method nonblock-prefix-expr:sym<c>($/) {
-        make ExprUnary.new(
+        make ExprUnaryStar.new(
             expr =>  $<expr>.made,
         )
     }
@@ -93,7 +95,9 @@ our role NonblockPrefixExpr::Actions {
 
     method nonblock-prefix-expr:sym<e>($/) {
         make ExprAddrOf.new(
-
+            maybe-mut => $<maybe-mut>.made,
+            expr      => $<expr>.made,
+            count     => 2,
         )
     }
 

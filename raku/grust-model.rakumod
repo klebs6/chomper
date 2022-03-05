@@ -663,6 +663,7 @@ our class Items {
 }
 
 our class Item {
+    has $.comment;
     has $.item;
     has $.attrs-and-vis;
 }
@@ -799,9 +800,25 @@ our class ExprAddrOf {
     has $.expr-nostruct;
     has $.maybe-mut;
     has $.expr;
+    has $.count = 1;
 }
 
 our class ExprUnary {
+    has $.expr;
+    has $.expr-nostruct;
+}
+
+our class ExprUnaryMinus {
+    has $.expr;
+    has $.expr-nostruct;
+}
+
+our class ExprUnaryNot {
+    has $.expr;
+    has $.expr-nostruct;
+}
+
+our class ExprUnaryStar {
     has $.expr;
     has $.expr-nostruct;
 }

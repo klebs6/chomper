@@ -18,7 +18,7 @@ our role OuterAttrs::Rules {
 
 our role OuterAttrs::Actions {
 
-    method maybe-outer-attrs:sym<a>($/) {
+    method maybe-outer-attrs($/) {
         make $<outer-attrs>.made
     }
 
@@ -31,8 +31,6 @@ our role OuterAttrs::Actions {
     }
 
     method outer-attr:sym<b>($/) {
-        make DocComment.new(
-
-        )
+        make $<outer-doc-comment>.made
     }
 }
