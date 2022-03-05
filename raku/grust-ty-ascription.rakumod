@@ -14,7 +14,9 @@ our role TyAscription::Rules {
 our role TyAscription::Actions {
 
     method ty-ascription($/) {
-        make $<ty-sum>.made
+        make TyAscription.new(
+            value => $<ty-sum>.made
+        )
     }
 
     method maybe-ty-ascription($/) {

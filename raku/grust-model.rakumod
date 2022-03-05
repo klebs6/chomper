@@ -83,6 +83,17 @@ our class AsTraitRef {
     has $.trait-ref;
 }
 
+our class TyAscription {
+    has $.value;
+}
+our class TyBareFn {
+
+}
+
+our class TraitRef {
+    has $.value;
+}
+
 our class AttrsAndVis {
     has $.maybe-outer-attrs;
     has $.visibility;
@@ -873,9 +884,11 @@ our class PatMac {
 }
 
 our class PatQualifiedPath {
-    has $.maybe-as-trait-ref;
-    has $.ident;
     has $.ty-sum;
+    has $.maybe-as-trait-refA;
+    has $.identA;
+    has $.maybe-as-trait-refB;
+    has $.identB;
 }
 
 our class PatRange {
@@ -884,6 +897,11 @@ our class PatRange {
 }
 
 our class PatRegion {
+    has Bool $.mut = False;
+    has $.pat;
+}
+
+our class PatRegionRefRef {
     has $.pat;
 }
 
@@ -1001,6 +1019,11 @@ our class DefaultFieldInit {
 }
 
 our class FieldInit {
+    has $.comment;
+    has $.item;
+}
+
+our class FieldInitItem {
     has $.ident;
     has $.expr;
 }

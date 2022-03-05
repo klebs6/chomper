@@ -11,6 +11,8 @@ our role TraitRef::Rules {
 our role TraitRef::Actions {
 
     method trait-ref($/) {
-        make $<path-generic-args-without-colons>.made
+        make TraitRef.new(
+            value => $<path-generic-args-without-colons>.made
+        )
     }
 }

@@ -36,6 +36,10 @@ our role StructExpr::Rules {
 
 our role StructExpr::Actions {
 
+    method struct-expr-fields($/) {
+        make $<struct-expr-fields-base>.made
+    }
+
     method struct-expr-fields-base:sym<b>($/) {
         make $<field-inits>.made
     }
@@ -55,21 +59,28 @@ our role StructExpr::Actions {
         make $<field-init>>>.made
     }
 
-    method field-init-item:sym<a>($/) {
+    method field-init($/) {
         make FieldInit.new(
+            comment => $<comment>.made,
+            item    => $<field-init-item>.made,
+        )
+    }
+
+    method field-init-item:sym<a>($/) {
+        make FieldInitItem.new(
             ident =>  $<ident>.made,
         )
     }
 
     method field-init-item:sym<b>($/) {
-        make FieldInit.new(
+        make FieldInitItem.new(
             ident =>  $<ident>.made,
             expr  =>  $<expr>.made,
         )
     }
 
     method field-init-item:sym<c>($/) {
-        make FieldInit.new(
+        make FieldInitItem.new(
             expr =>  $<expr>.made,
         )
     }

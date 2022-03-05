@@ -11,13 +11,17 @@ our role RetTy::Rules {
 
 our role RetTy::Actions {
 
-    method ret-ty:sym<a>($/) {
+    method ret-ty($/) {
+        make $<some-ret-ty>.made
+    }
+
+    method some-ret-ty:sym<panic>($/) {
         make RetTy.new(
-            ty =>  $<panic>.made,
+            ty => "panic",
         )
     }
 
-    method ret-ty:sym<b>($/) {
+    method some-ret-ty:sym<ty>($/) {
         make RetTy.new(
             ty =>  $<ty>.made,
         )

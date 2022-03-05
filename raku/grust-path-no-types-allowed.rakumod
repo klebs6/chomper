@@ -39,7 +39,7 @@ our role PathGenericArgsWithoutColons::Rules {
 
     proto rule path-generic-args-without-colons-item { * }
 
-    rule path-generic-args-without-colons-item:sym<c> { <ident> '(' <maybe-ty-sums> ')' <ret-ty> }
+    rule path-generic-args-without-colons-item:sym<c>  { <ident> '(' <maybe-ty-sums> ')' <ret-ty> }
     token path-generic-args-without-colons-item:sym<b> { <ident> <tok-mod-sep>? <generic-args> }
     token path-generic-args-without-colons-item:sym<a> { <ident> }
 }

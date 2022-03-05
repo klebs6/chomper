@@ -21,8 +21,28 @@ our role Pat::Rules {
     rule pat:sym<o> { <ident> '@' <pat> }
     rule pat:sym<p> { <binding-mode> <ident> '@' <pat> }
     rule pat:sym<q> { <kw-box> <pat> }
-    rule pat:sym<r> { '<' <ty-sum> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident> }
-    rule pat:sym<s> { <tok-shl> <ty-sum> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident> <maybe-as-trait-ref> '>' <tok-mod-sep> <ident> }
+
+    rule pat:sym<r> { 
+        '<' 
+        <ty-sum> 
+        <maybe-as-trait-ref> 
+        '>' 
+        <tok-mod-sep> 
+        <ident> 
+    }
+
+    rule pat:sym<s> { 
+        <tok-shl> 
+        <ty-sum> 
+        <maybe-as-trait-ref> 
+        '>' 
+        <tok-mod-sep> 
+        <ident> 
+        <maybe-as-trait-ref> 
+        '>' 
+        <tok-mod-sep> 
+        <ident> 
+    }
 
     rule pats-or {
         <pat>+ %% "|"
@@ -43,13 +63,14 @@ our role Pat::Actions {
 
     method pat:sym<c>($/) {
         make PatRegion.new(
+            mut => True,
             pat =>  $<pat>.made,
         )
     }
 
     method pat:sym<d>($/) {
-        make PatRegion.new(
-
+        make PatRegionRefRef.new(
+            pat =>  $<pat>.made,
         )
     }
 
@@ -146,8 +167,11 @@ our role Pat::Actions {
 
     method pat:sym<s>($/) {
         make PatQualifiedPath.new(
-            maybe-as-trait-ref =>  $<maybe-as-trait-ref>.made,
-            ident              =>  $<ident>.made,
+            ty-sum              =>  $<ty-sum>.made,
+            maybe-as-trait-refA =>  $<maybe-as-trait-ref>>>.made[0],
+            identA              =>  $<ident>>>.made[0],
+            maybe-as-trait-refB =>  $<maybe-as-trait-ref>>>.made[1],
+            identB              =>  $<ident>>>.made[1],
         )
     }
 
