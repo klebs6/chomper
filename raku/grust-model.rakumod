@@ -1167,6 +1167,7 @@ our class VecRepeat {
 
 our class ViewItemExternCrate {
     has $.ident;
+    has $.as-ident;
 }
 
 our class ViewPathGlob {

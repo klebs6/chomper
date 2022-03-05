@@ -28,8 +28,8 @@ our role ViewItem::Actions {
 
     method view-item:sym<d>($/) {
         make ViewItemExternCrate.new(
-            ident =>  $<ident>.made,
-            ident =>  $<ident>.made,
+            ident    => $<ident>>>.made[0],
+            as-ident => $<ident>>>.made[1],
         )
     }
 }
