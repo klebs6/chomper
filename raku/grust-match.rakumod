@@ -5,11 +5,11 @@ our role ExprMatch::Rules {
     proto rule expr-match { * }
 
     rule expr-match:sym<a> { <kw-match> <expr-nostruct> '{' '}' }
-    rule expr-match:sym<b> { <kw-match> <expr-nostruct> '{' <match-clauses> '}' }
-    rule expr-match:sym<c> { <kw-match> <expr-nostruct> '{' <match-clauses> <nonblock-match-clause> '}' }
-    rule expr-match:sym<d> { <kw-match> <expr-nostruct> '{' <nonblock-match-clause> '}' }
+    rule expr-match:sym<b> { <kw-match> <expr-nostruct> '{' <match-clauses> <comment>? '}' }
+    rule expr-match:sym<c> { <kw-match> <expr-nostruct> '{' <match-clauses> <nonblock-match-clause> <comment>? '}' }
+    rule expr-match:sym<d> { <kw-match> <expr-nostruct> '{' <nonblock-match-clause> <comment>? '}' }
 
-    regex match-clauses { <match-clause>+ <comment>? }
+    regex match-clauses { <match-clause>+ }
 
     #--------------------
     rule match-clause { <comment>? <match-clause-base> }
@@ -22,22 +22,38 @@ our role ExprMatch::Rules {
     proto rule nonblock-match-clause { * }
 
     rule nonblock-match-clause:sym<a> {
-        <maybe-outer-attrs> <pats-or> <maybe-guard> <tok-fat-arrow> <nonblock-expr>
+        <maybe-outer-attrs> 
+        <pats-or> 
+        <maybe-guard> 
+        <tok-fat-arrow> 
+        <nonblock-expr>
     }
 
     rule nonblock-match-clause:sym<b> {
-        <maybe-outer-attrs> <pats-or> <maybe-guard> <tok-fat-arrow> <block-expr-dot>
+        <maybe-outer-attrs> 
+        <pats-or> 
+        <maybe-guard> 
+        <tok-fat-arrow> 
+        <block-expr-dot>
     }
 
     #--------------------
     proto rule block-match-clause { * }
 
     rule block-match-clause:sym<a> {
-        <maybe-outer-attrs> <pats-or> <maybe-guard> <tok-fat-arrow> <block>
+        <maybe-outer-attrs> 
+        <pats-or> 
+        <maybe-guard> 
+        <tok-fat-arrow> 
+        <block>
     }
 
     rule block-match-clause:sym<b> {
-        <maybe-outer-attrs> <pats-or> <maybe-guard> <tok-fat-arrow> <block-expr>
+        <maybe-outer-attrs> 
+        <pats-or> 
+        <maybe-guard> 
+        <tok-fat-arrow> 
+        <block-expr>
     }
 }
 
@@ -51,22 +67,26 @@ our role ExprMatch::Actions {
 
     method expr-match:sym<b>($/) {
         make ExprMatch.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
-            match-clauses =>  $<match-clauses>.made,
+            expr-nostruct => $<expr-nostruct>.made,
+            match-clauses => $<match-clauses>.made,
+            comment       => $<comment>.made,
         )
     }
 
     method expr-match:sym<c>($/) {
         make ExprMatch.new(
-            expr-nostruct         =>  $<expr-nostruct>.made,
-            match-clauses         =>  $<match-clauses>.made,
-            nonblock-match-clause =>  $<nonblock-match-clause>.made,
+            expr-nostruct         => $<expr-nostruct>.made,
+            match-clauses         => $<match-clauses>.made,
+            nonblock-match-clause => $<nonblock-match-clause>.made,
+            comment               => $<comment>.made,
         )
     }
 
     method expr-match:sym<d>($/) {
         make ExprMatch.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct         => $<expr-nostruct>.made,
+            nonblock-match-clause => $<nonblock-match-clause>.made,
+            comment               => $<comment>.made,
         )
     }
 
@@ -74,11 +94,18 @@ our role ExprMatch::Actions {
         make $<match-clause>>>.made
     }
 
-    method match-clause:sym<a>($/) {
-
+    method match-clause($/) {
+        make MatchClause.new(
+            comment => $<comment>.made,
+            clause  => $<match-clause-base>.made,
+        )
     }
 
-    method match-clause:sym<b>($/) {
+    method match-clause-base:sym<a>($/) {
+        make $<nonblock-match-clause>.made
+    }
+
+    method match-clause-base:sym<b>($/) {
         make $<block-match-clause>.made
     }
 

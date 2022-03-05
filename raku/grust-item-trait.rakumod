@@ -67,19 +67,26 @@ our role ItemTrait::Actions {
     }
 
     #----------
-    method trait-item:sym<a>($/) {
+    method trait-item($/) {
+        make TraitItem.new(
+            value   => $<trait-item-base>.made,
+            comment => $<comment>.made,
+        )
+    }
+
+    method trait-item-base:sym<a>($/) {
         make $<trait-const>.made
     }
 
-    method trait-item:sym<b>($/) {
+    method trait-item-base:sym<b>($/) {
         make $<trait-type>.made
     }
 
-    method trait-item:sym<c>($/) {
+    method trait-item-base:sym<c>($/) {
         make $<trait-method>.made
     }
 
-    method trait-item:sym<d>($/) {
+    method trait-item-base:sym<d>($/) {
         make TraitMacroItem.new(
             maybe-outer-attrs =>  $<maybe-outer-attrs>.made,
             item-macro        =>  $<item-macro>.made,

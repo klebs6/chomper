@@ -16,23 +16,31 @@ our role MetaItem::Rules {
 
 our role MetaItem::Actions {
 
+    method maybe-scoped-ident($/) {
+        make $<ident>>>.made
+    }
+
     method meta-item:sym<a>($/) {
         make MetaWord.new(
-            ident =>  $<ident>.made,
+            ident =>  $<maybe-scoped-ident>.made,
         )
     }
 
     method meta-item:sym<b>($/) {
         make MetaNameValue.new(
-            ident =>  $<ident>.made,
+            ident =>  $<maybe-scoped-ident>.made,
             lit   =>  $<lit>.made,
         )
     }
 
     method meta-item:sym<c>($/) {
         make MetaList.new(
-            ident    =>  $<ident>.made,
+            ident    =>  $<maybe-scoped-ident>.made,
             meta-seq =>  $<meta-seq>.made,
         )
+    }
+
+    method meta-item:sym<d>($/) {
+        make $<lit-int>.made
     }
 }

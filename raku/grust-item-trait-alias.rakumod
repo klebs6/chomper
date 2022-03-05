@@ -16,9 +16,9 @@ our role ItemTraitAlias::Actions {
 
     method item-trait-alias($/) {
         make ItemTraitAlias.new(
-            unsafe => $<maybe-unsafe><kw-unsafe>:exists,
-            name   => $<ident>.made,
-            types  => $<ty>>>.made,
+            unsafe  => so $<maybe-unsafe><kw-unsafe>:exists,
+            ident   => $<ident>.made,
+            ty-sum  => $<ty-sum>.made,
         )
     }
 }

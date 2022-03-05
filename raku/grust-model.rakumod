@@ -508,12 +508,22 @@ our class ItemTrait {
 
 our class ItemTraitAlias {
     has Bool $.unsafe;
-    has $.name;
-    has @.types;
+    has $.ident;
+    has $.ty-sum;
 }
 
 our class TraitItems {
     has $.trait-item;
+}
+
+our class TraitItem {
+    has $.value;
+    has $.comment;
+}
+
+our class MatchClause {
+    has $.clause;
+    has $.comment;
 }
 
 our class TraitMacroItem {
