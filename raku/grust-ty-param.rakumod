@@ -23,7 +23,7 @@ our role TyParam::Actions {
 
     method ty-param:sym<a>($/) {
         make TyParam.new(
-            ident                 =>  $<ident>.made,
+            identA                =>  $<ident>.made,
             maybe-ty-param-bounds =>  $<maybe-ty-param-bounds>.made,
             maybe-ty-default      =>  $<maybe-ty-default>.made,
         )
@@ -31,8 +31,8 @@ our role TyParam::Actions {
 
     method ty-param:sym<b>($/) {
         make TyParam.new(
-            ident                 =>  $<ident>.made,
-            ident                 =>  $<ident>.made,
+            identA                =>  $<ident>>>.made[0],
+            identB                =>  $<ident>>>.made[1],
             maybe-ty-param-bounds =>  $<maybe-ty-param-bounds>.made,
             maybe-ty-default      =>  $<maybe-ty-default>.made,
         )
@@ -50,7 +50,7 @@ our role TyParams::Rules {
 our role TyParams::Actions {
 
     method ty-params($/) {
-        make $<ty-param>.made
+        make $<ty-param>>>.made
     }
 }
 

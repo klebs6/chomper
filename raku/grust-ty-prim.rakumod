@@ -28,7 +28,6 @@ our role TyPrim::Rules {
     rule ty-prim:sym<t> { <for-in-type> }
 
     rule ty-prim:sym<d> { 
-        #{self.set-prec(IDENT)} 
         <path-generic-args-without-colons> 
         '!' 
         <maybe-ident> 
@@ -36,7 +35,6 @@ our role TyPrim::Rules {
     }
 
     rule ty-prim:sym<e> {
-        #{self.set-prec(IDENT)} 
         <tok-mod-sep> 
         <path-generic-args-without-colons> 
         '!' 
@@ -45,18 +43,15 @@ our role TyPrim::Rules {
     }
 
     rule ty-prim:sym<a> { 
-        #{self.set-prec(IDENT)} 
         <path-generic-args-without-colons> 
     }
 
     rule ty-prim:sym<b> { 
-        #{self.set-prec(IDENT)} 
         <tok-mod-sep> 
         <path-generic-args-without-colons> 
     }
 
     rule ty-prim:sym<c> { 
-        #{self.set-prec(IDENT)} 
         <kw-self> 
         <tok-mod-sep> 
         <path-generic-args-without-colons> 
@@ -120,33 +115,40 @@ our role TyPrim::Actions {
 
     method ty-prim:sym<i>($/) {
         make TyRptr.new(
-            ty =>  $<ty>.made,
+            mut => True,
+            ty  =>  $<ty>.made,
         )
     }
 
     method ty-prim:sym<j>($/) {
         make TyRptr.new(
-
+            ty       => $<ty>.made,
+            count    => 2,
         )
     }
 
     method ty-prim:sym<k>($/) {
         make TyRptr.new(
-
+            mut      => $<maybe-mut>.made,
+            ty       => $<ty>.made,
+            count    => 2,
         )
     }
 
     method ty-prim:sym<l>($/) {
         make TyRptr.new(
-            lifetime  =>  $<lifetime>.made,
-            maybe-mut =>  $<maybe-mut>.made,
-            ty        =>  $<ty>.made,
+            lifetime =>  $<lifetime>.made,
+            mut      =>  $<maybe-mut>.made,
+            ty       =>  $<ty>.made,
         )
     }
 
     method ty-prim:sym<m>($/) {
         make TyRptr.new(
-
+            lifetime => $<lifetime>.made,
+            mut      => $<maybe-mut>.made,
+            ty       => $<ty>.made,
+            count    => 2,
         )
     }
 

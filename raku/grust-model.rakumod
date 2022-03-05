@@ -86,8 +86,11 @@ our class AsTraitRef {
 our class TyAscription {
     has $.value;
 }
-our class TyBareFn {
 
+our class TyBareFn {
+    has Bool $.unsafe = False;
+    has Bool $.extern = False;
+    has $.decl;
 }
 
 our class TraitRef {
@@ -1109,8 +1112,9 @@ our class TyPtr {
 
 our class TyRptr {
     has $.ty;
-    has $.maybe-mut;
+    has $.mut;
     has $.lifetime;
+    has $.count = 1;
 }
 
 our class TyTypeof {
