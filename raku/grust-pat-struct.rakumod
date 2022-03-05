@@ -10,6 +10,7 @@ our role PatStruct::Actions {
     method pat-struct($/) {
         make PatStruct.new(
             pat-fields =>  $<pat-fields>.made,
+            text       => ~$/,
         )
     }
 }

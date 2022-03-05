@@ -14,7 +14,8 @@ our role TyBareFn::Actions {
 
     method ty-bare-fn:sym<fn>($/) { 
         make TyBareFn.new(
-            decl => $<ty-fn-decl>.made ,
+            decl => $<ty-fn-decl>.made,
+            text => ~$/,
         )
     }
 
@@ -22,21 +23,24 @@ our role TyBareFn::Actions {
         make TyBareFn.new(
             decl   => $<ty-fn-decl>.made ,
             unsafe => True,
+            text   => ~$/,
         )
     }
 
     method ty-bare-fn:sym<extern>($/) { 
         make TyBareFn.new(
-            decl => $<ty-fn-decl>.made ,
+            decl   => $<ty-fn-decl>.made,
             extern => True,
+            text   => ~$/,
         )
     }
 
     method ty-bare-fn:sym<unsafe-extern>($/) { 
         make TyBareFn.new(
-            decl   => $<ty-fn-decl>.made ,
+            decl   => $<ty-fn-decl>.made,
             unsafe => True,
             extern => True,
+            text   => ~$/,
         )
     }
 }

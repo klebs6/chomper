@@ -53,6 +53,7 @@ our role Stmts::Actions {
         make Stmt.new(
             comment => $<comment>.made,
             value   => $<stmt-body>.made,
+            text    => ~$/,
         )
     }
 
@@ -60,6 +61,7 @@ our role Stmts::Actions {
         make Stmt.new(
             comment => $<block-comment>.made,
             value   => Nil,
+            text    => ~$/,
         )
     }
 

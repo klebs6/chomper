@@ -15,7 +15,8 @@ our role PathExpr::Actions {
     method path-expr($/) {
         if $/<kw-self>:exists {
             make SelfPath.new(
-                path-generic-args-with-colons =>  $<path-generic-args-with-colons>.made,
+                path-generic-args-with-colons => $<path-generic-args-with-colons>.made,
+                text                          => ~$/,
             )
         } else {
             make $<path-generic-args-with-colons>.made

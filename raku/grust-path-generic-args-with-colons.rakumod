@@ -35,6 +35,7 @@ our role PathGenericArgsWithColons::Actions {
         make PathGenericArgsWithColons.new(
             base => $<path-generic-args-with-colons-base>.made,
             tail => $<path-generic-args-with-colons-tail>>>.made,
+            text => ~$/,
         )
     }
 
@@ -43,7 +44,9 @@ our role PathGenericArgsWithColons::Actions {
     }
 
     method path-generic-args-with-colons-base:sym<b>($/) {
-        make Super.new
+        make Super.new(
+            text => ~$/,
+        )
     }
 
     method path-generic-args-with-colons-tail:sym<c>($/) { make $<ident>.made }

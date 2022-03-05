@@ -22,6 +22,7 @@ our role PathNoTypesAllowed::Actions {
         make ViewPath.new(
             base =>  $<path-no-types-allowed-base>.made,
             tail =>  $<ident>>>.made,
+            text => ~$/,
         )
     }
 
@@ -56,8 +57,9 @@ our role PathGenericArgsWithoutColons::Actions {
 
     method path-generic-args-without-colons-item:sym<b>($/) {
         make Components.new(
-            ident        =>  $<ident>.made,
-            generic-args =>  $<generic-args>.made,
+            ident        => $<ident>.made,
+            generic-args => $<generic-args>.made,
+            text         => ~$/,
         )
     }
 
@@ -66,6 +68,7 @@ our role PathGenericArgsWithoutColons::Actions {
             ident         => $<ident>.made,
             maybe-ty-sums => $<maybe-ty-sums>.made,
             ret-ty        => $<ret-ty>.made,
+            text          => ~$/,
         )
     }
 }

@@ -13,6 +13,7 @@ our role TraitRef::Actions {
     method trait-ref($/) {
         make TraitRef.new(
             value => $<path-generic-args-without-colons>.made
+            text  => ~$/,
         )
     }
 }

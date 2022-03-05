@@ -15,7 +15,8 @@ our role TyAscription::Actions {
 
     method ty-ascription($/) {
         make TyAscription.new(
-            value => $<ty-sum>.made
+            value => $<ty-sum>.made,
+            text  => ~$/,
         )
     }
 

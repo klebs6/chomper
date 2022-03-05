@@ -16,10 +16,11 @@ our role TraitConst::Actions {
 
     method trait-const($/) {
         make ConstTraitItem.new(
-            maybe-outer-attrs   =>  $<maybe-outer-attrs>.made,
-            ident               =>  $<ident>.made,
-            maybe-ty-ascription =>  $<maybe-ty-ascription>.made,
-            maybe-const-default =>  $<maybe-const-default>.made,
+            maybe-outer-attrs   => $<maybe-outer-attrs>.made,
+            ident               => $<ident>.made,
+            maybe-ty-ascription => $<maybe-ty-ascription>.made,
+            maybe-const-default => $<maybe-const-default>.made,
+            text                => ~$/,
         )
     }
 }

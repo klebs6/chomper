@@ -15,7 +15,8 @@ our role PatVec::Actions {
 
     method pat-vec:sym<d>($/) {
         make PatVec.new(
-            pat-vec-elts =>  $<pat-vec-elts>.made,
+            pat-vec-elts => $<pat-vec-elts>.made,
+            text         => ~$/,
         )
     }
 
@@ -31,6 +32,7 @@ our role PatVec::Actions {
     method pat-vec:sym<j>($/) {
         make PatVec.new(
             pat-vec-elts =>  $<pat-vec-elts>.made,
+            text         => ~$/,
         )
     }
 

@@ -48,6 +48,7 @@ our role StructExpr::Actions {
         make StructExprFields.new(
             maybe-field-inits  => $<maybe-field-inits>.made,
             default-field-init => $<default-field-init>.made,
+            text               => ~$/,
         )
     }
 
@@ -63,12 +64,14 @@ our role StructExpr::Actions {
         make FieldInit.new(
             comment => $<comment>.made,
             item    => $<field-init-item>.made,
+            text    => ~$/,
         )
     }
 
     method field-init-item:sym<a>($/) {
         make FieldInitItem.new(
             ident =>  $<ident>.made,
+            text  => ~$/,
         )
     }
 
@@ -76,18 +79,21 @@ our role StructExpr::Actions {
         make FieldInitItem.new(
             ident =>  $<ident>.made,
             expr  =>  $<expr>.made,
+            text  => ~$/,
         )
     }
 
     method field-init-item:sym<c>($/) {
         make FieldInitItem.new(
             expr =>  $<expr>.made,
+            text => ~$/,
         )
     }
 
     method default-field-init($/) {
         make DefaultFieldInit.new(
             expr =>  $<expr>.made,
+            text => ~$/,
         )
     }
 }

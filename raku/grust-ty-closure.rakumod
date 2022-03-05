@@ -38,6 +38,7 @@ our role TyClosure::Actions {
             anon-params  =>  $<anon-params>.made,
             maybe-bounds =>  $<maybe-bounds>.made,
             ret-ty       =>  $<ret-ty>.made,
+            text         => ~$/,
         )
     }
 
@@ -46,6 +47,7 @@ our role TyClosure::Actions {
             anon-params  =>  $<anon-params>.made,
             maybe-bounds =>  $<maybe-bounds>.made,
             ret-ty       =>  $<ret-ty>.made,
+            text         => ~$/,
         )
     }
 
@@ -53,6 +55,7 @@ our role TyClosure::Actions {
         make TyClosure.new(
             maybe-bounds =>  $<maybe-bounds>.made,
             ret-ty       =>  $<ret-ty>.made,
+            text         => ~$/,
         )
     }
 
@@ -60,6 +63,7 @@ our role TyClosure::Actions {
         make TyClosure.new(
             maybe-bounds =>  $<maybe-bounds>.made,
             ret-ty       =>  $<ret-ty>.made,
+            text         => ~$/,
         )
     }
 }

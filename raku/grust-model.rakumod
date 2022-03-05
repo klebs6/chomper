@@ -3097,11 +3097,8 @@ our class ItemUnsafeFn {
 our class LitByte    { 
     has $.val; 
 
-    has $.text is required;
-
     method gist {
         say "need to write gist!";
-        say $.text;
         ddt self;
         exit;
     }
@@ -3110,11 +3107,8 @@ our class LitByte    {
 our class LitStr     { 
     has $.val; 
 
-    has $.text is required;
-
     method gist {
         say "need to write gist!";
-        say $.text;
         ddt self;
         exit;
     }
@@ -3123,11 +3117,8 @@ our class LitStr     {
 our class LitByteStr { 
     has $.val; 
 
-    has $.text is required;
-
     method gist {
         say "need to write gist!";
-        say $.text;
         ddt self;
         exit;
     }
@@ -3136,11 +3127,8 @@ our class LitByteStr {
 our class LitChar    { 
     has $.val; 
 
-    has $.text is required;
-
     method gist {
         say "need to write gist!";
-        say $.text;
         ddt self;
         exit;
     }
@@ -3149,11 +3137,8 @@ our class LitChar    {
 our class LitInteger { 
     has $.val; 
 
-    has $.text is required;
-
     method gist {
         say "need to write gist!";
-        say $.text;
         ddt self;
         exit;
     }
@@ -3162,11 +3147,8 @@ our class LitInteger {
 our class LitFloat { 
     has $.val; 
 
-    has $.text is required;
-
     method gist {
         say "need to write gist!";
-        say $.text;
         ddt self;
         exit;
     }
@@ -3175,11 +3157,8 @@ our class LitFloat {
 our class LitBool { 
     has $.val; 
 
-    has $.text is required;
-
     method gist {
         say "need to write gist!";
-        say $.text;
         ddt self;
         exit;
     }

@@ -21,6 +21,7 @@ our role PatField::Actions {
         make PatField.new(
             ident =>  $<ident>.made,
             pat   =>  $<pat>.made,
+            text  => ~$/,
         )
     }
 
@@ -29,38 +30,44 @@ our role PatField::Actions {
             binding-mode =>  $<binding-mode>.made,
             ident        =>  $<ident>.made,
             pat          =>  $<pat>.made,
+            text         => ~$/,
         )
     }
 
     method pat-field:sym<ident>($/) {
         make PatField.new(
-            ident =>  $<ident>.made,
+            ident => $<ident>.made,
+            text  => ~$/,
         )
     }
 
     method pat-field:sym<bound-ident>($/) {
         make PatField.new(
-            binding-mode =>  $<binding-mode>.made,
-            ident        =>  $<ident>.made,
+            binding-mode => $<binding-mode>.made,
+            ident        => $<ident>.made,
+            text         => ~$/,
         )
     }
 
     method pat-field:sym<box-ident>($/) {
         make PatField.new(
             ident =>  $<ident>.made,
+            text  => ~$/,
         )
     }
 
     method pat-field:sym<box-bound-ident>($/) {
         make PatField.new(
-            binding-mode =>  $<binding-mode>.made,
-            ident        =>  $<ident>.made,
+            binding-mode => $<binding-mode>.made,
+            ident        => $<ident>.made,
+            text         => ~$/,
         )
     }
 
     method pat-field:sym<lit-pat>($/) {
         make PatField.new(
-            pat =>  $<pat>.made,
+            pat  => $<pat>.made,
+            text => ~$/,
         )
     }
 

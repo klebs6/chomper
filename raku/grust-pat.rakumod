@@ -52,41 +52,50 @@ our role Pat::Rules {
 our role Pat::Actions {
 
     method pat:sym<a>($/) {
-        make PatWild.new
+        make PatWild.new(
+            text         => ~$/,
+        )
     }
 
     method pat:sym<b>($/) {
         make PatRegion.new(
-            pat =>  $<pat>.made,
+            pat  =>  $<pat>.made,
+            text => ~$/,
         )
     }
 
     method pat:sym<c>($/) {
         make PatRegion.new(
-            mut => True,
-            pat =>  $<pat>.made,
+            mut  => True,
+            pat  => $<pat>.made,
+            text => ~$/,
         )
     }
 
     method pat:sym<d>($/) {
         make PatRegionRefRef.new(
-            pat =>  $<pat>.made,
+            pat  => $<pat>.made,
+            text => ~$/,
         )
     }
 
     method pat:sym<e>($/) {
-        make PatUnit.new
+        make PatUnit.new(
+            text => ~$/,
+        )
     }
 
     method pat:sym<f>($/) {
         make PatTup.new(
-            pat-tup =>  $<pat-tup>.made,
+            pat-tup => $<pat-tup>.made,
+            text    => ~$/,
         )
     }
 
     method pat:sym<g>($/) {
         make PatVec.new(
-            pat-vec =>  $<pat-vec>.made,
+            pat-vec => $<pat-vec>.made,
+            text    => ~$/,
         )
     }
 
@@ -98,19 +107,22 @@ our role Pat::Actions {
         make PatRange.new(
             lit-or-pathA =>  $<lit-or-path>.made,
             lit-or-pathB =>  $<lit-or-path>.made,
+            text         => ~$/,
         )
     }
 
     method pat:sym<j>($/) {
         make PatStruct.new(
-            path-expr  =>  $<path-expr>.made,
-            pat-struct =>  $<pat-struct>.made,
+            path-expr  => $<path-expr>.made,
+            pat-struct => $<pat-struct>.made,
+            text       => ~$/,
         )
     }
 
     method pat:sym<k>($/) {
         make PatEnum.new(
-            path-expr =>  $<path-expr>.made,
+            path-expr => $<path-expr>.made,
+            text      => ~$/,
         )
     }
 
@@ -118,28 +130,32 @@ our role Pat::Actions {
         make PatEnum.new(
             path-expr =>  $<path-expr>.made,
             pat-tup   =>  $<pat-tup>.made,
+            text      => ~$/,
         )
     }
 
     method pat:sym<m>($/) {
         make PatMac.new(
-            path-expr             =>  $<path-expr>.made,
-            maybe-ident           =>  $<maybe-ident>.made,
-            delimited-token-trees =>  $<delimited-token-trees>.made,
+            path-expr             => $<path-expr>.made,
+            maybe-ident           => $<maybe-ident>.made,
+            delimited-token-trees => $<delimited-token-trees>.made,
+            text                  => ~$/,
         )
     }
 
     method pat:sym<n>($/) {
         make PatIdent.new(
-            binding-mode =>  $<binding-mode>.made,
-            ident        =>  $<ident>.made,
+            binding-mode => $<binding-mode>.made,
+            ident        => $<ident>.made,
+            text         => ~$/,
         )
     }
 
     method pat:sym<o>($/) {
         make PatIdent.new(
-            ident =>  $<ident>.made,
-            pat   =>  $<pat>.made,
+            ident => $<ident>.made,
+            pat   => $<pat>.made,
+            text  => ~$/,
         )
     }
 
@@ -148,12 +164,14 @@ our role Pat::Actions {
             binding-mode =>  $<binding-mode>.made,
             ident        =>  $<ident>.made,
             pat          =>  $<pat>.made,
+            text         => ~$/,
         )
     }
 
     method pat:sym<q>($/) {
         make PatUniq.new(
-            pat =>  $<pat>.made,
+            pat  => $<pat>.made,
+            text => ~$/,
         )
     }
 
@@ -162,6 +180,7 @@ our role Pat::Actions {
             ty-sum             =>  $<ty-sum>.made,
             maybe-as-trait-ref =>  $<maybe-as-trait-ref>.made,
             ident              =>  $<ident>.made,
+            text               => ~$/,
         )
     }
 
@@ -172,6 +191,7 @@ our role Pat::Actions {
             identA              =>  $<ident>>>.made[0],
             maybe-as-trait-refB =>  $<maybe-as-trait-ref>>>.made[1],
             identB              =>  $<ident>>>.made[1],
+            text                => ~$/,
         )
     }
 

@@ -35,6 +35,7 @@ our role Params::Actions {
             comment => $<comment>.made,
             pat     => $<pat>.made,
             ty-sum  => $<ty-sum>.made,
+            text    => ~$/,
         )
     }
 
