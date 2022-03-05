@@ -16,6 +16,7 @@ our role ModItem::Actions {
             comment       => $<comment>.made,
             attrs-and-vis => $<attrs-and-vis>.made,
             item          => $<item>.made,
+            text          => ~$/,
         )
     }
 }

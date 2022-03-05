@@ -10,17 +10,25 @@ our role MutOrConst::Actions {
 
     method maybe-mut($/) { 
         if $/<kw-mut>:exists {
-            make MutMutable.new 
+            make MutMutable.new(
+                text => ~$/,
+            )
         } else {
-            make MutImmutable.new 
+            make MutImmutable.new(
+                text => ~$/,
+            )
         }
     }
 
     method maybe-mut-or-const($/) { 
         if $/<kw-mut>:exists {
-            make MutMutable.new 
+            make MutMutable.new(
+                text => ~$/,
+            )
         } else {
-            make MutImmutable.new 
+            make MutImmutable.new(
+                text => ~$/,
+            )
         }
     }
 }

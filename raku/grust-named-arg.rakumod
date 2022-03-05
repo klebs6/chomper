@@ -15,10 +15,10 @@ our role NamedArg::Rules {
 our role NamedArg::Actions {
 
     method named-arg:sym<a>($/) { make $<ident>.made }
-    method named-arg:sym<b>($/) { make PatWild.new }
+    method named-arg:sym<b>($/) { make PatWild.new( text => ~$/ ) }
     method named-arg:sym<c>($/) { make $<ident>.made }
-    method named-arg:sym<d>($/) { make PatWild.new }
+    method named-arg:sym<d>($/) { make PatWild.new( text => ~$/ ) }
     method named-arg:sym<e>($/) { make $<ident>.made }
-    method named-arg:sym<f>($/) { make PatWild.new }
+    method named-arg:sym<f>($/) { make PatWild.new( text => ~$/ ) }
     method named-arg:sym<g>($/) { make $<ident>.made }
 }
