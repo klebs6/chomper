@@ -7,9 +7,9 @@ our role Exprs::Rules {
 
     rule exprs               { <exprs-item>+ %% "," }
 
-    proto method exprs-item  { * }
-    method exprs-item:sym<a> { <expr> }
-    method exprs-item:sym<b> { <expr-nostruct> } #not in original grammar
+    proto token exprs-item  { * }
+    token exprs-item:sym<a> { <expr> }
+    token exprs-item:sym<b> { <expr-nostruct> } #not in original grammar
 }
 
 our role Exprs::Actions {

@@ -75,7 +75,7 @@ our role NonblockPrefixExpr::Actions {
     }
 
     method nonblock-prefix-expr:sym<b>($/) {
-        make ExprUnaryBang.new(
+        make ExprUnaryNot.new(
             expr =>  $<expr>.made,
         )
     }

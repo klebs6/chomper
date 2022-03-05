@@ -13,6 +13,11 @@ our class Expr {
     has @.tail;
 }
 
+our class ExprNoStruct {
+    has $.base;
+    has @.tail;
+}
+
 our class NonBlockExpr {
     has $.comment;
     has $.base;
