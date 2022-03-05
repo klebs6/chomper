@@ -62,6 +62,7 @@ our role ItemStruct::Actions {
             generic-params     =>  $<generic-params>.made,
             maybe-where-clause =>  $<maybe-where-clause>.made,
             struct-decl-args   =>  $<struct-decl-args>.made,
+            text               => ~$/,
         )
     }
 
@@ -71,6 +72,7 @@ our role ItemStruct::Actions {
             generic-params     =>  $<generic-params>.made,
             struct-tuple-args  =>  $<struct-tuple-args>.made,
             maybe-where-clause =>  $<maybe-where-clause>.made,
+            text               => ~$/,
         )
     }
 
@@ -79,6 +81,7 @@ our role ItemStruct::Actions {
             ident              =>  $<ident>.made,
             generic-params     =>  $<generic-params>.made,
             maybe-where-clause =>  $<maybe-where-clause>.made,
+            text               => ~$/,
         )
     }
 
@@ -100,6 +103,7 @@ our role ItemStruct::Actions {
             attrs-and-vis => $<attrs-and-vis>.made,
             ident         => $<ident>.made,
             ty-sum        => $<ty-sum>.made,
+            text          => ~$/,
         )
     }
 
@@ -111,6 +115,7 @@ our role ItemStruct::Actions {
         make StructField.new(
             attrs-and-vis =>  $<attrs-and-vis>.made,
             ty-sum        =>  $<ty-sum>.made,
+            text          => ~$/,
         )
     }
 }

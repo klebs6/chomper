@@ -62,6 +62,7 @@ our role ExprMatch::Actions {
     method expr-match:sym<a>($/) {
         make ExprMatch.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
@@ -70,6 +71,7 @@ our role ExprMatch::Actions {
             expr-nostruct => $<expr-nostruct>.made,
             match-clauses => $<match-clauses>.made,
             comment       => $<comment>.made,
+            text          => ~$/,
         )
     }
 
@@ -79,6 +81,7 @@ our role ExprMatch::Actions {
             match-clauses         => $<match-clauses>.made,
             nonblock-match-clause => $<nonblock-match-clause>.made,
             comment               => $<comment>.made,
+            text                   => ~$/,
         )
     }
 
@@ -87,6 +90,7 @@ our role ExprMatch::Actions {
             expr-nostruct         => $<expr-nostruct>.made,
             nonblock-match-clause => $<nonblock-match-clause>.made,
             comment               => $<comment>.made,
+            text                  => ~$/,
         )
     }
 
@@ -98,6 +102,7 @@ our role ExprMatch::Actions {
         make MatchClause.new(
             comment => $<comment>.made,
             clause  => $<match-clause-base>.made,
+            text    => ~$/,
         )
     }
 
@@ -116,6 +121,7 @@ our role ExprMatch::Actions {
             pats-or           =>  $<pats-or>.made,
             maybe-guard       =>  $<maybe-guard>.made,
             nonblock-expr     =>  $<nonblock-expr>.made,
+            text              => ~$/,
         )
     }
 
@@ -125,6 +131,7 @@ our role ExprMatch::Actions {
             pats-or           =>  $<pats-or>.made,
             maybe-guard       =>  $<maybe-guard>.made,
             block-expr-dot    =>  $<block-expr-dot>.made,
+            text              => ~$/,
         )
     }
 
@@ -134,6 +141,7 @@ our role ExprMatch::Actions {
             pats-or           =>  $<pats-or>.made,
             maybe-guard       =>  $<maybe-guard>.made,
             block             =>  $<block>.made,
+            text              => ~$/,
         )
     }
 
@@ -143,6 +151,7 @@ our role ExprMatch::Actions {
             pats-or           =>  $<pats-or>.made,
             maybe-guard       =>  $<maybe-guard>.made,
             block-expr        =>  $<block-expr>.made,
+            text              => ~$/,
         )
     }
 }

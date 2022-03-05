@@ -19,6 +19,7 @@ our role ItemTraitAlias::Actions {
             unsafe  => so $<maybe-unsafe><kw-unsafe>:exists,
             ident   => $<ident>.made,
             ty-sum  => $<ty-sum>.made,
+            text    => ~$/,
         )
     }
 }

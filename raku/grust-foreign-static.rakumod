@@ -14,6 +14,7 @@ our role ForeignStatic::Actions {
             maybe-mut =>  $<maybe-mut>.made,
             ident     =>  $<ident>.made,
             ty        =>  $<ty>.made,
+            text      => ~$/,
         )
     }
 }

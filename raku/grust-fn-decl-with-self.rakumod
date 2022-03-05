@@ -23,6 +23,7 @@ our role FnDeclWithSelf::Actions {
         make FnDecl.new(
             fn-params =>  $<fn-params>.made,
             ret-ty    =>  $<ret-ty>.made,
+            text      => ~$/,
         )
     }
 
@@ -30,6 +31,7 @@ our role FnDeclWithSelf::Actions {
         make FnDecl.new(
             fn-params-with-self =>  $<fn-params-with-self>.made,
             ret-ty              =>  $<ret-ty>.made,
+            text                => ~$/,
         )
     }
 
@@ -37,6 +39,7 @@ our role FnDeclWithSelf::Actions {
         make FnDecl.new(
             fn-anon-params-with-self =>  $<fn-anon-params-with-self>.made,
             ret-ty                   =>  $<ret-ty>.made,
+            text                     => ~$/,
         )
     }
 }

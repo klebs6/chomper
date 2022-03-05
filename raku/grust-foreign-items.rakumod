@@ -31,6 +31,7 @@ our role ForeignItems::Actions {
         make ForeignItemStatic.new(
             attrs-and-vis       =>  $<attrs-and-vis>.made,
             item-foreign-static =>  $<item-foreign-static>.made,
+            text                => ~$/,
         )
     }
 
@@ -38,6 +39,7 @@ our role ForeignItems::Actions {
         make ForeignItem.new(
             attrs-and-vis   =>  $<attrs-and-vis>.made,
             item-foreign-fn =>  $<item-foreign-fn>.made,
+            text            => ~$/,
         )
     }
 
@@ -45,6 +47,7 @@ our role ForeignItems::Actions {
         make ForeignItemUnsafe.new(
             attrs-and-vis   =>  $<attrs-and-vis>.made,
             item-foreign-fn =>  $<item-foreign-fn>.made,
+            text            => ~$/,
         )
     }
 }

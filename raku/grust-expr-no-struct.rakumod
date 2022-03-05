@@ -89,330 +89,384 @@ our role ExprNoStruct::Actions {
         make ExprNoStruct.new(
             base => $<expr-nostruct-base>.made,
             tail => $<expr-nostruct-tail>>>.made,
+            text => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<lit>($/) {
         make ExprLit.new(
-            lit =>  $<lit>.made,
+            lit  =>  $<lit>.made,
+            text => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<path-expr>($/) {
         make ExprPath.new(
             path-expr =>  $<path-expr>.made,
+            text      => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<self>($/) {
         make ExprPath.new(
-
+            text      => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<macro-expr>($/) {
         make ExprMac.new(
             macro-expr =>  $<macro-expr>.made,
+            text       => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<qmark>($/) {
-        make ExprTry.new
+        make ExprTry.new(
+            text       => ~$/,
+        )
     }
 
     method expr-nostruct-tail:sym<dot-path>($/) {
         make ExprField.new(
-            path-generic-args-with-colons =>  $<path-generic-args-with-colons>.made,
+            path-generic-args-with-colons => $<path-generic-args-with-colons>.made
+            text                          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<dot-lit-int>($/) {
         make ExprTupleIndex.new(
             lit-int =>  $<lit-int>.made,
+            text    => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<brack-expr>($/) {
         make ExprIndex.new(
-            maybe-expr    =>  $<maybe-expr>.made,
+            maybe-expr =>  $<maybe-expr>.made,
+            text       => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<paren-expr>($/) {
         make ExprCall.new(
-            maybe-exprs   =>  $<maybe-exprs>.made,
+            maybe-exprs =>  $<maybe-exprs>.made,
+            text        => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<vec-expr>($/) {
         make ExprVec.new(
             vec-expr =>  $<vec-expr>.made,
+            text     => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<paren-expr>($/) {
         make ExprParen.new(
             maybe-exprs =>  $<maybe-exprs>.made,
+            text        => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<continue>($/) {
         make ExprAgain.new(
-
+            text        => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<continue-ident>($/) {
         make ExprAgain.new(
             ident =>  $<ident>.made,
+            text        => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<return>($/) {
         make ExprRet.new(
-
+            text        => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<return-expr>($/) {
         make ExprRet.new(
             expr =>  $<expr>.made,
+            text => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<break>($/) {
         make ExprBreak.new(
-
+            text => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<break-ident>($/) {
         make ExprBreak.new(
             ident =>  $<ident>.made,
+            text  => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<yield>($/) {
         make ExprYield.new(
-
+            text  => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<yield-expr>($/) {
         make ExprYield.new(
             expr =>  $<expr>.made,
+            text => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<eq-expr>($/) {
         make ExprAssign.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<shleq-expr>($/) {
         make ExprAssignShl.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<shreq-expr>($/) {
         make ExprAssignShr.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<minuseq-expr>($/) {
         make ExprAssignSub.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<andeq-expr>($/) {
         make ExprAssignBitAnd.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<oreq-expr>($/) {
         make ExprAssignBitOr.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<pluseq-expr>($/) {
         make ExprAssignAdd.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<stareq-expr>($/) {
         make ExprAssignMul.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<slasheq-expr>($/) {
         make ExprAssignDiv.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<careteq-expr>($/) {
         make ExprAssignBitXor.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<percenteq-expr>($/) {
         make ExprAssignRem.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<oror-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<andand-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<eqeq-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<ne-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<lt-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<gt-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<le-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tai:sym<ge-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<pipe-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<caret-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<amp-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<shl-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<shr-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<plus-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<minus-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<star-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<slash-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<mod-expr>($/) {
         make ExprBinary.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<dotdot>($/) {
-        make ExprRange.new
+        make ExprRange.new(
+            text          => ~$/,
+        )
     }
 
     method expr-nostruct-tail:sym<dotdot-nostruct>($/) {
         make ExprRange.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<dotdot-expr-nostruct>($/) {
         make ExprRange.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<dotdot>($/) {
-        make ExprRange.new
+        make ExprRange.new(
+            text          => ~$/,
+        )
     }
 
     method expr-nostruct-tail:sym<as-try>($/) {
         make ExprCast.new(
             ty   =>  $<ty>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-tail:sym<colon-try>($/) {
         make ExprTypeAscr.new(
             ty   =>  $<ty>.made,
+            text          => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<box-expr>($/) {
         make ExprBox.new(
             expr =>  $<expr>.made,
+            text          => ~$/,
         )
     }
 

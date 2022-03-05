@@ -14,6 +14,7 @@ our role ItemConst::Actions {
             ident =>  $<ident>.made,
             ty    =>  $<ty>.made,
             expr  =>  $<expr>.made,
+            text  => ~$/,
         )
     }
 }

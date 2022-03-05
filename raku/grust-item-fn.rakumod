@@ -50,6 +50,7 @@ our role Fn::Actions {
             fn-decl               => $<fn-decl>.made,
             maybe-where-clause    => $<maybe-where-clause>.made,
             inner-attrs-and-block => $<inner-attrs-and-block>.made,
+            text                  => ~$/,
         )
     }
 
@@ -61,6 +62,7 @@ our role Fn::Actions {
             fn-decl               =>  $<fn-decl>.made,
             maybe-where-clause    =>  $<maybe-where-clause>.made,
             inner-attrs-and-block =>  $<inner-attrs-and-block>.made,
+            text                  => ~$/,
         )
     }
 
@@ -72,6 +74,7 @@ our role Fn::Actions {
             fn-decl               =>  $<fn-decl>.made,
             maybe-where-clause    =>  $<maybe-where-clause>.made,
             inner-attrs-and-block =>  $<inner-attrs-and-block>.made,
+            text                  => ~$/,
         )
     }
 }

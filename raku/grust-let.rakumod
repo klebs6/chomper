@@ -17,6 +17,7 @@ our role Let::Actions {
             pat                 =>  $<pat>.made,
             maybe-ty-ascription =>  $<maybe-ty-ascription>.made,
             maybe-init-expr     =>  $<maybe-init-expr>.made,
+            text                => ~$/,
         )
     }
 }

@@ -26,6 +26,7 @@ our role GenericParams::Actions {
             lifetimes      =>  $<lifetimes>.made,
             const-generics =>  $<const-generics>.made,
             ty-params      =>  $<ty-params>.made,
+            text           => ~$/,
         )
     }
 }

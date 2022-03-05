@@ -18,6 +18,7 @@ our role ForSized::Actions {
     method for-sized($/) {
         make ForSized.new(
             ident =>  $<ident>.made,
+            text  => ~$/,
         )
     }
 }

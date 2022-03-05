@@ -35,6 +35,7 @@ our role ItemMacro::Actions {
             path-expr                    =>  $<path-expr>.made,
             maybe-ident                  =>  $<maybe-ident>.made,
             parens-delimited-token-trees =>  $<parens-delimited-token-trees>.made,
+            text                         => ~$/,
         )
     }
 
@@ -43,6 +44,7 @@ our role ItemMacro::Actions {
             path-expr                    =>  $<path-expr>.made,
             maybe-ident                  =>  $<maybe-ident>.made,
             braces-delimited-token-trees =>  $<braces-delimited-token-trees>.made,
+            text                         => ~$/,
         )
     }
 
@@ -51,6 +53,7 @@ our role ItemMacro::Actions {
             path-expr                      =>  $<path-expr>.made,
             maybe-ident                    =>  $<maybe-ident>.made,
             brackets-delimited-token-trees =>  $<brackets-delimited-token-trees>.made,
+            text                           => ~$/,
         )
     }
 }

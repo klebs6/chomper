@@ -53,12 +53,14 @@ our role AnonParams::Actions {
         make AnonParam.new(
             named-arg =>  $<named-arg>.made,
             ty        =>  $<ty>.made,
+            text      => ~$/,
         )
     }
 
     method anon-param:sym<just-ty>($/) {
         make AnonParam.new(
             ty        =>  $<ty>.made,
+            text      => ~$/,
         )
     }
 
@@ -66,6 +68,7 @@ our role AnonParams::Actions {
         make AnonParams.new(
             anon-params   => $<anon-param>>>.made,
             variadic-tail => so $<tok-dotdotdot>.made,
+            text      => ~$/,
         )
     }
 }

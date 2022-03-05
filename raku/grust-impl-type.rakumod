@@ -23,6 +23,7 @@ our role ImplType::Actions {
             ident          =>  $<ident>.made,
             generic-params =>  $<generic-params>.made,
             ty-sum         =>  $<ty-sum>.made,
+            text           => ~$/,
         )
     }
 }

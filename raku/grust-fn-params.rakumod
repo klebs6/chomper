@@ -39,6 +39,7 @@ our role FnParams::Actions {
         make FnDecl.new(
             fn-params-allow-variadic =>  $<fn-params-allow-variadic>.made,
             ret-ty                   =>  $<ret-ty>.made,
+            text                     => ~$/,
         )
     }
 
@@ -60,6 +61,7 @@ our role FnParams::Actions {
             maybe-mut           =>  $<maybe-mut>.made,
             maybe-ty-ascription =>  $<maybe-ty-ascription>.made,
             maybe-comma-params  =>  $<maybe-comma-params>.made,
+            text                => ~$/,
         )
     }
 
@@ -68,6 +70,7 @@ our role FnParams::Actions {
             maybe-mut           =>  $<maybe-mut>.made,
             maybe-ty-ascription =>  $<maybe-ty-ascription>.made,
             maybe-comma-params  =>  $<maybe-comma-params>.made,
+            text                => ~$/,
         )
     }
 
@@ -77,12 +80,14 @@ our role FnParams::Actions {
             maybe-mut           =>  $<maybe-mut>.made,
             maybe-ty-ascription =>  $<maybe-ty-ascription>.made,
             maybe-comma-params  =>  $<maybe-comma-params>.made,
+            text                => ~$/,
         )
     }
 
     method fn-params-with-self:sym<d>($/) {
         make SelfStatic.new(
             maybe-params =>  $<maybe-params>.made,
+            text         => ~$/,
         )
     }
 
@@ -92,6 +97,7 @@ our role FnParams::Actions {
             maybe-mut               =>  $<maybe-mut>.made,
             maybe-ty-ascription     =>  $<maybe-ty-ascription>.made,
             maybe-comma-anon-params =>  $<maybe-comma-anon-params>.made,
+            text                    => ~$/,
         )
     }
 
@@ -100,6 +106,7 @@ our role FnParams::Actions {
             maybe-mut               =>  $<maybe-mut>.made,
             maybe-ty-ascription     =>  $<maybe-ty-ascription>.made,
             maybe-comma-anon-params =>  $<maybe-comma-anon-params>.made,
+            text                    => ~$/,
         )
     }
 
@@ -109,12 +116,14 @@ our role FnParams::Actions {
             maybe-mut               =>  $<maybe-mut>.made,
             maybe-ty-ascription     =>  $<maybe-ty-ascription>.made,
             maybe-comma-anon-params =>  $<maybe-comma-anon-params>.made,
+            text                    => ~$/,
         )
     }
 
     method fn-anon-params-with-self:sym<d>($/) {
         make SelfStatic.new(
             maybe-anon-params =>  $<maybe-anon-params>.made,
+            text              => ~$/,
         )
     }
 }

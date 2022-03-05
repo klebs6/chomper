@@ -55,6 +55,7 @@ our role ItemTrait::Actions {
             maybe-ty-param-bounds =>  $<maybe-ty-param-bounds>.made,
             maybe-where-clause    =>  $<maybe-where-clause>.made,
             maybe-trait-items     =>  $<maybe-trait-items>.made,
+            text                  => ~$/,
         )
     }
 
@@ -71,6 +72,7 @@ our role ItemTrait::Actions {
         make TraitItem.new(
             value   => $<trait-item-base>.made,
             comment => $<comment>.made,
+            text    => ~$/,
         )
     }
 
@@ -90,6 +92,7 @@ our role ItemTrait::Actions {
         make TraitMacroItem.new(
             maybe-outer-attrs =>  $<maybe-outer-attrs>.made,
             item-macro        =>  $<item-macro>.made,
+            text              => ~$/,
         )
     }
 }

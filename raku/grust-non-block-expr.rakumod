@@ -123,14 +123,13 @@ our role NonBlockExpr::Actions {
 
     method nonblock-expr-tail:sym<dot-path>($/) {
         make ExprField.new(
-            nonblock-expr                 =>  $<nonblock-expr>.made,
-            path-generic-args-with-colons =>  $<path-generic-args-with-colons>.made,
+            path-generic-args-with-colons => $<path-generic-args-with-colons>.made
         )
     }
 
     method nonblock-expr-tail:sym<dot-lit-int>($/) {
         make ExprTupleIndex.new(
-            nonblock-expr =>  $<nonblock-expr>.made,
+            lit-int =>  $<lit-int>.made,
         )
     }
 

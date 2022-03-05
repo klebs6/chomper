@@ -91,6 +91,7 @@ our role LambdaExpr::Actions {
         make ExprFnBlock.new(
             ret-ty =>  $<ret-ty>.made,
             expr   =>  $<expr>.made,
+            text   => ~$/,
         )
     }
 
@@ -98,6 +99,7 @@ our role LambdaExpr::Actions {
         make ExprFnBlock.new(
             ret-ty =>  $<ret-ty>.made,
             expr   =>  $<expr>.made,
+            text   => ~$/,
         )
     }
 
@@ -106,6 +108,7 @@ our role LambdaExpr::Actions {
             inferrable-params =>  $<inferrable-params>.made,
             ret-ty            =>  $<ret-ty>.made,
             expr              =>  $<expr>.made,
+            text              => ~$/,
         )
     }
 
@@ -113,6 +116,7 @@ our role LambdaExpr::Actions {
         make ExprFnBlock.new(
             inferrable-params        =>  $<inferrable-params>.made,
             lambda-expr-no-first-bar =>  $<lambda-expr-no-first-bar>.made,
+            text                     => ~$/,
         )
     }
 
@@ -120,6 +124,7 @@ our role LambdaExpr::Actions {
         make ExprFnBlock.new(
             ret-ty =>  $<ret-ty>.made,
             expr   =>  $<expr>.made,
+            text   => ~$/,
         )
     }
 
@@ -128,6 +133,7 @@ our role LambdaExpr::Actions {
             inferrable-params =>  $<inferrable-params>.made,
             ret-ty            =>  $<ret-ty>.made,
             expr              =>  $<expr>.made,
+            text              => ~$/,
         )
     }
 
@@ -135,12 +141,14 @@ our role LambdaExpr::Actions {
         make ExprFnBlock.new(
             inferrable-params        =>  $<inferrable-params>.made,
             lambda-expr-no-first-bar =>  $<lambda-expr-no-first-bar>.made,
+            text                     => ~$/,
         )
     }
 
     method lambda-expr-nostruct:sym<a>($/) {
         make ExprFnBlock.new(
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
@@ -148,6 +156,7 @@ our role LambdaExpr::Actions {
         make ExprFnBlock.new(
             ret-ty        =>  $<ret-ty>.made,
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
@@ -155,6 +164,7 @@ our role LambdaExpr::Actions {
         make ExprFnBlock.new(
             inferrable-params =>  $<inferrable-params>.made,
             expr-nostruct     =>  $<expr-nostruct>.made,
+            text              => ~$/,
         )
     }
 
@@ -162,6 +172,7 @@ our role LambdaExpr::Actions {
         make ExprFnBlock.new(
             inferrable-params                 =>  $<inferrable-params>.made,
             lambda-expr-nostruct-no-first-bar =>  $<lambda-expr-nostruct-no-first-bar>.made,
+            text                              => ~$/,
         )
     }
 
@@ -169,6 +180,7 @@ our role LambdaExpr::Actions {
         make ExprFnBlock.new(
             ret-ty        =>  $<ret-ty>.made,
             expr-nostruct =>  $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 
@@ -177,6 +189,7 @@ our role LambdaExpr::Actions {
             inferrable-params =>  $<inferrable-params>.made,
             ret-ty            =>  $<ret-ty>.made,
             expr-nostruct     =>  $<expr-nostruct>.made,
+            text              => ~$/,
         )
     }
 
@@ -184,6 +197,7 @@ our role LambdaExpr::Actions {
         make ExprFnBlock.new(
             inferrable-params                 =>  $<inferrable-params>.made,
             lambda-expr-nostruct-no-first-bar =>  $<lambda-expr-nostruct-no-first-bar>.made,
+            text                              => ~$/,
         )
     }
 }

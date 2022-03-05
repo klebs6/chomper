@@ -21,6 +21,7 @@ our role ExprWhileLet::Actions {
             pat           =>  $<pat>.made,
             expr-nostruct =>  $<expr-nostruct>.made,
             block         =>  $<block>.made,
+            text          => ~$/,
         )
     }
 }

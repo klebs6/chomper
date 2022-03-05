@@ -14,18 +14,21 @@ our role LitOrPath::Actions {
     method lit-or-path:sym<a>($/) {
         make PatLit.new(
             path-expr =>  $<path-expr>.made,
+            text      => ~$/,
         )
     }
 
     method lit-or-path:sym<b>($/) {
         make PatLit.new(
-            lit =>  $<lit>.made,
+            lit  =>  $<lit>.made,
+            text => ~$/,
         )
     }
 
     method lit-or-path:sym<c>($/) {
         make PatLit.new(
-            lit =>  $<lit>.made,
+            lit  =>  $<lit>.made,
+            text => ~$/,
         )
     }
 }

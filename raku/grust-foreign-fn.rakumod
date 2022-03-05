@@ -19,6 +19,7 @@ our role ForeignFn::Actions {
             generic-params         =>  $<generic-params>.made,
             fn-decl-allow-variadic =>  $<fn-decl-allow-variadic>.made,
             maybe-where-clause     =>  $<maybe-where-clause>.made,
+            text                   => ~$/,
         )
     }
 }

@@ -22,6 +22,7 @@ our role InferrableParams::Actions {
         make InferrableParam.new(
             pat                 =>  $<pat>.made,
             maybe-ty-ascription =>  $<maybe-ty-ascription>.made,
+            text                => ~$/,
         )
     }
 }

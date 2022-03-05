@@ -1,63 +1,171 @@
 our class ForLifetimes {
     has $.lifetimes;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TypeWithDefault {
     has $.ty;
     has $.default;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Expr {
     has @.prefix;
     has $.base;
     has @.tail;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprNoStruct {
     has $.base;
     has @.tail;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class NonBlockExpr {
     has $.comment;
     has $.base;
     has @.tail;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class As {
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Label {
     has $.value;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprAgain {
     has $.lifetime;
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprAssignMul {
     has $.nonblock-expr;
     has $.expr;
     has $.expr-nostruct;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprAssignSub {
     has $.expr;
     has $.expr-nostruct;
     has $.nonblock-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprBinary {
     has $.expr;
     has $.expr-nostruct;
     has $.nonblock-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprBreak {
     has $.ident;
     has $.lifetime;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprCall {
@@ -68,102 +176,291 @@ our class ExprCall {
     has $.maybe-exprs;
     has $.nonblock-expr;
     has $.path-generic-args-with-colons;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprLit {
     has $.lit;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class AnonParam {
     has $.named-arg;
     has $.ty;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class AnonParams {
     has Bool $.variadic-tail;
     has @.anon-params;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class AsTraitRef {
     has $.trait-ref;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyAscription {
     has $.value;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyBareFn {
     has Bool $.unsafe = False;
     has Bool $.extern = False;
     has $.decl;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TraitRef {
     has $.value;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class AttrsAndVis {
     has $.maybe-outer-attrs;
     has $.visibility;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class BindByRef {
     has Bool $.mut;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class BindByValue {
     has Bool $.mut;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Binding {
     has $.ty;
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Macro {
     has $.braces-delimited-token-trees;
     has $.path-expr;
     has $.maybe-ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class UnsafeBlock {
     has $.block;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class BlockExprDotTail {
     has $.path-generic-args-with-colons;
     has @.maybe-exprs;
     has $.lit-integer;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class BlockExprDot {
     has @.block-exprs;
     has $.block-expr-dot-tail;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemForeignMod {
     has $.inner-attrs;
     has $.item-foreign-mod;
     has $.maybe-foreign-items;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprBlock {
     has $.maybe-stmts;
     has $.maybe-inner-attrs;
     has $.comment;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Bounds {
     has $.bound;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ConstDefault {
     has $.expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Crate {
     has $.maybe-mod-items;
     has $.inner-attrs;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprForLoop {
@@ -171,6 +468,15 @@ our class ExprForLoop {
     has $.block;
     has $.pat;
     has $.maybe-label;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprIfLet {
@@ -178,23 +484,59 @@ our class ExprIfLet {
     has $.block;
     has $.pat;
     has $.block-or-if;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprIf {
     has $.block-or-if;
     has $.block;
     has $.expr-nostruct;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprLoop {
     has $.block;
     has $.maybe-label;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprAssignShr {
     has $.expr;
     has $.expr-nostruct;
     has $.nonblock-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprCast {
@@ -202,6 +544,15 @@ our class ExprCast {
     has $.expr-nostruct;
     has $.nonblock-expr;
     has $.ty;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprQualifiedPath {
@@ -216,6 +567,15 @@ our class ExprQualifiedPath {
     has $.generic-argsB;
 
     has $.maybe-qpath-params;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprWhileLet {
@@ -223,21 +583,57 @@ our class ExprWhileLet {
     has $.pat;
     has $.block;
     has $.maybe-label;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprWhile {
     has $.expr-nostruct;
     has $.block;
     has $.maybe-label;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Exprs {
     has $.expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ViewItemExternFn {
     has $.item-fn;
     has $.maybe-abi;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class FnDecl {
@@ -246,6 +642,15 @@ our class FnDecl {
     has $.fn-params-allow-variadic;
     has $.fn-params-with-self;
     has $.ret-ty;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class SelfLower {
@@ -253,6 +658,15 @@ our class SelfLower {
     has $.maybe-comma-anon-params;
     has $.maybe-comma-params;
     has $.maybe-mut;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class SelfRegion {
@@ -261,20 +675,56 @@ our class SelfRegion {
     has $.lifetime;
     has $.maybe-mut;
     has $.maybe-ty-ascription;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class SelfStatic {
     has $.maybe-params;
     has $.maybe-anon-params;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ForInType {
     has $.for-in-type-suffix;
     has $.maybe-lifetimes;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ForSized {
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ForeignFn {
@@ -282,59 +732,158 @@ our class ForeignFn {
     has $.fn-decl-allow-variadic;
     has $.ident;
     has $.generic-params;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ForeignItem {
     has $.item-foreign-fn;
     has $.attrs-and-vis;
     has $.item-foreign-static;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ForeignItemStatic {
     has $.attrs-and-vis;
     has $.item-foreign-static;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ForeignItemUnsafe {
     has $.item-foreign-fn;
     has $.attrs-and-vis;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ForeignItems {
     has $.foreign-items;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Guard {
     has $.expr-nostruct;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class StaticItem {
     has $.maybe-mut;
     has $.ident;
     has $.ty;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class GenericValues {
     has $.ty-qualified-path;
     has $.maybe-bindings;
     has $.maybe-ty-sums-and-or-bindings;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Generics {
     has $.ty-params;
     has $.lifetimes;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class IdentsOrSelf {
     has $.idents-or-self;
     has $.ident-or-self;
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ImplConst {
     has $.maybe-default;
     has $.attrs-and-vis;
     has $.item-const;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ImplType {
@@ -343,45 +892,126 @@ our class ImplType {
     has $.ty-sum;
     has $.ident;
     has $.maybe-default;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class InferrableParam {
     has $.pat;
     has $.maybe-ty-ascription;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class InferrableParams {
     has $.inferrable-param;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class InnerAttr {
     has $.meta-item;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class InnerAttrs {
     has $.inner-attr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemConst {
     has $.ty;
     has $.ident;
     has $.expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class EnumArgs {
     has $.struct-decl-fields;
     has $.maybe-ty-sums;
     has $.expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class EnumDef {
     has $.attrs-and-vis;
     has $.enum-args;
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class EnumDefs {
     has $.enum-def;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Fn {
@@ -390,6 +1020,15 @@ our class Fn {
     has $.ident;
     has $.generic-params;
     has $.maybe-where-clause;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class UnsafeFn {
@@ -399,6 +1038,15 @@ our class UnsafeFn {
     has $.ident;
     has $.maybe-where-clause;
     has $.inner-attrs-and-block;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 #------------------------------
@@ -425,20 +1073,56 @@ our class UnsafeFn {
 our class ImplItems {
     has $.impl-items;
     has $.comment;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class InitExpr {
     has $.expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ImplItem {
     has $.value;
     has $.comment;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ImplMacroItem {
     has $.item-macro;
     has $.attrs-and-vis;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemImpl {
@@ -451,18 +1135,45 @@ our class ItemImpl {
     has $.ty-sum;
     has $.generic-params;
     has $.maybe-inner-attrs;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemImplDefault {
     has $.maybe-default-maybe-unsafe;
     has $.generic-params;
     has $.trait-ref;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemImplDefaultNeg {
     has $.trait-ref;
     has $.maybe-default-maybe-unsafe;
     has $.generic-params;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemImplNeg {
@@ -473,6 +1184,15 @@ our class ItemImplNeg {
     has $.maybe-where-clause;
     has $.ty-sum;
     has $.generic-params;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemMacro {
@@ -481,12 +1201,30 @@ our class ItemMacro {
     has $.maybe-ident;
     has $.path-expr;
     has $.brackets-delimited-token-trees;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemMod {
     has $.ident;
     has $.maybe-mod-items;
     has $.inner-attrs;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemStatic {
@@ -494,6 +1232,15 @@ our class ItemStatic {
     has $.ty;
     has $.expr;
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemStruct {
@@ -502,6 +1249,15 @@ our class ItemStruct {
     has $.maybe-where-clause;
     has $.ident;
     has $.generic-params;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class StructField {
@@ -509,11 +1265,29 @@ our class StructField {
     has $.attrs-and-vis;
     has $.ty-sum;
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class StructFields {
     has $.struct-decl-field;
     has $.struct-tuple-field;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemTrait {
@@ -524,31 +1298,85 @@ our class ItemTrait {
     has $.maybe-ty-param-bounds;
     has $.maybe-trait-items;
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemTraitAlias {
     has Bool $.unsafe;
     has $.ident;
     has $.ty-sum;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TraitItems {
     has $.trait-item;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TraitItem {
     has $.value;
     has $.comment;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class MatchClause {
     has $.clause;
     has $.comment;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TraitMacroItem {
     has $.maybe-outer-attrs;
     has $.item-macro;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemTy {
@@ -556,6 +1384,15 @@ our class ItemTy {
     has $.maybe-where-clause;
     has $.ty-sum;
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprFnBlock {
@@ -565,31 +1402,94 @@ our class ExprFnBlock {
     has $.lambda-expr-nostruct-no-first-bar;
     has $.lambda-expr-no-first-bar;
     has $.expr-nostruct;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class DeclLocal {
     has $.pat;
     has $.maybe-init-expr;
     has $.maybe-ty-ascription;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Lifetimes {
     has $.lifetime-and-bounds;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Lifetime {
     has $.maybe-ltbounds;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
+
+has $.text is required;
+
+method gist {
+    say "need to write gist!";
+    say $.text;
+    ddt self;
+    exit;
+}
 our class StaticLifetime { }
 
 our class PatLit {
     has $.lit;
     has $.path-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Ltbounds {
     has $.lifetime;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------------------------
@@ -600,6 +1500,15 @@ our class MacroExpr {
     has $.parens-delimited-token-trees;
     has $.maybe-ident;
     has $.brackets-delimited-token-trees;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ArmBlock {
@@ -608,6 +1517,15 @@ our class ArmBlock {
     has $.pats-or;
     has $.maybe-guard;
     has $.maybe-outer-attrs;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ArmNonblock {
@@ -616,34 +1534,97 @@ our class ArmNonblock {
     has $.block-expr-dot;
     has $.maybe-guard;
     has $.pats-or;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Arms {
     has $.match-clause;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprMatch {
     has $.match-clauses;
     has $.nonblock-match-clause;
     has $.expr-nostruct;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class MetaList {
     has $.ident;
     has $.meta-seq;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class MetaNameValue {
     has $.lit;
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class MetaWord {
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class MetaItems {
     has $.meta-item;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Method {
@@ -658,14 +1639,41 @@ our class Method {
     has $.maybe-unsafe;
     has $.maybe-default;
     has $.inner-attrs-and-block;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Provided {
     has $.method;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Required {
     has $.type-method;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TypeMethod {
@@ -676,68 +1684,176 @@ our class TypeMethod {
     has $.generic-params;
     has $.maybe-unsafe;
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Items {
     has $.mod-item;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Item {
     has $.comment;
     has $.item;
     has $.attrs-and-vis;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprAssign {
     has $.expr;
     has $.nonblock-expr;
     has $.expr-nostruct;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprAssignAdd {
     has $.expr;
     has $.expr-nostruct;
     has $.nonblock-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprAssignBitAnd {
     has $.expr;
     has $.expr-nostruct;
     has $.nonblock-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprAssignBitOr {
     has $.nonblock-expr;
     has $.expr;
     has $.expr-nostruct;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprAssignBitXor {
     has $.expr;
     has $.expr-nostruct;
     has $.nonblock-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprAssignDiv {
     has $.expr;
     has $.nonblock-expr;
     has $.expr-nostruct;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprAssignRem {
     has $.expr;
     has $.expr-nostruct;
     has $.nonblock-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprAssignShl {
     has $.nonblock-expr;
     has $.expr;
     has $.expr-nostruct;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprBox {
     has $.expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprField {
@@ -747,6 +1863,15 @@ our class ExprField {
     has $.expr-nostruct;
     has $.nonblock-expr;
     has $.path-generic-args-with-colons;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprIndex {
@@ -757,39 +1882,111 @@ our class ExprIndex {
     has $.maybe-expr;
     has $.nonblock-expr;
     has $.path-generic-args-with-colons;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprMac {
     has $.macro-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprParen {
     has $.maybe-exprs;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprPath {
     has $.path-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprRange {
     has $.expr;
     has $.expr-nostruct;
     has $.nonblock-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprRet {
     has $.expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprStruct {
     has $.path-expr;
     has $.struct-expr-fields;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprTry {
     has $.expr;
     has $.expr-nostruct;
     has $.nonblock-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprTupleIndex {
@@ -799,6 +1996,15 @@ our class ExprTupleIndex {
     has $.expr-nostruct;
     has $.nonblock-expr;
     has $.lit-int;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprTypeAscr {
@@ -806,14 +2012,41 @@ our class ExprTypeAscr {
     has $.expr-nostruct;
     has $.nonblock-expr;
     has $.ty;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprVec {
     has $.vec-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprYield {
     has $.expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprAddrOf {
@@ -821,39 +2054,111 @@ our class ExprAddrOf {
     has $.maybe-mut;
     has $.expr;
     has $.count = 1;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprUnary {
     has $.expr;
     has $.expr-nostruct;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprUnaryMinus {
     has $.expr;
     has $.expr-nostruct;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprUnaryNot {
     has $.expr;
     has $.expr-nostruct;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ExprUnaryStar {
     has $.expr;
     has $.expr-nostruct;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class OuterAttrs {
     has $.outer-attr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Arg {
     has $.ty-sum;
     has $.pat;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Args {
     has $.param;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class PatField {
@@ -861,35 +2166,98 @@ our class PatField {
     has $.pat;
     has $.binding-mode;
     has $.lit-int;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class PatTupElts {
     has $.pat;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class PatVecElts {
     has $.pat;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class PatEnum {
     has $.path-expr;
     has $.pat-tup;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Ident {
     has $.value;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class PatIdent {
     has $.pat;
     has $.ident;
     has $.binding-mode;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class PatMac {
     has $.maybe-ident;
     has $.path-expr;
     has $.delimited-token-trees;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class PatQualifiedPath {
@@ -898,50 +2266,149 @@ our class PatQualifiedPath {
     has $.identA;
     has $.maybe-as-trait-refB;
     has $.identB;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class PatRange {
     has $.lit-or-pathA;
     has $.lit-or-pathB;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class PatRegion {
     has Bool $.mut = False;
     has $.pat;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class PatRegionRefRef {
     has $.pat;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class PatStruct {
     has $.pat-fields;
     has $.pat-struct;
     has $.path-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class PatTup {
     has $.pat-tup;
     has $.pat-tup-elts;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class PatUniq {
     has $.pat;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
+
+has $.text is required;
+
+method gist {
+    say "need to write gist!";
+    say $.text;
+    ddt self;
+    exit;
+}
 our class PatUnit { }
 
 our class PatVec {
     has $.pat-vec;
     has $.pat-vec-elts;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class Pats {
     has $.pat;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class SelfPath {
     has $.path-generic-args-with-colons;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 #--------------------------
@@ -953,6 +2420,15 @@ our class SelfPath {
 our class ViewPath {
     has $.base is required;
     has Ident @.tail;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 #--------------------------
@@ -974,11 +2450,29 @@ our class Components {
     has $.generic-args;
     has $.ret-ty;
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class RetTy {
     has $.ty;
     has $.panic;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 #---------------------------------
@@ -1014,39 +2508,121 @@ our class RetTy {
 our class Stmts {
     has @.stmts;
     has $.nonblock-expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
-our class Self {}
+our class Self {
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our class Stmt {
     has $.value;
     has $.comment;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class DefaultFieldInit {
     has $.expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class FieldInit {
     has $.comment;
     has $.item;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class FieldInitItem {
     has $.ident;
     has $.expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class FieldInits {
     has $.field-init;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TTDelim {
     has $.token-trees;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TTTok {
     has $.unpaired-token;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ConstTraitItem {
@@ -1054,66 +2630,183 @@ our class ConstTraitItem {
     has $.maybe-const-default;
     has $.ident;
     has $.maybe-outer-attrs;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ConstGeneric {
     has $.name is required;
     has $.ty   is required;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyClosure {
     has $.anon-params;
     has $.ret-ty;
     has $.maybe-bounds;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyDefault {
     has $.ty-sum;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyFnDecl {
     has $.fn-anon-params;
     has $.ret-ty;
     has $.generic-params;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class PolyBound {
     has $.maybe-lifetimes;
     has $.bound;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyParam {
     has $.maybe-ty-param-bounds;
     has $.maybe-ty-default;
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyParams {
     has $.ty-param;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyBox {
     has $.ty;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyFixedLengthVec {
     has $.expr;
     has $.ty;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyMacro {
     has $.path-generic-args-without-colons;
     has $.delimited-token-trees;
     has $.maybe-ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyPath {
     has $.path-generic-args-without-colons;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyPtr {
     has $.maybe-mut-or-const;
     has $.ty;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyRptr {
@@ -1121,27 +2814,81 @@ our class TyRptr {
     has $.mut;
     has $.lifetime;
     has $.count = 1;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyTypeof {
     has $.expr;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyVec {
     has $.ty;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TySum {
     has @.ty-sum-elts;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class DynTyPrim {
     has $.ty;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TySumsAndBindings {
     has $.bindings;
     has $.ty-sums;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyQualifiedPath {
@@ -1150,47 +2897,137 @@ our class TyQualifiedPath {
     has $.ident;
     has $.maybe-as-trait-ref;
     has $.ty-param-bounds;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TyTup {
     has $.ty-sums;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class TypeTraitItem {
     has $.maybe-outer-attrs;
     has $.ty-param;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ViewItemUse {
     has $.view-path;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class VecRepeat {
     has $.expr;
     has $.exprs;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ViewItemExternCrate {
     has $.ident;
     has $.as-ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ViewPathGlob {
     has $.path-no-types-allowed;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ViewPathList {
     has $.idents-or-self;
     has $.path-no-types-allowed;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ViewPathSimple {
     has $.path-no-types-allowed;
     has $.ident;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class WhereClause {
     has $.where-predicates;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class WherePredicate {
@@ -1199,10 +3036,28 @@ our class WherePredicate {
     has $.lifetime;
     has $.ty-param-bounds;
     has $.ty;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class WherePredicates {
     has $.where-predicate;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemFn {
@@ -1211,6 +3066,15 @@ our class ItemFn {
     has $.fn-decl;
     has $.maybe-where-clause;
     has $.inner-attrs-and-block;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
 our class ItemUnsafeFn {
@@ -1219,29 +3083,263 @@ our class ItemUnsafeFn {
     has $.fn-decl;
     has $.maybe-where-clause;
     has $.inner-attrs-and-block;
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
 
-our class LitByte    { has $.val; }
-our class LitStr     { has $.val; }
-our class LitByteStr { has $.val; }
-our class LitChar    { has $.val; }
-our class LitInteger { has $.val; }
-our class LitFloat   { has $.val; }
-our class LitBool    { has $.val; }
+our class LitByte    { 
+    has $.val; 
 
-our class MutMutable        { }
-our class MutImmutable      { }
-our class PatWild           { }
-our class DocComment        { }
-our class Super             { }
-our class TyInfer           { }
-our class Default           { }
-our class DefaultUnsafe     { }
-our class Unsafe            { }
-our class TyNil             { }
-our class ViewPathListEmpty { }
-our class Public            { }
-our class Inherited         { }
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class LitStr     { 
+    has $.val; 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class LitByteStr { 
+    has $.val; 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class LitChar    { 
+    has $.val; 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class LitInteger { 
+    has $.val; 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class LitFloat { 
+    has $.val; 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class LitBool { 
+    has $.val; 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class MutMutable { 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class MutImmutable { 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class PatWild { 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class DocComment { 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class Super { 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class TyInfer { 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class Default { 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class DefaultUnsafe { 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class Unsafe { 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class TyNil { 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ViewPathListEmpty { 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class Public { 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class Inherited { 
+
+    has $.text is required;
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our class StructExprFields {
     has $.maybe-field-inits;

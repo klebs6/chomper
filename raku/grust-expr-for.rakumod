@@ -20,6 +20,7 @@ our role ExprFor::Actions {
             pat           =>  $<pat>.made,
             expr-nostruct =>  $<expr-nostruct>.made,
             block         =>  $<block>.made,
+            text          => ~$/,
         )
     }
 }

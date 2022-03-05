@@ -11,6 +11,7 @@ our role AsTraitRef::Actions {
         if $/<trait-ref>:exists {
             make AsTraitRef.new(
                 trait-ref => $<trait-ref>.made,
+                text      => ~$/,
             )
         }
     }

@@ -24,6 +24,7 @@ our role ExprIfLet::Actions {
             expr-nostruct =>  $<expr-nostruct>.made,
             block         =>  $<block>.made,
             block-or-if   =>  $<block-or-if>.made,
+            text          => ~$/,
         )
     }
 }

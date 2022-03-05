@@ -11,6 +11,6 @@ our role ConstDefault::Actions {
 
         my $expr = $<expr>.made;
 
-        make $expr ?? ConstDefault.new( :$expr,) !! Nil
+        make $expr ?? ConstDefault.new( :$expr, text => ~$/,) !! Nil
     }
 }

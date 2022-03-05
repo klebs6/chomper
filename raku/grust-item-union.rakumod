@@ -19,6 +19,7 @@ our role ItemUnion::Actions {
             generic-params     => $<generic-params>.made,
             maybe-where-clause => $<maybe-where-clause>.made,
             struct-decl-fields => $<struct-decl-fields>.made,
+            text               => ~$/,
         )
     }
 }

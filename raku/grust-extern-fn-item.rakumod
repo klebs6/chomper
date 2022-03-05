@@ -15,6 +15,7 @@ our role ExternFnItem::Actions {
         make ViewItemExternFn.new(
             maybe-abi =>  $<maybe-abi>.made,
             item-fn   =>  $<item-fn>.made,
+            text      => ~$/,
         )
     }
 }

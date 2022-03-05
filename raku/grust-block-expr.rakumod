@@ -8,7 +8,7 @@ our role BlockExpr::Rules {
     rule block-expr:sym<match>        { <expr-match>     } 
     rule block-expr:sym<if>           { <expr-if>        } 
     rule block-expr:sym<if-let>       { <expr-if-let>    } 
-    rule block-expr:sym<while>        { <expr-while>     } 
+    rule block-expr:sym<expr-while>   { <expr-while>     } 
     rule block-expr:sym<while-let>    { <expr-while-let> } 
     rule block-expr:sym<expr-loop>    { <expr-loop>      } 
     rule block-expr:sym<expr-for>     { <expr-for>       } 
@@ -54,12 +54,13 @@ our role BlockExpr::Actions {
     method block-expr:sym<if-let>($/)     { make $<expr-if-let>.made }
     method block-expr:sym<expr-while>($/) { make $<expr-while>.made }
     method block-expr:sym<while-let>($/)  { make $<expr-while-let>.made }
-    method block-expr:sym<loop>($/)       { make $<expr-loop>.made }
-    method block-expr:sym<for>($/)        { make $<expr-for>.made }
+    method block-expr:sym<expr-loop>($/)  { make $<expr-loop>.made }
+    method block-expr:sym<expr-for>($/)   { make $<expr-for>.made }
 
     method block-expr:sym<unsafe-block>($/) {
         make UnsafeBlock.new(
             block =>  $<block>.made,
+            text  => ~$/,
         )
     }
 
@@ -68,6 +69,7 @@ our role BlockExpr::Actions {
             path-expr                    =>  $<path-expr>.made,
             maybe-ident                  =>  $<maybe-ident>.made,
             braces-delimited-token-trees =>  $<braces-delimited-token-trees>.made,
+            text                         => ~$/,
         )
     }
 
@@ -79,12 +81,14 @@ our role BlockExpr::Actions {
         make BlockExprDot.new(
             block-exprs         => $<block-expr>>>.made,
             block-expr-dot-tail => $<block-expr-dot-tail>.made,
+            text                => ~$/,
         )
     }
 
     method block-expr-dot-tail:sym<base>($/) {
         make ExprField.new(
-            path-generic-args-with-colons => $<path-generic-args-with-colons>.made,
+            path-generic-args-with-colons => $<path-generic-args-with-colons>.made
+            text                          => ~$/,
         )
     }
 
@@ -92,6 +96,7 @@ our role BlockExpr::Actions {
         make ExprIndex.new(
             path-generic-args-with-colons =>  $<path-generic-args-with-colons>.made,
             maybe-expr                    =>  $<maybe-expr>.made,
+            text                          => ~$/,
         )
     }
 
@@ -99,6 +104,7 @@ our role BlockExpr::Actions {
         make ExprCall.new(
             path-generic-args-with-colons =>  $<path-generic-args-with-colons>.made,
             maybe-exprs                   =>  $<maybe-exprs>.made,
+            text                          => ~$/,
         )
     }
 

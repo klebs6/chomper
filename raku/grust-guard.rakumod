@@ -11,7 +11,8 @@ our role Guard::Actions {
 
     method maybe-guard($/) {
         make Guard.new(
-            expr-nostruct => $<expr-nostruct>.made
+            expr-nostruct => $<expr-nostruct>.made,
+            text          => ~$/,
         )
     }
 }

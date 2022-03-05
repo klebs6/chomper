@@ -79,6 +79,7 @@ our role ItemImpl::Actions {
             maybe-where-clause         =>  $<maybe-where-clause>.made,
             maybe-inner-attrs          =>  $<maybe-inner-attrs>.made,
             maybe-impl-items           =>  $<maybe-impl-items>.made,
+            text                       => ~$/,
         )
     }
 
@@ -90,6 +91,7 @@ our role ItemImpl::Actions {
             maybe-where-clause         =>  $<maybe-where-clause>.made,
             maybe-inner-attrs          =>  $<maybe-inner-attrs>.made,
             maybe-impl-items           =>  $<maybe-impl-items>.made,
+            text                       => ~$/,
         )
     }
 
@@ -101,6 +103,7 @@ our role ItemImpl::Actions {
             maybe-where-clause =>  $<maybe-where-clause>.made,
             maybe-inner-attrs  =>  $<maybe-inner-attrs>.made,
             maybe-impl-items   =>  $<maybe-impl-items>.made,
+            text               => ~$/,
         )
     }
 
@@ -113,6 +116,7 @@ our role ItemImpl::Actions {
             maybe-where-clause         =>  $<maybe-where-clause>.made,
             maybe-inner-attrs          =>  $<maybe-inner-attrs>.made,
             maybe-impl-items           =>  $<maybe-impl-items>.made,
+            text                       => ~$/,
         )
     }
 
@@ -121,6 +125,7 @@ our role ItemImpl::Actions {
             maybe-default-maybe-unsafe =>  $<maybe-default-maybe-unsafe>.made,
             generic-params             =>  $<generic-params>.made,
             trait-ref                  =>  $<trait-ref>.made,
+            text                       => ~$/,
         )
     }
 
@@ -129,6 +134,7 @@ our role ItemImpl::Actions {
             maybe-default-maybe-unsafe =>  $<maybe-default-maybe-unsafe>.made,
             generic-params             =>  $<generic-params>.made,
             trait-ref                  =>  $<trait-ref>.made,
+            text                       => ~$/,
         )
     }
 }

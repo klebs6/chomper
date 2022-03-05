@@ -19,6 +19,7 @@ our role ForInType::Actions {
         make ForInType.new(
             maybe-lifetimes    =>  $<maybe-lifetimes>.made,
             for-in-type-suffix =>  $<for-in-type-suffix>.made,
+            text                => ~$/,
         )
     }
 

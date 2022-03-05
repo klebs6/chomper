@@ -17,6 +17,7 @@ our role ExprWhile::Actions {
             maybe-label   =>  $<maybe-label>.made,
             expr-nostruct =>  $<expr-nostruct>.made,
             block         =>  $<block>.made,
+            text          => ~$/,
         )
     }
 }

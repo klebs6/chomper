@@ -37,7 +37,8 @@ our role Lifetimes::Actions {
 
     method lifetime-and-bounds:sym<a>($/) {
         make Lifetime.new(
-            maybe-ltbounds =>  $<maybe-ltbounds>.made,
+            maybe-ltbounds => $<maybe-ltbounds>.made,
+            text           => ~$/,
         )
     }
 
@@ -46,6 +47,15 @@ our role Lifetimes::Actions {
     }
 
     #------------------
-    method lifetime:sym<a>($/) { make Lifetime.new }
-    method lifetime:sym<b>($/) { make StaticLifetime.new }
+    method lifetime:sym<a>($/) { 
+        make Lifetime.new(
+            text           => ~$/,
+        )
+    }
+
+    method lifetime:sym<b>($/) { 
+        make StaticLifetime.new(
+            text           => ~$/,
+        )
+    }
 }

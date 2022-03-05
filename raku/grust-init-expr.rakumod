@@ -11,7 +11,8 @@ our role InitExpr::Actions {
 
     method maybe-init-expr($/) {
         make InitExpr.new(
-            expr => $<expr>.made
+            expr => $<expr>.made,
+            text => ~$/,
         )
     }
 }

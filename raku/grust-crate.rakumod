@@ -20,6 +20,7 @@ our role Crate::Actions {
             shebang         => $<maybe-shebang>.made,
             inner-attrs     => $<inner-attrs>.made // Nil,
             maybe-mod-items => $<maybe-mod-items>.made,
+            text            => ~$/,
         )
     }
 

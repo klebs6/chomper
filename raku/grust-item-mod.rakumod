@@ -25,15 +25,17 @@ our role ItemMod::Actions {
 
     method item-mod:sym<a>($/) {
         make ItemMod.new(
-            ident =>  $<ident>.made,
+            ident => $<ident>.made,
+            text  => ~$/,
         )
     }
 
     method item-mod:sym<b>($/) {
         make ItemMod.new(
-            ident           =>  $<ident>.made,
-            inner-attrs     =>  $<inner-attrs>.made,
-            maybe-mod-items =>  $<maybe-mod-items>.made,
+            ident           => $<ident>.made,
+            inner-attrs     => $<inner-attrs>.made,
+            maybe-mod-items => $<maybe-mod-items>.made,
+            text            => ~$/,
         )
     }
 
@@ -41,6 +43,7 @@ our role ItemMod::Actions {
         make ItemForeignMod.new(
             inner-attrs         =>  $<inner-attrs>.made,
             maybe-foreign-items =>  $<maybe-foreign-items>.made,
+            text                => ~$/,
         )
     }
 

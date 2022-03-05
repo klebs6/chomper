@@ -11,7 +11,9 @@ our role Default::Actions {
 
     method maybe-default($/) {
         if $/<kw-default>:exists {
-            make Default.new
+            make Default.new(
+                text => ~$/,
+            )
         }
     }
 }

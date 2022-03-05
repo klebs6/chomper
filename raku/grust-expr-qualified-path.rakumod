@@ -38,6 +38,7 @@ our role ExprQualifiedPath::Actions {
             maybe-as-trait-ref0 =>  $<maybe-as-trait-ref>.made,
             identA              =>  $<ident>.made,
             maybe-qpath-params  =>  $<maybe-qpath-params>.made,
+            text                => ~$/,
         )
     }
 
@@ -52,6 +53,7 @@ our role ExprQualifiedPath::Actions {
 
             identB              =>  $<ident>>>.made[1],
             generic-argsB       =>  $<generic-args>>>.made[1],
+            text                => ~$/,
         )
     }
 }

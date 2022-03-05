@@ -16,6 +16,7 @@ our role ImplConst::Actions {
             attrs-and-vis =>  $<attrs-and-vis>.made,
             maybe-default =>  $<maybe-default>.made,
             item-const    =>  $<item-const>.made,
+            text          => ~$/,
         )
     }
 }

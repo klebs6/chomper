@@ -19,6 +19,7 @@ our role ItemType::Actions {
             generic-params     =>  $<generic-params>.made,
             maybe-where-clause =>  $<maybe-where-clause>.made,
             ty-sum             =>  $<ty-sum>.made,
+            text               => ~$/,
         )
     }
 }

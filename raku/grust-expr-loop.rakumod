@@ -15,6 +15,7 @@ our role ExprLoop::Actions {
         make ExprLoop.new(
             maybe-label => $<maybe-label>.made,
             block       => $<block>.made,
+            text        => ~$/,
         )
     }
 }

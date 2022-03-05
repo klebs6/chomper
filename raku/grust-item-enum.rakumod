@@ -37,6 +37,7 @@ our role ItemEnum::Actions {
             generic-params     => $<generic-params>.made,
             maybe-where-clause => $<maybe-where-clause>.made,
             enum-defs          => $<enum-defs>.made,
+            text               => ~$/,
         )
     }
 
@@ -49,30 +50,35 @@ our role ItemEnum::Actions {
             attrs-and-vis =>  $<attrs-and-vis>.made,
             ident         =>  $<ident>.made,
             enum-args     =>  $<enum-args>.made,
+            text          => ~$/,
         )
     }
 
     method enum-args:sym<a>($/) {
         make EnumArgs.new(
             struct-decl-fields =>  $<struct-decl-fields>.made,
+            text               => ~$/,
         )
     }
 
     method enum-args:sym<b>($/) {
         make EnumArgs.new(
             struct-decl-fields =>  $<struct-decl-fields>.made,
+            text               => ~$/,
         )
     }
 
     method enum-args:sym<c>($/) {
         make EnumArgs.new(
             maybe-ty-sums =>  $<maybe-ty-sums>.made,
+            text          => ~$/,
         )
     }
 
     method enum-args:sym<d>($/) {
         make EnumArgs.new(
-            expr =>  $<expr>.made,
+            expr => $<expr>.made,
+            text => ~$/,
         )
     }
 }

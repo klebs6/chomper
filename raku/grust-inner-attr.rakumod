@@ -33,7 +33,8 @@ our role InnerAttrs::Actions {
 
     method inner-attr:sym<a>($/) {
         make InnerAttr.new(
-            meta-item =>  $<meta-item>.made,
+            meta-item => $<meta-item>.made,
+            text      => ~$/,
         )
     }
 

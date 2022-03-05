@@ -22,12 +22,14 @@ our role IdentsOrSelf::Actions {
         make IdentsOrSelf.new(
             ident-or-self => $<ident-or-self>.made,
             tail          => $<idents-or-self-tail>>>.made,
+            text          => ~$/,
         )
     }
 
     method idents-or-self-tail:sym<a>($/) {
         make As.new(
-            ident => $<ident>.made
+            ident => $<ident>.made,
+            text  => ~$/,
         )
     }
 

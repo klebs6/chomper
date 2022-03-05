@@ -9,7 +9,8 @@ our role Label::Rules {
 our role Label::Actions {
     method maybe-label($/) {  
         make Label.new(
-            value => $<lifetime>.made
+            value => $<lifetime>.made,
+            text  => ~$/,
         )
     }
 }

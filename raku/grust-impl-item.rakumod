@@ -42,6 +42,7 @@ our role ImplItem::Actions {
         make ImplItems.new(
             impl-items => $<impl-items>.made,
             comment    => $<comment>.made,
+            text       => ~$/,
         )
     }
 
@@ -53,6 +54,7 @@ our role ImplItem::Actions {
         make ImplItem.new(
             value   => $<impl-item-base>.made,
             comment => $<comment>.made,
+            text    => ~$/,
         )
     }
 
@@ -64,6 +66,7 @@ our role ImplItem::Actions {
         make ImplMacroItem.new(
             attrs-and-vis =>  $<attrs-and-vis>.made,
             item-macro    =>  $<item-macro>.made,
+            text          => ~$/,
         )
     }
 

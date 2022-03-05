@@ -51,9 +51,7 @@ our role PathGenericArgsWithoutColons::Actions {
     }
 
     method path-generic-args-without-colons-item:sym<a>($/) {
-        make Components.new(
-            ident =>  $<ident>.made,
-        )
+        make $<ident>.made
     }
 
     method path-generic-args-without-colons-item:sym<b>($/) {

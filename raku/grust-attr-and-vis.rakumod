@@ -13,6 +13,7 @@ our role AttrsAndVis::Actions {
         make AttrsAndVis.new(
             maybe-outer-attrs =>  $<maybe-outer-attrs>.made,
             visibility        =>  $<visibility>.made,
+            text      => ~$/,
         )
     }
 }

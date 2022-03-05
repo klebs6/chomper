@@ -36,6 +36,7 @@ our role GenericArgs::Actions {
     method generic-values($/) {
         make GenericValues.new(
             maybe-ty-sums-and-or-bindings =>  $<maybe-ty-sums-and-or-bindings>.made,
+            text                          => ~$/,
         )
     }
 }
