@@ -24,11 +24,13 @@ our role TySums::Rules {
     #--------------------
     proto rule ty-prim-sum-elt { * }
 
-    rule ty-prim-sum-elt:sym<a> { 
+    rule ty-prim-sum-elt:sym<a> {
         <ty-prim> 
-
     }
-    rule ty-prim-sum-elt:sym<b> { <lifetime> }
+
+    rule ty-prim-sum-elt:sym<b> {
+        <lifetime>
+    }
 }
 
 our role TySums::Actions {

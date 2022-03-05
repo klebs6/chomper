@@ -1130,6 +1130,10 @@ our class TySum {
     has @.ty-sum-elts;
 }
 
+our class DynTyPrim {
+    has $.ty;
+}
+
 our class TySumsAndBindings {
     has $.bindings;
     has $.ty-sums;

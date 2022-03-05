@@ -6,10 +6,10 @@ our role Ty::Rules {
 
     #should this be here? is this how we 
     #want to handle "dyn"?
-    rule ty:sym<aa> { <kw-dyn> <ty-prim> }
+    rule ty:sym<dyn> { <kw-dyn> <ty-prim> }
 
-    rule ty:sym<a> { <ty-prim> }
-    rule ty:sym<b> { <ty-closure> }
+    rule ty:sym<prim>    { <ty-prim> }
+    rule ty:sym<closure> { <ty-closure> }
 
     rule ty:sym<c> { 
         '<' <ty-sum> <maybe-as-trait-ref> '>' 
@@ -37,11 +37,17 @@ our role Ty::Rules {
 
 our role Ty::Actions {
 
-    method ty:sym<a>($/) {
+    method ty:sym<dyn>($/) {
+        make DynTyPrim.new(
+            ty => $<ty-prim>.made,
+        )
+    }
+
+    method ty:sym<prim>($/) {
         make $<ty-prim>.made
     }
 
-    method ty:sym<b>($/) {
+    method ty:sym<closure>($/) {
         make $<ty-closure>.made
     }
 
