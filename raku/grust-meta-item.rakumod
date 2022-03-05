@@ -23,6 +23,7 @@ our role MetaItem::Actions {
     method meta-item:sym<a>($/) {
         make MetaWord.new(
             ident =>  $<maybe-scoped-ident>.made,
+            text  => ~$/,
         )
     }
 
@@ -30,6 +31,7 @@ our role MetaItem::Actions {
         make MetaNameValue.new(
             ident =>  $<maybe-scoped-ident>.made,
             lit   =>  $<lit>.made,
+            text  => ~$/,
         )
     }
 
@@ -37,6 +39,7 @@ our role MetaItem::Actions {
         make MetaList.new(
             ident    =>  $<maybe-scoped-ident>.made,
             meta-seq =>  $<meta-seq>.made,
+            text  => ~$/,
         )
     }
 

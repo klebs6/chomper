@@ -133,12 +133,14 @@ our role Method::Actions {
     method trait-method:sym<a>($/) {
         make Required.new(
             type-method =>  $<type-method>.made,
+            text        => ~$/,
         )
     }
 
     method trait-method:sym<b>($/) {
         make Provided.new(
-            method =>  $<method>.made,
+            method => $<method>.made,
+            text   => ~$/,
         )
     }
 
@@ -150,6 +152,7 @@ our role Method::Actions {
             generic-params                      =>  $<generic-params>.made,
             fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
             maybe-where-clause                  =>  $<maybe-where-clause>.made,
+            text                                => ~$/,
         )
     }
 
@@ -161,6 +164,7 @@ our role Method::Actions {
             generic-params                      =>  $<generic-params>.made,
             fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
             maybe-where-clause                  =>  $<maybe-where-clause>.made,
+            text                                => ~$/,
         )
     }
 
@@ -173,6 +177,7 @@ our role Method::Actions {
             generic-params                      =>  $<generic-params>.made,
             fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
             maybe-where-clause                  =>  $<maybe-where-clause>.made,
+            text                                => ~$/,
         )
     }
 
@@ -185,6 +190,7 @@ our role Method::Actions {
             fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
             maybe-where-clause                  =>  $<maybe-where-clause>.made,
             inner-attrs-and-block               =>  $<inner-attrs-and-block>.made,
+            text                                => ~$/,
         )
     }
 
@@ -197,6 +203,7 @@ our role Method::Actions {
             fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
             maybe-where-clause                  =>  $<maybe-where-clause>.made,
             inner-attrs-and-block               =>  $<inner-attrs-and-block>.made,
+            text                                => ~$/,
         )
     }
 
@@ -210,6 +217,7 @@ our role Method::Actions {
             fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
             maybe-where-clause                  =>  $<maybe-where-clause>.made,
             inner-attrs-and-block               =>  $<inner-attrs-and-block>.made,
+            text                                => ~$/,
         )
     }
 
@@ -223,6 +231,7 @@ our role Method::Actions {
             fn-decl-with-self     =>  $<fn-decl-with-self>.made,
             maybe-where-clause    =>  $<maybe-where-clause>.made,
             inner-attrs-and-block =>  $<inner-attrs-and-block>.made,
+            text                  => ~$/,
         )
     }
 
@@ -236,6 +245,7 @@ our role Method::Actions {
             fn-decl-with-self     =>  $<fn-decl-with-self>.made,
             maybe-where-clause    =>  $<maybe-where-clause>.made,
             inner-attrs-and-block =>  $<inner-attrs-and-block>.made,
+            text                  => ~$/,
         )
     }
 
@@ -250,6 +260,7 @@ our role Method::Actions {
             fn-decl-with-self     =>  $<fn-decl-with-self>.made,
             maybe-where-clause    =>  $<maybe-where-clause>.made,
             inner-attrs-and-block =>  $<inner-attrs-and-block>.made,
+            text                  => ~$/,
         )
     }
 }
