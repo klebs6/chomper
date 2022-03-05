@@ -15,7 +15,8 @@ our role TyDefault::Actions {
 
     method maybe-ty-default($/) {
         make TyDefault.new(
-            ty-sum =>  $<ty-sum>.made,
+            ty-sum => $<ty-sum>.made,
+            text   => ~$/,
         )
     }
 }

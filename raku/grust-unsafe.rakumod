@@ -19,12 +19,12 @@ our role Unsafe::Rules {
 our role Unsafe::Actions {
 
     method maybe-unsafe($/) {
-        make $/<kw-unsafe>:exists ?? Unsafe.new !! Nil
+        make $/<kw-unsafe>:exists ?? Unsafe.new( text => ~$/ )!! Nil
     }
 
     method maybe-default-maybe-unsafe($/) { make $<maybe-default-maybe-unsafe-base>.made }
 
-    method maybe-default-maybe-unsafe-base:sym<a>($/) { make DefaultUnsafe.new }
-    method maybe-default-maybe-unsafe-base:sym<b>($/) { make Default.new }
-    method maybe-default-maybe-unsafe-base:sym<c>($/) { make Unsafe.new }
+    method maybe-default-maybe-unsafe-base:sym<a>($/) { make DefaultUnsafe.new( text => ~$/ ) }
+    method maybe-default-maybe-unsafe-base:sym<b>($/) { make Default.new(       text => ~$/ ) }
+    method maybe-default-maybe-unsafe-base:sym<c>($/) { make Unsafe.new(        text => ~$/ ) }
 }

@@ -63,18 +63,21 @@ our role TyPrim::Actions {
     method ty-prim:sym<a>($/) {
         make TyPath.new(
             path-generic-args-without-colons =>  $<path-generic-args-without-colons>.made,
+            text                             => ~$/,
         )
     }
 
     method ty-prim:sym<b>($/) {
         make TyPath.new(
             path-generic-args-without-colons =>  $<path-generic-args-without-colons>.made,
+            text                             => ~$/,
         )
     }
 
     method ty-prim:sym<c>($/) {
         make TyPath.new(
             path-generic-args-without-colons =>  $<path-generic-args-without-colons>.made,
+            text                             => ~$/,
         )
     }
 
@@ -83,6 +86,7 @@ our role TyPrim::Actions {
             path-generic-args-without-colons =>  $<path-generic-args-without-colons>.made,
             maybe-ident                      =>  $<maybe-ident>.made,
             delimited-token-trees            =>  $<delimited-token-trees>.made,
+            text                             => ~$/,
         )
     }
 
@@ -91,12 +95,14 @@ our role TyPrim::Actions {
             path-generic-args-without-colons =>  $<path-generic-args-without-colons>.made,
             maybe-ident                      =>  $<maybe-ident>.made,
             delimited-token-trees            =>  $<delimited-token-trees>.made,
+            text                             => ~$/,
         )
     }
 
     method ty-prim:sym<f>($/) {
         make TyBox.new(
-            ty =>  $<ty>.made,
+            ty   => $<ty>.made,
+            text => ~$/,
         )
     }
 
@@ -104,19 +110,22 @@ our role TyPrim::Actions {
         make TyPtr.new(
             maybe-mut-or-const =>  $<maybe-mut-or-const>.made,
             ty                 =>  $<ty>.made,
+            text               => ~$/,
         )
     }
 
     method ty-prim:sym<h>($/) {
         make TyRptr.new(
-            ty =>  $<ty>.made,
+            ty   => $<ty>.made,
+            text => ~$/,
         )
     }
 
     method ty-prim:sym<i>($/) {
         make TyRptr.new(
-            mut => True,
-            ty  =>  $<ty>.made,
+            mut  => True,
+            ty   => $<ty>.made,
+            text => ~$/,
         )
     }
 
@@ -124,6 +133,7 @@ our role TyPrim::Actions {
         make TyRptr.new(
             ty       => $<ty>.made,
             count    => 2,
+            text     => ~$/,
         )
     }
 
@@ -132,6 +142,7 @@ our role TyPrim::Actions {
             mut      => $<maybe-mut>.made,
             ty       => $<ty>.made,
             count    => 2,
+            text     => ~$/,
         )
     }
 
@@ -140,6 +151,7 @@ our role TyPrim::Actions {
             lifetime =>  $<lifetime>.made,
             mut      =>  $<maybe-mut>.made,
             ty       =>  $<ty>.made,
+            text     => ~$/,
         )
     }
 
@@ -149,12 +161,14 @@ our role TyPrim::Actions {
             mut      => $<maybe-mut>.made,
             ty       => $<ty>.made,
             count    => 2,
+            text     => ~$/,
         )
     }
 
     method ty-prim:sym<n>($/) {
         make TyVec.new(
-            ty =>  $<ty>.made,
+            ty   =>  $<ty>.made,
+            text => ~$/,
         )
     }
 
@@ -162,6 +176,7 @@ our role TyPrim::Actions {
         make TyFixedLengthVec.new(
             ty   =>  $<ty>.made,
             expr =>  $<expr>.made,
+            text => ~$/,
         )
     }
 
@@ -169,17 +184,21 @@ our role TyPrim::Actions {
         make TyFixedLengthVec.new(
             ty   =>  $<ty>.made,
             expr =>  $<expr>.made,
+            text => ~$/,
         )
     }
 
     method ty-prim:sym<q>($/) {
         make TyTypeof.new(
-            expr =>  $<expr>.made,
+            expr => $<expr>.made,
+            text => ~$/,
         )
     }
 
     method ty-prim:sym<r>($/) {
-        make TyInfer.new
+        make TyInfer.new(
+            text => ~$/,
+        )
     }
 
     method ty-prim:sym<s>($/) {

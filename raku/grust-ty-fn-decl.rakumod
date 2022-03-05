@@ -13,9 +13,10 @@ our role TyFnDecl::Actions {
 
     method ty-fn-decl($/) {
         make TyFnDecl.new(
-            generic-params =>  $<generic-params>.made,
-            fn-anon-params =>  $<fn-anon-params>.made,
-            ret-ty         =>  $<ret-ty>.made,
+            generic-params => $<generic-params>.made,
+            fn-anon-params => $<fn-anon-params>.made,
+            ret-ty         => $<ret-ty>.made,
+            text           => ~$/,
         )
     }
 }

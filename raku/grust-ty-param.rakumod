@@ -26,6 +26,7 @@ our role TyParam::Actions {
             identA                =>  $<ident>.made,
             maybe-ty-param-bounds =>  $<maybe-ty-param-bounds>.made,
             maybe-ty-default      =>  $<maybe-ty-default>.made,
+            text                  => ~$/,
         )
     }
 
@@ -35,6 +36,7 @@ our role TyParam::Actions {
             identB                =>  $<ident>>>.made[1],
             maybe-ty-param-bounds =>  $<maybe-ty-param-bounds>.made,
             maybe-ty-default      =>  $<maybe-ty-default>.made,
+            text                  => ~$/,
         )
     }
 }

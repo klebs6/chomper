@@ -16,31 +16,37 @@ our role ViewPath::Actions {
 
     method view-path:sym<a>($/) {
         make ViewPathSimple.new(
-            path-no-types-allowed =>  $<path-no-types-allowed>.made,
+            path-no-types-allowed => $<path-no-types-allowed>.made,
+            text                  => ~$/,
         )
     }
 
     method view-path:sym<f>($/) {
         make ViewPathList.new(
-            path-no-types-allowed =>  $<path-no-types-allowed>.made,
-            idents-or-self        =>  $<idents-or-self>.made,
+            path-no-types-allowed => $<path-no-types-allowed>.made,
+            idents-or-self        => $<idents-or-self>.made,
+            text                  => ~$/,
         )
     }
 
     method view-path:sym<h>($/) {
         make ViewPathGlob.new(
-            path-no-types-allowed =>  $<path-no-types-allowed>.made,
+            path-no-types-allowed => $<path-no-types-allowed>.made,
+            text                  => ~$/,
         )
     }
 
     method view-path:sym<i>($/) {
-        make ViewPathGlob.new
+        make ViewPathGlob.new(
+            text                  => ~$/,
+        )
     }
 
     method view-path:sym<n>($/) {
         make ViewPathSimple.new(
-            path-no-types-allowed =>  $<path-no-types-allowed>.made,
-            ident                 =>  $<ident>.made,
+            path-no-types-allowed => $<path-no-types-allowed>.made,
+            ident                 => $<ident>.made,
+            text                  => ~$/,
         )
     }
 }

@@ -11,7 +11,8 @@ our role UseItem::Actions {
 
     method use-item($/) {
         make ViewItemUse.new(
-            view-path =>  $<view-path>.made,
+            view-path => $<view-path>.made,
+            text      => ~$/,
         )
     }
 }

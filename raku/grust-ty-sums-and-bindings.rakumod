@@ -13,8 +13,9 @@ our role TySumsAndBindings::Actions {
 
     method maybe-ty-sums-and-or-bindings:sym<c>($/) {
         make TySumsAndBindings.new(
-            ty-sums  =>  $<ty-sums>.made,
-            bindings =>  $<bindings>.made,
+            ty-sums  => $<ty-sums>.made,
+            bindings => $<bindings>.made,
+            text     => ~$/,
         )
     }
 

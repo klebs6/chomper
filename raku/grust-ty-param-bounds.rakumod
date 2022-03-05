@@ -34,6 +34,7 @@ our role TyParamBounds::Actions {
         make PolyBound.new(
             maybe-lifetimes =>  $<maybe-lifetimes>.made,
             bound           =>  $<bound>.made,
+            text            => ~$/,
         )
     }
 
@@ -45,6 +46,7 @@ our role TyParamBounds::Actions {
         make PolyBound.new(
             maybe-lifetimes =>  $<maybe-lifetimes>.made,
             bound           =>  $<bound>.made,
+            text            => ~$/,
         )
     }
 

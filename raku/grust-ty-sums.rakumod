@@ -45,7 +45,8 @@ our role TySums::Actions {
 
     method ty-sum($/) {
         make TySum.new(
-            ty-sum-elts =>  $<ty-sum-elt>>>.made,
+            ty-sum-elts => $<ty-sum-elt>>>.made,
+            text        => ~$/,
         )
     }
 
@@ -54,6 +55,7 @@ our role TySums::Actions {
         make TypeWithDefault.new(
             ty      => $<ty>.made,
             default => $<ty-sum>.made,
+            text    => ~$/,
         )
     }
 

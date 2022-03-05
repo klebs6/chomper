@@ -11,8 +11,9 @@ our role TraitType::Actions {
 
     method trait-type($/) {
         make TypeTraitItem.new(
-            maybe-outer-attrs =>  $<maybe-outer-attrs>.made,
-            ty-param          =>  $<ty-param>.made,
+            maybe-outer-attrs => $<maybe-outer-attrs>.made,
+            ty-param          => $<ty-param>.made,
+            text              => ~$/,
         )
     }
 }

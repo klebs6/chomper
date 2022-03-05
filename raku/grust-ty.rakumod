@@ -39,7 +39,8 @@ our role Ty::Actions {
 
     method ty:sym<dyn>($/) {
         make DynTyPrim.new(
-            ty => $<ty-prim>.made,
+            ty   => $<ty-prim>.made,
+            text => ~$/,
         )
     }
 
@@ -56,6 +57,7 @@ our role Ty::Actions {
             ty-sum             =>  $<ty-sum>.made,
             maybe-as-trait-ref =>  $<maybe-as-trait-ref>.made,
             ident              =>  $<ident>.made,
+            text               => ~$/,
         )
     }
 
@@ -63,22 +65,27 @@ our role Ty::Actions {
         make TyQualifiedPath.new(
             maybe-as-trait-ref =>  $<maybe-as-trait-ref>.made,
             ident              =>  $<ident>.made,
+            text               => ~$/,
         )
     }
 
     method ty:sym<e>($/) {
         make TyTup.new(
-            ty-sums =>  $<ty-sums>.made,
+            ty-sums => $<ty-sums>.made,
+            text    => ~$/,
         )
     }
 
     method ty:sym<f>($/) {
         make TyTup.new(
-            ty-sums =>  $<ty-sums>.made,
+            ty-sums => $<ty-sums>.made,
+            text    => ~$/,
         )
     }
 
     method ty:sym<g>($/) {
-        make TyNil.new
+        make TyNil.new(
+            text    => ~$/,
+        )
     }
 }

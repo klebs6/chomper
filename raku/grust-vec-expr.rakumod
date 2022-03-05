@@ -22,8 +22,9 @@ our role VecExpr::Actions {
 
     method vec-expr:sym<b>($/) {
         make VecRepeat.new(
-            exprs =>  $<exprs>.made,
-            expr  =>  $<expr>.made,
+            exprs => $<exprs>.made,
+            expr  => $<expr>.made,
+            text  => ~$/,
         )
     }
 }

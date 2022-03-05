@@ -29,6 +29,7 @@ our role TyQualifiedPath::Actions {
         make GenericValues.new(
             ty-qualified-path => $<ty-qualified-path>.made,
             maybe-bindings    => $<maybe-bindings>.made,
+            text              => ~$/,
         )
     }
 
@@ -37,6 +38,7 @@ our role TyQualifiedPath::Actions {
             ty-qualified-path => $<ty-qualified-path>.made,
             ty-sums           =>  $<ty-sums>.made,
             maybe-bindings    =>  $<maybe-bindings>.made,
+            text              => ~$/,
         )
     }
 
@@ -45,6 +47,7 @@ our role TyQualifiedPath::Actions {
             ty-sum    =>  $<ty-sum>.made,
             trait-ref =>  $<trait-ref>.made,
             ident     =>  $<ident>.made,
+            text      => ~$/,
         )
     }
 
@@ -54,6 +57,7 @@ our role TyQualifiedPath::Actions {
             trait-ref       =>  $<trait-ref>.made,
             ident           =>  $<ident>.made,
             ty-param-bounds =>  $<ty-param-bounds>.made,
+            text            => ~$/,
         )
     }
 }
