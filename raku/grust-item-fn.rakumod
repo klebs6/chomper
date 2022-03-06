@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ItemFn {
     has $.ident;
     has $.generic-params;

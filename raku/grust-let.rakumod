@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class DeclLocal {
     has $.pat;
     has $.maybe-init-expr;

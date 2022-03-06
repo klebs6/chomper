@@ -1,3 +1,7 @@
+use Data::Dump::Tree;
+
+
+
 our class SelfPath {
     has $.path-generic-args-with-colons;
 

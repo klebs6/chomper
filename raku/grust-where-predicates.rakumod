@@ -1,4 +1,42 @@
-use grust-model;
+use Data::Dump::Tree;
+
+our class WherePredicate {
+    has $.maybe-for-lifetimes;
+    has $.bounds;
+    has $.lifetime;
+    has $.ty-param-bounds;
+    has $.ty;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class WherePredicates {
+    has $.where-predicate;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role WherePredicates::Rules {
 

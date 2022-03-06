@@ -1,3 +1,6 @@
+use Data::Dump::Tree;
+use grust-model-expr;
+
 our class IdentsOrSelf {
     has $.idents-or-self;
     has $.ident-or-self;

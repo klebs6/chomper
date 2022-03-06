@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ExprIfLet {
     has $.expr-nostruct;
     has $.block;

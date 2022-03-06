@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ForInType {
     has $.for-in-type-suffix;
     has $.maybe-lifetimes;

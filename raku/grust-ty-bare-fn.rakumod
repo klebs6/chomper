@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class TyBareFn {
     has Bool $.unsafe = False;
     has Bool $.extern = False;

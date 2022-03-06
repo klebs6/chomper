@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ViewItemExternCrate {
     has $.ident;
     has $.as-ident;

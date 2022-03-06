@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class VecRepeat {
     has $.expr;
     has $.exprs;

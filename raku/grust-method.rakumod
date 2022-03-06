@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class Method {
     has $.ident;
     has $.fn-decl-with-self;

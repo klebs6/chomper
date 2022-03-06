@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ViewItemUse {
     has $.view-path;
 

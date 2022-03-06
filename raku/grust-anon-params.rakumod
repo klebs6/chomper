@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class AnonParam {
     has $.named-arg;
     has $.ty;

@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ViewItemExternFn {
     has $.item-fn;
     has $.maybe-abi;

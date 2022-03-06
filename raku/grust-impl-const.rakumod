@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ImplConst {
     has $.maybe-default;
     has $.attrs-and-vis;

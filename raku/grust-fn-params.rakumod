@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class SelfLower {
     has $.maybe-ty-ascription;
     has $.maybe-comma-anon-params;

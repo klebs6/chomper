@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class PatLit {
     has $.lit;
     has $.path-expr;

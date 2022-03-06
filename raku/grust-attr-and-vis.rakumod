@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class AttrsAndVis {
     has $.maybe-outer-attrs;
     has $.visibility;

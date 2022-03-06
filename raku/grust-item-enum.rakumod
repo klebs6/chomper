@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class EnumDef {
     has $.attrs-and-vis;
     has $.enum-args;

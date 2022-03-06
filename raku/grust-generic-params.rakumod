@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class Generics {
     has $.ty-params;
     has $.lifetimes;

@@ -1,4 +1,4 @@
-use grust-model;
+use Data::Dump::Tree;
 
 our role BlockOrIf::Rules {
     proto rule block-or-if { * }

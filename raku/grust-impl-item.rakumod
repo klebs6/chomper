@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 #------------------------------
 # There are two forms of impl:
 #

@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ItemStatic {
     has Bool $.mut;
     has $.ty;

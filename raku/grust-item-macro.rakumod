@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ItemMacro {
     has $.braces-delimited-token-trees;
     has $.parens-delimited-token-trees;

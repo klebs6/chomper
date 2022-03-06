@@ -1,4 +1,36 @@
-use grust-model;
+use Data::Dump::Tree;
+
+our class Public { 
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class Inherited { 
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role Visibility::Rules {
     rule visibility { <kw-pub>? }

@@ -1,3 +1,6 @@
+use Data::Dump::Tree;
+
+use grust-ident;
 
 #--------------------------
 # A path with no type parameters;

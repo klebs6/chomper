@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ConstDefault {
     has $.expr;
 

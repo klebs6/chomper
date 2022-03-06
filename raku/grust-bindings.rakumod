@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class Binding {
     has $.ty;
     has $.ident;

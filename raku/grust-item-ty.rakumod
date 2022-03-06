@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ItemTy {
     has $.generic-params;
     has $.maybe-where-clause;

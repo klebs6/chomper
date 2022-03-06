@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ExprQualifiedPath {
     has $.ty-sum;
     has $.maybe-as-trait-ref0;

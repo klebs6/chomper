@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our role LtBounds::Rules {
 
     rule maybe-ltbounds {

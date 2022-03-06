@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class StructExprFields {
     has $.maybe-field-inits;
     has $.default-field-init;

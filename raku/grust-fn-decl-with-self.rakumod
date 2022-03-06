@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 
 our class FnDecl {
     has $.fn-anon-params-with-self;

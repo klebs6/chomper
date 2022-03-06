@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class TypeTraitItem {
     has $.maybe-outer-attrs;
     has $.ty-param;

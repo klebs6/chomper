@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ConstTraitItem {
     has $.maybe-ty-ascription;
     has $.maybe-const-default;

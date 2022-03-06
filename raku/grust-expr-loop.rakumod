@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ExprLoop {
     has $.block;
     has $.maybe-label;

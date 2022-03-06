@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ImplType {
     has $.generic-params;
     has $.attrs-and-vis;

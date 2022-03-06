@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 use grust-pat;
 
 our role NamedArg::Rules {

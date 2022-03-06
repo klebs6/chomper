@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ArmBlock {
     has $.block-expr;
     has $.block;

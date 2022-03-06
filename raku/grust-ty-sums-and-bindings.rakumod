@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class TySumsAndBindings {
     has $.bindings;
     has $.ty-sums;

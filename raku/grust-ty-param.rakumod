@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class TyParam {
     has $.maybe-ty-param-bounds;
     has $.maybe-ty-default;

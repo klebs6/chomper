@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 #-------------------------------------
 # the braces-delimited macro is a block-expr so it
 # doesn't appear here

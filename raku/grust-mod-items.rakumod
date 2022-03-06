@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class Item {
     has $.comment;
     has $.item;

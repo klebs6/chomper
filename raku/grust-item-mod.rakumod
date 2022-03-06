@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ItemMod {
     has $.ident;
     has $.maybe-mod-items;

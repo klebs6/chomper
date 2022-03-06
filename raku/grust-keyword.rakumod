@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 use grust-model;
 
 our role Rust::Keyword {

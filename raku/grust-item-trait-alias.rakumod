@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ItemTraitAlias {
     has Bool $.unsafe;
     has $.ident;

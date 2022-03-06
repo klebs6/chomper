@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ViewPathSimple {
     has $.path-no-types-allowed;
     has $.ident;

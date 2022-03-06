@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class TyQualifiedPath {
     has $.ty-sum;
     has $.trait-ref;

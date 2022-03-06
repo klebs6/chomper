@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 use grust-generic-args;
 
 our class DynTyPrim {

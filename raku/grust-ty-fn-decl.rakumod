@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class TyFnDecl {
     has $.fn-anon-params;
     has $.ret-ty;

@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ExprForLoop {
     has $.expr-nostruct;
     has $.block;

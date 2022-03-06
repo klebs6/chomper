@@ -1,3 +1,4 @@
+use Data::Dump::Tree;
 
 our class ExprBlock {
     has $.maybe-stmts;

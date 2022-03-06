@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ItemTrait {
     has $.maybe-where-clause;
     has $.maybe-unsafe;

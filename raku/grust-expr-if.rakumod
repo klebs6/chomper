@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ExprIf {
     has $.block-or-if;
     has $.block;

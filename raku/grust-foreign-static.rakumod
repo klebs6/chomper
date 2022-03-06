@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class StaticItem {
     has $.maybe-mut;
     has $.ident;

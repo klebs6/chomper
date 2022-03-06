@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our role ExprWhileLet::Rules {
 
     rule expr-while-let {

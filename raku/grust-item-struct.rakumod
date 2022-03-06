@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ItemStruct {
     has $.struct-tuple-args;
     has $.struct-decl-args;

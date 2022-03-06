@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class TyClosure {
     has $.anon-params;
     has $.ret-ty;

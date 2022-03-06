@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ForeignFn {
     has $.maybe-where-clause;
     has $.fn-decl-allow-variadic;

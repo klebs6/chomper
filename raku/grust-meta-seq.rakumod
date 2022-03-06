@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our role MetaSeq::Rules {
 
     rule meta-seq {

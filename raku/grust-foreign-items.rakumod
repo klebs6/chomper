@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ForeignItem {
     has $.item-foreign-fn;
     has $.attrs-and-vis;

@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 use grust-model;
 use grust-lit-float;
 use grust-lit-int;
