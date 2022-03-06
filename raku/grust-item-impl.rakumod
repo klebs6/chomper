@@ -1,4 +1,89 @@
-use grust-model;
+
+our class ItemImpl {
+    has $.trait-ref;
+    has $.ty-prim-sum;
+    has $.maybe-default-maybe-unsafe;
+    has $.maybe-where-clause;
+    has $.ty;
+    has $.maybe-impl-items;
+    has $.ty-sum;
+    has $.generic-params;
+    has $.maybe-inner-attrs;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ItemImplDefault {
+    has $.maybe-default-maybe-unsafe;
+    has $.generic-params;
+    has $.trait-ref;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ItemImplDefaultNeg {
+    has $.trait-ref;
+    has $.maybe-default-maybe-unsafe;
+    has $.generic-params;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ItemImplNeg {
+    has $.maybe-default-maybe-unsafe;
+    has $.maybe-inner-attrs;
+    has $.trait-ref;
+    has $.maybe-impl-items;
+    has $.maybe-where-clause;
+    has $.ty-sum;
+    has $.generic-params;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ItemImpl::Rules {
 

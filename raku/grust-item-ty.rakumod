@@ -1,4 +1,22 @@
-use grust-model;
+our class ItemTy {
+    has $.generic-params;
+    has $.maybe-where-clause;
+    has $.ty-sum;
+    has $.ident;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ItemType::Rules {
 

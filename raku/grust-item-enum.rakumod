@@ -1,4 +1,59 @@
-use grust-model;
+our class EnumDef {
+    has $.attrs-and-vis;
+    has $.enum-args;
+    has $.ident;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class EnumArgs {
+    has $.struct-decl-fields;
+    has $.maybe-ty-sums;
+    has $.expr;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ItemEnum {
+    has $.ident;
+    has $.generic-params;
+    has $.maybe-where-clause;
+    has $.enum-defs;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ItemEnum::Rules {
 

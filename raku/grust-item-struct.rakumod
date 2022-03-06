@@ -1,4 +1,43 @@
-use grust-model;
+our class ItemStruct {
+    has $.struct-tuple-args;
+    has $.struct-decl-args;
+    has $.maybe-where-clause;
+    has $.ident;
+    has $.generic-params;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructField {
+    has $.comment;
+    has $.attrs-and-vis;
+    has $.ty-sum;
+    has $.ident;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ItemStruct::Rules {
 

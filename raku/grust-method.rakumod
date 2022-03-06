@@ -1,50 +1,31 @@
-use grust-model;
+our class Method {
+    has $.ident;
+    has $.fn-decl-with-self;
+    has $.maybe-outer-attrs;
+    has $.maybe-abi;
+    has $.generic-params;
+    has $.maybe-where-clause;
+    has $.attrs-and-vis;
+    has $.fn-decl-with-self-allow-anon-params;
+    has $.maybe-unsafe;
+    has $.maybe-default;
+    has $.inner-attrs-and-block;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role Method::Rules {
-
-    proto rule trait-method { * }
-
-    rule trait-method:sym<a> { <type-method> }
-    rule trait-method:sym<b> { <method> }
-
-    #-----------------------------
-    proto rule type-method { * }
-
-    rule type-method:sym<a> {
-        <maybe-outer-attrs> 
-        <maybe-unsafe> 
-        <kw-fn> 
-        <ident> 
-        <generic-params> 
-        <fn-decl-with-self-allow-anon-params> 
-        <maybe-where-clause> 
-        ';'
-    }
-
-    rule type-method:sym<b> {
-        <maybe-outer-attrs> 
-        <kw-const> 
-        <maybe-unsafe> 
-        <kw-fn> 
-        <ident> 
-        <generic-params> 
-        <fn-decl-with-self-allow-anon-params> 
-        <maybe-where-clause> 
-        ';'
-    }
-
-    rule type-method:sym<c> {
-        <maybe-outer-attrs> 
-        <maybe-unsafe> 
-        <kw-extern> 
-        <maybe-abi> 
-        <kw-fn> 
-        <ident> 
-        <generic-params> 
-        <fn-decl-with-self-allow-anon-params> 
-        <maybe-where-clause> 
-        ';'
-    }
 
     #-----------------------------
     proto rule method { * }
@@ -129,57 +110,6 @@ our role Method::Rules {
 }
 
 our role Method::Actions {
-
-    method trait-method:sym<a>($/) {
-        make Required.new(
-            type-method =>  $<type-method>.made,
-            text        => ~$/,
-        )
-    }
-
-    method trait-method:sym<b>($/) {
-        make Provided.new(
-            method => $<method>.made,
-            text   => ~$/,
-        )
-    }
-
-    method type-method:sym<a>($/) {
-        make TypeMethod.new(
-            maybe-outer-attrs                   =>  $<maybe-outer-attrs>.made,
-            maybe-unsafe                        =>  $<maybe-unsafe>.made,
-            ident                               =>  $<ident>.made,
-            generic-params                      =>  $<generic-params>.made,
-            fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
-            maybe-where-clause                  =>  $<maybe-where-clause>.made,
-            text                                => ~$/,
-        )
-    }
-
-    method type-method:sym<b>($/) {
-        make TypeMethod.new(
-            maybe-outer-attrs                   =>  $<maybe-outer-attrs>.made,
-            maybe-unsafe                        =>  $<maybe-unsafe>.made,
-            ident                               =>  $<ident>.made,
-            generic-params                      =>  $<generic-params>.made,
-            fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
-            maybe-where-clause                  =>  $<maybe-where-clause>.made,
-            text                                => ~$/,
-        )
-    }
-
-    method type-method:sym<c>($/) {
-        make TypeMethod.new(
-            maybe-outer-attrs                   =>  $<maybe-outer-attrs>.made,
-            maybe-unsafe                        =>  $<maybe-unsafe>.made,
-            maybe-abi                           =>  $<maybe-abi>.made,
-            ident                               =>  $<ident>.made,
-            generic-params                      =>  $<generic-params>.made,
-            fn-decl-with-self-allow-anon-params =>  $<fn-decl-with-self-allow-anon-params>.made,
-            maybe-where-clause                  =>  $<maybe-where-clause>.made,
-            text                                => ~$/,
-        )
-    }
 
     method method:sym<a>($/) {
         make Method.new(

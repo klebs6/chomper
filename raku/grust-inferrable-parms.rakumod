@@ -1,4 +1,37 @@
-use grust-model;
+our class InferrableParam {
+    has $.pat;
+    has $.maybe-ty-ascription;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class InferrableParams {
+    has $.inferrable-param;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role InferrableParams::Rules {
 

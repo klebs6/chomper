@@ -1,4 +1,44 @@
-use grust-model;
+our class ItemFn {
+    has $.ident;
+    has $.generic-params;
+    has $.fn-decl;
+    has $.maybe-where-clause;
+    has $.inner-attrs-and-block;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ItemUnsafeFn {
+    has $.ident;
+    has $.generic-params;
+    has $.fn-decl;
+    has $.maybe-where-clause;
+    has $.inner-attrs-and-block;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role Fn::Rules {
 

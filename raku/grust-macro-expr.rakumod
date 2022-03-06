@@ -1,4 +1,25 @@
-use grust-model;
+#-------------------------------------
+# the braces-delimited macro is a block-expr so it
+# doesn't appear here
+our class MacroExpr {
+    has $.path-expr;
+    has $.parens-delimited-token-trees;
+    has $.maybe-ident;
+    has $.brackets-delimited-token-trees;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role MacroExpr::Rules {
 

@@ -1,4 +1,16 @@
-use grust-model;
+our class Label {
+    has $.value;
+
+    has $.text;
+
+    method gist {
+        if so $.value {
+            "{$.value.gist}:"
+        } else {
+            ""
+        }
+    }
+}
 
 our role Label::Rules {
     rule maybe-label {  

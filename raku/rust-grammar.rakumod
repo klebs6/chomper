@@ -243,6 +243,7 @@ does String::Rules
 does StructExpr::Rules
 does TokenTree::Rules
 does TraitConst::Rules
+does TraitMethod::Rules
 does TraitRef::Rules
 does TraitType::Rules
 does Ty::Rules
@@ -372,6 +373,7 @@ does String::Actions
 does StructExpr::Actions
 does TokenTree::Actions
 does TraitConst::Actions
+does TraitMethod::Actions
 does TraitRef::Actions
 does TraitType::Actions
 does Ty::Actions

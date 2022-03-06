@@ -1,5 +1,3 @@
-use grust-model;
-
 our role MetaSeq::Rules {
 
     rule meta-seq {

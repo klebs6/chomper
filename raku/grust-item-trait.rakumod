@@ -1,4 +1,61 @@
-use grust-model;
+our class ItemTrait {
+    has $.maybe-where-clause;
+    has $.maybe-unsafe;
+    has $.generic-params;
+    has $.for-sized;
+    has $.maybe-ty-param-bounds;
+    has $.maybe-trait-items;
+    has $.ident;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class TraitItem {
+    has $.value;
+    has $.comment;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class TraitMacroItem {
+    has $.maybe-outer-attrs;
+    has $.item-macro;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ItemTrait::Rules {
 

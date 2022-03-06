@@ -1,4 +1,40 @@
-use grust-model;
+our class ItemMod {
+    has $.ident;
+    has $.maybe-mod-items;
+    has $.inner-attrs;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ItemForeignMod {
+    has $.inner-attrs;
+    has $.item-foreign-mod;
+    has $.maybe-foreign-items;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ItemMod::Rules {
 

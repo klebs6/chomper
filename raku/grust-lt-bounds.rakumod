@@ -1,6 +1,3 @@
-use grust-model;
-
-
 our role LtBounds::Rules {
 
     rule maybe-ltbounds {

@@ -1,4 +1,23 @@
-use grust-model;
+our class ItemMacro {
+    has $.braces-delimited-token-trees;
+    has $.parens-delimited-token-trees;
+    has $.maybe-ident;
+    has $.path-expr;
+    has $.brackets-delimited-token-trees;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ItemMacro::Rules {
 

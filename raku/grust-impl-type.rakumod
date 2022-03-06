@@ -1,4 +1,23 @@
-use grust-model;
+our class ImplType {
+    has $.generic-params;
+    has $.attrs-and-vis;
+    has $.ty-sum;
+    has $.ident;
+    has $.maybe-default;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ImplType::Rules {
 
