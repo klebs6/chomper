@@ -1,4 +1,21 @@
-use grust-model;
+our class StaticItem {
+    has $.maybe-mut;
+    has $.ident;
+    has $.ty;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ForeignStatic::Rules {
 

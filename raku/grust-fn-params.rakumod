@@ -1,10 +1,63 @@
-use grust-model;
+our class SelfLower {
+    has $.maybe-ty-ascription;
+    has $.maybe-comma-anon-params;
+    has $.maybe-comma-params;
+    has $.maybe-mut;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class SelfRegion {
+    has $.maybe-comma-anon-params;
+    has $.maybe-comma-params;
+    has $.lifetime;
+    has $.maybe-mut;
+    has $.maybe-ty-ascription;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class SelfStatic {
+    has $.maybe-params;
+    has $.maybe-anon-params;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role FnParams::Rules {
-
-    rule fn-decl-allow-variadic {
-        <fn-params-allow-variadic> <ret-ty>
-    }
 
     rule fn-params {
         '(' <maybe-params> ')'
@@ -34,14 +87,6 @@ our role FnParams::Rules {
 }
 
 our role FnParams::Actions {
-
-    method fn-decl-allow-variadic($/) {
-        make FnDecl.new(
-            fn-params-allow-variadic =>  $<fn-params-allow-variadic>.made,
-            ret-ty                   =>  $<ret-ty>.made,
-            text                     => ~$/,
-        )
-    }
 
     method fn-params($/) {
         make $<maybe-params>.made

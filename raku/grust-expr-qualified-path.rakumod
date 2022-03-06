@@ -1,4 +1,29 @@
-use grust-model;
+our class ExprQualifiedPath {
+    has $.ty-sum;
+    has $.maybe-as-trait-ref0;
+
+    has $.identA;
+    has $.generic-argsA;
+    has $.maybe-as-trait-ref1;
+
+    has $.identB;
+    has $.generic-argsB;
+
+    has $.maybe-qpath-params;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ExprQualifiedPath::Rules {
 

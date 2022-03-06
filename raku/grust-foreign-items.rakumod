@@ -1,4 +1,57 @@
-use grust-model;
+our class ForeignItem {
+    has $.item-foreign-fn;
+    has $.attrs-and-vis;
+    has $.item-foreign-static;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ForeignItemStatic {
+    has $.attrs-and-vis;
+    has $.item-foreign-static;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ForeignItemUnsafe {
+    has $.item-foreign-fn;
+    has $.attrs-and-vis;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ForeignItems::Rules {
 

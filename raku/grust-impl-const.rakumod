@@ -1,4 +1,21 @@
-use grust-model;
+our class ImplConst {
+    has $.maybe-default;
+    has $.attrs-and-vis;
+    has $.item-const;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ImplConst::Rules {
 

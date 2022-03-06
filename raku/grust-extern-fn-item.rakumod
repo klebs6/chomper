@@ -1,4 +1,20 @@
-use grust-model;
+our class ViewItemExternFn {
+    has $.item-fn;
+    has $.maybe-abi;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ExternFnItem::Rules {
 

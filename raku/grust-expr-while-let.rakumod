@@ -1,5 +1,3 @@
-use grust-model;
-
 our role ExprWhileLet::Rules {
 
     rule expr-while-let {
@@ -23,5 +21,25 @@ our role ExprWhileLet::Actions {
             block         =>  $<block>.made,
             text          => ~$/,
         )
+    }
+}
+
+our class ExprWhileLet {
+    has $.expr-nostruct;
+    has $.pat;
+    has $.block;
+    has $.maybe-label;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
     }
 }

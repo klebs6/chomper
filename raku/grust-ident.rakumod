@@ -1,4 +1,10 @@
-use grust-model;
+our class Ident {
+    has $.value;
+
+    method gist {
+        self.value
+    }
+}
 
 our role Ident::Rules {
 

@@ -1,4 +1,38 @@
-use grust-model;
+our class IdentsOrSelf {
+    has $.idents-or-self;
+    has $.ident-or-self;
+    has $.ident;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class As {
+    has $.ident;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role IdentsOrSelf::Rules {
 

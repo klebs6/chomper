@@ -1,4 +1,21 @@
-use grust-model;
+our class GenericValues {
+    has $.ty-qualified-path;
+    has $.maybe-bindings;
+    has $.maybe-ty-sums-and-or-bindings;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role GenericArgs::Rules {
 

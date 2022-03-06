@@ -1,4 +1,22 @@
-use grust-model;
+our class ForeignFn {
+    has $.maybe-where-clause;
+    has $.fn-decl-allow-variadic;
+    has $.ident;
+    has $.generic-params;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ForeignFn::Rules {
 
