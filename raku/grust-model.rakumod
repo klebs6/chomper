@@ -18,26 +18,6 @@ our class TypeWithDefault {
     }
 }
 
-our class NonBlockExpr {
-    has $.comment;
-    has $.base;
-    has @.tail;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-
 our class TyAscription {
     has $.value;
 
@@ -240,64 +220,8 @@ our class ExprAddrOf {
     }
 }
 
-
 our class OuterAttrs {
     has $.outer-attr;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class Arg {
-    has $.ty-sum;
-    has $.pat;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class Args {
-    has $.param;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class PatField {
-    has $.ident;
-    has $.pat;
-    has $.binding-mode;
-    has $.lit-int;
 
     has $.text;
 
@@ -462,25 +386,6 @@ our class PatRegion {
 
 our class PatRegionRefRef {
     has $.pat;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class PatStruct {
-    has $.pat-fields;
-    has $.pat-struct;
-    has $.path-expr;
 
     has $.text;
 
@@ -708,22 +613,6 @@ our class RetTy {
 our class Stmts {
     has @.stmts;
     has $.nonblock-expr;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class Self {
 
     has $.text;
 
@@ -1402,53 +1291,6 @@ our class WherePredicates {
     }
 }
 
-our class MutMutable { 
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class MutImmutable { 
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class PatWild { 
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
 
 our class DocComment { 
 
