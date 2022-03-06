@@ -1,4 +1,22 @@
-use grust-model;
+
+our class ExprBlock {
+    has $.maybe-stmts;
+    has $.maybe-inner-attrs;
+    has $.comment;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role InnerAttrsAndBlock::Rules {
 

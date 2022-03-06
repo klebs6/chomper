@@ -355,82 +355,9 @@ our class ItemForeignMod {
     }
 }
 
-our class ExprBlock {
-    has $.maybe-stmts;
-    has $.maybe-inner-attrs;
-    has $.comment;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
 
 our class Bounds {
     has $.bound;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class ConstDefault {
-    has $.expr;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class Crate {
-    has $.maybe-mod-items;
-    has $.inner-attrs;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class ExprForLoop {
-    has $.expr-nostruct;
-    has $.block;
-    has $.pat;
-    has $.maybe-label;
 
     has $.text;
 
@@ -3073,24 +3000,6 @@ our class ConstTraitItem {
     }
 }
 
-our class ConstGeneric {
-    has $.name;
-    has $.ty  ;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
 our class TyClosure {
     has $.anon-params;
     has $.ret-ty;
@@ -3735,22 +3644,6 @@ our class Super {
 }
 
 our class TyInfer { 
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class Default { 
 
     has $.text;
 

@@ -1,4 +1,22 @@
-use grust-model;
+our class ExprForLoop {
+    has $.expr-nostruct;
+    has $.block;
+    has $.pat;
+    has $.maybe-label;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ExprFor::Rules {
 

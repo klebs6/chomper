@@ -1,4 +1,22 @@
-use grust-model;
+our class ExprIfLet {
+    has $.expr-nostruct;
+    has $.block;
+    has $.pat;
+    has $.block-or-if;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ExprIfLet::Rules {
 
