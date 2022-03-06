@@ -1,4 +1,21 @@
-use grust-model;
+our class Item {
+    has $.comment;
+    has $.item;
+    has $.attrs-and-vis;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 #-----------------------
 our role ModItem::Rules {

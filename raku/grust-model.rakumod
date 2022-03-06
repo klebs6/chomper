@@ -203,54 +203,8 @@ our class MetaItems {
     }
 }
 
-our class Method {
-    has $.ident;
-    has $.fn-decl-with-self;
-    has $.maybe-outer-attrs;
-    has $.maybe-abi;
-    has $.generic-params;
-    has $.maybe-where-clause;
-    has $.attrs-and-vis;
-    has $.fn-decl-with-self-allow-anon-params;
-    has $.maybe-unsafe;
-    has $.maybe-default;
-    has $.inner-attrs-and-block;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
 our class Items {
     has $.mod-item;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class Item {
-    has $.comment;
-    has $.item;
-    has $.attrs-and-vis;
 
     has $.text;
 
