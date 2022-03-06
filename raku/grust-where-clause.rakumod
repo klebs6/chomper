@@ -14,7 +14,8 @@ our role WhereClause::Actions {
 
     method where-clause($/) {
         make WhereClause.new(
-            where-predicates =>  $<where-predicates>.made,
+            where-predicates => $<where-predicates>.made,
+            text             => ~$/,
         )
     }
 }

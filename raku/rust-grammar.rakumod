@@ -91,7 +91,6 @@ use grust-qpath-params;
 use grust-ret-ty;
 use grust-shebang;
 use grust-stmts;
-use grust-str;
 use grust-struct-expr;
 use grust-symbol;
 use grust-token-tree;

@@ -8,9 +8,13 @@ our role Visibility::Actions {
 
     method visibility($/) { 
         if $/<kw-pub>:exists {
-            make Public.new 
+            make Public.new(
+                text => ~$/,
+            )
         } else {
-            make Inherited.new 
+            make Inherited.new(
+                text => ~$/,
+            )
         }
     }
 }

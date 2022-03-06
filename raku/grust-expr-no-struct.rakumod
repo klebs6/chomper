@@ -128,7 +128,7 @@ our role ExprNoStruct::Actions {
 
     method expr-nostruct-tail:sym<dot-path>($/) {
         make ExprField.new(
-            path-generic-args-with-colons => $<path-generic-args-with-colons>.made
+            path-generic-args-with-colons => $<path-generic-args-with-colons>.made,
             text                          => ~$/,
         )
     }

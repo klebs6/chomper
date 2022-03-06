@@ -1,4 +1,19 @@
-use grust-model;
+our class AsTraitRef {
+    has $.trait-ref;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role AsTraitRef::Rules {
     rule maybe-as-trait-ref {

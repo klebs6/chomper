@@ -28,6 +28,7 @@ our role WherePredicates::Actions {
             maybe-for-lifetimes =>  $<maybe-for-lifetimes>.made,
             lifetime            =>  $<lifetime>.made,
             bounds              =>  $<bounds>.made,
+            text                => ~$/,
         )
     }
 
@@ -36,6 +37,7 @@ our role WherePredicates::Actions {
             maybe-for-lifetimes =>  $<maybe-for-lifetimes>.made,
             ty                  =>  $<ty>.made,
             ty-param-bounds     =>  $<ty-param-bounds>.made,
+            text                => ~$/,
         )
     }
 }

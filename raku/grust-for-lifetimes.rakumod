@@ -11,7 +11,7 @@ our role ForLifetimes::Actions {
 
     method maybe-for-lifetimes($/) {
         make ForLifetimes.new(
-            lifetimes => $<lifetimes>.made
+            lifetimes => $<lifetimes>.made,
             text      => ~$/,
         )
     }

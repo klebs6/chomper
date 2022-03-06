@@ -1,7 +1,13 @@
+use Data::Dump::Tree;
+
 our class ForLifetimes {
     has $.lifetimes;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -15,7 +21,11 @@ our class TypeWithDefault {
     has $.ty;
     has $.default;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -30,7 +40,11 @@ our class Expr {
     has $.base;
     has @.tail;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -44,7 +58,11 @@ our class ExprNoStruct {
     has $.base;
     has @.tail;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -59,7 +77,11 @@ our class NonBlockExpr {
     has $.base;
     has @.tail;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -72,7 +94,11 @@ our class NonBlockExpr {
 our class As {
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -85,13 +111,14 @@ our class As {
 our class Label {
     has $.value;
 
-    has $.text is required;
+    has $.text;
 
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if so $.value {
+            "{$.value.gist}:"
+        } else {
+            ""
+        }
     }
 }
 
@@ -99,7 +126,11 @@ our class ExprAgain {
     has $.lifetime;
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -114,7 +145,11 @@ our class ExprAssignMul {
     has $.expr;
     has $.expr-nostruct;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -129,7 +164,11 @@ our class ExprAssignSub {
     has $.expr-nostruct;
     has $.nonblock-expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -144,7 +183,11 @@ our class ExprBinary {
     has $.expr-nostruct;
     has $.nonblock-expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -158,7 +201,11 @@ our class ExprBreak {
     has $.ident;
     has $.lifetime;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -168,16 +215,31 @@ our class ExprBreak {
     }
 }
 
-our class ExprCall {
-    has $.block-expr;
-    has $.block-expr-dot;
-    has $.expr;
-    has $.expr-nostruct;
+our class ExprMac {
+    has $.macro-expr;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ExprParen {
     has $.maybe-exprs;
-    has $.nonblock-expr;
-    has $.path-generic-args-with-colons;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -187,51 +249,30 @@ our class ExprCall {
     }
 }
 
+our class ExprPath {
+    has $.path-expr;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 our class ExprLit {
     has $.lit;
 
-    has $.text is required;
+    has $.text;
 
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+    submethod TWEAK {
+        say self.gist;
     }
-}
-
-our class AnonParam {
-    has $.named-arg;
-    has $.ty;
-
-    has $.text is required;
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class AnonParams {
-    has Bool $.variadic-tail;
-    has @.anon-params;
-
-    has $.text is required;
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class AsTraitRef {
-    has $.trait-ref;
-
-    has $.text is required;
 
     method gist {
         say "need to write gist!";
@@ -244,7 +285,11 @@ our class AsTraitRef {
 our class TyAscription {
     has $.value;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -259,7 +304,11 @@ our class TyBareFn {
     has Bool $.extern = False;
     has $.decl;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -272,7 +321,11 @@ our class TyBareFn {
 our class TraitRef {
     has $.value;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -282,123 +335,17 @@ our class TraitRef {
     }
 }
 
-our class AttrsAndVis {
-    has $.maybe-outer-attrs;
-    has $.visibility;
-
-    has $.text is required;
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class BindByRef {
-    has Bool $.mut;
-
-    has $.text is required;
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class BindByValue {
-    has Bool $.mut;
-
-    has $.text is required;
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class Binding {
-    has $.ty;
-    has $.ident;
-
-    has $.text is required;
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class Macro {
-    has $.braces-delimited-token-trees;
-    has $.path-expr;
-    has $.maybe-ident;
-
-    has $.text is required;
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class UnsafeBlock {
-    has $.block;
-
-    has $.text is required;
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class BlockExprDotTail {
-    has $.path-generic-args-with-colons;
-    has @.maybe-exprs;
-    has $.lit-integer;
-
-    has $.text is required;
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class BlockExprDot {
-    has @.block-exprs;
-    has $.block-expr-dot-tail;
-
-    has $.text is required;
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
 
 our class ItemForeignMod {
     has $.inner-attrs;
     has $.item-foreign-mod;
     has $.maybe-foreign-items;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -413,7 +360,11 @@ our class ExprBlock {
     has $.maybe-inner-attrs;
     has $.comment;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -426,7 +377,11 @@ our class ExprBlock {
 our class Bounds {
     has $.bound;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -439,7 +394,11 @@ our class Bounds {
 our class ConstDefault {
     has $.expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -453,7 +412,11 @@ our class Crate {
     has $.maybe-mod-items;
     has $.inner-attrs;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -469,7 +432,11 @@ our class ExprForLoop {
     has $.pat;
     has $.maybe-label;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -485,7 +452,11 @@ our class ExprIfLet {
     has $.pat;
     has $.block-or-if;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -500,7 +471,11 @@ our class ExprIf {
     has $.block;
     has $.expr-nostruct;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -514,7 +489,11 @@ our class ExprLoop {
     has $.block;
     has $.maybe-label;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -529,7 +508,11 @@ our class ExprAssignShr {
     has $.expr-nostruct;
     has $.nonblock-expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -545,7 +528,11 @@ our class ExprCast {
     has $.nonblock-expr;
     has $.ty;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -568,7 +555,11 @@ our class ExprQualifiedPath {
 
     has $.maybe-qpath-params;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -584,7 +575,11 @@ our class ExprWhileLet {
     has $.block;
     has $.maybe-label;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -599,7 +594,11 @@ our class ExprWhile {
     has $.block;
     has $.maybe-label;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -612,7 +611,11 @@ our class ExprWhile {
 our class Exprs {
     has $.expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -626,7 +629,11 @@ our class ViewItemExternFn {
     has $.item-fn;
     has $.maybe-abi;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -643,7 +650,11 @@ our class FnDecl {
     has $.fn-params-with-self;
     has $.ret-ty;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -659,7 +670,11 @@ our class SelfLower {
     has $.maybe-comma-params;
     has $.maybe-mut;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -676,7 +691,11 @@ our class SelfRegion {
     has $.maybe-mut;
     has $.maybe-ty-ascription;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -690,7 +709,11 @@ our class SelfStatic {
     has $.maybe-params;
     has $.maybe-anon-params;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -704,7 +727,11 @@ our class ForInType {
     has $.for-in-type-suffix;
     has $.maybe-lifetimes;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -717,7 +744,11 @@ our class ForInType {
 our class ForSized {
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -733,7 +764,11 @@ our class ForeignFn {
     has $.ident;
     has $.generic-params;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -748,7 +783,11 @@ our class ForeignItem {
     has $.attrs-and-vis;
     has $.item-foreign-static;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -762,7 +801,11 @@ our class ForeignItemStatic {
     has $.attrs-and-vis;
     has $.item-foreign-static;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -776,7 +819,11 @@ our class ForeignItemUnsafe {
     has $.item-foreign-fn;
     has $.attrs-and-vis;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -789,7 +836,11 @@ our class ForeignItemUnsafe {
 our class ForeignItems {
     has $.foreign-items;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -802,7 +853,11 @@ our class ForeignItems {
 our class Guard {
     has $.expr-nostruct;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -817,7 +872,11 @@ our class StaticItem {
     has $.ident;
     has $.ty;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -832,7 +891,11 @@ our class GenericValues {
     has $.maybe-bindings;
     has $.maybe-ty-sums-and-or-bindings;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -846,7 +909,11 @@ our class Generics {
     has $.ty-params;
     has $.lifetimes;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -861,7 +928,11 @@ our class IdentsOrSelf {
     has $.ident-or-self;
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -876,7 +947,11 @@ our class ImplConst {
     has $.attrs-and-vis;
     has $.item-const;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -893,7 +968,11 @@ our class ImplType {
     has $.ident;
     has $.maybe-default;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -907,7 +986,11 @@ our class InferrableParam {
     has $.pat;
     has $.maybe-ty-ascription;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -920,7 +1003,11 @@ our class InferrableParam {
 our class InferrableParams {
     has $.inferrable-param;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -933,7 +1020,11 @@ our class InferrableParams {
 our class InnerAttr {
     has $.meta-item;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -946,7 +1037,11 @@ our class InnerAttr {
 our class InnerAttrs {
     has $.inner-attr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -961,7 +1056,11 @@ our class ItemConst {
     has $.ident;
     has $.expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -976,7 +1075,11 @@ our class EnumArgs {
     has $.maybe-ty-sums;
     has $.expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -991,7 +1094,11 @@ our class EnumDef {
     has $.enum-args;
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1004,7 +1111,11 @@ our class EnumDef {
 our class EnumDefs {
     has $.enum-def;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1021,7 +1132,11 @@ our class Fn {
     has $.generic-params;
     has $.maybe-where-clause;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1039,7 +1154,11 @@ our class UnsafeFn {
     has $.maybe-where-clause;
     has $.inner-attrs-and-block;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1074,7 +1193,11 @@ our class ImplItems {
     has $.impl-items;
     has $.comment;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1087,7 +1210,11 @@ our class ImplItems {
 our class InitExpr {
     has $.expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1101,7 +1228,11 @@ our class ImplItem {
     has $.value;
     has $.comment;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1115,7 +1246,11 @@ our class ImplMacroItem {
     has $.item-macro;
     has $.attrs-and-vis;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1136,7 +1271,11 @@ our class ItemImpl {
     has $.generic-params;
     has $.maybe-inner-attrs;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1151,7 +1290,11 @@ our class ItemImplDefault {
     has $.generic-params;
     has $.trait-ref;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1166,7 +1309,11 @@ our class ItemImplDefaultNeg {
     has $.maybe-default-maybe-unsafe;
     has $.generic-params;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1185,7 +1332,11 @@ our class ItemImplNeg {
     has $.ty-sum;
     has $.generic-params;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1202,7 +1353,11 @@ our class ItemMacro {
     has $.path-expr;
     has $.brackets-delimited-token-trees;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1217,7 +1372,11 @@ our class ItemMod {
     has $.maybe-mod-items;
     has $.inner-attrs;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1233,7 +1392,11 @@ our class ItemStatic {
     has $.expr;
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1250,7 +1413,11 @@ our class ItemStruct {
     has $.ident;
     has $.generic-params;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1266,7 +1433,11 @@ our class StructField {
     has $.ty-sum;
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1280,7 +1451,11 @@ our class StructFields {
     has $.struct-decl-field;
     has $.struct-tuple-field;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1299,7 +1474,11 @@ our class ItemTrait {
     has $.maybe-trait-items;
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1314,7 +1493,11 @@ our class ItemTraitAlias {
     has $.ident;
     has $.ty-sum;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1327,7 +1510,11 @@ our class ItemTraitAlias {
 our class TraitItems {
     has $.trait-item;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1341,7 +1528,11 @@ our class TraitItem {
     has $.value;
     has $.comment;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1355,7 +1546,11 @@ our class MatchClause {
     has $.clause;
     has $.comment;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1369,7 +1564,11 @@ our class TraitMacroItem {
     has $.maybe-outer-attrs;
     has $.item-macro;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1385,7 +1584,11 @@ our class ItemTy {
     has $.ty-sum;
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1403,7 +1606,11 @@ our class ExprFnBlock {
     has $.lambda-expr-no-first-bar;
     has $.expr-nostruct;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1418,7 +1625,11 @@ our class DeclLocal {
     has $.maybe-init-expr;
     has $.maybe-ty-ascription;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1431,7 +1642,11 @@ our class DeclLocal {
 our class Lifetimes {
     has $.lifetime-and-bounds;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1444,7 +1659,11 @@ our class Lifetimes {
 our class Lifetime {
     has $.maybe-ltbounds;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1454,22 +1673,31 @@ our class Lifetime {
     }
 }
 
+our class StaticLifetime { 
 
-has $.text is required;
+    has $.text;
 
-method gist {
-    say "need to write gist!";
-    say $.text;
-    ddt self;
-    exit;
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
-our class StaticLifetime { }
 
 our class PatLit {
     has $.lit;
     has $.path-expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1482,7 +1710,11 @@ our class PatLit {
 our class Ltbounds {
     has $.lifetime;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1501,7 +1733,11 @@ our class MacroExpr {
     has $.maybe-ident;
     has $.brackets-delimited-token-trees;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1518,7 +1754,11 @@ our class ArmBlock {
     has $.maybe-guard;
     has $.maybe-outer-attrs;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1535,7 +1775,11 @@ our class ArmNonblock {
     has $.maybe-guard;
     has $.pats-or;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1548,7 +1792,11 @@ our class ArmNonblock {
 our class Arms {
     has $.match-clause;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1563,7 +1811,11 @@ our class ExprMatch {
     has $.nonblock-match-clause;
     has $.expr-nostruct;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1577,7 +1829,11 @@ our class MetaList {
     has $.ident;
     has $.meta-seq;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1591,7 +1847,11 @@ our class MetaNameValue {
     has $.lit;
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1604,7 +1864,11 @@ our class MetaNameValue {
 our class MetaWord {
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1617,7 +1881,11 @@ our class MetaWord {
 our class MetaItems {
     has $.meta-item;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1640,7 +1908,11 @@ our class Method {
     has $.maybe-default;
     has $.inner-attrs-and-block;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1653,7 +1925,11 @@ our class Method {
 our class Provided {
     has $.method;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1666,7 +1942,11 @@ our class Provided {
 our class Required {
     has $.type-method;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1685,7 +1965,11 @@ our class TypeMethod {
     has $.maybe-unsafe;
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1698,7 +1982,11 @@ our class TypeMethod {
 our class Items {
     has $.mod-item;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1713,7 +2001,11 @@ our class Item {
     has $.item;
     has $.attrs-and-vis;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1728,7 +2020,11 @@ our class ExprAssign {
     has $.nonblock-expr;
     has $.expr-nostruct;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1743,7 +2039,11 @@ our class ExprAssignAdd {
     has $.expr-nostruct;
     has $.nonblock-expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1758,7 +2058,11 @@ our class ExprAssignBitAnd {
     has $.expr-nostruct;
     has $.nonblock-expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1773,7 +2077,11 @@ our class ExprAssignBitOr {
     has $.expr;
     has $.expr-nostruct;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1788,7 +2096,11 @@ our class ExprAssignBitXor {
     has $.expr-nostruct;
     has $.nonblock-expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1803,7 +2115,11 @@ our class ExprAssignDiv {
     has $.nonblock-expr;
     has $.expr-nostruct;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1818,7 +2134,11 @@ our class ExprAssignRem {
     has $.expr-nostruct;
     has $.nonblock-expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1833,7 +2153,11 @@ our class ExprAssignShl {
     has $.expr;
     has $.expr-nostruct;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1846,83 +2170,11 @@ our class ExprAssignShl {
 our class ExprBox {
     has $.expr;
 
-    has $.text is required;
+    has $.text;
 
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+    submethod TWEAK {
+        say self.gist;
     }
-}
-
-our class ExprField {
-    has $.block-expr;
-    has $.block-expr-dot;
-    has $.expr;
-    has $.expr-nostruct;
-    has $.nonblock-expr;
-    has $.path-generic-args-with-colons;
-
-    has $.text is required;
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class ExprIndex {
-    has $.block-expr;
-    has $.block-expr-dot;
-    has $.expr;
-    has $.expr-nostruct;
-    has $.maybe-expr;
-    has $.nonblock-expr;
-    has $.path-generic-args-with-colons;
-
-    has $.text is required;
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class ExprMac {
-    has $.macro-expr;
-
-    has $.text is required;
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class ExprParen {
-    has $.maybe-exprs;
-
-    has $.text is required;
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class ExprPath {
-    has $.path-expr;
-
-    has $.text is required;
 
     method gist {
         say "need to write gist!";
@@ -1937,7 +2189,11 @@ our class ExprRange {
     has $.expr-nostruct;
     has $.nonblock-expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1950,7 +2206,11 @@ our class ExprRange {
 our class ExprRet {
     has $.expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1964,7 +2224,11 @@ our class ExprStruct {
     has $.path-expr;
     has $.struct-expr-fields;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1979,7 +2243,11 @@ our class ExprTry {
     has $.expr-nostruct;
     has $.nonblock-expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -1997,7 +2265,11 @@ our class ExprTupleIndex {
     has $.nonblock-expr;
     has $.lit-int;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2013,7 +2285,11 @@ our class ExprTypeAscr {
     has $.nonblock-expr;
     has $.ty;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2026,7 +2302,11 @@ our class ExprTypeAscr {
 our class ExprVec {
     has $.vec-expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2039,7 +2319,11 @@ our class ExprVec {
 our class ExprYield {
     has $.expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2055,7 +2339,11 @@ our class ExprAddrOf {
     has $.expr;
     has $.count = 1;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2069,7 +2357,11 @@ our class ExprUnary {
     has $.expr;
     has $.expr-nostruct;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2083,7 +2375,11 @@ our class ExprUnaryMinus {
     has $.expr;
     has $.expr-nostruct;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2097,7 +2393,11 @@ our class ExprUnaryNot {
     has $.expr;
     has $.expr-nostruct;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2111,7 +2411,11 @@ our class ExprUnaryStar {
     has $.expr;
     has $.expr-nostruct;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2124,7 +2428,11 @@ our class ExprUnaryStar {
 our class OuterAttrs {
     has $.outer-attr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2138,7 +2446,11 @@ our class Arg {
     has $.ty-sum;
     has $.pat;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2151,7 +2463,11 @@ our class Arg {
 our class Args {
     has $.param;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2167,7 +2483,11 @@ our class PatField {
     has $.binding-mode;
     has $.lit-int;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2180,7 +2500,11 @@ our class PatField {
 our class PatTupElts {
     has $.pat;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2193,7 +2517,11 @@ our class PatTupElts {
 our class PatVecElts {
     has $.pat;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2207,7 +2535,11 @@ our class PatEnum {
     has $.path-expr;
     has $.pat-tup;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2220,13 +2552,8 @@ our class PatEnum {
 our class Ident {
     has $.value;
 
-    has $.text is required;
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        self.value
     }
 }
 
@@ -2235,7 +2562,11 @@ our class PatIdent {
     has $.ident;
     has $.binding-mode;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2250,7 +2581,11 @@ our class PatMac {
     has $.path-expr;
     has $.delimited-token-trees;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2267,7 +2602,11 @@ our class PatQualifiedPath {
     has $.maybe-as-trait-refB;
     has $.identB;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2281,7 +2620,11 @@ our class PatRange {
     has $.lit-or-pathA;
     has $.lit-or-pathB;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2295,7 +2638,11 @@ our class PatRegion {
     has Bool $.mut = False;
     has $.pat;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2308,7 +2655,11 @@ our class PatRegion {
 our class PatRegionRefRef {
     has $.pat;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2323,7 +2674,11 @@ our class PatStruct {
     has $.pat-struct;
     has $.path-expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2337,7 +2692,11 @@ our class PatTup {
     has $.pat-tup;
     has $.pat-tup-elts;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2350,7 +2709,11 @@ our class PatTup {
 our class PatUniq {
     has $.pat;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2360,22 +2723,31 @@ our class PatUniq {
     }
 }
 
+our class PatUnit { 
 
-has $.text is required;
+    has $.text;
 
-method gist {
-    say "need to write gist!";
-    say $.text;
-    ddt self;
-    exit;
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }
-our class PatUnit { }
 
 our class PatVec {
     has $.pat-vec;
     has $.pat-vec-elts;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2388,7 +2760,11 @@ our class PatVec {
 our class Pats {
     has $.pat;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2401,7 +2777,11 @@ our class Pats {
 our class SelfPath {
     has $.path-generic-args-with-colons;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2418,10 +2798,14 @@ our class SelfPath {
 # These show up in 'use' view-items, because these
 # are processed without respect to types.
 our class ViewPath {
-    has $.base is required;
+    has $.base;
     has Ident @.tail;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2451,7 +2835,11 @@ our class Components {
     has $.ret-ty;
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2465,7 +2853,11 @@ our class RetTy {
     has $.ty;
     has $.panic;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2509,7 +2901,11 @@ our class Stmts {
     has @.stmts;
     has $.nonblock-expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2521,7 +2917,11 @@ our class Stmts {
 
 our class Self {
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2535,7 +2935,11 @@ our class Stmt {
     has $.value;
     has $.comment;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2548,7 +2952,11 @@ our class Stmt {
 our class DefaultFieldInit {
     has $.expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2562,7 +2970,11 @@ our class FieldInit {
     has $.comment;
     has $.item;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2576,7 +2988,11 @@ our class FieldInitItem {
     has $.ident;
     has $.expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2589,7 +3005,11 @@ our class FieldInitItem {
 our class FieldInits {
     has $.field-init;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2602,7 +3022,11 @@ our class FieldInits {
 our class TTDelim {
     has $.token-trees;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2615,7 +3039,11 @@ our class TTDelim {
 our class TTTok {
     has $.unpaired-token;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2631,7 +3059,11 @@ our class ConstTraitItem {
     has $.ident;
     has $.maybe-outer-attrs;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2642,10 +3074,14 @@ our class ConstTraitItem {
 }
 
 our class ConstGeneric {
-    has $.name is required;
-    has $.ty   is required;
+    has $.name;
+    has $.ty  ;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2660,7 +3096,11 @@ our class TyClosure {
     has $.ret-ty;
     has $.maybe-bounds;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2673,7 +3113,11 @@ our class TyClosure {
 our class TyDefault {
     has $.ty-sum;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2688,7 +3132,11 @@ our class TyFnDecl {
     has $.ret-ty;
     has $.generic-params;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2702,7 +3150,11 @@ our class PolyBound {
     has $.maybe-lifetimes;
     has $.bound;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2717,7 +3169,11 @@ our class TyParam {
     has $.maybe-ty-default;
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2730,7 +3186,11 @@ our class TyParam {
 our class TyParams {
     has $.ty-param;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2743,7 +3203,11 @@ our class TyParams {
 our class TyBox {
     has $.ty;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2757,7 +3221,11 @@ our class TyFixedLengthVec {
     has $.expr;
     has $.ty;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2772,7 +3240,11 @@ our class TyMacro {
     has $.delimited-token-trees;
     has $.maybe-ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2785,7 +3257,11 @@ our class TyMacro {
 our class TyPath {
     has $.path-generic-args-without-colons;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2799,7 +3275,11 @@ our class TyPtr {
     has $.maybe-mut-or-const;
     has $.ty;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2815,7 +3295,11 @@ our class TyRptr {
     has $.lifetime;
     has $.count = 1;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2828,7 +3312,11 @@ our class TyRptr {
 our class TyTypeof {
     has $.expr;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2841,7 +3329,11 @@ our class TyTypeof {
 our class TyVec {
     has $.ty;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2854,7 +3346,11 @@ our class TyVec {
 our class TySum {
     has @.ty-sum-elts;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2867,7 +3363,11 @@ our class TySum {
 our class DynTyPrim {
     has $.ty;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2881,7 +3381,11 @@ our class TySumsAndBindings {
     has $.bindings;
     has $.ty-sums;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2898,7 +3402,11 @@ our class TyQualifiedPath {
     has $.maybe-as-trait-ref;
     has $.ty-param-bounds;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2911,7 +3419,11 @@ our class TyQualifiedPath {
 our class TyTup {
     has $.ty-sums;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2925,7 +3437,11 @@ our class TypeTraitItem {
     has $.maybe-outer-attrs;
     has $.ty-param;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2938,7 +3454,11 @@ our class TypeTraitItem {
 our class ViewItemUse {
     has $.view-path;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2952,7 +3472,11 @@ our class VecRepeat {
     has $.expr;
     has $.exprs;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2966,7 +3490,11 @@ our class ViewItemExternCrate {
     has $.ident;
     has $.as-ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2979,7 +3507,11 @@ our class ViewItemExternCrate {
 our class ViewPathGlob {
     has $.path-no-types-allowed;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -2993,7 +3525,11 @@ our class ViewPathList {
     has $.idents-or-self;
     has $.path-no-types-allowed;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3007,7 +3543,11 @@ our class ViewPathSimple {
     has $.path-no-types-allowed;
     has $.ident;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3020,7 +3560,11 @@ our class ViewPathSimple {
 our class WhereClause {
     has $.where-predicates;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3037,7 +3581,11 @@ our class WherePredicate {
     has $.ty-param-bounds;
     has $.ty;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3050,7 +3598,11 @@ our class WherePredicate {
 our class WherePredicates {
     has $.where-predicate;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3067,7 +3619,11 @@ our class ItemFn {
     has $.maybe-where-clause;
     has $.inner-attrs-and-block;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3084,7 +3640,11 @@ our class ItemUnsafeFn {
     has $.maybe-where-clause;
     has $.inner-attrs-and-block;
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3094,79 +3654,13 @@ our class ItemUnsafeFn {
     }
 }
 
-our class LitByte    { 
-    has $.val; 
-
-    method gist {
-        say "need to write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-our class LitStr     { 
-    has $.val; 
-
-    method gist {
-        say "need to write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-our class LitByteStr { 
-    has $.val; 
-
-    method gist {
-        say "need to write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-our class LitChar    { 
-    has $.val; 
-
-    method gist {
-        say "need to write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-our class LitInteger { 
-    has $.val; 
-
-    method gist {
-        say "need to write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-our class LitFloat { 
-    has $.val; 
-
-    method gist {
-        say "need to write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-our class LitBool { 
-    has $.val; 
-
-    method gist {
-        say "need to write gist!";
-        ddt self;
-        exit;
-    }
-}
-
 our class MutMutable { 
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3178,7 +3672,11 @@ our class MutMutable {
 
 our class MutImmutable { 
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3190,7 +3688,11 @@ our class MutImmutable {
 
 our class PatWild { 
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3202,7 +3704,11 @@ our class PatWild {
 
 our class DocComment { 
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3214,7 +3720,11 @@ our class DocComment {
 
 our class Super { 
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3226,7 +3736,11 @@ our class Super {
 
 our class TyInfer { 
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3238,7 +3752,11 @@ our class TyInfer {
 
 our class Default { 
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3250,7 +3768,11 @@ our class Default {
 
 our class DefaultUnsafe { 
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3262,7 +3784,11 @@ our class DefaultUnsafe {
 
 our class Unsafe { 
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3274,7 +3800,11 @@ our class Unsafe {
 
 our class TyNil { 
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3286,7 +3816,11 @@ our class TyNil {
 
 our class ViewPathListEmpty { 
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3298,7 +3832,11 @@ our class ViewPathListEmpty {
 
 our class Public { 
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3310,7 +3848,11 @@ our class Public {
 
 our class Inherited { 
 
-    has $.text is required;
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
 
     method gist {
         say "need to write gist!";
@@ -3323,4 +3865,15 @@ our class Inherited {
 our class StructExprFields {
     has $.maybe-field-inits;
     has $.default-field-init;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
 }

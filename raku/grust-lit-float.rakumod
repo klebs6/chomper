@@ -1,3 +1,17 @@
+our class LitFloat { 
+    has $.val; 
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        ddt self;
+        exit;
+    }
+}
+
 our role LitFloat::Rules {
 
     proto token lit-float { * }

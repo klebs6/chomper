@@ -1,4 +1,77 @@
-use grust-model;
+use grust-model-expr;
+
+our class UnsafeBlock {
+    has $.block;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class Macro {
+    has $.braces-delimited-token-trees;
+    has $.path-expr;
+    has $.maybe-ident;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class BlockExprDotTail {
+    has $.path-generic-args-with-colons;
+    has @.maybe-exprs;
+    has $.lit-integer;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class BlockExprDot {
+    has @.block-exprs;
+    has $.block-expr-dot-tail;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role BlockExpr::Rules {
 
@@ -87,7 +160,7 @@ our role BlockExpr::Actions {
 
     method block-expr-dot-tail:sym<base>($/) {
         make ExprField.new(
-            path-generic-args-with-colons => $<path-generic-args-with-colons>.made
+            path-generic-args-with-colons => $<path-generic-args-with-colons>.made,
             text                          => ~$/,
         )
     }

@@ -1,4 +1,54 @@
-use grust-model;
+our class Binding {
+    has $.ty;
+    has $.ident;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class BindByRef {
+    has Bool $.mut;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class BindByValue {
+    has Bool $.mut;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role Binding::Rules {
 
@@ -19,8 +69,9 @@ our role Binding::Actions {
 
     method binding($/) {
         make Binding.new(
-            ident =>  $<ident>.made,
-            ty    =>  $<ty>.made,
+            ident => $<ident>.made,
+            ty    => $<ty>.made,
+            text  => ~$/,
         )
     }
 }
@@ -36,8 +87,8 @@ our role BindingMode::Rules {
 
 our role BindingMode::Actions {
 
-    method binding-mode:sym<kw-ref>($/)  { make BindByRef.new(  mut => False) }
-    method binding-mode:sym<ref-mut>($/) { make BindByRef.new(  mut => True) }
-    method binding-mode:sym<kw-mut>($/)  { make BindByValue.new(mut => True) }
+    method binding-mode:sym<kw-ref>($/)  { make BindByRef.new(  text => ~$/, mut => False) }
+    method binding-mode:sym<ref-mut>($/) { make BindByRef.new(  text => ~$/, mut => True) }
+    method binding-mode:sym<kw-mut>($/)  { make BindByValue.new(text => ~$/, mut => True) }
 }
 

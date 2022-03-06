@@ -1,4 +1,38 @@
-use grust-model;
+our class AnonParam {
+    has $.named-arg;
+    has $.ty;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class AnonParams {
+    has Bool $.variadic-tail;
+    has @.anon-params;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 # anon means it's allowed to be anonymous
 # (type-only), but it can still have a name

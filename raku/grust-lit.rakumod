@@ -1,4 +1,21 @@
 use grust-model;
+use grust-lit-float;
+use grust-lit-int;
+use grust-lit-str;
+
+our class LitBool { 
+    has $.val; 
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 #----------------------------------
 our role Lit::Rules {
