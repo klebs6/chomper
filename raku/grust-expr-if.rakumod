@@ -1,4 +1,21 @@
-use grust-model;
+our class ExprIf {
+    has $.block-or-if;
+    has $.block;
+    has $.expr-nostruct;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ExprIf::Rules {
 
