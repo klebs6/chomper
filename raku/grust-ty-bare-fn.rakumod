@@ -1,4 +1,21 @@
-use grust-model;
+our class TyBareFn {
+    has Bool $.unsafe = False;
+    has Bool $.extern = False;
+    has $.decl;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role TyBareFn::Rules {
 

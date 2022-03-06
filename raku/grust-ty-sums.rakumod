@@ -1,4 +1,37 @@
-use grust-model;
+our class TypeWithDefault {
+    has $.ty;
+    has $.default;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class TySum {
+    has @.ty-sum-elts;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role TySums::Rules {
 

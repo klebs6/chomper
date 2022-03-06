@@ -1,4 +1,20 @@
-use grust-model;
+our class ViewItemExternCrate {
+    has $.ident;
+    has $.as-ident;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ViewItem::Rules {
 

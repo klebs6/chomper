@@ -1,4 +1,22 @@
-use grust-model;
+our class ConstTraitItem {
+    has $.maybe-ty-ascription;
+    has $.maybe-const-default;
+    has $.ident;
+    has $.maybe-outer-attrs;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role TraitConst::Rules {
 

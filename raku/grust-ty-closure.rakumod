@@ -1,4 +1,21 @@
-use grust-model;
+our class TyClosure {
+    has $.anon-params;
+    has $.ret-ty;
+    has $.maybe-bounds;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role TyClosure::Rules {
 

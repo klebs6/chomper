@@ -105,7 +105,6 @@ use grust-ty-fn-decl;
 use grust-ty-param-bounds;
 use grust-ty-param;
 use grust-ty-prim;
-use grust-ty-qualified-path;
 use grust-ty-sums;
 use grust-ty-sums-and-bindings;
 use grust-ty;

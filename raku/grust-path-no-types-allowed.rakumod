@@ -1,4 +1,61 @@
-use grust-model;
+
+#--------------------------
+# A path with no type parameters;
+# e.g. `foo::bar::Baz`
+#
+# These show up in 'use' view-items, because these
+# are processed without respect to types.
+our class ViewPath {
+    has $.base;
+    has Ident @.tail;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+#--------------------------
+# A path with a lifetime and type parameters, with
+# no double colons before the type parameters;
+# e.g. `foo::bar<'a>::Baz<t>`
+#
+# These show up in "trait references", the
+# components of type-parameter bounds lists, as
+# well as in the prefix of the
+# path-generic-args-and-bounds rule, which is the
+# full form of a named typed expression.
+#
+# They do not have (nor need) an extra '::' before
+# '<' because unlike in expr context, there are no
+# "less-than" type exprs to be ambiguous with.
+our class Components {
+    has $.maybe-ty-sums;
+    has $.generic-args;
+    has $.ret-ty;
+    has $.ident;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role PathNoTypesAllowed::Rules {
 

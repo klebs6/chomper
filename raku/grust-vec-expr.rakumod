@@ -1,4 +1,20 @@
-use grust-model;
+our class VecRepeat {
+    has $.expr;
+    has $.exprs;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role VecExpr::Rules {
 

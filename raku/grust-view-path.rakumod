@@ -1,4 +1,55 @@
-use grust-model;
+our class ViewPathSimple {
+    has $.path-no-types-allowed;
+    has $.ident;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ViewPathList {
+    has $.idents-or-self;
+    has $.path-no-types-allowed;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ViewPathGlob {
+    has $.path-no-types-allowed;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
 
 our role ViewPath::Rules {
 
