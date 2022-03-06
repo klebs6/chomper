@@ -17,10 +17,19 @@ sub MAIN(:$stdin = Nil) {
 
     my $parsed = 
     Rust::Grammar.parse($in, :$rule, :$actions) 
-    // Rust::GrammarD.parse($in, :$rule, :$actions);
+    // 
+    Rust::GrammarD.parse($in, :$rule, :$actions);
 
     if $parsed {
+
         say $parsed;
-        ddt $parsed.made;
+
+        my $made = $parsed.made;
+
+        ddt $made;
+
+        for $made.List {
+            say $_.gist;
+        }
     }
 }

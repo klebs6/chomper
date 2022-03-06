@@ -1,8 +1,61 @@
 use Data::Dump::Tree;
+use nqp;
 
 our class Stmt {
     has $.value;
     has $.comment;
+    has Bool $.semi = $!value.semi;
+
+    has $.text;
+
+    submethod TWEAK {
+        self.gist;
+    }
+
+    method gist {
+        my $res = do if $.comment {
+            qq:to/END/.trim.chomp
+            {$.comment.gist}
+            {$.value.gist}
+            END
+        } else {
+            "{$.value.gist}"
+        };
+
+        if $.semi {
+            $res ~ ";"
+        } else {
+            $res 
+        }
+    }
+}
+
+our class StmtLet {
+    has $.maybe-outer-attrs;
+    has $.let;
+    has Bool $.semi = True;
+
+    has $.text;
+
+    method gist {
+        if $.maybe-outer-attrs {
+            qq:to/END/.trim.chomp
+            {$.maybe-outer-attrs.gist}
+            {$.let.gist}
+            END
+        } else {
+            qq:to/END/.trim.chomp
+            {$.let.gist}
+            END
+        }
+    }
+}
+
+our class StmtItem {
+    has      $.outer-attrs;
+    has Bool $.public;
+    has      $.stmt-item;
+    has Bool $.semi = False;
 
     has $.text;
 
@@ -15,6 +68,51 @@ our class Stmt {
         say $.text;
         ddt self;
         exit;
+    }
+}
+
+our class StmtBlock {
+    has $.maybe-outer-attrs;
+    has $.block;
+    has Bool $.semi = False;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StmtBasic {
+    has $.outer-attrs;
+    has $.nonblock-expr;
+    has Bool $.semi = True;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        if $.outer-attrs {
+            qq:to/END/.chomp.trim
+            {$.outer-attrs.gist}
+            {$.nonblock-expr.gist}
+            END
+
+        } else {
+            qq:to/END/.chomp.trim
+            {$.nonblock-expr.gist}
+            END
+        }
     }
 }
 
@@ -39,6 +137,7 @@ our role Stmts::Rules {
     rule stmt-body:sym<i> { <outer-attrs>? <nonblock-expr> ';' }
     rule stmt-body:sym<j> { ';' }
 }
+
 
 our role Stmts::Actions {
 
@@ -75,18 +174,45 @@ our role Stmts::Actions {
     }
 
     method stmt:sym<b>($/) { 
-        make Stmt.new(
-            comment => $<block-comment>.made,
-            value   => Nil,
-            text    => ~$/,
+        make $<block-comment>.made
+    }
+
+    method stmt-body:sym<a>($/) { 
+        make StmtLet.new(
+            let               => $<let>.made,
+            maybe-outer-attrs => $<maybe-outer-attrs>.made,
+            text              => ~$/,
         )
     }
 
-    method stmt-body:sym<a>($/) { make $<let>.made }
-    method stmt-body:sym<e>($/) { make $<stmt-item>.made }
-    method stmt-body:sym<f>($/) { make $<full-block-expr>.made }
-    method stmt-body:sym<g>($/) { make $<block>.made }
-    method stmt-body:sym<i>($/) { make $<nonblock-expr>.made }
+    method stmt-body:sym<e>($/) { 
+        make StmtItem.new(
+            outer-attrs => $<outer-attrs>.made,
+            public      => so $/<kw-pub>:exists,
+            stmt-item   => $<stmt-item>.made,
+            text        => ~$/,
+        )
+    }
+
+    method stmt-body:sym<f>($/) { 
+        make $<full-block-expr>.made 
+    }
+
+    method stmt-body:sym<g>($/) { 
+        make StmtBlock.new(
+            maybe-outer-attrs => $<maybe-outer-attrs>.made,
+            block             => $<block>.made,
+            text              => ~$/,
+        )
+    }
+
+    method stmt-body:sym<i>($/) { 
+        make StmtBasic.new(
+            outer-attrs   => $<outer-attrs>.made,
+            nonblock-expr => $<nonblock-expr>.made,
+            text          => ~$/,
+        )
+    }
 }
 
 #------------------------------

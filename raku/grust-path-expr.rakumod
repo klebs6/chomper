@@ -1,7 +1,5 @@
 use Data::Dump::Tree;
 
-
-
 our class SelfPath {
     has $.path-generic-args-with-colons;
 
@@ -24,7 +22,10 @@ our class SelfPath {
 our role PathExpr::Rules {
 
     rule path-expr { 
-        [ <kw-self>? <tok-mod-sep> ]?
+        [ 
+            <kw-self>? 
+            <tok-mod-sep> 
+        ]?
         <path-generic-args-with-colons> 
     }
 }

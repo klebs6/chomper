@@ -1,12 +1,26 @@
-use Data::Dump::Tree;
-
-
-
 use grust-model;
+
+use Data::Dump::Tree;
 
 our class PathGenericArgsWithColons {
     has $.base;
     has @.tail;
+    has $.text;
+
+    submethod TWEAK {
+        self.gist;
+    }
+
+    method gist {
+        if @.tail.elems gt 0 {
+            say "need to write gist!";
+            say $.text;
+            ddt self;
+            exit;
+        } else {
+            $.base.gist
+        }
+    }
 }
 
 #-------------------------------------

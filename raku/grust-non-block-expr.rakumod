@@ -147,7 +147,6 @@ our role NonBlockExpr::Actions {
 
     method nonblock-expr-tail:sym<brack-expr>($/) {
         make ExprIndex.new(
-            nonblock-expr =>  $<nonblock-expr>.made,
             maybe-expr    =>  $<maybe-expr>.made,
             text          => ~$/,
         )
@@ -155,7 +154,6 @@ our role NonBlockExpr::Actions {
 
     method nonblock-expr-tail:sym<parens-expr>($/) {
         make ExprCall.new(
-            nonblock-expr =>  $<nonblock-expr>.made,
             maybe-exprs   =>  $<maybe-exprs>.made,
             text          => ~$/,
         )
@@ -229,7 +227,7 @@ our role NonBlockExpr::Actions {
 
     method nonblock-expr-tail:sym<eq-expr>($/) {
         make ExprAssign.new(
-            expr =>  $<expr>.made,
+            expr => $<expr>.made,
             text => ~$/,
         )
     }
@@ -432,21 +430,20 @@ our role NonBlockExpr::Actions {
 
     method nonblock-expr-base:sym<dotdot>($/) {
         make ExprRange.new(
-            nonblock-expr =>  $<nonblock-expr>.made,
-            text          => ~$/,
+            text => ~$/,
         )
     }
 
     method nonblock-expr-base:sym<dotdot-expr>($/) {
         make ExprRange.new(
-            expr =>  $<expr>.made,
+            expr => $<expr>.made,
             text => ~$/,
         )
     }
 
     method nonblock-expr-tail:sym<dotdot-expr>($/) {
         make ExprRange.new(
-            expr =>  $<expr>.made,
+            expr => $<expr>.made,
             text => ~$/,
         )
     }

@@ -10,10 +10,8 @@ our class InitExpr {
     }
 
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        my $expr = $.expr.gist;
+        "= $expr";
     }
 }
 

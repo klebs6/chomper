@@ -57,14 +57,11 @@ our class TyPath {
     has $.text;
 
     submethod TWEAK {
-        say self.gist;
+        self.gist;
     }
 
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.path-generic-args-without-colons.gist
     }
 }
 

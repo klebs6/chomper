@@ -111,7 +111,7 @@ our role ExprNoStruct::Actions {
     }
 
     method expr-nostruct-base:sym<self>($/) {
-        make ExprPath.new(
+        make ExprPathSelf.new(
             text      => ~$/,
         )
     }
@@ -225,7 +225,7 @@ our role ExprNoStruct::Actions {
 
     method expr-nostruct-tail:sym<eq-expr>($/) {
         make ExprAssign.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
+            expr-nostruct => $<expr-nostruct>.made,
             text          => ~$/,
         )
     }
@@ -434,15 +434,15 @@ our role ExprNoStruct::Actions {
 
     method expr-nostruct-tail:sym<dotdot-nostruct>($/) {
         make ExprRange.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
-            text          => ~$/,
+            expr => $<expr-nostruct>.made,
+            text => ~$/,
         )
     }
 
     method expr-nostruct-base:sym<dotdot-expr-nostruct>($/) {
         make ExprRange.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
-            text          => ~$/,
+            expr => $<expr-nostruct>.made,
+            text => ~$/,
         )
     }
 

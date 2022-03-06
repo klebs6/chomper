@@ -12,6 +12,7 @@ our role Expr::Rules {
     rule expr-tail:sym<expr-bracket-tail>             { '[' <maybe-expr> ']' }
     rule expr-tail:sym<expr-paren-tail>               { '(' <maybe-exprs> ')' }
     rule expr-tail:sym<expr-eq-expr>                  { '=' <expr> }
+
     rule expr-tail:sym<expr-shleq-expr>               { <tok-shleq> <expr> }
     rule expr-tail:sym<expr-shreq-expr>               { <tok-shreq> <expr> }
     rule expr-tail:sym<expr-minuseq-expr>             { <tok-minuseq> <expr> }
@@ -26,6 +27,7 @@ our role Expr::Rules {
     rule expr-tail:sym<expr-andand-expr>              { <tok-andand> <expr> }
     rule expr-tail:sym<expr-eqeq-expr>                { <tok-eqeq> <expr> }
     rule expr-tail:sym<expr-ne-expr>                  { <tok-ne> <expr> }
+
     rule expr-tail:sym<expr-lt-expr>                  { '<' <expr> }
     rule expr-tail:sym<expr-gt-expr>                  { '>' <expr> }
     rule expr-tail:sym<expr-le-expr>                  { <tok-le> <expr> }
@@ -100,7 +102,7 @@ our role Expr::Actions {
     }
 
     method expr-base:sym<self>($/) {
-        make ExprPath.new(
+        make ExprPathSelf.new(
             text => ~$/,
         )
     }
@@ -136,7 +138,6 @@ our role Expr::Actions {
 
     method expr-tail:sym<dotted-expr>($/) {
         make ExprField.new(
-            expr                          =>  $<expr>.made,
             path-generic-args-with-colons =>  $<path-generic-args-with-colons>.made,
             text                          => ~$/,
         )
@@ -144,14 +145,13 @@ our role Expr::Actions {
 
     method expr-tail:sym<dotted-expr-lit>($/) {
         make ExprTupleIndex.new(
-            expr =>  $<expr>.made,
+            expr =>  $<lit-int>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-bracket-tail>($/) {
         make ExprIndex.new(
-            expr       =>  $<expr>.made,
             maybe-expr =>  $<maybe-expr>.made,
             text       => ~$/,
         )
@@ -159,7 +159,6 @@ our role Expr::Actions {
 
     method expr-tail:sym<expr-paren-tail>($/) {
         make ExprCall.new(
-            expr        =>  $<expr>.made,
             maybe-exprs =>  $<maybe-exprs>.made,
             text        => ~$/,
         )
@@ -233,7 +232,7 @@ our role Expr::Actions {
 
     method expr-tail:sym<expr-eq-expr>($/) {
         make ExprAssign.new(
-            expr =>  $<expr>.made,
+            expr => $<expr>.made,
             text => ~$/,
         )
     }
@@ -309,126 +308,126 @@ our role Expr::Actions {
     }
 
     method expr-tail:sym<expr-oror-expr>($/) {
-        make ExprBinary.new(
+        make ExprOrOr.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-andand-expr>($/) {
-        make ExprBinary.new(
+        make ExprAndAnd.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-eqeq-expr>($/) {
-        make ExprBinary.new(
+        make ExprEqEq.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-ne-expr>($/) {
-        make ExprBinary.new(
+        make ExprNe.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-lt-expr>($/) {
-        make ExprBinary.new(
+        make ExprLt.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-gt-expr>($/) {
-        make ExprBinary.new(
+        make ExprGt.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-le-expr>($/) {
-        make ExprBinary.new(
+        make ExprLe.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-ge-expr>($/) {
-        make ExprBinary.new(
+        make ExprGe.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-pipe-expr>($/) {
-        make ExprBinary.new(
+        make ExprPipe.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-caret-expr>($/) {
-        make ExprBinary.new(
+        make ExprCaret.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-amp-expr>($/) {
-        make ExprBinary.new(
+        make ExprAmp.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-shl-expr>($/) {
-        make ExprBinary.new(
+        make ExprShl.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-shr-expr>($/) {
-        make ExprBinary.new(
+        make ExprShr.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-plus-expr>($/) {
-        make ExprBinary.new(
+        make ExprPlus.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-minus-expr>($/) {
-        make ExprBinary.new(
+        make ExprMinus.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-star-expr>($/) {
-        make ExprBinary.new(
+        make ExprStar.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-slash-expr>($/) {
-        make ExprBinary.new(
+        make ExprSlash.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-mod-expr>($/) {
-        make ExprBinary.new(
+        make ExprMod.new(
             expr =>  $<expr>.made,
             text => ~$/,
         )
@@ -436,21 +435,21 @@ our role Expr::Actions {
 
     method expr-tail:sym<expr-dotdot>($/) {
         make ExprRange.new(
-            expr =>  $<expr>.made,
+            expr => $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-tail:sym<expr-dotdot-expr>($/) {
         make ExprRange.new(
-            expr =>  $<expr>.made,
+            expr => $<expr>.made,
             text => ~$/,
         )
     }
 
     method expr-prefix:sym<dotdot-expr>($/) {
         make ExprRange.new(
-            expr =>  $<expr>.made,
+            expr => $<expr>.made,
             text => ~$/,
         )
     }

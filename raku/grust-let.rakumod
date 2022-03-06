@@ -7,15 +7,12 @@ our class DeclLocal {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        my $pat                 = $.pat.gist;
+        my $maybe-ty-ascription = $.maybe-ty-ascription.gist;
+        my $maybe-init-expr     = $.maybe-init-expr.gist;
+
+        "let $pat$maybe-ty-ascription $maybe-init-expr"
     }
 }
 

@@ -108,7 +108,14 @@ our role PathGenericArgsWithoutColons::Rules {
 our role PathGenericArgsWithoutColons::Actions {
 
     method path-generic-args-without-colons($/) {
-        make $<path-generic-args-without-colons-item>>>.made
+
+        my @args = $<path-generic-args-without-colons-item>>>.made;
+
+        if @args.elems eq 1 {
+            make @args[0]
+        } else {
+            make @args
+        }
     }
 
     method path-generic-args-without-colons-item:sym<a>($/) {

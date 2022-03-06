@@ -1,19 +1,16 @@
 use Data::Dump::Tree;
 
 our class TyAscription {
-    has $.value;
+    has $.ty-sum;
 
     has $.text;
 
     submethod TWEAK {
-        say self.gist;
+        self.gist;
     }
 
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        ": {$.ty-sum.gist}"
     }
 }
 
@@ -32,7 +29,7 @@ our role TyAscription::Actions {
 
     method ty-ascription($/) {
         make TyAscription.new(
-            value => $<ty-sum>.made,
+            ty-sum => $<ty-sum>.made,
             text  => ~$/,
         )
     }

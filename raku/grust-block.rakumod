@@ -1,21 +1,19 @@
 use Data::Dump::Tree;
 
 our class ExprBlock {
-    has $.maybe-stmts;
-    has $.maybe-inner-attrs;
     has $.comment;
+    has $.maybe-inner-attrs;
+    has $.maybe-stmts;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        qq:to/END/.trim.chomp
+        {$.comment ?? $.comment.gist !! ""}
+        \{
+        {$.maybe-inner-attrs ?? $.maybe-inner-attrs.gist ~ "\n" !! ""}{$.maybe-stmts>>.gist>>.indent(4).join("\n")}
+        \}
+        END
     }
 }
 

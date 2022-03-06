@@ -314,15 +314,21 @@ our class PatIdent {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $ident = $.ident.gist;
+        my $bm    = $.binding-mode.gist;
+
+        if $.pat {
+
+            my $pat = $.pat.gist;
+
+            "$bm $ident @ $pat"
+
+        } else {
+
+            [$bm,$ident].join(" ")
+        }
     }
 }
 

@@ -1,22 +1,18 @@
 use Data::Dump::Tree;
 
 our class ExprForLoop {
+    has $.maybe-label;
+    has $.pat;
     has $.expr-nostruct;
     has $.block;
-    has $.pat;
-    has $.maybe-label;
 
     has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
+    has Bool $.semi = False;
 
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        qq:to/END/.chomp.trim
+        for {$.pat.gist.trim} in {$.expr-nostruct.gist} {$.block.gist}
+        END
     }
 }
 

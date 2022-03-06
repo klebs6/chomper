@@ -5,14 +5,8 @@ use grust-model;
 our class LitInteger { 
     has $.val; 
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        ddt self;
-        exit;
+        "$.val"
     }
 }
 

@@ -2,19 +2,21 @@ use Data::Dump::Tree;
 
 our class PatLit {
     has $.lit;
+
+    has $.text;
+
+    method gist {
+        $.lit.gist
+    }
+}
+
+our class PatLitPath {
     has $.path-expr;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.path-expr.gist
     }
 }
 
@@ -30,7 +32,7 @@ our role LitOrPath::Rules {
 our role LitOrPath::Actions {
 
     method lit-or-path:sym<a>($/) {
-        make PatLit.new(
+        make PatLitPath.new(
             path-expr =>  $<path-expr>.made,
             text      => ~$/,
         )
