@@ -12,7 +12,7 @@ our class ExprIf {
 
         say "go back to that one with the precedence operators and gate";
         ddt self;
-        exit;
+        #exit;
         if not $.block-or-if {
 
             qq:to/END/

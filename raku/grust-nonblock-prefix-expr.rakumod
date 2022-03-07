@@ -36,8 +36,8 @@ our role NonblockPrefixExpr::Actions {
 
     method nonblock-prefix-expr-nostruct:sym<b>($/) {
         make ExprUnaryNot.new(
-            expr-nostruct => $<expr-nostruct>.made,
-            text          => ~$/,
+            expr => $<expr-nostruct>.made,
+            text => ~$/,
         )
     }
 

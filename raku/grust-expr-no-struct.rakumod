@@ -7,7 +7,7 @@ use grust-model-expr;
 
 our role ExprNoStruct::Rules {
 
-    rule expr-nostruct { 
+    regex expr-nostruct { 
         <expr-nostruct-base> 
         <expr-nostruct-tail>* 
     }
@@ -61,20 +61,20 @@ our role ExprNoStruct::Rules {
     rule expr-nostruct-tail:sym<andand-expr>       { <tok-andand>      <expr-nostruct> }
     rule expr-nostruct-tail:sym<eqeq-expr>         { <tok-eqeq>        <expr-nostruct> }
     rule expr-nostruct-tail:sym<ne-expr>           { <tok-ne>          <expr-nostruct> }
-    rule expr-nostruct-tail:sym<lt-expr>           { '<'           <expr-nostruct> }
-    rule expr-nostruct-tail:sym<gt-expr>           { '>'           <expr-nostruct> }
+    rule expr-nostruct-tail:sym<lt-expr>           { '<'               <expr-nostruct> }
+    rule expr-nostruct-tail:sym<gt-expr>           { '>'               <expr-nostruct> }
     rule expr-nostruct-tail:sym<le-expr>           { <tok-le>          <expr-nostruct> }
     rule expr-nostruct-tail:sym<ge-expr>           { <tok-ge>          <expr-nostruct> }
-    rule expr-nostruct-tail:sym<pipe-expr>         { '|'           <expr-nostruct> }
-    rule expr-nostruct-tail:sym<caret-expr>        { '^'           <expr-nostruct> }
-    rule expr-nostruct-tail:sym<amp-expr>          { '&'           <expr-nostruct> }
+    rule expr-nostruct-tail:sym<pipe-expr>         { '|'               <expr-nostruct> }
+    rule expr-nostruct-tail:sym<caret-expr>        { '^'               <expr-nostruct> }
+    rule expr-nostruct-tail:sym<amp-expr>          { '&'               <expr-nostruct> }
     rule expr-nostruct-tail:sym<shl-expr>          { <tok-shl>         <expr-nostruct> }
     rule expr-nostruct-tail:sym<shr-expr>          { <tok-shr>         <expr-nostruct> }
-    rule expr-nostruct-tail:sym<plus-expr>         { '+'           <expr-nostruct> }
-    rule expr-nostruct-tail:sym<minus-expr>        { '-'           <expr-nostruct> }
-    rule expr-nostruct-tail:sym<star-expr>         { '*'           <expr-nostruct> }
-    rule expr-nostruct-tail:sym<slash-expr>        { '/'           <expr-nostruct> }
-    rule expr-nostruct-tail:sym<mod-expr>          { '%'           <expr-nostruct> }
+    rule expr-nostruct-tail:sym<plus-expr>         { '+'               <expr-nostruct> }
+    rule expr-nostruct-tail:sym<minus-expr>        { '-'               <expr-nostruct> }
+    rule expr-nostruct-tail:sym<star-expr>         { '*'               <expr-nostruct> }
+    rule expr-nostruct-tail:sym<slash-expr>        { '/'               <expr-nostruct> }
+    rule expr-nostruct-tail:sym<mod-expr>          { '%'               <expr-nostruct> }
     rule expr-nostruct-tail:sym<dotdot-nostruct>   { <tok-dotdot>      <expr-nostruct> }
 
     rule expr-nostruct-tail:sym<dotdot> { 
