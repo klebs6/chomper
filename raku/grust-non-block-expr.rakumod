@@ -110,10 +110,7 @@ our role NonBlockExpr::Actions {
     }
 
     method nonblock-expr-base:sym<macro-expr>($/) {
-        make ExprMac.new(
-            macro-expr =>  $<macro-expr>.made,
-            text       => ~$/,
-        )
+        make $<macro-expr>.made
     }
 
     method nonblock-expr-base:sym<struct-expr>($/) {
@@ -140,7 +137,7 @@ our role NonBlockExpr::Actions {
 
     method nonblock-expr-tail:sym<dot-lit-int>($/) {
         make ExprTupleIndex.new(
-            lit-int =>  $<lit-int>.made,
+            lit-int => $<lit-int>.made,
             text    => ~$/,
         )
     }

@@ -1,7 +1,9 @@
 use Data::Dump::Tree;
 
 our role BlockOrIf::Rules {
+
     proto rule block-or-if { * }
+
     rule block-or-if:sym<block>       { <block> }
     rule block-or-if:sym<expr-if>     { <expr-if> }
     rule block-or-if:sym<expr-if-let> { <expr-if-let> }

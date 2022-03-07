@@ -115,10 +115,7 @@ our role Expr::Actions {
     }
 
     method expr-base:sym<macro-expr>($/) {
-        make ExprMac.new(
-            macro-expr =>  $<macro-expr>.made,
-            text       => ~$/,
-        )
+        make $<macro-expr>.made
     }
 
     method expr-base:sym<struct-expr>($/) {
@@ -145,14 +142,14 @@ our role Expr::Actions {
 
     method expr-tail:sym<dotted-expr-lit>($/) {
         make ExprTupleIndex.new(
-            expr =>  $<lit-int>.made,
-            text => ~$/,
+            lit-int => $<lit-int>.made,
+            text    => ~$/,
         )
     }
 
     method expr-tail:sym<expr-bracket-tail>($/) {
         make ExprIndex.new(
-            maybe-expr =>  $<maybe-expr>.made,
+            maybe-expr => $<maybe-expr>.made,
             text       => ~$/,
         )
     }
@@ -274,7 +271,7 @@ our role Expr::Actions {
 
     method expr-tail:sym<expr-pluseq-expr>($/) {
         make ExprAssignAdd.new(
-            expr =>  $<expr>.made,
+            expr => $<expr>.made,
             text => ~$/,
         )
     }
@@ -462,7 +459,6 @@ our role Expr::Actions {
 
     method expr-tail:sym<expr-as-ty>($/) {
         make ExprCast.new(
-            expr =>  $<expr>.made,
             ty   =>  $<ty>.made,
             text => ~$/,
         )

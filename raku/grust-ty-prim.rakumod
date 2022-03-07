@@ -107,15 +107,8 @@ our class TyPtr {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "*" ~ $.maybe-mut-or-const.gist ~ " " ~ $.ty.gist
     }
 }
 

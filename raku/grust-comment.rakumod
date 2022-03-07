@@ -1,5 +1,7 @@
 use Data::Dump::Tree;
 
+use doxy-comment;
+
 use grust-lex;
 
 our class DocComment { 
@@ -27,7 +29,7 @@ our role Comment::Rules
 }
 
 our role Comment::Actions {
-    method comment:sym<line>($/)  { make $<line-comment>>>.made }
+    method comment:sym<line>($/)  { make "\n/*" ~ $<line-comment>>>.made.join("\n") ~ "*/" }
     method comment:sym<block>($/) { make $<block-comment>.made }
 }
 
@@ -44,7 +46,9 @@ our role LineComment::Rules {
     }
 
     token line-comment {
-        <.ws> <.line-comment-begin> <line-comment-body>
+        <.ws> 
+        <.line-comment-begin> 
+        <line-comment-body>
     }
 }
 

@@ -1,4 +1,1 @@
 direct_or_indirect DirectOrIndirect
-direct_or_indirect DirectOrIndirect
-direct_or_indirect Dir
-direct_or_indirect DirectOrIndirect

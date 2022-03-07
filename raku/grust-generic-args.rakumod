@@ -21,22 +21,35 @@ our class TyQualifiedPath {
     }
 }
 
-our class GenericValues {
-    has $.ty-qualified-path;
-    has $.maybe-bindings;
-    has $.maybe-ty-sums-and-or-bindings;
+our class GenericArgs {
+    has $.values;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
+    method gist {
+        #ddt self;
+        "<" ~ $.values.gist ~ ">"
     }
+}
+
+our class GenericValues {
+    has $.ty-qualified-path;
+    has $.ty-sums;
+    has $.maybe-bindings;
+
+    has $.text;
 
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $ty-qualified-path = $.ty-qualified-path.gist;
+        my $maybe-bindings    = $.maybe-bindings.gist;
+
+        if $.ty-sums {
+            my $ty-sums = $.ty-sums.gist;
+            "{$ty-qualified-path}, {$ty-sums} {$maybe-bindings}"
+        } else {
+            "{$ty-qualified-path} {$maybe-bindings}"
+        }
     }
 }
 
@@ -128,17 +141,18 @@ our role GenericArgs::Rules {
 our role GenericArgs::Actions {
 
     method generic-args:sym<a>($/) {
-        make $<generic-values>.made
+        make GenericArgs.new(
+            values => $<generic-values>.made
+        )
     }
 
     method generic-args:sym<b>($/) {
-        make $<ty-qualified-path-and-generic-values>.made
+        make GenericArgs.new(
+            values => $<ty-qualified-path-and-generic-values>.made
+        )
     }
 
     method generic-values($/) {
-        make GenericValues.new(
-            maybe-ty-sums-and-or-bindings =>  $<maybe-ty-sums-and-or-bindings>.made,
-            text                          => ~$/,
-        )
+        make $<maybe-ty-sums-and-or-bindings>.made
     }
 }

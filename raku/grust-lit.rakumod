@@ -35,22 +35,52 @@ our role Lit::Rules {
 
 our role Lit::Actions {
 
+    method lit-int($/) {
+        make LitInteger.new(
+            val => ~$/ 
+        )
+    }
+
+    method lit-float($/) {
+        make LitFloat.new(
+            val => ~$/ 
+        )
+    }
+
+    method lit-char($/) {
+        make LitChar.new(
+            val => ~$/ 
+        )
+    }
+
+    method lit-byte($/) { 
+        make LitByte.new(
+            val => ~$/ 
+        )
+    }
+
+    method lit-str($/) { 
+        make LitStr.new(
+            val => ~$/ 
+        )
+    }
+
     method lit($/) {
         make do given ~$/.keys[0] {
             when "lit-str" {
-                LitStr.new( val => ~$<lit-str>)
+                $<lit-str>.made
             }
             when "lit-byte" {
-                LitByte.new( val => ~$<lit-byte>)
+                $<lit-byte>.made
             }
             when "lit-char" {
-                LitChar.new( val => ~$<lit-char>)
+                $<lit-char>.made
             }
             when "lit-float" {
-                LitFloat.new( val => ~$<lit-float>)
+                $<lit-float>.made
             }
             when "lit-int" {
-                LitInteger.new( val => ~$<lit-int>)
+                $<lit-int>.made
             }
             when "kw-true" {
                 LitBool.new( val => True)

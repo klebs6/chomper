@@ -3,22 +3,18 @@ use Data::Dump::Tree;
 our class LitFloat { 
     has $.val; 
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        ddt self;
-        exit;
+        "{$.val}"
     }
 }
 
 our role LitFloat::Rules {
 
-    proto token lit-float { * }
+    token lit-float { <lit-float-body> }
 
-    token lit-float:sym<a> { 
+    proto token lit-float-body { * }
+
+    token lit-float-body:sym<a> { 
         <decdigit>
         <decdigit-cont>*
         '.'
@@ -31,7 +27,7 @@ our role LitFloat::Rules {
     }
 
 
-    token lit-float:sym<b> { 
+    token lit-float-body:sym<b> { 
         <decdigit>
         <decdigit-cont>*
         '.'
@@ -41,14 +37,14 @@ our role LitFloat::Rules {
         <litfloat-ty>?
     }
 
-    token lit-float:sym<c> { 
+    token lit-float-body:sym<c> { 
         <decdigit>
         <decdigit-cont>*
         <litfloat-exp>
         <litfloat-ty>?
     }
 
-    token lit-float:sym<d> { 
+    token lit-float-body:sym<d> { 
         <decdigit>
         <decdigit-cont>*
         <litfloat-ty>

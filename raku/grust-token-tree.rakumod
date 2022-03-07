@@ -2,6 +2,52 @@ use Data::Dump::Tree;
 
 use grust-model;
 
+our class TokenTree {
+    has $.tree;
+    has $.leaf;
+
+    has $.text;
+
+    method gist {
+
+        if $.leaf {
+            $.leaf.gist
+        } else {
+            $.tree>>.gist.join("")
+        }
+    }
+}
+
+our class BracesDelimitedTokenTrees {
+    has $.trees;
+
+    has $.text;
+
+    method gist {
+        "{" ~ $.trees>>.gist.join("") ~ "}"
+    }
+}
+
+our class BracketsDelimitedTokenTrees {
+    has $.trees;
+
+    has $.text;
+
+    method gist {
+        "[" ~ $.trees>>.gist.join("") ~ "]"
+    }
+}
+
+our class ParensDelimitedTokenTrees {
+    has $.trees;
+
+    has $.text;
+
+    method gist {
+        "(" ~ $.trees>>.gist.join("") ~ ")"
+    }
+}
+
 our role TokenTree::Rules {
 
     rule token-trees { <token-tree>* }
@@ -29,23 +75,33 @@ our role TokenTree::Actions {
     }
 
     method token-tree:sym<a>($/) {
-        make $<delimited-token-trees>.made
+        make TokenTree.new(
+            tree => $<delimited-token-trees>.made
+        )
     }
 
     method token-tree:sym<b>($/) {
-        make $<unpaired-token>.made
+        make TokenTree.new(
+            leaf => $<unpaired-token>.made
+        )
     }
 
     method delimited-token-trees:sym<a>($/) {
-        make $<parens-delimited-token-trees>.made
+        make ParensDelimitedTokenTrees.new(
+            trees => $<parens-delimited-token-trees>.made
+        )
     }
 
     method delimited-token-trees:sym<b>($/) {
-        make $<braces-delimited-token-trees>.made
+        make BracesDelimitedTokenTrees.new(
+            trees => $<braces-delimited-token-trees>.made
+        )
     }
 
     method delimited-token-trees:sym<c>($/) {
-        make $<brackets-delimited-token-trees>.made
+        make BracketsDelimitedTokenTrees.new(
+            trees => $<brackets-delimited-token-trees>.made
+        )
     }
 
     method parens-delimited-token-trees($/) {

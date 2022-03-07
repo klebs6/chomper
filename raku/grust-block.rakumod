@@ -8,12 +8,24 @@ our class ExprBlock {
     has $.text;
 
     method gist {
-        qq:to/END/.trim.chomp
-        {$.comment ?? $.comment.gist !! ""}
-        \{
-        {$.maybe-inner-attrs ?? $.maybe-inner-attrs.gist ~ "\n" !! ""}{$.maybe-stmts>>.gist>>.indent(4).join("\n")}
-        \}
-        END
+
+        my $inner-attrs = $.maybe-inner-attrs ?? $.maybe-inner-attrs.gist ~ "\n" !! "";
+        my $stmts       = $.maybe-stmts>>.gist>>.indent(4).join("\n");
+        my $comment     = $.comment ?? $.comment.gist ~ "\n" !! "";
+        my $inner       = "$inner-attrs$stmts";
+
+        if $inner.split(";").elems gt 1 or $inner.chars gt 20 {
+            qq:to/END/.trim.chomp
+            $comment\{
+                $inner
+            \}
+            END
+
+        } else {
+            qq:to/END/.trim.chomp
+            $comment\{ {$inner.trim.chomp} \}
+            END
+        }
     }
 }
 

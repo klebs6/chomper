@@ -13,20 +13,10 @@ our class Stmt {
     }
 
     method gist {
-        my $res = do if $.comment {
-            qq:to/END/.trim.chomp
-            {$.comment.gist}
-            {$.value.gist}
-            END
-        } else {
-            "{$.value.gist}"
-        };
 
-        if $.semi {
-            $res ~ ";"
-        } else {
-            $res 
-        }
+        qq:to/END/.chomp;
+        {$.comment ?? $.comment.gist ~ "\n" !! ""}{$.value.gist}{$.semi ?? ";" !! ""}
+        END
     }
 }
 
@@ -59,15 +49,10 @@ our class StmtItem {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        qq:to/END/.chomp.trim
+        {$.outer-attrs ?? $.outer-attrs.gist ~ "\n" !! ""}{$.public ?? "pub " !! ""}{$.stmt-item.gist}{$.semi ?? ";" !! ""}
+        END
     }
 }
 

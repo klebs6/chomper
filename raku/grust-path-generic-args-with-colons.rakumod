@@ -7,19 +7,8 @@ our class PathGenericArgsWithColons {
     has @.tail;
     has $.text;
 
-    submethod TWEAK {
-        self.gist;
-    }
-
     method gist {
-        if @.tail.elems gt 0 {
-            say "need to write gist!";
-            say $.text;
-            ddt self;
-            exit;
-        } else {
-            $.base.gist
-        }
+        [$.base.gist, |@.tail>>.gist].join("::")
     }
 }
 

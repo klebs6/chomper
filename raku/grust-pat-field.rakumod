@@ -1,7 +1,5 @@
 use Data::Dump::Tree;
 
-
-
 our class PatField {
     has $.ident;
     has $.pat;

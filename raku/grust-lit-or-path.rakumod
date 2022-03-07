@@ -16,7 +16,7 @@ our class PatLitPath {
     has $.text;
 
     method gist {
-        $.path-expr.gist
+        $.path-expr>>.gist.join("")
     }
 }
 

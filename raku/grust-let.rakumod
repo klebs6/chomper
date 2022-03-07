@@ -12,7 +12,12 @@ our class DeclLocal {
         my $maybe-ty-ascription = $.maybe-ty-ascription.gist;
         my $maybe-init-expr     = $.maybe-init-expr.gist;
 
-        "let $pat$maybe-ty-ascription $maybe-init-expr"
+        if $.maybe-ty-ascription {
+            "let $pat$maybe-ty-ascription $maybe-init-expr"
+        } else {
+            "let $pat$maybe-init-expr"
+
+        }
     }
 }
 

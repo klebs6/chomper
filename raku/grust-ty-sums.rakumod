@@ -23,10 +23,6 @@ our class TySum {
 
     has $.text;
 
-    submethod TWEAK {
-        self.gist;
-    }
-
     method gist {
         @.ty-sum-elts>>.gist.join(" + ").trim
     }

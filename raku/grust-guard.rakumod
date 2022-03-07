@@ -5,10 +5,6 @@ our class Guard {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
         say "need to write gist!";
         say $.text;
@@ -27,9 +23,13 @@ our role Guard::Rules {
 our role Guard::Actions {
 
     method maybe-guard($/) {
-        make Guard.new(
-            expr-nostruct => $<expr-nostruct>.made,
-            text          => ~$/,
-        )
+
+        if $/<expr-nostruct>:exists {
+
+            make Guard.new(
+                expr-nostruct => $<expr-nostruct>.made,
+                text          => ~$/,
+            )
+        }
     }
 }

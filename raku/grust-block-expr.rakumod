@@ -128,16 +128,16 @@ our role BlockExpr::Actions {
 
     method block-expr:sym<unsafe-block>($/) {
         make UnsafeBlock.new(
-            block =>  $<block>.made,
+            block => $<block>.made,
             text  => ~$/,
         )
     }
 
     method block-expr:sym<macro>($/) {
         make Macro.new(
-            path-expr                    =>  $<path-expr>.made,
-            maybe-ident                  =>  $<maybe-ident>.made,
-            braces-delimited-token-trees =>  $<braces-delimited-token-trees>.made,
+            path-expr                    => $<path-expr>.made,
+            maybe-ident                  => $<maybe-ident>.made,
+            braces-delimited-token-trees => $<braces-delimited-token-trees>.made,
             text                         => ~$/,
         )
     }
@@ -163,21 +163,21 @@ our role BlockExpr::Actions {
 
     method block-expr-dot-tail:sym<brack>($/) {
         make ExprIndex.new(
-            path-generic-args-with-colons =>  $<path-generic-args-with-colons>.made,
-            maybe-expr                    =>  $<maybe-expr>.made,
+            path-generic-args-with-colons => $<path-generic-args-with-colons>.made,
+            maybe-expr                    => $<maybe-expr>.made,
             text                          => ~$/,
         )
     }
 
     method block-expr-dot-tail:sym<parens>($/) {
         make ExprCall.new(
-            path-generic-args-with-colons =>  $<path-generic-args-with-colons>.made,
-            maybe-exprs                   =>  $<maybe-exprs>.made,
+            path-generic-args-with-colons => $<path-generic-args-with-colons>.made,
+            maybe-exprs                   => $<maybe-exprs>.made,
             text                          => ~$/,
         )
     }
 
     method block-expr-dot-tail:sym<lit-int>($/) {
-        make $<lit-integer>.made
+        make $<lit-int>.made
     }
 }

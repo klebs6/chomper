@@ -1,28 +1,39 @@
 use Data::Dump::Tree;
 
 our class ArmBlock {
-    has $.block-expr;
-    has $.block;
+
+    has $.maybe-outer-attrs;
     has $.pats-or;
     has $.maybe-guard;
-    has $.maybe-outer-attrs;
+    has $.block;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        qq:to/END/.chomp.trim
+        {$.maybe-outer-attrs ?? $.maybe-outer-attrs.gist !! ""}
+        {$.pats-or>>.gist.join("")} {$.maybe-guard ?? $.maybe-guard.gist !! ""} => {$.block.gist}
+        END
     }
 }
 
 our class ArmNonblock {
     has $.nonblock-expr;
+    has $.maybe-outer-attrs;
+    has $.maybe-guard;
+    has $.pats-or;
+
+    has $.text;
+
+    method gist {
+        qq:to/END/.chomp.trim
+        {$.maybe-outer-attrs ?? $.maybe-outer-attrs.gist !! ""}
+        {$.pats-or>>.gist.join("")} {$.maybe-guard ?? $.maybe-guard.gist !! ""} => {$.nonblock-expr.gist}
+        END
+    }
+}
+
+our class ArmNonblockDot {
     has $.maybe-outer-attrs;
     has $.block-expr-dot;
     has $.maybe-guard;
@@ -30,15 +41,11 @@ our class ArmNonblock {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        qq:to/END/.chomp.trim
+        {$.maybe-outer-attrs ?? $.maybe-outer-attrs.gist !! ""}
+        {$.pats-or.gist} {$.maybe-guard ?? $.maybe-guard.gist !! ""} => {$.block-expr-dot.gist}
+        END
     }
 }
 
@@ -48,15 +55,17 @@ our class MatchClause {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.comment {
+            qq:to/END/.chomp.trim
+            {$.comment.gist}
+            {$.clause.gist}
+            END
+        } else {
+            qq:to/END/.chomp.trim
+            {$.clause.gist}
+            END
+        }
     }
 }
 
@@ -66,16 +75,21 @@ our class ExprMatch {
     has $.expr-nostruct;
 
     has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
+    has $.semi = False;
 
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my @clauses = [|$.match-clauses>>.gist];
+
+        if $.nonblock-match-clause {
+            @clauses.push: $.nonblock-match-clause.gist
+        }
+
+        qq:to/END/
+        match {$.expr-nostruct.gist} \{
+        @clauses.join(",\n").indent(4)
+        \}
+        END
     }
 }
 
@@ -205,7 +219,7 @@ our role ExprMatch::Actions {
     }
 
     method nonblock-match-clause:sym<b>($/) {
-        make ArmNonblock.new(
+        make ArmNonblockDot.new(
             maybe-outer-attrs =>  $<maybe-outer-attrs>.made,
             pats-or           =>  $<pats-or>.made,
             maybe-guard       =>  $<maybe-guard>.made,
@@ -226,10 +240,10 @@ our role ExprMatch::Actions {
 
     method block-match-clause:sym<b>($/) {
         make ArmBlock.new(
-            maybe-outer-attrs =>  $<maybe-outer-attrs>.made,
-            pats-or           =>  $<pats-or>.made,
-            maybe-guard       =>  $<maybe-guard>.made,
-            block-expr        =>  $<block-expr>.made,
+            maybe-outer-attrs => $<maybe-outer-attrs>.made,
+            pats-or           => $<pats-or>.made,
+            maybe-guard       => $<maybe-guard>.made,
+            block             => $<block-expr>.made,
             text              => ~$/,
         )
     }

@@ -6,15 +6,12 @@ our class TySumsAndBindings {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.bindings {
+            $.ty-sums.gist ~ ", " ~ $.bindings.gist
+        } else {
+            $.ty-sums>>.gist.join("")
+        }
     }
 }
 

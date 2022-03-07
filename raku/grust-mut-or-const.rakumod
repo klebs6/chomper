@@ -4,15 +4,8 @@ our class MutMutable {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "mut"
     }
 }
 
@@ -20,15 +13,8 @@ our class MutImmutable {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        ""
     }
 }
 
