@@ -1,4 +1,3 @@
-
 our role AssignmentExpression::Rules {
 
     rule assignment-expression {

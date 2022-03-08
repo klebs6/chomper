@@ -1,4 +1,3 @@
-
 our role ArrayExpression::Rules {
 
     rule array-expression {

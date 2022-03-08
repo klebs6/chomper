@@ -1,4 +1,3 @@
-
 our role Attributes::Rules {
 
     token tok-shebang {
