@@ -1,19 +1,55 @@
+our role Enumeration {
 
-Enumeration :
-   enum IDENTIFIER  GenericParams? WhereClause? { EnumItems? }
+    rule enumertion {
+        <kw-enum> 
+        <identifier> 
+        <generic-params>? 
+        <where-clause>? 
+        <tok-lbrace> 
+        <enum-items>? 
+        <tok-rbrace>
+    }
 
-EnumItems :
-   EnumItem ( , EnumItem )* ,?
+    rule enum-items {
+        <enum-item>+ %% <tok-comma>
+    }
 
-EnumItem :
-   OuterAttribute* Visibility?
-   IDENTIFIER ( EnumItemTuple | EnumItemStruct | EnumItemDiscriminant )?
+    rule enum-item {
+        <outer-attribute>*
+        <visibility>?
+        <identifier>
+        <enum-item-variant>?
+    }
 
-EnumItemTuple :
-   ( TupleFields? )
+    #----------------
+    proto rule enum-item-variant { * }
 
-EnumItemStruct :
-   { StructFields? }
+    rule enum-item-variant:sym<tuple> {
+        <enum-item-tuple>
+    }
 
-EnumItemDiscriminant :
-   = Expression
+    rule enum-item-variant:sym<struct> {
+        <enum-item-struct>
+    }
+
+    rule enum-item-variant:sym<discriminant> {
+        <enum-item-discriminant>
+    }
+
+    #----------------
+    rule enum-item-tuple {
+        <tok-lparen>
+        <tuple-fields>?
+        <tok-rparen>
+    }
+
+    rule enum-item-struct {
+        <tok-lbrace>
+        <struct-fields>?
+        <tok-rbrace>
+    }
+
+    rule enum-item-discriminant {
+        <tok-eq> <expression>
+    }
+}
