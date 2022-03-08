@@ -1,0 +1,4 @@
+
+PathExpression :
+      PathInExpression
+   | QualifiedPathInExpression
