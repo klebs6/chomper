@@ -1,4 +1,6 @@
+our role ErrorPropagationExpression::Rules {
 
-ErrorPropagationExpression :
-   Expression ?
-
+    rule error-propagation-expression {
+        <expression> <tok-qmark>
+    }
+}
