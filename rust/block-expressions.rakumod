@@ -1,18 +1,35 @@
+our role BlockExpression::Rules {
 
-BlockExpression :
-   {
-      InnerAttribute*
-      Statements?
-   }
+    rule block-expression {
+        <tok-lbrace>
+        <inner-attribute>*
+        <statements>?
+        <tok-rbrace>
+    }
 
-Statements :
-      Statement+
-   | Statement+ ExpressionWithoutBlock
-   | ExpressionWithoutBlock
+    proto rule statements { * }
 
-AsyncBlockExpression :
-   async move? BlockExpression
+    rule statements:sym<basic> {
+        <statement>+
+    }
 
+    rule statements:sym<basic-with-final-expr> {
+        <statement>+
+        <expression-without-block>
+    }
 
-UnsafeBlockExpression :
-   unsafe BlockExpression
+    rule statements:sym<just-final-expr> {
+        <expression-without-block>
+    }
+
+    rule async-block-expression {
+        <kw-async>
+        <kw-move>?
+        <block-expression>
+    }
+
+    rule unsafe-block-expression {
+        <kw-unsafe>
+        <block-expression>
+    }
+}

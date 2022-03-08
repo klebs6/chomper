@@ -1,13 +1,39 @@
 
-InnerAttribute :
-   # ! [ Attr ]
+our role Attributes::Rules {
 
-OuterAttribute :
-   # [ Attr ]
+    token tok-shebang {
+        <tok-pound>
+        <tok-bang>
+    }
 
-Attr :
-   SimplePath AttrInput?
+    rule inner-attribute {
+        <tok-shebang>
+        <tok-lbrack>
+        <attr>
+        <tok-rbrack>
+    }
 
-AttrInput :
-      DelimTokenTree
-   | = Expression
+    rule outer-attribute {
+        <tok-pound>
+        <tok-lbrack>
+        <attr>
+        <tok-rbrack>
+    }
+
+    rule attr {
+        <simple-path>
+        <attr-input>?
+    }
+
+    #-------------------
+    proto rule attr-input { * }
+
+    rule attr-input:sym<token-tree> {
+        <delim-token-tree>
+    }
+
+    rule attr-input:sym<eq-expr> {
+        <tok-eq>
+        <expression>
+    }
+}
