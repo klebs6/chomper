@@ -1,82 +1,30 @@
-Crate :
-   UTF8BOM?
-   SHEBANG?
-   InnerAttribute*
-   Item*
+our role Crate::Rules {
 
-UTF8BOM : \uFEFF
-SHEBANG : #! ~\n+†
+    rule crate {
+        <utf8-bom>?
+        <shebang>?
+        <inner-attribute>*
+        <item>*
+    }
 
-ConfigurationPredicate :
-      ConfigurationOption
-   | ConfigurationAll
-   | ConfigurationAny
-   | ConfigurationNot
+    token utf8-bom {
+        \uFEFF
+    }
 
-ConfigurationOption :
-   IDENTIFIER (= (STRING_LITERAL | RAW_STRING_LITERAL))?
+    token shebang {
+        <tok-shebang> \N+
+    }
 
-ConfigurationAll
-   all ( ConfigurationPredicateList? )
+    rule extern-crate {
+        <kw-extern>
+        <kw-crate>
+        <crate-ref>
+        <as-clause>?
+        <tok-semi>
+    }
 
-ConfigurationAny
-   any ( ConfigurationPredicateList? )
+    proto rule crate-ref { * }
 
-ConfigurationNot
-   not ( ConfigurationPredicate )
-
-ConfigurationPredicateList
-   ConfigurationPredicate (, ConfigurationPredicate)* ,?
-
-
-CfgAttrAttribute :
-   cfg ( ConfigurationPredicate )
-
-CfgAttrAttribute :
-   cfg_attr ( ConfigurationPredicate , CfgAttrs? )
-
-CfgAttrs :
-   Attr (, Attr)* ,?
-
-Item:
-   OuterAttribute*
-      VisItem
-   | MacroItem
-
-VisItem:
-   Visibility?
-   (
-         Module
-      | ExternCrate
-      | UseDeclaration
-      | Function
-      | TypeAlias
-      | Struct
-      | Enumeration
-      | Union
-      | ConstantItem
-      | StaticItem
-      | Trait
-      | Implementation
-      | ExternBlock
-   )
-
-MacroItem:
-      MacroInvocationSemi
-   | MacroRulesDefinition
-
-Module :
-      unsafe? mod IDENTIFIER ;
-   | unsafe? mod IDENTIFIER {
-        InnerAttribute*
-        Item*
-      }
-
-ExternCrate :
-   extern crate CrateRef AsClause? ;
-
-CrateRef :
-   IDENTIFIER | self
-
-AsClause :
-   as ( IDENTIFIER | _ )
+    rule crate-ref:sym<id>   { <identifier> }
+    rule crate-ref:sym<self> { <kw-self> }
+}
