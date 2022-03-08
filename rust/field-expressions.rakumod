@@ -1,3 +1,6 @@
+our role FieldExpression::Rules {
 
-FieldExpression :
-   Expression . IDENTIFIER
+    rule field-expression {
+        <expression> <tok-dot> <identifier>
+    }
+}

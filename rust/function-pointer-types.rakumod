@@ -1,24 +1,55 @@
+our role BareFunctionType::Rules {
 
-BareFunctionType :
-   ForLifetimes? FunctionTypeQualifiers fn
-      ( FunctionParametersMaybeNamedVariadic? ) BareFunctionReturnType?
+    rule bare-function-type {
+        <for-lifetimes>?
+        <function-type-qualifiers>
+        <kw-fn>
+        <tok-lparen>
+        <function-parameters-maybe-named-variadic>?
+        <tok-rparen>
+        <bare-function-return-type>?
+    }
 
-FunctionTypeQualifiers:
-   unsafe? (extern Abi?)?
+    rule function-type-qualifiers {
+        <kw-unsafe>?
+        [
+            <kw-extern>
+            <abi>?
+        ]?
+    }
 
-BareFunctionReturnType:
-   -> TypeNoBounds
+    rule bare-function-return-type {
+        <tok-rarrow>
+        <type-no-bounds>
+    }
 
-FunctionParametersMaybeNamedVariadic :
-   MaybeNamedFunctionParameters | MaybeNamedFunctionParametersVariadic
+    #-------------------
+    proto rule function-parameters-maybe-named-variadic { * }
 
-MaybeNamedFunctionParameters :
-   MaybeNamedParam ( , MaybeNamedParam )* ,?
+    rule function-parameters-maybe-named-variadic:sym<basic> {  
+        <maybe-named-function-parameters>
+    }
 
-MaybeNamedParam :
-   OuterAttribute* ( ( IDENTIFIER | _ ) : )? Type
+    rule function-parameters-maybe-named-variadic:sym<variadic> {  
+        <maybe-named-function-parameters-variadic>
+    }
 
-MaybeNamedFunctionParametersVariadic :
-   ( MaybeNamedParam , )* MaybeNamedParam , OuterAttribute* ...
+    rule maybe-named-function-parameters {
+        <maybe-named-param>+ %% <tok-comma>
+    }
 
+    rule maybe-named-param {
+        <outer-attribute>*
+        [
+            <identifier-or-underscore>
+            <tok-colon>
+        ]?
+        <type>
+    }
 
+    rule maybe-named-function-parameters-variadic {
+        [<maybe-named-param>+ % <tok-comma>]
+        <outer-attribute>*
+        <tok-dotdotdot>
+    }
+}
