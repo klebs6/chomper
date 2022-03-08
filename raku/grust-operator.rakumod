@@ -8,7 +8,8 @@ our role Rust::Operator {
     #-------------------------------
 
     token tok-and              { '&'      } 
-    token tok-andand           { \&\&     } 
+    token tok-qmark            { '?'      } 
+    token tok-andand           { '&&'     } 
     token tok-andeq            { '&='     } 
     token tok-at               { '@'      } 
     token tok-caret            { '^'      } 

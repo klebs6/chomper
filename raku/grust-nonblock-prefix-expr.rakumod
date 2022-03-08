@@ -4,16 +4,6 @@ use grust-model-expr;
 
 our role NonblockPrefixExpr::Rules {
 
-    proto rule nonblock-prefix-expr-nostruct { * }
-
-    rule nonblock-prefix-expr-nostruct:sym<a> { '-' <expr-nostruct> }
-    rule nonblock-prefix-expr-nostruct:sym<b> { '!' <expr-nostruct> }
-    rule nonblock-prefix-expr-nostruct:sym<c> { '*' <expr-nostruct> }
-    rule nonblock-prefix-expr-nostruct:sym<d> { '&' <maybe-mut> <expr-nostruct> }
-    rule nonblock-prefix-expr-nostruct:sym<e> { <tok-andand> <maybe-mut> <expr-nostruct> }
-    rule nonblock-prefix-expr-nostruct:sym<f> { <lambda-expr-nostruct> }
-    rule nonblock-prefix-expr-nostruct:sym<g> { <kw-move> <lambda-expr-nostruct> }
-
     proto rule nonblock-prefix-expr { * }
 
     rule nonblock-prefix-expr:sym<a> { '-' <expr> }

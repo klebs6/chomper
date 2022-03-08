@@ -11,7 +11,7 @@ sub MAIN(:$stdin = Nil) {
 
     $in = $in.subst(/^\s+/,"");
 
-    my $rule = "maybe-stmts";
+    my $rule = "expr-nostruct-dot-path";
 
     my $actions = Rust::Actions.new;
 

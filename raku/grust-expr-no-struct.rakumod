@@ -3,486 +3,133 @@ use Data::Dump::Tree;
 use grust-model;
 use grust-model-expr;
 
-#-------------------------------------
-
 our role ExprNoStruct::Rules {
 
-    regex expr-nostruct { 
-        <expr-nostruct-base> 
-        <expr-nostruct-tail>* 
+    rule expr-nostruct { <expr-nostruct-assign> }
+
+    #--------------------------------
+    rule expr-nostruct-assign        {  <expr-nostruct-assign-shleq>  ["=" <expr-nostruct-assign-shleq>]* }
+    rule expr-nostruct-assign-shleq  {  <expr-nostruct-assign-shreq>  [<tok-shleq>        <expr-nostruct-assign-shreq>]* }
+    rule expr-nostruct-assign-shreq  {  <expr-nostruct-minuseq>       [<tok-shreq>        <expr-nostruct-minuseq>]* }
+    rule expr-nostruct-minuseq       {  <expr-nostruct-andeq>         [<tok-minuseq>      <expr-nostruct-andeq>]* }
+    rule expr-nostruct-andeq         {  <expr-nostruct-oreq>          [<tok-andeq>        <expr-nostruct-oreq>]* }
+    rule expr-nostruct-oreq          {  <expr-nostruct-pluseq>        [<tok-oreq>         <expr-nostruct-pluseq>]* }
+    rule expr-nostruct-pluseq        {  <expr-nostruct-stareq>        [<tok-pluseq>       <expr-nostruct-stareq>]* }
+    rule expr-nostruct-stareq        {  <expr-nostruct-slasheq>       [<tok-stareq>       <expr-nostruct-slasheq>]* }
+    rule expr-nostruct-slasheq       {  <expr-nostruct-careteq>       [<tok-slasheq>      <expr-nostruct-careteq>]* }
+    rule expr-nostruct-careteq       {  <expr-nostruct-percenteq>     [<tok-careteq>      <expr-nostruct-percenteq>]* }
+    rule expr-nostruct-percenteq     {  <expr-nostruct-oror>          [<tok-percenteq>    <expr-nostruct-oror>]* }
+    rule expr-nostruct-oror          {  <expr-nostruct-andand>        [<tok-oror>         <expr-nostruct-andand>]* }
+    rule expr-nostruct-andand        {  <expr-nostruct-eqeq>          [<tok-andand>       <expr-nostruct-eqeq>]* }
+    rule expr-nostruct-eqeq          {  <expr-nostruct-ne>            [<tok-eqeq>         <expr-nostruct-ne>]* }
+    rule expr-nostruct-ne            {  <expr-nostruct-lt>            [<tok-ne>           <expr-nostruct-lt>]* }
+    rule expr-nostruct-lt            {  <expr-nostruct-gt>            ['<'                <expr-nostruct-gt>]* }
+    rule expr-nostruct-gt            {  <expr-nostruct-le>            ['>'                <expr-nostruct-le>]* }
+    rule expr-nostruct-le            {  <expr-nostruct-ge>            [<tok-le>           <expr-nostruct-ge>]* }
+    rule expr-nostruct-ge            {  <expr-nostruct-pipe>          [<tok-ge>           <expr-nostruct-pipe>]* }
+    rule expr-nostruct-pipe          {  <expr-nostruct-caret>         ['|'  <!before '|'> <expr-nostruct-caret>]* }
+    rule expr-nostruct-caret         {  <expr-nostruct-and>           ['^'                <expr-nostruct-and>]* }
+    rule expr-nostruct-and           {  <expr-nostruct-shl>           ['&' <!before '&'>  <expr-nostruct-shl>]* }
+    rule expr-nostruct-shl           {  <expr-nostruct-shr>           [<tok-shl>          <expr-nostruct-shr>]* }
+    rule expr-nostruct-shr           {  <expr-nostruct-add>           [<tok-shr>          <expr-nostruct-add>]* }
+    rule expr-nostruct-add           {  <expr-nostruct-sub>           ['+'                <expr-nostruct-sub>]* }
+    rule expr-nostruct-sub           {  <expr-nostruct-mul>           ['-'                <expr-nostruct-mul>]* }
+    rule expr-nostruct-mul           {  <expr-nostruct-div>           ['*'                <expr-nostruct-div>]* }
+    rule expr-nostruct-div           {  <expr-nostruct-mod>           ['/'                <expr-nostruct-mod>]* }
+    rule expr-nostruct-mod           {  <expr-nostruct-tight>         ['%'                <expr-nostruct-tight>]* }
+
+    #-----------------------
+    proto rule expr-nostruct-range         { * }
+    rule expr-nostruct-range:sym<a>        { <tok-dotdot> }
+    rule expr-nostruct-range:sym<b>        { <tok-dotdot> <expr-nostruct-tighter> }
+    rule expr-nostruct-range:sym<c>        { <expr-nostruct-tighter> <tok-dotdot> }
+    rule expr-nostruct-range:sym<d>        { <expr-nostruct-tighter> <tok-dotdot> <expr-nostruct-tighter> }
+
+    #-----------------------
+    proto rule expr-nostruct-tight         { * }
+    #rule expr-nostruct-tight:sym<range>   { <expr-nostruct-range> }
+    rule expr-nostruct-tight:sym<tighter>  { <expr-nostruct-tighter> }
+
+    rule expr-nostruct-tighter             { <expr-nostruct-even-tighter> [<kw-as> <ty>]* }
+    rule expr-nostruct-even-tighter        { <expr-nostruct-tightest> [':' <ty>]* }
+
+    proto rule expr-nostruct-tightest { * }
+
+    rule expr-nostruct-tightest:sym<bc> { <kw-box> <expr> }
+    rule expr-nostruct-tightest:sym<bd> { <expr-qualified-path> }
+    rule expr-nostruct-tightest:sym<be> { <block-expr> }
+    rule expr-nostruct-tightest:sym<bf> { <block> }
+    rule expr-nostruct-tightest:sym<a>  { <expr-nostruct-unary-minus> }
+
+    #--------------------------
+
+    rule expr-nostruct-unary-minus {
+      <tok-minus>? 
+      <expr-nostruct-unary-not> 
     }
 
-    #-------------------------
-    proto rule expr-nostruct-base { * }
-
-    rule expr-nostruct-base:sym<lit>  { <lit> }
-
-    rule expr-nostruct-base:sym<self>                          { <kw-self> }
-    rule expr-nostruct-base:sym<macro-expr>                    { <macro-expr> }
-    rule expr-nostruct-base:sym<vec-expr>                      { '[' <vec-expr> ']' }
-    rule expr-nostruct-base:sym<paren-expr>                    { '(' <maybe-exprs> ')' }
-    rule expr-nostruct-base:sym<continue-ident>                { <kw-continue> <ident> }
-    rule expr-nostruct-base:sym<continue>                      { <kw-continue> }
-    rule expr-nostruct-base:sym<return-expr>                   { <kw-return> <expr> }
-    rule expr-nostruct-base:sym<return>                        { <kw-return> }
-    rule expr-nostruct-base:sym<break-ident>                   { <kw-break> <ident> }
-    rule expr-nostruct-base:sym<break>                         { <kw-break> }
-    rule expr-nostruct-base:sym<yield-expr>                    { <kw-yield> <expr> }
-    rule expr-nostruct-base:sym<yield>                         { <kw-yield> }
-    rule expr-nostruct-base:sym<dotdot-expr-nostruct>          { <tok-dotdot> <expr-nostruct> }
-    rule expr-nostruct-base:sym<dotdot>                        { <tok-dotdot> }
-    rule expr-nostruct-base:sym<box-expr>                      { <kw-box> <expr> }
-    rule expr-nostruct-base:sym<expr-qualified-path>           { <expr-qualified-path> }
-    rule expr-nostruct-base:sym<block-expr>                    { <block-expr> }
-    rule expr-nostruct-base:sym<block>                         { <block> }
-    rule expr-nostruct-base:sym<nonblock-prefix-expr-nostruct> { <nonblock-prefix-expr-nostruct> }
-    rule expr-nostruct-base:sym<path-expr>                     { <path-expr> }
-
-    #-------------------------
-    proto rule expr-nostruct-tail { * }
-
-    rule expr-nostruct-tail:sym<qmark>             { '?' }
-    rule expr-nostruct-tail:sym<dot-path>          { '.' <path-generic-args-with-colons> }
-    rule expr-nostruct-tail:sym<dot-lit-int>       { '.' <lit-int> }
-    rule expr-nostruct-tail:sym<brack-expr>        { '[' <maybe-expr> ']' }
-    rule expr-nostruct-tail:sym<paren-expr>        { '(' <maybe-exprs> ')' }
-    rule expr-nostruct-tail:sym<eq-expr>           { '=' <expr-nostruct> }
-    rule expr-nostruct-tail:sym<shleq-expr>        { <tok-shleq>       <expr-nostruct> }
-    rule expr-nostruct-tail:sym<shreq-expr>        { <tok-shreq>       <expr-nostruct> }
-    rule expr-nostruct-tail:sym<minuseq-expr>      { <tok-minuseq>     <expr-nostruct> }
-    rule expr-nostruct-tail:sym<andeq-expr>        { <tok-andeq>       <expr-nostruct> }
-    rule expr-nostruct-tail:sym<oreq-expr>         { <tok-oreq>        <expr-nostruct> }
-    rule expr-nostruct-tail:sym<pluseq-expr>       { <tok-pluseq>      <expr-nostruct> }
-    rule expr-nostruct-tail:sym<stareq-expr>       { <tok-stareq>      <expr-nostruct> }
-    rule expr-nostruct-tail:sym<slasheq-expr>      { <tok-slasheq>     <expr-nostruct> }
-    rule expr-nostruct-tail:sym<careteq-expr>      { <tok-careteq>     <expr-nostruct> }
-    rule expr-nostruct-tail:sym<percenteq-expr>    { <tok-percenteq>   <expr-nostruct> }
-    rule expr-nostruct-tail:sym<oror-expr>         { <tok-oror>        <expr-nostruct> }
-    rule expr-nostruct-tail:sym<andand-expr>       { <tok-andand>      <expr-nostruct> }
-    rule expr-nostruct-tail:sym<eqeq-expr>         { <tok-eqeq>        <expr-nostruct> }
-    rule expr-nostruct-tail:sym<ne-expr>           { <tok-ne>          <expr-nostruct> }
-    rule expr-nostruct-tail:sym<lt-expr>           { '<'               <expr-nostruct> }
-    rule expr-nostruct-tail:sym<gt-expr>           { '>'               <expr-nostruct> }
-    rule expr-nostruct-tail:sym<le-expr>           { <tok-le>          <expr-nostruct> }
-    rule expr-nostruct-tail:sym<ge-expr>           { <tok-ge>          <expr-nostruct> }
-    rule expr-nostruct-tail:sym<pipe-expr>         { '|'               <expr-nostruct> }
-    rule expr-nostruct-tail:sym<caret-expr>        { '^'               <expr-nostruct> }
-    rule expr-nostruct-tail:sym<amp-expr>          { '&'               <expr-nostruct> }
-    rule expr-nostruct-tail:sym<shl-expr>          { <tok-shl>         <expr-nostruct> }
-    rule expr-nostruct-tail:sym<shr-expr>          { <tok-shr>         <expr-nostruct> }
-    rule expr-nostruct-tail:sym<plus-expr>         { '+'               <expr-nostruct> }
-    rule expr-nostruct-tail:sym<minus-expr>        { '-'               <expr-nostruct> }
-    rule expr-nostruct-tail:sym<star-expr>         { '*'               <expr-nostruct> }
-    rule expr-nostruct-tail:sym<slash-expr>        { '/'               <expr-nostruct> }
-    rule expr-nostruct-tail:sym<mod-expr>          { '%'               <expr-nostruct> }
-    rule expr-nostruct-tail:sym<dotdot-nostruct>   { <tok-dotdot>      <expr-nostruct> }
-
-    rule expr-nostruct-tail:sym<dotdot> { 
-        <tok-dotdot>      
-        #{ self.set-prec(RANGE) } 
+    rule expr-nostruct-unary-not {
+        <tok-bang>? 
+        <expr-nostruct-unary-star> 
     }
 
-    rule expr-nostruct-tail:sym<as-try>    { <kw-as> <ty> }
-    rule expr-nostruct-tail:sym<colon-try> { ':' <ty> }
+    rule expr-nostruct-unary-star {
+        <tok-star>? 
+        <expr-nostruct-unary-ampersand> 
+    }
+
+    rule unary-ampersand-maybe-mut {
+        '&' <maybe-mut> 
+    }
+
+    rule expr-nostruct-unary-ampersand {
+        <unary-ampersand-maybe-mut>? 
+        <expr-nostruct-unary-refref>
+    }
+
+    rule unary-refref-maybe-mut {
+        <tok-andand> 
+        <maybe-mut> 
+    }
+
+    rule expr-nostruct-unary-refref { 
+        <unary-refref-maybe-mut>?
+        <expr-nostruct-most-tightest-of-all> 
+    }
+
+    #----------------------
+    proto rule expr-nostruct-most-tightest-of-all { * }
+
+    rule expr-nostruct-most-tightest-of-all:sym<f>  { <lambda-expr-nostruct> }
+    rule expr-nostruct-most-tightest-of-all:sym<g>  { <kw-move> <lambda-expr-nostruct> }
+    rule expr-nostruct-most-tightest-of-all:sym<c>  { <expr-nostruct-base> } #{self.set-prec(IDENT)} 
+
+    #--------------------------------
+    rule expr-nostruct-base { <expr-nostruct-root> <tok-qmark>* }
+
+    #--------------------------------
+    proto rule expr-nostruct-root { * }
+    rule expr-nostruct-root:sym<a> { <lit> }
+    rule expr-nostruct-root:sym<b> { <path-expr> } #{self.set-prec(IDENT)} 
+    rule expr-nostruct-root:sym<c> { <kw-self> }
+    rule expr-nostruct-root:sym<d> { <macro-expr> }
+    rule expr-nostruct-root:sym<f> { <expr-nostruct-dot-path> }
+
+    #--------------------------------
+    rule expr-nostruct-dot-path    { <expr-nostruct-dot-lit-int> ["." <path-generic-args-with-colons>]* }
+    rule expr-nostruct-dot-lit-int { <expr-nostruct-brack-index> ["." <lit-int>]* }
+    rule expr-nostruct-brack-index { <expr-nostruct-call>        ['[' <maybe-expr> ']']* }
+    rule expr-nostruct-call        { <expr-nostruct-basic>       ['(' <maybe-exprs> ')']* }
+
+    #--------------------------------
+    proto rule expr-nostruct-basic { * }
+
+    rule expr-nostruct-basic:sym<j> { '[' <vec-expr> ']' }
+    rule expr-nostruct-basic:sym<k> { '(' <maybe-exprs> ')' }
+    rule expr-nostruct-basic:sym<m> { <kw-continue> <ident>? }
+    rule expr-nostruct-basic:sym<o> { <kw-return>   <expr>? }
+    rule expr-nostruct-basic:sym<q> { <kw-break>    <ident>? }
+    rule expr-nostruct-basic:sym<s> { <kw-yield>    <expr>? }
 }
 
-our role ExprNoStruct::Actions {
-
-    method expr-nostruct($/) {
-        make ExprNoStruct.new(
-            base => $<expr-nostruct-base>.made,
-            tail => $<expr-nostruct-tail>>>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<lit>($/) {
-        make ExprLit.new(
-            lit  =>  $<lit>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<path-expr>($/) {
-        make ExprPath.new(
-            path-expr =>  $<path-expr>.made,
-            text      => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<self>($/) {
-        make ExprPathSelf.new(
-            text      => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<macro-expr>($/) {
-        make $<macro-expr>.made
-    }
-
-    method expr-nostruct-tail:sym<qmark>($/) {
-        make ExprTry.new(
-            text       => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<dot-path>($/) {
-        make ExprField.new(
-            path-generic-args-with-colons => $<path-generic-args-with-colons>.made,
-            text                          => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<dot-lit-int>($/) {
-        make ExprTupleIndex.new(
-            lit-int => $<lit-int>.made,
-            text    => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<brack-expr>($/) {
-        make ExprIndex.new(
-            maybe-expr => $<maybe-expr>.made,
-            text       => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<paren-expr>($/) {
-        make ExprCall.new(
-            maybe-exprs => $<maybe-exprs>.made,
-            text        => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<vec-expr>($/) {
-        make ExprVec.new(
-            vec-expr => $<vec-expr>.made,
-            text     => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<paren-expr>($/) {
-        make ExprParen.new(
-            maybe-exprs => $<maybe-exprs>.made,
-            text        => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<continue>($/) {
-        make ExprAgain.new(
-            text        => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<continue-ident>($/) {
-        make ExprAgain.new(
-            ident =>  $<ident>.made,
-            text        => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<return>($/) {
-        make ExprRet.new(
-            text        => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<return-expr>($/) {
-        make ExprRet.new(
-            expr =>  $<expr>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<break>($/) {
-        make ExprBreak.new(
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<break-ident>($/) {
-        make ExprBreak.new(
-            ident =>  $<ident>.made,
-            text  => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<yield>($/) {
-        make ExprYield.new(
-            text  => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<yield-expr>($/) {
-        make ExprYield.new(
-            expr =>  $<expr>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<eq-expr>($/) {
-        make ExprAssign.new(
-            expr-nostruct => $<expr-nostruct>.made,
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<shleq-expr>($/) {
-        make ExprAssignShl.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<shreq-expr>($/) {
-        make ExprAssignShr.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<minuseq-expr>($/) {
-        make ExprAssignSub.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<andeq-expr>($/) {
-        make ExprAssignBitAnd.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<oreq-expr>($/) {
-        make ExprAssignBitOr.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<pluseq-expr>($/) {
-        make ExprAssignAdd.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<stareq-expr>($/) {
-        make ExprAssignMul.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<slasheq-expr>($/) {
-        make ExprAssignDiv.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<careteq-expr>($/) {
-        make ExprAssignBitXor.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<percenteq-expr>($/) {
-        make ExprAssignRem.new(
-            expr-nostruct =>  $<expr-nostruct>.made,
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<oror-expr>($/) {
-        make ExprOrOr.new(
-            expr => $<expr>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<andand-expr>($/) {
-        make ExprAndAnd.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<eqeq-expr>($/) {
-        make ExprEqEq.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<ne-expr>($/) {
-        make ExprNe.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<lt-expr>($/) {
-        make ExprLt.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<gt-expr>($/) {
-        make ExprGt.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<le-expr>($/) {
-        make ExprLe.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tai:sym<ge-expr>($/) {
-        make ExprGe.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<pipe-expr>($/) {
-        make ExprPipe.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<caret-expr>($/) {
-        make ExprCaret.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<amp-expr>($/) {
-        make ExprAmp.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<shl-expr>($/) {
-        make ExprShl.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<shr-expr>($/) {
-        make ExprShl.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<plus-expr>($/) {
-        make ExprPlus.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<minus-expr>($/) {
-        make ExprMinus.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<star-expr>($/) {
-        make ExprStar.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<slash-expr>($/) {
-        make ExprSlash.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<mod-expr>($/) {
-        make ExprMod.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<dotdot>($/) {
-        make ExprRange.new(
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<dotdot-nostruct>($/) {
-        make ExprRange.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<dotdot-expr-nostruct>($/) {
-        make ExprRange.new(
-            expr => $<expr-nostruct>.made,
-            text => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<dotdot>($/) {
-        make ExprRange.new(
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<as-try>($/) {
-        make ExprCast.new(
-            ty   =>  $<ty>.made,
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-tail:sym<colon-try>($/) {
-        make ExprTypeAscr.new(
-            ty   =>  $<ty>.made,
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<box-expr>($/) {
-        make ExprBox.new(
-            expr =>  $<expr>.made,
-            text          => ~$/,
-        )
-    }
-
-    method expr-nostruct-base:sym<expr-qualified-path>($/) {
-        make $<expr-qualified-path>.made
-    }
-
-    method expr-nostruct-base:sym<block-expr>($/) {
-        make $<block-expr>.made
-    }
-
-    method expr-nostruct-base:sym<block>($/) {
-        make $<block>.made
-    }
-
-    method expr-nostruct-base:sym<nonblock-prefix-expr-nostruct>($/) {
-        make $<nonblock-prefix-expr-nostruct>.made
-    }
-}
+our role ExprNoStruct::Actions {}
