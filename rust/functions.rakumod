@@ -1,34 +1,111 @@
+our role Function::Rules {
 
-Function :
-   FunctionQualifiers fn IDENTIFIER GenericParams?
-      ( FunctionParameters? )
-      FunctionReturnType? WhereClause?
-      ( BlockExpression | ; )
+    rule function {
+        <function-qualifiers>
+        <kw-fn>
+        <identifier>
+        <generic-params>?
+        <tok-lparen>
+        <function-parameters>?
+        <tok-rparen>
+        <function-return-type>?
+        <where-clause>?
+        [
+            | <block-expression>
+            | <tok-semi>
+        ]
+    }
 
-FunctionQualifiers :
-   const? async1? unsafe? (extern Abi?)?
+    rule function-qualifiers {
+        <kw-const>?
+        <kw-async>?
+        <kw-unsafe>?
+        [ <kw-extern> <abi>? ]?
+    }
 
-Abi :
-   STRING_LITERAL | RAW_STRING_LITERAL
+    proto rule abi { * }
 
-FunctionParameters :
-      SelfParam ,?
-   | (SelfParam ,)? FunctionParam (, FunctionParam)* ,?
+    rule abi:sym<str>     { <string-literal> }
 
-SelfParam :
-   OuterAttribute* ( ShorthandSelf | TypedSelf )
+    rule abi:sym<raw-str> { <raw-string-literal> }
 
-ShorthandSelf :
-   (& | & Lifetime)? mut? self
+    #----------------------
+    proto rule function-parameters { * }
 
-TypedSelf :
-   mut? self : Type
+    rule function-parameters:sym<just-self> {
+        <self-param> <tok-comma>?
+    }
 
-FunctionParam :
-   OuterAttribute* ( FunctionParamPattern | ... | Type 2 )
+    rule function-parameters:sym<just-params> {
+        <function-param>+ %% <tok-comma>
+    }
 
-FunctionParamPattern :
-   PatternNoTopAlt : ( Type | ... )
+    rule function-parameters:sym<self-and-just-params> {
+        <self-param> 
+        <tok-comma>
+        [ <function-param>+ %% <tok-comma> ]
+    }
 
-FunctionReturnType :
-   -> Type
+    #----------------------
+    rule self-param {  
+        <outer-attribute>*
+        <self-param-variant>
+    }
+
+    proto rule self-param-variant { * }
+
+    rule self-param-variant:sym<shorthand> { <shorthand-self> }
+    rule self-param-variant:sym<typed>     { <typed-self> }
+
+    #----------------------
+    rule shorthand-self {
+        [
+            <tok-ref> <lifetime>?
+        ]?
+        <kw-mut>?
+        <kw-self>
+    }
+
+    rule typed-self {
+        <kw-mut>?
+        <kw-self>
+        <tok-colon>
+        <type>
+    }
+
+    #-------------------
+    rule function-param {
+        <outer-attribute>*
+        <function-param-variant>
+    }
+
+    proto rule function-param-variant { * }
+
+    rule function-param-variant:sym<pattern> {
+        <function-param-pattern>
+    }
+
+    rule function-param-variant:sym<ellipsis> {
+        <tok-ellipsis>
+    }
+
+    rule function-param-variant:sym<type> {
+        <type>
+    }
+
+    #-------------------
+    rule function-param-pattern {
+        <pattern-no-top-alt> 
+        <tok-colon>
+        <function-param-pattern-variant>
+    }
+
+    proto rule function-param-pattern-variant { * }
+    rule function-param-pattern-variant:sym<type>     { <type> }
+    rule function-param-pattern-variant:sym<ellipsis> { <tok-ellipsis> }
+
+    rule function-return-type {
+        <tok-rarrow>
+        <type>
+    }
+}
