@@ -1,9 +1,22 @@
 
-CallExpression :
-   Expression ( CallParams? )
+our role CallExpression::Rules {
+    rule call-expression {
+        <expression> 
+        <tok-lparen>
+        <call-params>?
+        <tok-rparen>
+    }
 
-CallParams :
-   Expression ( , Expression )* ,?
+    rule call-params {
+        <expression>+ %% <tok-comma>
+    }
 
-MethodCallExpression :
-   Expression . PathExprSegment (CallParams? )
+    rule method-call-expression {
+        <expression>
+        <tok-dot>
+        <path-expr-segment>
+        <tok-lparen>
+        <call-params>?
+        <tok-rparen>
+    }
+}
