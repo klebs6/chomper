@@ -1,4 +1,5 @@
 our role Union::Rules {
+
     rule union {
         <kw-union>
         <identifier>

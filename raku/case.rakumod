@@ -36,3 +36,37 @@ our sub kebab-to-camel($id) {
     my @parts = $id.split("-");
     @parts>>.tc.join("").subst(/_$/,"")
 }
+
+our sub camel-to-kebab($id) {
+
+    grammar Camel {
+
+        token TOP {
+            <.ws> <camel-ident>
+        }
+
+        token camel-ident {
+            <camel-hump>+
+        }
+
+        token camel-hump {
+            <[A..Z]> <[a..z]>*
+        }
+    }
+
+    class Camel::Actions {
+        method TOP($/) {
+            make $<camel-ident>.made
+        }
+
+        method camel-ident($/) {
+            make $<camel-hump>>>.made.join("-")
+        }
+
+        method camel-hump($/) {
+            make $/.lc
+        }
+    }
+
+    Camel.parse($id, actions => Camel::Actions.new).made
+}
