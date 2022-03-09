@@ -1,27 +1,49 @@
+our role TupleStructPattern::Rules {
 
-TupleStructPattern :
-   PathInExpression ( TupleStructItems? )
+    rule tuple-struct-pattern {
+        <path-in-expression> 
+        <tok-lparen> 
+        <tuple-struct-items>? 
+        <tok-rparen>
+    }
 
-TupleStructItems :
-   Pattern ( , Pattern )* ,?
+    rule tuple-struct-items {
+        <pattern>+ %% <tok-comma>
+    }
 
-TuplePattern :
-   ( TuplePatternItems? )
+    rule tuple-pattern {
+        <tok-lparen> 
+        <tuple-pattern-items>? 
+        <tok-rparen>
+    }
 
-TuplePatternItems :
-      Pattern ,
-   | RestPattern
-   | Pattern (, Pattern)+ ,?
+    proto rule tuple-pattern-items { * }
 
-GroupedPattern :
-   ( Pattern )
+    rule tuple-pattern-items:sym<rest-pat> {
+        <rest-pattern>
+    }
 
-SlicePattern :
-   [ SlicePatternItems? ]
+    rule tuple-pattern-items:sym<pat> {
+        <pattern>+ %% <tok-comma>
+    }
 
-SlicePatternItems :
-   Pattern (, Pattern)* ,?
+    rule grouped-pattern {
+        <tok-lparen>
+        <pattern>
+        <tok-rparen>
+    }
 
-PathPattern :
-      PathInExpression
-   | QualifiedPathInExpression
+    rule slice-pattern {
+        <tok-lbrack>
+        <slice-pattern-items>?
+        <tok-rbrack>
+    }
+
+    rule slice-pattern-items {
+        <pattern>+ %% <tok-comma>
+    }
+
+    proto rule path-pattern { * }
+    rule path-pattern:sym<a> { <path-in-expression> }
+    rule path-pattern:sym<b> { <qualified-path-in-expression> }
+}
