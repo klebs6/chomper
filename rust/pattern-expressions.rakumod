@@ -13,6 +13,21 @@ our role Pattern::Rules {
 
     rule pattern-no-top-alt:sym<range>    { <range-pattern> }
 
+    rule identifier-pattern {
+        <kw-ref>?
+        <kw-mut>?
+        <identifier>
+        [ <tok-at> <pattern> ]?
+    }
+
+    token wildcard-pattern {
+        <tok-underscore>
+    }
+
+    token rest-pattern {
+        <tok-dotdot>
+    }
+
     #---------------------
     proto rule pattern-without-range { * }
     rule pattern-without-range:sym<literal>          { <literal-pattern>      } 

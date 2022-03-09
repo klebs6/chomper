@@ -1,4 +1,4 @@
-our role GenericArgs {
+our role GenericArgs::Rules {
 
     rule generic-args {
         <tok-lt>
