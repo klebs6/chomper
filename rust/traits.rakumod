@@ -1,23 +1,45 @@
+our role Trait::Rules {
 
-Trait :
-   unsafe? trait IDENTIFIER  GenericParams? ( : TypeParamBounds? )? WhereClause? {
-     InnerAttribute*
-     AssociatedItem*
-   }
+    rule trait {
+        <kw-unsafe>?
+        <kw-trait>
+        <identifier>
+        <generic-params>?
+        [ <tok-colon> <type-param-bounds>? ]?
+        <where-clause>?
+        <tok-lbrace>
+        <inner-attribute>*
+        <associated-item>*
+        <tok-rbrace>
+    }
 
-Implementation :
-   InherentImpl | TraitImpl
+    proto rule implementation { * }
+    rule implementation:sym<inherent> { <inherent-impl> }
+    rule implementation:sym<trait>    { <trait-impl> }
 
-InherentImpl :
-   impl GenericParams? Type WhereClause? {
-      InnerAttribute*
-      AssociatedItem*
-   }
+    rule inherent-impl {
+        <kw-impl>
+        <generic-params>?
+        <type>
+        <where-clause>?
+        <tok-lbrace>
+        <inner-attribute>*
+        <associated-item>*
+        <tok-rbrace>
+    }
 
-TraitImpl :
-   unsafe? impl GenericParams? !? TypePath for Type
-   WhereClause?
-   {
-      InnerAttribute*
-      AssociatedItem*
-   }
+    rule trait-impl {
+        <kw-unsafe>?
+        <kw-impl>
+        <generic-params>?
+        <tok-bang>?
+        <type-path>
+        <kw-for>
+        <type>
+        <where-clause>?
+        <tok-lbrace>
+        <inner-attribute>*
+        <associated-item>*
+        <tok-rbrace>
+    }
+}
