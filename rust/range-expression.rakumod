@@ -1,26 +1,34 @@
+our role RangeExpression::Rules {
 
-RangeExpression :
-      RangeExpr
-   | RangeFromExpr
-   | RangeToExpr
-   | RangeFullExpr
-   | RangeInclusiveExpr
-   | RangeToInclusiveExpr
+    proto rule range-expression { * }
+    rule range-expression:sym<basic>        { <range-expr> }
+    rule range-expression:sym<from>         { <range-from-expr> }
+    rule range-expression:sym<to>           { <range-to-expr> }
+    rule range-expression:sym<full>         { <range-full-expr> }
+    rule range-expression:sym<inclusive>    { <range-inclusive-expr> }
+    rule range-expression:sym<to-inclusive> { <range-to-inclusive-expr> }
 
-RangeExpr :
-   Expression .. Expression
+    rule range-expr {
+        <expression> <tok-dotdot> <expression>
+    }
 
-RangeFromExpr :
-   Expression ..
+    rule range-from-expr {
+        <expression> <tok-dotdot>
+    }
 
-RangeToExpr :
-   .. Expression
+    rule range-to-expr {
+        <tok-dotdot> <expression>
+    }
 
-RangeFullExpr :
-   ..
+    rule range-full {
+        <tok-dotdot>
+    }
 
-RangeInclusiveExpr :
-   Expression ..= Expression
+    rule range-inclusive-expr {
+        <expression> <tok-dotdoteq> <expression>
+    }
 
-RangeToInclusiveExpr :
-   ..= Expression
+    rule range-to-inclusive-expr {
+        <tok-dotdoteq> <expression>
+    }
+}
