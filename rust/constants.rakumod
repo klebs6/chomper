@@ -1,4 +1,3 @@
-
 our role ConstantItem::Rules {
 
     rule init-expression {
