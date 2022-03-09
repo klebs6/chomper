@@ -1,7 +1,21 @@
+our role Module::Rules {
 
-Module :
-      unsafe? mod IDENTIFIER ;
-   | unsafe? mod IDENTIFIER {
-        InnerAttribute*
-        Item*
-      }
+    proto rule module { * }
+
+    rule module:sym<semi> {
+        <tok-unsafe>? 
+        <kw-mod> 
+        <identifier> 
+        <tok-semi>
+    }
+
+    rule module:sym<block> {
+        <tok-unsafe>?
+        <kw-mod>
+        <identifier>
+        <tok-lbrace>
+        <inner-attribute>*
+        <item>*
+        <tok-rbrace>
+    }
+}
