@@ -1,6 +1,10 @@
+our role ReturnExpression::Rules {
 
-ReturnExpression :
-   return Expression?
+    rule return-expression {
+        <kw-return> <expression>?
+    }
 
-AwaitExpression :
-   Expression . await
+    token await-expression {
+        <expression> <tok-dot> <kw-await>
+    }
+}
