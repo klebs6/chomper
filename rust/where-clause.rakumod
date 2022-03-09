@@ -1,13 +1,30 @@
-WhereClause :
-   where ( WhereClauseItem , )* WhereClauseItem ?
+our role WhereClause::Rules {
 
-WhereClauseItem :
-      LifetimeWhereClauseItem
-   | TypeBoundWhereClauseItem
+    rule where-clause {
+        <kw-where>
+        [<where-clause-item>* %% <tok-comma>]
+    }
 
-LifetimeWhereClauseItem :
-   Lifetime : LifetimeBounds
+    proto rule where-clause-item { * }
 
-TypeBoundWhereClauseItem :
-   ForLifetimes? Type : TypeParamBounds?
+    rule where-clause-item:sym<lt> {
+        <lifetime-where-clause-item>
+    }
 
+    rule where-clause-item:sym<type-bound> {
+        <type-bound-where-clause-item>
+    }
+
+    rule lifetime-where-clause-item {
+        <lifetime> 
+        <tok-colon> 
+        <lifetime-bounds>
+    }
+
+    rule type-bound-where-clause-item {
+        <for-lifetimes>? 
+        <type> 
+        <tok-colon> 
+        <type-param-bounds>?
+    }
+}
