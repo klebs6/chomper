@@ -25,6 +25,14 @@ our role Statement::Rules {
     }
 
     proto rule expression-statement { * }
-    rule expression-statement:sym<noblock> { <expression-without-block> <tok-semi> }
-    rule expression-statement:sym<block>   { <expression-with-block>    <tok-semi>? }
+
+    rule expression-statement:sym<noblock> {
+        <expression-without-block>
+        <tok-semi>
+    }
+
+    rule expression-statement:sym<block> { 
+        <expression-with-block>
+        <tok-semi>?
+    }
 }

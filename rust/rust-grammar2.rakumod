@@ -1,0 +1,148 @@
+use array-expression;
+use as-clause;
+use assignment-expression;
+use assoc-items;
+use block-expressions;
+use borrow-expressions;
+use call-expressions;
+use cfg-attr;
+use closure-expressions;
+use comments;
+use comparison-expression;
+use configuration;
+use constants;
+use crate;
+use dereference-expression;
+use enumerations;
+use error-propagation;
+use expressions;
+use external-blocks;
+use field-expressions;
+use function-pointer-types;
+use functions;
+use generic-args;
+use generic-parameters;
+use grouped-expression;
+use identifiers;
+use if-expressions;
+use impl-trait;
+use inferred-type;
+use item;
+use keywords;
+use lifetimes;
+use literal-pattern;
+use literal;
+use loop-expression;
+use macros;
+use match-expressions;
+use meta-item;
+use module;
+use operator-expressions;
+use path-expressions;
+use paths;
+use pattern-expressions;
+use punctuation;
+use range-expression;
+use range-patterns;
+use reference-patterns;
+use return-expressions;
+use statements;
+use struct-expressions;
+use struct-patterns;
+use structs;
+use tokens;
+use trait-and-lifetime;
+use trait-objects;
+use traits;
+use tuple-expression;
+use tuple-struct-patterns;
+use type-alias;
+use type-cast-expression;
+use type-path;
+use types;
+use unions;
+use use-declaration;
+use visibility;
+use where-clause;
+use whitespace;
+
+our grammar Rust::Grammar 
+    does ArrayExpression::Rules 
+    does AsClause::Rules 
+    does AssignmentExpression::Rules 
+    does AssociatedItem::Rules 
+    does BareFunctionType::Rules 
+    does BlockCommentOrDoc::Rules 
+    does BlockExpression::Rules 
+    does BorrowExpression::Rules 
+    does CallExpression::Rules 
+    does CfgAttr::Rules 
+    does ClosureExpression::Rules 
+    does ComparisonExpression::Rules 
+    does ConfigurationPredicate::Rules 
+    does ConstantItem::Rules 
+    does Crate::Rules 
+    does DereferenceExpression::Rules 
+    does Enumeration::Rules 
+    does ErrorPropagationExpression::Rules 
+    does Expression::Rules 
+    does ExpressionWithBlock::Rules 
+    does ExpressionWithoutBlock::Rules 
+    does ExternBlock::Rules 
+    does FieldExpression::Rules 
+    does Function::Rules 
+    does GenericArgs::Rules 
+    does GenericParams::Rules 
+    does GroupedExpression::Rules 
+    does Identifiers::Rules 
+    does IfExpressions::Rules 
+    does ImplTraitType::Rules 
+    does InferredType::Rules 
+    does Item::Rules 
+    does Lifetimes::Rules 
+    does LineComment::Rules 
+    does LiteralExpression::Rules 
+    does LiteralPattern::Rules 
+    does LoopExpression::Rules 
+    does MacroInvocation::Rules 
+    does MatchExpression::Rules 
+    does MetaItem::Rules 
+    does Module::Rules 
+    does OperatorExpression::Rules 
+    does PathExpression::Rules 
+    does Pattern::Rules 
+    does Punctuation::Rules 
+    does RangeExpression::Rules 
+    does RangePattern::Rules 
+    does ReferencePattern::Rules 
+    does ReservedKeywords::Rules 
+    does ReturnExpression::Rules 
+    does SimplePath::Rules 
+    does Statement::Rules 
+    does StaticItem::Rules 
+    does StrictKeywords::Rules 
+    does Struct::Rules 
+    does StructExpression::Rules 
+    does StructPattern::Rules 
+    does Tokens::Rules 
+    does Trait::Rules 
+    does TraitObjectType::Rules 
+    does TupleExpression::Rules 
+    does TupleStructPattern::Rules 
+    does Type::Rules 
+    does TypeAlias::Rules 
+    does TypeBounds::Rules 
+    does TypeCastExpression::Rules 
+    does TypePath::Rules 
+    does Union::Rules 
+    does UseDeclaration::Rules 
+    does Visibility::Rules 
+    does WeakKeywords::Rules 
+    does WhereClause::Rules 
+    does Whitespace::Rules 
+{
+    rule TOP {
+        <.ws> 
+        <statement>+
+    }
+}

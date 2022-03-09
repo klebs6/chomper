@@ -1,4 +1,4 @@
-our role Enumeration {
+our role Enumeration::Rules {
 
     rule enumertion {
         <kw-enum> 

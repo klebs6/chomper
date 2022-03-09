@@ -8,7 +8,7 @@ our role Crate::Rules {
     }
 
     token utf8-bom {
-        \uFEFF
+        \x[FEFF]
     }
 
     token shebang {

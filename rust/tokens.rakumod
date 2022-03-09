@@ -1,116 +1,257 @@
 
-CHAR_LITERAL :
-   ' ( ~[' \ \n \r \t] | QUOTE_ESCAPE | ASCII_ESCAPE | UNICODE_ESCAPE ) '
+our role Tokens::Rules {
 
-QUOTE_ESCAPE :
-   \' | \"
+    proto token char-literal-body { * }
 
-ASCII_ESCAPE :
-      \x OCT_DIGIT HEX_DIGIT
-   | \n | \r | \t | \\ | \0
+    token char-literal-body:sym<not-forbidden> { 
+        <-[\' \\ \n \r \t ]>
+    }
 
-UNICODE_ESCAPE :
-   \u{ ( HEX_DIGIT _* )1..6 }
+    token char-literal-body:sym<quote-escape> { 
+        <quote-escape>
+    }
 
-STRING_LITERAL :
-   " (
-      ~[" \ IsolatedCR]
-      | QUOTE_ESCAPE
-      | ASCII_ESCAPE
-      | UNICODE_ESCAPE
-      | STRING_CONTINUE
-   )* "
+    token char-literal-body:sym<ascii-escape> { 
+        <ascii-escape>
+    }
 
-STRING_CONTINUE :
-   \ followed by \n
+    token char-literal-body:sym<unicode-escape> { 
+        <unicode-escape>
+    }
 
+    token char-literal {
+        <tok-single-quote>
+        <char-literal-body>
+        <tok-single-quote>
+    }
 
-RAW_STRING_LITERAL :
-   r RAW_STRING_CONTENT
+    token quote-escape {
+        | \'
+        | \"
+    }
 
-RAW_STRING_CONTENT :
-      " ( ~ IsolatedCR )* (non-greedy) "
-   | # RAW_STRING_CONTENT #
+    proto token ascii-escape { * }
 
+    token ascii-escape:sym<x> { \\x <oct-digit> <hex-digit> }
+    token ascii-escape:sym<n> { \\n }
+    token ascii-escape:sym<r> { \\r }
+    token ascii-escape:sym<t> { \\t }
+    token ascii-escape:sym<s> { \\\\ }
+    token ascii-escape:sym<0> { \\0 }
 
-BYTE_LITERAL :
-   b' ( ASCII_FOR_CHAR | BYTE_ESCAPE ) '
+    token unicode-escape {
+        \\u 
+        <tok-lbrace> 
+        [[ <hex-digit> _* ] ** 1..6] 
+        <tok-rbrace> 
+    }
 
-ASCII_FOR_CHAR :
-   any ASCII (i.e. 0x00 to 0x7F), except ', \, \n, \r or \t
+    token bin-digit {
+        <[0..1]>
+    }
 
-BYTE_ESCAPE :
-      \x HEX_DIGIT HEX_DIGIT
-   | \n | \r | \t | \\ | \0 | \' | \"
+    token oct-digit {
+        <[0..7]>
+    }
 
+    token dec-digit {
+        <[0..9]>
+    }
 
-BYTE_STRING_LITERAL :
-   b" ( ASCII_FOR_STRING | BYTE_ESCAPE | STRING_CONTINUE )* "
+    token hex-digit {
+        <[0..9 a..f A..F]>
+    }
 
-ASCII_FOR_STRING :
-   any ASCII (i.e 0x00 to 0x7F), except ", \ and IsolatedCR
+    proto token integer-suffix { * }
+    token integer-suffix:sym<u8>    { u8 }
+    token integer-suffix:sym<u16>   { u16 }
+    token integer-suffix:sym<u32>   { u32 }
+    token integer-suffix:sym<u64>   { u64 }
+    token integer-suffix:sym<u128>  { u128 }
+    token integer-suffix:sym<usize> { usize }
+    token integer-suffix:sym<i8>    { i8 }
+    token integer-suffix:sym<i16>   { i16 }
+    token integer-suffix:sym<i32>   { i32 }
+    token integer-suffix:sym<i64>   { i64 }
+    token integer-suffix:sym<i128>  { i128 }
+    token integer-suffix:sym<isize> { isize }
 
+    token tuple-index { <integer-literal> }
 
-RAW_BYTE_STRING_LITERAL :
-   br RAW_BYTE_STRING_CONTENT
+    proto token float-suffix { * }
+    token float-suffix:sym<f32> { f32 }
+    token float-suffix:sym<f64> { f64 }
 
-RAW_BYTE_STRING_CONTENT :
-      " ASCII* (non-greedy) "
-   | # RAW_BYTE_STRING_CONTENT #
+    proto token boolean-literal { * }
+    token boolean-literal:sym<t> { true }
+    token boolean-literal:sym<f> { false }
 
-ASCII :
-   any ASCII (i.e. 0x00 to 0x7F)
+    token integer-literal {
+        <integer-literal-variant> <integer-suffix>?
+    }
 
-INTEGER_LITERAL :
-   ( DEC_LITERAL | BIN_LITERAL | OCT_LITERAL | HEX_LITERAL ) INTEGER_SUFFIX?
+    proto token integer-literal-variant { * }
 
-DEC_LITERAL :
-   DEC_DIGIT (DEC_DIGIT|_)*
+    token integer-literal-variant:sym<dec> { <dec-literal> }
+    token integer-literal-variant:sym<bin> { <bin-literal> }
+    token integer-literal-variant:sym<oct> { <oct-literal> }
+    token integer-literal-variant:sym<hex> { <hex-literal> }
 
-BIN_LITERAL :
-   0b (BIN_DIGIT|_)* BIN_DIGIT (BIN_DIGIT|_)*
+    token dec-literal {
+        <dec-digit> [<dec-digit> | _]*
+    }
 
-OCT_LITERAL :
-   0o (OCT_DIGIT|_)* OCT_DIGIT (OCT_DIGIT|_)*
+    token bin-literal {
+        0b [<bin-digit> | _]* <bin-digit> [<bin-digit> | _]*
+    }
 
-HEX_LITERAL :
-   0x (HEX_DIGIT|_)* HEX_DIGIT (HEX_DIGIT|_)*
+    token oct-literal {
+        0o [<oct-digit> | _]* <oct-digit> [<oct-digit> | _]*
+    }
 
-BIN_DIGIT : [0-1]
+    token hex-literal {
+        0x [<hex-digit> | _]* <hex-digit> [<hex-digit> | _]*
+    }
 
-OCT_DIGIT : [0-7]
+    token string-literal {
+        <tok-double-quote>
+        <string-literal-inner>*
+        <tok-double-quote>
+    }
 
-DEC_DIGIT : [0-9]
+    proto token string-literal-inner { * }
 
-HEX_DIGIT : [0-9 a-f A-F]
+    token string-literal-inner:sym<not-forbidden>   { <-[\" \\ ]> <?{$/ !~~ <isolated-cr>}> }
+    token string-literal-inner:sym<quote-escape>    { <quote-escape> }
+    token string-literal-inner:sym<ascii-escape>    { <ascii-escape> }
+    token string-literal-inner:sym<unicode-escape>  { <unicode-escape> }
+    token string-literal-inner:sym<string-continue> { <string-continue> }
 
-INTEGER_SUFFIX :
-      u8 | u16 | u32 | u64 | u128 | usize
-   | i8 | i16 | i32 | i64 | i128 | isize
+    token string-continue {
+        \\ <?before \n>
+    }
 
-TUPLE_INDEX:
-   INTEGER_LITERAL
+    token raw-string-literal {
+        r <raw-string-content>
+    }
 
-FLOAT_LITERAL :
-      DEC_LITERAL . (not immediately followed by ., _ or an identifier)
-   | DEC_LITERAL FLOAT_EXPONENT
-   | DEC_LITERAL . DEC_LITERAL FLOAT_EXPONENT?
-   | DEC_LITERAL (. DEC_LITERAL)? FLOAT_EXPONENT? FLOAT_SUFFIX
+    proto token raw-string-content { * }
 
-FLOAT_EXPONENT :
-   (e|E) (+|-)? (DEC_DIGIT|_)* DEC_DIGIT (DEC_DIGIT|_)*
+    token raw-string-content:sym<a> {
+        " ( ~ IsolatedCR )* (non-greedy) "
+    }
 
-FLOAT_SUFFIX :
-   f32 | f64
+    token raw-string-content:sym<b> {
+        <tok-pound> 
+        <raw-string-content>
+        <tok-pound> 
+    }
 
-BOOLEAN_LITERAL :
-      true
-   | false
+    token byte-literal {
+        b 
+        <tok-single-quote> 
+        [ <ascii-for-char> | <byte-escape> ] 
+        <tok-single-quote>
+    }
 
+    token ascii-for-char {
+        <ascii-except-forbidden>
+    }
 
-LIFETIME_TOKEN :
-      ' IDENTIFIER_OR_KEYWORD
-   | '_
+    token ascii-except-forbidden {
+        <any-ascii> <?{$/ !~~ /[\' | \\ | \n | \r | \t]/}>
+    }
 
-LIFETIME_OR_LABEL :
-      ' NON_KEYWORD_IDENTIFIER
+    proto token byte-escape { * }
+
+    token byte-escape:sym<x>  { \\x <hex-digit> <hex-digit> }
+    token byte-escape:sym<n>  { \\n }
+    token byte-escape:sym<r>  { \\r }
+    token byte-escape:sym<t>  { \\t }
+    token byte-escape:sym<sl> { \\\\ }
+    token byte-escape:sym<s0> { \\0 }
+    token byte-escape:sym<sq> { \\\' }
+    token byte-escape:sym<dq> { \\\" }
+
+    token byte-string-literal {
+        b <tok-double-quote> 
+        [
+            | <ascii-for-string>
+            | <byte-escape>
+            | <string-continue>
+        ]* 
+        <tok-double-quote>
+    }
+
+    token ascii-for-string {
+        <ascii-except-forbidden2>
+    }
+
+    token ascii-except-forbidden2 {
+        <any-ascii> <?{$/ !~~ /[\" | \\ | $Tokens::Rules::isolated-cr]/}>
+    }
+
+    token any-ascii {
+        <:ASCII>
+    }
+
+    token raw-byte-string-literal {
+        br <raw-byte-string-content>
+    }
+
+    proto token raw-byte-string-content { * }
+
+    token raw-byte-string-content:sym<a> {
+        <tok-double-quote> 
+        <ascii>*? 
+        <tok-double-quote>
+    }
+
+    token raw-byte-string-content:sym<b> {
+        <tok-pound> 
+        <raw-byte-string-content>
+        <tok-pound>
+    }
+
+    token ascii {
+        <any-ascii>
+    }
+
+    proto token float-literal { * }
+
+    token float-literal:sym<a> {
+        <dec-literal> 
+        <tok-dot> 
+        <!before [ <tok-dot> | <tok-underscore> | <identifier> ]>
+    }
+
+    token float-literal:sym<b> {
+        <dec-literal> 
+        <float-exponent>
+    }
+
+    token float-literal:sym<c> {
+        <dec-literal> 
+        <tok-dot>
+        <dec-literal> 
+        <float-exponent>?
+    }
+
+    token float-literal:sym<d> {
+        <dec-literal> 
+        [
+            <tok-dot>
+            <dec-literal> 
+        ]?
+        <float-exponent>?
+        <float-suffix>
+    }
+
+    token float-exponent {
+        [ e | E ]
+        [ \+ | \- ]?
+        [<dec-digit> | <tok-underscore>]*
+        <dec-digit>
+        [<dec-digit> | <tok-underscore>]*
+    }
+}
