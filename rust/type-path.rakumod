@@ -1,12 +1,33 @@
+our role TypePath::Rules {
 
-TypePath :
-   ::? TypePathSegment (:: TypePathSegment)*
+    rule type-path {
+        <tok-mod-sep>?
+        [ <type-path-segment>+ %% <tok-mod-sep> ]
+    }
 
-TypePathSegment :
-   PathIdentSegment ::? (GenericArgs | TypePathFn)?
+    rule type-path-segment { 
+        <path-ident-segment> <tok-mod-sep>? <type-path-segment-suffix>?
+    }
 
-TypePathFn :
-( TypePathFnInputs? ) (-> Type)?
+    #----------------------
+    proto rule type-path-segment-suffix { * }
 
-TypePathFnInputs :
-Type (, Type)* ,?
+    rule type-path-segment-suffix:sym<generic> {  
+        <generic-args>
+    }
+
+    rule type-path-segment-suffix:sym<type-path-fn> {  
+        <type-path-fn>
+    }
+
+    rule type-path-fn {
+        <tok-lparen> 
+        <type-path-fn-inputs>? 
+        <tok-rparen> 
+        [ <tok-rarrow> <type> ]?
+    }
+
+    rule type-path-fn-inputs {
+        <type>+ %% <tok-comma>
+    }
+}
