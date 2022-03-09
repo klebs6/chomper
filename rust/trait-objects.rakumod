@@ -1,7 +1,12 @@
+our role TraitObjectType::Rules {
 
-TraitObjectType :
-   dyn? TypeParamBounds
+    rule trait-object-type {
+        <kw-dyn>? 
+        <type-param-bounds>
+    }
 
-TraitObjectTypeOneBound :
-   dyn? TraitBound
-
+    rule trait-object-type-one-bound {
+        <kw-dyn>?
+        <trait-bound>
+    }
+}

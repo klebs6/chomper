@@ -44,5 +44,6 @@ our role Punctuation::Rules {
     token tok-fat-rarrow  { =>  } #Match arms, Macros
     token tok-pound       { \#  } #Attributes
     token tok-dollar      { \$  } #Macros
-    token tok-question    { ?   } #Question mark operator, Questionably sized, Macro Kleene Matcher
+    token tok-qmark       { ?   } #Question mark operator, Questionably sized, Macro Kleene Matcher
+    token tok-qmark-qmark { <tok-qmark> ** 2 }
 }

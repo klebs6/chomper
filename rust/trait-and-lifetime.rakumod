@@ -1,21 +1,39 @@
+our role TypeBounds::Rules {
 
-TypeParamBounds :
-   TypeParamBound ( + TypeParamBound )* +?
+    rule type-param-bounds {
+        <type-param-bound>+ %% <tok-plus>
+    }
 
-TypeParamBound :
-      Lifetime | TraitBound
+    proto rule type-param-bound { * }
+    rule type-param-bound:sym<lt> { <lifetime> }
+    rule type-param-bound:sym<tb> { <trait-bound> }
 
-TraitBound :
-      ?? ForLifetimes? TypePath
-   | ( ?? ForLifetimes? TypePath )
+    proto rule trait-bound { * }
 
-LifetimeBounds :
-   ( Lifetime + )* Lifetime?
+    rule trait-bound:sym<no-parens> { 
+        <tok-qmark-qmark> 
+        <for-lifetimes>? 
+        <type-path> 
+    }
 
-Lifetime :
-      LIFETIME_OR_LABEL
-   | 'static
-   | '_
+    rule trait-bound:sym<parens> { 
+        <tok-lparen> 
+        <tok-qmark-qmark> 
+        <for-lifetimes>? 
+        <type-path> 
+        <tok-rparen> 
+    }
 
-ForLifetimes :
-   for GenericParams
+    rule lifetime-bounds {
+        <lifetime>* %% <tok-plus>
+    }
+
+    proto token lifetime { * }
+    token lifetime:sym<lt>      { <lifetime-or-label> }
+    token lifetime:sym<static>  { \' <static> }
+    token lifetime:sym<unnamed> { \' _ }
+
+    rule for-lifetimes {
+        <kw-for> <generic-params>
+    }
+}
