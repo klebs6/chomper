@@ -1,26 +1,50 @@
+our role Struct::Rules {
 
-Struct :
-      StructStruct
-   | TupleStruct
+    proto rule struct { * }
+    rule struct:sym<struct> { <struct-struct> }
+    rule struct:sym<tuple>  { <tuple-struct> }
 
-StructStruct :
-   struct IDENTIFIER  GenericParams? WhereClause? ( { StructFields? } | ; )
+    rule struct-struct {
+        <kw-struct> 
+        <identifier> 
+        <generic-params>?
+        <where-clause>?
+        [
+            | <tok-semi>
+            | <tok-lbrace> <struct-fields>? <tok-rbrace>
+        ]
+    }
 
-TupleStruct :
-   struct IDENTIFIER  GenericParams? ( TupleFields? ) WhereClause? ;
+    rule tuple-struct {
+        <kw-struct>
+        <identifier>
+        <generic-params>?
+        <tok-lparen>
+        <tuple-fields>?
+        <tok-rparen>
+        <where-clause>?
+        <tok-semi>
+    }
 
-StructFields :
-   StructField (, StructField)* ,?
+    rule struct-fields {
+        <struct-field>+ %% <tok-comma>
+    }
 
-StructField :
-   OuterAttribute*
-   Visibility?
-   IDENTIFIER : Type
+    rule struct-field {
+        <outer-attribute>*
+        <visibility>?
+        <identifier>
+        <tok-colon>
+        <type>
+    }
 
-TupleFields :
-   TupleField (, TupleField)* ,?
+    rule tuple-fields {
+        <tuple-field>+ %% <tok-comma>
+    }
 
-TupleField :
-   OuterAttribute*
-   Visibility?
-   Type
+    rule tuple-field {
+        <outer-attribute>*
+        <visibility>?
+        <type>
+    }
+}
