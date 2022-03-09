@@ -1,4 +1,12 @@
+our role ImplTraitType::Rules {
 
-ImplTraitType : impl TypeParamBounds
+    rule impl-trait-type {
+        <kw-impl>
+        <type-param-bounds>
+    }
 
-ImplTraitTypeOneBound : impl TraitBound
+    rule impl-trait-type-one-bound {
+        <kw-impl>
+        <trait-bound>
+    }
+}
