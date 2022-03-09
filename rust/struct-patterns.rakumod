@@ -1,24 +1,50 @@
+our role StructPattern::Rules {
 
-StructPattern :
-   PathInExpression {
-      StructPatternElements ?
-   }
+    rule struct-pattern {
+        <path-in-expression> 
+        <tok-lbrace> 
+        <struct-pattern-elements>? 
+        <tok-rbrace>
+    }
 
-StructPatternElements :
-      StructPatternFields (, | , StructPatternEtCetera)?
-   | StructPatternEtCetera
+    proto rule struct-pattern-elements { * }
 
-StructPatternFields :
-   StructPatternField (, StructPatternField) *
+    rule struct-pattern-elements:sym<basic> {
+        <struct-pattern-fields>
+        [
+            <tok-comma> <struct-pattern-et-cetera>?
+        ]?
+    }
 
-StructPatternField :
-   OuterAttribute *
-   (
-         TUPLE_INDEX : Pattern
-      | IDENTIFIER : Pattern
-      | ref? mut? IDENTIFIER
-   )
+    rule struct-pattern-elements:sym<etc> {
+        <struct-pattern-et-cetera>
+    }
 
-StructPatternEtCetera :
-   OuterAttribute *
-   ..
+    rule struct-pattern-fields {
+        <struct-pattern-field>+ %% <tok-comma>
+    }
+
+    rule struct-pattern-field {
+        <outer-attribute>*
+        <struct-pattern-field-variant>
+    }
+
+    proto rule struct-pattern-field-variant { * }
+
+    rule struct-pattern-field-variant:sym<tup> {
+        <tuple-index> <tok-colon> <pattern>
+    }
+
+    rule struct-pattern-field-variant:sym<id> {
+        <identifier> <tok-colon> <pattern>
+    }
+
+    rule struct-pattern-field-variant:sym<ref-mut-id> {
+        <kw-ref>? <kw-mut>? <identifier>
+    }
+
+    rule struct-pattern-et-cetera {
+        <outer-attribute>*
+        <tok-dotdot>
+    }
+}
