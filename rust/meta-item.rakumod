@@ -1,27 +1,63 @@
 
-MetaItem :
-      SimplePath
-   | SimplePath = Expression
-   | SimplePath ( MetaSeq? )
+our role MetaItem::Rules {
 
-MetaSeq :
-   MetaItemInner ( , MetaItemInner )* ,?
+    proto rule meta-item { * }
 
-MetaItemInner :
-      MetaItem
-   | Expression
+    rule meta-item:sym<simple> {  
+        <simple-path>
+    }
 
-MetaWord:
-   IDENTIFIER
+    rule meta-item:sym<simple-eq-expr> {  
+        <simple-path> <tok-eq> <expression>
+    }
 
-MetaNameValueStr:
-   IDENTIFIER = (STRING_LITERAL | RAW_STRING_LITERAL)
+    rule meta-item:sym<simple-with-meta-seq> {  
+        <simple-path> <tok-lparen> <meta-seq>? <tok-rparen>
+    }
 
-MetaListPaths:
-   IDENTIFIER ( ( SimplePath (, SimplePath)* ,? )? )
+    rule meta-seq {
+        <meta-item-inner>+ %% <tok-comma>
+    }
 
-MetaListIdents:
-   IDENTIFIER ( ( IDENTIFIER (, IDENTIFIER)* ,? )? )
+    proto rule meta-item-inner { * }
 
-MetaListNameValueStr:
-   IDENTIFIER ( ( MetaNameValueStr (, MetaNameValueStr)* ,? )? )
+    rule meta-item-inner:sym<basic> { <meta-item> }
+
+    rule meta-item-inner:sym<expr>  { <expression> }
+
+    rule meta-word {
+        <identifier>
+    }
+
+    #---------------
+    proto rule any-string-literal { * }
+
+    rule any-string-literal:sym<basic> { <string-literal> }
+    rule any-string-literal:sym<raw>   { <raw-string-literal> }
+
+    #---------------
+    rule meta-name-value-str {
+        <identifier> <tok-eq> <any-string-literal>
+    }
+
+    rule meta-list-paths {
+        <identifier> 
+        <tok-lparen>
+        [ <simple-path>* %% <tok-comma> ] 
+        <tok-rparen>
+    }
+
+    rule meta-list-idents {
+        <identifier>
+        <tok-lparen>
+        [ <identifier>* %% <tok-comma> ]
+        <tok-rparen>
+    }
+
+    rule meta-list-name-value-str {
+        <identifier>
+        <tok-lparen>
+        [ <meta-name-value-str>* %% <tok-comma> ]
+        <tok-rparen>
+    }
+}
