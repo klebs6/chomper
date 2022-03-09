@@ -1,2 +1,4 @@
+our role InferredType::Rules {
 
-InferredType : _
+    rule inferred-type { <tok-underscore> }
+}
