@@ -1,19 +1,54 @@
+our role MatchExpression::Rules {
 
-MatchExpression :
-   match Scrutinee {
-      InnerAttribute*
-      MatchArms?
-   }
+    rule match-expression {
+        <kw-match> 
+        <scrutinee> 
+        <tok-lbrace>
+        <inner-attribute>*
+        <match-arms>?
+        <tok-rbrace>
+    }
 
-Scrutinee :
-   Expressionexcept struct expression
+    rule scrutinee {
+        <expression-except-struct-expression>
+    }
 
-MatchArms :
-   ( MatchArm => ( ExpressionWithoutBlock , | ExpressionWithBlock ,? ) )*
-   MatchArm => Expression ,?
+    #------------------
+    rule match-arms {
+        <match-arms-inner-item>*
+        <match-arms-outer-item>
+    }
 
-MatchArm :
-   OuterAttribute* Pattern MatchArmGuard?
+    proto rule match-arms-inner-item { * }
 
-MatchArmGuard :
-   if Expression
+    rule match-arms-inner-item:sym<without-block> {  
+        <match-arm> 
+        <tok-fat-rarrow> 
+        <expression-without-block> 
+        <tok-comma>
+    }
+
+    rule match-arms-inner-item:sym<with-block> {  
+        <match-arm>
+        <tok-fat-rarrow>
+        <expression-with-block>
+        <tok-comma>?
+    }
+
+    rule match-arms-outer-item {
+        <match-arm> 
+        <tok-fat-rarrow> 
+        <expression> 
+        <tok-comma>?
+    }
+
+    rule match-arm {
+        <outer-attribute>*
+        <pattern>
+        <match-arm-guard>?
+    }
+
+    rule match-arm-guard {
+        <kw-if> <expression>
+    }
+}
