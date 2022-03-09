@@ -101,7 +101,9 @@ our role Function::Rules {
     }
 
     proto rule function-param-pattern-variant { * }
+
     rule function-param-pattern-variant:sym<type>     { <type> }
+
     rule function-param-pattern-variant:sym<ellipsis> { <tok-ellipsis> }
 
     rule function-return-type {

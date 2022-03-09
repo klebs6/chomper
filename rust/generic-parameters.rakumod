@@ -1,30 +1,42 @@
+our role GenericParams::Rules {
 
-GenericParams :
-      < >
-   | < (GenericParam ,)* GenericParam ,? >
+    rule generic-params {
+        <tok-lt>
+        [
+            <generic-param>* %% <tok-comma>
+        ]
+        <tok-gt>
+    }
 
-GenericParam :
-   OuterAttribute* ( LifetimeParam | TypeParam | ConstParam )
+    rule generic-param {
+        <outer-attribute>*
+        <generic-param-variant>
+    }
 
-LifetimeParam :
-   LIFETIME_OR_LABEL ( : LifetimeBounds )?
+    #-----------------
+    proto rule generic-param-variant { * }
 
-TypeParam :
-   IDENTIFIER( : TypeParamBounds? )? ( = Type )?
+    rule generic-param-variant:sym<lt>    { <lifetime-param> }
 
-ConstParam:
-   const IDENTIFIER : Type
+    rule generic-param-variant:sym<type>  { <type-param> }
 
+    rule generic-param-variant:sym<const> { <const-param> }
 
-WhereClause :
-   where ( WhereClauseItem , )* WhereClauseItem ?
+    #-----------------
+    rule lifetime-param {
+        <lifetime-or-label> [ <tok-colon> <lifetime-bounds> ]?
+    }
 
-WhereClauseItem :
-      LifetimeWhereClauseItem
-   | TypeBoundWhereClauseItem
+    rule type-param {
+        <identifier>
+        [ <tok-colon> <type-param-bounds>? ]?
+        [ <tok-eq> <type> ]?
+    }
 
-LifetimeWhereClauseItem :
-   Lifetime : LifetimeBounds
-
-TypeBoundWhereClauseItem :
-   ForLifetimes? Type : TypeParamBounds?
+    rule const-param {
+        <kw-const> 
+        <identifier> 
+        <tok-colon> 
+        <type>
+    }
+}
