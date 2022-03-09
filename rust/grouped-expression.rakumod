@@ -1,4 +1,8 @@
+our role GroupedExpression::Rules {
 
-GroupedExpression :
-   ( Expression )
-
+    rule grouped-expression {
+        <tok-lparen>
+        <expression>
+        <tok-rparen>
+    }
+}
