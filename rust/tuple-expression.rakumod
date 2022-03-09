@@ -1,17 +1,16 @@
-TupleExpression :
-   ( TupleElements? )
+our role TupleExpression::Rules {
 
-TupleElements :
-   ( Expression , )+ Expression?
+    rule tuple-expression {
+        <tok-lparen>
+        <tuple-elements>?
+        <tok-rparen>
+    }
 
-TupleExpression :
-   ( TupleElements? )
+    rule tuple-elements {
+        <expression>* %% <tok-comma>
+    }
 
-TupleElements :
-   ( Expression , )+ Expression?
-
-
-TupleIndexingExpression :
-   Expression . TUPLE_INDEX
-
-
+    rule tuple-indexing-expression {
+        <expression> <tok-dot> <tuple-index>
+    }
+}
