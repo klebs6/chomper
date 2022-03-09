@@ -1,3 +1,12 @@
+our role TypeAlias::Rules {
 
-TypeAlias :
-   type IDENTIFIER GenericParams? ( : TypeParamBounds )? WhereClause? ( = Type )? ;
+    rule type-alias {
+        <kw-type>
+        <identifier>
+        <generic-params>?
+        [ <tok-colon> <type-param-bounds> ]?
+        <where-clause>?
+        [ <tok-eq> <type>]?
+        <tok-semi>
+    }
+}
