@@ -1,29 +1,66 @@
+our role LoopExpression::Rules {
 
-LoopExpression :
-   LoopLabel? (
-         InfiniteLoopExpression
-      | PredicateLoopExpression
-      | PredicatePatternLoopExpression
-      | IteratorLoopExpression
-   )
+    rule loop-expression {
+        <loop-label>?
+        <loop-expression-variant>
+    }
 
-InfiniteLoopExpression :
-   loop BlockExpression
+    proto rule loop-expression-variant { * }
 
-PredicateLoopExpression :
-   while Expressionexcept struct expression BlockExpression
+    rule loop-expression-variant:sym<infinite-loop> {
+        <infinite-loop-expression>
+    }
 
-PredicatePatternLoopExpression :
-   while let Pattern = Scrutineeexcept lazy boolean operator expression BlockExpression
+    rule loop-expression-variant:sym<predicate-loop> {
+        <predicate-loop-expression>
+    }
 
-IteratorLoopExpression :
-   for Pattern in Expressionexcept struct expression BlockExpression
+    rule loop-expression-variant:sym<predicate-pattern-loop> {
+        <predicate-pattern-loop-expression>
+    }
 
-LoopLabel :
-   LIFETIME_OR_LABEL :
+    rule loop-expression-variant:sym<iterator-loop> {
+        <iterator-loop-expression>
+    }
 
-BreakExpression :
-   break LIFETIME_OR_LABEL? Expression?
+    rule infinite-loop-expression {
+        <kw-loop> <block-expression>
+    }
 
-ContinueExpression :
-   continue LIFETIME_OR_LABEL?
+    rule predicate-loop-expression {
+        <kw-while> <expression-except-struct-expression> <block-expression>
+    }
+
+    rule predicate-pattern-loop-expression {
+        <kw-while>
+        <kw-let>
+        <pattern>
+        <tok-eq>
+        <scrutinee-except-lazy-boolean-operator-expression>
+        <block-expression>
+    }
+
+    rule iterator-loop-expression {
+        <kw-for>
+        <pattern>
+        <kw-in>
+        <expression-except-struct-expression>
+        <block-expression>
+    }
+
+    rule loop-label {
+        <lifetime-or-label> 
+        <tok-colon>
+    }
+
+    rule break-expression {
+        <kw-break> 
+        <lifetime-or-label>?
+        <expression>?
+    }
+
+    rule continue-expression {
+        <kw-continue>
+        <lifetime-or-label>?
+    }
+}
