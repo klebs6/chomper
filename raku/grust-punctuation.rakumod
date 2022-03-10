@@ -9,8 +9,8 @@ our role Punctuation::Rules {
     token tok-not          { '!'   } #Bitwise and Logical NOT, Macro Calls, Inner Attributes, Never Type, Negative impls
     token tok-bang         { '!'   } 
 
-    token tok-and          { '&'   } #Bitwise and Logical AND, Borrow, References, Reference patterns
-    token tok-or           { '|'   } #Bitwise and Logical OR, Closures, Patterns in match, if let, and while let
+    token tok-and          { '&' <!before '&'>   } #Bitwise and Logical AND, Borrow, References, Reference patterns
+    token tok-or           { '|' <!before '|'>  } #Bitwise and Logical OR, Closures, Patterns in match, if let, and while let
     token tok-andand       { '&&'  } #Lazy AND, Borrow, References, Reference patterns
     token tok-oror         { '||'  } #Lazy OR, Closures
     token tok-shl          { '<<'  } #Shift Left, Nested Generics
@@ -25,7 +25,7 @@ our role Punctuation::Rules {
     token tok-oreq         { '|='  } #Bitwise Or assignment
     token tok-shleq        { '<<=' } #Shift Left assignment
     token tok-shreq        { '>>=' } #Shift Right assignment, Nested Generics
-    token tok-eq           { '='   } #Assignment, Attributes, Various type definitions
+    token tok-eq           { '=' <!before '='>   } #Assignment, Attributes, Various type definitions
     token tok-eqeq         { '=='  } #Equal
     token tok-ne           { '!='  } #Not Equal
     token tok-gt           { '>'   } #Greater than, Generics, Paths
