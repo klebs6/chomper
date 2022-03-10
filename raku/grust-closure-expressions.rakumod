@@ -1,9 +1,9 @@
 our role ClosureExpression::Rules {
 
     rule closure-expression-opener {
-        <tok-pipe>
+        <tok-or>
         <closure-parameters>?
-        <tok-pipe>
+        <tok-or>
     }
 
     proto rule closure-body { * }

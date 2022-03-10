@@ -29,7 +29,7 @@ our role Punctuation::Rules {
     token tok-eqeq         { '=='  } #Equal
     token tok-ne           { '!='  } #Not Equal
     token tok-gt           { '>'   } #Greater than, Generics, Paths
-    token tok-lt           { '\<'  } #Less than, Generics, Paths
+    token tok-lt           { '<'   } #Less than, Generics, Paths
     token tok-ge           { '>='  } #Greater than or equal to, Generics
     token tok-le           { '<='  } #Less than or equal to
     token tok-at           { '@'   } #Subpattern binding

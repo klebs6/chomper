@@ -15,11 +15,11 @@ our role BlockExpression::Rules {
 
     rule statements:sym<basic-with-final-expr> {
         <statement>+
-        <expression-without-block>
+        <expression-noblock>
     }
 
     rule statements:sym<just-final-expr> {
-        <expression-without-block>
+        <expression-noblock>
     }
 
     rule async-block-expression {

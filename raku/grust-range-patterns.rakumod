@@ -11,7 +11,7 @@ our role RangePattern::Rules {
     }
 
     rule half-open-range-pattern {
-        <tok-pipe> <range-pattern-bound> <tok-dotdot>
+        <tok-or> <range-pattern-bound> <tok-dotdot>
     }
 
     rule obsolete-range-pattern {

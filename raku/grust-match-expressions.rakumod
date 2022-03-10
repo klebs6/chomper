@@ -24,7 +24,7 @@ our role MatchExpression::Rules {
     rule match-arms-inner-item:sym<without-block> {  
         <match-arm> 
         <tok-fat-rarrow> 
-        <expression-without-block> 
+        <expression-noblock> 
         <tok-comma>
     }
 

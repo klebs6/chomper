@@ -26,7 +26,7 @@ our role Statement::Rules {
     proto rule expression-statement { * }
 
     rule expression-statement:sym<noblock> {
-        <expression-without-block>
+        <expression-noblock>
         <tok-semi>
     }
 
