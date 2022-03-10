@@ -11,7 +11,7 @@ sub MAIN(:$stdin = Nil) {
 
     $in = $in.subst(/^\s+/,"");
 
-    my $rule = "field-expression";
+    my $rule = "expression";
 
     my $actions = Rust::Actions.new;
 

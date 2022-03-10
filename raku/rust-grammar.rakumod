@@ -89,8 +89,6 @@ our role Rust::Grammar::Role
     does Enumeration::Rules 
     does ErrorPropagationExpression::Rules 
     does Expression::Rules 
-    does ExpressionWithBlock::Rules 
-    does ExpressionWithoutBlock::Rules 
     does ExternBlock::Rules 
     does FieldExpression::Rules 
     does Function::Rules 
@@ -171,8 +169,6 @@ our role Rust::Actions::Role
     does Enumeration::Actions 
     does ErrorPropagationExpression::Actions 
     does Expression::Actions 
-    does ExpressionWithBlock::Actions 
-    does ExpressionWithoutBlock::Actions 
     does ExternBlock::Actions 
     does FieldExpression::Actions 
     does Function::Actions 
