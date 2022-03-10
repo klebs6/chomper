@@ -44,4 +44,3 @@ our role StaticItem::Rules {
 our role StaticItem::Actions {
 
 }
-

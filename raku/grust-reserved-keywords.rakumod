@@ -1,11 +1,10 @@
-=begin comment
+#`(
 These keywords aren't used yet, but they are
 reserved for future use. They have the same
 restrictions as strict keywords. The reasoning
 behind this is to make current programs forward
 compatible with future versions of Rust by
-forbidding them to use these keywords.
-=end comment
+forbidding them to use these keywords.)
 our role ReservedKeywords::Rules {
     token kw-abstract { abstract }
     token kw-become   { become }

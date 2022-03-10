@@ -1,6 +1,8 @@
 our role PathExpression::Rules {
 
     proto rule path-expression { * }
+    rule path-expression:sym<basic>      { <path-in-expression> }
+    rule path-expression:sym<qualified>  { <qualified-path-in-expression> }
 
     token path-in-expression {
         <tok-path-sep>?

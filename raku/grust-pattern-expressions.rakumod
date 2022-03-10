@@ -1,9 +1,9 @@
 our role Pattern::Rules {
 
     rule pattern {
-        <tok-pipe>? 
+        <tok-or>? 
         <pattern-no-top-alt> 
-        [ <tok-pipe> <pattern-no-top-alt> ]*
+        [ <tok-or> <pattern-no-top-alt> ]*
     }
 
     proto rule pattern-no-top-alt { * }

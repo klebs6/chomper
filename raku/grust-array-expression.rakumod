@@ -10,8 +10,23 @@ our role ArrayExpression::Rules {
         <expression> <tok-semi> <expression>
     }
 
+    rule array-expression {
+        <tok-lbrack> <array-elements>? <tok-rbrack> 
+    }
 }
 
-our role ArrayExpression::Actions {
+our role ArrayExpression::Actions { }
 
+our role TupleExpression::Rules {
+
+    rule tuple-elements {
+        <expression>* %% <tok-comma>
+    }
+
+    rule tuple-expression {
+        <tok-lparen> <tuple-elements>? <tok-rparen> 
+    }
 }
+
+our role TupleExpression::Actions {}
+

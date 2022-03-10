@@ -1,4 +1,4 @@
-=begin comment
+#`(
 Whitespace is any non-empty string containing only
 characters that have the Pattern_White_Space
 Unicode property, namely:
@@ -11,7 +11,7 @@ A Rust program has identical meaning if each
 whitespace element is replaced with any other
 legal whitespace element, such as a single space
 character.
-=end comment
+)
 our role Whitespace::Rules {
     token whitespace {
         | \x[0009] #(horizontal tab, '\t')

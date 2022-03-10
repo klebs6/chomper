@@ -52,7 +52,6 @@ our role LoopExpression::Rules {
         <lifetime-or-label> 
         <tok-colon>
     }
-
 }
 
 our role LoopExpression::Actions {}

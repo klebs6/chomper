@@ -7,18 +7,24 @@ our role BlockExpression::Rules {
         <tok-rbrace>
     }
 
-    proto rule statements { * }
+    rule statements {  
+        :my $*NOBLOCK = False;
+        :my $*NOSTRUCT = False;
+        <statements-variant>
+    }
 
-    rule statements:sym<basic> {
+    proto rule statements-variant { * }
+
+    rule statements-variant:sym<basic> {
         <statement>+
     }
 
-    rule statements:sym<basic-with-final-expr> {
+    rule statements-variant:sym<basic-with-final-expr> {
         <statement>+
         <expression-noblock>
     }
 
-    rule statements:sym<just-final-expr> {
+    rule statements-variant:sym<just-final-expr> {
         <expression-noblock>
     }
 

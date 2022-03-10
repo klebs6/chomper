@@ -1,16 +1,16 @@
-=begin comment
+#`(
 These keywords can only be used in their correct
 contexts. They cannot be used as the names of:
 
-    Items
-    Variables and function parameters
-    Fields and variants
-    Type parameters
-    Lifetime parameters or loop labels
-    Macros or attributes
-    Macro placeholders
-    Crates
-=end comment
+-Items
+-Variables and function parameters
+-Fields and variants
+-Type parameters
+-Lifetime parameters or loop labels
+-Macros or attributes
+-Macro placeholders
+-Crates
+)
 our role StrictKeywords::Rules {
     token kw-as        { as }
     token kw-break     { break }

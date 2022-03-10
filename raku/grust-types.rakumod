@@ -1,5 +1,7 @@
 our role Type::Rules {
 
+    rule inferred-type { <tok-underscore> }
+
     proto rule type { * }
 
     rule type:sym<no-bounds>    { <type-no-bounds> }

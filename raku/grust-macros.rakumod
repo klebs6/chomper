@@ -1,5 +1,11 @@
 our role MacroInvocation::Rules {
 
+    rule macro-expression {
+        <simple-path> 
+        <tok-bang> 
+        <delim-token-tree>
+    }
+
     rule delim-token-tree {
         | <tok-lparen> <token-tree>* <tok-rparen>
         | <tok-lbrack> <token-tree>* <tok-rbrack>

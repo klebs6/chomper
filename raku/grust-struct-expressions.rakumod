@@ -1,9 +1,26 @@
 our role StructExpression::Rules {
 
-    #--------------------
+    proto rule struct-expression { * }
+
+    rule struct-expression:sym<struct> {  
+        <path-in-expression> 
+        <tok-lbrace> 
+        <struct-expr-struct-body>? 
+        <tok-rbrace> 
+    }
+
+    rule struct-expression:sym<tuple> {  
+        <path-in-expression> 
+        <tok-lparen> 
+        [ <expression>* %% <tok-comma> ] 
+        <tok-rparen>
+    }
+
+    rule struct-expression:sym<unit> {  
+        <path-in-expression> 
+    }
 
     #--------------------
-
     proto rule struct-expr-struct-body { * }
     rule struct-expr-struct-body:sym<fields> { <struct-expr-fields> }
     rule struct-expr-struct-body:sym<base>   { <struct-base> }

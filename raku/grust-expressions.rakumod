@@ -1,18 +1,16 @@
-my $nostruct = False;
-my $noblock  = False;
 
 our role Expression::Rules {
 
     rule expression-nostruct { 
-        {$nostruct = True}
+        {$*NOSTRUCT = True}
         <expression>
-        {$nostruct = False}
+        {$*NOSTRUCT = False}
     }
 
     rule expression-noblock { 
-        {$noblock = True}
+        {$*NOBLOCK = True}
         <expression>
-        {$noblock = False}
+        {$*NOBLOCK = False}
     }
 
     rule base-expression {
@@ -32,11 +30,15 @@ our role Expression::Rules {
         ]*
     }
 
+    rule call-params {
+        <expression>+ %% <tok-comma>
+    }
+
     rule call-expression {
         <path-call-expression>
         [ 
             <tok-lparen> 
-            <call-params>? 
+            <call-params>?
             <tok-rparen>
         ]*
     }
@@ -67,42 +69,37 @@ our role Expression::Rules {
         ]*
     }
 
-    rule qmark-expression {
+    rule error-propagation-expression {
         <index-expression>
         <tok-qmark>* 
     }
 
     rule unary-bang-expression {
-        <tok-bang>* <qmark-expression>
+        <tok-bang>* 
+        <error-propagation-expression>
     }
 
     rule unary-minus-expression {
-        <tok-minus>* <unary-bang-expression>
+        <tok-minus>* 
+        <unary-bang-expression>
     }
 
     rule unary-star-expression {
-        <tok-star>* <unary-minus-expression>
+        <tok-star>* 
+        <unary-minus-expression>
     }
 
-    rule unary-ref-expression {
+    rule borrow-expression {
         [
             <tok-and> 
+            <tok-and>?
             <kw-mut>? 
         ]*
         <unary-star-expression>
     }
 
-    rule unary-refref-expression {
-        [
-            <tok-and> 
-            <tok-and> 
-            <kw-mut>? 
-        ]*
-        <unary-ref-expression>
-    }
-
     rule cast-expression {
-        <unary-refref-expression>
+        <borrow-expression>
         [ <kw-as> <type-no-bounds> ]*
     }
 
@@ -182,22 +179,28 @@ our role Expression::Rules {
     }
 
     #--------------------
-    rule rangeto-eq-expression {
-        <binary-oror-expression>+ %% <tok-dotdoteq>
+    proto rule range-expression { * }
+
+    rule range-expression:sym<full> {  
+        <binary-oror-expression> [<tok-dotdot>  <binary-oror-expression>]*
     }
 
-    rule range-open-expression {
-        <rangeto-eq-expression>+ % <tok-dotdot>
+    rule range-expression:sym<to> {  
+        <tok-dotdot> 
+        <binary-oror-expression>
     }
 
-    rule range-to-expression {
-        <range-open-expression> [ <tok-dotdot> <range-open-expression> ]*
+    rule range-expression:sym<from> {  
+        <binary-oror-expression>
+        <tok-dotdot> 
     }
+
+    rule range-expression:sym<open> {  <tok-dotdot> }
 
     #--------------------
 
     rule shreq-expression {
-        <range-to-expression>+ %% <tok-shreq>
+        <range-expression>+ %% <tok-shreq>
     }
 
     rule shleq-expression {
@@ -246,75 +249,21 @@ our role Expression::Rules {
 
     #-------------------------
     proto rule expression-item { * }
-    token expression-item:sym<lit-char>         { <char-literal>            } 
-    token expression-item:sym<lit-str>          { <string-literal>          } 
-    token expression-item:sym<lit-raw-str>      { <raw-string-literal>      } 
-    token expression-item:sym<lit-byte>         { <byte-literal>            } 
-    token expression-item:sym<lit-byte-str>     { <byte-string-literal>     } 
-    token expression-item:sym<lit-raw-byte-str> { <raw-byte-string-literal> } 
-    token expression-item:sym<lit-int>          { <integer-literal>         } 
-    token expression-item:sym<lit-float>        { <float-literal>           } 
-    token expression-item:sym<lit-bool>         { <boolean-literal>         } 
 
-    rule expression-item:sym<path-basic>        { <path-in-expression> }
-    rule expression-item:sym<path-qualified>    { <qualified-path-in-expression> }
+    rule expression-item:sym<literal>  { <literal-expression> } 
+    rule expression-item:sym<path>     { <path-expression>    }
+    rule expression-item:sym<grouped>  { <tok-lparen> <expression> <tok-rparen> }
+    rule expression-item:sym<array>    { <array-expression>   }
+    rule expression-item:sym<tuple>    { <tuple-expression>   }
+    rule expression-item:sym<struct>   { <?{$*NOSTRUCT eq False}> <struct-expression> }
+    rule expression-item:sym<closure>  { <closure-expression> } 
+    rule expression-item:sym<continue> { <continue-expression> } 
+    rule expression-item:sym<break>    { <break-expression> } 
+    rule expression-item:sym<return>   { <return-expression> } 
+    rule expression-item:sym<macro>    { <macro-expression> } 
+    rule expression-item:sym<block>    { <?{$*NOBLOCK eq False}> <expression-with-block> }
 
-    rule expression-item:sym<grouped>           { <tok-lparen> <expression> <tok-rparen> }
-    rule expression-item:sym<array>             { <tok-lbrack> <array-elements>? <tok-rbrack> }
-    rule expression-item:sym<tuple>             { <tok-lparen> <tuple-elements>? <tok-rparen> }
-
-    rule expression-item:sym<struct-expr-struct> { 
-        <?{$nostruct eq False}>
-        <path-in-expression> 
-        <tok-lbrace> 
-        <struct-expr-struct-body>? 
-        <tok-rbrace> 
-    }
-
-    rule expression-item:sym<struct-expr-tuple> { 
-        <?{$nostruct eq False}>
-        <path-in-expression> 
-        <tok-lparen> 
-        [ <expression>* %% <tok-comma> ] 
-        <tok-rparen>
-    }
-
-    rule expression-item:sym<struct-expr-unit> { 
-        <?{$nostruct eq False}>
-        <path-in-expression> 
-    }
-
-    rule expression-item:sym<closure> { 
-        <kw-move>?
-        <closure-expression-opener>
-        <closure-body>
-    } 
-
-    rule expression-item:sym<continue> { 
-        <kw-continue>
-        <lifetime-or-label>?
-    } 
-
-    rule expression-item:sym<break> { 
-        <kw-break> 
-        <lifetime-or-label>?
-        <expression>?
-    } 
-
-    rule expression-item:sym<range-to-expr>           { <tok-dotdot> <expression> }
-    rule expression-item:sym<range-full>              { <tok-dotdot> }
-    rule expression-item:sym<range-to-inclusive-expr> { <tok-dotdoteq> <expression> }
-    rule expression-item:sym<return>                  { <kw-return> <expression>? } 
-
-    rule expression-item:sym<macro> { 
-        <simple-path> 
-        <tok-bang> 
-        <delim-token-tree>
-    } 
-
-    #------------------with block
-    rule expression-item:sym<block>        { <?{$noblock eq False}> <expression-with-block> }
-
+    #-------------------------
     proto rule expression-with-block { * }
     rule expression-with-block:sym<block>        { <block-expression> }
     rule expression-with-block:sym<async-block>  { <async-block-expression> }
