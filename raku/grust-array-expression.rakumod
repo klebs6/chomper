@@ -1,9 +1,5 @@
 our role ArrayExpression::Rules {
 
-    rule array-expression {
-        <tok-lbrack> <array-elements>? <tok-rbrack>
-    }
-
     proto rule array-elements { * }
 
     rule array-elements:sym<commas> {
@@ -14,9 +10,6 @@ our role ArrayExpression::Rules {
         <expression> <tok-semi> <expression>
     }
 
-    rule index-expression {
-        <expression> <tok-lbrack> <expression> <tok-rbrack>
-    }
 }
 
 our role ArrayExpression::Actions {

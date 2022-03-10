@@ -19,11 +19,6 @@ our role ClosureExpression::Rules {
     }
 
     #---------------
-    rule closure-expression {
-        <kw-move>?
-        <closure-expression-opener>
-        <closure-body>
-    }
 
     rule closure-parameters {
         <closure-param>+ %% <tok-comma>

@@ -2,10 +2,6 @@ our role PathExpression::Rules {
 
     proto rule path-expression { * }
 
-    rule path-expression:sym<path-in> {
-        <path-in-expression>
-    }
-
     token path-in-expression {
         <tok-path-sep>?
         [
@@ -26,10 +22,6 @@ our role PathExpression::Rules {
     token path-ident-segment:sym<selft>   { <kw-selftype> }
     token path-ident-segment:sym<crate>   { <kw-crate> }
     token path-ident-segment:sym<$-crate> { <tok-dollar> <kw-crate> }
-
-    rule path-expression:sym<qualified-path-in> {
-        <qualified-path-in-expression>
-    }
 
     token qualified-path-in-expression {
         <qualified-path-type> [<tok-path-sep> <path-expr-segment>]+

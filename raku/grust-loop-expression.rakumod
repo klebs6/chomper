@@ -53,16 +53,6 @@ our role LoopExpression::Rules {
         <tok-colon>
     }
 
-    rule break-expression {
-        <kw-break> 
-        <lifetime-or-label>?
-        <expression>?
-    }
-
-    rule continue-expression {
-        <kw-continue>
-        <lifetime-or-label>?
-    }
 }
 
 our role LoopExpression::Actions {}
