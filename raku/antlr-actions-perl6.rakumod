@@ -778,4 +778,3 @@ $_.<terminal><STRING_LITERAL>.ast
 		make $grammar
 	}
 }
-

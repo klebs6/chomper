@@ -1,401 +1,229 @@
-use grust-anon-params;
-use grust-as-trait-ref;
-use grust-attr-and-vis;
-use grust-bindings;
-use grust-block-expr;
-use grust-block-item;
-use grust-block-or-if;
-use grust-block;
-use grust-bounds;
-use grust-const-default;
-use grust-const-generics;
+use grust-array-expression;
+use grust-as-clause;
+use grust-assignment-expression;
+use grust-assoc-items;
+use grust-block-expressions;
+use grust-borrow-expressions;
+use grust-call-expressions;
+use grust-cfg-attr;
+use grust-closure-expressions;
+use grust-comments;
+use grust-comparison-expression;
+use grust-configuration;
+use grust-constants;
 use grust-crate;
-use grust-comment;
-use grust-default-unsafe;
-use grust-expr-for;
-use grust-expr-if-let;
-use grust-expr-if;
-use grust-expr-loop;
-use grust-expr-no-struct;
-use grust-expr-qualified-path;
-use grust-expr-while-let;
-use grust-expr-while;
-use grust-expr;
-use grust-exprs;
-use grust-extern-fn-item;
-use grust-fn-decl-with-self;
-use grust-fn-params;
-use grust-for-in-type;
-use grust-for-lifetimes;
-use grust-for-sized;
-use grust-foreign-fn;
-use grust-foreign-items;
-use grust-foreign-static;
+use grust-dereference-expression;
+use grust-enumerations;
+use grust-error-propagation;
+use grust-expressions;
+use grust-external-blocks;
+use grust-field-expressions;
+use grust-function-pointer-types;
+use grust-functions;
 use grust-generic-args;
-use grust-generic-params;
-use grust-guard;
-use grust-ident;
-use grust-idents-or-self;
-use grust-impl-const;
-use grust-impl-type;
-use grust-impl-item;
-use grust-inferrable-parms;
-use grust-init-expr;
-use grust-inner-attr;
-use grust-item-const;
-use grust-item-enum;
-use grust-item-fn;
-use grust-item-impl;
-use grust-item-macro;
-use grust-item-mod;
-use grust-item-static;
-use grust-item-struct;
-use grust-item-trait;
-use grust-item-trait-alias;
-use grust-item-ty;
-use grust-item-union;
-use grust-items;
-use grust-keyword;
-use grust-label;
-use grust-lambda-expr;
-use grust-let;
+use grust-generic-parameters;
+use grust-grouped-expression;
+use grust-identifiers;
+use grust-if-expressions;
+use grust-impl-trait;
+use grust-inferred-type;
+use grust-item;
+use grust-reserved-keywords;
+use grust-weak-keywords;
+use grust-strict-keywords;
 use grust-lifetimes;
-use grust-lit;
-use grust-lit-str;
-use grust-lit-float;
-use grust-lit-int;
-use grust-lit-or-path;
-use grust-lt-bounds;
-use grust-macro-expr;
-use grust-match;
+use grust-literal-pattern;
+use grust-literal;
+use grust-loop-expression;
+use grust-macros;
+use grust-match-expressions;
 use grust-meta-item;
-use grust-meta-seq;
-use grust-method;
-use grust-mod-items;
-use grust-mut-or-const;
-use grust-named-arg;
-use grust-non-block-expr;
-use grust-nonblock-prefix-expr;
-use grust-outer-attr;
-use grust-operator;
-use grust-params;
-use grust-pat-field;
-use grust-pat-tup;
-use grust-pat;
-use grust-path-expr;
-use grust-path-generic-args-with-colons;
-use grust-path-no-types-allowed;
-use grust-qpath-params;
-use grust-ret-ty;
-use grust-shebang;
-use grust-stmts;
-use grust-struct-expr;
-use grust-symbol;
-use grust-token-tree;
-use grust-trait-const;
-use grust-trait-ref;
-use grust-trait-method;
-use grust-ty-ascription;
-use grust-ty-bare-fn;
-use grust-ty-closure;
-use grust-ty-default;
-use grust-ty-fn-decl;
-use grust-ty-param-bounds;
-use grust-ty-param;
-use grust-ty-prim;
-use grust-ty-sums;
-use grust-ty-sums-and-bindings;
-use grust-ty;
-use grust-type-method;
-use grust-type-trait;
-use grust-unpaired-token;
-use grust-use-item;
-use grust-vec-expr;
-use grust-view-item;
-use grust-view-path;
+use grust-module;
+use grust-operator-expressions;
+use grust-path-expressions;
+use grust-paths;
+use grust-pattern-expressions;
+use grust-punctuation;
+use grust-range-expression;
+use grust-range-patterns;
+use grust-reference-patterns;
+use grust-return-expressions;
+use grust-statements;
+use grust-struct-expressions;
+use grust-struct-patterns;
+use grust-structs;
+use grust-tokens;
+use grust-trait-and-lifetime;
+use grust-trait-objects;
+use grust-traits;
+use grust-tuple-expression;
+use grust-tuple-struct-patterns;
+use grust-type-alias;
+use grust-type-cast-expression;
+use grust-type-path;
+use grust-types;
+use grust-unions;
+use grust-use-declaration;
 use grust-visibility;
 use grust-where-clause;
-use grust-where-predicates;
+use grust-whitespace;
+use grust-xid;
 
-use grust-lex;
-
-our role  Rust::Grammar::Role
-
-#-----------------------------
-does Lex::DocBlock
-does Lex::DocLine
-does Lex::LifetimeOrChar
-does Lex::ByteStr
-does Lex::RawByteStrNoHash
-does Lex::RawByteStr
-does Lex::Byte
-does Lex::RawStr
-does Lex::Pound
-does Lex::RawStrEsc
-does Lex::Str_
-does Lex::Suffix
-
-does Comment::Rules
-does LineComment::Rules
-does BlockComment::Rules
-does DocComment::Rules
-
-#-----------------------------
-does Rust::Keyword
-does Rust::Operator
-does AnonParams::Rules
-does AsTraitRef::Rules
-does AttrsAndVis::Rules
-does Binding::Rules
-does BindingMode::Rules
-does Block::Rules
-does BlockExpr::Rules
-does BlockItem::Rules
-does BlockOrIf::Rules
-does Bounds::Rules
-does ConstDefault::Rules
-does ConstGenerics::Rules
-does Crate::Rules
-does Default::Rules
-does Expr::Rules
-does ExprFor::Rules
-does ExprIf::Rules
-does ExprIfLet::Rules
-does ExprLoop::Rules
-does ExprMatch::Rules
-does ExprNoStruct::Rules
-does ExprQualifiedPath::Rules
-does ExprWhile::Rules
-does ExprWhileLet::Rules
-does Exprs::Rules
-does ExternFnItem::Rules
-does Fn::Rules
-does FnDeclWithSelf::Rules
-does FnParams::Rules
-does ForInType::Rules
-does ForLifetimes::Rules
-does ForSized::Rules
-does ForeignFn::Rules
-does ForeignItems::Rules
-does ForeignStatic::Rules
-does GenericArgs::Rules
-does GenericParams::Rules
-does Guard::Rules
-does Ident::Rules
-does IdentsOrSelf::Rules
-does ImplConst::Rules
-does ImplType::Rules
-does InferrableParams::Rules
-does InitExpr::Rules
-does InnerAttrs::Rules
-does InnerAttrsAndBlock::Rules
-does Item::Rules
-does ItemConst::Rules
-does ItemEnum::Rules
-does ItemImpl::Rules
-does ImplItem::Rules
-does ItemMacro::Rules
-does ItemMod::Rules
-does ItemStatic::Rules
-does ItemStruct::Rules
-does ItemTrait::Rules
-does ItemTraitAlias::Rules
-does ItemType::Rules
-does ItemUnion::Rules
-does Label::Rules
-does LambdaExpr::Rules
-does Let::Rules
-does Lifetimes::Rules
-does Lit::Rules
-does LitInt::Rules
-does LitFloat::Rules
-does LitStr::Rules
-does LitOrPath::Rules
-does LtBounds::Rules
-does MacroExpr::Rules
-does MetaItem::Rules
-does MetaSeq::Rules
-does Method::Rules
-does ModItem::Rules
-does ModItems::Rules
-does MutOrConst::Rules
-does NamedArg::Rules
-does NonBlockExpr::Rules
-does NonblockPrefixExpr::Rules
-does OuterAttrs::Rules
-does Params::Rules
-does Pat::Rules
-does PatField::Rules
-does PatStruct::Rules
-does PatTup::Rules
-does PatVec::Rules
-does PathExpr::Rules
-does PathGenericArgsWithColons::Rules
-does PathGenericArgsWithoutColons::Rules
-does PathNoTypesAllowed::Rules
-does QPathParams::Rules
-does RetTy::Rules
-does StmtItem::Rules
-does Stmts::Rules
-does String::Rules
-does StructExpr::Rules
-does TokenTree::Rules
-does TraitConst::Rules
-does TraitMethod::Rules
-does TraitRef::Rules
-does TraitType::Rules
-does Ty::Rules
-does TyAscription::Rules
-does TyBareFn::Rules
-does TyClosure::Rules
-does TyDefault::Rules
-does TyFnDecl::Rules
-does TyParam::Rules
-does TyParamBounds::Rules
-does TyParams::Rules
-does TyPrim::Rules
-does TyQualifiedPath::Rules
-does TySums::Rules
-does TySumsAndBindings::Rules
-does UnpairedToken::Rules
-does Unsafe::Rules
-does UseItem::Rules
-does VecExpr::Rules
-does ViewItem::Rules
-does ViewPath::Rules
-does Visibility::Rules
-does WhereClause::Rules
-does WherePredicates::Rules {
+our role Rust::Grammar::Role
+    does ArrayExpression::Rules 
+    does AsClause::Rules 
+    does AssignmentExpression::Rules 
+    does AssociatedItem::Rules 
+    does BareFunctionType::Rules 
+    does BlockCommentOrDoc::Rules 
+    does BlockExpression::Rules 
+    does BorrowExpression::Rules 
+    does CallExpression::Rules 
+    does CfgAttr::Rules 
+    does ClosureExpression::Rules 
+    does ComparisonExpression::Rules 
+    does ConfigurationPredicate::Rules 
+    does ConstantItem::Rules 
+    does Crate::Rules 
+    does DereferenceExpression::Rules 
+    does Enumeration::Rules 
+    does ErrorPropagationExpression::Rules 
+    does Expression::Rules 
+    does ExpressionWithBlock::Rules 
+    does ExpressionWithoutBlock::Rules 
+    does ExternBlock::Rules 
+    does FieldExpression::Rules 
+    does Function::Rules 
+    does GenericArgs::Rules 
+    does GenericParams::Rules 
+    does GroupedExpression::Rules 
+    does Identifiers::Rules 
+    does IfExpressions::Rules 
+    does ImplTraitType::Rules 
+    does InferredType::Rules 
+    does Item::Rules 
+    does Lifetimes::Rules 
+    does LineComment::Rules 
+    does LiteralExpression::Rules 
+    does LiteralPattern::Rules 
+    does LoopExpression::Rules 
+    does MacroInvocation::Rules 
+    does MatchExpression::Rules 
+    does MetaItem::Rules 
+    does Module::Rules 
+    does OperatorExpression::Rules 
+    does PathExpression::Rules 
+    does Pattern::Rules 
+    does Punctuation::Rules 
+    does RangeExpression::Rules 
+    does RangePattern::Rules 
+    does ReferencePattern::Rules 
+    does ReservedKeywords::Rules 
+    does ReturnExpression::Rules 
+    does SimplePath::Rules 
+    does Statement::Rules 
+    does StaticItem::Rules 
+    does StrictKeywords::Rules 
+    does Struct::Rules 
+    does StructExpression::Rules 
+    does StructPattern::Rules 
+    does Tokens::Rules 
+    does Trait::Rules 
+    does TraitObjectType::Rules 
+    does TupleExpression::Rules 
+    does TupleStructPattern::Rules 
+    does Type::Rules 
+    does TypeAlias::Rules 
+    does TypeBounds::Rules 
+    does TypeCastExpression::Rules 
+    does TypePath::Rules 
+    does Union::Rules 
+    does UseDeclaration::Rules 
+    does Visibility::Rules 
+    does WeakKeywords::Rules 
+    does WhereClause::Rules 
+    does Whitespace::Rules 
+    does Xid::Rules 
+{
     rule TOP {
-        <.ws> <stmts>
+        <.ws> 
+        <statement>+
     }
 }
 
 our role Rust::Actions::Role
-does AnonParams::Actions
-does AsTraitRef::Actions
-does AttrsAndVis::Actions
-does Binding::Actions
-does BindingMode::Actions
-does Block::Actions
-does BlockExpr::Actions
-does BlockItem::Actions
-does BlockOrIf::Actions
-does Bounds::Actions
-does ConstDefault::Actions
-does ConstGenerics::Actions
-does Crate::Actions
-does Comment::Actions
-does LineComment::Actions
-does BlockComment::Actions
-does DocComment::Actions
-does Default::Actions
-does Expr::Actions
-does ExprFor::Actions
-does ExprIf::Actions
-does ExprIfLet::Actions
-does ExprLoop::Actions
-does ExprMatch::Actions
-does ExprNoStruct::Actions
-does ExprQualifiedPath::Actions
-does ExprWhile::Actions
-does ExprWhileLet::Actions
-does Exprs::Actions
-does ExternFnItem::Actions
-does Fn::Actions
-does FnDeclWithSelf::Actions
-does FnParams::Actions
-does ForInType::Actions
-does ForLifetimes::Actions
-does ForSized::Actions
-does ForeignFn::Actions
-does ForeignItems::Actions
-does ForeignStatic::Actions
-does GenericArgs::Actions
-does GenericParams::Actions
-does Guard::Actions
-does Ident::Actions
-does IdentsOrSelf::Actions
-does ImplConst::Actions
-does ImplType::Actions
-does InferrableParams::Actions
-does InitExpr::Actions
-does InnerAttrs::Actions
-does InnerAttrsAndBlock::Actions
-does Item::Actions
-does ItemConst::Actions
-does ItemEnum::Actions
-does ItemImpl::Actions
-does ImplItem::Actions
-does ItemMacro::Actions
-does ItemMod::Actions
-does ItemStatic::Actions
-does ItemStruct::Actions
-does ItemTrait::Actions
-does ItemTraitAlias::Actions
-does ItemType::Actions
-does ItemUnion::Actions
-does Label::Actions
-does LambdaExpr::Actions
-does Let::Actions
-does Lifetimes::Actions
-does Lit::Actions
-does LitOrPath::Actions
-does LtBounds::Actions
-does MacroExpr::Actions
-does MetaItem::Actions
-does MetaSeq::Actions
-does Method::Actions
-does ModItem::Actions
-does ModItems::Actions
-does MutOrConst::Actions
-does NamedArg::Actions
-does NonBlockExpr::Actions
-does NonblockPrefixExpr::Actions
-does OuterAttrs::Actions
-does Params::Actions
-does Pat::Actions
-does PatField::Actions
-does PatStruct::Actions
-does PatTup::Actions
-does PatVec::Actions
-does PathExpr::Actions
-does PathGenericArgsWithColons::Actions
-does PathGenericArgsWithoutColons::Actions
-does PathNoTypesAllowed::Actions
-does QPathParams::Actions
-does RetTy::Actions
-does StmtItem::Actions
-does Stmts::Actions
-does String::Actions
-does StructExpr::Actions
-does TokenTree::Actions
-does TraitConst::Actions
-does TraitMethod::Actions
-does TraitRef::Actions
-does TraitType::Actions
-does Ty::Actions
-does TyAscription::Actions
-does TyBareFn::Actions
-does TyClosure::Actions
-does TyDefault::Actions
-does TyFnDecl::Actions
-does TyParam::Actions
-does TyParamBounds::Actions
-does TyParams::Actions
-does TyPrim::Actions
-does TyQualifiedPath::Actions
-does TySums::Actions
-does TySumsAndBindings::Actions
-does UnpairedToken::Actions
-does Unsafe::Actions
-does UseItem::Actions
-does VecExpr::Actions
-does ViewItem::Actions
-does ViewPath::Actions
-does Visibility::Actions
-does WhereClause::Actions
-does WherePredicates::Actions {}
+    does ArrayExpression::Actions 
+    does AsClause::Actions 
+    does AssignmentExpression::Actions 
+    does AssociatedItem::Actions 
+    does BareFunctionType::Actions 
+    does BlockCommentOrDoc::Actions 
+    does BlockExpression::Actions 
+    does BorrowExpression::Actions 
+    does CallExpression::Actions 
+    does CfgAttr::Actions 
+    does ClosureExpression::Actions 
+    does ComparisonExpression::Actions 
+    does ConfigurationPredicate::Actions 
+    does ConstantItem::Actions 
+    does Crate::Actions 
+    does DereferenceExpression::Actions 
+    does Enumeration::Actions 
+    does ErrorPropagationExpression::Actions 
+    does Expression::Actions 
+    does ExpressionWithBlock::Actions 
+    does ExpressionWithoutBlock::Actions 
+    does ExternBlock::Actions 
+    does FieldExpression::Actions 
+    does Function::Actions 
+    does GenericArgs::Actions 
+    does GenericParams::Actions 
+    does GroupedExpression::Actions 
+    does Identifiers::Actions 
+    does IfExpressions::Actions 
+    does ImplTraitType::Actions 
+    does InferredType::Actions 
+    does Item::Actions 
+    does Lifetimes::Actions 
+    does LineComment::Actions 
+    does LiteralExpression::Actions 
+    does LiteralPattern::Actions 
+    does LoopExpression::Actions 
+    does MacroInvocation::Actions 
+    does MatchExpression::Actions 
+    does MetaItem::Actions 
+    does Module::Actions 
+    does OperatorExpression::Actions 
+    does PathExpression::Actions 
+    does Pattern::Actions 
+    does Punctuation::Actions 
+    does RangeExpression::Actions 
+    does RangePattern::Actions 
+    does ReferencePattern::Actions 
+    does ReservedKeywords::Actions 
+    does ReturnExpression::Actions 
+    does SimplePath::Actions 
+    does Statement::Actions 
+    does StaticItem::Actions 
+    does StrictKeywords::Actions 
+    does Struct::Actions 
+    does StructExpression::Actions 
+    does StructPattern::Actions 
+    does Tokens::Actions 
+    does Trait::Actions 
+    does TraitObjectType::Actions 
+    does TupleExpression::Actions 
+    does TupleStructPattern::Actions 
+    does Type::Actions 
+    does TypeAlias::Actions 
+    does TypeBounds::Actions 
+    does TypeCastExpression::Actions 
+    does TypePath::Actions 
+    does Union::Actions 
+    does UseDeclaration::Actions 
+    does Visibility::Actions 
+    does WeakKeywords::Actions 
+    does WhereClause::Actions {}
 
 our grammar Rust::Grammar does Rust::Grammar::Role {}
 our class Rust::Actions does Rust::Actions::Role {}

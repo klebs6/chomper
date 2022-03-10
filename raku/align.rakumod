@@ -1,4 +1,5 @@
 use MONKEY-TYPING;
+
 augment class List {
     method align($delim) {
         my @splits = self>>.split($delim);
