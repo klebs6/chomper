@@ -3,7 +3,7 @@ our role GenericArgs::Rules {
     rule generic-args {
         <tok-lt>
         [ <generic-arg>* %% <tok-comma> ]
-        <tok-rt>
+        <tok-gt>
     }
 
     proto rule generic-arg { * }

@@ -1,6 +1,6 @@
 our role Item::Rules {
 
-    rule item {
+    rule crate-item {
         <outer-attribute>*
         <item-variant>
     }
@@ -31,8 +31,32 @@ our role Item::Rules {
     rule vis-item-variant:sym<extern-block>    { <extern-block> }
 
     proto rule macro-item { * }
-    rule macro-item:sym<macro-invocation-semi>  { <macro-invocation-semi> }
+    rule macro-item:sym<macro-invocation>       { <macro-invocation> }
     rule macro-item:sym<macro-rules-definition> { <macro-rules-definition> }
+
+    rule init-expression {
+        <tok-eq>
+        <expression>
+    }
+
+    rule constant-item {
+        <kw-const> 
+        <identifier-or-underscore> 
+        <tok-colon> 
+        <type> 
+        <init-expression>?
+        <tok-semi>
+    }
+
+    rule static-item {
+        <kw-static>
+        <kw-mut>?
+        <identifier>
+        <tok-colon>
+        <type>
+        <init-expression>?
+        <tok-semi>
+    }
 }
 
 our role Item::Actions {}

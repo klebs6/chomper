@@ -4,7 +4,7 @@ our role Crate::Rules {
         <utf8-bom>?
         <shebang>?
         <inner-attribute>*
-        <item>*
+        <crate-item>*
     }
 
     token utf8-bom {
@@ -49,7 +49,7 @@ our role Crate::Rules {
         <identifier>
         <tok-lbrace>
         <inner-attribute>*
-        <item>*
+        <crate-item>*
         <tok-rbrace>
     }
 }

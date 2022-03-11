@@ -28,7 +28,7 @@ our role LoopExpression::Rules {
     }
 
     rule predicate-loop-expression {
-        <kw-while> <expression-except-struct-expression> <block-expression>
+        <kw-while> <expression-nostruct> <block-expression>
     }
 
     rule predicate-pattern-loop-expression {
@@ -44,7 +44,7 @@ our role LoopExpression::Rules {
         <kw-for>
         <pattern>
         <kw-in>
-        <expression-except-struct-expression>
+        <expression-nostruct>
         <block-expression>
     }
 

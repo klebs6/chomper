@@ -154,14 +154,57 @@ our role Punctuation::Rules {
     token tok-single-quote { \' }
     token tok-double-quote { \" }
 
-    token tok-lparen { '(' }
-    token tok-rparen { ')' }
-
-    token tok-lbrace { '{' }
-    token tok-rbrace { '}' }
-
-    token tok-lbrack { '[' }
-    token tok-rbrack { ']' }
+    #-------------------------
+    proto token punctuation { * }
+    token punctuation:sym<tok-plus>         { <tok-plus> } 
+    token punctuation:sym<tok-minus>        { <tok-minus> } 
+    token punctuation:sym<tok-star>         { <tok-star> } 
+    token punctuation:sym<tok-slash>        { <tok-slash> } 
+    token punctuation:sym<tok-percent>      { <tok-percent> } 
+    token punctuation:sym<tok-caret>        { <tok-caret> } 
+    token punctuation:sym<tok-not>          { <tok-not> } 
+    token punctuation:sym<tok-bang>         { <tok-bang> } 
+    token punctuation:sym<tok-and>          { <tok-and> } 
+    token punctuation:sym<tok-or>           { <tok-or> } 
+    token punctuation:sym<tok-andand>       { <tok-andand> } 
+    token punctuation:sym<tok-oror>         { <tok-oror> } 
+    token punctuation:sym<tok-shl>          { <tok-shl> } 
+    token punctuation:sym<tok-shr>          { <tok-shr> } 
+    token punctuation:sym<tok-pluseq>       { <tok-pluseq> } 
+    token punctuation:sym<tok-minuseq>      { <tok-minuseq> } 
+    token punctuation:sym<tok-stareq>       { <tok-stareq> } 
+    token punctuation:sym<tok-slasheq>      { <tok-slasheq> } 
+    token punctuation:sym<tok-percenteq>    { <tok-percenteq> } 
+    token punctuation:sym<tok-careteq>      { <tok-careteq> } 
+    token punctuation:sym<tok-andeq>        { <tok-andeq> } 
+    token punctuation:sym<tok-oreq>         { <tok-oreq> } 
+    token punctuation:sym<tok-shleq>        { <tok-shleq> } 
+    token punctuation:sym<tok-shreq>        { <tok-shreq> } 
+    token punctuation:sym<tok-eq>           { <tok-eq> } 
+    token punctuation:sym<tok-eqeq>         { <tok-eqeq> } 
+    token punctuation:sym<tok-ne>           { <tok-ne> } 
+    token punctuation:sym<tok-gt>           { <tok-gt> } 
+    token punctuation:sym<tok-lt>           { <tok-lt> } 
+    token punctuation:sym<tok-ge>           { <tok-ge> } 
+    token punctuation:sym<tok-le>           { <tok-le> } 
+    token punctuation:sym<tok-at>           { <tok-at> } 
+    token punctuation:sym<tok-underscore>   { <tok-underscore> } 
+    token punctuation:sym<tok-dot>          { <tok-dot> } 
+    token punctuation:sym<tok-dotdot>       { <tok-dotdot> } 
+    token punctuation:sym<tok-dotdotdot>    { <tok-dotdotdot> } 
+    token punctuation:sym<tok-dotdoteq>     { <tok-dotdoteq> } 
+    token punctuation:sym<tok-comma>        { <tok-comma> } 
+    token punctuation:sym<tok-semi>         { <tok-semi> } 
+    token punctuation:sym<tok-colon>        { <tok-colon> } 
+    token punctuation:sym<tok-path-sep>     { <tok-path-sep> } 
+    token punctuation:sym<tok-rarrow>       { <tok-rarrow> } 
+    token punctuation:sym<tok-fat-rarrow>   { <tok-fat-rarrow> } 
+    token punctuation:sym<tok-pound>        { <tok-pound> } 
+    token punctuation:sym<tok-dollar>       { <tok-dollar> } 
+    token punctuation:sym<tok-qmark>        { <tok-qmark> } 
+    token punctuation:sym<tok-qmark-qmark>  { <tok-qmark-qmark> }
+    token punctuation:sym<tok-single-quote> { <tok-single-quote> }
+    token punctuation:sym<tok-double-quote> { <tok-double-quote> }
 }
 
 our role Punctuation::Actions {}

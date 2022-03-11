@@ -1,12 +1,17 @@
 our role Statement::Rules {
 
+    rule statements {  
+        <statement>*
+        <expression-noblock>?
+    }
+
     proto rule statement { * }
 
-    rule statement:sym<semi>  { <tok-semi> }
-    rule statement:sym<item>  { <item> }
-    rule statement:sym<let>   { <let-statement> }
-    rule statement:sym<expr>  { <expression-statement> }
-    rule statement:sym<macro> { <macro-invocation-semi> }
+    rule statement:sym<semi>          { <tok-semi> }
+    regex statement:sym<let>           { <comment>? <let-statement> <line-comment>? }
+    rule statement:sym<expr>          { <comment>? <expression-statement> }
+    rule statement:sym<macro>         { <comment>? <macro-invocation> }
+    rule statement:sym<item>          { <comment>? <crate-item> }
 
     rule let-statement {
         <outer-attribute>*
@@ -25,15 +30,8 @@ our role Statement::Rules {
 
     proto rule expression-statement { * }
 
-    rule expression-statement:sym<noblock> {
-        <expression-noblock>
-        <tok-semi>
-    }
-
-    rule expression-statement:sym<block> { 
-        <expression-with-block>
-        <tok-semi>?
-    }
+    rule expression-statement:sym<noblock> { <expression-noblock> <tok-semi> }
+    rule expression-statement:sym<block>   { <expression-with-block> <tok-semi>? }
 }
 
 our role Statement::Actions {}

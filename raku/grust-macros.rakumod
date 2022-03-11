@@ -12,13 +12,15 @@ our role MacroInvocation::Rules {
         | <tok-lbrace> <token-tree>* <tok-rbrace>
     }
 
+    rule token-trees { <token-tree>* }
+
     proto rule token-tree { * }
 
-    rule token-tree:sym<leaf> { <token-except-delimiters> }
+    rule token-tree:sym<leaf> { <rust-token-no-delim> }
 
     rule token-tree:sym<tree> { <delim-token-tree> }
 
-    rule macro-invocation-semi {
+    rule macro-invocation {
         | <simple-path> <.tok-bang> <.tok-lparen> <token-tree>* <.tok-rparen> <.tok-semi>
         | <simple-path> <.tok-bang> <.tok-lbrack> <token-tree>* <.tok-rbrack> <.tok-semi>
         | <simple-path> <.tok-bang> <.tok-lbrace> <token-tree>* <.tok-rbrace>
@@ -36,9 +38,9 @@ our role MacroInvocation::Rules {
     }
 
     rule macro-rules-def {
-        | <tok-lparen> <macro-rules> <tok-rparen> <tok-semi>
-        | <tok-lbrack> <macro-rules> <tok-rbrack> <tok-semi>
-        | <tok-lbrace> <macro-rules> <tok-rbrace>
+        | <tok-lparen> <comment>? <macro-rules> <tok-rparen> <tok-semi>
+        | <tok-lbrack> <comment>? <macro-rules> <tok-rbrack> <tok-semi>
+        | <tok-lbrace> <comment>? <macro-rules> <tok-rbrace>
     }
 
     rule macro-rules {

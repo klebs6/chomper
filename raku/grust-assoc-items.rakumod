@@ -9,7 +9,7 @@ our role AssociatedItem::Rules {
     proto rule associated-item-variant { * }
 
     rule associated-item-variant:sym<macro> {
-        <macro-invocation-semi>
+        <macro-invocation>
     }
 
     rule associated-item-variant:sym<maybe-visible> {
@@ -20,17 +20,9 @@ our role AssociatedItem::Rules {
     #---------------------
     proto rule maybe-visible-associated-item-variant { * }
 
-    rule maybe-visible-associated-item-variant:sym<type-alias> {
-        <type-alias>
-    }
-
-    rule maybe-visible-associated-item-variant:sym<constant-item> {
-        <constant-item>
-    }
-
-    rule maybe-visible-associated-item-variant:sym<fn> {
-        <function>
-    }
+    rule maybe-visible-associated-item-variant:sym<type-alias>    { <type-alias> }
+    rule maybe-visible-associated-item-variant:sym<constant-item> { <constant-item> }
+    rule maybe-visible-associated-item-variant:sym<fn>            { <function> }
 }
 
 our role AssociatedItem::Actions {

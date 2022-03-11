@@ -30,6 +30,17 @@ our role Identifiers::Rules {
     proto token identifier { * }
     token identifier:sym<a> { <non-keyword-identifier> }
     token identifier:sym<b> { <raw-identifier> }
+
+    #---------------------
+    proto rule identifier-or-underscore { * }
+
+    rule identifier-or-underscore:sym<identifier> {
+        <identifier>
+    }
+
+    rule identifier-or-underscore:sym<underscore> {
+        <tok-underscore>
+    }
 }
 
 our role Identifiers::Actions {}

@@ -10,29 +10,30 @@ our role MatchExpression::Rules {
     }
 
     rule scrutinee {
-        <expression-except-struct-expression>
+        <expression-nostruct>
     }
 
     #------------------
     rule match-arms {
         <match-arms-inner-item>*
         <match-arms-outer-item>
+        <comment>?
     }
 
     proto rule match-arms-inner-item { * }
-
-    rule match-arms-inner-item:sym<without-block> {  
-        <match-arm> 
-        <tok-fat-rarrow> 
-        <expression-noblock> 
-        <tok-comma>
-    }
 
     rule match-arms-inner-item:sym<with-block> {  
         <match-arm>
         <tok-fat-rarrow>
         <expression-with-block>
         <tok-comma>?
+    }
+
+    rule match-arms-inner-item:sym<without-block> {  
+        <match-arm> 
+        <tok-fat-rarrow> 
+        <expression-noblock> 
+        <tok-comma>
     }
 
     rule match-arms-outer-item {

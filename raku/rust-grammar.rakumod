@@ -1,15 +1,21 @@
 use grust-array-expression;
+use grust-ascii;
 use grust-assoc-items;
-use grust-block-comment;
+use grust-comment;
 use grust-block-expressions;
+use grust-boolean-literal;
+use grust-byte-literal;
+use grust-byte-string-literal;
 use grust-cfg-attr;
+use grust-char-literal;
 use grust-closure-expressions;
 use grust-configuration;
-use grust-constants;
 use grust-crate;
+use grust-delimiters;
 use grust-enumerations;
 use grust-expressions;
 use grust-external-blocks;
+use grust-float-literal;
 use grust-function-pointer-types;
 use grust-functions;
 use grust-generic-args;
@@ -17,10 +23,10 @@ use grust-generic-parameters;
 use grust-identifiers;
 use grust-if-expressions;
 use grust-impl-trait;
+use grust-int-literal;
 use grust-item;
 use grust-jump-expressions;
 use grust-lifetimes;
-use grust-line-comment;
 use grust-literal-pattern;
 use grust-literal;
 use grust-loop-expression;
@@ -36,6 +42,7 @@ use grust-reference-patterns;
 use grust-reserved-keywords;
 use grust-statements;
 use grust-strict-keywords;
+use grust-string-literal;
 use grust-struct-expressions;
 use grust-struct-patterns;
 use grust-structs;
@@ -56,64 +63,73 @@ use grust-whitespace;
 use grust-xid;
 
 our role Rust::Grammar::Role
-    does ArrayExpression::Rules 
-    does AssociatedItem::Rules 
-    does BareFunctionType::Rules 
-    does BlockCommentOrDoc::Rules 
-    does BlockExpression::Rules 
-    does CfgAttr::Rules 
-    does ClosureExpression::Rules 
-    does ConfigurationPredicate::Rules 
-    does ConstantItem::Rules 
-    does Crate::Rules 
-    does Enumeration::Rules 
-    does Expression::Rules 
-    does ExternBlock::Rules 
-    does Function::Rules 
-    does GenericArgs::Rules 
-    does GenericParams::Rules 
-    does Identifiers::Rules 
-    does IfExpressions::Rules 
-    does ImplTraitType::Rules 
-    does Item::Rules 
-    does Lifetimes::Rules 
-    does LineComment::Rules 
-    does LiteralExpression::Rules 
-    does LiteralPattern::Rules 
-    does LoopExpression::Rules 
-    does MacroInvocation::Rules 
-    does MatchExpression::Rules 
-    does MetaItem::Rules 
-    does PathExpression::Rules 
-    does Pattern::Rules 
-    does Punctuation::Rules 
-    does RangePattern::Rules 
-    does ReferencePattern::Rules 
-    does ReservedKeywords::Rules 
-    does JumpExpression::Rules 
-    does SimplePath::Rules 
-    does Statement::Rules 
-    does StaticItem::Rules 
-    does StrictKeywords::Rules 
-    does Struct::Rules 
-    does StructExpression::Rules 
-    does StructPattern::Rules 
-    does Tokens::Rules 
-    does Trait::Rules 
-    does TraitObjectType::Rules 
-    does TupleExpression::Rules 
-    does TupleStructPattern::Rules 
-    does Type::Rules 
-    does TypeAlias::Rules 
-    does TypeBounds::Rules 
-    does TypePath::Rules 
-    does Union::Rules 
-    does UseDeclaration::Rules 
-    does Visibility::Rules 
-    does WeakKeywords::Rules 
-    does WhereClause::Rules 
-    does Whitespace::Rules 
-    does Xid::Rules 
+does ArrayExpression::Rules 
+does AssociatedItem::Rules 
+does BareFunctionType::Rules 
+does Comment::Rules 
+does LineComment::Rules 
+does BlockComment::Rules 
+does DocComment::Rules 
+does BlockExpression::Rules 
+does CfgAttr::Rules 
+does ClosureExpression::Rules 
+does ConfigurationPredicate::Rules 
+does Crate::Rules 
+does Enumeration::Rules 
+does Expression::Rules 
+does ExternBlock::Rules 
+does Function::Rules 
+does GenericArgs::Rules 
+does GenericParams::Rules 
+does Identifiers::Rules 
+does IfExpressions::Rules 
+does ImplTraitType::Rules 
+does Item::Rules 
+does JumpExpression::Rules 
+does Lifetimes::Rules 
+does LiteralExpression::Rules 
+does LiteralPattern::Rules 
+does LoopExpression::Rules 
+does MacroInvocation::Rules 
+does MatchExpression::Rules 
+does MetaItem::Rules 
+does PathExpression::Rules 
+does Pattern::Rules 
+does Punctuation::Rules 
+does RangePattern::Rules 
+does ReferencePattern::Rules 
+does ReservedKeywords::Rules 
+does SimplePath::Rules 
+does Statement::Rules 
+does StrictKeywords::Rules 
+does Struct::Rules 
+does StructExpression::Rules 
+does StructPattern::Rules 
+does Tokens::Rules 
+does Trait::Rules 
+does TraitObjectType::Rules 
+does TupleExpression::Rules 
+does TupleStructPattern::Rules 
+does Type::Rules 
+does TypeAlias::Rules 
+does TypeBounds::Rules 
+does TypePath::Rules 
+does Union::Rules 
+does UseDeclaration::Rules 
+does Visibility::Rules 
+does WeakKeywords::Rules 
+does WhereClause::Rules 
+does Whitespace::Rules 
+does Xid::Rules 
+does Ascii::Rules
+does BooleanLiteral::Rules
+does ByteLiteral::Rules
+does ByteStringLiteral::Rules
+does CharLiteral::Rules
+does Delimiters::Rules
+does FloatLiteral::Rules
+does IntLiteral::Rules
+does StringLiteral::Rules
 {
     rule TOP {
         <.ws> 
@@ -125,12 +141,11 @@ our role Rust::Actions::Role
     does ArrayExpression::Actions 
     does AssociatedItem::Actions 
     does BareFunctionType::Actions 
-    does BlockCommentOrDoc::Actions 
+    does Comment::Actions 
     does BlockExpression::Actions 
     does CfgAttr::Actions 
     does ClosureExpression::Actions 
     does ConfigurationPredicate::Actions 
-    does ConstantItem::Actions 
     does Crate::Actions 
     does Enumeration::Actions 
     does Expression::Actions 
@@ -143,7 +158,6 @@ our role Rust::Actions::Role
     does ImplTraitType::Actions 
     does Item::Actions 
     does Lifetimes::Actions 
-    does LineComment::Actions 
     does LiteralExpression::Actions 
     does LiteralPattern::Actions 
     does LoopExpression::Actions 
@@ -159,7 +173,6 @@ our role Rust::Actions::Role
     does JumpExpression::Actions 
     does SimplePath::Actions 
     does Statement::Actions 
-    does StaticItem::Actions 
     does StrictKeywords::Actions 
     does Struct::Actions 
     does StructExpression::Actions 

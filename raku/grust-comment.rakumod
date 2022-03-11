@@ -2,7 +2,7 @@ use Data::Dump::Tree;
 
 use doxy-comment;
 
-use grust-lex;
+#use grust-lex;
 
 our class DocComment { 
 
@@ -29,8 +29,8 @@ our role Comment::Rules
 }
 
 our role Comment::Actions {
-    method comment:sym<line>($/)  { make "\n/*" ~ $<line-comment>>>.made.join("\n") ~ "*/" }
-    method comment:sym<block>($/) { make $<block-comment>.made }
+    #method comment:sym<line>($/)  { make "\n/*" ~ $<line-comment>>>.made.join("\n") ~ "*/" }
+    #method comment:sym<block>($/) { make $<block-comment>.made }
 }
 
 #--------------------------------------
@@ -64,7 +64,12 @@ our role LineComment::Actions {
 }
 
 #--------------------------------------
-my @block-comment-states;
+enum BlockCommentState <
+blockcomment
+initial
+>;
+
+my BlockCommentState @block-comment-states;
 
 our role BlockComment::Rules {
 
@@ -83,8 +88,8 @@ our role BlockComment::Rules {
     token block-comment-begin {
         \/\*
         { 
-            self.push-state(XState::<initial>);
-            self.push-state(XState::<blockcomment>);
+            self.push-state(BlockCommentState::<initial>);
+            self.push-state(BlockCommentState::<blockcomment>);
         }
     }
 
@@ -98,7 +103,7 @@ our role BlockComment::Rules {
         <?{self.peek-state().Str eq "blockcomment" }>
         \/\*
         { 
-            self.push-state(XState::<blockcomment>) 
+            self.push-state(BlockCommentState::<blockcomment>) 
         }
     }
 

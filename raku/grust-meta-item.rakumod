@@ -18,6 +18,7 @@ our role MetaItem::Rules {
         <meta-item-inner>+ %% <tok-comma>
     }
 
+    #---------------
     proto rule meta-item-inner { * }
 
     rule meta-item-inner:sym<basic> { <meta-item> }

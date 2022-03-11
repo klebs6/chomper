@@ -18,7 +18,7 @@ our role ExternBlock::Rules {
     proto rule external-item-variant { * }
 
     rule external-item-variant:sym<macro> {
-        <macro-invocation-semi>
+        <macro-invocation>
     }
 
     rule external-item-variant:sym<maybe-visible> {

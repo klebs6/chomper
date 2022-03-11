@@ -27,13 +27,13 @@ our role StructExpression::Rules {
 
     rule struct-expr-fields {
         [ <struct-expr-field>+ %% <tok-comma> ]
-        [ <tok-comma> <struct-base> ]?
+        [ <tok-comma>? <struct-base> ]?
     }
 
     proto rule struct-expr-field { * }
-    rule struct-expr-field:sym<id>       { <identifier> }
-    rule struct-expr-field:sym<id-expr>  { <identifier>  <tok-colon> <expression> }
     rule struct-expr-field:sym<tup-expr> { <tuple-index> <tok-colon> <expression> }
+    rule struct-expr-field:sym<id-expr>  { <identifier>  <tok-colon> <expression> }
+    rule struct-expr-field:sym<id>       { <identifier> }
 
     rule struct-base {
         <tok-dotdot> <expression>
