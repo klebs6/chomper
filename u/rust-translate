@@ -11,7 +11,7 @@ sub MAIN(:$stdin = Nil) {
 
     $in = $in.subst(/^\s+/,"");
 
-    my $rule = "statements";
+    my $rule = "crate";
 
     my $actions = Rust::Actions.new;
 

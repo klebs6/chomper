@@ -105,7 +105,7 @@ our role Expression::Rules {
             <tok-and>?
             <kw-mut>? 
         ]*
-        <unary-star-expression>
+        <unary-expression>
     }
 
     rule cast-expression {
