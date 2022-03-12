@@ -79,7 +79,7 @@ our role Punctuation::Rules {
 
     #`(Assignment, Attributes, Various type
     #definitions)
-    token tok-eq           { '=' <!before '='>   } 
+    token tok-eq           { '=' <!before <[\= \>]>>   } 
 
     #`(Equal)
     token tok-eqeq         { '=='  } 

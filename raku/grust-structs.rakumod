@@ -31,6 +31,7 @@ our role Struct::Rules {
     }
 
     rule struct-field {
+        <comment>?
         <outer-attribute>*
         <visibility>?
         <identifier>
@@ -43,6 +44,7 @@ our role Struct::Rules {
     }
 
     rule tuple-field {
+        <comment>?
         <outer-attribute>*
         <visibility>?
         <type>

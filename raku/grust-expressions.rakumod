@@ -1,15 +1,18 @@
+our $NOSTRUCT = False;
+our $NOBLOCK  = False;
+
 our role Expression::Rules {
 
     rule expression-nostruct { 
-        :my $*NOSTRUCT = True;
+        {$NOSTRUCT = True}
         <expression>
-        {$*NOSTRUCT = False}
+        {$NOSTRUCT = False}
     }
 
     rule expression-noblock { 
-        :my $*NOBLOCK = True;
+        {$NOBLOCK = True}
         <expression>
-        {$*NOBLOCK = False}
+        {$NOBLOCK = False}
     }
 
     rule base-expression {
@@ -18,96 +21,82 @@ our role Expression::Rules {
         {
             #once we parse one base-expression,
             #reset noblock and nostruct
-            $*NOBLOCK  = False;
-            $*NOSTRUCT = False;
+            $NOBLOCK  = False;
+            $NOSTRUCT = False;
         }
     }
 
-    #--------------------
-    rule method-call-expression {
-        <base-expression>
-        [ 
-            <tok-dot> 
-            <path-expr-segment> 
-            <tok-lparen> 
-            <call-params>? 
-            <tok-rparen> 
-        ]*
+    proto rule suffixed-expression-suffix { * }
+
+    rule suffixed-expression-suffix:sym<method-call> {
+        <tok-dot> 
+        <path-expr-segment> 
+        <tok-lparen> 
+        <call-params>? 
+        <tok-rparen> 
     }
 
-    rule field-expression {
-        <method-call-expression>
-        [ 
-            <tok-dot> 
-            <identifier> 
-        ]*
+    rule suffixed-expression-suffix:sym<index> {
+        <tok-lbrack> 
+        <expression> 
+        <tok-rbrack>  
     }
 
-    rule tuple-index-expression {
-        <field-expression>
-        [ <tok-dot> <tuple-index> ]*
-    }
+    rule suffixed-expression-suffix:sym<field> {
 
-    rule await-expression {
-        <tuple-index-expression>
-        [ <tok-dot> <kw-await> ]*
-    }
+        <tok-dot> 
 
-    #--------------------
-    rule index-expression {
-        <await-expression>
-        [ 
-            <tok-lbrack> 
-            <expression> 
-            <tok-rbrack>  
-        ]*
-    }
-
-    #this resolves a precedenceloop in the grammar
-    #from the rust ref.  it is a duplicate of
-    #field-expression, except that we take
-    #index-expression as our base
-    rule index-field-expression {
-        <index-expression>
-        [ 
-            <tok-dot> 
-            <identifier> 
-        ]*
+        #making this <expression> results in
+        #massive performance loss
+        <identifier>  
     }
 
     rule call-params {
         <expression>+ %% <tok-comma>
     }
 
-    rule call-expression {
-        <index-field-expression>
-        [ 
-            <tok-lparen> 
-            <call-params>?
-            <tok-rparen>
-        ]*
+    rule suffixed-expression-suffix:sym<call> {
+        <tok-lparen> 
+        <call-params>?
+        <tok-rparen>
+    }
+
+    rule suffixed-expression-suffix:sym<await> {
+        <tok-dot> <kw-await>
+    }
+
+    rule suffixed-expression-suffix:sym<tuple-index> {
+        <tok-dot> <tuple-index>
+    }
+
+    rule suffixed-expression-suffix:sym<error-propagation> {
+        <tok-qmark>
+    }
+
+    rule suffixed-expression {
+        <base-expression>
+        <suffixed-expression-suffix>*
     }
 
     #--------------------
 
-    rule error-propagation-expression {
-        <call-expression>
-        <tok-qmark>* 
+    proto rule unary-prefix { * }
+
+    rule unary-prefix:sym<bang> {
+        <tok-bang>
     }
 
-    rule unary-bang-expression {
-        <tok-bang>* 
-        <error-propagation-expression>
+    rule unary-prefix:sym<minus> {
+        <tok-minus>
     }
 
-    rule unary-minus-expression {
-        <tok-minus>* 
-        <unary-bang-expression>
+    rule unary-prefix:sym<star> {
+        <tok-star>
     }
 
-    rule unary-star-expression {
-        <tok-star>* 
-        <unary-minus-expression>
+    rule unary-expression {
+        <unary-prefix>*
+        <suffixed-expression>
     }
 
     rule borrow-expression {
@@ -274,8 +263,6 @@ our role Expression::Rules {
     }
 
     rule expression {
-        :my $*NOBLOCK  = False;
-        :my $*NOSTRUCT = False;
         <assign-expression>
     }
 
@@ -283,13 +270,13 @@ our role Expression::Rules {
     proto rule expression-item { * }
 
     rule expression-item:sym<block>    { 
-        <?{$*NOBLOCK eq False}> 
+        <?{$NOBLOCK eq False}> 
         <expression-with-block> 
     }
     rule expression-item:sym<macro>    { <macro-expression> } 
 
     rule expression-item:sym<struct>   { 
-        #<?{$*NOSTRUCT eq False}>  #why does <?{True}> break matching here?
+        #<?{$NOSTRUCT eq False}>  #why does <?{True}> break matching here?
         <struct-expression> 
     }
 
@@ -312,6 +299,7 @@ our role Expression::Rules {
     rule expression-with-block:sym<loop>         { <loop-expression> }
     rule expression-with-block:sym<if>           { <if-expression> }
     rule expression-with-block:sym<if-let>       { <if-let-expression> }
+    rule expression-with-block:sym<comment>      { <comment> }
 }
 
 our role Expression::Actions {}

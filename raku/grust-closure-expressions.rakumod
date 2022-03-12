@@ -6,9 +6,15 @@ our role ClosureExpression::Rules {
         <closure-body>
     }
 
-    rule closure-expression-opener {
+    proto rule closure-expression-opener { * }
+
+    rule closure-expression-opener:sym<a> {
+        <tok-oror>
+    }
+
+    rule closure-expression-opener:sym<b> {
         <tok-or>
-        <closure-parameters>?
+        <closure-parameters>
         <tok-or>
     }
 

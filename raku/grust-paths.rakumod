@@ -3,7 +3,11 @@ our role SimplePath::Rules {
     token simple-path {
         <tok-path-sep>?
         [
-            <simple-path-segment>+ %% <tok-path-sep>
+            <simple-path-segment>
+            [
+                <tok-path-sep>
+                <simple-path-segment>
+            ]*
         ]
     }
 

@@ -25,7 +25,9 @@ our role StringLiteral::Rules {
     proto token raw-string-content { * }
 
     token raw-string-content:sym<a> {
-        " ( ~ IsolatedCR )* (non-greedy) "
+        <tok-double-quote>
+        <-[\r]>*?
+        <tok-double-quote>
     }
 
     token raw-string-content:sym<b> {

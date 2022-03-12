@@ -1,6 +1,7 @@
 our role AssociatedItem::Rules {
 
     rule associated-item {
+        <comment>?
         <outer-attribute>*
         <associated-item-variant>
     }

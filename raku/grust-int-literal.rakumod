@@ -20,40 +20,40 @@ our role IntLiteral::Rules {
 
     proto token integer-literal-variant { * }
 
-    token integer-literal-variant:sym<dec> { <dec-literal> }
     token integer-literal-variant:sym<bin> { <bin-literal> }
     token integer-literal-variant:sym<oct> { <oct-literal> }
     token integer-literal-variant:sym<hex> { <hex-literal> }
+    token integer-literal-variant:sym<dec> { <dec-literal> }
 
     token dec-literal {
         <dec-digit> [<dec-digit> | _]*
     }
 
     token bin-literal {
-        0b [<bin-digit> | _]* <bin-digit> [<bin-digit> | _]*
+        0b <bin-digit>+
     }
 
     token oct-literal {
-        0o [<oct-digit> | _]* <oct-digit> [<oct-digit> | _]*
+        0o <oct-digit>+
     }
 
     token hex-literal {
-        0x [<hex-digit> | _]* <hex-digit> [<hex-digit> | _]*
+        0x <hex-digit>+
     }
 
     token bin-digit {
-        <[0..1]>
+        <[0..1 _]>
     }
 
     token oct-digit {
-        <[0..7]>
+        <[0..7 _]>
     }
 
     token dec-digit {
-        <[0..9]>
+        <[0..9 _]>
     }
 
     token hex-digit {
-        <[0..9 a..f A..F]>
+        <[0..9 a..f A..F _]>
     }
 }

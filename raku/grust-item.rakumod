@@ -1,6 +1,7 @@
 our role Item::Rules {
 
     rule crate-item {
+        <comment>?
         <outer-attribute>*
         <item-variant>
     }

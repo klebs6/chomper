@@ -18,11 +18,11 @@ our role UseDeclaration::Rules {
 
     rule use-tree:sym<complex> {
        [ <simple-path>? <tok-path-sep> ]? 
-       <tok-lbrack>
+       <tok-lbrace>
        [
            <use-tree>+ %% <tok-comma>
        ]? 
-       <tok-rbrack>
+       <tok-rbrace>
     }
 
     rule use-tree:sym<as> {

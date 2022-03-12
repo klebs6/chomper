@@ -31,9 +31,9 @@ our role StructExpression::Rules {
     }
 
     proto rule struct-expr-field { * }
-    rule struct-expr-field:sym<tup-expr> { <tuple-index> <tok-colon> <expression> }
-    rule struct-expr-field:sym<id-expr>  { <identifier>  <tok-colon> <expression> }
-    rule struct-expr-field:sym<id>       { <identifier> }
+    rule struct-expr-field:sym<tup-expr> { <comment>? <tuple-index> <tok-colon> <expression> }
+    rule struct-expr-field:sym<id-expr>  { <comment>? <identifier>  <tok-colon> <expression> }
+    rule struct-expr-field:sym<id>       { <comment>? <identifier> }
 
     rule struct-base {
         <tok-dotdot> <expression>

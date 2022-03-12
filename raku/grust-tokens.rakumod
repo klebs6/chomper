@@ -21,8 +21,8 @@ our role Tokens::Rules
     }
     
     token quote-escape {
-        | \'
-        | \"
+        | \\\'
+        | \\\"
     }
 
     token unicode-escape {

@@ -6,7 +6,11 @@ our role TypePath::Rules {
     }
 
     rule type-path-segment { 
-        <path-ident-segment> <tok-path-sep>? <type-path-segment-suffix>?
+        <path-ident-segment> 
+        [
+            <tok-path-sep>?
+            <type-path-segment-suffix>
+        ]?
     }
 
     #----------------------

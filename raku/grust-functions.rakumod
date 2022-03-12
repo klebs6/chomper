@@ -32,18 +32,18 @@ our role Function::Rules {
     #----------------------
     proto rule function-parameters { * }
 
-    rule function-parameters:sym<just-self> {
-        <self-param> <tok-comma>?
+    rule function-parameters:sym<self-and-just-params> {
+        <self-param> 
+        <tok-comma>
+        [ <function-param>+ %% <tok-comma> ]
     }
 
     rule function-parameters:sym<just-params> {
         <function-param>+ %% <tok-comma>
     }
 
-    rule function-parameters:sym<self-and-just-params> {
-        <self-param> 
-        <tok-comma>
-        [ <function-param>+ %% <tok-comma> ]
+    rule function-parameters:sym<just-self> {
+        <self-param> <tok-comma>?
     }
 
     #----------------------
@@ -60,7 +60,7 @@ our role Function::Rules {
     #----------------------
     rule shorthand-self {
         [
-            <tok-ref> <lifetime>?
+            <tok-and> <lifetime>?
         ]?
         <kw-mut>?
         <kw-selfvalue>
@@ -86,7 +86,7 @@ our role Function::Rules {
     }
 
     rule function-param-variant:sym<ellipsis> {
-        <tok-ellipsis>
+        <tok-dotdotdot>
     }
 
     rule function-param-variant:sym<type> {
@@ -104,7 +104,7 @@ our role Function::Rules {
 
     rule function-param-pattern-variant:sym<type>     { <type> }
 
-    rule function-param-pattern-variant:sym<ellipsis> { <tok-ellipsis> }
+    rule function-param-pattern-variant:sym<ellipsis> { <tok-dotdotdot> }
 
     rule function-return-type {
         <tok-rarrow>

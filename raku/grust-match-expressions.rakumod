@@ -13,6 +13,10 @@ our role MatchExpression::Rules {
         <expression-nostruct>
     }
 
+    rule scrutinee-except-lazy-boolean-operator-expression {
+        <scrutinee> <?{$0 !~~ <binary-oror-expression>}>
+    }
+
     #------------------
     rule match-arms {
         <match-arms-inner-item>*
@@ -23,6 +27,7 @@ our role MatchExpression::Rules {
     proto rule match-arms-inner-item { * }
 
     rule match-arms-inner-item:sym<with-block> {  
+        <comment>?
         <match-arm>
         <tok-fat-rarrow>
         <expression-with-block>
@@ -30,6 +35,7 @@ our role MatchExpression::Rules {
     }
 
     rule match-arms-inner-item:sym<without-block> {  
+        <comment>?
         <match-arm> 
         <tok-fat-rarrow> 
         <expression-noblock> 
@@ -37,9 +43,13 @@ our role MatchExpression::Rules {
     }
 
     rule match-arms-outer-item {
+        <comment>?
         <match-arm> 
         <tok-fat-rarrow> 
-        <expression> 
+        [
+            | <expression-with-block> 
+            | <expression-noblock> 
+        ]
         <tok-comma>?
     }
 
