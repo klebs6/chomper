@@ -144,15 +144,15 @@ our role Expression::Rules {
 
     #--------------------
     rule binary-and-expression {
-        [<binary-shl-expression>+ %% <tok-and>]
+        <binary-shl-expression>+ %% <tok-and>
     }
 
     rule binary-xor-expression {
-        [<binary-and-expression>+ %% <tok-caret>]
+        <binary-and-expression>+ %% <tok-caret>
     }
 
     rule binary-or-expression {
-        [<binary-xor-expression>+ %% <tok-or>]
+        <binary-xor-expression>+ %% <tok-or>
     }
 
     #--------------------

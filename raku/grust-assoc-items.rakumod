@@ -13,17 +13,9 @@ our role AssociatedItem::Rules {
         <macro-invocation>
     }
 
-    rule associated-item-variant:sym<maybe-visible> {
-        <visibility>?
-        <maybe-visible-associated-item-variant>
-    }
-
-    #---------------------
-    proto rule maybe-visible-associated-item-variant { * }
-
-    rule maybe-visible-associated-item-variant:sym<type-alias>    { <type-alias> }
-    rule maybe-visible-associated-item-variant:sym<constant-item> { <constant-item> }
-    rule maybe-visible-associated-item-variant:sym<fn>            { <function> }
+    rule associated-item-variant:sym<type-alias>    { <visibility>? <type-alias> }
+    rule associated-item-variant:sym<constant-item> { <visibility>? <constant-item> }
+    rule associated-item-variant:sym<fn>            { <visibility>? <function> }
 }
 
 our role AssociatedItem::Actions {

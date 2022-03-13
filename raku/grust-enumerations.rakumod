@@ -25,31 +25,18 @@ our role Enumeration::Rules {
     proto rule enum-item-variant { * }
 
     rule enum-item-variant:sym<tuple> {
-        <enum-item-tuple>
-    }
-
-    rule enum-item-variant:sym<struct> {
-        <enum-item-struct>
-    }
-
-    rule enum-item-variant:sym<discriminant> {
-        <enum-item-discriminant>
-    }
-
-    #----------------
-    rule enum-item-tuple {
         <tok-lparen>
         <tuple-fields>?
         <tok-rparen>
     }
 
-    rule enum-item-struct {
+    rule enum-item-variant:sym<struct> {
         <tok-lbrace>
         <struct-fields>?
         <tok-rbrace>
     }
 
-    rule enum-item-discriminant {
+    rule enum-item-variant:sym<discriminant> {
         <tok-eq> <expression>
     }
 }
