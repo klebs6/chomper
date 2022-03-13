@@ -16,6 +16,19 @@ our role Lifetimes::Rules {
         <tok-single-quote>
         <non-keyword-identifier>
     }
+
+    rule lifetime-bounds {
+        <lifetime>* %% <tok-plus>
+    }
+
+    proto token lifetime { * }
+    token lifetime:sym<lt>      { <lifetime-or-label> }
+    token lifetime:sym<static>  { \' <static> }
+    token lifetime:sym<unnamed> { \' _ }
+
+    rule for-lifetimes {
+        <kw-for> <generic-params>
+    }
 }
 
 our role Lifetimes::Actions {}

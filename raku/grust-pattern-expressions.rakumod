@@ -29,6 +29,7 @@ our role Pattern::Rules {
 
     #---------------------
     proto rule pattern-without-range { * }
+    rule pattern-without-range:sym<path>             { <path-pattern>         } 
     rule pattern-without-range:sym<literal>          { <literal-pattern>      } 
     rule pattern-without-range:sym<identifier>       { <identifier-pattern>   } 
     rule pattern-without-range:sym<wildcard>         { <wildcard-pattern>     } 
@@ -39,7 +40,6 @@ our role Pattern::Rules {
     rule pattern-without-range:sym<tuple>            { <tuple-pattern>        } 
     rule pattern-without-range:sym<grouped>          { <grouped-pattern>      } 
     rule pattern-without-range:sym<slice>            { <slice-pattern>        } 
-    rule pattern-without-range:sym<path>             { <path-pattern>         } 
     rule pattern-without-range:sym<macro-invocation> { <macro-invocation>     } 
 }
 

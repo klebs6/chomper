@@ -19,6 +19,10 @@ our role Tokens::Rules
     token token-except-dollar-and-delimiters {
         (<rust-token-no-delim>) <?{$0 !~~ /\$/}>
     }
+
+    token token-except-delimiters-and-repetition-operators {
+        (<rust-token-no-delim>) <?{$0 !~~ /<[\$ \*]>/}>
+    }
     
     token quote-escape {
         | \\\'

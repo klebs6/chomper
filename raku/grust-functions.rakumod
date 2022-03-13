@@ -75,6 +75,7 @@ our role Function::Rules {
 
     #-------------------
     rule function-param {
+        <comment>?
         <outer-attribute>*
         <function-param-variant>
     }
@@ -109,6 +110,7 @@ our role Function::Rules {
     rule function-return-type {
         <tok-rarrow>
         <type>
+        <comment>?
     }
 }
 

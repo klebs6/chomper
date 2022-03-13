@@ -28,6 +28,7 @@ our role Item::Rules {
     rule vis-item-variant:sym<constant-item>   { <constant-item> }
     rule vis-item-variant:sym<static-item>     { <static-item> }
     rule vis-item-variant:sym<trait>           { <trait> }
+    rule vis-item-variant:sym<trait-alias>     { <trait-alias> }
     rule vis-item-variant:sym<implementation>  { <implementation> }
     rule vis-item-variant:sym<extern-block>    { <extern-block> }
 

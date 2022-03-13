@@ -270,7 +270,7 @@ our role Expression::Rules {
     proto rule expression-item { * }
 
     rule expression-item:sym<block>    { 
-        <?{$NOBLOCK eq False}> 
+        #<?{$NOBLOCK eq False}> 
         <expression-with-block> 
     }
     rule expression-item:sym<macro>    { <macro-expression> } 
@@ -292,8 +292,8 @@ our role Expression::Rules {
 
     #-------------------------
     proto rule expression-with-block { * }
-    rule expression-with-block:sym<match>        { <match-expression> }
     rule expression-with-block:sym<block>        { <block-expression> }
+    rule expression-with-block:sym<match>        { <match-expression> }
     rule expression-with-block:sym<async-block>  { <async-block-expression> }
     rule expression-with-block:sym<unsafe-block> { <unsafe-block-expression> }
     rule expression-with-block:sym<loop>         { <loop-expression> }

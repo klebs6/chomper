@@ -47,7 +47,6 @@ use grust-struct-expressions;
 use grust-struct-patterns;
 use grust-structs;
 use grust-tokens;
-use grust-trait-and-lifetime;
 use grust-trait-objects;
 use grust-traits;
 use grust-tuple-struct-patterns;
@@ -112,7 +111,6 @@ does TupleExpression::Rules
 does TupleStructPattern::Rules 
 does Type::Rules 
 does TypeAlias::Rules 
-does TypeBounds::Rules 
 does TypePath::Rules 
 does Union::Rules 
 does UseDeclaration::Rules 
@@ -184,7 +182,6 @@ our role Rust::Actions::Role
     does TupleStructPattern::Actions 
     does Type::Actions 
     does TypeAlias::Actions 
-    does TypeBounds::Actions 
     does TypePath::Actions 
     does Union::Actions 
     does UseDeclaration::Actions 

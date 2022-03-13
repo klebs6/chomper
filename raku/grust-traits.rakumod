@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our role Trait::Rules {
 
     rule trait {
@@ -10,6 +12,7 @@ our role Trait::Rules {
         <tok-lbrace>
         <inner-attribute>*
         <associated-item>*
+        <comment>?
         <tok-rbrace>
     }
 
@@ -25,6 +28,7 @@ our role Trait::Rules {
         <tok-lbrace>
         <inner-attribute>*
         <associated-item>*
+        <comment>?
         <tok-rbrace>
     }
 
@@ -40,7 +44,20 @@ our role Trait::Rules {
         <tok-lbrace>
         <inner-attribute>*
         <associated-item>*
+        <comment>?
         <tok-rbrace>
+    }
+
+    rule trait-alias {
+        <outer-attribute>* 
+        <visibility>? 
+        <kw-trait> 
+        <identifier>
+        <generic-params>? 
+        <tok-eq>
+        <type-param-bounds> 
+        <where-clause>?
+        <tok-semi>
     }
 }
 
