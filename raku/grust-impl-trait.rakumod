@@ -48,12 +48,14 @@ our role ImplTraitType::Rules {
 our role ImplTraitType::Actions {
 
     method impl-trait-type($/) {
-        <kw-impl>
-        <type-param-bounds>
+        make ImplTraitType.new(
+            type-param-bounds => $<type-param-bounds>.made
+        )
     }
 
     method impl-trait-type-one-bound($/) {
-        <kw-impl>
-        <trait-bound>
+        make ImplTraitTypeOneBound.new(
+            trait-bound => $<trait-bound>.made
+        )
     }
 }

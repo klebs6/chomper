@@ -72,7 +72,7 @@ our class ConstantItem {
 }
 
 our class StaticItem {
-    has Bool $.mut;
+    has Bool $.mutable;
     has $.identifier;
     has $.type;
     has $.maybe-init-expression;
@@ -163,31 +163,31 @@ our role Item::Actions {
         <item-variant>
     }
 
-    method item-variant:sym<vis>($/)   { <vis-item> }
-    method item-variant:sym<macro>($/) { <macro-item> }
+    method item-variant:sym<vis>($/)   { make $<vis-item>.made }
+    method item-variant:sym<macro>($/) { make $<macro-item>.made }
 
     method vis-item($/) {
         <visibility>?
         <vis-item-variant>
     }
 
-    method vis-item-variant:sym<module>($/)          { <module> }
-    method vis-item-variant:sym<extern-crate>($/)    { <extern-crate> }
-    method vis-item-variant:sym<use-declaration>($/) { <use-declaration> }
-    method vis-item-variant:sym<function>($/)        { <function> }
-    method vis-item-variant:sym<type-alias>($/)      { <type-alias> }
-    method vis-item-variant:sym<struct>($/)          { <struct> }
-    method vis-item-variant:sym<enumeration>($/)     { <enumeration> }
-    method vis-item-variant:sym<union>($/)           { <union> }
-    method vis-item-variant:sym<constant-item>($/)   { <constant-item> }
-    method vis-item-variant:sym<static-item>($/)     { <static-item> }
-    method vis-item-variant:sym<trait>($/)           { <trait> }
-    method vis-item-variant:sym<trait-alias>($/)     { <trait-alias> }
-    method vis-item-variant:sym<implementation>($/)  { <implementation> }
-    method vis-item-variant:sym<extern-block>($/)    { <extern-block> }
+    method vis-item-variant:sym<module>($/)          { make $<module>.made }
+    method vis-item-variant:sym<extern-crate>($/)    { make $<extern-crate>.made }
+    method vis-item-variant:sym<use-declaration>($/) { make $<use-declaration>.made }
+    method vis-item-variant:sym<function>($/)        { make $<function>.made }
+    method vis-item-variant:sym<type-alias>($/)      { make $<type-alias>.made }
+    method vis-item-variant:sym<struct>($/)          { make $<struct>.made }
+    method vis-item-variant:sym<enumeration>($/)     { make $<enumeration>.made }
+    method vis-item-variant:sym<union>($/)           { make $<union>.made }
+    method vis-item-variant:sym<constant-item>($/)   { make $<constant-item>.made }
+    method vis-item-variant:sym<static-item>($/)     { make $<static-item>.made }
+    method vis-item-variant:sym<trait>($/)           { make $<trait>.made }
+    method vis-item-variant:sym<trait-alias>($/)     { make $<trait-alias>.made }
+    method vis-item-variant:sym<implementation>($/)  { make $<implementation>.made }
+    method vis-item-variant:sym<extern-block>($/)    { make $<extern-block>.made }
 
-    method macro-item:sym<macro-invocation>($/)       { <macro-invocation> }
-    method macro-item:sym<macro-rules-definition>($/) { <macro-rules-definition> }
+    method macro-item:sym<macro-invocation>($/)       { make $<macro-invocation>.made }
+    method macro-item:sym<macro-rules-definition>($/) { make $<macro-rules-definition>.made }
 
     method init-expression($/) {
         <tok-eq>
@@ -204,12 +204,11 @@ our role Item::Actions {
     }
 
     method static-item($/) {
-        <kw-static>
-        <kw-mut>?
-        <identifier>
-        <tok-colon>
-        <type>
-        <init-expression>?
-        <tok-semi>
+        make StaticItem.new(
+            mutable               => so $/<kw-mut>:exists,
+            identifier            => $<identifier>.made,
+            type                  => $<type>.made,
+            maybe-init-expression => $<init-expression>.made,
+        )
     }
 }
