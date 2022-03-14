@@ -134,36 +134,41 @@ our role LoopExpression::Rules {
 our role LoopExpression::Actions {
 
     method loop-expression:sym<infinite-loop>($/) {
-        <loop-label>?
-        <kw-loop> <block-expression>
+        make LoopExpressionInfinite.new(
+            loop-label       => $<loop-label>.made,
+            block-expression => $<block-expression>.made,
+        )
     }
 
     method loop-expression:sym<predicate-loop>($/) {
-        <loop-label>?
-        <kw-while> <expression-nostruct> <block-expression>
+        make LoopExpressionPredicate.new(
+            maybe-loop-label    => $<loop-label>.made,
+            expression-nostruct => $<expression-nostruct>.made,
+            block-expression    => $<block-expression>.made,
+        )
     }
 
     method loop-expression:sym<predicate-pattern-loop>($/) {
-        <loop-label>?
-        <kw-while>
-        <kw-let>
-        <pattern>
-        <tok-eq>
-        <scrutinee-except-lazy-boolean-operator-expression>
-        <block-expression>
+        make LoopExpressionPredicatePattern.new(
+            maybe-loop-label => $<loop-label>.made,
+            pattern          => $<pattern>.made,
+            scrutinee        => $<scrutinee-except-lazy-boolean-operator-expression>.made,
+            block-expression => $<block-expression>.made
+        )
     }
 
     method loop-expression:sym<iterator-loop>($/) {
-        <loop-label>?
-        <kw-for>
-        <pattern>
-        <kw-in>
-        <expression-nostruct>
-        <block-expression>
+        make LoopExpressionIterator.new(
+            maybe-loop-label    => $<loop-label>.made,
+            pattern             => $<pattern>.made,
+            expression-nostruct => $<expression-nostruct>.made,
+            block-expression    => $<block-expression>.made,
+        )
     }
 
     method loop-label($/) {
-        <lifetime-or-label> 
-        <tok-colon>
+        make LoopLabel.new(
+            lifetime-or-label => $<lifetime-or-label>.made
+        )
     }
 }
