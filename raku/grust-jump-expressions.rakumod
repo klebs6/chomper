@@ -71,17 +71,21 @@ our role JumpExpression::Rules {
 our role JumpExpression::Actions {
 
     method continue-expression($/) {
-        <kw-continue>
-        <lifetime-or-label>?
+        make ContinueExpression.new(
+            maybe-lifetime-or-label => $<lifetime-or-label>.made,
+        )
     }
 
     method break-expression($/) {
-        <kw-break> 
-        <lifetime-or-label>?
-        <expression>?
+        make BreakExpression.new(
+            maybe-lifetime-or-label => $<lifetime-or-label>.made,
+            maybe-expression        => $<expression>.made,
+        )
     }
 
     method return-expression($/) {
-        <kw-return> <expression>? 
+        make ReturnExpression.new(
+            maybe-expression => $<expression>.made
+        )
     }
 }
