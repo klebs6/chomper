@@ -51,23 +51,6 @@ our class TraitBound {
     }
 }
 
-our class GenericArgs {
-    has @.generic-args;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
 our class MinusLiteralExpression {
     has $.literal-expression;
 
@@ -157,4 +140,55 @@ our role GenericArgs::Rules {
     }
 }
 
-our role GenericArgs::Actions {}
+our role GenericArgs::Actions {
+
+    method type-param-bounds($/) {
+        make $<type-param-bound>>>.made
+    }
+
+    method type-param-bound:sym<lt>($/) { make $<lifetime>.made }
+    method type-param-bound:sym<tb>($/) { make $<trait-bound>.made }
+
+    method trait-bound:sym<no-parens>($/) { 
+        make TraitBound.new(
+            qmark               => so $/<tok-qmark>:exists,
+            maybe-for-lifetimes => $<for-lifetimes>.made,
+            type-path           => $<type-path>.made,
+        )
+    }
+
+    method trait-bound:sym<parens>($/) { 
+        make TraitBound.new(
+            qmark               => so $/<tok-qmark>:exists,
+            maybe-for-lifetimes => $<for-lifetimes>.made,
+            type-path           => $<type-path>.made,
+        )
+    }
+
+    method generic-args($/) {
+        make $<generic-arg>>>.made
+    }
+
+    method generic-arg:sym<lifetime>($/)                   { make $<lifetime>.made }
+    method generic-arg:sym<generic-args-binding>($/)       { make $<generic-args-binding>.made }
+    method generic-arg:sym<type>($/)                       { make $<type>.made }
+    method generic-arg:sym<generic-args-const>($/)         { make $<generic-args-const>.made }
+
+    method generic-args-const:sym<block>($/)               { make $<block-expression>.made }
+    method generic-args-const:sym<lit>($/)                 { make $<literal-expression>.made }
+    method generic-args-const:sym<minus-lit>($/)           { make $<minus-literal-expression>.made }
+    method generic-args-const:sym<simple-path-segment>($/) { make $<simple-path-segment>.made }
+
+    method minus-literal-expression($/) {
+        make MinusLiteralExpression.new(
+            literal-expression => $<literal-expression>.made
+        )
+    }
+
+    method generic-args-binding($/) {
+        make GenericArgsBinding.new(
+            identifier => $<identifier>.made,
+            type       => $<type>.made
+        )
+    }
+}

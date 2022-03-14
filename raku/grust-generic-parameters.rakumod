@@ -1,20 +1,3 @@
-our class GenericParams {
-    has @.generic-params;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
 our class GenericParam {
     has @.outer-attributes;
     has $.generic-param-variant;
@@ -131,4 +114,44 @@ our role GenericParams::Rules {
     }
 }
 
-our role GenericParams::Actions {}
+our role GenericParams::Actions {
+
+    method generic-params {
+        make $<generic-param>.made
+    }
+
+    method generic-param {
+        make GenericParam.new(
+            outer-attributes      => $<outer-attribute>.made,
+            generic-param-variant => $<generic-param-variant>.made,
+        )
+    }
+
+    #-----------------
+    method generic-param-variant:sym<lt>    { make $<lifetime-param>.made }
+    method generic-param-variant:sym<type>  { make $<type-param>.made }
+    method generic-param-variant:sym<const> { make $<const-param>.made }
+
+    #-----------------
+    method lifetime-param {
+        make LifetimeParam.new(
+            lifetime-or-label     => $<lifetime-or-label>.made,
+            maybe-lifetime-bounds => $<lifetime-bounds>.made,
+        )
+    }
+
+    method type-param {
+        make TypeParam.new(
+            identifier              => $<identifier>.made,
+            maybe-type-param-bounds => $<type-param-bounds>.made,
+            maybe-type              => $<type>.made,
+        )
+    }
+
+    method const-param {
+        make ConstParam.new(
+            identifier => $<identifier>.made,
+            type       => $<type>.made,
+        )
+    }
+}
