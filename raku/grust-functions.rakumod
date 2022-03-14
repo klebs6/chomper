@@ -200,22 +200,6 @@ our class FunctionParamVariantEllipsis {
     }
 }
 
-our class FunctionParamVariantType     { 
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
 our class FunctionReturnType {
     has $.type;
     has $.maybe-comment;
@@ -235,6 +219,10 @@ our class FunctionReturnType {
 }
 
 our role Function::Rules {
+
+    rule function-extern-modifier {
+        <kw-extern> <abi>?
+    }
 
     rule function {
         <function-qualifiers>
@@ -256,7 +244,7 @@ our role Function::Rules {
         <kw-const>?
         <kw-async>?
         <kw-unsafe>?
-        [ <kw-extern> <abi>? ]?
+        <function-extern-modifier>?
     }
 
     proto rule abi { * }
@@ -342,6 +330,118 @@ our role Function::Rules {
         <type>
         <comment>?
     }
+
 }
 
-our role Function::Actions {}
+our role Function::Actions {
+
+    method function($/) {
+        make Function.new(
+            function-qualifiers        => $<function-qualifiers>.made,
+            identifier                 => $<identifier>.made,
+            maybe-generic-params       => $<generic-params>.made,
+            maybe-function-parameters  => $<function-parameters>.made,
+            maybe-function-return-type => $<function-return-type>.made,
+            maybe-where-clause         => $<where-clause>.made,
+            maybe-block-expression     => $<block-expression>.made,
+        )
+    }
+
+    method function-qualifiers($/) {
+        make FunctionQualifiers.new(
+            const                          => so $/<kw-const>:exists,
+            async                          => so $/<kw-async>:exists,
+            unsafe                         => so $/<kw-unsafe>:exists,
+            maybe-function-extern-modifier => $<function-extern-modifier>.made,
+        )
+    }
+
+    method abi:sym<str>($/)     { make $<string-literal>.made }
+    method abi:sym<raw-str>($/) { make $<raw-string-literal>.made }
+
+    #----------------------
+    method function-parameters:sym<self-and-just-params>($/) {
+        make FunctionParameters.new(
+            maybe-self-param => $<self-param>.made,
+            function-params => $<function-param>>>.made,
+        )
+    }
+
+    method function-parameters:sym<just-params>($/) {
+        make FunctionParameters.new(
+            function-params => $<function-param>>>.made,
+        )
+    }
+
+    method function-parameters:sym<just-self>($/) {
+        make FunctionParameters.new(
+            maybe-self-param => $<self-param>.made,
+        )
+    }
+
+    #----------------------
+    method self-param($/) {  
+        make SelfParam.new(
+            outer-attributes   => $<outer-attrigute>>>.made,
+            self-param-variant => $<self-param-variant>.made,
+        )
+    }
+
+    method self-borrow($/) {
+        make SelfBorrow.new(
+            maybe-lifetime => $<lifetime>.made,
+        )
+    }
+
+    method self-param-variant:sym<shorthand>($/) { 
+        make SelfParamVariantShorthand.new(
+            maybe-self-borrow => $<self-borrow>.made,
+            mutable           => so $/<kw-mut>:exists,
+        )
+    }
+
+    method self-param-variant:sym<typed>($/) { 
+        make SelfParamVariantTyped.new(
+            mutable => so $/<kw-mut>:exists,
+            type    => $<type>.made,
+        )
+    }
+
+    #-------------------
+    method function-param($/) {
+        make FunctionParam.new(
+            maybe-comment          => $<comment>.made,
+            outer-attributes       => $<outer-attributes>>>.made,
+            function-param-variant => $<function-param-variant>.made,
+        )
+    }
+
+    method function-param-variant:sym<pattern-type>($/) {
+        make FunctionParamVariantPatternType.new(
+            pattern-no-top-alt => $<pattern-no-top-alt>.made,
+            type               => $<type>.made,
+        )
+    }
+
+    method function-param-variant:sym<pattern-ellipsis>($/) {
+        make FunctionParamVariantPatternEllipsis.new(
+            pattern-no-top-alt => $<pattern-no-top-alt>.made,
+        )
+    }
+
+    method function-param-variant:sym<ellipsis>($/) {
+        make FunctionParamVariantEllipsis.new
+    }
+
+    method function-param-variant:sym<type>($/) {
+        make $<type>.made
+    }
+
+    #-------------------
+    method function-return-type($/) {
+        make FunctionReturnType.new(
+            type          => $<type>.made,
+            maybe-comment => $<comment>.made,
+        )
+    }
+}
