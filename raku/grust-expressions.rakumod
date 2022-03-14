@@ -1550,8 +1550,8 @@ our role Expression::Actions {
         make $<struct-expression>.made
     }
 
-    method expression-item:sym<literal>($/)  { make $<literal-expression>.made } 
-    method expression-item:sym<path>($/)     { make $<path-expression>.made    }
+    method expression-item:sym<literal>($/)      { make $<literal-expression>.made } 
+    method expression-item:sym<path>($/)         { make $<path-expression>.made    }
 
     method expression-item:sym<grouped>($/)  { 
         make GroupedExpression.new(
@@ -1559,12 +1559,12 @@ our role Expression::Actions {
         )
     }
 
-    method expression-item:sym<array>($/)    { make $<array-expression>.made   }
-    method expression-item:sym<tuple>($/)    { make $<tuple-expression>.made   }
-    method expression-item:sym<closure>($/)  { make $<closure-expression>.made } 
-    method expression-item:sym<continue>($/) { make $<continue-expression>.made } 
-    method expression-item:sym<break>($/)    { make $<break-expression>.made } 
-    method expression-item:sym<return>($/)   { make $<return-expression>.made } 
+    method expression-item:sym<array>($/)        { make $<array-expression>.made   }
+    method expression-item:sym<tuple>($/)        { make $<tuple-expression>.made   }
+    method expression-item:sym<closure>($/)      { make $<closure-expression>.made } 
+    method expression-item:sym<continue>($/)     { make $<continue-expression>.made } 
+    method expression-item:sym<break>($/)        { make $<break-expression>.made } 
+    method expression-item:sym<return>($/)       { make $<return-expression>.made } 
 
     #-------------------------
     method expression-with-block:sym<block>($/)        { make $<block-expression>.made }

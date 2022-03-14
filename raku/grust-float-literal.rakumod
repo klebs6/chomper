@@ -71,3 +71,11 @@ our role FloatLiteral::Rules {
         <dec-digit-or-underscore>*
     }
 }
+
+our role FloatLiteral::Actions {
+    method float-literal($/) {
+        make FloatLiteral.new(
+            value => $/.Str
+        )
+    }
+}

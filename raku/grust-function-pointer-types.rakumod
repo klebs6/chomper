@@ -1,4 +1,3 @@
-
 our class BareFunctionType {
     has $.maybe-for-lifetimes;
     has $.function-type-qualifiers;
@@ -175,4 +174,55 @@ our role BareFunctionType::Rules {
     }
 }
 
-our role BareFunctionType::Actions {}
+our role BareFunctionType::Actions {
+
+    method bare-function-type($/) {
+        make BareFunctionType.new(
+            maybe-for-lifetimes        => $<for-lifetimes>.made,
+            function-type-qualifiers   => $<function-type-qualifiers>.made,
+            maybe-function-parameters  => $<function-parameters>.made,
+            maybe-function-return-type => $<bare-function-return-type>.made,
+        )
+    }
+
+    method function-extern-modifier($/) {
+        make FunctionExternModifier.new(
+            maybe-abi => $<abi>.made,
+        )
+    }
+
+    method function-type-qualifiers($/) {
+        make FunctionTypeQualifiers.new(
+            unsafe => so $/<kw-unsafe>:exists,
+            maybe-function-extern-modifier => $<function-extern-modifier>.made,
+        )
+    }
+
+    method bare-function-return-type($/) {
+        make BareFunctionReturnType.new(
+            type-no-bounds => $<type-no-bounds>.made,
+        )
+    }
+
+    #-------------------
+    method function-parameters:sym<basic>($/) {  
+        make FunctionParametersBasic.new(
+            maybe-named-params => $<maybe-named-param>>>.made
+        )
+    }
+
+    method function-parameters:sym<variadic>($/) {  
+        make FunctionParametersVariadic.new(
+            maybe-named-params => $<maybe-named-param>>>.made,
+            outer-attributes   => $<outer-attribute>>>.made,
+        )
+    }
+
+    method maybe-named-param($/) {
+        make MaybeNamedParam.new(
+            outer-attributes               => $<outer-attribute>>>.made,
+            maybe-identifier-or-underscore => $<identifier-or-underscore>.made,
+            type                           => $<type>.made,
+        )
+    }
+}

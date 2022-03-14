@@ -1,7 +1,6 @@
-
 our class ExternBlock {
     has Bool $.unsafe;
-    has $.maybe-api;
+    has $.maybe-abi;
     has @.inner-attributes;
     has @.external-items;
 
@@ -124,4 +123,41 @@ our role ExternBlock::Rules {
     }
 }
 
-our role ExternBlock::Actions {}
+our role ExternBlock::Actions {
+
+    method extern-block($/) {
+        make ExternBlock.new(
+            unsafe           => so $/<kw-unsafe>:exists,
+            maybe-abi        => $<abi>.made,
+            inner-attributes => $<inner-attribute>>>.made,
+            external-items   => $<external-item>>>.made,
+        )
+    }
+
+    method external-item($/) {
+        make ExternalItem.new(
+            outer-attributes      => $<outer-attribute>>>.made,
+            external-item-variant => $<external-item-variant>.made,
+        )
+    }
+
+    method external-item-variant:sym<macro>($/) {
+        make ExternalItemMacroInvocation.new(
+            macro-invocation => $<macro-invocation>.made
+        )
+    }
+
+    method external-item-variant:sym<fn>($/) {
+        make ExternalItemFn.new(
+            maybe-visibility => $<visibility>.made,
+            function         => $<function>.made,
+        )
+    }
+
+    method external-item-variant:sym<static>($/) {
+        make ExternalItemStatic.new(
+            maybe-visibility => $<visibility>.made,
+            static-item      => $<static-item>.made,
+        )
+    }
+}
