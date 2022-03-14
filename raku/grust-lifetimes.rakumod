@@ -15,21 +15,7 @@ our class LifetimeToken {
     }
 }
 
-our class LifetimeTokenAnonymous { 
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
+our class LifetimeTokenAnonymous { }
 
 our class LifetimeOrLabel {
     has $.non-keyword-identifier;
@@ -167,29 +153,42 @@ our role Lifetimes::Rules {
 our role Lifetimes::Actions {
 
     method lifetime-token:sym<basic>($/) {
-        <tok-single-quote>
-        <identifier-or-keyword>
+        make LifetimeToken.new(
+            identifier-or-keyword => $<identifier-or-keyword>.made
+        )
     }
 
     method lifetime-token:sym<anonymous>($/) {
-        <tok-single-quote>
-        <tok-underscore>
+        make LifetimeTokenAnonymous.new
     }
 
     method lifetime-or-label($/) {
-        <tok-single-quote>
-        <non-keyword-identifier>
+        make LifetimeOrLabel.new(
+            non-keyword-identifier => $<non-keyword-identifier>.made,
+        )
     }
 
     method lifetime-bounds($/) {
-        <lifetime>* %% <tok-plus>
+        make $<lifetime>>>.made
     }
 
-    method lifetime:sym<lt>($/)      { <lifetime-or-label> }
-    method lifetime:sym<static>($/)  { \' <static> }
-    method lifetime:sym<unnamed>($/) { \' _ }
+    method lifetime:sym<lt>($/) { 
+        make Lifetime.new(
+            lifetime-or-label => $<lifetime-or-label>.made
+        )
+    }
+
+    method lifetime:sym<static>($/)  { 
+        make StaticLifetime.new
+    }
+
+    method lifetime:sym<unnamed>($/) { 
+        make UnnamedLifetime.new
+    }
 
     method for-lifetimes($/) {
-        <kw-for> <generic-params>
+        make ForLifetimes.new(
+            generic-params => $<generic-params>.made
+        )
     }
 }
