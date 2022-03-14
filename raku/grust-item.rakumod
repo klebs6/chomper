@@ -158,17 +158,21 @@ our role Item::Rules {
 our role Item::Actions {
 
     method crate-item($/) {
-        <comment>?
-        <outer-attribute>*
-        <item-variant>
+        make CrateItem.new(
+            maybe-comment    => $<comment>.made,
+            outer-attributes => $<outer-attribute>>>.made,
+            item-variant     => $<item-variant>.made
+        )
     }
 
     method item-variant:sym<vis>($/)   { make $<vis-item>.made }
     method item-variant:sym<macro>($/) { make $<macro-item>.made }
 
     method vis-item($/) {
-        <visibility>?
-        <vis-item-variant>
+        make VisItem.new(
+            maybe-visability => $<visibility>.made,
+            vis-item-variant => $<vis-item-variant>.made,
+        )
     }
 
     method vis-item-variant:sym<module>($/)          { make $<module>.made }
@@ -190,17 +194,17 @@ our role Item::Actions {
     method macro-item:sym<macro-rules-definition>($/) { make $<macro-rules-definition>.made }
 
     method init-expression($/) {
-        <tok-eq>
-        <expression>
+        make InitExpression.new(
+            expression => $<expression>.made
+        )
     }
 
     method constant-item($/) {
-        <kw-const> 
-        <identifier-or-underscore> 
-        <tok-colon> 
-        <type> 
-        <init-expression>?
-        <tok-semi>
+        make ConstantItem.new(
+            identifier-or-underscore => $<identifier-or-underscore>.made,
+            type                     => $<type>.made,
+            init-expression          => $<init-expression>.made,
+        )
     }
 
     method static-item($/) {
