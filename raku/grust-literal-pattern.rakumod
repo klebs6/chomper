@@ -1,4 +1,5 @@
-our class LiteralPattern {
+our class NumericLiteral {
+    has Bool $.minus;
     has $.value;
 
     has $.text;
@@ -32,13 +33,25 @@ our role LiteralPattern::Rules {
 
 our role LiteralPattern::Actions {
 
-    method literal-pattern:sym<bool>($/)         { <boolean-literal> }
-    method literal-pattern:sym<char>($/)         { <char-literal> }
-    method literal-pattern:sym<byte>($/)         { <byte-literal> }
-    method literal-pattern:sym<str>($/)          { <string-literal> }
-    method literal-pattern:sym<raw-str>($/)      { <raw-string-literal> }
-    method literal-pattern:sym<byte-str>($/)     { <byte-string-literal> }
-    method literal-pattern:sym<raw-byte-str>($/) { <raw-byte-string-literal> }
-    method literal-pattern:sym<int>($/)          { <tok-minus>? <integer-literal> }
-    method literal-pattern:sym<float>($/)        { <tok-minus>? <float-literal> }
+    method literal-pattern:sym<bool>($/)         { make $<boolean-literal>.made }
+    method literal-pattern:sym<char>($/)         { make $<char-literal>.made }
+    method literal-pattern:sym<byte>($/)         { make $<byte-literal>.made }
+    method literal-pattern:sym<str>($/)          { make $<string-literal>.made }
+    method literal-pattern:sym<raw-str>($/)      { make $<raw-string-literal>.made }
+    method literal-pattern:sym<byte-str>($/)     { make $<byte-string-literal>.made }
+    method literal-pattern:sym<raw-byte-str>($/) { make $<raw-byte-string-literal>.made }
+
+    method literal-pattern:sym<int>($/) { 
+        make NumericLiteral.new(
+            minus => so $/<tok-minus>:exists,
+            value => $<integer-literal>.made,
+        )
+    }
+
+    method literal-pattern:sym<float>($/) { 
+        make NumericLiteral.new(
+            minus => so $/<tok-minus>:exists,
+            value => $<float-literal>.made,
+        )
+    }
 }
