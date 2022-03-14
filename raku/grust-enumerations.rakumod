@@ -1,4 +1,3 @@
-
 our class Enumeration {
     has $.identifier;
     has $.maybe-generic-params;
@@ -133,4 +132,46 @@ our role Enumeration::Rules {
     }
 }
 
-our role Enumeration::Actions {}
+our role Enumeration::Actions {
+
+    method enumeration($/) {
+        make Enumeration.new(
+            identifier           => $<identifier>.made,
+            maybe-generic-params => $<generic-params>.made,
+            maybe-where-clause   => $<where-clause>.made,
+            maybe-enum-items     => $<enum-items>.made,
+        )
+    }
+
+    method enum-items($/) {
+        make $<enum-item>>>.made
+    }
+
+    method enum-item($/) {
+        make EnumItem.new(
+            outer-attributes        => $<outer-attribute>>>.made,
+            maybe-visibility        => $<visibility>.made,
+            identifier              => $<identifier>.made,
+            maybe-enum-item-variant => $<enum-item-variant>.made,
+        )
+    }
+
+    #----------------
+    method enum-item-variant:sym<tuple>($/) {
+        make EnumVariantTuple.new(
+            maybe-tuple-fields => $<tuple-fields>.made,
+        )
+    }
+
+    method enum-item-variant:sym<struct>($/) {
+        make EnumVariantStruct.new(
+            struct-fields => $<struct-fields>.made,
+        )
+    }
+
+    method enum-item-variant:sym<discriminant>($/) {
+        make EnumVariantDiscriminant.new(
+            eq-expression => $<expression>.made,
+        )
+    }
+}

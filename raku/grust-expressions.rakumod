@@ -1,4 +1,3 @@
-
 our class BaseExpression {
     has @.outer-attributes;
     has $.expression-item;
@@ -258,23 +257,6 @@ our class BorrowExpression {
 our class CastExpression {
     has $.borrow-expression;
     has @.cast-targets;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class CastTarget {
-    has $.type-no-bounds;
 
     has $.text;
 
@@ -683,7 +665,6 @@ our class RangeExpressionFrom {
 
 our class RangeExpressionOpen {
 
-
     has $.text;
 
     submethod TWEAK {
@@ -1020,12 +1001,14 @@ our role Expression::Rules {
         <suffixed-expression>
     }
 
+    rule borrow-expression-prefix {
+        <tok-and> 
+        <tok-and>?
+        <kw-mut>? 
+    }
+
     rule borrow-expression {
-        [
-            <tok-and> 
-            <tok-and>?
-            <kw-mut>? 
-        ]*
+        <borrow-expresison-prefix>*
         <unary-expression>
     }
 
@@ -1221,6 +1204,375 @@ our role Expression::Rules {
     rule expression-with-block:sym<if>           { <if-expression> }
     rule expression-with-block:sym<if-let>       { <if-let-expression> }
     rule expression-with-block:sym<comment>      { <comment> }
+
 }
 
-our role Expression::Actions {}
+our role Expression::Actions {
+
+    method expression-nostruct($/) { 
+        make $<expression>.made
+    }
+
+    method expression-noblock($/) { 
+        make $<expression>.made
+    }
+
+    method base-expression($/) {
+        make BaseExpression.new(
+            outer-attributes => $<outer-attribute>>>.made,
+            expression-item  => $<expression-item>.made,
+        )
+    }
+
+    method suffixed-expression-suffix:sym<method-call>($/) {
+        make MethodCallExpressionSuffix.new(
+            path-expr-segment => $<path-expr-segment>.made,
+            maybe-call-params => $<call-params>.made,
+        )
+    }
+
+    method suffixed-expression-suffix:sym<index>($/) {
+        make IndexExpressionSuffix.new(
+            expression => $<expression>.made
+        )
+    }
+
+    method suffixed-expression-suffix:sym<field>($/) {
+        make FieldExpressionSuffix.new(
+            identifier => $<identifier>.made,
+        )
+    }
+
+    method call-params($/) {
+        make $<expression>>>.made
+    }
+
+    method suffixed-expression-suffix:sym<call>($/) {
+        make CallExpressionSuffix.new(
+            maybe-call-params => $<call-params>.made,
+        )
+    }
+
+    method suffixed-expression-suffix:sym<await>($/) {
+        make AwaitExpressionSuffix.new
+    }
+
+    method suffixed-expression-suffix:sym<tuple-index>($/) {
+        make TupleIndexExpressionSuffix.new(
+            tuple-index => $<tuple-index>.made,
+        )
+    }
+
+    method suffixed-expression-suffix:sym<error-propagation>($/) {
+        make ErrorPropagationExpressionSuffix.new
+    }
+
+    method suffixed-expression($/) {
+        make SuffixedExpression.new(
+            base-expression            => $<base-expression>.made,
+            suffixed-expression-suffix => $<suffixed-expression-suffix>>>.made,
+        )
+    }
+
+    #--------------------
+    method unary-prefix:sym<bang>($/) {
+        make UnaryPrefixBang.new
+    }
+
+    method unary-prefix:sym<minus>($/) {
+        make UnaryPrefixMinus.new
+    }
+
+    method unary-prefix:sym<star>($/) {
+        make UnaryPrefixStar.new
+    }
+
+    method unary-expression($/) {
+        make UnaryExpression.new(
+            unary-prefixes      => $<unary-prefix>>>.made,
+            suffixed-expression => $<suffixed-expression>.made,
+        )
+    }
+
+    method borrow-expression-prefix($/) {
+        make BorrowExpressionPrefix.new(
+            borrow-count => $/<tok-and>.List.elems,
+            mutable      => so $/<kw-mut>:exists,
+        )
+    }
+
+    method borrow-expression($/) {
+        make BorrowExpression.new(
+            borrow-expression-prefixes => $<borrow-expression-prefix>>>.made,
+            unary-expression           => $<unary-expression>.made,
+        )
+    }
+
+    method cast-expression($/) {
+        make CastExpression.new(
+            borrow-expression => $<borrow-expression>.made,
+            cast-targets      => $<type-no-bounds>>>.made,
+        )
+    }
+
+    method modulo-expression($/) {
+        make ModuloExpression.new(
+            cast-expression => $<cast-expression>>>.made,
+        )
+    }
+
+    method division-expression($/) {
+        make DivisionExpression.new(
+            modulo-expression => $<modulo-expression>>>.made,
+        )
+    }
+
+    method multiplicative-expression($/) {
+        make MultiplicativeExpression.new(
+            division-expression => $<division-expression>>>.made,
+        )
+    }
+
+    method subtractive-expression($/) {
+        make SubtractiveExpression.new(
+            multiplicative-expression => $<multiplicative-expression>>>.made,
+        )
+    }
+
+    method additive-expression($/) {
+        make AdditiveExpression.new(
+            subtractive-expression => $<subtractive-expression>>>.made,
+        )
+    }
+
+    method binary-shr-expression($/) {
+        make BinaryShrExpression.new(
+            additive-expression => $<additive-expression>>>.made,
+        )
+    }
+
+    method binary-shl-expression($/) {
+        make BinaryShlExpression.new(
+            binary-shr-expression => $<binary-shr-expression>.made
+        )
+    }
+
+    method binary-and-expression($/) {
+        make BinaryAndExpression.new(
+            binary-shl-expression => $<binary-shl-expression>>>.made
+        )
+    }
+
+    method binary-xor-expression($/) {
+        make BinaryXorExpression.new(
+            binary-and-expression => $<binary-and-expression>>>.made,
+        )
+    }
+
+    method binary-or-expression($/) {
+        make BinaryOrExpression.new(
+            binary-xor-expression => $<binary-xor-expression>>>.made,
+        )
+    }
+
+    #--------------------
+    method binary-le-expression($/) {
+        make BinaryLeExpression.new(
+            binary-or-expression => $<binary-or-expression>>>.made,
+        )
+    }
+
+    method binary-ge-expression($/) {
+        make BinaryGeExpression.new(
+            binary-le-expression => $<binary-le-expression>>>.made,
+        )
+    }
+
+    method binary-lt-expression($/) {
+        make BinaryLtExpression.new(
+            binary-ge-expression => $<binary-ge-expression>>>.made,
+        )
+    }
+
+    method binary-gt-expression($/) {
+        make BinaryGtExpression.new(
+            binary-lt-expression => $<binary-lt-expression>>>.made,
+        )
+    }
+
+    method binary-ne-expression($/) {
+        make BinaryNeExpression.new(
+            binary-gt-expression => $<binary-gt-expression>>>.made,
+        )
+    }
+
+    method binary-eqeq-expression($/) {
+        make BinaryEqEqExpression.new(
+            binary-ne-expression => $<binary-ne-expression>>>.made,
+        )
+    }
+
+    method binary-andand-expression($/) {
+        make BinaryAndAndExpression.new(
+            binary-eqeq-expression => $<binary-eqeq-expression>>>.made
+        )
+    }
+
+    method binary-oror-expression($/) {
+        make BinaryOrOrExpression.new(
+            binary-andand-expression => $<binary-andand-expression>>>.made,
+        )
+    }
+
+    #--------------------
+    method range-expression:sym<full-eq>($/) { 
+        make RangeExpressionFullEq.new(
+            binary-oror-expressions => $<binary-oror-expression>>>.made
+        )
+    }
+
+    method range-expression:sym<full>($/) {  
+        make RangeExpressionFull.new(
+            binary-oror-expression => $<binary-oror-expression>>>.made
+        )
+    }
+
+    method range-expression:sym<to>($/) {  
+        make RangeExpressionTo.new(
+            binary-oror-expression => $<binary-oror-expression>.made
+        )
+    }
+
+    method range-expression:sym<to-eq>($/) {  
+        make RangeExpressionToEq.new(
+            binary-oror-expression => $<binary-oror-expression>.made,
+        )
+    }
+
+    method range-expression:sym<from>($/) {  
+        make RangeExpressionFrom.new(
+            binary-oror-expression => $<binary-oror-expression>.made,
+        )
+    }
+
+    method range-expression:sym<open>($/) {  
+        make RangeExpressionOpen.new
+    }
+
+    method range-expression:sym<base>($/) {  
+        make $<binary-oror-expression>.made
+    }
+
+    #--------------------
+
+    method shreq-expression($/) {
+        make ShrEqExpression.new(
+            range-expression => $<range-expression>>>.made,
+        )
+    }
+
+    method shleq-expression($/) {
+        make ShlEqExpression.new(
+            shreq-expression => $<shreq-expression>>>.made
+        )
+    }
+
+    method xoreq-expression($/) {
+        make XorEqExpression.new(
+            shleq-expression => $<shleq-expression>>>.made
+        )
+    }
+
+    method oreq-expression($/) {
+        make OrEqExpression.new(
+            xoreq-expression => $<xoreq-expression>>>.made
+        )
+    }
+
+    method andeq-expression($/) {
+        make AndEqExpression.new(
+            oreq-expression => $<oreq-expression>>>.made
+        )
+    }
+
+    method modeq-expression($/) {
+        make ModEqExpression.new(
+            andeq-expression => $<andeq-expression>>>.made
+        )
+    }
+
+    method slasheq-expression($/) {
+        make SlashEqExpression.new(
+            modeq-expression => $<modeq-expression>>>.made
+        )
+    }
+
+    method stareq-expression($/) {
+        make StarEqExpression.new(
+            slasheq-expression => $<slasheq-expression>>>.made
+        )
+    }
+
+    method minuseq-expression($/) {
+        make MinusEqExpression.new(
+            stareq-expression => $<stareq-expression>>>.made
+        )
+    }
+
+    method addeq-expression($/) {
+        make AddEqExpression.new(
+            minuseq-expression => $<minuseq-expression>>>.made
+        )
+    }
+
+    method assign-expression($/) {
+        make AssignExpression.new(
+            addeq-expression => $<addeq-expression>>>.made
+        )
+    }
+
+    method expression($/) {
+        make Expression.new(
+            assign-expression => $<assign-expression>.made
+        )
+    }
+
+    #-------------------------
+    method expression-item:sym<block>($/) { 
+        make $<expression-with-block>.made
+    }
+
+    method expression-item:sym<macro>($/) { 
+        make $<macro-expression>.made
+    }
+
+    method expression-item:sym<struct>($/) { 
+        make $<struct-expression>.made
+    }
+
+    method expression-item:sym<literal>($/)  { make $<literal-expression>.made } 
+    method expression-item:sym<path>($/)     { make $<path-expression>.made    }
+
+    method expression-item:sym<grouped>($/)  { 
+        make GroupedExpression.new(
+            expression => $<expression>.made
+        )
+    }
+
+    method expression-item:sym<array>($/)    { make $<array-expression>.made   }
+    method expression-item:sym<tuple>($/)    { make $<tuple-expression>.made   }
+    method expression-item:sym<closure>($/)  { make $<closure-expression>.made } 
+    method expression-item:sym<continue>($/) { make $<continue-expression>.made } 
+    method expression-item:sym<break>($/)    { make $<break-expression>.made } 
+    method expression-item:sym<return>($/)   { make $<return-expression>.made } 
+
+    #-------------------------
+    method expression-with-block:sym<block>($/)        { make $<block-expression>.made }
+    method expression-with-block:sym<match>($/)        { make $<match-expression>.made }
+    method expression-with-block:sym<async-block>($/)  { make $<async-block-expression>.made }
+    method expression-with-block:sym<unsafe-block>($/) { make $<unsafe-block-expression>.made }
+    method expression-with-block:sym<loop>($/)         { make $<loop-expression>.made }
+    method expression-with-block:sym<if>($/)           { make $<if-expression>.made }
+    method expression-with-block:sym<if-let>($/)       { make $<if-let-expression>.made }
+    method expression-with-block:sym<comment>($/)      { make $<comment>.made }
+}

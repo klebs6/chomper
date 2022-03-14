@@ -147,38 +147,38 @@ our role Crate::Rules {
 
 our role Crate::Actions {
 
-    method crate {
+    method crate($/) {
         make Crate.new(
             inner-attributes => $<inner-attribute>>>.made,
             crate-item       => $<crate-item>>>.made,
         )
     }
 
-    method as-clause {
+    method as-clause($/) {
         make AsClause.new(
             identifier-or-underscore => $<identifier-or-underscore>.made,
         )
     }
 
-    method extern-crate {
+    method extern-crate($/) {
         make ExternCrate.new(
             crate-ref       => $<crate-ref>.made,
             maybe-as-clause => $<as-clause>.made,
         )
     }
 
-    method crate-ref:sym<id>   { make $<identifier>.made }
-    method crate-ref:sym<self> { make $<kw-selfvalue>.made }
+    method crate-ref:sym<id>($/)   { make $<identifier>.made }
+    method crate-ref:sym<self>($/) { make $<kw-selfvalue>.made }
 
     #-------------------------
-    method module:sym<semi> {
+    method module:sym<semi>($/) {
         make ModuleSemi.new(
             unsafe     => so $/<kw-unsafe>:exists,
             identifier => $<identifier>.made,
         )
     }
 
-    method module:sym<block> {
+    method module:sym<block>($/) {
         make ModuleBlock.new(
             unsafe           => so $/<kw-unsafe>:exists,
             identifier       => $<identifier>.made,
