@@ -51,23 +51,6 @@ our class MetaItemSimpleWithMetaSeq {
     }
 }
 
-our class MetaSeq {
-    has @.meta-items;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
 our class MetaWord {
     has $.identifier;
 
@@ -206,10 +189,14 @@ our role MetaItem::Rules {
         <tok-rparen>
     }
 
+    rule ident-list {
+        <identifier>* %% <tok-comma>
+    }
+
     rule meta-list-idents {
         <identifier>
         <tok-lparen>
-        [ <identifier>* %% <tok-comma> ]
+        <ident-list>
         <tok-rparen>
     }
 
@@ -225,57 +212,72 @@ our role MetaItem::Rules {
 our role MetaItem::Actions {
 
     method meta-item:sym<simple>($/) {  
-        <simple-path>
+        make MetaItemSimple.new(
+            simple-path => $<simple-path>.made
+        )
     }
 
     method meta-item:sym<simple-eq-expr>($/) {  
-        <simple-path> <tok-eq> <expression>
+        make MetaItemSimpleEqExpr.new(
+            simple-path => $<simple-path>.made,
+            expression => $<expression>.made,
+        )
     }
 
     method meta-item:sym<simple-with-meta-seq>($/) {  
-        <simple-path> <tok-lparen> <meta-seq>? <tok-rparen>
+        make MetaItemSimpleWithMetaSeq.new(
+            simple-path => $<simple-path>.made,
+            meta-seq    => $<meta-seq>.made,
+        )
     }
 
     method meta-seq($/) {
-        <meta-item-inner>+ %% <tok-comma>
+        make $<meta-item-inner>>>.made
     }
 
     #---------------
-    method meta-item-inner:sym<basic>($/) { <meta-item> }
+    method meta-item-inner:sym<basic>($/) { make $<meta-item>.made }
 
-    method meta-item-inner:sym<expr>($/)  { <expression> }
+    method meta-item-inner:sym<expr>($/)  { make $<expression>.made }
 
     method meta-word($/) {
-        <identifier>
+        make $<identifier>.made
     }
 
     #---------------
-    method any-string-literal:sym<basic>($/) { <string-literal> }
-    method any-string-literal:sym<raw>($/)   { <raw-string-literal> }
+    method any-string-literal:sym<basic>($/) { make $<string-literal>.made }
+    method any-string-literal:sym<raw>($/)   { make $<raw-string-literal>.made }
 
     #---------------
     method meta-name-value-str($/) {
-        <identifier> <tok-eq> <any-string-literal>
+        make MetaNameValueStr.new(
+            identifier         => $<identifier>.made,
+            any-string-literal => $<any-string-literal>.made,
+        )
     }
 
     method meta-list-paths($/) {
-        <identifier> 
-        <tok-lparen>
-        [ <simple-path>* %% <tok-comma> ] 
-        <tok-rparen>
+        make MetaListPaths.new(
+            identifier   => $<identifier>.made,
+            simple-paths => $<simple-path>>>.made,
+        )
+    }
+
+    method ident-list($/) {
+        make $<identifier>>>.made
     }
 
     method meta-list-idents($/) {
-        <identifier>
-        <tok-lparen>
-        [ <identifier>* %% <tok-comma> ]
-        <tok-rparen>
+        make MetaListIdents.new(
+            identifier          => $<identifier>.made,
+            grouped-identifiers => $<ident-list>.made,
+        )
     }
 
     method meta-list-name-value-str($/) {
-        <identifier>
-        <tok-lparen>
-        [ <meta-name-value-str>* %% <tok-comma> ]
-        <tok-rparen>
+        make MetaListNameValueStr.new(
+            identifier                  => $<identifier>.made,
+            grouped-meta-name-value-str => $<meta-name-value-str>>>.made,
+        )
     }
 }
