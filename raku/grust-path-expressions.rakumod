@@ -160,51 +160,51 @@ our role PathExpression::Rules {
 
 our role PathExpression::Actions {
 
-    method path-expression:sym<basic>($/)      { <path-in-expression> }
-    method path-expression:sym<qualified>($/)  { <qualified-path-in-expression> }
+    method path-expression:sym<basic>($/)      { make $<path-in-expression>.made }
+    method path-expression:sym<qualified>($/)  { make $<qualified-path-in-expression>.made }
 
     method path-in-expression($/) {
-        <tok-path-sep>?
-        [
-            <path-expr-segment>+ %% <tok-path-sep>
-        ]
+        make PathInExpression.new(
+            path-expr-segments => $<path-expr-segment>>>.made
+        )
     }
 
     method path-expr-segment($/) {
-        <path-ident-segment> 
-        [ <tok-path-sep> <generic-args> ]?
+        make PathExprSegment.new(
+            path-ident-segment => $<path-ident-segment>.made,
+            maybe-generic-args => $<generic-args>.made,
+        )
     }
 
-    method path-ident-segment:sym<ident>($/)   { <identifier> }
-    method path-ident-segment:sym<super>($/)   { <kw-super> }
-    method path-ident-segment:sym<selfv>($/)   { <kw-selfvalue> }
-    method path-ident-segment:sym<selft>($/)   { <kw-selftype> }
-    method path-ident-segment:sym<crate>($/)   { <kw-crate> }
-    method path-ident-segment:sym<$-crate>($/) { <dollar-crate> }
+    method path-ident-segment:sym<ident>($/)   { make $<identifier>.made }
+    method path-ident-segment:sym<super>($/)   { make $<kw-super>.made }
+    method path-ident-segment:sym<selfv>($/)   { make $<kw-selfvalue>.made }
+    method path-ident-segment:sym<selft>($/)   { make $<kw-selftype>.made }
+    method path-ident-segment:sym<crate>($/)   { make $<kw-crate>.made }
+    method path-ident-segment:sym<$-crate>($/) { make $<dollar-crate>.made }
 
     method dollar-crate($/) {
-        <tok-dollar> <kw-crate> 
+        make DollarCrate.new
     }
 
     method qualified-path-in-expression($/) {
-        <qualified-path-type> [<tok-path-sep> <path-expr-segment>]+
+        make QualifiedPathInExpression.new(
+            qualified-path-type => $<qualified-path-type>.made,
+            path-expr-segments  => $<path-expr-segment>>>.made,
+        )
     }
 
     method qualified-path-type($/) {
-        <tok-lt>
-        <type>
-        [
-            <kw-as>
-            <type-path>
-        ]?
-        <tok-gt>
+        make QualifiedPathType.new(
+            type               => $<type>.made,
+            maybe-as-type-path => $<type-path>.made,
+        )
     }
 
     method qualified-path-in-type($/) {
-        <qualified-path-type>
-        [
-            <tok-path-sep>
-            <type-path-segment>
-        ]+
+        make QualifiedPathInType.new(
+            qualified-path-type => $<qualified-path-type>.made,
+            type-path-segments => $<type-path-segment>>>.made
+        )
     }
 }
