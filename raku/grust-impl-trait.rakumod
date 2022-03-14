@@ -45,4 +45,15 @@ our role ImplTraitType::Rules {
     }
 }
 
-our role ImplTraitType::Actions {}
+our role ImplTraitType::Actions {
+
+    method impl-trait-type($/) {
+        <kw-impl>
+        <type-param-bounds>
+    }
+
+    method impl-trait-type-one-bound($/) {
+        <kw-impl>
+        <trait-bound>
+    }
+}

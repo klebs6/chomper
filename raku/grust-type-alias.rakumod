@@ -32,4 +32,15 @@ our role TypeAlias::Rules {
     }
 }
 
-our role TypeAlias::Actions {}
+our role TypeAlias::Actions {
+
+    method type-alias($/) {
+        <kw-type>
+        <identifier>
+        <generic-params>?
+        [ <tok-colon> <type-param-bounds> ]?
+        <where-clause>?
+        [ <tok-eq> <type>]?
+        <tok-semi>
+    }
+}

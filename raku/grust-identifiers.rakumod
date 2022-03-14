@@ -78,4 +78,23 @@ our role Identifiers::Rules {
     }
 }
 
-our role Identifiers::Actions {}
+our role Identifiers::Actions {
+
+    method identifier-or-keyword:sym<a>($/) { make ~$/ }
+    method identifier-or-keyword:sym<b>($/) { make ~$/ }
+
+    method raw-identifier($/) {
+        make ~$/
+    }
+
+    method non-keyword-identifier($/) {
+        make ~$/
+    }
+
+    method identifier:sym<a>($/) { ~$/ }
+    method identifier:sym<b>($/) { ~$/ }
+
+    #---------------------
+    method identifier-or-underscore:sym<identifier>($/) { ~$/ }
+    method identifier-or-underscore:sym<underscore>($/) { ~$/ }
+}

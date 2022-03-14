@@ -168,4 +168,49 @@ our role TupleStructPattern::Rules {
     rule path-pattern:sym<b> { <qualified-path-in-expression> }
 }
 
-our role TupleStructPattern::Actions {}
+our role TupleStructPattern::Actions {
+
+    method tuple-struct-pattern($/) {
+        <path-in-expression> 
+        <tok-lparen> 
+        <tuple-struct-items>? 
+        <tok-rparen>
+    }
+
+    method tuple-struct-items($/) {
+        <pattern>+ %% <tok-comma>
+    }
+
+    method tuple-pattern($/) {
+        <tok-lparen> 
+        <tuple-pattern-items>? 
+        <tok-rparen>
+    }
+
+    method tuple-pattern-items:sym<rest-pat>($/) {
+        <rest-pattern>
+    }
+
+    method tuple-pattern-items:sym<pat>($/) {
+        <pattern>+ %% <tok-comma>
+    }
+
+    method grouped-pattern($/) {
+        <tok-lparen>
+        <pattern>
+        <tok-rparen>
+    }
+
+    method slice-pattern($/) {
+        <tok-lbrack>
+        <slice-pattern-items>?
+        <tok-rbrack>
+    }
+
+    method slice-pattern-items($/) {
+        <pattern>+ %% <tok-comma>
+    }
+
+    method path-pattern:sym<a>($/) { <path-in-expression> }
+    method path-pattern:sym<b>($/) { <qualified-path-in-expression> }
+}

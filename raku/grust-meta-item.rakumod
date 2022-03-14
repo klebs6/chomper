@@ -219,6 +219,63 @@ our role MetaItem::Rules {
         [ <meta-name-value-str>* %% <tok-comma> ]
         <tok-rparen>
     }
+
 }
 
-our role MetaItem::Actions {}
+our role MetaItem::Actions {
+
+    method meta-item:sym<simple>($/) {  
+        <simple-path>
+    }
+
+    method meta-item:sym<simple-eq-expr>($/) {  
+        <simple-path> <tok-eq> <expression>
+    }
+
+    method meta-item:sym<simple-with-meta-seq>($/) {  
+        <simple-path> <tok-lparen> <meta-seq>? <tok-rparen>
+    }
+
+    method meta-seq($/) {
+        <meta-item-inner>+ %% <tok-comma>
+    }
+
+    #---------------
+    method meta-item-inner:sym<basic>($/) { <meta-item> }
+
+    method meta-item-inner:sym<expr>($/)  { <expression> }
+
+    method meta-word($/) {
+        <identifier>
+    }
+
+    #---------------
+    method any-string-literal:sym<basic>($/) { <string-literal> }
+    method any-string-literal:sym<raw>($/)   { <raw-string-literal> }
+
+    #---------------
+    method meta-name-value-str($/) {
+        <identifier> <tok-eq> <any-string-literal>
+    }
+
+    method meta-list-paths($/) {
+        <identifier> 
+        <tok-lparen>
+        [ <simple-path>* %% <tok-comma> ] 
+        <tok-rparen>
+    }
+
+    method meta-list-idents($/) {
+        <identifier>
+        <tok-lparen>
+        [ <identifier>* %% <tok-comma> ]
+        <tok-rparen>
+    }
+
+    method meta-list-name-value-str($/) {
+        <identifier>
+        <tok-lparen>
+        [ <meta-name-value-str>* %% <tok-comma> ]
+        <tok-rparen>
+    }
+}

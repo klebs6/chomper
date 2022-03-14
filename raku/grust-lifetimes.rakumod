@@ -164,4 +164,32 @@ our role Lifetimes::Rules {
     }
 }
 
-our role Lifetimes::Actions {}
+our role Lifetimes::Actions {
+
+    method lifetime-token:sym<basic>($/) {
+        <tok-single-quote>
+        <identifier-or-keyword>
+    }
+
+    method lifetime-token:sym<anonymous>($/) {
+        <tok-single-quote>
+        <tok-underscore>
+    }
+
+    method lifetime-or-label($/) {
+        <tok-single-quote>
+        <non-keyword-identifier>
+    }
+
+    method lifetime-bounds($/) {
+        <lifetime>* %% <tok-plus>
+    }
+
+    method lifetime:sym<lt>($/)      { <lifetime-or-label> }
+    method lifetime:sym<static>($/)  { \' <static> }
+    method lifetime:sym<unnamed>($/) { \' _ }
+
+    method for-lifetimes($/) {
+        <kw-for> <generic-params>
+    }
+}

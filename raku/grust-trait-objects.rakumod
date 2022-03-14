@@ -47,4 +47,15 @@ our role TraitObjectType::Rules {
     }
 }
 
-our role TraitObjectType::Actions {}
+our role TraitObjectType::Actions {
+
+    method trait-object-type($/) {
+        <kw-dyn>? 
+        <type-param-bounds>
+    }
+
+    method trait-object-type-one-bound($/) {
+        <kw-dyn>?
+        <trait-bound>
+    }
+}

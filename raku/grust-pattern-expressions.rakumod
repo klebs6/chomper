@@ -110,6 +110,47 @@ our role Pattern::Rules {
     rule pattern-without-range:sym<grouped>          { <grouped-pattern>      } 
     rule pattern-without-range:sym<slice>            { <slice-pattern>        } 
     rule pattern-without-range:sym<macro-invocation> { <macro-invocation>     } 
+
 }
 
-our role Pattern::Actions {}
+our role Pattern::Actions {
+
+    method pattern($/) {
+        <tok-or>? 
+        <pattern-no-top-alt> 
+        [ <tok-or> <pattern-no-top-alt> ]*
+    }
+
+    method pattern-no-top-alt:sym<no-range>($/) { <pattern-without-range> }
+
+    method pattern-no-top-alt:sym<range>($/)    { <range-pattern> }
+
+    method identifier-pattern($/) {
+        <kw-ref>?
+        <kw-mut>?
+        <identifier>
+        [ <tok-at> <pattern> ]?
+    }
+
+    method wildcard-pattern($/) {
+        <tok-underscore>
+    }
+
+    method rest-pattern($/) {
+        <tok-dotdot>
+    }
+
+    #---------------------
+    method pattern-without-range:sym<path>($/)             { <path-pattern>         } 
+    method pattern-without-range:sym<literal>($/)          { <literal-pattern>      } 
+    method pattern-without-range:sym<identifier>($/)       { <identifier-pattern>   } 
+    method pattern-without-range:sym<wildcard>($/)         { <wildcard-pattern>     } 
+    method pattern-without-range:sym<rest>($/)             { <rest-pattern>         } 
+    method pattern-without-range:sym<ref>($/)              { <reference-pattern>    } 
+    method pattern-without-range:sym<struct>($/)           { <struct-pattern>       } 
+    method pattern-without-range:sym<tuple-struct>($/)     { <tuple-struct-pattern> } 
+    method pattern-without-range:sym<tuple>($/)            { <tuple-pattern>        } 
+    method pattern-without-range:sym<grouped>($/)          { <grouped-pattern>      } 
+    method pattern-without-range:sym<slice>($/)            { <slice-pattern>        } 
+    method pattern-without-range:sym<macro-invocation>($/) { <macro-invocation>     } 
+}

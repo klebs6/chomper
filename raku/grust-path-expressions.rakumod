@@ -155,6 +155,56 @@ our role PathExpression::Rules {
             <type-path-segment>
         ]+
     }
+
 }
 
-our role PathExpression::Actions {}
+our role PathExpression::Actions {
+
+    method path-expression:sym<basic>($/)      { <path-in-expression> }
+    method path-expression:sym<qualified>($/)  { <qualified-path-in-expression> }
+
+    method path-in-expression($/) {
+        <tok-path-sep>?
+        [
+            <path-expr-segment>+ %% <tok-path-sep>
+        ]
+    }
+
+    method path-expr-segment($/) {
+        <path-ident-segment> 
+        [ <tok-path-sep> <generic-args> ]?
+    }
+
+    method path-ident-segment:sym<ident>($/)   { <identifier> }
+    method path-ident-segment:sym<super>($/)   { <kw-super> }
+    method path-ident-segment:sym<selfv>($/)   { <kw-selfvalue> }
+    method path-ident-segment:sym<selft>($/)   { <kw-selftype> }
+    method path-ident-segment:sym<crate>($/)   { <kw-crate> }
+    method path-ident-segment:sym<$-crate>($/) { <dollar-crate> }
+
+    method dollar-crate($/) {
+        <tok-dollar> <kw-crate> 
+    }
+
+    method qualified-path-in-expression($/) {
+        <qualified-path-type> [<tok-path-sep> <path-expr-segment>]+
+    }
+
+    method qualified-path-type($/) {
+        <tok-lt>
+        <type>
+        [
+            <kw-as>
+            <type-path>
+        ]?
+        <tok-gt>
+    }
+
+    method qualified-path-in-type($/) {
+        <qualified-path-type>
+        [
+            <tok-path-sep>
+            <type-path-segment>
+        ]+
+    }
+}

@@ -33,4 +33,13 @@ our role Union::Rules {
 
 our role Union::Actions {
 
+    method union($/) {
+        <kw-union>
+        <identifier>
+        <generic-params>?
+        <where-clause>?
+        <tok-lbrace>
+        <struct-fields>
+        <tok-rbrace>
+    }
 }

@@ -104,4 +104,36 @@ our role UseDeclaration::Rules {
     }
 }
 
-our role UseDeclaration::Actions {}
+our role UseDeclaration::Actions {
+
+    method use-declaration($/) {
+        <kw-use> 
+        <use-tree> 
+        <tok-semi>
+    }
+
+    method use-tree:sym<basic>($/) {
+        [
+            <simple-path>? 
+            <tok-path-sep>
+        ]? 
+        <tok-star>
+    }
+
+    method use-tree:sym<complex>($/) {
+       [ <simple-path>? <tok-path-sep> ]? 
+       <tok-lbrace>
+       [
+           <use-tree>+ %% <tok-comma>
+       ]? 
+       <tok-rbrace>
+    }
+
+    method use-tree:sym<as>($/) {
+        <simple-path>
+       [ 
+           <kw-as> 
+           <identifier-or-underscore>
+       ]?
+    }
+}

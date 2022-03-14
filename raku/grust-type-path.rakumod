@@ -140,4 +140,38 @@ our role TypePath::Rules {
     }
 }
 
-our role TypePath::Actions {}
+our role TypePath::Actions {
+
+    method type-path($/) {
+        <tok-path-sep>?
+        [ <type-path-segment>+ %% <tok-path-sep> ]
+    }
+
+    method type-path-segment($/) { 
+        <path-ident-segment> 
+        [
+            <tok-path-sep>?
+            <type-path-segment-suffix>
+        ]?
+    }
+
+    #----------------------
+    method type-path-segment-suffix:sym<generic>($/) {  
+        <generic-args>
+    }
+
+    method type-path-segment-suffix:sym<type-path-fn>($/) {  
+        <type-path-fn>
+    }
+
+    method type-path-fn($/) {
+        <tok-lparen> 
+        <type-path-fn-inputs>? 
+        <tok-rparen> 
+        [ <tok-rarrow> <type> ]?
+    }
+
+    method type-path-fn-inputs($/) {
+        <type>+ %% <tok-comma>
+    }
+}

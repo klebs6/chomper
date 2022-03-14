@@ -429,6 +429,119 @@ our role MacroInvocation::Rules {
     rule macro-transcriber {
         <delim-token-tree>
     }
+
 }
 
-our role MacroInvocation::Actions {}
+our role MacroInvocation::Actions {
+
+    method macro-expression($/) {
+        <simple-path> 
+        <tok-bang> 
+        <delim-token-tree>
+    }
+
+    method delim-token-tree($/) {
+        | <tok-lparen> <token-tree>* <tok-rparen>
+        | <tok-lbrack> <token-tree>* <tok-rbrack>
+        | <tok-lbrace> <token-tree>* <tok-rbrace>
+    }
+
+    method token-trees($/) { <token-tree>* }
+
+    method token-tree:sym<leaf>($/) { <rust-token-no-delim> }
+
+    method token-tree:sym<tree>($/) { <delim-token-tree> }
+
+    method macro-invocation($/) {
+        <comment>? 
+        [
+            | <simple-path> <.tok-bang> <.tok-lparen> <token-tree>* <.tok-rparen> <.tok-semi>
+            | <simple-path> <.tok-bang> <.tok-lbrack> <token-tree>* <.tok-rbrack> <.tok-semi>
+            | <simple-path> <.tok-bang> <.tok-lbrace> <token-tree>* <.tok-rbrace>
+        ]
+    }
+
+    method kw-macro-rules($/) {
+        macro_rules
+    }
+
+    method macro-rules-definition($/) {
+        <kw-macro-rules> 
+        <tok-bang>
+        <identifier>
+        <macro-rules-def>
+    }
+
+    method macro-rules-def($/) {
+        | <tok-lparen> <comment>? <macro-rules> <tok-rparen> <tok-semi>
+        | <tok-lbrack> <comment>? <macro-rules> <tok-rbrack> <tok-semi>
+        | <tok-lbrace> <comment>? <macro-rules> <tok-rbrace>
+    }
+
+    method macro-rules($/) {
+        <macro-rule>+ %% <tok-semi>
+    }
+
+    method macro-rule($/) {
+        <macro-matcher> <tok-fat-rarrow> <macro-transcriber>
+    }
+
+    method macro-matcher($/) {
+        | <tok-lparen> <macro-match>* <tok-rparen>
+        | <tok-lbrack> <macro-match>* <tok-rbrack>
+        | <tok-lbrace> <macro-match>* <tok-rbrace>
+    }
+
+    #-----------------
+    method macro-match:sym<token>($/)   { 
+        <token-except-dollar-and-delimiters> 
+    }
+
+    method macro-match:sym<matcher>($/) { 
+        <macro-matcher> 
+    }
+
+    method macro-match:sym<single>($/)  { 
+        <tok-dollar> 
+        <identifier> 
+        <tok-colon> 
+        <macro-frag-spec> 
+    }
+
+    method macro-match:sym<plural>($/)  { 
+        <tok-dollar> 
+        <tok-lparen> 
+        <macro-match>+ 
+        <tok-rparen> 
+        <macro-rep-sep>? 
+        <macro-rep-op> 
+    }
+
+    #-----------------
+    method macro-frag-spec:sym<block>($/)     { block }
+    method macro-frag-spec:sym<expr>($/)      { expr }
+    method macro-frag-spec:sym<ident>($/)     { ident }
+    method macro-frag-spec:sym<item>($/)      { item }
+    method macro-frag-spec:sym<lifetime>($/)  { lifetime }
+    method macro-frag-spec:sym<literal>($/)   { literal }
+    method macro-frag-spec:sym<meta>($/)      { meta }
+    method macro-frag-spec:sym<pat>($/)       { pat }
+    method macro-frag-spec:sym<pat_param>($/) { pat_param }
+    method macro-frag-spec:sym<path>($/)      { path }
+    method macro-frag-spec:sym<stmt>($/)      { stmt }
+    method macro-frag-spec:sym<tt>($/)        { tt }
+    method macro-frag-spec:sym<ty>($/)        { ty }
+    method macro-frag-spec:sym<vis>($/)       { vis }
+
+    method macro-rep-sep($/) {
+        <token-except-delimiters-and-repetition-operators>
+    }
+
+    method macro-rep-op:sym<star>($/)  { <tok-star> }
+    method macro-rep-op:sym<plus>($/)  { <tok-plus> }
+    method macro-rep-op:sym<qmark>($/) { <tok-qmark> }
+
+    method macro-transcriber($/) {
+        <delim-token-tree>
+    }
+}

@@ -89,4 +89,11 @@ our role Visibility::Rules {
     rule visibility:sym<in-path> { <kw-pub> <tok-lparen> <kw-in> <simple-path> <tok-rparen> }
 }
 
-our role Visibility::Actions {}
+our role Visibility::Actions {
+
+    method visibility:sym<basic>($/)   { <kw-pub> }
+    method visibility:sym<crate>($/)   { <kw-pub> <tok-lparen> <kw-crate> <tok-rparen> }
+    method visibility:sym<self>($/)    { <kw-pub> <tok-lparen> <kw-selfvalue>  <tok-rparen> }
+    method visibility:sym<super>($/)   { <kw-pub> <tok-lparen> <kw-super> <tok-rparen> }
+    method visibility:sym<in-path>($/) { <kw-pub> <tok-lparen> <kw-in> <simple-path> <tok-rparen> }
+}

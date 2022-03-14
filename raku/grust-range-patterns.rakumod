@@ -83,4 +83,30 @@ our role RangePattern::Rules {
     rule range-pattern-bound:sym<qualified-path-in> { <qualified-path-in-expression> }
 }
 
-our role RangePattern::Actions {}
+our role RangePattern::Actions {
+
+    method range-pattern:sym<inclusive>($/) { 
+        <range-pattern-bound> 
+        <tok-dotdoteq> 
+        <range-pattern-bound>
+    }
+
+    method range-pattern:sym<half-open>($/) { 
+        <tok-or> 
+        <range-pattern-bound> 
+        <tok-dotdot>
+    }
+
+    method range-pattern:sym<obsolete>($/)  { 
+        <range-pattern-bound> 
+        <tok-dotdotdot> 
+        <range-pattern-bound>
+    }
+
+    method range-pattern-bound:sym<char>($/)              { <char-literal> }
+    method range-pattern-bound:sym<byte>($/)              { <byte-literal> }
+    method range-pattern-bound:sym<int>($/)               { <tok-minus>? <integer-literal> }
+    method range-pattern-bound:sym<float>($/)             { <tok-minus>? <float-literal> }
+    method range-pattern-bound:sym<path-in>($/)           { <path-in-expression> }
+    method range-pattern-bound:sym<qualified-path-in>($/) { <qualified-path-in-expression> }
+}

@@ -42,4 +42,7 @@ our role ReferencePattern::Rules {
     rule reference-pattern:sym<refref> { <tok-andand> <kw-mut>? <pattern-without-range> }
 }
 
-our role ReferencePattern::Actions {}
+our role ReferencePattern::Actions {
+    method reference-pattern:sym<ref>($/)    { <tok-and> <kw-mut>? <pattern-without-range> }
+    method reference-pattern:sym<refref>($/) { <tok-andand> <kw-mut>? <pattern-without-range> }
+}

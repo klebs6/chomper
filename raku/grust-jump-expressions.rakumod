@@ -68,4 +68,20 @@ our role JumpExpression::Rules {
     }
 }
 
-our role JumpExpression::Actions {}
+our role JumpExpression::Actions {
+
+    method continue-expression($/) {
+        <kw-continue>
+        <lifetime-or-label>?
+    }
+
+    method break-expression($/) {
+        <kw-break> 
+        <lifetime-or-label>?
+        <expression>?
+    }
+
+    method return-expression($/) {
+        <kw-return> <expression>? 
+    }
+}

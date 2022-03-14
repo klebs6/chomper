@@ -74,4 +74,23 @@ our role WhereClause::Rules {
     }
 }
 
-our role WhereClause::Actions {}
+our role WhereClause::Actions {
+
+    method where-clause($/) {
+        <kw-where>
+        [<where-clause-item>* %% <tok-comma>]
+    }
+
+    method where-clause-item:sym<lt>($/) {
+        <lifetime> 
+        <tok-colon> 
+        <lifetime-bounds>
+    }
+
+    method where-clause-item:sym<type-bound>($/) {
+        <for-lifetimes>? 
+        <type> 
+        <tok-colon> 
+        <type-param-bounds>?
+    }
+}

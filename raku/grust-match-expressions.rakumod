@@ -209,6 +209,69 @@ our role MatchExpression::Rules {
     rule match-arm-guard {
         <kw-if> <expression>
     }
+
 }
 
-our role MatchExpression::Actions {}
+our role MatchExpression::Actions {
+
+    method match-expression($/) {
+        <kw-match> 
+        <scrutinee> 
+        <tok-lbrace>
+        <inner-attribute>*
+        <match-arms>?
+        <tok-rbrace>
+    }
+
+    method scrutinee($/) {
+        <expression-nostruct>
+    }
+
+    method scrutinee-except-lazy-boolean-operator-expression($/) {
+        <scrutinee> <?{$0 !~~ <binary-oror-expression>}>
+    }
+
+    #------------------
+    method match-arms($/) {
+        <match-arms-inner-item>*
+        <match-arms-outer-item>
+        <comment>?
+    }
+
+    method match-arms-inner-item:sym<with-block>($/) {  
+        <comment>?
+        <match-arm>
+        <tok-fat-rarrow>
+        <expression-with-block>
+        <tok-comma>?
+    }
+
+    method match-arms-inner-item:sym<without-block>($/) {  
+        <comment>?
+        <match-arm> 
+        <tok-fat-rarrow> 
+        <expression-noblock> 
+        <tok-comma>
+    }
+
+    method match-arms-outer-item($/) {
+        <comment>?
+        <match-arm> 
+        <tok-fat-rarrow> 
+        [
+            | <expression-with-block> 
+            | <expression-noblock> 
+        ]
+        <tok-comma>?
+    }
+
+    method match-arm($/) {
+        <outer-attribute>*
+        <pattern>
+        <match-arm-guard>?
+    }
+
+    method match-arm-guard($/) {
+        <kw-if> <expression>
+    }
+}

@@ -154,4 +154,62 @@ our role Trait::Rules {
     }
 }
 
-our role Trait::Actions {}
+our role Trait::Actions {
+
+    method trait($/) {
+        <kw-unsafe>?
+        <kw-trait>
+        <identifier>
+        <generic-params>?
+        [ <tok-colon> <type-param-bounds>? ]?
+        <where-clause>?
+        <tok-lbrace>
+        <inner-attribute>*
+        <associated-item>*
+        <comment>?
+        <tok-rbrace>
+    }
+
+    method implementation:sym<inherent>($/) { <inherent-impl> }
+    method implementation:sym<trait>($/)    { <trait-impl> }
+
+    method inherent-impl($/) {
+        <kw-impl>
+        <generic-params>?
+        <type>
+        <where-clause>?
+        <tok-lbrace>
+        <inner-attribute>*
+        <associated-item>*
+        <comment>?
+        <tok-rbrace>
+    }
+
+    method trait-impl($/) {
+        <kw-unsafe>?
+        <kw-impl>
+        <generic-params>?
+        <tok-bang>?
+        <type-path>
+        <kw-for>
+        <type>
+        <where-clause>?
+        <tok-lbrace>
+        <inner-attribute>*
+        <associated-item>*
+        <comment>?
+        <tok-rbrace>
+    }
+
+    method trait-alias($/) {
+        <outer-attribute>* 
+        <visibility>? 
+        <kw-trait> 
+        <identifier>
+        <generic-params>? 
+        <tok-eq>
+        <type-param-bounds> 
+        <where-clause>?
+        <tok-semi>
+    }
+}

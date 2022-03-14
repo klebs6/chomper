@@ -184,4 +184,40 @@ our role StructExpression::Rules {
     }
 }
 
-our role StructExpression::Actions {}
+our role StructExpression::Actions {
+
+    method struct-expression:sym<struct>($/) {  
+        <path-in-expression> 
+        <tok-lbrace> 
+        <struct-expr-struct-body>? 
+        <tok-rbrace> 
+    }
+
+    method struct-expression:sym<tuple>($/) {  
+        <path-in-expression> 
+        <tok-lparen> 
+        [ <expression>* %% <tok-comma> ] 
+        <tok-rparen>
+    }
+
+    method struct-expression:sym<unit>($/) {  
+        <path-in-expression> 
+    }
+
+    #--------------------
+    method struct-expr-struct-body:sym<fields>($/) { <struct-expr-fields> }
+    method struct-expr-struct-body:sym<base>($/)   { <struct-base> }
+
+    method struct-expr-fields($/) {
+        [ <struct-expr-field>+ %% <tok-comma> ]
+        [ <tok-comma>? <struct-base> ]?
+    }
+
+    method struct-expr-field:sym<tup-expr>($/) { <comment>? <tuple-index> <tok-colon> <expression> }
+    method struct-expr-field:sym<id-expr>($/)  { <comment>? <identifier>  <tok-colon> <expression> }
+    method struct-expr-field:sym<id>($/)       { <comment>? <identifier> }
+
+    method struct-base($/) {
+        <tok-dotdot> <expression>
+    }
+}

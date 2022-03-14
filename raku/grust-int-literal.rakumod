@@ -74,3 +74,12 @@ our role IntLiteral::Rules {
         <[0..9 a..f A..F _]>
     }
 }
+
+our role IntLiteral::Actions {
+
+    method integer-literal($/) {
+        make IntegerLiteral.new(
+            value => ~$/
+        )
+    }
+}

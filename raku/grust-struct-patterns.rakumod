@@ -191,4 +191,49 @@ our role StructPattern::Rules {
     }
 }
 
-our role StructPattern::Actions {}
+our role StructPattern::Actions {
+
+    method struct-pattern($/) {
+        <path-in-expression> 
+        <tok-lbrace> 
+        <struct-pattern-elements>? 
+        <tok-rbrace>
+    }
+
+    method struct-pattern-elements:sym<basic>($/) {
+        <struct-pattern-fields>
+        [
+            <tok-comma> <struct-pattern-et-cetera>?
+        ]?
+    }
+
+    method struct-pattern-elements:sym<etc>($/) {
+        <struct-pattern-et-cetera>
+    }
+
+    method struct-pattern-fields($/) {
+        <struct-pattern-field>+ %% <tok-comma>
+    }
+
+    method struct-pattern-field($/) {
+        <outer-attribute>*
+        <struct-pattern-field-variant>
+    }
+
+    method struct-pattern-field-variant:sym<tup>($/) {
+        <tuple-index> <tok-colon> <pattern>
+    }
+
+    method struct-pattern-field-variant:sym<id>($/) {
+        <identifier> <tok-colon> <pattern>
+    }
+
+    method struct-pattern-field-variant:sym<ref-mut-id>($/) {
+        <kw-ref>? <kw-mut>? <identifier>
+    }
+
+    method struct-pattern-et-cetera($/) {
+        <outer-attribute>*
+        <tok-dotdot>
+    }
+}

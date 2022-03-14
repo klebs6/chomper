@@ -132,4 +132,54 @@ our role Struct::Rules {
     }
 }
 
-our role Struct::Actions {}
+our role Struct::Actions {
+
+    method struct:sym<struct>($/) { <struct-struct> }
+    method struct:sym<tuple>($/)  { <tuple-struct> }
+
+    method struct-struct($/) {
+        <kw-struct> 
+        <identifier> 
+        <generic-params>?
+        <where-clause>?
+        [
+            | <tok-semi>
+            | <tok-lbrace> <struct-fields>? <tok-rbrace>
+        ]
+    }
+
+    method tuple-struct($/) {
+        <kw-struct>
+        <identifier>
+        <generic-params>?
+        <tok-lparen>
+        <tuple-fields>?
+        <tok-rparen>
+        <where-clause>?
+        <tok-semi>
+    }
+
+    method struct-fields($/) {
+        <struct-field>+ %% <tok-comma>
+    }
+
+    method struct-field($/) {
+        <comment>?
+        <outer-attribute>*
+        <visibility>?
+        <identifier>
+        <tok-colon>
+        <type>
+    }
+
+    method tuple-fields($/) {
+        <tuple-field>+ %% <tok-comma>
+    }
+
+    method tuple-field($/) {
+        <comment>?
+        <outer-attribute>*
+        <visibility>?
+        <type>
+    }
+}

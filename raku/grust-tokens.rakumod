@@ -54,4 +54,38 @@ our role Tokens::Rules
     }
 }
 
-our role Tokens::Actions {}
+our role Tokens::Actions {
+
+    method rust-keyword:sym<strict>($/)         { <strict-keyword> }
+    method rust-keyword:sym<weak>($/)           { <weak-keyword> }
+    method rust-keyword:sym<reserved>($/)       { <reserved-keyword> }
+
+    method rust-token-no-delim:sym<id>($/)      { <identifier> }
+    method rust-token-no-delim:sym<keyword>($/) { <rust-keyword> }
+    method rust-token-no-delim:sym<lit>($/)     { <literal-expression> }
+    method rust-token-no-delim:sym<lt>($/)      { <lifetime-token> }
+    method rust-token-no-delim:sym<punc>($/)    { <punctuation> }
+
+    method rust-token:sym<no-delim>($/)         { <rust-token-no-delim> }
+    method rust-token:sym<delim>($/)            { <delimiter> }
+
+    method token-except-dollar-and-delimiters($/) {
+        (<rust-token-no-delim>) <?{$0 !~~ /\$/}>
+    }
+
+    method token-except-delimiters-and-repetition-operators($/) {
+        (<rust-token-no-delim>) <?{$0 !~~ /<[\$ \*]>/}>
+    }
+    
+    method quote-escape($/) {
+        | \\\'
+        | \\\"
+    }
+
+    method unicode-escape($/) {
+        \\u 
+        <tok-lbrace> 
+        [[ <hex-digit> _* ] ** 1..6] 
+        <tok-rbrace> 
+    }
+}

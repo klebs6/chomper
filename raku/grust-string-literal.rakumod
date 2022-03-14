@@ -53,3 +53,12 @@ our role StringLiteral::Rules {
         <tok-pound> 
     }
 }
+
+our role StringLiteral::Actions {
+
+    method string-literal($/) {
+        <tok-double-quote>
+        <string-literal-inner>*
+        <tok-double-quote>
+    }
+}

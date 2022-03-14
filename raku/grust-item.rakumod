@@ -152,6 +152,64 @@ our role Item::Rules {
         <init-expression>?
         <tok-semi>
     }
+
 }
 
-our role Item::Actions {}
+our role Item::Actions {
+
+    method crate-item($/) {
+        <comment>?
+        <outer-attribute>*
+        <item-variant>
+    }
+
+    method item-variant:sym<vis>($/)   { <vis-item> }
+    method item-variant:sym<macro>($/) { <macro-item> }
+
+    method vis-item($/) {
+        <visibility>?
+        <vis-item-variant>
+    }
+
+    method vis-item-variant:sym<module>($/)          { <module> }
+    method vis-item-variant:sym<extern-crate>($/)    { <extern-crate> }
+    method vis-item-variant:sym<use-declaration>($/) { <use-declaration> }
+    method vis-item-variant:sym<function>($/)        { <function> }
+    method vis-item-variant:sym<type-alias>($/)      { <type-alias> }
+    method vis-item-variant:sym<struct>($/)          { <struct> }
+    method vis-item-variant:sym<enumeration>($/)     { <enumeration> }
+    method vis-item-variant:sym<union>($/)           { <union> }
+    method vis-item-variant:sym<constant-item>($/)   { <constant-item> }
+    method vis-item-variant:sym<static-item>($/)     { <static-item> }
+    method vis-item-variant:sym<trait>($/)           { <trait> }
+    method vis-item-variant:sym<trait-alias>($/)     { <trait-alias> }
+    method vis-item-variant:sym<implementation>($/)  { <implementation> }
+    method vis-item-variant:sym<extern-block>($/)    { <extern-block> }
+
+    method macro-item:sym<macro-invocation>($/)       { <macro-invocation> }
+    method macro-item:sym<macro-rules-definition>($/) { <macro-rules-definition> }
+
+    method init-expression($/) {
+        <tok-eq>
+        <expression>
+    }
+
+    method constant-item($/) {
+        <kw-const> 
+        <identifier-or-underscore> 
+        <tok-colon> 
+        <type> 
+        <init-expression>?
+        <tok-semi>
+    }
+
+    method static-item($/) {
+        <kw-static>
+        <kw-mut>?
+        <identifier>
+        <tok-colon>
+        <type>
+        <init-expression>?
+        <tok-semi>
+    }
+}

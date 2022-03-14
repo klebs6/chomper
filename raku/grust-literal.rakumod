@@ -29,4 +29,15 @@ our role LiteralExpression::Rules {
     token literal-expression:sym<bool>         { <boolean-literal>         } 
 }
 
-our role LiteralExpression::Actions {}
+our role LiteralExpression::Actions {
+
+    method literal-expression:sym<char>($/)         { <char-literal>            } 
+    method literal-expression:sym<str>($/)          { <string-literal>          } 
+    method literal-expression:sym<raw-str>($/)      { <raw-string-literal>      } 
+    method literal-expression:sym<byte>($/)         { <byte-literal>            } 
+    method literal-expression:sym<byte-str>($/)     { <byte-string-literal>     } 
+    method literal-expression:sym<raw-byte-str>($/) { <raw-byte-string-literal> } 
+    method literal-expression:sym<int>($/)          { <integer-literal>         } 
+    method literal-expression:sym<float>($/)        { <float-literal>           } 
+    method literal-expression:sym<bool>($/)         { <boolean-literal>         } 
+}

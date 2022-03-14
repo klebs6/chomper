@@ -30,4 +30,15 @@ our role LiteralPattern::Rules {
     rule literal-pattern:sym<float>        { <tok-minus>? <float-literal> }
 }
 
-our role LiteralPattern::Actions {}
+our role LiteralPattern::Actions {
+
+    method literal-pattern:sym<bool>($/)         { <boolean-literal> }
+    method literal-pattern:sym<char>($/)         { <char-literal> }
+    method literal-pattern:sym<byte>($/)         { <byte-literal> }
+    method literal-pattern:sym<str>($/)          { <string-literal> }
+    method literal-pattern:sym<raw-str>($/)      { <raw-string-literal> }
+    method literal-pattern:sym<byte-str>($/)     { <byte-string-literal> }
+    method literal-pattern:sym<raw-byte-str>($/) { <raw-byte-string-literal> }
+    method literal-pattern:sym<int>($/)          { <tok-minus>? <integer-literal> }
+    method literal-pattern:sym<float>($/)        { <tok-minus>? <float-literal> }
+}

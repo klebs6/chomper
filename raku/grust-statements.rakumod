@@ -112,4 +112,36 @@ our role Statement::Rules {
     rule expression-statement:sym<block>   { <comment>? <expression-with-block> <tok-semi>? }
 }
 
-our role Statement::Actions {}
+our role Statement::Actions {
+
+    method statements($/) {  
+        <statement>*
+        <expression-noblock>?
+    }
+
+    method statement:sym<semi>($/)  { <tok-semi> }
+    method statement:sym<let>($/)   { <let-statement> }
+    method statement:sym<expr>($/)  { <expression-statement> }
+    method statement:sym<macro>($/) { <macro-invocation> }
+    method statement:sym<item>($/)  { <crate-item> }
+
+    method let-statement($/) {
+        <comment>?
+        <outer-attribute>*
+        <kw-let>
+        <pattern-no-top-alt>
+        [
+            <tok-colon>
+            <type>
+        ]?
+        [
+            <tok-eq>
+            <expression>
+        ]?
+        <tok-semi>
+        <line-comment>? 
+    }
+
+    method expression-statement:sym<noblock>($/) { <comment>? <expression-noblock> <tok-semi> }
+    method expression-statement:sym<block>($/)   { <comment>? <expression-with-block> <tok-semi>? }
+}

@@ -36,4 +36,22 @@ our role SimplePath::Rules {
     token simple-path-segment:sym<$-crate> { <dollar-crate> }
 }
 
-our role SimplePath::Actions {}
+our role SimplePath::Actions {
+
+    method simple-path($/) {
+        <tok-path-sep>?
+        [
+            <simple-path-segment>
+            [
+                <tok-path-sep>
+                <simple-path-segment>
+            ]*
+        ]
+    }
+
+    method simple-path-segment:sym<ident>($/)   { <identifier> }
+    method simple-path-segment:sym<super>($/)   { <kw-super> }
+    method simple-path-segment:sym<self>($/)    { <kw-selfvalue> }
+    method simple-path-segment:sym<crate>($/)   { <kw-crate> }
+    method simple-path-segment:sym<$-crate>($/) { <dollar-crate> }
+}

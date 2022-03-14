@@ -93,4 +93,40 @@ our role IfExpressions::Rules {
     }
 }
 
-our role IfExpressions::Actions {}
+our role IfExpressions::Actions {
+
+    method if-expression($/) {
+        make IfExpression.new(
+            expression-nostruct => $<expression-nostruct>.made,
+            block-expression    => $<block-expression>.made,
+            maybe-else-clause   => $<else-clause>.made,
+        )
+    }
+
+    method if-let-expression($/) {
+        make IfLetExpression.new(
+            pattern           => $<pattern>.made,
+            scrutinee         => $<scrutinee-except-lazy-boolean-operator-expression>.made,
+            block-expression  => $<block-expression>.made,
+            maybe-else-clause => $<else-clause>.made,
+        )
+    }
+
+    method else-clause($/) {
+        make ElseClause.new(
+            else-clause-variant => $<else-clause-variant>.made,
+        )
+    }
+
+    method else-clause-variant:sym<block>($/) {  
+        make $<block-expression>.made
+    }
+
+    method else-clause-variant:sym<if>($/) {  
+        make $<if-expression>.made
+    }
+
+    method else-clause-variant:sym<if-let>($/) {  
+        make $<if-let-expression>.made
+    }
+}

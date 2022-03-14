@@ -131,4 +131,39 @@ our role LoopExpression::Rules {
     }
 }
 
-our role LoopExpression::Actions {}
+our role LoopExpression::Actions {
+
+    method loop-expression:sym<infinite-loop>($/) {
+        <loop-label>?
+        <kw-loop> <block-expression>
+    }
+
+    method loop-expression:sym<predicate-loop>($/) {
+        <loop-label>?
+        <kw-while> <expression-nostruct> <block-expression>
+    }
+
+    method loop-expression:sym<predicate-pattern-loop>($/) {
+        <loop-label>?
+        <kw-while>
+        <kw-let>
+        <pattern>
+        <tok-eq>
+        <scrutinee-except-lazy-boolean-operator-expression>
+        <block-expression>
+    }
+
+    method loop-expression:sym<iterator-loop>($/) {
+        <loop-label>?
+        <kw-for>
+        <pattern>
+        <kw-in>
+        <expression-nostruct>
+        <block-expression>
+    }
+
+    method loop-label($/) {
+        <lifetime-or-label> 
+        <tok-colon>
+    }
+}
