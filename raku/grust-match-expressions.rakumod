@@ -189,14 +189,15 @@ our role MatchExpression::Rules {
         <tok-comma>
     }
 
+    proto rule expression-variant { * }
+    rule expression-variant:sym<with>    { <expression-with-block> }
+    rule expression-variant:sym<without> { <expression-noblock> }
+
     rule match-arms-outer-item {
         <comment>?
         <match-arm> 
         <tok-fat-rarrow> 
-        [
-            | <expression-with-block> 
-            | <expression-noblock> 
-        ]
+        <expression-variant>
         <tok-comma>?
     }
 
@@ -215,63 +216,72 @@ our role MatchExpression::Rules {
 our role MatchExpression::Actions {
 
     method match-expression($/) {
-        <kw-match> 
-        <scrutinee> 
-        <tok-lbrace>
-        <inner-attribute>*
-        <match-arms>?
-        <tok-rbrace>
+        make MatchExpression.new(
+            scrutinee        => $<scrutinee>.made,
+            inner-attributes => $<inner-attribute>>>.made,
+            maybe-match-arms => $<match-arms>.made,
+        )
     }
 
     method scrutinee($/) {
-        <expression-nostruct>
+        make Scrutinee.new(
+            expression-nostruct => $<expression-nostruct>.made,
+        )
     }
 
     method scrutinee-except-lazy-boolean-operator-expression($/) {
-        <scrutinee> <?{$0 !~~ <binary-oror-expression>}>
+        make $<scrutinee>.made
     }
 
     #------------------
     method match-arms($/) {
-        <match-arms-inner-item>*
-        <match-arms-outer-item>
-        <comment>?
+        make MatchArms.new(
+            items => [
+                |$<match-arms-inner-item>>>.made, 
+                $<match-arms-outer-item>.made
+            ],
+            maybe-comment => $<comment>.made,
+        )
     }
 
     method match-arms-inner-item:sym<with-block>($/) {  
-        <comment>?
-        <match-arm>
-        <tok-fat-rarrow>
-        <expression-with-block>
-        <tok-comma>?
+        make MatchArmsInnerItemWithBlock.new(
+            maybe-comment         => $<comment>.made,
+            match-arm             => $<match-arm>.made,
+            expression-with-block => $<expression-with-block>.made,
+        )
     }
 
     method match-arms-inner-item:sym<without-block>($/) {  
-        <comment>?
-        <match-arm> 
-        <tok-fat-rarrow> 
-        <expression-noblock> 
-        <tok-comma>
+        make MatchArmsInnerItemWithoutBlock.new(
+            maybe-comment      => $<comment>.made,
+            match-arm          => $<match-arm>.made,
+            expresison-noblock => $<expression-noblock>.made,
+        )
     }
 
+    method expression-variant:sym<with>($/)    { make $<expression-with-block>.made }
+    method expression-variant:sym<without>($/) { make $<expression-noblock>.made }
+
     method match-arms-outer-item($/) {
-        <comment>?
-        <match-arm> 
-        <tok-fat-rarrow> 
-        [
-            | <expression-with-block> 
-            | <expression-noblock> 
-        ]
-        <tok-comma>?
+        make MatchArmsOuterItem.new(
+            maybe-comment => $<comment>.made,
+            match-arm     => $<match-arm>.made,
+            expression    => $<expression-variant>.made,
+        )
     }
 
     method match-arm($/) {
-        <outer-attribute>*
-        <pattern>
-        <match-arm-guard>?
+        make MatchArm.new(
+            outer-attributes      => $<outer-attribute>>>.made,
+            pattern               => $<pattern>.made,
+            maybe-match-arm-guard => $<match-arm-guard>.made,
+        )
     }
 
     method match-arm-guard($/) {
-        <kw-if> <expression>
+        make MatchArmGuard.new(
+            expression => $<expression>.made,
+        )
     }
 }
