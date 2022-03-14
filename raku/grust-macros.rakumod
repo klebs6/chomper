@@ -245,53 +245,11 @@ our class MacroRepSep {
     }
 }
 
-our class MacroRepOpStar { 
+our class MacroRepOpStar { }
 
-    has $.text;
+our class MacroRepOpPlus { }
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class MacroRepOpPlus { 
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class MacroRepOpQmark { 
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
+our class MacroRepOpQmark { }
 
 our class MacroTranscriber {
     has $.delim-token-tree;
@@ -309,6 +267,21 @@ our class MacroTranscriber {
         exit;
     }
 }
+
+our class MacroFragSpec::Block    { }
+our class MacroFragSpec::Expr     { }
+our class MacroFragSpec::Ident    { }
+our class MacroFragSpec::Item     { }
+our class MacroFragSpec::Lifetime { }
+our class MacroFragSpec::Literal  { }
+our class MacroFragSpec::Meta     { }
+our class MacroFragSpec::Pat      { }
+our class MacroFragSpec::PatParam { }
+our class MacroFragSpec::Path     { }
+our class MacroFragSpec::Stmt     { }
+our class MacroFragSpec::Tt       { }
+our class MacroFragSpec::Ty       { }
+our class MacroFragSpec::Vis      { }
 
 our role MacroInvocation::Rules {
 
@@ -435,113 +408,127 @@ our role MacroInvocation::Rules {
 our role MacroInvocation::Actions {
 
     method macro-expression($/) {
-        <simple-path> 
-        <tok-bang> 
-        <delim-token-tree>
+        make MacroExpression.new(
+            simple-path      => $<simple-path>.made,
+            delim-token-tree => $<delim-token-tree>.made,
+        )
     }
 
     method delim-token-tree($/) {
-        | <tok-lparen> <token-tree>* <tok-rparen>
-        | <tok-lbrack> <token-tree>* <tok-rbrack>
-        | <tok-lbrace> <token-tree>* <tok-rbrace>
+        make DelimTokenTree.new(
+            token-tree => $<token-tree>.made
+        )
     }
 
-    method token-trees($/) { <token-tree>* }
+    method token-trees($/) { make $<token-tree>>>.made }
 
-    method token-tree:sym<leaf>($/) { <rust-token-no-delim> }
+    method token-tree:sym<leaf>($/) { 
+        make TokenTreeLeaf.new(
+            rust-token-no-delim => $<rust-token-no-delim>.made
+        )
+    }
 
-    method token-tree:sym<tree>($/) { <delim-token-tree> }
+    method token-tree:sym<tree>($/) { 
+        make TokenTree.new(
+            delim-token-tree => $<delim-token-tree>.made
+        )
+    }
 
     method macro-invocation($/) {
-        <comment>? 
-        [
-            | <simple-path> <.tok-bang> <.tok-lparen> <token-tree>* <.tok-rparen> <.tok-semi>
-            | <simple-path> <.tok-bang> <.tok-lbrack> <token-tree>* <.tok-rbrack> <.tok-semi>
-            | <simple-path> <.tok-bang> <.tok-lbrace> <token-tree>* <.tok-rbrace>
-        ]
-    }
-
-    method kw-macro-rules($/) {
-        macro_rules
+        make MacroInvocation.new(
+            maybe-comment => $<comment>.made,
+            simple-path   => $<simple-path>.made,
+            token-trees   => $<token-tree>>>.made,
+        )
     }
 
     method macro-rules-definition($/) {
-        <kw-macro-rules> 
-        <tok-bang>
-        <identifier>
-        <macro-rules-def>
-    }
+        make MacroRulesDefinition.new(
+            identifier      => $<identifier>.made,
+            macro-rules-def => $<macro-rules-def>.made,
+        }
 
     method macro-rules-def($/) {
-        | <tok-lparen> <comment>? <macro-rules> <tok-rparen> <tok-semi>
-        | <tok-lbrack> <comment>? <macro-rules> <tok-rbrack> <tok-semi>
-        | <tok-lbrace> <comment>? <macro-rules> <tok-rbrace>
+        make MacroRulesDef.new(
+            maybe-comment => $<comment>.made,
+            macro-rules   => $<macro-rules>.made,
+        )
     }
 
     method macro-rules($/) {
-        <macro-rule>+ %% <tok-semi>
+        make $<macro-rule>>>.made
     }
 
     method macro-rule($/) {
-        <macro-matcher> <tok-fat-rarrow> <macro-transcriber>
+        make MacroRule.new(
+            macro-matcher     => $<macro-matcher>.made,
+            macro-transcriber => $<macro-transcriber>.made,
+        )
     }
 
     method macro-matcher($/) {
-        | <tok-lparen> <macro-match>* <tok-rparen>
-        | <tok-lbrack> <macro-match>* <tok-rbrack>
-        | <tok-lbrace> <macro-match>* <tok-rbrace>
+        make MacroMatcher.new(
+            macro-matches => $<macro-match>>>.made,
+        )
     }
 
     #-----------------
     method macro-match:sym<token>($/)   { 
-        <token-except-dollar-and-delimiters> 
+        make MacroMatchToken.new(
+            token => $<token-except-dollar-and-delimiters>.made,
+        )
     }
 
     method macro-match:sym<matcher>($/) { 
-        <macro-matcher> 
+        make MacroMatchMatcher.new(
+            macro-matcher => $<macro-matcher>.made,
+        )
     }
 
     method macro-match:sym<single>($/)  { 
-        <tok-dollar> 
-        <identifier> 
-        <tok-colon> 
-        <macro-frag-spec> 
+        make MacroMatchSingle.new(
+            identifier      => $<identifier>.made,
+            macro-frag-spec => $<macro-frag-spec>.made,
+        )
     }
 
     method macro-match:sym<plural>($/)  { 
-        <tok-dollar> 
-        <tok-lparen> 
-        <macro-match>+ 
-        <tok-rparen> 
-        <macro-rep-sep>? 
-        <macro-rep-op> 
+        make MacroMatchPlural.new(
+            macro-matches       => $<macro-match>>>.made,
+            maybe-macro-rep-sep => $<macro-rep-sep>.made,
+            macro-rep-op        => $<macro-rep-op>.made,
+        )
     }
 
     #-----------------
-    method macro-frag-spec:sym<block>($/)     { block }
-    method macro-frag-spec:sym<expr>($/)      { expr }
-    method macro-frag-spec:sym<ident>($/)     { ident }
-    method macro-frag-spec:sym<item>($/)      { item }
-    method macro-frag-spec:sym<lifetime>($/)  { lifetime }
-    method macro-frag-spec:sym<literal>($/)   { literal }
-    method macro-frag-spec:sym<meta>($/)      { meta }
-    method macro-frag-spec:sym<pat>($/)       { pat }
-    method macro-frag-spec:sym<pat_param>($/) { pat_param }
-    method macro-frag-spec:sym<path>($/)      { path }
-    method macro-frag-spec:sym<stmt>($/)      { stmt }
-    method macro-frag-spec:sym<tt>($/)        { tt }
-    method macro-frag-spec:sym<ty>($/)        { ty }
-    method macro-frag-spec:sym<vis>($/)       { vis }
+    method macro-frag-spec:sym<block>($/)     { make MacroFragSpec::Block.new }
+    method macro-frag-spec:sym<expr>($/)      { make MacroFragSpec::Expr.new }
+    method macro-frag-spec:sym<ident>($/)     { make MacroFragSpec::Ident.new }
+    method macro-frag-spec:sym<item>($/)      { make MacroFragSpec::Item.new }
+    method macro-frag-spec:sym<lifetime>($/)  { make MacroFragSpec::Lifetime.new }
+    method macro-frag-spec:sym<literal>($/)   { make MacroFragSpec::Literal.new }
+    method macro-frag-spec:sym<meta>($/)      { make MacroFragSpec::Meta.new }
+    method macro-frag-spec:sym<pat>($/)       { make MacroFragSpec::Pat.new }
+    method macro-frag-spec:sym<pat_param>($/) { make MacroFragSpec::PatParam.new }
+    method macro-frag-spec:sym<path>($/)      { make MacroFragSpec::Path.new }
+    method macro-frag-spec:sym<stmt>($/)      { make MacroFragSpec::Stmt.new }
+    method macro-frag-spec:sym<tt>($/)        { make MacroFragSpec::Tt }.new
+    method macro-frag-spec:sym<ty>($/)        { make MacroFragSpec::Ty }.new
+    method macro-frag-spec:sym<vis>($/)       { make MacroFragSpec::Vis.new }
 
     method macro-rep-sep($/) {
-        <token-except-delimiters-and-repetition-operators>
+        make MacroRepSep.new(
+            token => $<token-except-delimiters-and-repetition-operators>.made,
+        )
     }
 
-    method macro-rep-op:sym<star>($/)  { <tok-star> }
-    method macro-rep-op:sym<plus>($/)  { <tok-plus> }
-    method macro-rep-op:sym<qmark>($/) { <tok-qmark> }
+    method macro-rep-op:sym<star>($/)  { make MacroRepOpStar.new }
+    method macro-rep-op:sym<plus>($/)  { make MacroRepOpPlus.new }
+    method macro-rep-op:sym<qmark>($/) { make MacroRepOpQmark.new }
 
     method macro-transcriber($/) {
-        <delim-token-tree>
+        make MacroTranscriber.new(
+            delim-token-tree => $<delim-token-tree>.made
+        )
     }
 }
