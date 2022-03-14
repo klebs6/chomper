@@ -1,3 +1,55 @@
+our class ContinueExpression {
+    has $.maybe-lifetime-or-label;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class BreakExpression {
+    has $.maybe-lifetime-or-label;
+    has $.maybe-expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ReturnExpression {
+    has $.maybe-expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role JumpExpression::Rules {
 
     rule continue-expression {

@@ -1,5 +1,98 @@
 use Data::Dump::Tree;
 
+our class Trait {
+    has Bool $.unsafe;
+    has $.identifier;
+    has $.maybe-generic-params;
+    has $.maybe-type-param-bounds;
+    has $.maybe-where-clause;
+    has @.inner-attributes;
+    has @.associated-items;
+    has $.maybe-comment;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class InherentImpl {
+    has $.maybe-generic-params;
+    has $.type;
+    has $.maybe-where-clause;
+    has @.inner-attributes;
+    has @.associated-items;
+    has $.maybe-comment;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class TraitImpl {
+    has Bool $.unsafe;
+    has $.maybe-generic-params;
+    has Bool $.bang;
+    has $.type-path;
+    has $.for-type;
+    has $.maybe-where-clause;
+    has @.inner-attributes;
+    has @.associated-items;
+    has $.maybe-comment;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class TraitAlias {
+    has @.outer-attributes;
+    has $.maybe-visibility;
+    has $.identifier;
+    has $.maybe-generic-params;
+    has $.type-param-bounds;
+    has $.maybe-where-clause;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role Trait::Rules {
 
     rule trait {

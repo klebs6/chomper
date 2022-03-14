@@ -1,3 +1,37 @@
+our class IdentifierOrKeyword {
+    has Str $.value;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class Identifier {
+    has Str $.value;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 use grust-strict-keywords;
 use grust-reserved-keywords;
 
@@ -11,6 +45,7 @@ sub is-not-strict-or-reserved-keyword($token) {
 
     $token !~~ /$strict | $reserved/
 }
+
 
 our role Identifiers::Rules {
 

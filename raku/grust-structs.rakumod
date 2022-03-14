@@ -1,3 +1,84 @@
+our class Struct {
+    has $.identifier;
+    has $.maybe-generic-params;
+    has $.maybe-where-clause;
+    has @.maybe-struct-fields;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class TupleStruct {
+    has $.identifier;
+    has $.maybe-generic-params;
+    has @.maybe-tuple-fields;
+    has $.maybe-where-clause;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructField {
+    has $.maybe-comment;
+    has @.outer-attributes;
+    has $.maybe-visibility;
+    has $.identifier;
+    has $.type;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class TupleField {
+    has $.maybe-comment;
+    has @.outer-attributes;
+    has $.maybe-visibility;
+    has $.type;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role Struct::Rules {
 
     proto rule struct { * }

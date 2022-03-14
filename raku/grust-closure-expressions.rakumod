@@ -1,3 +1,59 @@
+our class ClosureExpression {
+    has Bool $.move;
+    has $.maybe-parameters;
+    has $.body;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ClosureBodyWithReturnTypeAndBlock {
+    has $.return-type;
+    has $.block-expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ClosureParam {
+    has @.outer-attributes;
+    has $.pattern;
+    has $.maybe-type;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role ClosureExpression::Rules {
 
     rule closure-expression {
@@ -48,4 +104,40 @@ our role ClosureExpression::Rules {
 
 our role ClosureExpression::Actions {
 
+    method closure-expression($/) {
+        make ClosureExpression.new(
+            move             => so $/<kw-move>:exists,
+            maybe-parameters => $<closure-expression-opener>.made,
+            body             => $<closure-body>.made,
+        )
+    }
+
+    method closure-expression-opener:sym<b>($/) {
+        make $<closure-parameters>.made
+    }
+
+    method closure-body:sym<expr>($/) {
+        make $<expression>.made
+    }
+
+    method closure-body:sym<with-return-type-and-block>($/) {
+        make ClosureBodyWithReturnTypeAndBlock.new(
+            return-type      => $<type-no-bounds>.made,
+            block-expression => $<block-expression>.made,
+        )
+    }
+
+    #---------------
+
+    method closure-parameters($/) {
+        make $<closure-param>>>.made
+    }
+
+    method closure-param($/) {
+        make ClosureParam.new(
+            outer-attributes => $<outer-attribute>>>.made,
+            pattern          => $<pattern-no-top-alt>.made,
+            maybe-type       => $<type>.made,
+        )
+    }
 }

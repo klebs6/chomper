@@ -1,3 +1,20 @@
+our class Ascii {
+    has Str $.value;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role Ascii::Rules {
 
     proto token ascii-escape { * }
@@ -23,5 +40,13 @@ our role Ascii::Rules {
 
     token ascii {
         <any-ascii>
+    }
+}
+
+our role Ascii::Actions {
+    method ascii($/) {
+        make Ascii.new(
+            value => $/.Str
+        )
     }
 }

@@ -1,3 +1,145 @@
+our class StructPattern {
+    has $.path-in-expression;
+    has $.maybe-struct-pattern-elements;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructPatternElementsBasic {
+    has @.struct-pattern-fields;
+    has $.maybe-struct-pattern-etc;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructPatternElementsEtc {
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our cass StructPatternField {
+    has @.outer-attributes;
+    has $.struct-pattern-field-variant;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructPatternFieldVariantTuple {
+    has $.tuple-index;
+    has $.pattern;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructPatternFieldVariantId {
+    has $.identifier;
+    has $.pattern;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructPatternFieldVariantRefMutId {
+    has Bool $.ref;
+    has Bool $.mutable;
+    has $.identifier;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructPatternEtCetera {
+    has @.outer-attributes;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role StructPattern::Rules {
 
     rule struct-pattern {

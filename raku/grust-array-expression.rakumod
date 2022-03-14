@@ -1,3 +1,55 @@
+our class ArrayExpression {
+    has $.maybe-array-elements;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ArrayElementsItemQuantity {
+    has $.expression;
+    has $.quantifier;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ArrayElementsList {
+    has @.expressions;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role ArrayExpression::Rules {
 
     proto rule array-elements { * }
@@ -15,20 +67,24 @@ our role ArrayExpression::Rules {
     }
 }
 
-our role ArrayExpression::Actions { }
+our role ArrayExpression::Actions { 
 
-our role TupleExpression::Rules {
-
-    rule tuple-elements {
-        <expression>* %% <tok-comma>
+    method array-elements:sym<semi>($/) {
+        make ArrayElementsItemQuantity.new(
+            expression => $<expression>>>.made[0],
+            quantifier => $<expression>>>.made[1],
+        )
     }
 
-    rule tuple-expression {
-        <tok-lparen> <tuple-elements>? <tok-rparen> 
+    method array-elements:sym<commas>($/) {
+        make ArrayElementsList.new(
+            expressions => $<expression>>>.made,
+        )
     }
 
-    token tuple-index { <integer-literal> }
+    method array-expression($/) {
+        make ArrayExpression.new(
+            maybe-array-elements => $<array-elements>.made,
+        )
+    }
 }
-
-our role TupleExpression::Actions {}
-

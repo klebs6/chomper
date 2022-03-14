@@ -1,3 +1,20 @@
+our class ByteStringLiteral {
+    has $.value;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role ByteStringLiteral::Rules {
 
     token byte-string-literal {
@@ -26,5 +43,13 @@ our role ByteStringLiteral::Rules {
         <tok-pound> 
         <raw-byte-string-content>
         <tok-pound>
+    }
+}
+
+our role ByteStringLiteral::Actions {
+    method byte-string-literal($/) {
+        make ByteStringLiteral.new(
+            value => $/.Str,
+        )
     }
 }

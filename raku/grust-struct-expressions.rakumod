@@ -1,3 +1,147 @@
+our class StructExpressionStruct {
+    has $.path-in-expression;
+    has $.maybe-struct-expr-struct-body;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructExpressionTuple {
+    has $.path-in-expression;
+    has @.expressions;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructExpressionUnit {
+    has $.path-in-expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructExprFields {
+    has @.struct-expr-fields;
+    has $.maybe-struct-base;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructExprFieldTupleExpr {
+    has $.maybe-comment;
+    has $.tuple-index;
+    has $.expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructExprFieldIdExpr {
+    has $.maybe-comment;
+    has $.identifier;
+    has $.expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructExprFieldId {
+    has $.maybe-comment;
+    has $.identifier;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StructBase {
+    has $.expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role StructExpression::Rules {
 
     proto rule struct-expression { * }
@@ -38,7 +182,6 @@ our role StructExpression::Rules {
     rule struct-base {
         <tok-dotdot> <expression>
     }
-
 }
 
 our role StructExpression::Actions {}

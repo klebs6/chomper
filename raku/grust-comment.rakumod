@@ -2,24 +2,6 @@ use Data::Dump::Tree;
 
 use doxy-comment;
 
-#use grust-lex;
-
-our class DocComment { 
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
 our role Comment::Rules 
 {
     proto rule comment { * }
@@ -29,8 +11,8 @@ our role Comment::Rules
 }
 
 our role Comment::Actions {
-    #method comment:sym<line>($/)  { make "\n/*" ~ $<line-comment>>>.made.join("\n") ~ "*/" }
-    #method comment:sym<block>($/) { make $<block-comment>.made }
+    method comment:sym<line>($/)  { make "\n/*" ~ $<line-comment>>>.made.join("\n") ~ "*/" }
+    method comment:sym<block>($/) { make $<block-comment>.made }
 }
 
 #--------------------------------------

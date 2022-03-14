@@ -1,3 +1,96 @@
+our class CrateItem {
+    has $.maybe-comment;
+    has @.outer-attributes;
+    has $.item-variant;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class VisItem {
+    has $.maybe-visibility;
+    has $.vis-item-variant;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class InitExpression {
+    has $.expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ConstantItem {
+    has $.identifier-or-underscore;
+    has $.type;
+    has $.maybe-init-expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class StaticItem {
+    has Bool $.mut;
+    has $.identifier;
+    has $.type;
+    has $.maybe-init-expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role Item::Rules {
 
     rule crate-item {

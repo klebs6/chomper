@@ -1,3 +1,20 @@
+our class CharLiteral {
+    has $.value;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role CharLiteral::Rules {
 
     proto token char-literal-body { * }
@@ -25,3 +42,10 @@ our role CharLiteral::Rules {
     }
 }
 
+our role CharLiteral::Actions {
+    method char-literal($/) {
+        make CharLiteral.new(
+            value => $/.Str,
+        )
+    }
+}

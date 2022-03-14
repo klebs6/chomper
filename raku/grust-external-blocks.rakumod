@@ -1,3 +1,95 @@
+
+our class ExternBlock {
+    has Bool $.unsafe;
+    has $.maybe-api;
+    has @.inner-attributes;
+    has @.external-items;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ExternalItem {
+    has @.outer-attributes;
+    has $.external-item-variant;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ExternalItemMacroInvocation {
+    has $.macro-invocation;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ExternalItemFn {
+    has $.maybe-visibility;
+    has $.function;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ExternalItemStatic {
+    has $.maybe-visibility;
+    has $.static-item;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role ExternBlock::Rules {
 
     rule extern-block {
@@ -21,19 +113,13 @@ our role ExternBlock::Rules {
         <macro-invocation>
     }
 
-    rule external-item-variant:sym<maybe-visible> {
+    rule external-item-variant:sym<fn> {
         <visibility>?
-        <maybe-visible-external-item-variant>
-    }
-
-    #-------------------
-    proto rule maybe-visible-external-item-variant { * }
-
-    rule maybe-visible-external-item-variant:sym<static> {
         <function>
     }
 
-    rule maybe-visible-external-item-variant:sym<fn> {
+    rule external-item-variant:sym<static> {
+        <visibility>?
         <static-item>
     }
 }

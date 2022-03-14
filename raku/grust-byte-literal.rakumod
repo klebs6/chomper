@@ -1,3 +1,20 @@
+our class ByteLiteral {
+    has $.value;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role ByteLiteral::Rules {
 
     token byte-literal {
@@ -17,4 +34,12 @@ our role ByteLiteral::Rules {
     token byte-escape:sym<s0> { \\0 }
     token byte-escape:sym<sq> { \\\' }
     token byte-escape:sym<dq> { \\\" }
+}
+
+our role ByteLiteral::Actions {
+    method byte-literal($/) {
+        make ByteLiteral.new(
+            value => $/.Str
+        )
+    }
 }

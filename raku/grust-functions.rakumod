@@ -1,3 +1,239 @@
+our class Function {
+    has $.function-qualifiers;
+    has $.identifier;
+    has $.maybe-generic-params;
+    has $.maybe-function-parameters;
+    has $.maybe-function-return-type;
+    has $.maybe-where-clause;
+    has $.maybe-block-expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class FunctionQualifiers {
+    has Bool $.const;
+    has Bool $.async;
+    has Bool $.unsafe;
+    has $.maybe-function-extern-modifier;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class FunctionParameters {
+    has $.maybe-self-param;
+    has @.function-params;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class SelfParam {
+    has @.outer-attributes;
+    has $.self-param-variant;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class SelfBorrow {
+    has $.maybe-lifetime;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class SelfParamVariantShorthand {
+    has $.maybe-self-borrow;
+    has Bool $.mutable;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class SelfParamVariantTyped {
+    has Bool $.mutable;
+    has $.type;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class FunctionParam {
+    has $.maybe-comment;
+    has @.outer-attributes;
+    has $.function-param-variant;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class FunctionParamVariantPatternType {
+    has $.pattern-no-top-alt;
+    has $.type;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class FunctionParamVariantPatternEllipsis {
+    has $.pattern-no-top-alt;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class FunctionParamVariantEllipsis { 
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class FunctionParamVariantType     { 
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class FunctionReturnType {
+    has $.type;
+    has $.maybe-comment;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role Function::Rules {
 
     rule function {
@@ -52,21 +288,19 @@ our role Function::Rules {
         <self-param-variant>
     }
 
+    rule self-borrow {
+        <tok-and> <lifetime>?
+    }
+
     proto rule self-param-variant { * }
 
-    rule self-param-variant:sym<shorthand> { <shorthand-self> }
-    rule self-param-variant:sym<typed>     { <typed-self> }
-
-    #----------------------
-    rule shorthand-self {
-        [
-            <tok-and> <lifetime>?
-        ]?
+    rule self-param-variant:sym<shorthand> { 
+        <self-borrow>?
         <kw-mut>?
         <kw-selfvalue>
     }
 
-    rule typed-self {
+    rule self-param-variant:sym<typed> { 
         <kw-mut>?
         <kw-selfvalue>
         <tok-colon>
@@ -82,8 +316,16 @@ our role Function::Rules {
 
     proto rule function-param-variant { * }
 
-    rule function-param-variant:sym<pattern> {
-        <function-param-pattern>
+    rule function-param-variant:sym<pattern-type> {
+        <pattern-no-top-alt> 
+        <tok-colon>
+        <type> 
+    }
+
+    rule function-param-variant:sym<pattern-ellipsis> {
+        <pattern-no-top-alt> 
+        <tok-colon>
+        <tok-dotdotdot>
     }
 
     rule function-param-variant:sym<ellipsis> {
@@ -95,18 +337,6 @@ our role Function::Rules {
     }
 
     #-------------------
-    rule function-param-pattern {
-        <pattern-no-top-alt> 
-        <tok-colon>
-        <function-param-pattern-variant>
-    }
-
-    proto rule function-param-pattern-variant { * }
-
-    rule function-param-pattern-variant:sym<type>     { <type> }
-
-    rule function-param-pattern-variant:sym<ellipsis> { <tok-dotdotdot> }
-
     rule function-return-type {
         <tok-rarrow>
         <type>

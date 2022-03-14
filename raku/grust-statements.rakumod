@@ -1,3 +1,79 @@
+our class Statements {
+    has @.statements;
+    has $.maybe-expression-noblock;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class LetStatement {
+    has $.maybe-comment;
+    has @.outer-attributes;
+    has $.pattern-no-top-alt;
+    has $.maybe-type;
+    has $.maybe-expression;
+    has $.maybe-line-comment;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ExpressionStatementNoBlock {
+    has $.maybe-comment;
+    has $.expression-noblock;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ExpressionStatementBlock {
+    has $.maybe-comment;
+    has $.expression-with-block;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role Statement::Rules {
 
     rule statements {  
@@ -7,13 +83,14 @@ our role Statement::Rules {
 
     proto rule statement { * }
 
-    rule statement:sym<semi>          { <tok-semi> }
-    regex statement:sym<let>           { <comment>? <let-statement> <line-comment>? }
-    rule statement:sym<expr>          { <comment>? <expression-statement> }
-    rule statement:sym<macro>         { <comment>? <macro-invocation> }
-    rule statement:sym<item>          { <comment>? <crate-item> }
+    rule statement:sym<semi>  { <tok-semi> }
+    rule statement:sym<let>   { <let-statement> }
+    rule statement:sym<expr>  { <expression-statement> }
+    rule statement:sym<macro> { <macro-invocation> }
+    rule statement:sym<item>  { <crate-item> }
 
-    rule let-statement {
+    regex let-statement {
+        <comment>?
         <outer-attribute>*
         <kw-let>
         <pattern-no-top-alt>
@@ -26,12 +103,13 @@ our role Statement::Rules {
             <expression>
         ]?
         <tok-semi>
+        <line-comment>? 
     }
 
     proto rule expression-statement { * }
 
-    rule expression-statement:sym<noblock> { <expression-noblock> <tok-semi> }
-    rule expression-statement:sym<block>   { <expression-with-block> <tok-semi>? }
+    rule expression-statement:sym<noblock> { <comment>? <expression-noblock> <tok-semi> }
+    rule expression-statement:sym<block>   { <comment>? <expression-with-block> <tok-semi>? }
 }
 
 our role Statement::Actions {}

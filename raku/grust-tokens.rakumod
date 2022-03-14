@@ -1,3 +1,20 @@
+our class RustToken {
+    has $.value;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role Tokens::Rules 
 {
     proto token rust-keyword { * }

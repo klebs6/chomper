@@ -1,37 +1,113 @@
+our class LoopExpressionInfinite {
+    has $.maybe-loop-label;
+    has $.block-expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class LoopExpressionPredicate {
+    has $.maybe-loop-label;
+    has $.expression-nostruct;
+    has $.block-expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class LoopExpressionPredicatePattern {
+    has $.maybe-loop-label;
+    has $.pattern;
+    has $.scrutinee;
+    has $.block-expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class LoopExpressionIterator {
+    has $.maybe-loop-label;
+    has $.pattern;
+    has $.expression-nostruct;
+    has $.block-expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class LoopLabel {
+    has $.lifetime-or-label;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role LoopExpression::Rules {
 
-    rule loop-expression {
+    proto rule loop-expression { * }
+
+    rule loop-expression:sym<infinite-loop> {
         <loop-label>?
-        <loop-expression-variant>
-    }
-
-    proto rule loop-expression-variant { * }
-
-    rule loop-expression-variant:sym<infinite-loop> {
-        <infinite-loop-expression>
-    }
-
-    rule loop-expression-variant:sym<predicate-loop> {
-        <predicate-loop-expression>
-    }
-
-    rule loop-expression-variant:sym<predicate-pattern-loop> {
-        <predicate-pattern-loop-expression>
-    }
-
-    rule loop-expression-variant:sym<iterator-loop> {
-        <iterator-loop-expression>
-    }
-
-    rule infinite-loop-expression {
         <kw-loop> <block-expression>
     }
 
-    rule predicate-loop-expression {
+    rule loop-expression:sym<predicate-loop> {
+        <loop-label>?
         <kw-while> <expression-nostruct> <block-expression>
     }
 
-    rule predicate-pattern-loop-expression {
+    rule loop-expression:sym<predicate-pattern-loop> {
+        <loop-label>?
         <kw-while>
         <kw-let>
         <pattern>
@@ -40,7 +116,8 @@ our role LoopExpression::Rules {
         <block-expression>
     }
 
-    rule iterator-loop-expression {
+    rule loop-expression:sym<iterator-loop> {
+        <loop-label>?
         <kw-for>
         <pattern>
         <kw-in>

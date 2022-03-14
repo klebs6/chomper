@@ -1,3 +1,59 @@
+our class IfExpression {
+    has $.expression-nostruct;
+    has $.block-expression;
+    has $.maybe-else-clause;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class IfLetExpression {
+    has $.pattern;
+    has $.scrutinee;
+    has $.block-expression;
+    has $.maybe-else-clause;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class ElseClause {
+    has $.else-clause-variant;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role IfExpressions::Rules {
 
     rule if-expression {

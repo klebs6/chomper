@@ -1,3 +1,150 @@
+our class MatchExpression {
+    has $.scrutinee;
+    has @.inner-attributes;
+    has $.maybe-match-arms;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class Scrutinee {
+    has $.expression-nostruct;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class MatchArms {
+    has @.items;
+    has $.maybe-comment;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class MatchArmsInnerItemWithBlock {
+    has $.maybe-comment;
+    has $.match-arm;
+    has $.expression-with-block;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class MatchArmsInnerItemWithoutBlock {
+    has $.maybe-comment;
+    has $.match-arm;
+    has $.expresison-noblock;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class MatchArmsOuterItem {
+    has $.maybe-comment;
+    has $.match-arm;
+    has $.expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class MatchArm {
+    has @.outer-attributes;
+    has $.pattern;
+    has $.maybe-match-arm-guard;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
+our class MatchArmGuard {
+    has $.expression;
+
+    has $.text;
+
+    submethod TWEAK {
+        say self.gist;
+    }
+
+    method gist {
+        say "need to write gist!";
+        say $.text;
+        ddt self;
+        exit;
+    }
+}
+
 our role MatchExpression::Rules {
 
     rule match-expression {
