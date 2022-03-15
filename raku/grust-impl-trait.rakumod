@@ -50,12 +50,14 @@ our role ImplTraitType::Actions {
     method impl-trait-type($/) {
         make ImplTraitType.new(
             type-param-bounds => $<type-param-bounds>.made
+            text       => $/.Str,
         )
     }
 
     method impl-trait-type-one-bound($/) {
         make ImplTraitTypeOneBound.new(
             trait-bound => $<trait-bound>.made
+            text       => $/.Str,
         )
     }
 }

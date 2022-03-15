@@ -41,6 +41,7 @@ our role TypeAlias::Actions {
             maybe-type-param-bounds => $<type-param-bounds>.made,
             maybe-where-clause      => $<where-clause>.made,
             maybe-eq-type           => $<type>.made,
+            text       => $/.Str,
         )
     }
 }

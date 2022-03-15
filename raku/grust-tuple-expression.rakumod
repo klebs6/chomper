@@ -66,12 +66,14 @@ our role TupleExpression::Actions {
     method tuple-elements($/) {
         make TupleElements.new(
             expression => $<expression>>>.made
+            text       => $/.Str,
         )
     }
 
     method tuple-expression($/) {
         make TupleExpression.new(
             maybe-tuple-elements => $<tuple-elements>.made
+            text       => $/.Str,
         )
     }
 

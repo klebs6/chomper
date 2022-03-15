@@ -166,6 +166,7 @@ our role PathExpression::Actions {
     method path-in-expression($/) {
         make PathInExpression.new(
             path-expr-segments => $<path-expr-segment>>>.made
+            text       => $/.Str,
         )
     }
 
@@ -173,6 +174,7 @@ our role PathExpression::Actions {
         make PathExprSegment.new(
             path-ident-segment => $<path-ident-segment>.made,
             maybe-generic-args => $<generic-args>.made,
+            text       => $/.Str,
         )
     }
 
@@ -191,6 +193,7 @@ our role PathExpression::Actions {
         make QualifiedPathInExpression.new(
             qualified-path-type => $<qualified-path-type>.made,
             path-expr-segments  => $<path-expr-segment>>>.made,
+            text       => $/.Str,
         )
     }
 
@@ -198,6 +201,7 @@ our role PathExpression::Actions {
         make QualifiedPathType.new(
             type               => $<type>.made,
             maybe-as-type-path => $<type-path>.made,
+            text       => $/.Str,
         )
     }
 
@@ -205,6 +209,7 @@ our role PathExpression::Actions {
         make QualifiedPathInType.new(
             qualified-path-type => $<qualified-path-type>.made,
             type-path-segments => $<type-path-segment>>>.made
+            text       => $/.Str,
         )
     }
 }

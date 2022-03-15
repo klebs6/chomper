@@ -109,12 +109,14 @@ our role UseDeclaration::Actions {
     method use-declaration($/) {
         make UseDeclaration.new(
             use-tree => $<use-tree>.made,
+            text       => $/.Str,
         )
     }
 
     method use-tree:sym<basic>($/) {
         make UseTreeBasic.new(
             maybe-simple-path => $<simple-path>.made,
+            text       => $/.Str,
         )
     }
 
@@ -122,6 +124,7 @@ our role UseDeclaration::Actions {
         make UseTreeComplex.new(
             maybe-simple-path => $<simple-path>.made,
             use-trees         => $<use-tree>>>.made,
+            text       => $/.Str,
         )
     }
 
@@ -129,6 +132,7 @@ our role UseDeclaration::Actions {
         make UseTreeAs.new(
             simple-path => $<simple-path>.made,
             as-identified-or-underscore => $<identifier-or-underscore>.made
+            text       => $/.Str,
         )
     }
 }

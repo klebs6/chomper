@@ -100,6 +100,7 @@ our role IfExpressions::Actions {
             expression-nostruct => $<expression-nostruct>.made,
             block-expression    => $<block-expression>.made,
             maybe-else-clause   => $<else-clause>.made,
+            text       => $/.Str,
         )
     }
 
@@ -109,12 +110,14 @@ our role IfExpressions::Actions {
             scrutinee         => $<scrutinee-except-lazy-boolean-operator-expression>.made,
             block-expression  => $<block-expression>.made,
             maybe-else-clause => $<else-clause>.made,
+            text       => $/.Str,
         )
     }
 
     method else-clause($/) {
         make ElseClause.new(
             else-clause-variant => $<else-clause-variant>.made,
+            text       => $/.Str,
         )
     }
 

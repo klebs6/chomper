@@ -73,6 +73,7 @@ our role JumpExpression::Actions {
     method continue-expression($/) {
         make ContinueExpression.new(
             maybe-lifetime-or-label => $<lifetime-or-label>.made,
+            text       => $/.Str,
         )
     }
 
@@ -80,12 +81,14 @@ our role JumpExpression::Actions {
         make BreakExpression.new(
             maybe-lifetime-or-label => $<lifetime-or-label>.made,
             maybe-expression        => $<expression>.made,
+            text       => $/.Str,
         )
     }
 
     method return-expression($/) {
         make ReturnExpression.new(
             maybe-expression => $<expression>.made
+            text       => $/.Str,
         )
     }
 }

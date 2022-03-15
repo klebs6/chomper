@@ -190,6 +190,7 @@ our role StructExpression::Actions {
         make StructExpressionStruct.new(
             path-in-expression            => $<path-in-expression>.made,
             maybe-struct-expr-struct-body => $<struct-expr-struct-body>.made,
+            text       => $/.Str,
         )
     }
 
@@ -197,12 +198,14 @@ our role StructExpression::Actions {
         make StructExpressionTuple.new(
             path-in-expression => $<path-in-expression>.made,
             expressions        => $<expression>>>.made,
+            text       => $/.Str,
         )
     }
 
     method struct-expression:sym<unit>($/) {  
         make StructExpressionUnit.new(
             path-in-expression => $<path-in-expression>.made,
+            text       => $/.Str,
         )
     }
 
@@ -214,6 +217,7 @@ our role StructExpression::Actions {
         make StructExprFields.new(
             struct-expr-fields => $<struct-expr-field>>>.made,
             maybe-struct-base  => $<struct-base>.made,
+            text       => $/.Str,
         )
     }
 
@@ -222,6 +226,7 @@ our role StructExpression::Actions {
             maybe-comment => $<comment>.made,
             tuple-index   => $<tuple-index>.made,
             expression    => $<expression>.made,
+            text       => $/.Str,
         )
     }
 
@@ -230,6 +235,7 @@ our role StructExpression::Actions {
             maybe-comment => $<comment>.made,
             identifier    => $<identifier>.made,
             expression    => $<expression>.made,
+            text       => $/.Str,
         )
     }
 
@@ -237,12 +243,14 @@ our role StructExpression::Actions {
         make StructExprFieldId.new(
             maybe-comment => $<comment>.made,
             identifier    => $<identifier>.made,
+            text       => $/.Str,
         )
     }
 
     method struct-base($/) {
         make StructBase.new(
             expression => $<expression>.made,
+            text       => $/.Str,
         )
     }
 }

@@ -51,6 +51,7 @@ our role Visibility::Actions {
     method visibility:sym<in-path>($/) { 
         make VisibilityInPath.new(
             simple-path => $<simple-path>.made
+            text       => $/.Str,
         )
     }
 }

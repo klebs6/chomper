@@ -140,6 +140,7 @@ our role Enumeration::Actions {
             maybe-generic-params => $<generic-params>.made,
             maybe-where-clause   => $<where-clause>.made,
             maybe-enum-items     => $<enum-items>.made,
+            text => $/.Str,
         )
     }
 
@@ -153,6 +154,7 @@ our role Enumeration::Actions {
             maybe-visibility        => $<visibility>.made,
             identifier              => $<identifier>.made,
             maybe-enum-item-variant => $<enum-item-variant>.made,
+            text => $/.Str,
         )
     }
 
@@ -160,18 +162,21 @@ our role Enumeration::Actions {
     method enum-item-variant:sym<tuple>($/) {
         make EnumVariantTuple.new(
             maybe-tuple-fields => $<tuple-fields>.made,
+            text => $/.Str,
         )
     }
 
     method enum-item-variant:sym<struct>($/) {
         make EnumVariantStruct.new(
             struct-fields => $<struct-fields>.made,
+            text => $/.Str,
         )
     }
 
     method enum-item-variant:sym<discriminant>($/) {
         make EnumVariantDiscriminant.new(
             eq-expression => $<expression>.made,
+            text => $/.Str,
         )
     }
 }

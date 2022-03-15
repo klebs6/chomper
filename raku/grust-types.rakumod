@@ -202,6 +202,7 @@ our role Type::Actions {
     method parenthesized-type($/) {
         make ParenthesizedType.new(
             type => $<type>.made
+            text       => $/.Str,
         )
     }
 
@@ -212,6 +213,7 @@ our role Type::Actions {
     method tuple-type($/) {
         make TupleType.new(
             types => $<type>>>.made,
+            text       => $/.Str,
         )
     }
 
@@ -219,12 +221,14 @@ our role Type::Actions {
         make ArrayType.new(
             type       => $<type>.made,
             expression => $<expression>.made,
+            text       => $/.Str,
         )
     }
 
     method slice-type($/) {
         make SliceType.new(
             type => $<type>.made,
+            text       => $/.Str,
         )
     }
 
@@ -233,6 +237,7 @@ our role Type::Actions {
             maybe-lifetime => $<lifetime>.made,
             mutable        => so $/<kw-mut>:exists,
             type-no-bounds => $<type-no-bounds>.made
+            text       => $/.Str,
         )
     }
 
@@ -240,6 +245,7 @@ our role Type::Actions {
         make RawPtrType.new(
             mutable        => so $/<kw-mut>:exists,
             type-no-bounds => $<type-no-bounds>.made
+            text       => $/.Str,
         )
     }
 }

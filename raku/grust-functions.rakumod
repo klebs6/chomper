@@ -344,6 +344,7 @@ our role Function::Actions {
             maybe-function-return-type => $<function-return-type>.made,
             maybe-where-clause         => $<where-clause>.made,
             maybe-block-expression     => $<block-expression>.made,
+            text       => $/.Str,
         )
     }
 
@@ -353,6 +354,7 @@ our role Function::Actions {
             async                          => so $/<kw-async>:exists,
             unsafe                         => so $/<kw-unsafe>:exists,
             maybe-function-extern-modifier => $<function-extern-modifier>.made,
+            text       => $/.Str,
         )
     }
 
@@ -364,18 +366,21 @@ our role Function::Actions {
         make FunctionParameters.new(
             maybe-self-param => $<self-param>.made,
             function-params => $<function-param>>>.made,
+            text       => $/.Str,
         )
     }
 
     method function-parameters:sym<just-params>($/) {
         make FunctionParameters.new(
             function-params => $<function-param>>>.made,
+            text       => $/.Str,
         )
     }
 
     method function-parameters:sym<just-self>($/) {
         make FunctionParameters.new(
             maybe-self-param => $<self-param>.made,
+            text       => $/.Str,
         )
     }
 
@@ -384,12 +389,14 @@ our role Function::Actions {
         make SelfParam.new(
             outer-attributes   => $<outer-attrigute>>>.made,
             self-param-variant => $<self-param-variant>.made,
+            text       => $/.Str,
         )
     }
 
     method self-borrow($/) {
         make SelfBorrow.new(
             maybe-lifetime => $<lifetime>.made,
+            text       => $/.Str,
         )
     }
 
@@ -397,6 +404,7 @@ our role Function::Actions {
         make SelfParamVariantShorthand.new(
             maybe-self-borrow => $<self-borrow>.made,
             mutable           => so $/<kw-mut>:exists,
+            text       => $/.Str,
         )
     }
 
@@ -404,6 +412,7 @@ our role Function::Actions {
         make SelfParamVariantTyped.new(
             mutable => so $/<kw-mut>:exists,
             type    => $<type>.made,
+            text       => $/.Str,
         )
     }
 
@@ -413,6 +422,7 @@ our role Function::Actions {
             maybe-comment          => $<comment>.made,
             outer-attributes       => $<outer-attributes>>>.made,
             function-param-variant => $<function-param-variant>.made,
+            text       => $/.Str,
         )
     }
 
@@ -420,12 +430,14 @@ our role Function::Actions {
         make FunctionParamVariantPatternType.new(
             pattern-no-top-alt => $<pattern-no-top-alt>.made,
             type               => $<type>.made,
+            text       => $/.Str,
         )
     }
 
     method function-param-variant:sym<pattern-ellipsis>($/) {
         make FunctionParamVariantPatternEllipsis.new(
             pattern-no-top-alt => $<pattern-no-top-alt>.made,
+            text       => $/.Str,
         )
     }
 
@@ -442,6 +454,7 @@ our role Function::Actions {
         make FunctionReturnType.new(
             type          => $<type>.made,
             maybe-comment => $<comment>.made,
+            text       => $/.Str,
         )
     }
 }

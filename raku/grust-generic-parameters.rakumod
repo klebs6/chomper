@@ -124,6 +124,7 @@ our role GenericParams::Actions {
         make GenericParam.new(
             outer-attributes      => $<outer-attribute>.made,
             generic-param-variant => $<generic-param-variant>.made,
+            text       => $/.Str,
         )
     }
 
@@ -137,6 +138,7 @@ our role GenericParams::Actions {
         make LifetimeParam.new(
             lifetime-or-label     => $<lifetime-or-label>.made,
             maybe-lifetime-bounds => $<lifetime-bounds>.made,
+            text       => $/.Str,
         )
     }
 
@@ -145,6 +147,7 @@ our role GenericParams::Actions {
             identifier              => $<identifier>.made,
             maybe-type-param-bounds => $<type-param-bounds>.made,
             maybe-type              => $<type>.made,
+            text       => $/.Str,
         )
     }
 
@@ -152,6 +155,7 @@ our role GenericParams::Actions {
         make ConstParam.new(
             identifier => $<identifier>.made,
             type       => $<type>.made,
+            text       => $/.Str,
         )
     }
 }

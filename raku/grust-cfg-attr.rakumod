@@ -185,6 +185,7 @@ our role CfgAttr::Actions {
     method cfg-attr-attribute:sym<cfg>($/) {
         make CfgAttribute.new(
             configuration-predicate => $<configuration-predicate>.made
+            text => $/.Str,
         )
     }
 
@@ -192,6 +193,7 @@ our role CfgAttr::Actions {
         make CfgAttrAttribute.new(
             configuration-predicate => $<configuration-predicate>.made,
             maybe-cfg-attrs         => $<cfg-attrs>.made,
+            text => $/.Str,
         )
     }
 
@@ -202,12 +204,14 @@ our role CfgAttr::Actions {
     method inner-attribute($/) {
         make InnerAttribute.new(
             attr => $<attr>.made,
+            text => $/.Str,
         )
     }
 
     method outer-attribute($/) {
         make OuterAttribute.new(
             attr => $<attr>.made,
+            text => $/.Str,
         )
     }
 
@@ -215,6 +219,7 @@ our role CfgAttr::Actions {
         make Attr.new(
             simple-path => $<simple-path>.made,
             attr-input  => $<attr-input>.made,
+            text => $/.Str,
         )
     }
 
@@ -226,6 +231,7 @@ our role CfgAttr::Actions {
     method attr-input:sym<eq-expr>($/) {
         make AttrInputEqExpr.new(
             expression => $<expression>.made,
+            text => $/.Str,
         )
     }
 }

@@ -41,6 +41,7 @@ our role SimplePath::Actions {
     method simple-path($/) {
         make SimplePath.new(
             simple-path-segments => $<simple-path-segment>.made,
+            text       => $/.Str,
         )
     }
 

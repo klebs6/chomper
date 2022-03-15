@@ -89,12 +89,14 @@ our role RangePattern::Actions {
         make RangePatternInclusive.new(
             range-pattern-bound-begin => $<range-pattern-bound>>>.made[0],
             range-pattern-bound-end => $<range-pattern-bound>>>.made[1],
+            text       => $/.Str,
         )
     }
 
     method range-pattern:sym<half-open>($/) { 
         make RangePatternHalfOpen.new(
             range-pattern-bound-begin => $<range-pattern-bound>.made,
+            text       => $/.Str,
         )
     }
 
@@ -102,6 +104,7 @@ our role RangePattern::Actions {
         make RangePatternObsolete.new(
             range-pattern-bound-begin => $<range-pattern-bound>>>.made[0],
             range-pattern-bound-end => $<range-pattern-bound>>>.made[1],
+            text       => $/.Str,
         )
     }
 

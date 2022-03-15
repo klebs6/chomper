@@ -53,6 +53,7 @@ our role TraitObjectType::Actions {
         make TraitObjectType.new(
             dyn               => so $/<kw-dyn>:exists,
             type-param-bounds => $<type-param-bounds>.made,
+            text       => $/.Str,
         )
     }
 
@@ -60,6 +61,7 @@ our role TraitObjectType::Actions {
         make TraitObjectTypeOneBound.new(
             dyn         => so $/<kw-dyn>:exists,
             trait-bound => $<trait-bound>.made,
+            text       => $/.Str,
         )
     }
 }

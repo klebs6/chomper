@@ -78,6 +78,7 @@ our role BlockExpression::Actions {
         make BlockExpression.new(
             inner-attributes => $<inner-attributes>>>.made,
             statements       => $<statements>.made,
+            text => $/.Str,
         )
     }
 
@@ -85,12 +86,14 @@ our role BlockExpression::Actions {
         make AsyncBlockExpression.new(
             move             => so $/<kw-move>:exists,
             block-expression => $<block-expression>.made,
+            text => $/.Str,
         )
     }
 
     method unsafe-block-expression($/) {
         make UnsafeBlockExpression.new(
             block-expression => $<block-expression>.made,
+            text => $/.Str,
         )
     }
 }

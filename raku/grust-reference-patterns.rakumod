@@ -57,6 +57,7 @@ our role ReferencePattern::Actions {
         make ReferencePatternRef.new(
             mutable               => so $/<kw-mut>:exists,
             pattern-without-range => $<pattern-without-range>.made
+            text       => $/.Str,
         )
     }
 
@@ -64,6 +65,7 @@ our role ReferencePattern::Actions {
         make ReferencePatternRefRef.new(
             mutable               => so $/<kw-mut>:exists,
             pattern-without-range => $<pattern-without-range>.made
+            text       => $/.Str,
         )
     }
 }

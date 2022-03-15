@@ -118,24 +118,28 @@ our role ConfigurationPredicate::Actions {
         make ConfigurationPredicateOption.new(
             identifier        => $<identifier>.made,
             maybe-str-literal => $<any-str-literal>.made,
+            text => $/.Str,
         )
     }
 
     method configuration-predicate:sym<all>($/) {
         make ConfigurationPredicateAll.new(
             predicates => $<configuration-predicate-list>>>.made
+            text => $/.Str,
         )
     }
 
     method configuration-predicate:sym<any>($/) {
         make ConfigurationPredicateAny.new(
             predicates => $<configuration-predicate-list>>>.made
+            text => $/.Str,
         )
     }
 
     method configuration-predicate:sym<not>($/) {
         make ConfigurationPredicateNot.new(
             predicate => $<configuration-predicate-list>.made
+            text => $/.Str,
         )
     }
 

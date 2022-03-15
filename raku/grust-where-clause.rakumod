@@ -79,6 +79,7 @@ our role WhereClause::Actions {
     method where-clause($/) {
         make WhereClause.new(
             where-clause-items => $<where-clause-item>>>.made
+            text => $/.Str,
         )
     }
 
@@ -86,6 +87,7 @@ our role WhereClause::Actions {
         make WhereClauseItemLifetime.new(
             lifetime        => $<lifetime>.made,
             lifetime-bounds => $<lifetime-bounds>.made
+            text => $/.Str,
         )
     }
 
@@ -94,6 +96,7 @@ our role WhereClause::Actions {
             maybe-for-lifetimes     => $<for-lifetimes>.made,
             type                    => $<type>.made,
             maybe-type-param-bounds => $<type-param-bounds>.made,
+            text => $/.Str,
         )
     }
 }

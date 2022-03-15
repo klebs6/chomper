@@ -90,6 +90,7 @@ our role Pattern::Actions {
     method pattern($/) {
         make Pattern.new(
             pattern-no-top-alts => $<pattern-no-top-alt>>>.made
+            text       => $/.Str,
         )
     }
 
@@ -102,6 +103,7 @@ our role Pattern::Actions {
             mutable          => so $/<kw-mut>:exists,
             identifier       => $<identifier>.made,
             maybe-at-pattern => $<pattern>.made,
+            text       => $/.Str,
         )
     }
 

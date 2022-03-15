@@ -1221,6 +1221,7 @@ our role Expression::Actions {
         make BaseExpression.new(
             outer-attributes => $<outer-attribute>>>.made,
             expression-item  => $<expression-item>.made,
+            text => $/.Str,
         )
     }
 
@@ -1228,18 +1229,21 @@ our role Expression::Actions {
         make MethodCallExpressionSuffix.new(
             path-expr-segment => $<path-expr-segment>.made,
             maybe-call-params => $<call-params>.made,
+            text => $/.Str,
         )
     }
 
     method suffixed-expression-suffix:sym<index>($/) {
         make IndexExpressionSuffix.new(
             expression => $<expression>.made
+            text => $/.Str,
         )
     }
 
     method suffixed-expression-suffix:sym<field>($/) {
         make FieldExpressionSuffix.new(
             identifier => $<identifier>.made,
+            text => $/.Str,
         )
     }
 
@@ -1250,6 +1254,7 @@ our role Expression::Actions {
     method suffixed-expression-suffix:sym<call>($/) {
         make CallExpressionSuffix.new(
             maybe-call-params => $<call-params>.made,
+            text => $/.Str,
         )
     }
 
@@ -1260,6 +1265,7 @@ our role Expression::Actions {
     method suffixed-expression-suffix:sym<tuple-index>($/) {
         make TupleIndexExpressionSuffix.new(
             tuple-index => $<tuple-index>.made,
+            text => $/.Str,
         )
     }
 
@@ -1271,6 +1277,7 @@ our role Expression::Actions {
         make SuffixedExpression.new(
             base-expression            => $<base-expression>.made,
             suffixed-expression-suffix => $<suffixed-expression-suffix>>>.made,
+            text => $/.Str,
         )
     }
 
@@ -1291,6 +1298,7 @@ our role Expression::Actions {
         make UnaryExpression.new(
             unary-prefixes      => $<unary-prefix>>>.made,
             suffixed-expression => $<suffixed-expression>.made,
+            text => $/.Str,
         )
     }
 
@@ -1298,6 +1306,7 @@ our role Expression::Actions {
         make BorrowExpressionPrefix.new(
             borrow-count => $/<tok-and>.List.elems,
             mutable      => so $/<kw-mut>:exists,
+            text => $/.Str,
         )
     }
 
@@ -1305,6 +1314,7 @@ our role Expression::Actions {
         make BorrowExpression.new(
             borrow-expression-prefixes => $<borrow-expression-prefix>>>.made,
             unary-expression           => $<unary-expression>.made,
+            text => $/.Str,
         )
     }
 
@@ -1312,66 +1322,77 @@ our role Expression::Actions {
         make CastExpression.new(
             borrow-expression => $<borrow-expression>.made,
             cast-targets      => $<type-no-bounds>>>.made,
+            text => $/.Str,
         )
     }
 
     method modulo-expression($/) {
         make ModuloExpression.new(
             cast-expression => $<cast-expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method division-expression($/) {
         make DivisionExpression.new(
             modulo-expression => $<modulo-expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method multiplicative-expression($/) {
         make MultiplicativeExpression.new(
             division-expression => $<division-expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method subtractive-expression($/) {
         make SubtractiveExpression.new(
             multiplicative-expression => $<multiplicative-expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method additive-expression($/) {
         make AdditiveExpression.new(
             subtractive-expression => $<subtractive-expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method binary-shr-expression($/) {
         make BinaryShrExpression.new(
             additive-expression => $<additive-expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method binary-shl-expression($/) {
         make BinaryShlExpression.new(
             binary-shr-expression => $<binary-shr-expression>.made
+            text => $/.Str,
         )
     }
 
     method binary-and-expression($/) {
         make BinaryAndExpression.new(
             binary-shl-expression => $<binary-shl-expression>>>.made
+            text => $/.Str,
         )
     }
 
     method binary-xor-expression($/) {
         make BinaryXorExpression.new(
             binary-and-expression => $<binary-and-expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method binary-or-expression($/) {
         make BinaryOrExpression.new(
             binary-xor-expression => $<binary-xor-expression>>>.made,
+            text => $/.Str,
         )
     }
 
@@ -1379,48 +1400,56 @@ our role Expression::Actions {
     method binary-le-expression($/) {
         make BinaryLeExpression.new(
             binary-or-expression => $<binary-or-expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method binary-ge-expression($/) {
         make BinaryGeExpression.new(
             binary-le-expression => $<binary-le-expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method binary-lt-expression($/) {
         make BinaryLtExpression.new(
             binary-ge-expression => $<binary-ge-expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method binary-gt-expression($/) {
         make BinaryGtExpression.new(
             binary-lt-expression => $<binary-lt-expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method binary-ne-expression($/) {
         make BinaryNeExpression.new(
             binary-gt-expression => $<binary-gt-expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method binary-eqeq-expression($/) {
         make BinaryEqEqExpression.new(
             binary-ne-expression => $<binary-ne-expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method binary-andand-expression($/) {
         make BinaryAndAndExpression.new(
             binary-eqeq-expression => $<binary-eqeq-expression>>>.made
+            text => $/.Str,
         )
     }
 
     method binary-oror-expression($/) {
         make BinaryOrOrExpression.new(
             binary-andand-expression => $<binary-andand-expression>>>.made,
+            text => $/.Str,
         )
     }
 
@@ -1428,30 +1457,35 @@ our role Expression::Actions {
     method range-expression:sym<full-eq>($/) { 
         make RangeExpressionFullEq.new(
             binary-oror-expressions => $<binary-oror-expression>>>.made
+            text => $/.Str,
         )
     }
 
     method range-expression:sym<full>($/) {  
         make RangeExpressionFull.new(
             binary-oror-expression => $<binary-oror-expression>>>.made
+            text => $/.Str,
         )
     }
 
     method range-expression:sym<to>($/) {  
         make RangeExpressionTo.new(
             binary-oror-expression => $<binary-oror-expression>.made
+            text => $/.Str,
         )
     }
 
     method range-expression:sym<to-eq>($/) {  
         make RangeExpressionToEq.new(
             binary-oror-expression => $<binary-oror-expression>.made,
+            text => $/.Str,
         )
     }
 
     method range-expression:sym<from>($/) {  
         make RangeExpressionFrom.new(
             binary-oror-expression => $<binary-oror-expression>.made,
+            text => $/.Str,
         )
     }
 
@@ -1468,72 +1502,84 @@ our role Expression::Actions {
     method shreq-expression($/) {
         make ShrEqExpression.new(
             range-expression => $<range-expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method shleq-expression($/) {
         make ShlEqExpression.new(
             shreq-expression => $<shreq-expression>>>.made
+            text => $/.Str,
         )
     }
 
     method xoreq-expression($/) {
         make XorEqExpression.new(
             shleq-expression => $<shleq-expression>>>.made
+            text => $/.Str,
         )
     }
 
     method oreq-expression($/) {
         make OrEqExpression.new(
             xoreq-expression => $<xoreq-expression>>>.made
+            text => $/.Str,
         )
     }
 
     method andeq-expression($/) {
         make AndEqExpression.new(
             oreq-expression => $<oreq-expression>>>.made
+            text => $/.Str,
         )
     }
 
     method modeq-expression($/) {
         make ModEqExpression.new(
             andeq-expression => $<andeq-expression>>>.made
+            text => $/.Str,
         )
     }
 
     method slasheq-expression($/) {
         make SlashEqExpression.new(
             modeq-expression => $<modeq-expression>>>.made
+            text => $/.Str,
         )
     }
 
     method stareq-expression($/) {
         make StarEqExpression.new(
             slasheq-expression => $<slasheq-expression>>>.made
+            text => $/.Str,
         )
     }
 
     method minuseq-expression($/) {
         make MinusEqExpression.new(
             stareq-expression => $<stareq-expression>>>.made
+            text => $/.Str,
         )
     }
 
     method addeq-expression($/) {
         make AddEqExpression.new(
             minuseq-expression => $<minuseq-expression>>>.made
+            text => $/.Str,
         )
     }
 
     method assign-expression($/) {
         make AssignExpression.new(
             addeq-expression => $<addeq-expression>>>.made
+            text => $/.Str,
         )
     }
 
     method expression($/) {
         make Expression.new(
             assign-expression => $<assign-expression>.made
+            text => $/.Str,
         )
     }
 
@@ -1556,6 +1602,7 @@ our role Expression::Actions {
     method expression-item:sym<grouped>($/)  { 
         make GroupedExpression.new(
             expression => $<expression>.made
+            text       => $/.Str,
         )
     }
 

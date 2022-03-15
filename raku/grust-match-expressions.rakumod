@@ -220,12 +220,14 @@ our role MatchExpression::Actions {
             scrutinee        => $<scrutinee>.made,
             inner-attributes => $<inner-attribute>>>.made,
             maybe-match-arms => $<match-arms>.made,
+            text       => $/.Str,
         )
     }
 
     method scrutinee($/) {
         make Scrutinee.new(
             expression-nostruct => $<expression-nostruct>.made,
+            text       => $/.Str,
         )
     }
 
@@ -241,6 +243,7 @@ our role MatchExpression::Actions {
                 $<match-arms-outer-item>.made
             ],
             maybe-comment => $<comment>.made,
+            text       => $/.Str,
         )
     }
 
@@ -249,6 +252,7 @@ our role MatchExpression::Actions {
             maybe-comment         => $<comment>.made,
             match-arm             => $<match-arm>.made,
             expression-with-block => $<expression-with-block>.made,
+            text       => $/.Str,
         )
     }
 
@@ -257,6 +261,7 @@ our role MatchExpression::Actions {
             maybe-comment      => $<comment>.made,
             match-arm          => $<match-arm>.made,
             expresison-noblock => $<expression-noblock>.made,
+            text       => $/.Str,
         )
     }
 
@@ -268,6 +273,7 @@ our role MatchExpression::Actions {
             maybe-comment => $<comment>.made,
             match-arm     => $<match-arm>.made,
             expression    => $<expression-variant>.made,
+            text       => $/.Str,
         )
     }
 
@@ -276,12 +282,14 @@ our role MatchExpression::Actions {
             outer-attributes      => $<outer-attribute>>>.made,
             pattern               => $<pattern>.made,
             maybe-match-arm-guard => $<match-arm-guard>.made,
+            text       => $/.Str,
         )
     }
 
     method match-arm-guard($/) {
         make MatchArmGuard.new(
             expression => $<expression>.made,
+            text       => $/.Str,
         )
     }
 }

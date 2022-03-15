@@ -73,18 +73,21 @@ our role ArrayExpression::Actions {
         make ArrayElementsItemQuantity.new(
             expression => $<expression>>>.made[0],
             quantifier => $<expression>>>.made[1],
+            text => $/.Str,
         )
     }
 
     method array-elements:sym<commas>($/) {
         make ArrayElementsList.new(
             expressions => $<expression>>>.made,
+            text => $/.Str,
         )
     }
 
     method array-expression($/) {
         make ArrayExpression.new(
             maybe-array-elements => $<array-elements>.made,
+            text => $/.Str,
         )
     }
 }

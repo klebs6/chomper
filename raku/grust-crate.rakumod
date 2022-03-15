@@ -151,12 +151,14 @@ our role Crate::Actions {
         make Crate.new(
             inner-attributes => $<inner-attribute>>>.made,
             crate-item       => $<crate-item>>>.made,
+            text => $/.Str,
         )
     }
 
     method as-clause($/) {
         make AsClause.new(
             identifier-or-underscore => $<identifier-or-underscore>.made,
+            text => $/.Str,
         )
     }
 
@@ -164,6 +166,7 @@ our role Crate::Actions {
         make ExternCrate.new(
             crate-ref       => $<crate-ref>.made,
             maybe-as-clause => $<as-clause>.made,
+            text => $/.Str,
         )
     }
 
@@ -175,6 +178,7 @@ our role Crate::Actions {
         make ModuleSemi.new(
             unsafe     => so $/<kw-unsafe>:exists,
             identifier => $<identifier>.made,
+            text => $/.Str,
         )
     }
 
@@ -184,6 +188,7 @@ our role Crate::Actions {
             identifier       => $<identifier>.made,
             inner-attributes => $<inner-attribute>>>.made,
             crate-item       => $<crate-item>>>.made,
+            text => $/.Str,
         )
     }
 }

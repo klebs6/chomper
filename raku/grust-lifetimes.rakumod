@@ -155,6 +155,7 @@ our role Lifetimes::Actions {
     method lifetime-token:sym<basic>($/) {
         make LifetimeToken.new(
             identifier-or-keyword => $<identifier-or-keyword>.made
+            text       => $/.Str,
         )
     }
 
@@ -165,6 +166,7 @@ our role Lifetimes::Actions {
     method lifetime-or-label($/) {
         make LifetimeOrLabel.new(
             non-keyword-identifier => $<non-keyword-identifier>.made,
+            text       => $/.Str,
         )
     }
 
@@ -175,6 +177,7 @@ our role Lifetimes::Actions {
     method lifetime:sym<lt>($/) { 
         make Lifetime.new(
             lifetime-or-label => $<lifetime-or-label>.made
+            text       => $/.Str,
         )
     }
 
@@ -189,6 +192,7 @@ our role Lifetimes::Actions {
     method for-lifetimes($/) {
         make ForLifetimes.new(
             generic-params => $<generic-params>.made
+            text       => $/.Str,
         )
     }
 }

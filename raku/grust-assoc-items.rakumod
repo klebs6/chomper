@@ -115,6 +115,7 @@ our role AssociatedItem::Actions {
             maybe-comment    => $<comment>.made,
             outer-attributes => $<outer-attributes>>.made,
             variant          => $<associated-item-variant>.made,
+            text => $/.Str,
         )
     }
 
@@ -122,6 +123,7 @@ our role AssociatedItem::Actions {
     method associated-item-variant:sym<macro>($/) {
         make AssociatedItemMacro.new(
             macro-invocation => $<macro-invocation>.made
+            text => $/.Str,
         )
     }
 
@@ -129,6 +131,7 @@ our role AssociatedItem::Actions {
         make AssociatedItemTypeAlias.new(
             maybe-visibility => $<visibility>.made,
             type-alias       => $<type-alias>.made,
+            text => $/.Str,
         )
     }
 
@@ -136,6 +139,7 @@ our role AssociatedItem::Actions {
         make AssociatedItemConstantItem.new(
             maybe-visibility => $<visibility>.made,
             constant-item    => $<constant-item>.made,
+            text => $/.Str,
         )
     }
 
@@ -143,6 +147,7 @@ our role AssociatedItem::Actions {
         make AssociatedItemConstantItem.new(
             maybe-visibility => $<visibility>.made,
             function         => $<function>.made,
+            text => $/.Str,
         )
     }
 }

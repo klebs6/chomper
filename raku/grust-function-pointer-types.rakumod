@@ -182,12 +182,14 @@ our role BareFunctionType::Actions {
             function-type-qualifiers   => $<function-type-qualifiers>.made,
             maybe-function-parameters  => $<function-parameters>.made,
             maybe-function-return-type => $<bare-function-return-type>.made,
+            text       => $/.Str,
         )
     }
 
     method function-extern-modifier($/) {
         make FunctionExternModifier.new(
             maybe-abi => $<abi>.made,
+            text       => $/.Str,
         )
     }
 
@@ -195,12 +197,14 @@ our role BareFunctionType::Actions {
         make FunctionTypeQualifiers.new(
             unsafe => so $/<kw-unsafe>:exists,
             maybe-function-extern-modifier => $<function-extern-modifier>.made,
+            text       => $/.Str,
         )
     }
 
     method bare-function-return-type($/) {
         make BareFunctionReturnType.new(
             type-no-bounds => $<type-no-bounds>.made,
+            text       => $/.Str,
         )
     }
 
@@ -208,6 +212,7 @@ our role BareFunctionType::Actions {
     method function-parameters:sym<basic>($/) {  
         make FunctionParametersBasic.new(
             maybe-named-params => $<maybe-named-param>>>.made
+            text       => $/.Str,
         )
     }
 
@@ -215,6 +220,7 @@ our role BareFunctionType::Actions {
         make FunctionParametersVariadic.new(
             maybe-named-params => $<maybe-named-param>>>.made,
             outer-attributes   => $<outer-attribute>>>.made,
+            text       => $/.Str,
         )
     }
 
@@ -223,6 +229,7 @@ our role BareFunctionType::Actions {
             outer-attributes               => $<outer-attribute>>>.made,
             maybe-identifier-or-underscore => $<identifier-or-underscore>.made,
             type                           => $<type>.made,
+            text       => $/.Str,
         )
     }
 }

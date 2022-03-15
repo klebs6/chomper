@@ -166,6 +166,7 @@ our role Trait::Actions {
             inner-attributes        => $<inner-attribute>>>.made,
             associated-items        => $<associated-item>.made,
             maybe-comment           => $<comment>.made,
+            text       => $/.Str,
         )
     }
 
@@ -180,6 +181,7 @@ our role Trait::Actions {
             inner-attributes     => $<inner-attribute>.made,
             associated-items     => $<associated-item>.made,
             maybe-comment        => $<comment>.made,
+            text       => $/.Str,
         )
     }
 
@@ -194,6 +196,7 @@ our role Trait::Actions {
             inner-attributes     => $<inner-attribute>>>.made,
             associated-items     => $<associated-item>>>.made,
             maybe-comment        => $<comment>.made,
+            text       => $/.Str,
         }
     }
 
@@ -205,6 +208,7 @@ our role Trait::Actions {
             maybe-generic-params => $<generic-params>.made,
             type-param-bounds    => $<type-param-bounds>.made,
             maybe-where-clause   => $<where-clause>.made,
+            text       => $/.Str,
         )
     }
 }

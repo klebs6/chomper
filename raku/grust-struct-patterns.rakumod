@@ -197,6 +197,7 @@ our role StructPattern::Actions {
         make StructPattern.new(
             path-in-expression            => $<path-in-expression>.made,
             maybe-struct-pattern-elements => $<struct-pattern-elements>.made,
+            text       => $/.Str,
         )
     }
 
@@ -204,6 +205,7 @@ our role StructPattern::Actions {
         make StructPatternElementsBasic.new(
             struct-pattern-fields    => $<struct-pattern-fields>.made,
             maybe-struct-pattern-etc => $<struct-pattern-et-cetera>.made,
+            text       => $/.Str,
         )
     }
 
@@ -219,6 +221,7 @@ our role StructPattern::Actions {
         make StructPatternField.new(
             outer-attributes             => $<outer-attribute>>>.made,
             struct-pattern-field-variant => $<struct-pattern-field-variant>.made,
+            text       => $/.Str,
         )
     }
 
@@ -226,6 +229,7 @@ our role StructPattern::Actions {
         make StructPatternFieldVariantTuple.new(
             tuple-index => $<tuple-index>.made,
             pattern     => $<pattern>.made,
+            text       => $/.Str,
         )
     }
 
@@ -233,6 +237,7 @@ our role StructPattern::Actions {
         make StructPatternFieldVariantId.new(
             identifier => $<identifier>.made,
             pattern    => $<pattern>.made,
+            text       => $/.Str,
         )
     }
 
@@ -241,12 +246,14 @@ our role StructPattern::Actions {
             ref        => so $/<kw-ref>:exists,
             mutable    => so $/<kw-mut>:exists,
             identifier => $<identifier>.made,
+            text       => $/.Str,
         )
     }
 
     method struct-pattern-et-cetera($/) {
         make StructPatternEtCetera.new(
             outer-attributes => $<outer-attribute>>>.made,
+            text       => $/.Str,
         )
     }
 }
