@@ -134,52 +134,51 @@ our role Struct::Rules {
 
 our role Struct::Actions {
 
-    method struct:sym<struct>($/) { <struct-struct> }
-    method struct:sym<tuple>($/)  { <tuple-struct> }
+    method struct:sym<struct>($/) { make $<struct-struct>.made }
+    method struct:sym<tuple>($/)  { make $<tuple-struct>.made }
 
     method struct-struct($/) {
-        <kw-struct> 
-        <identifier> 
-        <generic-params>?
-        <where-clause>?
-        [
-            | <tok-semi>
-            | <tok-lbrace> <struct-fields>? <tok-rbrace>
-        ]
+        make Struct.new(
+            identifier           => $<identifier>.made,
+            maybe-generic-params => $<generic-params>.made,
+            maybe-where-clause   => $<where-clause>.made,
+            maybe-struct-fields  => $<struct-fields>.made,
+        )
     }
 
     method tuple-struct($/) {
-        <kw-struct>
-        <identifier>
-        <generic-params>?
-        <tok-lparen>
-        <tuple-fields>?
-        <tok-rparen>
-        <where-clause>?
-        <tok-semi>
+        make TupleStruct.new(
+            identifier           => $<identifier>.made,
+            maybe-generic-params => $<generic-params>.made,
+            maybe-tuple-fields   => $<tuple-fields>.made,
+            maybe-where-clause   => $<where-clause>.made,
+        )
     }
 
     method struct-fields($/) {
-        <struct-field>+ %% <tok-comma>
+        make $<struct-field>>>.made
     }
 
     method struct-field($/) {
-        <comment>?
-        <outer-attribute>*
-        <visibility>?
-        <identifier>
-        <tok-colon>
-        <type>
+        make StructField.new(
+            maybe-comment    => $<comment>.made,
+            outer-attributes => $<outer-attribute>>>.made,
+            maybe-visibility => $<visibility>.made,
+            identifier       => $<identifier>.made,
+            type             => $<type>.made,
+        )
     }
 
     method tuple-fields($/) {
-        <tuple-field>+ %% <tok-comma>
+        make $<tuple-field>>>.made
     }
 
     method tuple-field($/) {
-        <comment>?
-        <outer-attribute>*
-        <visibility>?
-        <type>
+        make TupleField.new(
+            maybe-comment    => $<comment>.made,
+            outer-attributes => $<outer-attribute>>>.made,
+            maybe-visibility => $<visibility>.made,
+            type             => $<type>.made,
+        )
     }
 }

@@ -50,7 +50,7 @@ our class StructPatternElementsEtc {
     }
 }
 
-our cass StructPatternField {
+our class StructPatternField {
     has @.outer-attributes;
     has $.struct-pattern-field-variant;
 
@@ -194,46 +194,59 @@ our role StructPattern::Rules {
 our role StructPattern::Actions {
 
     method struct-pattern($/) {
-        <path-in-expression> 
-        <tok-lbrace> 
-        <struct-pattern-elements>? 
-        <tok-rbrace>
+        make StructPattern.new(
+            path-in-expression            => $<path-in-expression>.made,
+            maybe-struct-pattern-elements => $<struct-pattern-elements>.made,
+        )
     }
 
     method struct-pattern-elements:sym<basic>($/) {
-        <struct-pattern-fields>
-        [
-            <tok-comma> <struct-pattern-et-cetera>?
-        ]?
+        make StructPatternElementsBasic.new(
+            struct-pattern-fields    => $<struct-pattern-fields>.made,
+            maybe-struct-pattern-etc => $<struct-pattern-et-cetera>.made,
+        )
     }
 
     method struct-pattern-elements:sym<etc>($/) {
-        <struct-pattern-et-cetera>
+        make StructPatternElementsEtc.new
     }
 
     method struct-pattern-fields($/) {
-        <struct-pattern-field>+ %% <tok-comma>
+        mak $<struct-pattern-field>>>.made
     }
 
     method struct-pattern-field($/) {
-        <outer-attribute>*
-        <struct-pattern-field-variant>
+        make StructPatternField.new(
+            outer-attributes             => $<outer-attribute>>>.made,
+            struct-pattern-field-variant => $<struct-pattern-field-variant>.made,
+        )
     }
 
     method struct-pattern-field-variant:sym<tup>($/) {
-        <tuple-index> <tok-colon> <pattern>
+        make StructPatternFieldVariantTuple.new(
+            tuple-index => $<tuple-index>.made,
+            pattern     => $<pattern>.made,
+        )
     }
 
     method struct-pattern-field-variant:sym<id>($/) {
-        <identifier> <tok-colon> <pattern>
+        make StructPatternFieldVariantId.new(
+            identifier => $<identifier>.made,
+            pattern    => $<pattern>.made,
+        )
     }
 
     method struct-pattern-field-variant:sym<ref-mut-id>($/) {
-        <kw-ref>? <kw-mut>? <identifier>
+        make StructPatternFieldVariantRefMutId.new(
+            ref        => so $/<kw-ref>:exists,
+            mutable    => so $/<kw-mut>:exists,
+            identifier => $<identifier>.made,
+        )
     }
 
     method struct-pattern-et-cetera($/) {
-        <outer-attribute>*
-        <tok-dotdot>
+        make StructPatternEtCetera.new(
+            outer-attributes => $<outer-attribute>>>.made,
+        )
     }
 }
