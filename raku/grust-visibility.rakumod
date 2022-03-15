@@ -1,66 +1,7 @@
-our class VisibilityPublic { 
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class VisibilityCrate  { 
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class VisibilitySelf   { 
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class VisibilitySuper  { 
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
+our class VisibilityPublic { }
+our class VisibilityCrate  { }
+our class VisibilitySelf   { }
+our class VisibilitySuper  { }
 
 our class VisibilityInPath {
     has $.simple-path;
@@ -91,9 +32,25 @@ our role Visibility::Rules {
 
 our role Visibility::Actions {
 
-    method visibility:sym<basic>($/)   { <kw-pub> }
-    method visibility:sym<crate>($/)   { <kw-pub> <tok-lparen> <kw-crate> <tok-rparen> }
-    method visibility:sym<self>($/)    { <kw-pub> <tok-lparen> <kw-selfvalue>  <tok-rparen> }
-    method visibility:sym<super>($/)   { <kw-pub> <tok-lparen> <kw-super> <tok-rparen> }
-    method visibility:sym<in-path>($/) { <kw-pub> <tok-lparen> <kw-in> <simple-path> <tok-rparen> }
+    method visibility:sym<basic>($/)   { 
+        make VisibilityPublic.new
+    }
+
+    method visibility:sym<crate>($/)   { 
+        make VisibilityCrate.new
+    }
+
+    method visibility:sym<self>($/)    { 
+        make VisibilitySelf.new
+    }
+
+    method visibility:sym<super>($/)   { 
+        make VisibilitySuper.new
+    }
+
+    method visibility:sym<in-path>($/) { 
+        make VisibilityInPath.new(
+            simple-path => $<simple-path>.made
+        )
+    }
 }

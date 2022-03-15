@@ -34,12 +34,11 @@ our role Union::Rules {
 our role Union::Actions {
 
     method union($/) {
-        <kw-union>
-        <identifier>
-        <generic-params>?
-        <where-clause>?
-        <tok-lbrace>
-        <struct-fields>
-        <tok-rbrace>
+        make Union.new(
+            identifier           => $<identifier>.made,
+            maybe-generic-params => $<generic-params>.made,
+            maybe-where-clause   => $<where-clause>.made,
+            struct-fields        => $<struct-fields>.made,
+        )
     }
 }

@@ -107,33 +107,28 @@ our role UseDeclaration::Rules {
 our role UseDeclaration::Actions {
 
     method use-declaration($/) {
-        <kw-use> 
-        <use-tree> 
-        <tok-semi>
+        make UseDeclaration.new(
+            use-tree => $<use-tree>.made,
+        )
     }
 
     method use-tree:sym<basic>($/) {
-        [
-            <simple-path>? 
-            <tok-path-sep>
-        ]? 
-        <tok-star>
+        make UseTreeBasic.new(
+            maybe-simple-path => $<simple-path>.made,
+        )
     }
 
     method use-tree:sym<complex>($/) {
-       [ <simple-path>? <tok-path-sep> ]? 
-       <tok-lbrace>
-       [
-           <use-tree>+ %% <tok-comma>
-       ]? 
-       <tok-rbrace>
+        make UseTreeComplex.new(
+            maybe-simple-path => $<simple-path>.made,
+            use-trees         => $<use-tree>>>.made,
+        )
     }
 
     method use-tree:sym<as>($/) {
-        <simple-path>
-       [ 
-           <kw-as> 
-           <identifier-or-underscore>
-       ]?
+        make UseTreeAs.new(
+            simple-path => $<simple-path>.made,
+            as-identified-or-underscore => $<identifier-or-underscore>.made
+        )
     }
 }

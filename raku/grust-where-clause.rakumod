@@ -77,20 +77,23 @@ our role WhereClause::Rules {
 our role WhereClause::Actions {
 
     method where-clause($/) {
-        <kw-where>
-        [<where-clause-item>* %% <tok-comma>]
+        make WhereClause.new(
+            where-clause-items => $<where-clause-item>>>.made
+        )
     }
 
     method where-clause-item:sym<lt>($/) {
-        <lifetime> 
-        <tok-colon> 
-        <lifetime-bounds>
+        make WhereClauseItemLifetime.new(
+            lifetime        => $<lifetime>.made,
+            lifetime-bounds => $<lifetime-bounds>.made
+        )
     }
 
     method where-clause-item:sym<type-bound>($/) {
-        <for-lifetimes>? 
-        <type> 
-        <tok-colon> 
-        <type-param-bounds>?
+        make WhereClauseItemTypeBound.new(
+            maybe-for-lifetimes     => $<for-lifetimes>.made,
+            type                    => $<type>.made,
+            maybe-type-param-bounds => $<type-param-bounds>.made,
+        )
     }
 }
