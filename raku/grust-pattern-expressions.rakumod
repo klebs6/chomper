@@ -35,37 +35,9 @@ our class IdentifierPattern {
     }
 }
 
-our class WildcardPattern {
+our class WildcardPattern { }
 
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class RestPattern {
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
+our class RestPattern { }
 
 our role Pattern::Rules {
 
@@ -116,41 +88,42 @@ our role Pattern::Rules {
 our role Pattern::Actions {
 
     method pattern($/) {
-        <tok-or>? 
-        <pattern-no-top-alt> 
-        [ <tok-or> <pattern-no-top-alt> ]*
+        make Pattern.new(
+            pattern-no-top-alts => $<pattern-no-top-alt>>>.made
+        )
     }
 
-    method pattern-no-top-alt:sym<no-range>($/) { <pattern-without-range> }
-
-    method pattern-no-top-alt:sym<range>($/)    { <range-pattern> }
+    method pattern-no-top-alt:sym<no-range>($/) { make $<pattern-without-range>.made }
+    method pattern-no-top-alt:sym<range>($/)    { make $<range-pattern>.made }
 
     method identifier-pattern($/) {
-        <kw-ref>?
-        <kw-mut>?
-        <identifier>
-        [ <tok-at> <pattern> ]?
+        make IdentifierPattern.new(
+            ref              => so $/<kw-ref>:exists,
+            mutable          => so $/<kw-mut>:exists,
+            identifier       => $<identifier>.made,
+            maybe-at-pattern => $<pattern>.made,
+        )
     }
 
     method wildcard-pattern($/) {
-        <tok-underscore>
+        make WildcardPattern.new
     }
 
     method rest-pattern($/) {
-        <tok-dotdot>
+        make RestPattern.new
     }
 
     #---------------------
-    method pattern-without-range:sym<path>($/)             { <path-pattern>         } 
-    method pattern-without-range:sym<literal>($/)          { <literal-pattern>      } 
-    method pattern-without-range:sym<identifier>($/)       { <identifier-pattern>   } 
-    method pattern-without-range:sym<wildcard>($/)         { <wildcard-pattern>     } 
-    method pattern-without-range:sym<rest>($/)             { <rest-pattern>         } 
-    method pattern-without-range:sym<ref>($/)              { <reference-pattern>    } 
-    method pattern-without-range:sym<struct>($/)           { <struct-pattern>       } 
-    method pattern-without-range:sym<tuple-struct>($/)     { <tuple-struct-pattern> } 
-    method pattern-without-range:sym<tuple>($/)            { <tuple-pattern>        } 
-    method pattern-without-range:sym<grouped>($/)          { <grouped-pattern>      } 
-    method pattern-without-range:sym<slice>($/)            { <slice-pattern>        } 
-    method pattern-without-range:sym<macro-invocation>($/) { <macro-invocation>     } 
+    method pattern-without-range:sym<path>($/)             { make $<path-pattern>.made         } 
+    method pattern-without-range:sym<literal>($/)          { make $<literal-pattern>.made      } 
+    method pattern-without-range:sym<identifier>($/)       { make $<identifier-pattern>.made   } 
+    method pattern-without-range:sym<wildcard>($/)         { make $<wildcard-pattern>.made     } 
+    method pattern-without-range:sym<rest>($/)             { make $<rest-pattern>.made         } 
+    method pattern-without-range:sym<ref>($/)              { make $<reference-pattern>.made    } 
+    method pattern-without-range:sym<struct>($/)           { make $<struct-pattern>.made       } 
+    method pattern-without-range:sym<tuple-struct>($/)     { make $<tuple-struct-pattern>.made } 
+    method pattern-without-range:sym<tuple>($/)            { make $<tuple-pattern>.made        } 
+    method pattern-without-range:sym<grouped>($/)          { make $<grouped-pattern>.made      } 
+    method pattern-without-range:sym<slice>($/)            { make $<slice-pattern>.made        } 
+    method pattern-without-range:sym<macro-invocation>($/) { make $<macro-invocation>.made     } 
 }

@@ -187,37 +187,62 @@ our role StructExpression::Rules {
 our role StructExpression::Actions {
 
     method struct-expression:sym<struct>($/) {  
-        <path-in-expression> 
-        <tok-lbrace> 
-        <struct-expr-struct-body>? 
-        <tok-rbrace> 
+        make StructExpressionStruct.new(
+            path-in-expression            => $<path-in-expression>.made,
+            maybe-struct-expr-struct-body => $<struct-expr-struct-body>.made,
+        )
     }
 
     method struct-expression:sym<tuple>($/) {  
-        <path-in-expression> 
-        <tok-lparen> 
-        [ <expression>* %% <tok-comma> ] 
-        <tok-rparen>
+        make StructExpressionTuple.new(
+            path-in-expression => $<path-in-expression>.made,
+            expressions        => $<expression>>>.made,
+        )
     }
 
     method struct-expression:sym<unit>($/) {  
-        <path-in-expression> 
+        make StructExpressionUnit.new(
+            path-in-expression => $<path-in-expression>.made,
+        )
     }
 
     #--------------------
-    method struct-expr-struct-body:sym<fields>($/) { <struct-expr-fields> }
-    method struct-expr-struct-body:sym<base>($/)   { <struct-base> }
+    method struct-expr-struct-body:sym<fields>($/) { make $<struct-expr-fields>.made }
+    method struct-expr-struct-body:sym<base>($/)   { make $<struct-base>.made }
 
     method struct-expr-fields($/) {
-        [ <struct-expr-field>+ %% <tok-comma> ]
-        [ <tok-comma>? <struct-base> ]?
+        make StructExprFields.new(
+            struct-expr-fields => $<struct-expr-field>>>.made,
+            maybe-struct-base  => $<struct-base>.made,
+        )
     }
 
-    method struct-expr-field:sym<tup-expr>($/) { <comment>? <tuple-index> <tok-colon> <expression> }
-    method struct-expr-field:sym<id-expr>($/)  { <comment>? <identifier>  <tok-colon> <expression> }
-    method struct-expr-field:sym<id>($/)       { <comment>? <identifier> }
+    method struct-expr-field:sym<tup-expr>($/) { 
+        make StructExprFieldTupleExpr.new(
+            maybe-comment => $<comment>.made,
+            tuple-index   => $<tuple-index>.made,
+            expression    => $<expression>.made,
+        )
+    }
+
+    method struct-expr-field:sym<id-expr>($/) { 
+        make StructExprFieldIdExpr.new(
+            maybe-comment => $<comment>.made,
+            identifier    => $<identifier>.made,
+            expression    => $<expression>.made,
+        )
+    }
+
+    method struct-expr-field:sym<id>($/) { 
+        make StructExprFieldId.new(
+            maybe-comment => $<comment>.made,
+            identifier    => $<identifier>.made,
+        )
+    }
 
     method struct-base($/) {
-        <tok-dotdot> <expression>
+        make StructBase.new(
+            expression => $<expression>.made,
+        )
     }
 }

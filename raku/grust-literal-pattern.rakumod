@@ -41,17 +41,25 @@ our role LiteralPattern::Actions {
     method literal-pattern:sym<byte-str>($/)     { make $<byte-string-literal>.made }
     method literal-pattern:sym<raw-byte-str>($/) { make $<raw-byte-string-literal>.made }
 
-    method literal-pattern:sym<int>($/) { 
+    method integer-literal-pattern($/) { 
         make NumericLiteral.new(
             minus => so $/<tok-minus>:exists,
             value => $<integer-literal>.made,
         )
     }
 
-    method literal-pattern:sym<float>($/) { 
+    method float-literal-pattern($/) { 
         make NumericLiteral.new(
             minus => so $/<tok-minus>:exists,
             value => $<float-literal>.made,
         )
+    }
+
+    method literal-pattern:sym<int>($/) { 
+        make $<integer-literal-pattern>.made
+    }
+
+    method literal-pattern:sym<float>($/) { 
+        make $<float-literal-pattern>.made
     }
 }

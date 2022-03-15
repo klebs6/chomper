@@ -39,19 +39,14 @@ our role SimplePath::Rules {
 our role SimplePath::Actions {
 
     method simple-path($/) {
-        <tok-path-sep>?
-        [
-            <simple-path-segment>
-            [
-                <tok-path-sep>
-                <simple-path-segment>
-            ]*
-        ]
+        make SimplePath.new(
+            simple-path-segments => $<simple-path-segment>.made,
+        )
     }
 
-    method simple-path-segment:sym<ident>($/)   { <identifier> }
-    method simple-path-segment:sym<super>($/)   { <kw-super> }
-    method simple-path-segment:sym<self>($/)    { <kw-selfvalue> }
-    method simple-path-segment:sym<crate>($/)   { <kw-crate> }
-    method simple-path-segment:sym<$-crate>($/) { <dollar-crate> }
+    method simple-path-segment:sym<ident>($/)   { make $<identifier>.made }
+    method simple-path-segment:sym<super>($/)   { make $<kw-super>.made }
+    method simple-path-segment:sym<self>($/)    { make $<kw-selfvalue>.made }
+    method simple-path-segment:sym<crate>($/)   { make $<kw-crate>.made }
+    method simple-path-segment:sym<$-crate>($/) { make $<dollar-crate>.made }
 }

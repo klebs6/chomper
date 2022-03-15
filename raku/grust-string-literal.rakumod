@@ -57,8 +57,8 @@ our role StringLiteral::Rules {
 our role StringLiteral::Actions {
 
     method string-literal($/) {
-        <tok-double-quote>
-        <string-literal-inner>*
-        <tok-double-quote>
+        make StringLiteral.new(
+            value => $/.Str
+        )
     }
 }

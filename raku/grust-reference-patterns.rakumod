@@ -38,11 +38,32 @@ our role ReferencePattern::Rules {
 
     proto rule reference-pattern { * }
 
-    rule reference-pattern:sym<ref>    { <tok-and> <kw-mut>? <pattern-without-range> }
-    rule reference-pattern:sym<refref> { <tok-andand> <kw-mut>? <pattern-without-range> }
+    rule reference-pattern:sym<ref> { 
+        <tok-and> 
+        <kw-mut>? 
+        <pattern-without-range> 
+    }
+
+    rule reference-pattern:sym<refref> { 
+        <tok-andand> 
+        <kw-mut>? 
+        <pattern-without-range> 
+    }
 }
 
 our role ReferencePattern::Actions {
-    method reference-pattern:sym<ref>($/)    { <tok-and> <kw-mut>? <pattern-without-range> }
-    method reference-pattern:sym<refref>($/) { <tok-andand> <kw-mut>? <pattern-without-range> }
+
+    method reference-pattern:sym<ref>($/)    { 
+        make ReferencePatternRef.new(
+            mutable               => so $/<kw-mut>:exists,
+            pattern-without-range => $<pattern-without-range>.made
+        )
+    }
+
+    method reference-pattern:sym<refref>($/) { 
+        make ReferencePatternRefRef.new(
+            mutable               => so $/<kw-mut>:exists,
+            pattern-without-range => $<pattern-without-range>.made
+        )
+    }
 }
