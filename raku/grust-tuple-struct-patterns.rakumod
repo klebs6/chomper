@@ -171,46 +171,46 @@ our role TupleStructPattern::Rules {
 our role TupleStructPattern::Actions {
 
     method tuple-struct-pattern($/) {
-        <path-in-expression> 
-        <tok-lparen> 
-        <tuple-struct-items>? 
-        <tok-rparen>
+        make TupleStructPattern.new(
+            path-in-expression       => $<path-in-expression>.made,
+            maybe-tuple-struct-items => $<tuple-struct-items>.made,
+        )
     }
 
     method tuple-struct-items($/) {
-        <pattern>+ %% <tok-comma>
+        make $<pattern>>>.made
     }
 
     method tuple-pattern($/) {
-        <tok-lparen> 
-        <tuple-pattern-items>? 
-        <tok-rparen>
+        make TupleStructItems.new(
+            patterns => $<tuple-pattern-items>.made,
+        )
     }
 
     method tuple-pattern-items:sym<rest-pat>($/) {
-        <rest-pattern>
+        make $<rest-pattern>.made
     }
 
     method tuple-pattern-items:sym<pat>($/) {
-        <pattern>+ %% <tok-comma>
+        make $<pattern>>>.made
     }
 
     method grouped-pattern($/) {
-        <tok-lparen>
-        <pattern>
-        <tok-rparen>
+        make GroupedPattern.new(
+            pattern => $<pattern>.made,
+        )
     }
 
     method slice-pattern($/) {
-        <tok-lbrack>
-        <slice-pattern-items>?
-        <tok-rbrack>
+        make SlicePattern.new(
+            maybe-slice-pattern-items => $<slice-pattern-items>.made
+        )
     }
 
     method slice-pattern-items($/) {
-        <pattern>+ %% <tok-comma>
+        make $<pattern>>>.made
     }
 
-    method path-pattern:sym<a>($/) { <path-in-expression> }
-    method path-pattern:sym<b>($/) { <qualified-path-in-expression> }
+    method path-pattern:sym<a>($/) { make $<path-in-expression>.made }
+    method path-pattern:sym<b>($/) { make $<qualified-path-in-expression>.made }
 }
