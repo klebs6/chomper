@@ -1,19 +1,3 @@
-our class InferredType { 
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
 our class ParenthesizedType {
     has $.type;
 
@@ -31,21 +15,8 @@ our class ParenthesizedType {
     }
 }
 
-our class NeverType {
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
+our class InferredType { }
+our class NeverType    { }
 
 our class TupleType {
     has @.types;
@@ -208,65 +179,67 @@ our role Type::Rules {
 
 our role Type::Actions {
 
-    method inferred-type($/) { <tok-underscore> }
+    method inferred-type($/) { make InferredType.new }
 
-    method type:sym<no-bounds>($/)    { <type-no-bounds> }
-    method type:sym<impl-trait>($/)   { <impl-trait-type> }
-    method type:sym<trait-object>($/) { <trait-object-type> }
-
-    method type-no-bounds:sym<bare-fn>($/)        { <bare-function-type> }
-    method type-no-bounds:sym<raw-ptr>($/)        { <raw-pointer-type> }
-    method type-no-bounds:sym<parens>($/)         { <parenthesized-type> }
-    method type-no-bounds:sym<tuple>($/)          { <tuple-type> }
-    method type-no-bounds:sym<impl-trait>($/)     { <impl-trait-type-one-bound> }
-    method type-no-bounds:sym<trait-obj>($/)      { <trait-object-type-one-bound> }
-    method type-no-bounds:sym<type-path>($/)      { <type-path> }
-    method type-no-bounds:sym<never>($/)          { <never-type> }
-    method type-no-bounds:sym<ref>($/)            { <reference-type> }
-    method type-no-bounds:sym<arr>($/)            { <array-type> }
-    method type-no-bounds:sym<slice>($/)          { <slice-type> }
-    method type-no-bounds:sym<inferred>($/)       { <inferred-type> }
-    method type-no-bounds:sym<qualified-path>($/) { <qualified-path-in-type> }
-    method type-no-bounds:sym<macro>($/)          { <macro-invocation> }
+    method type:sym<no-bounds>($/)                { make $<type-no-bounds>.made }
+    method type:sym<impl-trait>($/)               { make $<impl-trait-type>.made }
+    method type:sym<trait-object>($/)             { make $<trait-object-type>.made }
+    method type-no-bounds:sym<bare-fn>($/)        { make $<bare-function-type>.made }
+    method type-no-bounds:sym<raw-ptr>($/)        { make $<raw-pointer-type>.made }
+    method type-no-bounds:sym<parens>($/)         { make $<parenthesized-type>.made }
+    method type-no-bounds:sym<tuple>($/)          { make $<tuple-type>.made }
+    method type-no-bounds:sym<impl-trait>($/)     { make $<impl-trait-type-one-bound>.made }
+    method type-no-bounds:sym<trait-obj>($/)      { make $<trait-object-type-one-bound>.made }
+    method type-no-bounds:sym<type-path>($/)      { make $<type-path>.made }
+    method type-no-bounds:sym<never>($/)          { make $<never-type>.made }
+    method type-no-bounds:sym<ref>($/)            { make $<reference-type>.made }
+    method type-no-bounds:sym<arr>($/)            { make $<array-type>.made }
+    method type-no-bounds:sym<slice>($/)          { make $<slice-type>.made }
+    method type-no-bounds:sym<inferred>($/)       { make $<inferred-type>.made }
+    method type-no-bounds:sym<qualified-path>($/) { make $<qualified-path-in-type>.made }
+    method type-no-bounds:sym<macro>($/)          { make $<macro-invocation>.made }
 
     method parenthesized-type($/) {
-        <tok-lparen> <type> <tok-rparen>
+        make ParenthesizedType.new(
+            type => $<type>.made
+        )
     }
 
     method never-type($/) { 
-        <tok-bang> 
+        make NeverType.new
     }
 
     method tuple-type($/) {
-        <tok-lparen>
-        [[<.ws> <type>]+ %% <tok-comma>]
-        <tok-rparen>
+        make TupleType.new(
+            types => $<type>>>.made,
+        )
     }
 
     method array-type($/) {
-        <tok-lbrack>
-        <type>
-        <tok-semi>
-        <expression>
-        <tok-rbrack>
+        make ArrayType.new(
+            type       => $<type>.made,
+            expression => $<expression>.made,
+        )
     }
 
     method slice-type($/) {
-        <tok-lbrack>
-        <type>
-        <tok-rbrack>
+        make SliceType.new(
+            type => $<type>.made,
+        )
     }
 
     method reference-type($/) {
-        <tok-and>
-        <lifetime>?
-        <kw-mut>?
-        <type-no-bounds>
+        make ReferenceType.new(
+            maybe-lifetime => $<lifetime>.made,
+            mutable        => so $/<kw-mut>:exists,
+            type-no-bounds => $<type-no-bounds>.made
+        )
     }
 
     method raw-pointer-type($/) {
-        <tok-star>
-        [ <kw-mut> | <kw-const> ]
-        <type-no-bounds>
+        make RawPtrType.new(
+            mutable        => so $/<kw-mut>:exists,
+            type-no-bounds => $<type-no-bounds>.made
+        )
     }
 }

@@ -143,35 +143,41 @@ our role TypePath::Rules {
 our role TypePath::Actions {
 
     method type-path($/) {
-        <tok-path-sep>?
-        [ <type-path-segment>+ %% <tok-path-sep> ]
+        make TypePath.new(
+            type-path-segments => $<type-path-segment>>>.made
+        )
     }
 
     method type-path-segment($/) { 
-        <path-ident-segment> 
-        [
-            <tok-path-sep>?
-            <type-path-segment-suffix>
-        ]?
+        make TypePathSegment.new(
+            path-ident-segment             => $<path-ident-segment>.made,
+            maybe-type-path-segment-suffix => $<type-path-segment-suffix>.made,
+        )
     }
 
     #----------------------
     method type-path-segment-suffix:sym<generic>($/) {  
-        <generic-args>
+        make TypePathSegmentSuffixGeneric.new(
+            generic-args => $<generic-args>.made,
+        )
     }
 
     method type-path-segment-suffix:sym<type-path-fn>($/) {  
-        <type-path-fn>
+        make TypePathSegmentSuffixTypePathFn.new(
+            type-path-fn => $<type-path-fn>.made,
+        )
     }
 
     method type-path-fn($/) {
-        <tok-lparen> 
-        <type-path-fn-inputs>? 
-        <tok-rparen> 
-        [ <tok-rarrow> <type> ]?
+        make TypePathFn.new(
+            maybe-type-path-fn-inputs => $<type-path-fn-inputs>.made,
+            maybe-type                => $<type>.made,
+        )
     }
 
     method type-path-fn-inputs($/) {
-        <type>+ %% <tok-comma>
+        make TypePathFnInputs.new(
+            types => $<type>>>.made
+        )
     }
 }
