@@ -15,6 +15,10 @@ our class RustToken {
     }
 }
 
+our class UnicodeEscape {
+    has $.value;
+}
+
 our role Tokens::Rules 
 {
     proto token rust-keyword { * }
@@ -56,36 +60,22 @@ our role Tokens::Rules
 
 our role Tokens::Actions {
 
-    method rust-keyword:sym<strict>($/)         { <strict-keyword> }
-    method rust-keyword:sym<weak>($/)           { <weak-keyword> }
-    method rust-keyword:sym<reserved>($/)       { <reserved-keyword> }
-
-    method rust-token-no-delim:sym<id>($/)      { <identifier> }
-    method rust-token-no-delim:sym<keyword>($/) { <rust-keyword> }
-    method rust-token-no-delim:sym<lit>($/)     { <literal-expression> }
-    method rust-token-no-delim:sym<lt>($/)      { <lifetime-token> }
-    method rust-token-no-delim:sym<punc>($/)    { <punctuation> }
-
-    method rust-token:sym<no-delim>($/)         { <rust-token-no-delim> }
-    method rust-token:sym<delim>($/)            { <delimiter> }
-
-    method token-except-dollar-and-delimiters($/) {
-        (<rust-token-no-delim>) <?{$0 !~~ /\$/}>
-    }
-
-    method token-except-delimiters-and-repetition-operators($/) {
-        (<rust-token-no-delim>) <?{$0 !~~ /<[\$ \*]>/}>
-    }
+    method rust-keyword:sym<strict>($/)                         { make $<strict-keyword>.made }
+    method rust-keyword:sym<weak>($/)                           { make $<weak-keyword>.made }
+    method rust-keyword:sym<reserved>($/)                       { make $<reserved-keyword>.made }
+    method rust-token-no-delim:sym<id>($/)                      { make $<identifier>.made }
+    method rust-token-no-delim:sym<keyword>($/)                 { make $<rust-keyword>.made }
+    method rust-token-no-delim:sym<lit>($/)                     { make $<literal-expression>.made }
+    method rust-token-no-delim:sym<lt>($/)                      { make $<lifetime-token>.made }
+    method rust-token-no-delim:sym<punc>($/)                    { make $<punctuation>.made }
+    method rust-token:sym<no-delim>($/)                         { make $<rust-token-no-delim>.made }
+    method rust-token:sym<delim>($/)                            { make $<delimiter>.made }
+    method token-except-dollar-and-delimiters($/)               { make $<rust-token-no-delim>.made }
+    method token-except-delimiters-and-repetition-operators($/) { make $<rust-token-no-delim>.made }
     
-    method quote-escape($/) {
-        | \\\'
-        | \\\"
-    }
-
     method unicode-escape($/) {
-        \\u 
-        <tok-lbrace> 
-        [[ <hex-digit> _* ] ** 1..6] 
-        <tok-rbrace> 
+        make UnicodeEscape.new(
+            value => $/.Str
+        )
     }
 }

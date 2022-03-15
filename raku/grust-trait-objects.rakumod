@@ -50,12 +50,16 @@ our role TraitObjectType::Rules {
 our role TraitObjectType::Actions {
 
     method trait-object-type($/) {
-        <kw-dyn>? 
-        <type-param-bounds>
+        make TraitObjectType.new(
+            dyn               => so $/<kw-dyn>:exists,
+            type-param-bounds => $<type-param-bounds>.made,
+        )
     }
 
     method trait-object-type-one-bound($/) {
-        <kw-dyn>?
-        <trait-bound>
+        make TraitObjectTypeOneBound.new(
+            dyn         => so $/<kw-dyn>:exists,
+            trait-bound => $<trait-bound>.made,
+        )
     }
 }
