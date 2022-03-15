@@ -35,12 +35,12 @@ our role TypeAlias::Rules {
 our role TypeAlias::Actions {
 
     method type-alias($/) {
-        <kw-type>
-        <identifier>
-        <generic-params>?
-        [ <tok-colon> <type-param-bounds> ]?
-        <where-clause>?
-        [ <tok-eq> <type>]?
-        <tok-semi>
+        make TypeAlias.new(
+            identifier              => $<identifier>.made,
+            maybe-generic-params    => $<generic-params>.made,
+            maybe-type-param-bounds => $<type-param-bounds>.made,
+            maybe-where-clause      => $<where-clause>.made,
+            maybe-eq-type           => $<type>.made,
+        )
     }
 }
