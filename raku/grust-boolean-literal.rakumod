@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class BooleanLiteral {
     has Bool $.value;
 
@@ -23,6 +25,16 @@ our role BooleanLiteral::Rules {
 }
 
 our role BooleanLiteral::Actions {
-    method boolean-literal:sym<t>($/) { make BooleanLiteral.new(value => True) }
-    method boolean-literal:sym<f>($/) { make BooleanLiteral.new(value => False) }
+
+    method boolean-literal:sym<t>($/) { 
+        make BooleanLiteral.new(
+            value => True
+        )
+    }
+
+    method boolean-literal:sym<f>($/) { 
+        make BooleanLiteral.new(
+            value => False
+        )
+    }
 }

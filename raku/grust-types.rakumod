@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ParenthesizedType {
     has $.type;
 
@@ -201,8 +203,8 @@ our role Type::Actions {
 
     method parenthesized-type($/) {
         make ParenthesizedType.new(
-            type => $<type>.made
-            text       => $/.Str,
+            type => $<type>.made,
+            text => $/.Str,
         )
     }
 
@@ -213,7 +215,7 @@ our role Type::Actions {
     method tuple-type($/) {
         make TupleType.new(
             types => $<type>>>.made,
-            text       => $/.Str,
+            text  => $/.Str,
         )
     }
 
@@ -228,7 +230,7 @@ our role Type::Actions {
     method slice-type($/) {
         make SliceType.new(
             type => $<type>.made,
-            text       => $/.Str,
+            text => $/.Str,
         )
     }
 
@@ -236,16 +238,16 @@ our role Type::Actions {
         make ReferenceType.new(
             maybe-lifetime => $<lifetime>.made,
             mutable        => so $/<kw-mut>:exists,
-            type-no-bounds => $<type-no-bounds>.made
-            text       => $/.Str,
+            type-no-bounds => $<type-no-bounds>.made,
+            text           => $/.Str,
         )
     }
 
     method raw-pointer-type($/) {
         make RawPtrType.new(
             mutable        => so $/<kw-mut>:exists,
-            type-no-bounds => $<type-no-bounds>.made
-            text       => $/.Str,
+            type-no-bounds => $<type-no-bounds>.made,
+            text           => $/.Str,
         )
     }
 }

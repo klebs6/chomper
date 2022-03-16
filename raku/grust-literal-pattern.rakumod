@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class NumericLiteral {
     has Bool $.minus;
     has $.value;
@@ -45,7 +47,7 @@ our role LiteralPattern::Actions {
         make NumericLiteral.new(
             minus => so $/<tok-minus>:exists,
             value => $<integer-literal>.made,
-            text       => $/.Str,
+            text  => $/.Str,
         )
     }
 
@@ -53,7 +55,7 @@ our role LiteralPattern::Actions {
         make NumericLiteral.new(
             minus => so $/<tok-minus>:exists,
             value => $<float-literal>.made,
-            text       => $/.Str,
+            text  => $/.Str,
         )
     }
 

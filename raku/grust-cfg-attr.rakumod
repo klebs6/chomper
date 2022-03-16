@@ -1,5 +1,7 @@
+use Data::Dump::Tree;
+
 our class CfgAttribute {
-    has $.configuration-predicate
+    has $.configuration-predicate;
 
     has $.text;
 
@@ -16,8 +18,8 @@ our class CfgAttribute {
 }
 
 our class CfgAttrAttribute {
-    has $.configuration-predicate
-    has $.maybe-cfg-attrs
+    has $.configuration-predicate;
+    has $.maybe-cfg-attrs;
 
     has $.text;
 
@@ -184,8 +186,8 @@ our role CfgAttr::Actions {
 
     method cfg-attr-attribute:sym<cfg>($/) {
         make CfgAttribute.new(
-            configuration-predicate => $<configuration-predicate>.made
-            text => $/.Str,
+            configuration-predicate => $<configuration-predicate>.made,
+            text                    => $/.Str,
         )
     }
 
@@ -193,7 +195,7 @@ our role CfgAttr::Actions {
         make CfgAttrAttribute.new(
             configuration-predicate => $<configuration-predicate>.made,
             maybe-cfg-attrs         => $<cfg-attrs>.made,
-            text => $/.Str,
+            text                    => $/.Str,
         )
     }
 
@@ -219,7 +221,7 @@ our role CfgAttr::Actions {
         make Attr.new(
             simple-path => $<simple-path>.made,
             attr-input  => $<attr-input>.made,
-            text => $/.Str,
+            text        => $/.Str,
         )
     }
 
@@ -231,7 +233,7 @@ our role CfgAttr::Actions {
     method attr-input:sym<eq-expr>($/) {
         make AttrInputEqExpr.new(
             expression => $<expression>.made,
-            text => $/.Str,
+            text       => $/.Str,
         )
     }
 }

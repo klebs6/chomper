@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class MetaItemSimple {
     has $.simple-path;
 
@@ -206,23 +208,22 @@ our role MetaItem::Rules {
         [ <meta-name-value-str>* %% <tok-comma> ]
         <tok-rparen>
     }
-
 }
 
 our role MetaItem::Actions {
 
     method meta-item:sym<simple>($/) {  
         make MetaItemSimple.new(
-            simple-path => $<simple-path>.made
-            text       => $/.Str,
+            simple-path => $<simple-path>.made,
+            text        => $/.Str,
         )
     }
 
     method meta-item:sym<simple-eq-expr>($/) {  
         make MetaItemSimpleEqExpr.new(
             simple-path => $<simple-path>.made,
-            expression => $<expression>.made,
-            text       => $/.Str,
+            expression  => $<expression>.made,
+            text        => $/.Str,
         )
     }
 
@@ -230,7 +231,7 @@ our role MetaItem::Actions {
         make MetaItemSimpleWithMetaSeq.new(
             simple-path => $<simple-path>.made,
             meta-seq    => $<meta-seq>.made,
-            text       => $/.Str,
+            text        => $/.Str,
         )
     }
 
@@ -256,7 +257,7 @@ our role MetaItem::Actions {
         make MetaNameValueStr.new(
             identifier         => $<identifier>.made,
             any-string-literal => $<any-string-literal>.made,
-            text       => $/.Str,
+            text               => $/.Str,
         )
     }
 
@@ -264,7 +265,7 @@ our role MetaItem::Actions {
         make MetaListPaths.new(
             identifier   => $<identifier>.made,
             simple-paths => $<simple-path>>>.made,
-            text       => $/.Str,
+            text         => $/.Str,
         )
     }
 
@@ -276,7 +277,7 @@ our role MetaItem::Actions {
         make MetaListIdents.new(
             identifier          => $<identifier>.made,
             grouped-identifiers => $<ident-list>.made,
-            text       => $/.Str,
+            text                => $/.Str,
         )
     }
 
@@ -284,7 +285,7 @@ our role MetaItem::Actions {
         make MetaListNameValueStr.new(
             identifier                  => $<identifier>.made,
             grouped-meta-name-value-str => $<meta-name-value-str>>>.made,
-            text       => $/.Str,
+            text                        => $/.Str,
         )
     }
 }

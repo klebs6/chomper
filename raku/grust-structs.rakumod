@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class Struct {
     has $.identifier;
     has $.maybe-generic-params;
@@ -143,7 +145,7 @@ our role Struct::Actions {
             maybe-generic-params => $<generic-params>.made,
             maybe-where-clause   => $<where-clause>.made,
             maybe-struct-fields  => $<struct-fields>.made,
-            text       => $/.Str,
+            text                 => $/.Str,
         )
     }
 
@@ -153,7 +155,7 @@ our role Struct::Actions {
             maybe-generic-params => $<generic-params>.made,
             maybe-tuple-fields   => $<tuple-fields>.made,
             maybe-where-clause   => $<where-clause>.made,
-            text       => $/.Str,
+            text                 => $/.Str,
         )
     }
 
@@ -168,7 +170,7 @@ our role Struct::Actions {
             maybe-visibility => $<visibility>.made,
             identifier       => $<identifier>.made,
             type             => $<type>.made,
-            text       => $/.Str,
+            text             => $/.Str,
         )
     }
 
@@ -182,7 +184,7 @@ our role Struct::Actions {
             outer-attributes => $<outer-attribute>>>.made,
             maybe-visibility => $<visibility>.made,
             type             => $<type>.made,
-            text       => $/.Str,
+            text             => $/.Str,
         )
     }
 }

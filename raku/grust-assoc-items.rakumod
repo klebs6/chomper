@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class AssociatedItem {
     has $.maybe-comment;
     has @.outer-attributes;
@@ -35,7 +37,7 @@ our class AssociatedItemMacro {
 }
 
 our class AssociatedItemTypeAlias {
-    has $.maybe-visibility
+    has $.maybe-visibility;
     has $.type-alias;
 
     has $.text;
@@ -53,7 +55,7 @@ our class AssociatedItemTypeAlias {
 }
 
 our class AssociatedItemConstantItem {
-    has $.maybe-visibility
+    has $.maybe-visibility;
     has $.constant-item;
 
     has $.text;
@@ -71,7 +73,7 @@ our class AssociatedItemConstantItem {
 }
 
 our class AssociatedItemFunction {
-    has $.maybe-visibility
+    has $.maybe-visibility;
     has $.function;
 
     has $.text;
@@ -115,15 +117,15 @@ our role AssociatedItem::Actions {
             maybe-comment    => $<comment>.made,
             outer-attributes => $<outer-attributes>>.made,
             variant          => $<associated-item-variant>.made,
-            text => $/.Str,
+            text             => $/.Str,
         )
     }
 
     #---------------------
     method associated-item-variant:sym<macro>($/) {
         make AssociatedItemMacro.new(
-            macro-invocation => $<macro-invocation>.made
-            text => $/.Str,
+            macro-invocation => $<macro-invocation>.made,
+            text             => $/.Str,
         )
     }
 
@@ -131,7 +133,7 @@ our role AssociatedItem::Actions {
         make AssociatedItemTypeAlias.new(
             maybe-visibility => $<visibility>.made,
             type-alias       => $<type-alias>.made,
-            text => $/.Str,
+            text             => $/.Str,
         )
     }
 
@@ -139,7 +141,7 @@ our role AssociatedItem::Actions {
         make AssociatedItemConstantItem.new(
             maybe-visibility => $<visibility>.made,
             constant-item    => $<constant-item>.made,
-            text => $/.Str,
+            text             => $/.Str,
         )
     }
 
@@ -147,7 +149,7 @@ our role AssociatedItem::Actions {
         make AssociatedItemConstantItem.new(
             maybe-visibility => $<visibility>.made,
             function         => $<function>.made,
-            text => $/.Str,
+            text             => $/.Str,
         )
     }
 }

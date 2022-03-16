@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our role Xid::Rules {
 
     token xid-start {

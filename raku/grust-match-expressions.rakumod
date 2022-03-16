@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class MatchExpression {
     has $.scrutinee;
     has @.inner-attributes;
@@ -220,14 +222,14 @@ our role MatchExpression::Actions {
             scrutinee        => $<scrutinee>.made,
             inner-attributes => $<inner-attribute>>>.made,
             maybe-match-arms => $<match-arms>.made,
-            text       => $/.Str,
+            text             => $/.Str,
         )
     }
 
     method scrutinee($/) {
         make Scrutinee.new(
             expression-nostruct => $<expression-nostruct>.made,
-            text       => $/.Str,
+            text                => $/.Str,
         )
     }
 
@@ -252,7 +254,7 @@ our role MatchExpression::Actions {
             maybe-comment         => $<comment>.made,
             match-arm             => $<match-arm>.made,
             expression-with-block => $<expression-with-block>.made,
-            text       => $/.Str,
+            text                  => $/.Str,
         )
     }
 
@@ -261,7 +263,7 @@ our role MatchExpression::Actions {
             maybe-comment      => $<comment>.made,
             match-arm          => $<match-arm>.made,
             expresison-noblock => $<expression-noblock>.made,
-            text       => $/.Str,
+            text               => $/.Str,
         )
     }
 
@@ -273,7 +275,7 @@ our role MatchExpression::Actions {
             maybe-comment => $<comment>.made,
             match-arm     => $<match-arm>.made,
             expression    => $<expression-variant>.made,
-            text       => $/.Str,
+            text          => $/.Str,
         )
     }
 
@@ -282,7 +284,7 @@ our role MatchExpression::Actions {
             outer-attributes      => $<outer-attribute>>>.made,
             pattern               => $<pattern>.made,
             maybe-match-arm-guard => $<match-arm-guard>.made,
-            text       => $/.Str,
+            text                  => $/.Str,
         )
     }
 

@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class TypeParamBoundLifetime {
     has $.lifetime;
 
@@ -154,7 +156,7 @@ our role GenericArgs::Actions {
             qmark               => so $/<tok-qmark>:exists,
             maybe-for-lifetimes => $<for-lifetimes>.made,
             type-path           => $<type-path>.made,
-            text       => $/.Str,
+            text                => $/.Str,
         )
     }
 
@@ -163,7 +165,7 @@ our role GenericArgs::Actions {
             qmark               => so $/<tok-qmark>:exists,
             maybe-for-lifetimes => $<for-lifetimes>.made,
             type-path           => $<type-path>.made,
-            text       => $/.Str,
+            text                => $/.Str,
         )
     }
 
@@ -183,15 +185,15 @@ our role GenericArgs::Actions {
 
     method minus-literal-expression($/) {
         make MinusLiteralExpression.new(
-            literal-expression => $<literal-expression>.made
-            text       => $/.Str,
+            literal-expression => $<literal-expression>.made,
+            text               => $/.Str,
         )
     }
 
     method generic-args-binding($/) {
         make GenericArgsBinding.new(
             identifier => $<identifier>.made,
-            type       => $<type>.made
+            type       => $<type>.made,
             text       => $/.Str,
         )
     }

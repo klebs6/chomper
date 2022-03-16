@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ReferencePatternRef {
     has Bool $.mutable;
     has $.pattern-without-range;
@@ -56,16 +58,16 @@ our role ReferencePattern::Actions {
     method reference-pattern:sym<ref>($/)    { 
         make ReferencePatternRef.new(
             mutable               => so $/<kw-mut>:exists,
-            pattern-without-range => $<pattern-without-range>.made
-            text       => $/.Str,
+            pattern-without-range => $<pattern-without-range>.made,
+            text                  => $/.Str,
         )
     }
 
     method reference-pattern:sym<refref>($/) { 
         make ReferencePatternRefRef.new(
             mutable               => so $/<kw-mut>:exists,
-            pattern-without-range => $<pattern-without-range>.made
-            text       => $/.Str,
+            pattern-without-range => $<pattern-without-range>.made,
+            text                  => $/.Str,
         )
     }
 }

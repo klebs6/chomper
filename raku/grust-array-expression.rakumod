@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ArrayExpression {
     has $.maybe-array-elements;
 
@@ -73,21 +75,21 @@ our role ArrayExpression::Actions {
         make ArrayElementsItemQuantity.new(
             expression => $<expression>>>.made[0],
             quantifier => $<expression>>>.made[1],
-            text => $/.Str,
+            text       => $/.Str,
         )
     }
 
     method array-elements:sym<commas>($/) {
         make ArrayElementsList.new(
             expressions => $<expression>>>.made,
-            text => $/.Str,
+            text        => $/.Str,
         )
     }
 
     method array-expression($/) {
         make ArrayExpression.new(
             maybe-array-elements => $<array-elements>.made,
-            text => $/.Str,
+            text                 => $/.Str,
         )
     }
 }

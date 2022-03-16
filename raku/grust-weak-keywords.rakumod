@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 #`( These keywords have special meaning only in
 certain contexts. For example, it is possible to
 declare a variable or method with the name union.)

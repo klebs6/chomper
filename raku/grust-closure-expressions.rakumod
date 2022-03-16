@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ClosureExpression {
     has Bool $.move;
     has $.maybe-parameters;
@@ -109,7 +111,7 @@ our role ClosureExpression::Actions {
             move             => so $/<kw-move>:exists,
             maybe-parameters => $<closure-expression-opener>.made,
             body             => $<closure-body>.made,
-            text => $/.Str,
+            text             => $/.Str,
         )
     }
 
@@ -125,7 +127,7 @@ our role ClosureExpression::Actions {
         make ClosureBodyWithReturnTypeAndBlock.new(
             return-type      => $<type-no-bounds>.made,
             block-expression => $<block-expression>.made,
-            text => $/.Str,
+            text             => $/.Str,
         )
     }
 
@@ -140,7 +142,7 @@ our role ClosureExpression::Actions {
             outer-attributes => $<outer-attribute>>>.made,
             pattern          => $<pattern-no-top-alt>.made,
             maybe-type       => $<type>.made,
-            text => $/.Str,
+            text             => $/.Str,
         )
     }
 }

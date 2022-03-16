@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our role Punctuation::Rules {
 
     #`(Addition, Trait Bounds, Macro Kleene

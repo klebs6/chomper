@@ -1,17 +1,12 @@
+use Data::Dump::Tree;
+
 our class PathInExpression {
     has @.path-expr-segments;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.path-expr-segments>>.gist.join("::")
     }
 }
 
@@ -21,15 +16,17 @@ our class PathExprSegment {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        if $.maybe-generic-args {
+
+            $.path-ident-segment.gist 
+            ~ "::" 
+            ~ $.maybe-generic-args.gist
+
+        } else {
+            $.path-ident-segment.gist 
+        }
     }
 }
 
@@ -165,8 +162,8 @@ our role PathExpression::Actions {
 
     method path-in-expression($/) {
         make PathInExpression.new(
-            path-expr-segments => $<path-expr-segment>>>.made
-            text       => $/.Str,
+            path-expr-segments => $<path-expr-segment>>>.made,
+            text               => $/.Str,
         )
     }
 
@@ -174,7 +171,7 @@ our role PathExpression::Actions {
         make PathExprSegment.new(
             path-ident-segment => $<path-ident-segment>.made,
             maybe-generic-args => $<generic-args>.made,
-            text       => $/.Str,
+            text               => $/.Str,
         )
     }
 
@@ -193,7 +190,7 @@ our role PathExpression::Actions {
         make QualifiedPathInExpression.new(
             qualified-path-type => $<qualified-path-type>.made,
             path-expr-segments  => $<path-expr-segment>>>.made,
-            text       => $/.Str,
+            text                => $/.Str,
         )
     }
 
@@ -201,15 +198,15 @@ our role PathExpression::Actions {
         make QualifiedPathType.new(
             type               => $<type>.made,
             maybe-as-type-path => $<type-path>.made,
-            text       => $/.Str,
+            text               => $/.Str,
         )
     }
 
     method qualified-path-in-type($/) {
         make QualifiedPathInType.new(
             qualified-path-type => $<qualified-path-type>.made,
-            type-path-segments => $<type-path-segment>>>.made
-            text       => $/.Str,
+            type-path-segments  => $<type-path-segment>>>.made,
+            text                => $/.Str,
         )
     }
 }

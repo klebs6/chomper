@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class RangePatternInclusive {
     has $.range-pattern-bound-begin;
     has $.range-pattern-bound-end;
@@ -88,23 +90,23 @@ our role RangePattern::Actions {
     method range-pattern:sym<inclusive>($/) { 
         make RangePatternInclusive.new(
             range-pattern-bound-begin => $<range-pattern-bound>>>.made[0],
-            range-pattern-bound-end => $<range-pattern-bound>>>.made[1],
-            text       => $/.Str,
+            range-pattern-bound-end   => $<range-pattern-bound>>>.made[1],
+            text                      => $/.Str,
         )
     }
 
     method range-pattern:sym<half-open>($/) { 
         make RangePatternHalfOpen.new(
             range-pattern-bound-begin => $<range-pattern-bound>.made,
-            text       => $/.Str,
+            text                      => $/.Str,
         )
     }
 
     method range-pattern:sym<obsolete>($/)  { 
         make RangePatternObsolete.new(
             range-pattern-bound-begin => $<range-pattern-bound>>>.made[0],
-            range-pattern-bound-end => $<range-pattern-bound>>>.made[1],
-            text       => $/.Str,
+            range-pattern-bound-end   => $<range-pattern-bound>>>.made[1],
+            text                      => $/.Str,
         )
     }
 

@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 #`(
 These keywords can only be used in their correct
 contexts. They cannot be used as the names of:

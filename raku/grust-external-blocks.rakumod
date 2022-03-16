@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class ExternBlock {
     has Bool $.unsafe;
     has $.maybe-abi;
@@ -131,7 +133,7 @@ our role ExternBlock::Actions {
             maybe-abi        => $<abi>.made,
             inner-attributes => $<inner-attribute>>>.made,
             external-items   => $<external-item>>>.made,
-            text       => $/.Str,
+            text             => $/.Str,
         )
     }
 
@@ -139,14 +141,14 @@ our role ExternBlock::Actions {
         make ExternalItem.new(
             outer-attributes      => $<outer-attribute>>>.made,
             external-item-variant => $<external-item-variant>.made,
-            text       => $/.Str,
+            text                  => $/.Str,
         )
     }
 
     method external-item-variant:sym<macro>($/) {
         make ExternalItemMacroInvocation.new(
-            macro-invocation => $<macro-invocation>.made
-            text       => $/.Str,
+            macro-invocation => $<macro-invocation>.made,
+            text             => $/.Str,
         )
     }
 
@@ -154,7 +156,7 @@ our role ExternBlock::Actions {
         make ExternalItemFn.new(
             maybe-visibility => $<visibility>.made,
             function         => $<function>.made,
-            text       => $/.Str,
+            text             => $/.Str,
         )
     }
 
@@ -162,7 +164,7 @@ our role ExternBlock::Actions {
         make ExternalItemStatic.new(
             maybe-visibility => $<visibility>.made,
             static-item      => $<static-item>.made,
-            text       => $/.Str,
+            text             => $/.Str,
         )
     }
 }

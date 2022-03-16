@@ -50,6 +50,7 @@ use grust-tokens;
 use grust-trait-objects;
 use grust-traits;
 use grust-tuple-struct-patterns;
+use grust-tuple-expression;
 use grust-type-alias;
 use grust-type-path;
 use grust-types;

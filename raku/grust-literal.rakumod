@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our role LiteralExpression::Rules {
 
     proto token literal-expression { * }

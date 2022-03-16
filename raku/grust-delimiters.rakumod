@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our role Delimiters::Rules {
 
     token tok-lparen { '(' }

@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class Statements {
     has @.statements;
     has $.maybe-expression-noblock;
@@ -118,7 +120,7 @@ our role Statement::Actions {
         make Statements.new(
             statements               => $<statement>>>.made,
             maybe-expression-noblock => $<expression-noblock>.made,
-            text       => $/.Str,
+            text                     => $/.Str,
         )
     }
 
@@ -135,7 +137,7 @@ our role Statement::Actions {
             maybe-type         => $<type>.made,
             maybe-expression   => $<expression>.made,
             maybe-line-comment => $<line-comment>.made,
-            text       => $/.Str,
+            text               => $/.Str,
         )
     }
 
@@ -143,7 +145,7 @@ our role Statement::Actions {
         make ExpressionStatementNoBlock.new(
             maybe-comment      => $<comment>.made,
             expression-noblock => $<expression-noblock>.made,
-            text       => $/.Str,
+            text               => $/.Str,
         )
     }
 
@@ -151,7 +153,7 @@ our role Statement::Actions {
         make ExpressionStatementBlock.new(
             maybe-comment         => $<comment>.made,
             expression-with-block => $<expression-with-block>.made,
-            text       => $/.Str,
+            text                  => $/.Str,
         )
     }
 }

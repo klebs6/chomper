@@ -1,17 +1,12 @@
+use Data::Dump::Tree;
+
 our class SimplePath {
     has @.simple-path-segments;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.simple-path-segments>>.gist.join("::")
     }
 }
 
@@ -40,8 +35,8 @@ our role SimplePath::Actions {
 
     method simple-path($/) {
         make SimplePath.new(
-            simple-path-segments => $<simple-path-segment>.made,
-            text       => $/.Str,
+            simple-path-segments => $<simple-path-segment>>>.made,
+            text                 => $/.Str,
         )
     }
 

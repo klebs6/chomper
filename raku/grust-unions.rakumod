@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class Union {
     has $.identifier;
     has $.maybe-generic-params;
@@ -39,7 +41,7 @@ our role Union::Actions {
             maybe-generic-params => $<generic-params>.made,
             maybe-where-clause   => $<where-clause>.made,
             struct-fields        => $<struct-fields>.made,
-            text       => $/.Str,
+            text                 => $/.Str,
         )
     }
 }

@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class BareFunctionType {
     has $.maybe-for-lifetimes;
     has $.function-type-qualifiers;
@@ -131,7 +133,7 @@ our role BareFunctionType::Rules {
         <function-type-qualifiers>
         <kw-fn>
         <tok-lparen>
-        <function-parameters>?
+        <bare-function-parameters>?
         <tok-rparen>
         <bare-function-return-type>?
     }
@@ -152,13 +154,13 @@ our role BareFunctionType::Rules {
     }
 
     #-------------------
-    proto rule function-parameters { * }
+    proto rule bare-function-parameters { * }
 
-    rule function-parameters:sym<basic> {  
+    rule bare-function-parameters:sym<basic> {  
         <maybe-named-param>+ %% <tok-comma>
     }
 
-    rule function-parameters:sym<variadic> {  
+    rule bare-function-parameters:sym<variadic> {  
         [<maybe-named-param>+ % <tok-comma>]
         <outer-attribute>*
         <tok-dotdotdot>
@@ -180,39 +182,39 @@ our role BareFunctionType::Actions {
         make BareFunctionType.new(
             maybe-for-lifetimes        => $<for-lifetimes>.made,
             function-type-qualifiers   => $<function-type-qualifiers>.made,
-            maybe-function-parameters  => $<function-parameters>.made,
+            maybe-function-parameters  => $<bare-function-parameters>.made,
             maybe-function-return-type => $<bare-function-return-type>.made,
-            text       => $/.Str,
+            text                       => $/.Str,
         )
     }
 
     method function-extern-modifier($/) {
         make FunctionExternModifier.new(
             maybe-abi => $<abi>.made,
-            text       => $/.Str,
+            text      => $/.Str,
         )
     }
 
     method function-type-qualifiers($/) {
         make FunctionTypeQualifiers.new(
-            unsafe => so $/<kw-unsafe>:exists,
+            unsafe                         => so $/<kw-unsafe>:exists,
             maybe-function-extern-modifier => $<function-extern-modifier>.made,
-            text       => $/.Str,
+            text                           => $/.Str,
         )
     }
 
     method bare-function-return-type($/) {
         make BareFunctionReturnType.new(
             type-no-bounds => $<type-no-bounds>.made,
-            text       => $/.Str,
+            text           => $/.Str,
         )
     }
 
     #-------------------
     method function-parameters:sym<basic>($/) {  
         make FunctionParametersBasic.new(
-            maybe-named-params => $<maybe-named-param>>>.made
-            text       => $/.Str,
+            maybe-named-params => $<maybe-named-param>>>.made,
+            text               => $/.Str,
         )
     }
 
@@ -220,7 +222,7 @@ our role BareFunctionType::Actions {
         make FunctionParametersVariadic.new(
             maybe-named-params => $<maybe-named-param>>>.made,
             outer-attributes   => $<outer-attribute>>>.made,
-            text       => $/.Str,
+            text               => $/.Str,
         )
     }
 
@@ -229,7 +231,7 @@ our role BareFunctionType::Actions {
             outer-attributes               => $<outer-attribute>>>.made,
             maybe-identifier-or-underscore => $<identifier-or-underscore>.made,
             type                           => $<type>.made,
-            text       => $/.Str,
+            text                           => $/.Str,
         )
     }
 }

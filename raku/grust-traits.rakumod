@@ -166,7 +166,7 @@ our role Trait::Actions {
             inner-attributes        => $<inner-attribute>>>.made,
             associated-items        => $<associated-item>.made,
             maybe-comment           => $<comment>.made,
-            text       => $/.Str,
+            text                    => $/.Str,
         )
     }
 
@@ -181,12 +181,12 @@ our role Trait::Actions {
             inner-attributes     => $<inner-attribute>.made,
             associated-items     => $<associated-item>.made,
             maybe-comment        => $<comment>.made,
-            text       => $/.Str,
+            text                 => $/.Str,
         )
     }
 
     method trait-impl($/) {
-        our class TraitImpl {
+        make TraitImpl.new(
             unsafe               => $/<kw-unsafe>:exists,
             maybe-generic-params => $<generic-params>.made,
             bang                 => so $/<tok-bang>:exists,
@@ -196,8 +196,8 @@ our role Trait::Actions {
             inner-attributes     => $<inner-attribute>>>.made,
             associated-items     => $<associated-item>>>.made,
             maybe-comment        => $<comment>.made,
-            text       => $/.Str,
-        }
+            text                 => $/.Str,
+        )
     }
 
     method trait-alias($/) {
@@ -208,7 +208,7 @@ our role Trait::Actions {
             maybe-generic-params => $<generic-params>.made,
             type-param-bounds    => $<type-param-bounds>.made,
             maybe-where-clause   => $<where-clause>.made,
-            text       => $/.Str,
+            text                 => $/.Str,
         )
     }
 }

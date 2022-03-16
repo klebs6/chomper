@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 #`(
 These keywords aren't used yet, but they are
 reserved for future use. They have the same

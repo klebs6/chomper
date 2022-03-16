@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class MacroExpression {
     has $.simple-path;
     has $.delim-token-tree;
@@ -411,13 +413,13 @@ our role MacroInvocation::Actions {
         make MacroExpression.new(
             simple-path      => $<simple-path>.made,
             delim-token-tree => $<delim-token-tree>.made,
-            text       => $/.Str,
+            text             => $/.Str,
         )
     }
 
     method delim-token-tree($/) {
         make DelimTokenTree.new(
-            token-tree => $<token-tree>.made
+            token-tree => $<token-tree>.made,
             text       => $/.Str,
         )
     }
@@ -426,15 +428,15 @@ our role MacroInvocation::Actions {
 
     method token-tree:sym<leaf>($/) { 
         make TokenTreeLeaf.new(
-            rust-token-no-delim => $<rust-token-no-delim>.made
-            text       => $/.Str,
+            rust-token-no-delim => $<rust-token-no-delim>.made,
+            text                => $/.Str,
         )
     }
 
     method token-tree:sym<tree>($/) { 
         make TokenTree.new(
-            delim-token-tree => $<delim-token-tree>.made
-            text       => $/.Str,
+            delim-token-tree => $<delim-token-tree>.made,
+            text             => $/.Str,
         )
     }
 
@@ -443,7 +445,7 @@ our role MacroInvocation::Actions {
             maybe-comment => $<comment>.made,
             simple-path   => $<simple-path>.made,
             token-trees   => $<token-tree>>>.made,
-            text       => $/.Str,
+            text          => $/.Str,
         )
     }
 
@@ -451,14 +453,15 @@ our role MacroInvocation::Actions {
         make MacroRulesDefinition.new(
             identifier      => $<identifier>.made,
             macro-rules-def => $<macro-rules-def>.made,
-            text       => $/.Str,
-        }
+            text            => $/.Str,
+        )
+    }
 
     method macro-rules-def($/) {
         make MacroRulesDef.new(
             maybe-comment => $<comment>.made,
             macro-rules   => $<macro-rules>.made,
-            text       => $/.Str,
+            text          => $/.Str,
         )
     }
 
@@ -470,14 +473,14 @@ our role MacroInvocation::Actions {
         make MacroRule.new(
             macro-matcher     => $<macro-matcher>.made,
             macro-transcriber => $<macro-transcriber>.made,
-            text       => $/.Str,
+            text              => $/.Str,
         )
     }
 
     method macro-matcher($/) {
         make MacroMatcher.new(
             macro-matches => $<macro-match>>>.made,
-            text       => $/.Str,
+            text          => $/.Str,
         )
     }
 
@@ -485,14 +488,14 @@ our role MacroInvocation::Actions {
     method macro-match:sym<token>($/)   { 
         make MacroMatchToken.new(
             token => $<token-except-dollar-and-delimiters>.made,
-            text       => $/.Str,
+            text  => $/.Str,
         )
     }
 
     method macro-match:sym<matcher>($/) { 
         make MacroMatchMatcher.new(
             macro-matcher => $<macro-matcher>.made,
-            text       => $/.Str,
+            text          => $/.Str,
         )
     }
 
@@ -500,7 +503,7 @@ our role MacroInvocation::Actions {
         make MacroMatchSingle.new(
             identifier      => $<identifier>.made,
             macro-frag-spec => $<macro-frag-spec>.made,
-            text       => $/.Str,
+            text            => $/.Str,
         )
     }
 
@@ -509,7 +512,7 @@ our role MacroInvocation::Actions {
             macro-matches       => $<macro-match>>>.made,
             maybe-macro-rep-sep => $<macro-rep-sep>.made,
             macro-rep-op        => $<macro-rep-op>.made,
-            text       => $/.Str,
+            text                => $/.Str,
         )
     }
 
@@ -525,14 +528,14 @@ our role MacroInvocation::Actions {
     method macro-frag-spec:sym<pat_param>($/) { make MacroFragSpec::PatParam.new }
     method macro-frag-spec:sym<path>($/)      { make MacroFragSpec::Path.new }
     method macro-frag-spec:sym<stmt>($/)      { make MacroFragSpec::Stmt.new }
-    method macro-frag-spec:sym<tt>($/)        { make MacroFragSpec::Tt }.new
-    method macro-frag-spec:sym<ty>($/)        { make MacroFragSpec::Ty }.new
+    method macro-frag-spec:sym<tt>($/)        { make MacroFragSpec::Tt.new }
+    method macro-frag-spec:sym<ty>($/)        { make MacroFragSpec::Ty.new }
     method macro-frag-spec:sym<vis>($/)       { make MacroFragSpec::Vis.new }
 
     method macro-rep-sep($/) {
         make MacroRepSep.new(
             token => $<token-except-delimiters-and-repetition-operators>.made,
-            text       => $/.Str,
+            text  => $/.Str,
         )
     }
 
@@ -542,8 +545,8 @@ our role MacroInvocation::Actions {
 
     method macro-transcriber($/) {
         make MacroTranscriber.new(
-            delim-token-tree => $<delim-token-tree>.made
-            text       => $/.Str,
+            delim-token-tree => $<delim-token-tree>.made,
+            text             => $/.Str,
         )
     }
 }

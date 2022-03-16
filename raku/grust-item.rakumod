@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class CrateItem {
     has $.maybe-comment;
     has @.outer-attributes;
@@ -161,8 +163,8 @@ our role Item::Actions {
         make CrateItem.new(
             maybe-comment    => $<comment>.made,
             outer-attributes => $<outer-attribute>>>.made,
-            item-variant     => $<item-variant>.made
-            text       => $/.Str,
+            item-variant     => $<item-variant>.made,
+            text             => $/.Str,
         )
     }
 
@@ -173,7 +175,7 @@ our role Item::Actions {
         make VisItem.new(
             maybe-visability => $<visibility>.made,
             vis-item-variant => $<vis-item-variant>.made,
-            text       => $/.Str,
+            text             => $/.Str,
         )
     }
 
@@ -197,7 +199,7 @@ our role Item::Actions {
 
     method init-expression($/) {
         make InitExpression.new(
-            expression => $<expression>.made
+            expression => $<expression>.made,
             text       => $/.Str,
         )
     }
@@ -207,7 +209,7 @@ our role Item::Actions {
             identifier-or-underscore => $<identifier-or-underscore>.made,
             type                     => $<type>.made,
             init-expression          => $<init-expression>.made,
-            text       => $/.Str,
+            text                     => $/.Str,
         )
     }
 
@@ -217,7 +219,7 @@ our role Item::Actions {
             identifier            => $<identifier>.made,
             type                  => $<type>.made,
             maybe-init-expression => $<init-expression>.made,
-            text       => $/.Str,
+            text                  => $/.Str,
         )
     }
 }

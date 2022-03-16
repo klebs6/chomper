@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class UseDeclaration {
     has $.use-tree;
 
@@ -109,14 +111,14 @@ our role UseDeclaration::Actions {
     method use-declaration($/) {
         make UseDeclaration.new(
             use-tree => $<use-tree>.made,
-            text       => $/.Str,
+            text     => $/.Str,
         )
     }
 
     method use-tree:sym<basic>($/) {
         make UseTreeBasic.new(
             maybe-simple-path => $<simple-path>.made,
-            text       => $/.Str,
+            text              => $/.Str,
         )
     }
 
@@ -124,15 +126,15 @@ our role UseDeclaration::Actions {
         make UseTreeComplex.new(
             maybe-simple-path => $<simple-path>.made,
             use-trees         => $<use-tree>>>.made,
-            text       => $/.Str,
+            text              => $/.Str,
         )
     }
 
     method use-tree:sym<as>($/) {
         make UseTreeAs.new(
-            simple-path => $<simple-path>.made,
-            as-identified-or-underscore => $<identifier-or-underscore>.made
-            text       => $/.Str,
+            simple-path                 => $<simple-path>.made,
+            as-identified-or-underscore => $<identifier-or-underscore>.made,
+            text                        => $/.Str,
         )
     }
 }

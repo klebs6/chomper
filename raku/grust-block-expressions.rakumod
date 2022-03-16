@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class BlockExpression {
     has @.inner-attributes;
     has $.statements;
@@ -78,7 +80,7 @@ our role BlockExpression::Actions {
         make BlockExpression.new(
             inner-attributes => $<inner-attributes>>>.made,
             statements       => $<statements>.made,
-            text => $/.Str,
+            text             => $/.Str,
         )
     }
 
@@ -86,14 +88,14 @@ our role BlockExpression::Actions {
         make AsyncBlockExpression.new(
             move             => so $/<kw-move>:exists,
             block-expression => $<block-expression>.made,
-            text => $/.Str,
+            text             => $/.Str,
         )
     }
 
     method unsafe-block-expression($/) {
         make UnsafeBlockExpression.new(
             block-expression => $<block-expression>.made,
-            text => $/.Str,
+            text             => $/.Str,
         )
     }
 }

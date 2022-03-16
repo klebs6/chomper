@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class TupleExpression {
     has $.maybe-tuple-elements;
 
@@ -65,15 +67,15 @@ our role TupleExpression::Rules {
 our role TupleExpression::Actions {
     method tuple-elements($/) {
         make TupleElements.new(
-            expression => $<expression>>>.made
+            expression => $<expression>>>.made,
             text       => $/.Str,
         )
     }
 
     method tuple-expression($/) {
         make TupleExpression.new(
-            maybe-tuple-elements => $<tuple-elements>.made
-            text       => $/.Str,
+            maybe-tuple-elements => $<tuple-elements>.made,
+            text                 => $/.Str,
         )
     }
 

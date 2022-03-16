@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class VisibilityPublic { }
 our class VisibilityCrate  { }
 our class VisibilitySelf   { }
@@ -50,8 +52,8 @@ our role Visibility::Actions {
 
     method visibility:sym<in-path>($/) { 
         make VisibilityInPath.new(
-            simple-path => $<simple-path>.made
-            text       => $/.Str,
+            simple-path => $<simple-path>.made,
+            text        => $/.Str,
         )
     }
 }

@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class TypePath {
     has @.type-path-segments;
 
@@ -144,8 +146,8 @@ our role TypePath::Actions {
 
     method type-path($/) {
         make TypePath.new(
-            type-path-segments => $<type-path-segment>>>.made
-            text       => $/.Str,
+            type-path-segments => $<type-path-segment>>>.made,
+            text               => $/.Str,
         )
     }
 
@@ -153,7 +155,7 @@ our role TypePath::Actions {
         make TypePathSegment.new(
             path-ident-segment             => $<path-ident-segment>.made,
             maybe-type-path-segment-suffix => $<type-path-segment-suffix>.made,
-            text       => $/.Str,
+            text                           => $/.Str,
         )
     }
 
@@ -161,14 +163,14 @@ our role TypePath::Actions {
     method type-path-segment-suffix:sym<generic>($/) {  
         make TypePathSegmentSuffixGeneric.new(
             generic-args => $<generic-args>.made,
-            text       => $/.Str,
+            text         => $/.Str,
         )
     }
 
     method type-path-segment-suffix:sym<type-path-fn>($/) {  
         make TypePathSegmentSuffixTypePathFn.new(
             type-path-fn => $<type-path-fn>.made,
-            text       => $/.Str,
+            text         => $/.Str,
         )
     }
 
@@ -176,14 +178,14 @@ our role TypePath::Actions {
         make TypePathFn.new(
             maybe-type-path-fn-inputs => $<type-path-fn-inputs>.made,
             maybe-type                => $<type>.made,
-            text       => $/.Str,
+            text                      => $/.Str,
         )
     }
 
     method type-path-fn-inputs($/) {
         make TypePathFnInputs.new(
-            types => $<type>>>.made
-            text       => $/.Str,
+            types => $<type>>>.made,
+            text  => $/.Str,
         )
     }
 }

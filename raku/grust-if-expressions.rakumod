@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class IfExpression {
     has $.expression-nostruct;
     has $.block-expression;
@@ -100,7 +102,7 @@ our role IfExpressions::Actions {
             expression-nostruct => $<expression-nostruct>.made,
             block-expression    => $<block-expression>.made,
             maybe-else-clause   => $<else-clause>.made,
-            text       => $/.Str,
+            text                => $/.Str,
         )
     }
 
@@ -110,14 +112,14 @@ our role IfExpressions::Actions {
             scrutinee         => $<scrutinee-except-lazy-boolean-operator-expression>.made,
             block-expression  => $<block-expression>.made,
             maybe-else-clause => $<else-clause>.made,
-            text       => $/.Str,
+            text              => $/.Str,
         )
     }
 
     method else-clause($/) {
         make ElseClause.new(
             else-clause-variant => $<else-clause-variant>.made,
-            text       => $/.Str,
+            text                => $/.Str,
         )
     }
 

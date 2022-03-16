@@ -24,7 +24,6 @@ sub MAIN(:$stdin = Nil) {
 
         say $parsed;
 
-=begin comment
         my $made = $parsed.made;
 
         ddt $made;
@@ -32,6 +31,5 @@ sub MAIN(:$stdin = Nil) {
         for $made.List {
             say $_.gist;
         }
-=end comment
     }
 }

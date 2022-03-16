@@ -1,18 +1,16 @@
+use Data::Dump::Tree;
+
 our class BaseExpression {
     has @.outer-attributes;
     has $.expression-item;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        qq:to/END/
+        {@.outer-attributes>>.gist.join("\n")}
+        {$.expression-item.gist}
+        END
     }
 }
 
@@ -54,17 +52,8 @@ our class IndexExpressionSuffix {
 our class FieldExpressionSuffix {
     has $.identifier;
 
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "." ~ $.identifier.gist
     }
 }
 
@@ -140,15 +129,8 @@ our class SuffixedExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        [$.base-expression.gist, |@.suffixed-expression-suffix.join("")].join("")
     }
 }
 
@@ -206,15 +188,8 @@ our class UnaryExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.unary-prefixes>>.gist.join("") ~ $.suffixed-expression.gist
     }
 }
 
@@ -679,7 +654,7 @@ our class RangeExpressionOpen {
     }
 }
 
-our class ShreqExpression {
+our class ShrEqExpression {
     has @.range-expressions;
 
     has $.text;
@@ -696,7 +671,7 @@ our class ShreqExpression {
     }
 }
 
-our class ShleqExpression {
+our class ShlEqExpression {
     has @.shreq-expressions;
 
     has $.text;
@@ -713,7 +688,7 @@ our class ShleqExpression {
     }
 }
 
-our class XoreqExpression {
+our class XorEqExpression {
     has @.shleq-expressions;
 
     has $.text;
@@ -730,7 +705,7 @@ our class XoreqExpression {
     }
 }
 
-our class OreqExpression {
+our class OrEqExpression {
     has @.xoreq-expressions;
 
     has $.text;
@@ -747,7 +722,7 @@ our class OreqExpression {
     }
 }
 
-our class AndeqExpression {
+our class AndEqExpression {
     has @.oreq-expressions;
 
     has $.text;
@@ -764,7 +739,7 @@ our class AndeqExpression {
     }
 }
 
-our class ModeqExpression {
+our class ModEqExpression {
     has @.andeq-expressions;
 
     has $.text;
@@ -781,7 +756,7 @@ our class ModeqExpression {
     }
 }
 
-our class SlasheqExpression {
+our class SlashEqExpression {
     has @.modeq-expressions;
 
     has $.text;
@@ -798,7 +773,7 @@ our class SlasheqExpression {
     }
 }
 
-our class StareqExpression {
+our class StarEqExpression {
     has @.slasheq-expressions;
 
     has $.text;
@@ -815,7 +790,7 @@ our class StareqExpression {
     }
 }
 
-our class MinuseqExpression {
+our class MinusEqExpression {
     has @.stareq-expressions;
 
     has $.text;
@@ -832,7 +807,7 @@ our class MinuseqExpression {
     }
 }
 
-our class AddeqExpression {
+our class AddEqExpression {
     has @.minuseq-expressions;
 
     has $.text;
@@ -1008,7 +983,7 @@ our role Expression::Rules {
     }
 
     rule borrow-expression {
-        <borrow-expresison-prefix>*
+        <borrow-expression-prefix>*
         <unary-expression>
     }
 
@@ -1204,7 +1179,6 @@ our role Expression::Rules {
     rule expression-with-block:sym<if>           { <if-expression> }
     rule expression-with-block:sym<if-let>       { <if-let-expression> }
     rule expression-with-block:sym<comment>      { <comment> }
-
 }
 
 our role Expression::Actions {
@@ -1221,7 +1195,7 @@ our role Expression::Actions {
         make BaseExpression.new(
             outer-attributes => $<outer-attribute>>>.made,
             expression-item  => $<expression-item>.made,
-            text => $/.Str,
+            text             => $/.Str,
         )
     }
 
@@ -1229,21 +1203,21 @@ our role Expression::Actions {
         make MethodCallExpressionSuffix.new(
             path-expr-segment => $<path-expr-segment>.made,
             maybe-call-params => $<call-params>.made,
-            text => $/.Str,
+            text              => $/.Str,
         )
     }
 
     method suffixed-expression-suffix:sym<index>($/) {
         make IndexExpressionSuffix.new(
-            expression => $<expression>.made
-            text => $/.Str,
+            expression => $<expression>.made,
+            text       => $/.Str,
         )
     }
 
     method suffixed-expression-suffix:sym<field>($/) {
         make FieldExpressionSuffix.new(
             identifier => $<identifier>.made,
-            text => $/.Str,
+            text       => $/.Str,
         )
     }
 
@@ -1254,7 +1228,7 @@ our role Expression::Actions {
     method suffixed-expression-suffix:sym<call>($/) {
         make CallExpressionSuffix.new(
             maybe-call-params => $<call-params>.made,
-            text => $/.Str,
+            text              => $/.Str,
         )
     }
 
@@ -1265,7 +1239,7 @@ our role Expression::Actions {
     method suffixed-expression-suffix:sym<tuple-index>($/) {
         make TupleIndexExpressionSuffix.new(
             tuple-index => $<tuple-index>.made,
-            text => $/.Str,
+            text        => $/.Str,
         )
     }
 
@@ -1277,7 +1251,7 @@ our role Expression::Actions {
         make SuffixedExpression.new(
             base-expression            => $<base-expression>.made,
             suffixed-expression-suffix => $<suffixed-expression-suffix>>>.made,
-            text => $/.Str,
+            text                       => $/.Str,
         )
     }
 
@@ -1295,198 +1269,491 @@ our role Expression::Actions {
     }
 
     method unary-expression($/) {
-        make UnaryExpression.new(
-            unary-prefixes      => $<unary-prefix>>>.made,
-            suffixed-expression => $<suffixed-expression>.made,
-            text => $/.Str,
-        )
+        my @prefixes = $<unary-prefix>>>.made;
+        my $expr     = $<suffixed-expression>.made;
+
+        if @prefixes.elems gt 0 {
+
+            make UnaryExpression.new(
+                unary-prefixes      => @prefixes,
+                suffixed-expression => $expr,
+                text                => $/.Str,
+            )
+
+        } else {
+            make $expr
+
+        }
     }
 
     method borrow-expression-prefix($/) {
         make BorrowExpressionPrefix.new(
             borrow-count => $/<tok-and>.List.elems,
             mutable      => so $/<kw-mut>:exists,
-            text => $/.Str,
+            text         => $/.Str,
         )
     }
 
     method borrow-expression($/) {
-        make BorrowExpression.new(
-            borrow-expression-prefixes => $<borrow-expression-prefix>>>.made,
-            unary-expression           => $<unary-expression>.made,
-            text => $/.Str,
-        )
+
+        my @prefixes = $<borrow-expression-prefix>>>.made;
+        my $expr     = $<unary-expression>.made;
+
+        if @prefixes.elems gt 0 {
+            make BorrowExpression.new(
+                borrow-expression-prefixes => @prefixes,
+                unary-expression           => $expr,
+                text                       => $/.Str,
+            )
+        } else {
+
+            make $expr
+
+        }
     }
 
     method cast-expression($/) {
-        make CastExpression.new(
-            borrow-expression => $<borrow-expression>.made,
-            cast-targets      => $<type-no-bounds>>>.made,
-            text => $/.Str,
-        )
+
+        my @targets = $<type-no-bounds>>>.made;
+        my $expr    = $<borrow-expression>.made;
+
+        if @targets.elems gt 0 {
+            make CastExpression.new(
+                borrow-expression => $expr,
+                cast-targets      => @targets,
+                text              => $/.Str,
+            )
+        } else {
+            make $expr
+        }
     }
 
     method modulo-expression($/) {
-        make ModuloExpression.new(
-            cast-expression => $<cast-expression>>>.made,
-            text => $/.Str,
-        )
+
+        my @exprs = $<cast-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make ModuloExpression.new(
+                cast-expression => @exprs,
+                text            => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method division-expression($/) {
-        make DivisionExpression.new(
-            modulo-expression => $<modulo-expression>>>.made,
-            text => $/.Str,
-        )
+
+        my @exprs = $<modulo-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make DivisionExpression.new(
+                modulo-expression => @exprs,
+                text              => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method multiplicative-expression($/) {
-        make MultiplicativeExpression.new(
-            division-expression => $<division-expression>>>.made,
-            text => $/.Str,
-        )
+
+        my @exprs = $<division-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make MultiplicativeExpression.new(
+                division-expression => @exprs,
+                text                => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+
+        }
     }
 
     method subtractive-expression($/) {
-        make SubtractiveExpression.new(
-            multiplicative-expression => $<multiplicative-expression>>>.made,
-            text => $/.Str,
-        )
+
+        my @exprs = $<multiplicative-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make SubtractiveExpression.new(
+                multiplicative-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+
+        }
     }
 
     method additive-expression($/) {
-        make AdditiveExpression.new(
-            subtractive-expression => $<subtractive-expression>>>.made,
-            text => $/.Str,
-        )
+
+        my @exprs = $<subtractive-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make AdditiveExpression.new(
+                subtractive-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+
+        }
     }
 
     method binary-shr-expression($/) {
-        make BinaryShrExpression.new(
-            additive-expression => $<additive-expression>>>.made,
-            text => $/.Str,
-        )
+
+        my @exprs = $<additive-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make BinaryShrExpression.new(
+                additive-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method binary-shl-expression($/) {
-        make BinaryShlExpression.new(
-            binary-shr-expression => $<binary-shr-expression>.made
-            text => $/.Str,
-        )
+        my @exprs = $<binary-shr-expression>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make BinaryShlExpression.new(
+                binary-shr-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method binary-and-expression($/) {
-        make BinaryAndExpression.new(
-            binary-shl-expression => $<binary-shl-expression>>>.made
-            text => $/.Str,
-        )
+        my @exprs = $<binary-shl-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make BinaryAndExpression.new(
+                binary-shl-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method binary-xor-expression($/) {
-        make BinaryXorExpression.new(
-            binary-and-expression => $<binary-and-expression>>>.made,
-            text => $/.Str,
-        )
+        my @exprs = $<binary-and-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make BinaryXorExpression.new(
+                binary-and-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method binary-or-expression($/) {
-        make BinaryOrExpression.new(
-            binary-xor-expression => $<binary-xor-expression>>>.made,
-            text => $/.Str,
-        )
+        my @exprs = $<binary-xor-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make BinaryOrExpression.new(
+                binary-xor-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     #--------------------
     method binary-le-expression($/) {
-        make BinaryLeExpression.new(
-            binary-or-expression => $<binary-or-expression>>>.made,
-            text => $/.Str,
-        )
+
+        my @exprs = $<binary-or-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make BinaryLeExpression.new(
+                binary-or-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method binary-ge-expression($/) {
-        make BinaryGeExpression.new(
-            binary-le-expression => $<binary-le-expression>>>.made,
-            text => $/.Str,
-        )
+        my @exprs = $<binary-le-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make BinaryGeExpression.new(
+                binary-le-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method binary-lt-expression($/) {
-        make BinaryLtExpression.new(
-            binary-ge-expression => $<binary-ge-expression>>>.made,
-            text => $/.Str,
-        )
+        my @exprs = $<binary-ge-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make BinaryLtExpression.new(
+                binary-ge-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method binary-gt-expression($/) {
-        make BinaryGtExpression.new(
-            binary-lt-expression => $<binary-lt-expression>>>.made,
-            text => $/.Str,
-        )
+        my @exprs = $<binary-lt-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make BinaryGtExpression.new(
+                binary-lt-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method binary-ne-expression($/) {
-        make BinaryNeExpression.new(
-            binary-gt-expression => $<binary-gt-expression>>>.made,
-            text => $/.Str,
-        )
+        my @exprs = $<binary-gt-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make BinaryNeExpression.new(
+                binary-gt-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method binary-eqeq-expression($/) {
-        make BinaryEqEqExpression.new(
-            binary-ne-expression => $<binary-ne-expression>>>.made,
-            text => $/.Str,
-        )
+        my @exprs = $<binary-ne-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make BinaryEqEqExpression.new(
+                binary-ne-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method binary-andand-expression($/) {
-        make BinaryAndAndExpression.new(
-            binary-eqeq-expression => $<binary-eqeq-expression>>>.made
-            text => $/.Str,
-        )
+        my @exprs = $<binary-eqeq-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make BinaryAndAndExpression.new(
+                binary-eqeq-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method binary-oror-expression($/) {
-        make BinaryOrOrExpression.new(
-            binary-andand-expression => $<binary-andand-expression>>>.made,
-            text => $/.Str,
-        )
+        my @exprs = $<binary-andand-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make BinaryOrOrExpression.new(
+                binary-andand-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     #--------------------
     method range-expression:sym<full-eq>($/) { 
-        make RangeExpressionFullEq.new(
-            binary-oror-expressions => $<binary-oror-expression>>>.made
-            text => $/.Str,
-        )
+
+        my @exprs = $<binary-oror-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make RangeExpressionFullEq.new(
+                binary-oror-expressions => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method range-expression:sym<full>($/) {  
-        make RangeExpressionFull.new(
-            binary-oror-expression => $<binary-oror-expression>>>.made
-            text => $/.Str,
-        )
+        my @exprs = $<binary-oror-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make RangeExpressionFull.new(
+                binary-oror-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method range-expression:sym<to>($/) {  
-        make RangeExpressionTo.new(
-            binary-oror-expression => $<binary-oror-expression>.made
-            text => $/.Str,
-        )
+        my @exprs = $<binary-oror-expression>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make RangeExpressionTo.new(
+                binary-oror-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method range-expression:sym<to-eq>($/) {  
-        make RangeExpressionToEq.new(
-            binary-oror-expression => $<binary-oror-expression>.made,
-            text => $/.Str,
-        )
+        my @exprs = $<binary-oror-expression>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make RangeExpressionToEq.new(
+                binary-oror-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method range-expression:sym<from>($/) {  
-        make RangeExpressionFrom.new(
-            binary-oror-expression => $<binary-oror-expression>.made,
-            text => $/.Str,
-        )
+
+        my @exprs = $<binary-oror-expression>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make RangeExpressionFrom.new(
+                binary-oror-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method range-expression:sym<open>($/) {  
@@ -1500,87 +1767,231 @@ our role Expression::Actions {
     #--------------------
 
     method shreq-expression($/) {
-        make ShrEqExpression.new(
-            range-expression => $<range-expression>>>.made,
-            text => $/.Str,
-        )
+
+        my @exprs = $<range-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make ShrEqExpression.new(
+                range-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method shleq-expression($/) {
-        make ShlEqExpression.new(
-            shreq-expression => $<shreq-expression>>>.made
-            text => $/.Str,
-        )
+
+        my @exprs = $<shreq-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make ShlEqExpression.new(
+                shreq-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method xoreq-expression($/) {
-        make XorEqExpression.new(
-            shleq-expression => $<shleq-expression>>>.made
-            text => $/.Str,
-        )
+
+        my @exprs = $<shleq-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make XorEqExpression.new(
+                shleq-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method oreq-expression($/) {
-        make OrEqExpression.new(
-            xoreq-expression => $<xoreq-expression>>>.made
-            text => $/.Str,
-        )
+
+        my @exprs = $<xoreq-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make OrEqExpression.new(
+                xoreq-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method andeq-expression($/) {
-        make AndEqExpression.new(
-            oreq-expression => $<oreq-expression>>>.made
-            text => $/.Str,
-        )
+
+        my @exprs = $<oreq-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make AndEqExpression.new(
+                oreq-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method modeq-expression($/) {
-        make ModEqExpression.new(
-            andeq-expression => $<andeq-expression>>>.made
-            text => $/.Str,
-        )
+
+        my @exprs = $<andeq-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make ModEqExpression.new(
+                andeq-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method slasheq-expression($/) {
-        make SlashEqExpression.new(
-            modeq-expression => $<modeq-expression>>>.made
-            text => $/.Str,
-        )
+
+        my @exprs = $<modeq-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make SlashEqExpression.new(
+                modeq-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method stareq-expression($/) {
-        make StarEqExpression.new(
-            slasheq-expression => $<slasheq-expression>>>.made
-            text => $/.Str,
-        )
+
+        my @exprs = $<slasheq-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make StarEqExpression.new(
+                slasheq-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method minuseq-expression($/) {
-        make MinusEqExpression.new(
-            stareq-expression => $<stareq-expression>>>.made
-            text => $/.Str,
-        )
+
+        my @exprs = $<stareq-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make MinusEqExpression.new(
+                stareq-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method addeq-expression($/) {
-        make AddEqExpression.new(
-            minuseq-expression => $<minuseq-expression>>>.made
-            text => $/.Str,
-        )
+
+        my @exprs = $<minuseq-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make AddEqExpression.new(
+                minuseq-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method assign-expression($/) {
-        make AssignExpression.new(
-            addeq-expression => $<addeq-expression>>>.made
-            text => $/.Str,
-        )
+
+        my @exprs = $<addeq-expression>>>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make AssignExpression.new(
+                addeq-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     method expression($/) {
-        make Expression.new(
-            assign-expression => $<assign-expression>.made
-            text => $/.Str,
-        )
+
+        my @exprs = $<assign-expression>.made;
+
+        die if not @exprs.elems gt 0;
+
+        if @exprs.elems gt 1 {
+
+            make Expression.new(
+                assign-expression => @exprs,
+                text => $/.Str,
+            )
+
+        } else {
+
+            make @exprs[0]
+        }
     }
 
     #-------------------------
@@ -1601,7 +2012,7 @@ our role Expression::Actions {
 
     method expression-item:sym<grouped>($/)  { 
         make GroupedExpression.new(
-            expression => $<expression>.made
+            expression => $<expression>.made,
             text       => $/.Str,
         )
     }

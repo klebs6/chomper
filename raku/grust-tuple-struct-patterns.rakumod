@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class TupleStructPattern {
     has $.path-in-expression;
     has $.maybe-tuple-struct-items;
@@ -174,6 +176,7 @@ our role TupleStructPattern::Actions {
         make TupleStructPattern.new(
             path-in-expression       => $<path-in-expression>.made,
             maybe-tuple-struct-items => $<tuple-struct-items>.made,
+            text                     => $/.Str,
         )
     }
 
@@ -184,6 +187,7 @@ our role TupleStructPattern::Actions {
     method tuple-pattern($/) {
         make TupleStructItems.new(
             patterns => $<tuple-pattern-items>.made,
+            text     => $/.Str,
         )
     }
 
@@ -198,12 +202,14 @@ our role TupleStructPattern::Actions {
     method grouped-pattern($/) {
         make GroupedPattern.new(
             pattern => $<pattern>.made,
+            text    => $/.Str,
         )
     }
 
     method slice-pattern($/) {
         make SlicePattern.new(
-            maybe-slice-pattern-items => $<slice-pattern-items>.made
+            maybe-slice-pattern-items => $<slice-pattern-items>.made,
+            text                      => $/.Str,
         )
     }
 

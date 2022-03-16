@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class LoopExpressionInfinite {
     has $.maybe-loop-label;
     has $.block-expression;
@@ -137,7 +139,7 @@ our role LoopExpression::Actions {
         make LoopExpressionInfinite.new(
             loop-label       => $<loop-label>.made,
             block-expression => $<block-expression>.made,
-            text       => $/.Str,
+            text             => $/.Str,
         )
     }
 
@@ -146,7 +148,7 @@ our role LoopExpression::Actions {
             maybe-loop-label    => $<loop-label>.made,
             expression-nostruct => $<expression-nostruct>.made,
             block-expression    => $<block-expression>.made,
-            text       => $/.Str,
+            text                => $/.Str,
         )
     }
 
@@ -155,8 +157,8 @@ our role LoopExpression::Actions {
             maybe-loop-label => $<loop-label>.made,
             pattern          => $<pattern>.made,
             scrutinee        => $<scrutinee-except-lazy-boolean-operator-expression>.made,
-            block-expression => $<block-expression>.made
-            text       => $/.Str,
+            block-expression => $<block-expression>.made,
+            text             => $/.Str,
         )
     }
 
@@ -166,14 +168,14 @@ our role LoopExpression::Actions {
             pattern             => $<pattern>.made,
             expression-nostruct => $<expression-nostruct>.made,
             block-expression    => $<block-expression>.made,
-            text       => $/.Str,
+            text                => $/.Str,
         )
     }
 
     method loop-label($/) {
         make LoopLabel.new(
-            lifetime-or-label => $<lifetime-or-label>.made
-            text       => $/.Str,
+            lifetime-or-label => $<lifetime-or-label>.made,
+            text              => $/.Str,
         )
     }
 }

@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class Crate {
     has @.inner-attributes;
     has @.crate-items;

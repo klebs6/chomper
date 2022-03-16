@@ -1,3 +1,5 @@
+use Data::Dump::Tree;
+
 our class Enumeration {
     has $.identifier;
     has $.maybe-generic-params;
