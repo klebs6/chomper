@@ -6,15 +6,16 @@ our class ConfigurationPredicateOption {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = $.identifier.gist;
+
+        if $.maybe-str-literal {
+
+            $builder ~= "= " ~ $.any-str-literal.gist;
+        }
+
+        $builder
     }
 }
 
@@ -23,15 +24,8 @@ our class ConfigurationPredicateAll {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "all(" ~ @.predicates.join(", ") ~ ")"
     }
 }
 
@@ -40,15 +34,8 @@ our class ConfigurationPredicateAny {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "any(" ~ @.predicates.join(", ") ~ ")"
     }
 }
 
@@ -57,15 +44,8 @@ our class ConfigurationPredicateNot {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "not(" ~ $.predicate.gist ~ ")"
     }
 }
 

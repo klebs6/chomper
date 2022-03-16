@@ -43,15 +43,19 @@ our class FunctionTypeQualifiers {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.unsafe {
+            $builder ~= "unsafe ";
+        }
+
+        if so $.maybe-function-extern-modifier {
+            $builder ~= $.maybe-function-extern-modifier;
+        }
+
+        $builder
     }
 }
 

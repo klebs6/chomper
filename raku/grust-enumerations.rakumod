@@ -8,69 +8,93 @@ our class Enumeration {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "enum " ~ $.identifier.gist;
+
+        if $.maybe-generic-params {
+            $builder ~= $.maybe-generic-params.gist;
+        }
+
+        if $.maybe-where-clause {
+            $builder ~= $.maybe-where-clause.gist;
+        }
+
+        $builder ~= "\{\n";
+
+        for @.maybe-enum-items {
+            my $item = $_.gist ~ ",\n";
+            $builder ~= $item.indent(4);
+        }
+
+        $builder ~= "\n\}";
     }
 }
 
 our class EnumItem {
     has @.outer-attributes;
-    has @.maybe-visibility;
+    has $.maybe-visibility;
     has $.identifier;
     has $.maybe-enum-variant;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        for @.outer-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        if $.maybe-visibility {
+            $builder ~= $maybe-visibility.gist;
+        }
+
+        $builder ~= $.identifier.gist;
+
+        if $.maybe-enum-variant {
+            $builder ~= $.maybe-enum-variant.gist;
+        }
     }
 }
 
 our class EnumVariantTuple {
-    has @.maybe-tuple-fields;
+    has $.maybe-tuple-fields;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        if $.maybe-tuple-fields {
+
+            "(" 
+            ~ $.maybe-tuple-fields.List>>.gist.join(",") 
+            ~ ")"
+
+        } else {
+
+            "(" ~ ")"
+        }
     }
 }
 
 our class EnumVariantStruct {
-    has @.maybe-struct-fields;
+    has $.maybe-struct-fields;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.maybe-struct-fields {
+
+            "{" 
+            ~ $.maybe-tuple-fields.List>>.gist.join(",") 
+            ~ "}"
+
+        } else {
+
+            "{" ~ "}"
+        }
     }
 }
 
@@ -79,15 +103,8 @@ our class EnumVariantDiscriminant {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "= " ~ $.eq-expression.gist
     }
 }
 
@@ -142,7 +159,7 @@ our role Enumeration::Actions {
             maybe-generic-params => $<generic-params>.made,
             maybe-where-clause   => $<where-clause>.made,
             maybe-enum-items     => $<enum-items>.made,
-            text => $/.Str,
+            text                 => $/.Str,
         )
     }
 
@@ -156,7 +173,7 @@ our role Enumeration::Actions {
             maybe-visibility        => $<visibility>.made,
             identifier              => $<identifier>.made,
             maybe-enum-item-variant => $<enum-item-variant>.made,
-            text => $/.Str,
+            text                    => $/.Str,
         )
     }
 
@@ -164,21 +181,21 @@ our role Enumeration::Actions {
     method enum-item-variant:sym<tuple>($/) {
         make EnumVariantTuple.new(
             maybe-tuple-fields => $<tuple-fields>.made,
-            text => $/.Str,
+            text               => $/.Str,
         )
     }
 
     method enum-item-variant:sym<struct>($/) {
         make EnumVariantStruct.new(
             struct-fields => $<struct-fields>.made,
-            text => $/.Str,
+            text          => $/.Str,
         )
     }
 
     method enum-item-variant:sym<discriminant>($/) {
         make EnumVariantDiscriminant.new(
             eq-expression => $<expression>.made,
-            text => $/.Str,
+            text          => $/.Str,
         )
     }
 }

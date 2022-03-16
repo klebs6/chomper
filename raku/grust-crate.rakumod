@@ -1,20 +1,34 @@
 use Data::Dump::Tree;
 
 our class Crate {
+    has Bool $.bom;
+    has Bool $.shebang;
     has @.inner-attributes;
     has @.crate-items;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.bom {
+            $builder ~= 0xFEFF.Str;
+        }
+
+        if $.shebang {
+            $builder ~= "#!";
+        }
+
+        for @.inner-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        for @.crate-items {
+            $builder ~= $_.gist ~ "\n\n";
+        }
+
+        $builder
     }
 }
 
@@ -23,15 +37,8 @@ our class AsClause {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "as " ~ $.identifier.or-underscore.gist
     }
 }
 
@@ -41,15 +48,17 @@ our class ExternCrate {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "extern crate ";
+
+        $builder ~= $.crate-ref.gist;
+
+        if $.maybe-as-clause {
+            $builder ~= " " ~ $.maybe-as-clause.gist;
+        }
+
+        $builder ~ ";"
     }
 }
 
@@ -59,15 +68,17 @@ our class ModuleSemi {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.unsafe {
+            $builder ~= "unsafe ";
+        }
+
+        $builder ~= "mod " ~ $.identifier.gist ~ ";";
+
+        $builder
     }
 }
 
@@ -79,15 +90,31 @@ our class ModuleBlock {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.unsafe {
+            $builder ~= "unsafe ";
+        }
+
+        $builder ~= "mod " ~ $.identifier.gist;
+
+        $builder ~= "{\n";
+
+        for @.inner-attributes {
+            my $item = $_.gist ~ "\n";
+            $builder ~= $item.indent(4);
+        }
+
+        for @.crate-items {
+            my $item = $_.gist ~ "\n";
+            $builder ~= $item.indent(4);
+        }
+
+        $builder ~= "\n}";
+
+        $builder
     }
 }
 
@@ -151,16 +178,18 @@ our role Crate::Actions {
 
     method crate($/) {
         make Crate.new(
+            bom              => so $/<utf8-bom>:exists,
+            shebang          => so $/<shebang>:exists,
             inner-attributes => $<inner-attribute>>>.made,
-            crate-item       => $<crate-item>>>.made,
-            text => $/.Str,
+            crate-items      => $<crate-item>>>.made,
+            text             => $/.Str,
         )
     }
 
     method as-clause($/) {
         make AsClause.new(
             identifier-or-underscore => $<identifier-or-underscore>.made,
-            text => $/.Str,
+            text                     => $/.Str,
         )
     }
 
@@ -168,7 +197,7 @@ our role Crate::Actions {
         make ExternCrate.new(
             crate-ref       => $<crate-ref>.made,
             maybe-as-clause => $<as-clause>.made,
-            text => $/.Str,
+            text            => $/.Str,
         )
     }
 

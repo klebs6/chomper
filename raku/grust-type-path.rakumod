@@ -5,15 +5,8 @@ our class TypePath {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.type-path-segments.join("::")
     }
 }
 
@@ -23,15 +16,15 @@ our class TypePathSegment {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = $.path-ident-segment.gist;
+
+        if so $.maybe-type-path-segment-suffix {
+            $builder ~= "::{$.maybe-type-path-segment-suffix.gist}";
+        }
+
+        $builder
     }
 }
 

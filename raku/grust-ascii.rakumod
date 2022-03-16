@@ -3,14 +3,8 @@ use Data::Dump::Tree;
 our class Ascii {
     has Str $.value;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 

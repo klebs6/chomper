@@ -7,15 +7,19 @@ our class AssociatedItem {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.maybe-comment {
+            qq:to/END/.chomp.trim
+            {$.maybe-comment.gist}
+            {@.outer-attributes>>.gist.join("\n")}
+            {$.variant.gist}
+            END
+        } else {
+            qq:to/END/.chomp.trim
+            {@.outer-attributes>>.gist.join("\n")}
+            {$.variant.gist}
+            END
+        }
     }
 }
 
@@ -24,15 +28,8 @@ our class AssociatedItemMacro {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.macro-invocation.gist
     }
 }
 
@@ -42,15 +39,12 @@ our class AssociatedItemTypeAlias {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.maybe-visibility {
+            $.maybe-visibility.gist ~ " " ~ $.type-alias.gist
+        } else {
+            $.type-alias.gist
+        }
     }
 }
 
@@ -60,15 +54,12 @@ our class AssociatedItemConstantItem {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.maybe-visibility {
+            $.maybe-visibility.gist ~ " " ~ $.constant-item.gist
+        } else {
+            $.constant-item.gist
+        }
     }
 }
 
@@ -78,15 +69,12 @@ our class AssociatedItemFunction {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.maybe-visibility {
+            $.maybe-visibility.gist ~ " " ~ $.function.gist
+        } else {
+            $.function.gist
+        }
     }
 }
 

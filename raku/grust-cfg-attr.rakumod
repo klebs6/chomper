@@ -5,15 +5,8 @@ our class CfgAttribute {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "cfg(" ~  $.configuration-predicate.gist ~ ")"
     }
 }
 
@@ -23,15 +16,18 @@ our class CfgAttrAttribute {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.maybe-cfg-attrs {
+            "cfg_attr(" 
+            ~  $.configuration-predicate.gist 
+            ~ "," 
+            ~ $.maybe-cfg-attrs.gist 
+            ~ ")"
+        } else {
+            "cfg_attr(" 
+            ~  $.configuration-predicate.gist 
+            ~ ")"
+        }
     }
 }
 
@@ -40,15 +36,8 @@ our class CfgAttrs {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.attrs>>.gist.join(", ")
     }
 }
 
@@ -57,15 +46,8 @@ our class InnerAttribute {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "#![" ~ $.attr.gist ~ "]"
     }
 }
 
@@ -74,15 +56,8 @@ our class OuterAttribute {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "#[" ~ $.attr.gist ~ "]"
     }
 }
 
@@ -92,15 +67,12 @@ our class Attr {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.maybe-attr-input {
+            $.simple-path ~ $.maybe-attr-input.gist
+        } else {
+            $.simple-path
+        }
     }
 }
 
@@ -109,19 +81,15 @@ our class AttrInputEqExpr {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "= " ~ $.expression.gist
     }
 }
 
 our role CfgAttr::Rules {
+
+    token kw-cfg      { cfg }
+    token kw-cfg-attr { cfg_attr }
 
     proto rule cfg-attr-attribute { * }
 

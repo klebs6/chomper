@@ -25,15 +25,25 @@ our class IdentifierPattern {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if so $.ref {
+            $builder ~= "ref ";
+        }
+
+        if so $.mut {
+            $builder ~= "mut ";
+        }
+
+        $builder ~= $.identifier.gist;
+
+        if so $.maybe-at-pattern {
+            $builder ~= " at {$.maybe-at-pattern.gist}";
+        }
+
+        $builder
     }
 }
 

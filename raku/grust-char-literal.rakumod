@@ -3,17 +3,8 @@ use Data::Dump::Tree;
 our class CharLiteral {
     has $.value;
 
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.value
     }
 }
 

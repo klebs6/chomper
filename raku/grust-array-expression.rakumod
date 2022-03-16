@@ -5,15 +5,13 @@ our class ArrayExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        if $.maybe-array-elements {
+            "[" ~ $.maybe-array-elements.gist ~ "]"
+        } else {
+            "[" ~ "]"
+        }
     }
 }
 
@@ -23,15 +21,8 @@ our class ArrayElementsItemQuantity {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.expression.gist ~ "; " ~ $.quantifier.gist
     }
 }
 
@@ -40,15 +31,8 @@ our class ArrayElementsList {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.expressions>>.gist.join(", ")
     }
 }
 

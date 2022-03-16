@@ -25,20 +25,23 @@ our class BlockExpression {
 }
 
 our class AsyncBlockExpression {
+
     has Bool $.move;
     has $.block-expression;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "async ";
+
+        if $.move {
+            $builder ~= "move ";
+        }
+
+        $bulider ~= $.block-expression.gist;
+
+        $builder
     }
 }
 
@@ -47,15 +50,12 @@ our class UnsafeBlockExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        my $builder = "unsafe ";
+
+        $bulider ~= $.block-expression.gist;
+
+        $builder
     }
 }
 

@@ -45,15 +45,8 @@ our class IndexExpressionSuffix {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "[" ~ $.expression.gist ~ "]"
     }
 }
 
@@ -66,19 +59,22 @@ our class FieldExpressionSuffix {
 }
 
 our class CallExpressionSuffix {
-    has @.maybe-call-params;
+    has $.maybe-call-params;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        if $.maybe-call-params {
+
+            "(" 
+            ~ $.maybe-call-params.List>>.gist.join(",") 
+            ~ ")"
+
+        } else {
+
+            "()" 
+        }
     }
 }
 
@@ -86,15 +82,8 @@ our class AwaitExpressionSuffix {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        ".await"
     }
 }
 
@@ -103,15 +92,8 @@ our class TupleIndexExpressionSuffix {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "." ~ $.tuple-index.gist
     }
 }
 
@@ -119,15 +101,8 @@ our class ErrorPropagationExpressionSuffix {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "?"
     }
 }
 
@@ -149,15 +124,8 @@ our class UnaryPrefixBang  {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "!"
     }
 }
 
@@ -165,15 +133,8 @@ our class UnaryPrefixMinus {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "-"
     }
 }
 
@@ -181,15 +142,8 @@ our class UnaryPrefixStar  {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "*"
     }
 }
 
@@ -210,15 +164,19 @@ our class BorrowExpressionPrefix {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        for $.borrow-count {
+            $builder ~= "&";
+        }
+
+        if $.mutable {
+            $builder ~= "mut";
+        }
+
+        $builder
     }
 }
 
@@ -233,10 +191,14 @@ our class BorrowExpression {
     }
 
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        for @.borrow-expression-prefixes {
+            $builder ~= $_.gist ~ " ";
+        }
+
+        $builder ~ $.unary-expression.gist;
     }
 }
 
@@ -246,15 +208,15 @@ our class CastExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = $.borrow-expression.gist;
+
+        for @.cast-targets {
+            $builder ~= " as " ~ $_.gist;
+        }
+
+        $builder
     }
 }
 
@@ -633,15 +595,8 @@ our class GroupedExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "(" ~ $.expression.gist ~ ")"
     }
 }
 
@@ -690,7 +645,6 @@ our role Expression::Rules {
     }
 
     rule suffixed-expression-suffix:sym<field> {
-
         <tok-dot> 
         <identifier>  
     }

@@ -7,15 +7,28 @@ our class ClosureExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.move {
+            $builder ~= "move ";
+        }
+
+        if $.maybe-parameters {
+
+            my $params = $.maybe-parameters.List>>.gist.join(", ");
+
+            $builder ~= "|" ~ $params ~ "| ";
+
+        } else {
+
+            $builder ~= "|| ";
+        }
+
+        $builder ~= $.body.gist;
+
+        $builder
     }
 }
 
@@ -25,15 +38,11 @@ our class ClosureBodyWithReturnTypeAndBlock {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "-> " 
+        ~ $.return-type.gist 
+        ~ " " 
+        ~ $.block-expression.gist
     }
 }
 
@@ -44,15 +53,18 @@ our class ClosureParam {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = qq:to/END/.chomp.trim;
+        {@.outer-attributes>>.gist.join("\n")}
+        {$.pattern.gist}
+        END
+
+        if $.maybe-type {
+            $builder ~= ": " ~ $.maybe-type.gist;
+        }
+
+        $builder
     }
 }
 
