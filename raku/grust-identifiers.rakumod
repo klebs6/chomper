@@ -20,17 +20,8 @@ our class IdentifierOrKeyword {
 our class Identifier {
     has Str $.value;
 
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.value.chomp
     }
 }
 
@@ -93,8 +84,17 @@ our role Identifiers::Actions {
         make ~$/
     }
 
-    method identifier:sym<a>($/) { ~$/ }
-    method identifier:sym<b>($/) { ~$/ }
+    method identifier:sym<a>($/) { 
+        make Identifier.new(
+            value => ~$/ 
+        )
+    }
+
+    method identifier:sym<b>($/) { 
+        make Identifier.new(
+            value =>~$/ 
+        )
+    }
 
     #---------------------
     method identifier-or-underscore:sym<identifier>($/) { ~$/ }

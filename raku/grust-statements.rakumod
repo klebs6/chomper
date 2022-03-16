@@ -6,15 +6,15 @@ our class Statements {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my @res = @.statements>>.gist;
+
+        if $.maybe-expression-noblock {
+            @res.push: $.maybe-expression-noblock.gist;
+        }
+
+        @res.join("\n")
     }
 }
 
@@ -46,15 +46,17 @@ our class ExpressionStatementNoBlock {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        do if $.maybe-comment {
+            qq:to/END/.chomp
+            {$.maybe-comment.gist}
+            {$.expression-noblock.gist};
+            END
+        } else {
+            qq:to/END/.chomp
+            {$.expression-noblock.gist};
+            END
+        }
     }
 }
 
@@ -64,15 +66,17 @@ our class ExpressionStatementBlock {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.maybe-comment {
+            qq:to/END/.chomp.trim
+            {$.maybe-comment.gist}
+            {$.expression-with-block.gist}
+            END
+        } else {
+            qq:to/END/.chomp.trim
+            {$.expression-with-block.gist}
+            END
+        }
     }
 }
 
@@ -117,9 +121,13 @@ our role Statement::Rules {
 our role Statement::Actions {
 
     method statements($/) {  
+
+        my @statements = $<statement>>>.made;
+        my $expr       = $<expression-noblock>.made;
+
         make Statements.new(
-            statements               => $<statement>>>.made,
-            maybe-expression-noblock => $<expression-noblock>.made,
+            statements               => @statements,
+            maybe-expression-noblock => $expr,
             text                     => $/.Str,
         )
     }
@@ -142,6 +150,7 @@ our role Statement::Actions {
     }
 
     method expression-statement:sym<noblock>($/) { 
+
         make ExpressionStatementNoBlock.new(
             maybe-comment      => $<comment>.made,
             expression-noblock => $<expression-noblock>.made,

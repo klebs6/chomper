@@ -30,22 +30,6 @@ our class PathExprSegment {
     }
 }
 
-our class DollarCrate {
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
 our class QualifiedPathInExpression {
     has $.qualified-path-type;
     has @.path-expr-segments;
@@ -152,7 +136,27 @@ our role PathExpression::Rules {
             <type-path-segment>
         ]+
     }
+}
 
+our class IdentSuper {
+    method gist { "super" }
+}
+
+our class IdentSelfType  {
+    method gist { "Self" }
+}
+
+our class IdentSelfValue {
+    method gist { "self" }
+}
+
+our class IdentCrate {
+    method gist { "crate" }
+
+}
+
+our class DollarCrate {
+    method gist { "\$crate" }
 }
 
 our role PathExpression::Actions {
@@ -176,11 +180,11 @@ our role PathExpression::Actions {
     }
 
     method path-ident-segment:sym<ident>($/)   { make $<identifier>.made }
-    method path-ident-segment:sym<super>($/)   { make $<kw-super>.made }
-    method path-ident-segment:sym<selfv>($/)   { make $<kw-selfvalue>.made }
-    method path-ident-segment:sym<selft>($/)   { make $<kw-selftype>.made }
-    method path-ident-segment:sym<crate>($/)   { make $<kw-crate>.made }
-    method path-ident-segment:sym<$-crate>($/) { make $<dollar-crate>.made }
+    method path-ident-segment:sym<super>($/)   { make IdentSuper.new }
+    method path-ident-segment:sym<selfv>($/)   { make IdentSelfValue.new }
+    method path-ident-segment:sym<selft>($/)   { make IdentSelfType.new }
+    method path-ident-segment:sym<crate>($/)   { make IdentCrate.new }
+    method path-ident-segment:sym<$-crate>($/) { make DollarCrate.new }
 
     method dollar-crate($/) {
         make DollarCrate.new

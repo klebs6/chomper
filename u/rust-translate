@@ -27,6 +27,7 @@ sub MAIN(:$stdin = Nil) {
         my $made = $parsed.made;
 
         ddt $made;
+        say "---------------------[gists]";
 
         for $made.List {
             say $_.gist;

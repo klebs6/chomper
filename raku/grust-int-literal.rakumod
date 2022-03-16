@@ -3,17 +3,8 @@ use Data::Dump::Tree;
 our class IntegerLiteral {
     has $.value;
 
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -74,14 +65,5 @@ our role IntLiteral::Rules {
 
     token hex-digit {
         <[0..9 a..f A..F _]>
-    }
-}
-
-our role IntLiteral::Actions {
-
-    method integer-literal($/) {
-        make IntegerLiteral.new(
-            value => ~$/
-        )
     }
 }

@@ -7,7 +7,7 @@ our class BaseExpression {
     has $.text;
 
     method gist {
-        qq:to/END/
+        qq:to/END/.chomp.trim
         {@.outer-attributes>>.gist.join("\n")}
         {$.expression-item.gist}
         END
@@ -16,19 +16,27 @@ our class BaseExpression {
 
 our class MethodCallExpressionSuffix {
     has $.path-expr-segment;
-    has @.maybe-call-params;
+    has $.maybe-call-params;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        if $.maybe-call-params {
+
+            "." 
+            ~ $.path-expr-segment.gist 
+            ~ "(" 
+            ~ $.maybe-call-params.List>>.gist.join(",") 
+            ~ ")"
+
+        } else {
+
+            "." 
+            ~ $.path-expr-segment.gist 
+            ~ "()" 
+
+        }
     }
 }
 
@@ -53,7 +61,7 @@ our class FieldExpressionSuffix {
     has $.identifier;
 
     method gist {
-        "." ~ $.identifier.gist
+        "." ~ $.identifier.gist.chomp
     }
 }
 
@@ -130,7 +138,10 @@ our class SuffixedExpression {
     has $.text;
 
     method gist {
-        [$.base-expression.gist, |@.suffixed-expression-suffix.join("")].join("")
+        [
+            $.base-expression.gist.chomp.trim, 
+            |@.suffixed-expression-suffix>>.gist.join("")
+        ].join("").chomp
     }
 }
 
@@ -252,15 +263,8 @@ our class ModuloExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.cast-expressions>>.gist.join(" % ")
     }
 }
 
@@ -269,15 +273,8 @@ our class DivisionExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.modulo-expressions>>.gist.join(" / ")
     }
 }
 
@@ -286,15 +283,8 @@ our class MultiplicativeExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.division-expressions>>.gist.join(" * ")
     }
 }
 
@@ -303,15 +293,8 @@ our class SubtractiveExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.multiplicative-expressions>>.gist.join(" - ")
     }
 }
 
@@ -320,15 +303,8 @@ our class AdditiveExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.subtractive-expressions>>.gist.join(" + ")
     }
 }
 
@@ -337,15 +313,8 @@ our class BinaryShrExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.additive-expressions>>.gist.join(" >> ")
     }
 }
 
@@ -354,15 +323,8 @@ our class BinaryShlExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.binary-shr-expressions>>.gist.join(" << ")
     }
 }
 
@@ -371,15 +333,8 @@ our class BinaryAndExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.binary-shl-expressions>>.gist.join(" & ")
     }
 }
 
@@ -388,15 +343,8 @@ our class BinaryXorExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.binary-and-expressions>>.gist.join(" ^ ")
     }
 }
 
@@ -405,15 +353,8 @@ our class BinaryOrExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.binary-xor-expressions>>.gist.join(" | ")
     }
 }
 
@@ -422,15 +363,8 @@ our class BinaryLeExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.binary-or-expressions>>.gist.join(" <= ")
     }
 }
 
@@ -439,15 +373,8 @@ our class BinaryGeExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.binary-le-expressions>>.gist.join(" >= ")
     }
 }
 
@@ -456,15 +383,8 @@ our class BinaryLtExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.binary-ge-expressions>>.gist.join(" < ")
     }
 }
 
@@ -473,15 +393,8 @@ our class BinaryGtExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.binary-lt-expressions>>.gist.join(" > ")
     }
 }
 
@@ -490,20 +403,13 @@ our class BinaryNeExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.binary-gt-expressions>>.gist.join(" != ")
     }
 }
 
 our class BinaryEqEqExpression {
-    has @.binary-ne-expression;
+    has @.binary-ne-expressions;
 
     has $.text;
 
@@ -512,10 +418,7 @@ our class BinaryEqEqExpression {
     }
 
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.binary-ne-expressions>>.gist.join(" == ")
     }
 }
 
@@ -524,15 +427,8 @@ our class BinaryAndAndExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.binary-eqeq-expressions>>.gist.join(" && ") 
     }
 }
 
@@ -541,15 +437,8 @@ our class BinaryOrOrExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.binary-andand-expressions>>.gist.join(" || ") 
     }
 }
 
@@ -558,15 +447,10 @@ our class RangeExpressionFullEq {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.binary-oror-expressions[0].gist 
+        ~ "..="
+        ~ @.binary-oror-expressions[1].gist 
     }
 }
 
@@ -575,15 +459,10 @@ our class RangeExpressionFull {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.binary-oror-expressions[0].gist 
+        ~ ".."
+        ~ @.binary-oror-expressions[1].gist 
     }
 }
 
@@ -592,32 +471,21 @@ our class RangeExpressionTo {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        ".."
+        ~ $.binary-oror-expression.gist 
     }
 }
 
 our class RangeExpressionToEq {
+
     has $.binary-oror-expression;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "..="
+        ~ $.binary-oror-expression.gist 
     }
 }
 
@@ -626,15 +494,8 @@ our class RangeExpressionFrom {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.binary-oror-expression.gist ~ ".."
     }
 }
 
@@ -642,15 +503,8 @@ our class RangeExpressionOpen {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        ".."
     }
 }
 
@@ -659,15 +513,8 @@ our class ShrEqExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.range-expressions>>.gist>>.chomp.join(" >>= ")
     }
 }
 
@@ -676,15 +523,8 @@ our class ShlEqExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.shreq-expressions>>.gist>>.chomp.join(" <<= ")
     }
 }
 
@@ -693,15 +533,8 @@ our class XorEqExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.shleq-expressions>>.gist>>.chomp.join(" ^= ")
     }
 }
 
@@ -710,15 +543,8 @@ our class OrEqExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.xoreq-expressions>>.gist>>.chomp.join(" |= ")
     }
 }
 
@@ -727,15 +553,8 @@ our class AndEqExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.oreq-expressions>>.gist>>.chomp.join(" &= ")
     }
 }
 
@@ -744,15 +563,8 @@ our class ModEqExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.andeq-expressions>>.gist>>.chomp.join(" %= ")
     }
 }
 
@@ -761,15 +573,8 @@ our class SlashEqExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.modeq-expressions>>.gist>>.chomp.join(" /= ")
     }
 }
 
@@ -778,15 +583,8 @@ our class StarEqExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.slasheq-expressions>>.gist>>.chomp.join(" *= ")
     }
 }
 
@@ -795,15 +593,8 @@ our class MinusEqExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.stareq-expressions>>.gist>>.chomp.join(" -= ")
     }
 }
 
@@ -812,15 +603,8 @@ our class AddEqExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.minus-expressions>>.gist>>.chomp.join(" += ")
     }
 }
 
@@ -829,15 +613,8 @@ our class AssignExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.addeq-expressions>>.gist>>.chomp.join(" = ")
     }
 }
 
@@ -846,15 +623,8 @@ our class Expression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.assign-expression.gist
     }
 }
 
@@ -922,9 +692,6 @@ our role Expression::Rules {
     rule suffixed-expression-suffix:sym<field> {
 
         <tok-dot> 
-
-        #making this <expression> results in
-        #massive performance loss
         <identifier>  
     }
 
@@ -1188,6 +955,7 @@ our role Expression::Actions {
     }
 
     method expression-noblock($/) { 
+
         make $<expression>.made
     }
 
@@ -1337,7 +1105,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make ModuloExpression.new(
-                cast-expression => @exprs,
+                cast-expressions => @exprs,
                 text            => $/.Str,
             )
 
@@ -1375,7 +1143,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make MultiplicativeExpression.new(
-                division-expression => @exprs,
+                division-expressions => @exprs,
                 text                => $/.Str,
             )
 
@@ -1395,7 +1163,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make SubtractiveExpression.new(
-                multiplicative-expression => @exprs,
+                multiplicative-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1415,7 +1183,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make AdditiveExpression.new(
-                subtractive-expression => @exprs,
+                subtractive-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1435,7 +1203,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make BinaryShrExpression.new(
-                additive-expression => @exprs,
+                additive-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1446,14 +1214,15 @@ our role Expression::Actions {
     }
 
     method binary-shl-expression($/) {
-        my @exprs = $<binary-shr-expression>.made;
+
+        my @exprs = $<binary-shr-expression>>>.made;
 
         die if not @exprs.elems gt 0;
 
         if @exprs.elems gt 1 {
 
             make BinaryShlExpression.new(
-                binary-shr-expression => @exprs,
+                binary-shr-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1471,7 +1240,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make BinaryAndExpression.new(
-                binary-shl-expression => @exprs,
+                binary-shl-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1489,7 +1258,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make BinaryXorExpression.new(
-                binary-and-expression => @exprs,
+                binary-and-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1507,7 +1276,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make BinaryOrExpression.new(
-                binary-xor-expression => @exprs,
+                binary-xor-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1527,7 +1296,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make BinaryLeExpression.new(
-                binary-or-expression => @exprs,
+                binary-or-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1545,7 +1314,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make BinaryGeExpression.new(
-                binary-le-expression => @exprs,
+                binary-le-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1563,7 +1332,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make BinaryLtExpression.new(
-                binary-ge-expression => @exprs,
+                binary-ge-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1581,7 +1350,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make BinaryGtExpression.new(
-                binary-lt-expression => @exprs,
+                binary-lt-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1599,7 +1368,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make BinaryNeExpression.new(
-                binary-gt-expression => @exprs,
+                binary-gt-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1610,6 +1379,7 @@ our role Expression::Actions {
     }
 
     method binary-eqeq-expression($/) {
+
         my @exprs = $<binary-ne-expression>>>.made;
 
         die if not @exprs.elems gt 0;
@@ -1617,7 +1387,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make BinaryEqEqExpression.new(
-                binary-ne-expression => @exprs,
+                binary-ne-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1628,6 +1398,7 @@ our role Expression::Actions {
     }
 
     method binary-andand-expression($/) {
+
         my @exprs = $<binary-eqeq-expression>>>.made;
 
         die if not @exprs.elems gt 0;
@@ -1635,7 +1406,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make BinaryAndAndExpression.new(
-                binary-eqeq-expression => @exprs,
+                binary-eqeq-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1646,6 +1417,7 @@ our role Expression::Actions {
     }
 
     method binary-oror-expression($/) {
+
         my @exprs = $<binary-andand-expression>>>.made;
 
         die if not @exprs.elems gt 0;
@@ -1653,7 +1425,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make BinaryOrOrExpression.new(
-                binary-andand-expression => @exprs,
+                binary-andand-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1691,7 +1463,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make RangeExpressionFull.new(
-                binary-oror-expression => @exprs,
+                binary-oror-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1709,7 +1481,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make RangeExpressionTo.new(
-                binary-oror-expression => @exprs,
+                binary-oror-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1720,40 +1492,23 @@ our role Expression::Actions {
     }
 
     method range-expression:sym<to-eq>($/) {  
-        my @exprs = $<binary-oror-expression>.made;
 
-        die if not @exprs.elems gt 0;
+        my $expr = $<binary-oror-expression>.made;
 
-        if @exprs.elems gt 1 {
-
-            make RangeExpressionToEq.new(
-                binary-oror-expression => @exprs,
-                text => $/.Str,
-            )
-
-        } else {
-
-            make @exprs[0]
-        }
+        make RangeExpressionToEq.new(
+            binary-oror-expression => $expr,
+            text => $/.Str,
+        )
     }
 
     method range-expression:sym<from>($/) {  
 
-        my @exprs = $<binary-oror-expression>.made;
+        my $expr = $<binary-oror-expression>.made;
 
-        die if not @exprs.elems gt 0;
-
-        if @exprs.elems gt 1 {
-
-            make RangeExpressionFrom.new(
-                binary-oror-expression => @exprs,
-                text => $/.Str,
-            )
-
-        } else {
-
-            make @exprs[0]
-        }
+        make RangeExpressionFrom.new(
+            binary-oror-expression => $expr,
+            text => $/.Str,
+        )
     }
 
     method range-expression:sym<open>($/) {  
@@ -1775,7 +1530,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make ShrEqExpression.new(
-                range-expression => @exprs,
+                range-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1794,7 +1549,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make ShlEqExpression.new(
-                shreq-expression => @exprs,
+                shreq-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1813,7 +1568,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make XorEqExpression.new(
-                shleq-expression => @exprs,
+                shleq-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1832,7 +1587,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make OrEqExpression.new(
-                xoreq-expression => @exprs,
+                xoreq-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1851,7 +1606,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make AndEqExpression.new(
-                oreq-expression => @exprs,
+                oreq-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1870,11 +1625,12 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make ModEqExpression.new(
-                andeq-expression => @exprs,
+                andeq-expressions => @exprs,
                 text => $/.Str,
             )
 
         } else {
+
 
             make @exprs[0]
         }
@@ -1889,7 +1645,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make SlashEqExpression.new(
-                modeq-expression => @exprs,
+                modeq-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1908,7 +1664,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make StarEqExpression.new(
-                slasheq-expression => @exprs,
+                slasheq-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1927,7 +1683,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make MinusEqExpression.new(
-                stareq-expression => @exprs,
+                stareq-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1946,7 +1702,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make AddEqExpression.new(
-                minuseq-expression => @exprs,
+                minuseq-expressions => @exprs,
                 text => $/.Str,
             )
 
@@ -1965,8 +1721,8 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make AssignExpression.new(
-                addeq-expression => @exprs,
-                text => $/.Str,
+                addeq-expressions => @exprs,
+                text              => $/.Str,
             )
 
         } else {
@@ -1976,22 +1732,7 @@ our role Expression::Actions {
     }
 
     method expression($/) {
-
-        my @exprs = $<assign-expression>.made;
-
-        die if not @exprs.elems gt 0;
-
-        if @exprs.elems gt 1 {
-
-            make Expression.new(
-                assign-expression => @exprs,
-                text => $/.Str,
-            )
-
-        } else {
-
-            make @exprs[0]
-        }
+        make $<assign-expression>.made;
     }
 
     #-------------------------

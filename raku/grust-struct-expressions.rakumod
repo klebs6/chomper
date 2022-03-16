@@ -46,21 +46,21 @@ our class StructExpressionUnit {
     }
 }
 
-our class StructExprFields {
+our class StructExpr::Fields {
     has @.struct-expr-fields;
     has $.maybe-struct-base;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my @items = @.struct-expr-fields;
+
+        if $.maybe-struct-base {
+            @items.push: $.maybe-struct-base;
+        }
+
+        @items.join(",")
     }
 }
 
@@ -108,15 +108,17 @@ our class StructExprFieldId {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.maybe-comment {
+            qq:to/END/.chomp.trim
+            {$.maybe-comment.gist}
+            {$.identifier.gist}
+            END
+        } else {
+            qq:to/END/.chomp.trim
+            {$.identifier.gist}
+            END
+        }
     }
 }
 
@@ -209,7 +211,7 @@ our role StructExpression::Actions {
     method struct-expr-struct-body:sym<base>($/)   { make $<struct-base>.made }
 
     method struct-expr-fields($/) {
-        make StructExprFields.new(
+        make StructExpr::Fields.new(
             struct-expr-fields => $<struct-expr-field>>>.made,
             maybe-struct-base  => $<struct-base>.made,
             text               => $/.Str,

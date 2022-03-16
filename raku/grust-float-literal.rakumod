@@ -3,17 +3,8 @@ use Data::Dump::Tree;
 our class FloatLiteral {
     has $.value;
 
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        ~$.value
     }
 }
 
@@ -71,13 +62,5 @@ our role FloatLiteral::Rules {
         <dec-digit-or-underscore>*
         <dec-digit>
         <dec-digit-or-underscore>*
-    }
-}
-
-our role FloatLiteral::Actions {
-    method float-literal($/) {
-        make FloatLiteral.new(
-            value => $/.Str
-        )
     }
 }

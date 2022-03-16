@@ -7,15 +7,19 @@ our class IfExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = 
+        "if " 
+        ~ $.expression-nostruct.gist
+        ~ " "
+        ~ $.block-expression.gist;
+
+        if $.maybe-else-clause {
+            $builder ~= $.maybe-else-clause.gist;
+        }
+
+        $builder
     }
 }
 

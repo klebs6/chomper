@@ -11,7 +11,17 @@ our role Comment::Rules
 }
 
 our role Comment::Actions {
-    method comment:sym<line>($/)  { make "\n/*" ~ $<line-comment>>>.made.join("\n") ~ "*/" }
+
+    method comment:sym<line>($/)  { 
+
+        make 
+        parse-doxy-comment(
+            "\n/*\n" 
+            ~ $<line-comment>>>.made.join("\n")
+            ~ "\n*/"
+        )
+    }
+
     method comment:sym<block>($/) { make $<block-comment>.made }
 }
 

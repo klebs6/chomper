@@ -141,6 +141,8 @@ our role Rust::Actions::Role
     does AssociatedItem::Actions 
     does BareFunctionType::Actions 
     does Comment::Actions 
+    does LineComment::Actions 
+    does BlockComment::Actions 
     does BlockExpression::Actions 
     does CfgAttr::Actions 
     does ClosureExpression::Actions 

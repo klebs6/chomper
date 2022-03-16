@@ -31,15 +31,27 @@ our class FunctionQualifiers {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.const {
+            $builder ~= "const ";
+        }
+
+        if $.async {
+            $builder ~= "async ";
+        }
+
+        if $.unsafe {
+            $builder ~= "unsafe ";
+        }
+
+        if $.maybe-function-extern-modifier {
+            $builder ~= $.maybe-function-extern-modifier.gist;
+        }
+
+        $builder
     }
 }
 

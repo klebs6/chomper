@@ -1,5 +1,8 @@
 use Data::Dump::Tree;
 
+use grust-float-literal;
+use grust-int-literal;
+
 our role LiteralExpression::Rules {
 
     proto token literal-expression { * }
@@ -22,7 +25,14 @@ our role LiteralExpression::Actions {
     method literal-expression:sym<byte>($/)         { make $<byte-literal>.made            } 
     method literal-expression:sym<byte-str>($/)     { make $<byte-string-literal>.made     } 
     method literal-expression:sym<raw-byte-str>($/) { make $<raw-byte-string-literal>.made } 
-    method literal-expression:sym<int>($/)          { make $<integer-literal>.made         } 
-    method literal-expression:sym<float>($/)        { make $<float-literal>.made           } 
+
+    method literal-expression:sym<int>($/) { 
+        make IntegerLiteral.new( value => ~$/)
+    } 
+
+    method literal-expression:sym<float>($/) { 
+        make FloatLiteral.new( value => $/.Str) 
+    }
+
     method literal-expression:sym<bool>($/)         { make $<boolean-literal>.made         } 
 }
