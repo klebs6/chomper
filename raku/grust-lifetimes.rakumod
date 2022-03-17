@@ -5,34 +5,24 @@ our class LifetimeToken {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "'" ~ $.identifier-or-keyword.gist
     }
 }
 
-our class LifetimeTokenAnonymous { }
+our class LifetimeTokenAnonymous { 
+    method gist {
+        "'_"
+    }
+}
 
 our class LifetimeOrLabel {
     has $.non-keyword-identifier;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "'" ~ $.non-keyword-identifier.gist
     }
 }
 
@@ -41,15 +31,8 @@ our class LifetimeBounds {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.lifetimes>>.join(" + ")
     }
 }
 
@@ -58,15 +41,8 @@ our class Lifetime {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.lifetime-or-label.gist
     }
 }
 
@@ -74,15 +50,8 @@ our class StaticLifetime  {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "'static"
     }
 }
 
@@ -90,15 +59,8 @@ our class UnnamedLifetime {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "'_"
     }
 }
 
@@ -107,15 +69,8 @@ our class ForLifetimes {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "for " ~ @.generic-params>>.gist.join(" ")
     }
 }
 

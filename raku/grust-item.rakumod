@@ -7,15 +7,21 @@ our class CrateItem {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist ~ "\n";
+        }
+
+        for @.outer-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder ~= $.item-variant.gist;
+
+        $builder
     }
 }
 
@@ -25,15 +31,17 @@ our class VisItem {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-visibility {
+            $builder ~= $.maybe-visibility.gist ~ " ";
+        }
+
+        $builder ~= $.vis-item-variant.gist;
+
+        $builder
     }
 }
 
@@ -42,15 +50,8 @@ our class InitExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "= " ~ $.expression
     }
 }
 
@@ -61,15 +62,21 @@ our class ConstantItem {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        $builder ~= "const " ~ $.identifier-or-underscore.gist;
+
+        $builder ~= ": " ~ $.type.gist;
+
+        if $.maybe-init-expression {
+            $builder ~= $.maybe-init-expression.gist;
+        }
+
+        $builder ~= ";";
+
+        $builder
     }
 }
 
@@ -81,15 +88,26 @@ our class StaticItem {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        my $builder = "";
+
+        $builder ~= "static ";
+
+        if $.mutable {
+            $builder ~= "mut ";
+        }
+
+        $builder ~= $.identifier.gist;
+
+        $builder ~= ": " ~ $.type.gist;
+
+        if $.maybe-init-expression {
+            $builder ~= $.maybe-init-expression.gist;
+        }
+
+        $builder ~= ";";
+
+        $builder
     }
 }
 
@@ -154,7 +172,6 @@ our role Item::Rules {
         <init-expression>?
         <tok-semi>
     }
-
 }
 
 our role Item::Actions {
@@ -179,20 +196,20 @@ our role Item::Actions {
         )
     }
 
-    method vis-item-variant:sym<module>($/)          { make $<module>.made }
-    method vis-item-variant:sym<extern-crate>($/)    { make $<extern-crate>.made }
-    method vis-item-variant:sym<use-declaration>($/) { make $<use-declaration>.made }
-    method vis-item-variant:sym<function>($/)        { make $<function>.made }
-    method vis-item-variant:sym<type-alias>($/)      { make $<type-alias>.made }
-    method vis-item-variant:sym<struct>($/)          { make $<struct>.made }
-    method vis-item-variant:sym<enumeration>($/)     { make $<enumeration>.made }
-    method vis-item-variant:sym<union>($/)           { make $<union>.made }
-    method vis-item-variant:sym<constant-item>($/)   { make $<constant-item>.made }
-    method vis-item-variant:sym<static-item>($/)     { make $<static-item>.made }
-    method vis-item-variant:sym<trait>($/)           { make $<trait>.made }
-    method vis-item-variant:sym<trait-alias>($/)     { make $<trait-alias>.made }
-    method vis-item-variant:sym<implementation>($/)  { make $<implementation>.made }
-    method vis-item-variant:sym<extern-block>($/)    { make $<extern-block>.made }
+    method vis-item-variant:sym<module>($/)           { make $<module>.made }
+    method vis-item-variant:sym<extern-crate>($/)     { make $<extern-crate>.made }
+    method vis-item-variant:sym<use-declaration>($/)  { make $<use-declaration>.made }
+    method vis-item-variant:sym<function>($/)         { make $<function>.made }
+    method vis-item-variant:sym<type-alias>($/)       { make $<type-alias>.made }
+    method vis-item-variant:sym<struct>($/)           { make $<struct>.made }
+    method vis-item-variant:sym<enumeration>($/)      { make $<enumeration>.made }
+    method vis-item-variant:sym<union>($/)            { make $<union>.made }
+    method vis-item-variant:sym<constant-item>($/)    { make $<constant-item>.made }
+    method vis-item-variant:sym<static-item>($/)      { make $<static-item>.made }
+    method vis-item-variant:sym<trait>($/)            { make $<trait>.made }
+    method vis-item-variant:sym<trait-alias>($/)      { make $<trait-alias>.made }
+    method vis-item-variant:sym<implementation>($/)   { make $<implementation>.made }
+    method vis-item-variant:sym<extern-block>($/)     { make $<extern-block>.made }
 
     method macro-item:sym<macro-invocation>($/)       { make $<macro-invocation>.made }
     method macro-item:sym<macro-rules-definition>($/) { make $<macro-rules-definition>.made }

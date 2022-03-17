@@ -36,15 +36,15 @@ our class QualifiedPathInExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = $.qualified-path-type.gist;
+
+        for @.path-expr-segments {
+            $builder ~= "::" ~ $_.gist;
+        }
+
+        $builder
     }
 }
 
@@ -54,15 +54,19 @@ our class QualifiedPathType {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "<";
+
+        $builder ~= $.type.gist;
+
+        if $.maybe-as-type-path {
+            $builder ~= " as " ~ $.maybe-as-type-path.gist;
+        }
+
+        $builder ~= ">";
+
+        $builder
     }
 }
 
@@ -72,15 +76,15 @@ our class QualifiedPathInType {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = $.qualified-path-type.gist;
+
+        for @.type-path-segments {
+            $builder ~= "::" ~ $._.gist;
+        }
+
+        $builder
     }
 }
 

@@ -39,31 +39,12 @@ our role IntLiteral::Rules {
         <dec-digit> [<dec-digit> | _]*
     }
 
-    token bin-literal {
-        0b <bin-digit>+
-    }
+    token bin-literal { 0b <bin-digit>+ }
+    token oct-literal { 0o <oct-digit>+ }
+    token hex-literal { 0x <hex-digit>+ }
 
-    token oct-literal {
-        0o <oct-digit>+
-    }
-
-    token hex-literal {
-        0x <hex-digit>+
-    }
-
-    token bin-digit {
-        <[0..1 _]>
-    }
-
-    token oct-digit {
-        <[0..7 _]>
-    }
-
-    token dec-digit {
-        <[0..9 _]>
-    }
-
-    token hex-digit {
-        <[0..9 a..f A..F _]>
-    }
+    token bin-digit { <[0..1 _]> }
+    token oct-digit { <[0..7 _]> }
+    token dec-digit { <[0..9 _]> }
+    token hex-digit { <[0..9 a..f A..F _]> }
 }

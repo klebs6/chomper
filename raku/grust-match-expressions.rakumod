@@ -7,15 +7,23 @@ our class MatchExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "match " ~ $.scrutinee.gist;
+
+        $builder ~= '{';
+
+        for @.inner-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        if $.maybe-match-arms {
+            $builder ~= $.maybe-match-arms.gist;
+        }
+
+        $builder ~= '}';
+
+        $builder
     }
 }
 
@@ -24,15 +32,8 @@ our class Scrutinee {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.expression-nostruct.gist
     }
 }
 
@@ -42,15 +43,15 @@ our class MatchArms {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = @.items>>.gist.join("\n");
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist;
+        }
+
+        $builder
     }
 }
 
@@ -61,15 +62,18 @@ our class MatchArmsInnerItemWithBlock {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist ~ "\n";
+        }
+
+        $builder ~= $.match-arm.gist;
+        $builder ~= " => " ~ $.expression-with-block.gist;
+
+        $builder
     }
 }
 
@@ -80,15 +84,17 @@ our class MatchArmsInnerItemWithoutBlock {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        my $builder = "";
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist ~ "\n";
+        }
+
+        $builder ~= $.match-arm.gist;
+        $builder ~= " => " ~ $.expression-noblock.gist ~ ",";
+
+        $builder
     }
 }
 
@@ -99,15 +105,18 @@ our class MatchArmsOuterItem {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist ~ "\n";
+        }
+
+        $builder ~= $.match-arm.gist ~ " => ";
+        $builder ~= $.expression.gist;
+
+        $builder
     }
 }
 
@@ -118,15 +127,21 @@ our class MatchArm {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        for @.outer-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder ~= $.pattern.gist ~ " ";
+
+        if $.maybe-match-arm-guard {
+            $builder ~= $_.gist;
+        }
+
+        $builder
     }
 }
 
@@ -135,15 +150,8 @@ our class MatchArmGuard {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "if " ~ $.expression.gist
     }
 }
 

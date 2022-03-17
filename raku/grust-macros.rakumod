@@ -6,15 +6,8 @@ our class MacroExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.simple-path.gist ~ "!" ~ $.delim-token-tree.gist
     }
 }
 
@@ -23,15 +16,8 @@ our class DelimTokenTree {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        '{\n' ~ @.token-trees>>.gist ~ '\n}'
     }
 }
 
@@ -40,15 +26,8 @@ our class TokenTreeLeaf {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.rust-token-no-delim.gist
     }
 }
 
@@ -57,15 +36,8 @@ our class TokenTree {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.delim-token-tree.gist
     }
 }
 
@@ -76,15 +48,19 @@ our class MacroInvocation {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist ~ "\n";
+        }
+
+        $bulider ~= $.simple-path ~ '!{';
+        $builder ~= @.token-trees>>.gist.join("\n");
+        $builder ~= '}';
+
+        $builder
     }
 }
 
@@ -94,51 +70,44 @@ our class MacroRulesDefinition {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "macro_rules!" 
+        ~ $.identifier.gist 
+        ~ $.macro-rules-def.gist
     }
 }
 
 our class MacroRulesDef {
     has $.maybe-comment;
-    has @.macro-rules;
+    has $.macro-rules;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = '{';
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist;
+        }
+
+        $builder ~= $.macro-rules.List>>.gist.join(";\n");
+
+        $builder ~= '}';
+
+        $builder
     }
 }
 
 our class MacroRule {
+
     has $.macro-matcher;
     has $.macro-transcriber;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.macro-matcher.gist ~ "=>" ~ $.macro-transcriber.gist
     }
 }
 
@@ -147,15 +116,8 @@ our class MacroMatcher {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        '{' ~ @.macro-matches>>.gist.join("\n") ~ '}'
     }
 }
 
@@ -164,15 +126,8 @@ our class MacroMatchToken {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.token
     }
 }
 
@@ -181,15 +136,8 @@ our class MacroMatchMatcher {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.macro-matcher
     }
 }
 
@@ -199,15 +147,8 @@ our class MacroMatchSingle {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        '$' ~ $.identifier.gist ~ ":" ~ $.macro-frag-spec.gist
     }
 }
 
@@ -218,15 +159,23 @@ our class MacroMatchPlural {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        $builder ~= '$(';
+
+        $builder ~= @.macro-matches>>.gist.join(" ");
+
+        $builder ~= ')';
+
+        if $.maybe-macro-rep-sep {
+            $builder ~= $.maybe-macro-rep-sep.gist ~ " ";
+        }
+
+        $builder ~= $.macro-rep-op.gist;
+
+        $builder
     }
 }
 
@@ -235,55 +184,39 @@ our class MacroRepSep {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.token.gist
     }
 }
 
-our class MacroRepOpStar { }
-
-our class MacroRepOpPlus { }
-
-our class MacroRepOpQmark { }
+our class MacroRepOpStar  { method gist { "*" } }
+our class MacroRepOpPlus  { method gist { "+" } }
+our class MacroRepOpQmark { method gist { "?" } }
 
 our class MacroTranscriber {
     has $.delim-token-tree;
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.delim-token-tree.gist
     }
 }
 
-our class MacroFragSpec::Block    { }
-our class MacroFragSpec::Expr     { }
-our class MacroFragSpec::Ident    { }
-our class MacroFragSpec::Item     { }
-our class MacroFragSpec::Lifetime { }
-our class MacroFragSpec::Literal  { }
-our class MacroFragSpec::Meta     { }
-our class MacroFragSpec::Pat      { }
-our class MacroFragSpec::PatParam { }
-our class MacroFragSpec::Path     { }
-our class MacroFragSpec::Stmt     { }
-our class MacroFragSpec::Tt       { }
-our class MacroFragSpec::Ty       { }
-our class MacroFragSpec::Vis      { }
+our class MacroFragSpec::Block    { method gist { "block"     } } 
+our class MacroFragSpec::Expr     { method gist { "expr"      } } 
+our class MacroFragSpec::Ident    { method gist { "ident"     } } 
+our class MacroFragSpec::Item     { method gist { "item"      } } 
+our class MacroFragSpec::Lifetime { method gist { "lifetime"  } } 
+our class MacroFragSpec::Literal  { method gist { "literal"   } } 
+our class MacroFragSpec::Meta     { method gist { "meta"      } } 
+our class MacroFragSpec::Pat      { method gist { "pat"       } } 
+our class MacroFragSpec::PatParam { method gist { "pat_param" } } 
+our class MacroFragSpec::Path     { method gist { "path"      } } 
+our class MacroFragSpec::Stmt     { method gist { "stmt"      } } 
+our class MacroFragSpec::Tt       { method gist { "tt"        } } 
+our class MacroFragSpec::Ty       { method gist { "ty"        } } 
+our class MacroFragSpec::Vis      { method gist { "vis"       } } 
 
 our role MacroInvocation::Rules {
 
@@ -404,7 +337,6 @@ our role MacroInvocation::Rules {
     rule macro-transcriber {
         <delim-token-tree>
     }
-
 }
 
 our role MacroInvocation::Actions {

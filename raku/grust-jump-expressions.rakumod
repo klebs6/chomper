@@ -5,15 +5,15 @@ our class ContinueExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "continue";
+
+        if $.maybe-lifetime-or-label {
+            $builder ~= " " ~ $.maybe-lifetime-or-label.gist;
+        }
+
+        $builder
     }
 }
 
@@ -23,15 +23,19 @@ our class BreakExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "break";
+
+        if $.maybe-lifetime-or-label {
+            $builder ~= " " ~ $.maybe-lifetime-or-label.gist;
+        }
+
+        if $.maybe-expression {
+            $builder ~= " " ~ $.maybe-expression.gist;
+        }
+
+        $builder
     }
 }
 
@@ -40,15 +44,15 @@ our class ReturnExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "return";
+
+        if $.maybe-expression {
+            $builder ~= " " ~ $.maybe-expression.gist;
+        }
+
+        $builder
     }
 }
 

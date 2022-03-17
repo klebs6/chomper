@@ -5,15 +5,8 @@ our class MetaItemSimple {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.simple-path.gist
     }
 }
 
@@ -23,15 +16,8 @@ our class MetaItemSimpleEqExpr {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.simple-path.gist ~ " = " ~ $.expression.gist
     }
 }
 
@@ -41,15 +27,19 @@ our class MetaItemSimpleWithMetaSeq {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        if $.meta-seq {
+
+            $.simple-path.gist 
+            ~ "(" 
+            ~ $.meta-seq.List>>.gist.join(",") 
+            ~ ")"
+
+        } else {
+
+            $.simple-path.gist ~ "()"
+        }
     }
 }
 
@@ -58,15 +48,8 @@ our class MetaWord {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.identifier.gist
     }
 }
 
@@ -76,15 +59,15 @@ our class MetaNameValueStr {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = $.identifier.gist;
+
+        $builder ~= " = ";
+
+        $builder ~= $.any-string-literal.gist;
+
+        $builder
     }
 }
 
@@ -94,15 +77,15 @@ our class MetaListPaths {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = $.identifier.gist;
+
+        $builder ~= "(";
+        $builder ~= @.simple-paths>>.gist.join(",");
+        $builder ~= ")";
+
+        $builder
     }
 }
 
@@ -112,15 +95,15 @@ our class MetaListIdents {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = $.identifier.gist;
+
+        $builder ~= "(";
+        $builder ~= @.grouped-identifiers>>.gist.join(",");
+        $builder ~= ")";
+
+        $builder
     }
 }
 
@@ -130,15 +113,14 @@ our class MetaListNameValueStr {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        my $builder = $.identifier.gist;
+
+        $builder ~= "(";
+        $builder ~= @.grouped-meta-name-value-str>>.gist.join(",");
+        $builder ~= ")";
+
+        $builder
     }
 }
 

@@ -6,15 +6,17 @@ our class LoopExpressionInfinite {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-loop-label {
+            $builder ~= $.maybe-loop-label.gist ~ " ";
+        }
+
+        $builder ~= "loop " ~ $.block-expression.gist;
+
+        $builder
     }
 }
 
@@ -25,15 +27,17 @@ our class LoopExpressionPredicate {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-loop-label {
+            $builder ~= $.maybe-loop-label.gist ~ " ";
+        }
+
+        $builder ~= "while " ~ $.expression-nostruct.gist;
+        $builder ~= $.block-expression.gist;
+        $builder
     }
 }
 
@@ -45,15 +49,21 @@ our class LoopExpressionPredicatePattern {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-loop-label {
+            $builder ~= $.maybe-loop-label.gist ~ " ";
+        }
+
+        $builder ~= "whlie let " ~ $.pattern.gist;
+
+        $builder ~= " = " ~ $.scrutinee.gist;
+
+        $builder ~= $.block-expression.gist;
+
+        $builder
     }
 }
 
@@ -65,15 +75,19 @@ our class LoopExpressionIterator {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-loop-label {
+            $builder ~= $.maybe-loop-label.gist ~ " ";
+        }
+
+        $builder ~= "for " ~ $.pattern.gist ~ " ";
+        $builder ~= "in "  ~ $.expression-nostruct.gist ~ " ";
+        $builder ~= $.block-expression.gist;
+
+        $builder
     }
 }
 
@@ -82,15 +96,8 @@ our class LoopLabel {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.lifetime-or-label.gist ~ ":"
     }
 }
 

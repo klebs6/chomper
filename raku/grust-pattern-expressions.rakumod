@@ -5,15 +5,8 @@ our class Pattern {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.pattern-no-top-alts>>.gist.join("|")
     }
 }
 
@@ -47,9 +40,8 @@ our class IdentifierPattern {
     }
 }
 
-our class WildcardPattern { }
-
-our class RestPattern { }
+our class WildcardPattern { method gist {  '*' } }
+our class RestPattern     { method gist { '..' } }
 
 our role Pattern::Rules {
 
@@ -94,7 +86,6 @@ our role Pattern::Rules {
     rule pattern-without-range:sym<grouped>          { <grouped-pattern>      } 
     rule pattern-without-range:sym<slice>            { <slice-pattern>        } 
     rule pattern-without-range:sym<macro-invocation> { <macro-invocation>     } 
-
 }
 
 our role Pattern::Actions {
