@@ -340,7 +340,6 @@ our role Function::Rules {
         <type>
         <comment>?
     }
-
 }
 
 our role Function::Actions {

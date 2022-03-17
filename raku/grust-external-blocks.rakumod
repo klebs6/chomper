@@ -8,15 +8,33 @@ our class ExternBlock {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder;
+
+        if $.unsafe {
+            $builder ~= "unsafe ";
+        }
+
+        $builder ~= "extern ";
+
+        if $.maybe-abi {
+            $builder ~= $_.gist;
+        }
+
+        $builder ~= "{\n";
+
+        for @.inner-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        for @.external-items {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder ~= "\n}";
+
+        $builder 
     }
 }
 
@@ -26,15 +44,17 @@ our class ExternalItem {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        for @.outer-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder ~= $.external-item-variant.gist;
+
+        $builder
     }
 }
 
@@ -43,15 +63,8 @@ our class ExternalItemMacroInvocation {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.macro-invocation.gist
     }
 }
 
@@ -61,15 +74,17 @@ our class ExternalItemFn {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-visibility {
+            $builder ~= $.maybe-visibility.gist ~ " ";
+        }
+
+        $builder ~= $.function.gist;
+
+        $builder
     }
 }
 
@@ -79,15 +94,16 @@ our class ExternalItemStatic {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        if $.maybe-visibility {
+
+            $.maybe-visibility.gist ~ " " ~ $.static-item.gist
+
+        } else {
+
+            $.static-item.gist
+        }
     }
 }
 

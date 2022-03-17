@@ -8,15 +8,27 @@ our class BareFunctionType {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        my $builder = "";
+
+        if $.maybe-for-lifetimes {
+            $builder ~= $.maybe-for-lifetimes.gist ~ " ";
+        }
+
+        $builder ~= $.function-type-qualifiers.gist;
+        $builder ~= " fn (";
+
+        if $.maybe-function-parameters {
+            $builder ~= $.maybe-function-parameters.gist;
+        }
+
+        $builder ~= ")";
+
+        if $.maybe-function-return-type {
+            $builder ~= " " ~ $.maybe-function-return-type.gist;
+        }
+
+        $builder
     }
 }
 
@@ -25,15 +37,12 @@ our class FunctionExternModifier {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.maybe-abi {
+            "extern " ~ $.maybe-abi.gist
+        } else {
+            "extern"
+        }
     }
 }
 
@@ -64,15 +73,8 @@ our class BareFunctionReturnType {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "-> " ~ $.type-no-bounds.gist
     }
 }
 
@@ -81,15 +83,8 @@ our class FunctionParametersBasic {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.maybe-named-params>>.gist.join(", ")
     }
 }
 
@@ -99,15 +94,17 @@ our class FunctionParametersVariadic {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = @.maybe-named-params>>.gist.join(", ") ~ ", ";
+
+        for @.outer-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder ~= "...";
+
+        $builder
     }
 }
 
@@ -118,15 +115,21 @@ our class MaybeNamedParam {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        for @.outer-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        if $.maybe-type-identifier-or-underscore {
+            $builder ~= $.maybe-type-identifier-or-underscore.gist ~ ":";
+        }
+
+        $builder ~= $.type.gist;
+
+        $builder
     }
 }
 
