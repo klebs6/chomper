@@ -22,7 +22,7 @@ our class ExternBlock {
             $builder ~= $_.gist;
         }
 
-        $builder ~= "{\n";
+        $builder ~= "\{\n";
 
         for @.inner-attributes {
             $builder ~= $_.gist ~ "\n";
@@ -32,7 +32,7 @@ our class ExternBlock {
             $builder ~= $_.gist ~ "\n";
         }
 
-        $builder ~= "\n}";
+        $builder ~= "\n\}";
 
         $builder 
     }

@@ -11,15 +11,40 @@ our class Function {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = 
+        $.function-qualifiers 
+        ~ " fn " 
+        ~ $.identifier.gist;
+
+        if $.maybe-generic-params {
+            $builder ~= $.maybe-generic-params.gist;
+        }
+
+        $bulider ~= "(";
+
+        if $.maybe-function-parameters {
+            $builder ~= $.maybe-function-parameters.gist;
+        }
+
+        $bulider ~= ")";
+
+        if $.maybe-function-return-type {
+            $builder ~= $.maybe-function-return-type.gist;
+        }
+
+        if $.maybe-where-clause {
+            $builder ~= "\n" ~ $.maybe-where-clause.gist;
+        }
+
+        if $.maybe-block-expression {
+            $builder ~= $.maybe-block-expression.gist;
+        } else {
+            $builder ~= ";";
+        }
+
+        $builder
     }
 }
 
@@ -61,15 +86,22 @@ our class FunctionParameters {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $bulider = "";
+
+        if $.maybe-self-param {
+
+            $builder ~= $.maybe-self-param.gist;
+
+            if @.function-params.elems gt 0 {
+                $builder ~= ", ";
+            }
+        }
+
+        $builder ~= @.function-params>>.gist.join(", ");
+
+        $builder
     }
 }
 
@@ -79,15 +111,17 @@ our class SelfParam {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        for @.outer-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder ~= $.self-param-variant.gist;
+
+        $builder
     }
 }
 
@@ -96,15 +130,15 @@ our class SelfBorrow {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "&";
+
+        if $.maybe-lifetime {
+            $builder ~= $.maybe-lifetime.gist;
+        }
+
+        $builder
     }
 }
 
@@ -114,15 +148,19 @@ our class SelfParamVariantShorthand {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-self-borrow {
+            $builder ~= $.maybe-self-borrow.gist;
+        }
+
+        if $.mutable {
+            $builder ~= "mut ";
+        }
+
+        $builder ~ "self"
     }
 }
 
@@ -132,15 +170,17 @@ our class SelfParamVariantTyped {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.mutable {
+            $builder ~= "mut ";
+        }
+
+        $builder ~= "self:" ~ $.type.gist;
+
+        $builder
     }
 }
 
@@ -151,15 +191,21 @@ our class FunctionParam {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-comment {
+            $builder ~= "\n" ~ $.maybe-comment.gist ~ "\n";
+        }
+
+        for @.outer-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder ~= $.function-param-variant.gist;
+
+        $builder
     }
 }
 
@@ -169,15 +215,10 @@ our class FunctionParamVariantPatternType {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.pattern-no-top-alt.gist 
+        ~ ": " 
+        ~ $.type.gist
     }
 }
 
@@ -186,15 +227,10 @@ our class FunctionParamVariantPatternEllipsis {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.pattern-no-top-alt.gist 
+        ~ ": " 
+        ~ "..."
     }
 }
 
@@ -202,15 +238,8 @@ our class FunctionParamVariantEllipsis {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "..."
     }
 }
 
@@ -220,15 +249,14 @@ our class FunctionReturnType {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        my $builder = "-> " ~ $.type.gist;
+
+        if $.maybe-comment {
+            $builder ~= " " ~ $.maybe-comment.gist;
+        }
+
+        $builder
     }
 }
 

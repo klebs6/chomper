@@ -48,7 +48,7 @@ our class EnumItem {
         }
 
         if $.maybe-visibility {
-            $builder ~= $maybe-visibility.gist;
+            $builder ~= $.maybe-visibility.gist;
         }
 
         $builder ~= $.identifier.gist;

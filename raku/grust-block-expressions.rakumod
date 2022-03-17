@@ -39,7 +39,7 @@ our class AsyncBlockExpression {
             $builder ~= "move ";
         }
 
-        $bulider ~= $.block-expression.gist;
+        $builder ~= $.block-expression.gist;
 
         $builder
     }
@@ -53,7 +53,7 @@ our class UnsafeBlockExpression {
     method gist {
         my $builder = "unsafe ";
 
-        $bulider ~= $.block-expression.gist;
+        $builder ~= $.block-expression.gist;
 
         $builder
     }

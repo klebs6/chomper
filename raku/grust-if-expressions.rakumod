@@ -31,15 +31,18 @@ our class IfLetExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "if let " ~ $.pattern.gist;
+
+        $builder ~= " = " ~ $.scrutinee.gist;
+        $builder ~= $.block-expression.gist;
+
+        if $.maybe-else-clause {
+            $builder ~= $.maybe-else-clause.gist;
+        }
+
+        $builder
     }
 }
 
@@ -48,15 +51,8 @@ our class ElseClause {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "else " ~ $.else-clause-variant.gist
     }
 }
 

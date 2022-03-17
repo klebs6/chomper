@@ -1,39 +1,5 @@
 use Data::Dump::Tree;
 
-our class TypeParamBoundLifetime {
-    has $.lifetime;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
-our class TypeParamBoundTraitBound {
-    has $.trait-bound;
-
-    has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
-
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
-
 our class TraitBound {
     has Bool $.qmark;
     has $.maybe-for-lifetimes;
@@ -41,15 +7,21 @@ our class TraitBound {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.qmark {
+            $builder ~= "?";
+        }
+
+        if $.maybe-for-lifetimes {
+            $builder ~= $.maybe-for-lifetimes.gist ~ " ";
+        }
+
+        $builder ~= $.type-path.gist;
+
+        $builder
     }
 }
 
@@ -58,15 +30,8 @@ our class MinusLiteralExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "-" ~ $.literal-expression.gist
     }
 }
 
@@ -76,15 +41,8 @@ our class GenericArgsBinding {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.identifier.gist ~ " = " ~ $.type.gist
     }
 }
 

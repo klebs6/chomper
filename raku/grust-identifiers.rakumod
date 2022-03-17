@@ -5,15 +5,8 @@ our class IdentifierOrKeyword {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -38,7 +31,6 @@ sub is-not-strict-or-reserved-keyword($token) {
 
     $token !~~ /$strict | $reserved/
 }
-
 
 our role Identifiers::Rules {
 

@@ -6,15 +6,17 @@ our class GenericParam {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        for @.outer-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder ~= $.generic-param-variant.gist;
+
+        $builder
     }
 }
 
@@ -24,15 +26,14 @@ our class LifetimeParam {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        my $builder = $.lifetime-or-label.gist;
+
+        if $.maybe-lifetime-bounds.gist {
+            $builder ~= ": " ~ $.maybe-lifetime-bounds.gist;
+        }
+
+        $builder
     }
 }
 
@@ -43,15 +44,19 @@ our class TypeParam {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = $.identifier.gist;
+
+        if $.maybe-type-param-bounds {
+            $builder ~= ": " ~ $.maybe-type-param-bounds.gist;
+        }
+
+        if $.maybe-type {
+            $builder ~= " = " ~ $.maybe-type.gist;
+        }
+
+        $builder
     }
 }
 
@@ -61,15 +66,8 @@ our class ConstParam {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "const " ~ $.identifier ~ ": " ~ $.type.gist
     }
 }
 
@@ -119,7 +117,7 @@ our role GenericParams::Rules {
 our role GenericParams::Actions {
 
     method generic-params {
-        make $<generic-param>.made
+        make $<generic-param>>>.made
     }
 
     method generic-param {

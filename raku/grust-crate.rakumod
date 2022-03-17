@@ -100,7 +100,7 @@ our class ModuleBlock {
 
         $builder ~= "mod " ~ $.identifier.gist;
 
-        $builder ~= "{\n";
+        $builder ~= "\{\n";
 
         for @.inner-attributes {
             my $item = $_.gist ~ "\n";
@@ -112,7 +112,7 @@ our class ModuleBlock {
             $builder ~= $item.indent(4);
         }
 
-        $builder ~= "\n}";
+        $builder ~= "\n\}";
 
         $builder
     }
