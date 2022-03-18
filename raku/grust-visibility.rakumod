@@ -1,19 +1,19 @@
 use Data::Dump::Tree;
 
 our class VisibilityPublic {
-
+    method gist { "pub" }
 }
 
 our class VisibilityCrate {
-
+    method gist { "pub(crate)" }
 }
 
 our class VisibilitySelf {
-
+    method gist { "pub(self)" }
 }
 
 our class VisibilitySuper {
-
+    method gist { "pub(super)" }
 }
 
 our class VisibilityInPath {
@@ -21,15 +21,8 @@ our class VisibilityInPath {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "pub(in " ~ $.simple-path.gist ~ ")"
     }
 }
 

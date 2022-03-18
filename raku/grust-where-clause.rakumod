@@ -5,15 +5,15 @@ our class WhereClause {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "where ";
+
+        for @.where-clause-items {
+            $builder ~= $_.gist ~ ", ";
+        }
+
+        $builder
     }
 }
 
@@ -23,15 +23,8 @@ our class WhereClauseItemLifetime {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.lifetime.gist ~ ":" ~ $.lifetime-bounds.gist
     }
 }
 
@@ -42,15 +35,21 @@ our class WhereClauseItemTypeBound {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-for-lifetimes {
+            $builder ~= $.maybe-for-lifetimes.gist;
+        }
+
+        $builder ~= " " ~ $.type.gist ~ ": ";
+
+        if $.maybe-type-param-bounds {
+            $builder ~= $.maybe-type-param-bounds.gist;
+        }
+
+        $builder
     }
 }
 our role WhereClause::Rules {

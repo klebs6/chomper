@@ -5,15 +5,8 @@ our class UseDeclaration {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "use " ~ $.use-tree.gist ~ ";"
     }
 }
 
@@ -22,15 +15,16 @@ our class UseTreeBasic {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        if $.maybe-simple-path {
+
+            $.maybe-simple-path.gist ~ "::" ~ "*"
+
+        } else {
+
+            "*"
+        }
     }
 }
 
@@ -40,15 +34,21 @@ our class UseTreeComplex {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-simple-path {
+            $builder ~= $.maybe-simple-path.gist ~ "::";
+        }
+
+        $builder ~= '{';
+
+        for @.use-trees {
+            $builder ~= $_.gist ~ ", ";
+        }
+
+        $builder ~ '}'
     }
 }
 
@@ -58,15 +58,15 @@ our class UseTreeAs {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = $.simple-path.gist;
+
+        if $.as-identifier-or-underscore {
+            $builder ~= " as " ~ $.as-identifier-or-underscore.gist;
+        }
+
+        $builder
     }
 }
 

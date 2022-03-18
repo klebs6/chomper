@@ -33,15 +33,8 @@ our class TypePathSegmentSuffixGeneric {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.generic-args.gist
     }
 }
 
@@ -50,15 +43,8 @@ our class TypePathSegmentSuffixTypePathFn {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.type-path-fn.gist
     }
 }
 
@@ -68,15 +54,21 @@ our class TypePathFn {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "(";
+
+        if $.maybe-type-path-fn-inputs {
+            $builder ~= $.maybe-type-path-fn-inputs;
+        }
+
+        $builder ~= ")";
+
+        if $.maybe-type {
+            $builder ~= " -> " ~ $.maybe-type.gist;
+        }
+
+        $builder
     }
 }
 
@@ -85,15 +77,8 @@ our class TypePathFnInputs {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.types>>.gist.join(", ")
     }
 }
 

@@ -5,28 +5,17 @@ our class ParenthesizedType {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "(" ~ $.type.gist ~ ")"
     }
 }
 
 our class InferredType { 
-    method gist {
-
-    }
+    method gist { "_" }
 }
 
 our class NeverType {
-    method gist {
-
-    }
+    method gist { "!" }
 }
 
 our class TupleType {
@@ -34,15 +23,8 @@ our class TupleType {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "(" ~ @.types>>.gist.join(",") ~ ")"
     }
 }
 
@@ -52,15 +34,8 @@ our class ArrayType {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "[" ~ $.type.gist ~ "; " ~ $.expression.gist ~ "]"
     }
 }
 
@@ -69,15 +44,8 @@ our class SliceType {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "[" ~ $.type.gist ~ "]"
     }
 }
 
@@ -88,15 +56,21 @@ our class ReferenceType {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "&";
+
+        if $.maybe-lifetime {
+            $builder ~= $.maybe-lifetime.gist ~ " ";
+        }
+
+        if $.mutable {
+            $builder ~= "mut ";
+        }
+
+        $builder ~= $.type-no-bounds.gist;
+
+        $builder
     }
 }
 
@@ -106,15 +80,17 @@ our class RawPtrType {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "*";
+
+        if $.mutable {
+            $builder ~= "mut ";
+        } else {
+            $builder ~= "const ";
+        }
+
+        $builder ~ $.type-no-bounds.gist
     }
 }
 
