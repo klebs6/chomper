@@ -8,15 +8,29 @@ our class Struct {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "struct " ~ $.identifier.gist;
+
+        if $.maybe-generic-params {
+            $builder ~= $.maybe-generic-params.gist;
+        }
+
+        if $.maybe-where-clause {
+            $builder ~= $.maybe-where-clause.gist;
+        }
+
+        if @.maybe-struct-fields.elems gt 0 {
+
+            $builder ~= '{';
+            $builder ~= @.maybe-struct-fields>>.gist.join("\n").indent(4);
+            $builder ~= '}';
+
+        } else {
+            $builder ~= ";";
+        }
+
+        $builder
     }
 }
 
@@ -28,15 +42,27 @@ our class TupleStruct {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "struct " ~ $.identifier.gist;
+
+        if $.maybe-generic-params {
+            $builder ~= $.maybe-generic-params.gist;
+        }
+
+        $builder ~= "(";
+
+        for @.maybe-tuple-fields {
+            $builder ~= $_.gist ~ ", ";
+        }
+
+        $builder ~= ")";
+
+        if $.maybe-where-clause {
+            $builder ~= $.maybe-where-clause.gist;
+        }
+
+        $builder ~ ";"
     }
 }
 
@@ -49,15 +75,27 @@ our class StructField {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist;
+        }
+
+        for @.outer-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        if $.maybe-visibility {
+            $builder ~= $maybe-visibility.gist ~ " ";
+        }
+
+        $builder ~= $.identifier.gist;
+        $builder ~= ":";
+        $builder ~= $.type.gist;
+
+        $builder
     }
 }
 
@@ -69,15 +107,23 @@ our class TupleField {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-comment {
+            $builder ~= $maybe-comment.gist;
+        }
+
+        for @.outer-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        if $.maybe-visibility {
+            $builder ~= $.maybe-visibility.gist ~ " ";
+        }
+
+        $builder ~ $.type.gist
     }
 }
 

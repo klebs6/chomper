@@ -1,9 +1,20 @@
 use Data::Dump::Tree;
 
-our class VisibilityPublic { }
-our class VisibilityCrate  { }
-our class VisibilitySelf   { }
-our class VisibilitySuper  { }
+our class VisibilityPublic {
+
+}
+
+our class VisibilityCrate {
+
+}
+
+our class VisibilitySelf {
+
+}
+
+our class VisibilitySuper {
+
+}
 
 our class VisibilityInPath {
     has $.simple-path;

@@ -6,15 +6,18 @@ our class TupleStructPattern {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        my $builder = $.path-in-expression.gist;
+
+        $builder ~= "(";
+
+        if $.maybe-tuple-struct-items {
+            $builder ~= $.maybe-tuple-struct-items.gist;
+        }
+
+        $builder ~= ")";
+
+        $builder
     }
 }
 
@@ -23,15 +26,8 @@ our class TupleStructItems {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.patterns>>.gist.join(",")
     }
 }
 
@@ -40,15 +36,14 @@ our class TuplePattern {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        my $builder = "(";
+
+        if $.maybe-tuple-pattern-items {
+            $builder ~= $.maybe-tuple-pattern-items.gist;
+        }
+
+        $builder ~= ")";
     }
 }
 
@@ -57,15 +52,8 @@ our class TuplePatternItems {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.patterns>>.gist.join(",")
     }
 }
 
@@ -74,15 +62,8 @@ our class GroupedPattern {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        "(" ~ $.pattern.gist ~ ")"
     }
 }
 
@@ -91,15 +72,17 @@ our class SlicePattern {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "[";
+
+        if $.maybe-slice-pattern-items {
+            $builder ~= $.maybe-slice-pattern-items.gist;
+        }
+
+        $builder ~= "]";
+
+        $builder
     }
 }
 
@@ -108,15 +91,8 @@ our class SlicePatternItems {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.patterns.join(", ")
     }
 }
 

@@ -5,15 +5,12 @@ our class TupleExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.maybe-tuple-elements {
+            "(" ~ $.maybe-tuple-elements.gist ~ ")"
+        } else {
+            "()"
+        }
     }
 }
 
@@ -22,15 +19,8 @@ our class TupleElements {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        @.expressions>>.gist.join(",")
     }
 }
 
@@ -39,15 +29,8 @@ our class TupleIndex {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.value.Str
     }
 }
 

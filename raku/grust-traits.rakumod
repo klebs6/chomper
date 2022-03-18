@@ -12,15 +12,45 @@ our class Trait {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.unsafe {
+            $builder ~= "unsafe ";
+        }
+
+        $builder ~= "trait " ~ $.identifier.gist;
+
+        if $.maybe-generic-params {
+            $builder ~= $.maybe-generic-params.gist;
+        }
+
+        if $.maybe-type-param-bounds {
+            $builder ~= ": " ~ $.maybe-type-param-bounds.gist;
+        }
+
+        if $.maybe-where-clause {
+            $builder ~= $.maybe-where-clause.gist;
+        }
+
+        $builder ~= '{';
+
+        for @inner-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        for @associated-items {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist;
+        }
+
+        $builder ~= '}';
+
+        $builder
     }
 }
 
@@ -34,15 +64,36 @@ our class InherentImpl {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        my $builder = "impl";
+
+        if $.maybe-generic-params {
+            $builder ~= $.maybe-generic-params.gist;
+        }
+
+        $builder ~= " " ~ $.type.gist;
+
+        if $.maybe-where-clause {
+            $builder ~= "\n" ~ $.maybe-where-clause.gist;
+        }
+
+        $builder ~= "\n\{";
+
+        for @.inner-attribute {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        for @.associated-items {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist;
+        }
+
+        $builder ~= "\n}";
+
+        $builder
     }
 }
 
@@ -59,15 +110,48 @@ our class TraitImpl {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.unsafe {
+            $builder ~= "unsafe ";
+        }
+
+        $builder ~= "impl";
+
+        if $.maybe-generic-params {
+            $builder ~= $.maybe-generic-params.gist;
+        }
+
+        if $.bang {
+            $builder ~= "!";
+        }
+
+        $builder ~= " " ~ $.type-path.gist;
+        $builder ~= " for " ~ $.for-type.gist;
+
+        if $.maybe-where-clause {
+            $builder ~= "\n" ~ $.maybe-where-clause.gist ~ "\n";
+        }
+
+        $builder ~= '{';
+
+        for @.inner-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        for @.associated-items {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist;
+        }
+
+        $builder ~= '}';
+
+        $builder
     }
 }
 
@@ -81,15 +165,31 @@ our class TraitAlias {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        for @.outer-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        if $.maybe-visibility {
+            $builder ~= $.maybe-visibility.gist ~ " ";
+        }
+
+        $builder ~= "trait " ~ $.identifier.gist;
+
+        if $.maybe-generic-params {
+            $builder ~= $.maybe-generic-params.gist;
+        }
+
+        $builder ~= " = " ~ $.type-param-bounds.gist;
+
+        if $.maybe-where-clause {
+            $builder ~= "\n" ~ $.maybe-where-clause.gist ~ "\n";
+        }
+
+        $builder ~ ";"
     }
 }
 

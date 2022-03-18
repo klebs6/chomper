@@ -9,15 +9,27 @@ our class TypeAlias {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "type " ~ $.identifier.gist;
+
+        if $.maybe-generic-params {
+            $builder ~= $.maybe-generic-params.gist;
+        }
+
+        if $.maybe-type-param-bounds {
+            $builder ~= ": " ~ $.maybe-type-param-bounds.gist;
+        }
+
+        if $.maybe-where-clause {
+            $builder ~= "\n" ~ $.maybe-where-clause.gist ~ "\n";
+        }
+
+        if $.maybe-eq-type {
+            $builder ~= " = " ~ $.maybe-eq-type.gist;
+        }
+
+        $builder ~ ";"
     }
 }
 

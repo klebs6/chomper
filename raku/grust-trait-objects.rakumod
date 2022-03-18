@@ -6,15 +6,15 @@ our class TraitObjectType {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.dyn {
+            $builder ~= "dyn ";
+        }
+
+        $builder ~ $.type-param-bounds.gist
     }
 }
 
@@ -24,15 +24,14 @@ our class TraitObjectTypeOneBound {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        my $builder = "";
+
+        if $.dyn {
+            $builder ~= "dyn ";
+        }
+
+        $builder ~ $.trait-bound.gist
     }
 }
 

@@ -17,8 +17,17 @@ our class ParenthesizedType {
     }
 }
 
-our class InferredType { }
-our class NeverType    { }
+our class InferredType { 
+    method gist {
+
+    }
+}
+
+our class NeverType {
+    method gist {
+
+    }
+}
 
 our class TupleType {
     has @.types;

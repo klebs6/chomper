@@ -28,31 +28,17 @@ our class StructPatternElementsBasic {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
-    }
-}
 
-our class StructPatternElementsEtc {
+        my $builder = "";
 
-    has $.text;
+        $builder ~= @.struct-pattern-fields>>.gist.join(", ");
 
-    submethod TWEAK {
-        say self.gist;
-    }
+        if $.maybe-struct-pattern-etc {
+            $builder ~= ", " ~ $_.gist;
+        }
 
-    method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $builder
     }
 }
 
@@ -62,15 +48,17 @@ our class StructPatternField {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        for @.outer-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder ~= $.struct-pattern-field-variant.gist;
+
+        $builder
     }
 }
 
@@ -80,15 +68,8 @@ our class StructPatternFieldVariantTuple {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.tuple-index.gist ~ ":" ~ $.pattern.gist
     }
 }
 
@@ -98,15 +79,8 @@ our class StructPatternFieldVariantId {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.identifier.gist ~ ":" ~ $.pattern.gist
     }
 }
 
@@ -117,15 +91,21 @@ our class StructPatternFieldVariantRefMutId {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.ref {
+            $builder ~= "ref ";
+        }
+
+        if $.mutable {
+            $builder ~= "mut ";
+        }
+
+        $builder ~= $.identifier.gist;
+
+        $builder
     }
 }
 
@@ -134,15 +114,16 @@ our class StructPatternEtCetera {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        my $builder = "";
+
+        for @.outer-attributes {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder ~= "..";
+
+        $builder
     }
 }
 
