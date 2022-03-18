@@ -8,15 +8,25 @@ our class Union {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "union ";
+
+        $builder ~= $.identifier.gist;
+
+        if $.maybe-generic-params {
+            $builder ~= $.maybe-generic-params.gist;
+        }
+
+        if $.maybe-where-clause {
+            $builder ~= "\n" ~ $.maybe-where-clause.gist ~ "\n";
+        }
+
+        $builder ~= '{';
+        $builder ~= $.struct-fields.gist.indent(4);
+        $builder ~= '}';
+
+        $builder
     }
 }
 

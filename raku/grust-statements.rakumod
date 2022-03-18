@@ -28,15 +28,36 @@ our class LetStatement {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist ~ "\n";
+        }
+
+        for @.outer-attributes {
+            $bulider ~= $_.gist ~ "\n";
+        }
+
+        $builder ~= "let " ~ $.pattern-no-top-alt.gist;
+
+        if $.maybe-type {
+            $builder ~= ": " ~ $.maybe-type.gist;
+        }
+
+        if $.maybe-expression {
+            $builder ~= " = " ~ $.maybe-expression.gist;
+        }
+
+        $builder ~= ";";
+
+        if $.maybe-line-comment {
+            $builder ~= " " ~ $.maybe-line-comment.gist;
+
+        }
+
+        $builder
     }
 }
 

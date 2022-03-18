@@ -6,15 +6,25 @@ our class StructExpressionStruct {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        $builder ~= $.path-in-expression.gist;
+
+        $builder ~= '{';
+
+        if $.maybe-struct-expr-struct-body {
+
+            $builder ~= 
+            "\n" 
+            ~ $.maybe-struct-expr-struct-body.gist 
+            ~ "\n";
+        }
+
+        $builder ~= '}';
+
+        $builder
     }
 }
 
@@ -24,15 +34,15 @@ our class StructExpressionTuple {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = $.path-in-expression.gist;
+
+        $builder ~= "(";
+        $builder ~= @.expressions>>.gist.join(",");
+        $builder ~= ")";
+
+        $builder
     }
 }
 
@@ -71,15 +81,18 @@ our class StructExprFieldTupleExpr {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist ~ "\n";
+        }
+
+        $builder ~= $.tuple-index.gist ~ ": ";
+        $builder ~= $.expression.gist;
+
+        $builder
     }
 }
 
@@ -90,15 +103,18 @@ our class StructExprFieldIdExpr {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist ~ "\n";
+        }
+
+        $builder ~= $.identifier.gist ~ ":";
+        $builder ~= $.expression.gist;
+
+        $builder
     }
 }
 
@@ -127,15 +143,8 @@ our class StructBase {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        ".." ~ $.expression.gist
     }
 }
 
@@ -143,22 +152,22 @@ our role StructExpression::Rules {
 
     proto rule struct-expression { * }
 
-    rule struct-expression:sym<struct> {  
-        <path-in-expression> 
-        <tok-lbrace> 
-        <struct-expr-struct-body>? 
-        <tok-rbrace> 
+    rule struct-expression:sym<struct> {
+        <path-in-expression>
+        <tok-lbrace>
+        <struct-expr-struct-body>?
+        <tok-rbrace>
     }
 
-    rule struct-expression:sym<tuple> {  
-        <path-in-expression> 
-        <tok-lparen> 
-        [ <expression>* %% <tok-comma> ] 
+    rule struct-expression:sym<tuple> {
+        <path-in-expression>
+        <tok-lparen>
+        [ <expression>* %% <tok-comma> ]
         <tok-rparen>
     }
 
-    rule struct-expression:sym<unit> {  
-        <path-in-expression> 
+    rule struct-expression:sym<unit> {
+        <path-in-expression>
     }
 
     #--------------------
@@ -172,9 +181,25 @@ our role StructExpression::Rules {
     }
 
     proto rule struct-expr-field { * }
-    rule struct-expr-field:sym<tup-expr> { <comment>? <tuple-index> <tok-colon> <expression> }
-    rule struct-expr-field:sym<id-expr>  { <comment>? <identifier>  <tok-colon> <expression> }
-    rule struct-expr-field:sym<id>       { <comment>? <identifier> }
+
+    rule struct-expr-field:sym<tup-expr> { 
+        <comment>?
+        <tuple-index>
+        <tok-colon>
+        <expression>
+    }
+
+    rule struct-expr-field:sym<id-expr> { 
+        <comment>?
+        <identifier>
+        <tok-colon>
+        <expression>
+    }
+
+    rule struct-expr-field:sym<id> { 
+        <comment>?
+        <identifier>
+    }
 
     rule struct-base {
         <tok-dotdot> <expression>

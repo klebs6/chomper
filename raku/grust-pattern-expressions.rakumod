@@ -1,6 +1,7 @@
 use Data::Dump::Tree;
 
 our class Pattern {
+
     has @.pattern-no-top-alts;
 
     has $.text;

@@ -6,15 +6,10 @@ our class RangePatternInclusive {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.range-pattern-bound-begin.gist 
+        ~ "..="
+        $.range-pattern-bound-end.gist 
     }
 }
 
@@ -23,15 +18,10 @@ our class RangePatternHalfOpen {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.range-pattern-bound-begin.gist 
+        ~ ".."
+        $.range-pattern-bound-end.gist 
     }
 }
 
@@ -41,15 +31,10 @@ our class RangePatternObsolete {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        $.range-pattern-bound-begin.gist 
+        ~ "..."
+        $.range-pattern-bound-end.gist 
     }
 }
 

@@ -6,15 +6,12 @@ our class ReferencePatternRef {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.mutable {
+            '&' ~ 'mut ' ~ $.pattern-without-range.gist
+        } else {
+            '&' ~ $.pattern-without-range.gist
+        }
     }
 }
 
@@ -24,15 +21,12 @@ our class ReferencePatternRefRef {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+        if $.mutable {
+            '&' ~ 'mut ' ~ $.pattern-without-range.gist
+        } else {
+            '&' ~ $.pattern-without-range.gist
+        }
     }
 }
 
@@ -40,16 +34,16 @@ our role ReferencePattern::Rules {
 
     proto rule reference-pattern { * }
 
-    rule reference-pattern:sym<ref> { 
-        <tok-and> 
-        <kw-mut>? 
-        <pattern-without-range> 
+    rule reference-pattern:sym<ref> {
+        <tok-and>
+        <kw-mut>?
+        <pattern-without-range>
     }
 
-    rule reference-pattern:sym<refref> { 
-        <tok-andand> 
-        <kw-mut>? 
-        <pattern-without-range> 
+    rule reference-pattern:sym<refref> {
+        <tok-andand>
+        <kw-mut>?
+        <pattern-without-range>
     }
 }
 

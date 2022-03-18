@@ -6,15 +6,19 @@ our class StructPattern {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
-        say "need to write gist!";
-        say $.text;
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        $builder ~= $.path-in-expression.gist;
+        $builder ~= '{';
+
+        if $.maybe-struct-pattern-elements {
+            $builder ~= $.maybe-struct-pattern-elements.gist.indent(4);
+        }
+
+        $builder ~= '}';
+        $builder
     }
 }
 
