@@ -48,8 +48,8 @@ our role TupleExpression::Rules {
 our role TupleExpression::Actions {
     method tuple-elements($/) {
         make TupleElements.new(
-            expression => $<expression>>>.made,
-            text       => $/.Str,
+            expressions => $<expression>>>.made,
+            text        => $/.Str,
         )
     }
 

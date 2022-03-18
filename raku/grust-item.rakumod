@@ -51,7 +51,7 @@ our class InitExpression {
     has $.text;
 
     method gist {
-        "= " ~ $.expression
+        "= " ~ $.expression.gist
     }
 }
 
@@ -225,7 +225,7 @@ our role Item::Actions {
         make ConstantItem.new(
             identifier-or-underscore => $<identifier-or-underscore>.made,
             type                     => $<type>.made,
-            init-expression          => $<init-expression>.made,
+            maybe-init-expression    => $<init-expression>.made,
             text                     => $/.Str,
         )
     }

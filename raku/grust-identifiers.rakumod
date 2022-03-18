@@ -89,6 +89,6 @@ our role Identifiers::Actions {
     }
 
     #---------------------
-    method identifier-or-underscore:sym<identifier>($/) { ~$/ }
-    method identifier-or-underscore:sym<underscore>($/) { ~$/ }
+    method identifier-or-underscore:sym<identifier>($/) { make ~$/ }
+    method identifier-or-underscore:sym<underscore>($/) { make ~$/ }
 }

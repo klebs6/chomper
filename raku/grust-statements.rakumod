@@ -118,18 +118,27 @@ our role Statement::Rules {
 
     regex let-statement {
         <comment>?
+        <.ws>
         <outer-attribute>*
+        <.ws>
         <kw-let>
+        <.ws>
         <pattern-no-top-alt>
+        <.ws>
         [
             <tok-colon>
+            <.ws>
             <type>
         ]?
+        <.ws>
         [
             <tok-eq>
+            <.ws>
             <expression>
         ]?
+        <.ws>
         <tok-semi>
+        <.ws>
         <line-comment>? 
     }
 

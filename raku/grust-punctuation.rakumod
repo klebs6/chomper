@@ -4,10 +4,10 @@ our role Punctuation::Rules {
 
     #`(Addition, Trait Bounds, Macro Kleene
     Matcher)
-    token tok-plus         { '+'   } 
+    token tok-plus         { '+' <!before '='>  } 
 
     #`(Subtraction, Negation)
-    token tok-minus        { '-'   } 
+    token tok-minus        { '-' <!before '='> } 
 
     #`(Multiplication, Dereference, Raw Pointers,
     Macro Kleene Matcher, Use wildcards)

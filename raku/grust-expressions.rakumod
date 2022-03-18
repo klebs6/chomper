@@ -558,7 +558,7 @@ our class AddEqExpression {
     has $.text;
 
     method gist {
-        @.minus-expressions>>.gist>>.chomp.join(" += ")
+        @.minuseq-expressions>>.gist>>.chomp.join(" += ")
     }
 }
 

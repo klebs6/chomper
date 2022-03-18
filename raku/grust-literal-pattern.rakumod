@@ -71,7 +71,7 @@ our role LiteralPattern::Actions {
     method integer-literal-pattern($/) { 
         make NumericLiteral.new(
             minus => so $/<tok-minus>:exists,
-            value => $<integer-literal>.made,
+            value => ~$/<integer-literal>,
             text  => $/.Str,
         )
     }
@@ -79,7 +79,7 @@ our role LiteralPattern::Actions {
     method float-literal-pattern($/) { 
         make NumericLiteral.new(
             minus => so $/<tok-minus>:exists,
-            value => $<float-literal>.made,
+            value => ~$/<float-literal>,
             text  => $/.Str,
         )
     }
