@@ -36,11 +36,11 @@ our class Trait {
 
         $builder ~= '{';
 
-        for @inner-attributes {
+        for @.inner-attributes {
             $builder ~= $_.gist ~ "\n";
         }
 
-        for @associated-items {
+        for @.associated-items {
             $builder ~= $_.gist ~ "\n";
         }
 

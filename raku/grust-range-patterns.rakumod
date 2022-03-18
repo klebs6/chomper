@@ -9,7 +9,7 @@ our class RangePatternInclusive {
     method gist {
         $.range-pattern-bound-begin.gist 
         ~ "..="
-        $.range-pattern-bound-end.gist 
+        ~ $.range-pattern-bound-end.gist 
     }
 }
 
@@ -21,7 +21,7 @@ our class RangePatternHalfOpen {
     method gist {
         $.range-pattern-bound-begin.gist 
         ~ ".."
-        $.range-pattern-bound-end.gist 
+        ~ $.range-pattern-bound-end.gist 
     }
 }
 
@@ -34,7 +34,7 @@ our class RangePatternObsolete {
     method gist {
         $.range-pattern-bound-begin.gist 
         ~ "..."
-        $.range-pattern-bound-end.gist 
+        ~ $.range-pattern-bound-end.gist 
     }
 }
 

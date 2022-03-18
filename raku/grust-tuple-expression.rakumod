@@ -25,12 +25,10 @@ our class TupleElements {
 }
 
 our class TupleIndex {
-    has Int $.value;
-
-    has $.text;
+    has $.value;
 
     method gist {
-        $.value.Str
+        $.value
     }
 }
 
@@ -62,7 +60,7 @@ our role TupleExpression::Actions {
         )
     }
 
-    method tuple-index($/) { 
-        make $<integer-literal>.made 
+    method tuple-index($/) {
+        make TupleIndex.new(value => ~$/ )
     }
 }

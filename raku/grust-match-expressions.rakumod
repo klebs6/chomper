@@ -9,19 +9,19 @@ our class MatchExpression {
 
     method gist {
 
-        my $builder = "match " ~ $.scrutinee.gist;
+        my $builder = "match " ~ $.scrutinee.gist ~ " ";
 
-        $builder ~= '{';
+        $builder ~= "\{\n";
 
         for @.inner-attributes {
             $builder ~= $_.gist ~ "\n";
         }
 
         if $.maybe-match-arms {
-            $builder ~= $.maybe-match-arms.gist;
+            $builder ~= $.maybe-match-arms.gist.indent(4);
         }
 
-        $builder ~= '}';
+        $builder ~= "\n\}";
 
         $builder
     }
@@ -80,7 +80,7 @@ our class MatchArmsInnerItemWithBlock {
 our class MatchArmsInnerItemWithoutBlock {
     has $.maybe-comment;
     has $.match-arm;
-    has $.expresison-noblock;
+    has $.expression-noblock;
 
     has $.text;
 
@@ -220,7 +220,6 @@ our role MatchExpression::Rules {
     rule match-arm-guard {
         <kw-if> <expression>
     }
-
 }
 
 our role MatchExpression::Actions {
@@ -247,11 +246,12 @@ our role MatchExpression::Actions {
 
     #------------------
     method match-arms($/) {
+        my @items = [
+            |$<match-arms-inner-item>>>.made, 
+            $<match-arms-outer-item>.made
+        ];
         make MatchArms.new(
-            items => [
-                |$<match-arms-inner-item>>>.made, 
-                $<match-arms-outer-item>.made
-            ],
+            items => @items,
             maybe-comment => $<comment>.made,
             text       => $/.Str,
         )
@@ -270,7 +270,7 @@ our role MatchExpression::Actions {
         make MatchArmsInnerItemWithoutBlock.new(
             maybe-comment      => $<comment>.made,
             match-arm          => $<match-arm>.made,
-            expresison-noblock => $<expression-noblock>.made,
+            expression-noblock => $<expression-noblock>.made,
             text               => $/.Str,
         )
     }

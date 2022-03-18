@@ -29,8 +29,20 @@ sub MAIN(:$stdin = Nil) {
         ddt $made;
         say "---------------------[gists]";
 
-        for $made.List {
+        for $made.List>>.gist.join("") {
             say $_.gist;
+        }
+
+        my $stripped      = $made.List>>.gist.join("").subst(:g, /<.ws>/,"");
+        my $orig-stripped = $in.subst(:g, /<.ws>/,"");
+
+        if not $stripped eq $orig-stripped {
+            say "-----------------------------";
+            say "round trip bug!!!";
+            say "";
+            say "orig:  $orig-stripped";
+            say "rtrip: $stripped";
+            die;
         }
     }
 }

@@ -26,19 +26,47 @@ our role LiteralPattern::Rules {
     rule literal-pattern:sym<raw-str>      { <raw-string-literal> }
     rule literal-pattern:sym<byte-str>     { <byte-string-literal> }
     rule literal-pattern:sym<raw-byte-str> { <raw-byte-string-literal> }
-    rule literal-pattern:sym<int>          { <tok-minus>? <integer-literal> }
-    rule literal-pattern:sym<float>        { <tok-minus>? <float-literal> }
+    rule literal-pattern:sym<int>          { <integer-literal-pattern> }
+    rule literal-pattern:sym<float>        { <float-literal-pattern> }
+
+    rule float-literal-pattern {
+        <tok-minus>? <float-literal>
+    }
+
+    rule integer-literal-pattern {
+        <tok-minus>? <integer-literal>
+    }
 }
 
 our role LiteralPattern::Actions {
 
-    method literal-pattern:sym<bool>($/)         { make $<boolean-literal>.made }
-    method literal-pattern:sym<char>($/)         { make $<char-literal>.made }
-    method literal-pattern:sym<byte>($/)         { make $<byte-literal>.made }
-    method literal-pattern:sym<str>($/)          { make $<string-literal>.made }
-    method literal-pattern:sym<raw-str>($/)      { make $<raw-string-literal>.made }
-    method literal-pattern:sym<byte-str>($/)     { make $<byte-string-literal>.made }
-    method literal-pattern:sym<raw-byte-str>($/) { make $<raw-byte-string-literal>.made }
+    method literal-pattern:sym<bool>($/) {
+        make $<boolean-literal>.made
+    }
+
+    method literal-pattern:sym<char>($/) {
+        make $<char-literal>.made 
+    }
+
+    method literal-pattern:sym<byte>($/) {
+        make $<byte-literal>.made 
+    }
+
+    method literal-pattern:sym<str>($/) {
+        make $<string-literal>.made 
+    }
+
+    method literal-pattern:sym<raw-str>($/) {
+        make $<raw-string-literal>.made 
+    }
+
+    method literal-pattern:sym<byte-str>($/) {
+        make $<byte-string-literal>.made 
+    }
+
+    method literal-pattern:sym<raw-byte-str>($/) {
+        make $<raw-byte-string-literal>.made 
+    }
 
     method integer-literal-pattern($/) { 
         make NumericLiteral.new(

@@ -11,23 +11,34 @@ our class MacroExpression {
     }
 }
 
+our enum DelimKind<Brack Brace Paren>;
+
 our class DelimTokenTree {
     has @.token-trees;
+    has DelimKind $.kind;
 
     has $.text;
 
     method gist {
-        '{\n' ~ @.token-trees>>.gist ~ '\n}'
+        given $.kind {
+            when DelimKind::<Brack> {
+                "[" ~ @.token-trees>>.gist.join("") ~ "]"
+            }
+            when DelimKind::<Brace> {
+                "\{" ~ @.token-trees>>.gist.join("") ~ "\}"
+            }
+            when DelimKind::<Paren> {
+                "(" ~ @.token-trees>>.gist.join("") ~ ")"
+            }
+        }
     }
 }
 
 our class TokenTreeLeaf {
     has $.rust-token-no-delim;
 
-    has $.text;
-
     method gist {
-        $.rust-token-no-delim.gist
+        $.rust-token-no-delim
     }
 }
 
@@ -56,7 +67,7 @@ our class MacroInvocation {
             $builder ~= $.maybe-comment.gist ~ "\n";
         }
 
-        $bulider ~= $.simple-path ~ '!{';
+        $builder ~= $.simple-path ~ '!{';
         $builder ~= @.token-trees>>.gist.join("\n");
         $builder ~= '}';
 
@@ -226,10 +237,18 @@ our role MacroInvocation::Rules {
         <delim-token-tree>
     }
 
-    rule delim-token-tree {
-        | <tok-lparen> <token-tree>* <tok-rparen>
-        | <tok-lbrack> <token-tree>* <tok-rbrack>
-        | <tok-lbrace> <token-tree>* <tok-rbrace>
+    proto rule delim-token-tree { * }
+
+    rule delim-token-tree:sym<paren> {
+        <tok-lparen> <token-tree>* <tok-rparen>
+    }
+
+    rule delim-token-tree:sym<brack> {
+        <tok-lbrack> <token-tree>* <tok-rbrack>
+    }
+
+    rule delim-token-tree:sym<brace> {
+        <tok-lbrace> <token-tree>* <tok-rbrace>
     }
 
     rule token-trees { <token-tree>* }
@@ -349,10 +368,27 @@ our role MacroInvocation::Actions {
         )
     }
 
-    method delim-token-tree($/) {
+    method delim-token-tree:sym<brack>($/) {
         make DelimTokenTree.new(
-            token-tree => $<token-tree>.made,
-            text       => $/.Str,
+            token-trees => $<token-tree>>>.made,
+            kind        => DelimKind::<Brack>,
+            text        => $/.Str,
+        )
+    }
+
+    method delim-token-tree:sym<brace>($/) {
+        make DelimTokenTree.new(
+            token-trees => $<token-tree>>>.made,
+            kind        => DelimKind::<Brace>,
+            text        => $/.Str,
+        )
+    }
+
+    method delim-token-tree:sym<paren>($/) {
+        make DelimTokenTree.new(
+            token-trees => $<token-tree>>>.made,
+            kind        => DelimKind::<Paren>,
+            text        => $/.Str,
         )
     }
 
@@ -360,8 +396,7 @@ our role MacroInvocation::Actions {
 
     method token-tree:sym<leaf>($/) { 
         make TokenTreeLeaf.new(
-            rust-token-no-delim => $<rust-token-no-delim>.made,
-            text                => $/.Str,
+            rust-token-no-delim => ~$/,
         )
     }
 

@@ -23,9 +23,9 @@ our class ReferencePatternRefRef {
 
     method gist {
         if $.mutable {
-            '&' ~ 'mut ' ~ $.pattern-without-range.gist
+            '&&' ~ 'mut ' ~ $.pattern-without-range.gist
         } else {
-            '&' ~ $.pattern-without-range.gist
+            '&&' ~ $.pattern-without-range.gist
         }
     }
 }

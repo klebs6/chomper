@@ -143,12 +143,12 @@ our role Rust::Actions::Role
     does ArrayExpression::Actions 
     does AssociatedItem::Actions 
     does BareFunctionType::Actions 
-    does Comment::Actions 
-    does LineComment::Actions 
     does BlockComment::Actions 
     does BlockExpression::Actions 
+    does BooleanLiteral::Actions
     does CfgAttr::Actions 
     does ClosureExpression::Actions 
+    does Comment::Actions 
     does ConfigurationPredicate::Actions 
     does Crate::Actions 
     does Enumeration::Actions 
@@ -161,7 +161,9 @@ our role Rust::Actions::Role
     does IfExpressions::Actions 
     does ImplTraitType::Actions 
     does Item::Actions 
+    does JumpExpression::Actions 
     does Lifetimes::Actions 
+    does LineComment::Actions 
     does LiteralExpression::Actions 
     does LiteralPattern::Actions 
     does LoopExpression::Actions 
@@ -174,7 +176,6 @@ our role Rust::Actions::Role
     does RangePattern::Actions 
     does ReferencePattern::Actions 
     does ReservedKeywords::Actions 
-    does JumpExpression::Actions 
     does SimplePath::Actions 
     does Statement::Actions 
     does StrictKeywords::Actions 

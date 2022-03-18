@@ -37,7 +37,7 @@ our class LetStatement {
         }
 
         for @.outer-attributes {
-            $bulider ~= $_.gist ~ "\n";
+            $builder ~= $_.gist ~ "\n";
         }
 
         $builder ~= "let " ~ $.pattern-no-top-alt.gist;

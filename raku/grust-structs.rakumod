@@ -88,7 +88,7 @@ our class StructField {
         }
 
         if $.maybe-visibility {
-            $builder ~= $maybe-visibility.gist ~ " ";
+            $builder ~= $.maybe-visibility.gist ~ " ";
         }
 
         $builder ~= $.identifier.gist;
@@ -112,7 +112,7 @@ our class TupleField {
         my $builder = "";
 
         if $.maybe-comment {
-            $builder ~= $maybe-comment.gist;
+            $builder ~= $.maybe-comment.gist;
         }
 
         for @.outer-attributes {

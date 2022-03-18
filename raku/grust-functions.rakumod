@@ -22,13 +22,13 @@ our class Function {
             $builder ~= $.maybe-generic-params.gist;
         }
 
-        $bulider ~= "(";
+        $builder ~= "(";
 
         if $.maybe-function-parameters {
             $builder ~= $.maybe-function-parameters.gist;
         }
 
-        $bulider ~= ")";
+        $builder ~= ")";
 
         if $.maybe-function-return-type {
             $builder ~= $.maybe-function-return-type.gist;
@@ -88,7 +88,7 @@ our class FunctionParameters {
 
     method gist {
 
-        my $bulider = "";
+        my $builder = "";
 
         if $.maybe-self-param {
 

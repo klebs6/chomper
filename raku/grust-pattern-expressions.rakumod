@@ -27,7 +27,7 @@ our class IdentifierPattern {
             $builder ~= "ref ";
         }
 
-        if so $.mut {
+        if so $.mutable {
             $builder ~= "mut ";
         }
 
@@ -48,8 +48,7 @@ our role Pattern::Rules {
 
     rule pattern {
         <tok-or>? 
-        <pattern-no-top-alt> 
-        [ <tok-or> <pattern-no-top-alt> ]*
+        [<pattern-no-top-alt>+ %% <tok-or>]
     }
 
     proto rule pattern-no-top-alt { * }
@@ -98,8 +97,13 @@ our role Pattern::Actions {
         )
     }
 
-    method pattern-no-top-alt:sym<no-range>($/) { make $<pattern-without-range>.made }
-    method pattern-no-top-alt:sym<range>($/)    { make $<range-pattern>.made }
+    method pattern-no-top-alt:sym<no-range>($/) { 
+        make $<pattern-without-range>.made 
+    }
+
+    method pattern-no-top-alt:sym<range>($/)    { 
+        make $<range-pattern>.made 
+    }
 
     method identifier-pattern($/) {
         make IdentifierPattern.new(
@@ -121,7 +125,11 @@ our role Pattern::Actions {
 
     #---------------------
     method pattern-without-range:sym<path>($/)             { make $<path-pattern>.made         } 
-    method pattern-without-range:sym<literal>($/)          { make $<literal-pattern>.made      } 
+
+    method pattern-without-range:sym<literal>($/) { 
+        make $<literal-pattern>.made
+    } 
+
     method pattern-without-range:sym<identifier>($/)       { make $<identifier-pattern>.made   } 
     method pattern-without-range:sym<wildcard>($/)         { make $<wildcard-pattern>.made     } 
     method pattern-without-range:sym<rest>($/)             { make $<rest-pattern>.made         } 

@@ -197,7 +197,7 @@ our role StructPattern::Actions {
     }
 
     method struct-pattern-elements:sym<etc>($/) {
-        make StructPatternElementsEtc.new
+        make $<struct-pattern-et-cetera>.made
     }
 
     method struct-pattern-fields($/) {

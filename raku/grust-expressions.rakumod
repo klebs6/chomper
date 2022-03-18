@@ -173,7 +173,7 @@ our class BorrowExpressionPrefix {
         }
 
         if $.mutable {
-            $builder ~= "mut";
+            $builder ~= "mut ";
         }
 
         $builder
@@ -186,16 +186,12 @@ our class BorrowExpression {
 
     has $.text;
 
-    submethod TWEAK {
-        say self.gist;
-    }
-
     method gist {
 
         my $builder = "";
 
         for @.borrow-expression-prefixes {
-            $builder ~= $_.gist ~ " ";
+            $builder ~= $_.gist;
         }
 
         $builder ~ $.unary-expression.gist;
@@ -374,10 +370,6 @@ our class BinaryEqEqExpression {
     has @.binary-ne-expressions;
 
     has $.text;
-
-    submethod TWEAK {
-        say self.gist;
-    }
 
     method gist {
         @.binary-ne-expressions>>.gist.join(" == ")
@@ -1078,8 +1070,8 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
 
             make DivisionExpression.new(
-                modulo-expression => @exprs,
-                text              => $/.Str,
+                modulo-expressions => @exprs,
+                text               => $/.Str,
             )
 
         } else {

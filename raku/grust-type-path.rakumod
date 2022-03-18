@@ -6,7 +6,7 @@ our class TypePath {
     has $.text;
 
     method gist {
-        @.type-path-segments.join("::")
+        @.type-path-segments>>.gist.join("::")
     }
 }
 
@@ -21,7 +21,7 @@ our class TypePathSegment {
         my $builder = $.path-ident-segment.gist;
 
         if so $.maybe-type-path-segment-suffix {
-            $builder ~= "::{$.maybe-type-path-segment-suffix.gist}";
+            $builder ~= "::" ~ $.maybe-type-path-segment-suffix.gist;
         }
 
         $builder

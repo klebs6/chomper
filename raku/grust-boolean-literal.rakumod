@@ -1,10 +1,10 @@
 use Data::Dump::Tree;
 
 our class BooleanLiteral {
-    has Bool $.value;
+    has $.value;
 
     method gist {
-        $.value.Str
+        $.value
     }
 }
 
@@ -19,13 +19,13 @@ our role BooleanLiteral::Actions {
 
     method boolean-literal:sym<t>($/) { 
         make BooleanLiteral.new(
-            value => True
+            value => ~$/
         )
     }
 
     method boolean-literal:sym<f>($/) { 
         make BooleanLiteral.new(
-            value => False
+            value => ~$/
         )
     }
 }
