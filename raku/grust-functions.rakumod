@@ -14,7 +14,7 @@ our class Function {
     method gist {
 
         my $builder = 
-        $.function-qualifiers 
+        $.function-qualifiers.gist 
         ~ " fn " 
         ~ $.identifier.gist;
 
@@ -99,9 +99,7 @@ our class FunctionParameters {
             }
         }
 
-        $builder ~= @.function-params>>.gist.join(", ");
-
-        $builder
+        $builder ~ @.function-params>>.gist.join(", ")
     }
 }
 
@@ -119,9 +117,7 @@ our class SelfParam {
             $builder ~= $_.gist ~ "\n";
         }
 
-        $builder ~= $.self-param-variant.gist;
-
-        $builder
+        $builder ~ $.self-param-variant.gist
     }
 }
 
@@ -300,13 +296,14 @@ our role Function::Rules {
         [ <function-param>+ %% <tok-comma> ]
     }
 
+    rule function-parameters:sym<just-self> {
+        <self-param> <tok-comma>?
+    }
+
     rule function-parameters:sym<just-params> {
         <function-param>+ %% <tok-comma>
     }
 
-    rule function-parameters:sym<just-self> {
-        <self-param> <tok-comma>?
-    }
 
     #----------------------
     rule self-param {  
@@ -407,13 +404,6 @@ our role Function::Actions {
         )
     }
 
-    method function-parameters:sym<just-params>($/) {
-        make FunctionParameters.new(
-            function-params => $<function-param>>>.made,
-            text            => $/.Str,
-        )
-    }
-
     method function-parameters:sym<just-self>($/) {
         make FunctionParameters.new(
             maybe-self-param => $<self-param>.made,
@@ -421,10 +411,17 @@ our role Function::Actions {
         )
     }
 
+    method function-parameters:sym<just-params>($/) {
+        make FunctionParameters.new(
+            function-params => $<function-param>>>.made,
+            text            => $/.Str,
+        )
+    }
+
     #----------------------
     method self-param($/) {  
         make SelfParam.new(
-            outer-attributes   => $<outer-attrigute>>>.made,
+            outer-attributes   => $<outer-attribute>>>.made,
             self-param-variant => $<self-param-variant>.made,
             text               => $/.Str,
         )

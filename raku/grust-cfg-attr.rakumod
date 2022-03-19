@@ -69,9 +69,9 @@ our class Attr {
 
     method gist {
         if $.maybe-attr-input {
-            $.simple-path ~ $.maybe-attr-input.gist
+            $.simple-path.gist ~ $.maybe-attr-input.gist
         } else {
-            $.simple-path
+            $.simple-path.gist
         }
     }
 }
@@ -187,14 +187,14 @@ our role CfgAttr::Actions {
 
     method attr($/) {
         make Attr.new(
-            simple-path => $<simple-path>.made,
-            attr-input  => $<attr-input>.made,
-            text        => $/.Str,
+            simple-path       => $<simple-path>.made,
+            maybe-attr-input  => $<attr-input>.made,
+            text              => $/.Str,
         )
     }
 
     #-------------------
-    method attr-input:sym<method-tree>($/) {
+    method attr-input:sym<token-tree>($/) {
         make $<delim-token-tree>.made
     }
 

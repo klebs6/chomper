@@ -79,7 +79,7 @@ our class InherentImpl {
 
         $builder ~= "\n\{";
 
-        for @.inner-attribute {
+        for @.inner-attributes {
             $builder ~= $_.gist ~ "\n";
         }
 
@@ -264,7 +264,7 @@ our role Trait::Actions {
             maybe-type-param-bounds => $<type-param-bounds>>>.made,
             maybe-where-clause      => $<where-clause>.made,
             inner-attributes        => $<inner-attribute>>>.made,
-            associated-items        => $<associated-item>.made,
+            associated-items        => $<associated-item>>>.made,
             maybe-comment           => $<comment>.made,
             text                    => $/.Str,
         )
@@ -278,8 +278,8 @@ our role Trait::Actions {
             maybe-generic-params => $<generic-params>.made,
             type                 => $<type>.made,
             maybe-where-clause   => $<where-clause>.made,
-            inner-attributes     => $<inner-attribute>.made,
-            associated-items     => $<associated-item>.made,
+            inner-attributes     => $<inner-attribute>>>.made,
+            associated-items     => $<associated-item>>>.made,
             maybe-comment        => $<comment>.made,
             text                 => $/.Str,
         )

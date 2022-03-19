@@ -54,7 +54,7 @@ our class UseTreeComplex {
 
 our class UseTreeAs {
     has $.simple-path;
-    has $.as-identified-or-underscore;
+    has $.as-identifier-or-underscore;
 
     has $.text;
 
@@ -133,7 +133,7 @@ our role UseDeclaration::Actions {
     method use-tree:sym<as>($/) {
         make UseTreeAs.new(
             simple-path                 => $<simple-path>.made,
-            as-identified-or-underscore => $<identifier-or-underscore>.made,
+            as-identifier-or-underscore => $<identifier-or-underscore>.made,
             text                        => $/.Str,
         )
     }

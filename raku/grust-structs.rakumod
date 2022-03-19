@@ -23,7 +23,7 @@ our class Struct {
         if @.maybe-struct-fields.elems gt 0 {
 
             $builder ~= '{';
-            $builder ~= @.maybe-struct-fields>>.gist.join("\n").indent(4);
+            $builder ~= @.maybe-struct-fields>>.gist.join(",\n").indent(4);
             $builder ~= '}';
 
         } else {

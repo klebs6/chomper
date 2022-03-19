@@ -57,7 +57,9 @@ our class MacroInvocation {
     has $.simple-path;
     has @.token-trees;
 
-    has $.text;
+    has DelimKind $.delim-kind;
+
+    has $!text;
 
     method gist {
 
@@ -67,9 +69,25 @@ our class MacroInvocation {
             $builder ~= $.maybe-comment.gist ~ "\n";
         }
 
-        $builder ~= $.simple-path.gist ~ '!{';
+        $builder ~= $.simple-path.gist ~ '!';
+
+        $builder ~= do given $.delim-kind {
+            when DelimKind::<Paren> { "(" }
+            when DelimKind::<Brack> { "[" }
+            when DelimKind::<Brace> { "\{" }
+        };
+
         $builder ~= @.token-trees>>.gist.join("\n");
-        $builder ~= '}';
+
+        $builder ~= do given $.delim-kind {
+            when DelimKind::<Paren> { ")" }
+            when DelimKind::<Brack> { "]" }
+            when DelimKind::<Brace> { "}" }
+        };
+
+        if $.delim-kind eq Paren or $.delim-kind eq Brack {
+            $builder ~= ";";
+        }
 
         $builder
     }
@@ -259,13 +277,35 @@ our role MacroInvocation::Rules {
 
     rule token-tree:sym<tree> { <delim-token-tree> }
 
-    rule macro-invocation {
+    proto rule macro-invocation { * }
+
+    rule macro-invocation:sym<paren> {
         <comment>? 
-        [
-            | <simple-path> <.tok-bang> <.tok-lparen> <token-tree>* <.tok-rparen> <.tok-semi>
-            | <simple-path> <.tok-bang> <.tok-lbrack> <token-tree>* <.tok-rbrack> <.tok-semi>
-            | <simple-path> <.tok-bang> <.tok-lbrace> <token-tree>* <.tok-rbrace>
-        ]
+        <simple-path> 
+        <.tok-bang> 
+        <.tok-lparen> 
+        <token-tree>* 
+        <.tok-rparen> 
+        <.tok-semi>
+    }
+
+    rule macro-invocation:sym<brack> {
+        <comment>? 
+        <simple-path> 
+        <.tok-bang> 
+        <.tok-lbrack> 
+        <token-tree>* 
+        <.tok-rbrack> 
+        <.tok-semi>
+    }
+
+    rule macro-invocation:sym<brace> {
+        <comment>? 
+        <simple-path> 
+        <.tok-bang> 
+        <.tok-lbrace> 
+        <token-tree>* 
+        <.tok-rbrace>
     }
 
     token kw-macro-rules {
@@ -407,11 +447,32 @@ our role MacroInvocation::Actions {
         )
     }
 
-    method macro-invocation($/) {
+    method macro-invocation:sym<paren>($/) {
         make MacroInvocation.new(
             maybe-comment => $<comment>.made,
             simple-path   => $<simple-path>.made,
             token-trees   => $<token-tree>>>.made,
+            delim-kind    => DelimKind::<Paren>,
+            text          => $/.Str,
+        )
+    }
+
+    method macro-invocation:sym<brack>($/) {
+        make MacroInvocation.new(
+            maybe-comment => $<comment>.made,
+            simple-path   => $<simple-path>.made,
+            token-trees   => $<token-tree>>>.made,
+            delim-kind    => DelimKind::<Brack>,
+            text          => $/.Str,
+        )
+    }
+
+    method macro-invocation:sym<brace>($/) {
+        make MacroInvocation.new(
+            maybe-comment => $<comment>.made,
+            simple-path   => $<simple-path>.made,
+            token-trees   => $<token-tree>>>.made,
+            delim-kind    => DelimKind::<Brace>,
             text          => $/.Str,
         )
     }

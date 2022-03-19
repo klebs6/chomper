@@ -103,7 +103,7 @@ our role AssociatedItem::Actions {
     method associated-item($/) {
         make AssociatedItem.new(
             maybe-comment    => $<comment>.made,
-            outer-attributes => $<outer-attributes>>.made,
+            outer-attributes => $<outer-attribute>>>.made,
             variant          => $<associated-item-variant>.made,
             text             => $/.Str,
         )
@@ -134,7 +134,7 @@ our role AssociatedItem::Actions {
     }
 
     method associated-item-variant:sym<fn>($/) { 
-        make AssociatedItemConstantItem.new(
+        make AssociatedItemFunction.new(
             maybe-visibility => $<visibility>.made,
             function         => $<function>.made,
             text             => $/.Str,

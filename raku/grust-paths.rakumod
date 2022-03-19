@@ -14,13 +14,7 @@ our role SimplePath::Rules {
 
     token simple-path {
         <tok-path-sep>?
-        [
-            <simple-path-segment>
-            [
-                <tok-path-sep>
-                <simple-path-segment>
-            ]*
-        ]
+        [<simple-path-segment>+ % <tok-path-sep>]
     }
 
     proto token simple-path-segment { * }
@@ -40,9 +34,9 @@ our role SimplePath::Actions {
         )
     }
 
-    method simple-path-segment:sym<ident>($/)   { make $<identifier>.made }
-    method simple-path-segment:sym<super>($/)   { make $<kw-super>.made }
-    method simple-path-segment:sym<self>($/)    { make $<kw-selfvalue>.made }
-    method simple-path-segment:sym<crate>($/)   { make $<kw-crate>.made }
-    method simple-path-segment:sym<$-crate>($/) { make $<dollar-crate>.made }
+    method simple-path-segment:sym<ident>($/)   { make ~$/ }
+    method simple-path-segment:sym<super>($/)   { make ~$/ }
+    method simple-path-segment:sym<self>($/)    { make ~$/ }
+    method simple-path-segment:sym<crate>($/)   { make ~$/ }
+    method simple-path-segment:sym<$-crate>($/) { make ~$/ }
 }

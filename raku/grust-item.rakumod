@@ -190,7 +190,7 @@ our role Item::Actions {
 
     method vis-item($/) {
         make VisItem.new(
-            maybe-visability => $<visibility>.made,
+            maybe-visibility => $<visibility>.made,
             vis-item-variant => $<vis-item-variant>.made,
             text             => $/.Str,
         )
