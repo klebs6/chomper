@@ -11,22 +11,22 @@ our role Punctuation::Rules {
 
     #`(Multiplication, Dereference, Raw Pointers,
     Macro Kleene Matcher, Use wildcards)
-    token tok-star         { '*'   } 
+    token tok-star         { '*' <!before '='>   } 
 
     #`(Division)
-    token tok-slash        { '/'   } 
+    token tok-slash        { '/' <!before '='> } 
 
     #`(Remainder)
-    token tok-percent      { '%'   } 
+    token tok-percent      { '%' <!before '='>  } 
 
     #`(Bitwise and Logical XOR)
-    token tok-caret        { '^'   } 
+    token tok-caret        { '^' <!before '='>  } 
 
     #`(Bitwise and Logical NOT, Macro Calls, Inner
     Attributes, Never Type, Negative impls)
-    token tok-not          { '!'   } 
+    token tok-not          { '!' <!before '='>  } 
 
-    token tok-bang         { '!'   } 
+    token tok-bang         { '!' <!before '='>  } 
 
     #`(Bitwise and Logical AND, Borrow,
     #References, Reference patterns)
@@ -38,16 +38,16 @@ our role Punctuation::Rules {
 
     #`(Lazy AND, Borrow, References, Reference
     #patterns)
-    token tok-andand       { '&&'  } 
+    token tok-andand       { '&&' <!before '='> } 
 
     #`(Lazy OR, Closures)
-    token tok-oror         { '||'  } 
+    token tok-oror         { '||' <!before '='>  } 
 
     #`(Shift Left, Nested Generics)
-    token tok-shl          { '<<'  } 
+    token tok-shl          { '<<' <!before '='>  } 
 
     #`(Shift Right, Nested Generics)
-    token tok-shr          { '>>'  } 
+    token tok-shr          { '>>' <!before '='>  } 
 
     #`(Addition assignment)
     token tok-pluseq       { '+='  } 
@@ -90,10 +90,10 @@ our role Punctuation::Rules {
     token tok-ne           { '!='  } 
 
     #`(Greater than, Generics, Paths)
-    token tok-gt           { '>'   } 
+    token tok-gt           { '>'  <!before '='> } 
 
     #`(Less than, Generics, Paths)
-    token tok-lt           { '<'   } 
+    token tok-lt           { '<'  <!before '='> } 
 
     #`(Greater than or equal to, Generics)
     token tok-ge           { '>='  } 

@@ -67,7 +67,7 @@ our class MacroInvocation {
             $builder ~= $.maybe-comment.gist ~ "\n";
         }
 
-        $builder ~= $.simple-path ~ '!{';
+        $builder ~= $.simple-path.gist ~ '!{';
         $builder ~= @.token-trees>>.gist.join("\n");
         $builder ~= '}';
 

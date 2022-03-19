@@ -12,7 +12,7 @@ our class TupleStructPattern {
         $builder ~= "(";
 
         if $.maybe-tuple-struct-items {
-            $builder ~= $.maybe-tuple-struct-items.gist;
+            $builder ~= $.maybe-tuple-struct-items>>.gist.join(", ");
         }
 
         $builder ~= ")";
@@ -27,7 +27,7 @@ our class TupleStructItems {
     has $.text;
 
     method gist {
-        @.patterns>>.gist.join(",")
+        "(" ~ @.patterns>>.gist.join(",") ~ ")"
     }
 }
 
@@ -117,12 +117,13 @@ our role TupleStructPattern::Rules {
 
     proto rule tuple-pattern-items { * }
 
-    rule tuple-pattern-items:sym<rest-pat> {
-        <rest-pattern>
-    }
 
     rule tuple-pattern-items:sym<pat> {
         <pattern>+ %% <tok-comma>
+    }
+
+    rule tuple-pattern-items:sym<rest-pat> { 
+        <rest-pattern> 
     }
 
     rule grouped-pattern {

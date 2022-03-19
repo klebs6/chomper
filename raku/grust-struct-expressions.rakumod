@@ -18,7 +18,7 @@ our class StructExpressionStruct {
 
             $builder ~= 
             "\n" 
-            ~ $.maybe-struct-expr-struct-body.gist 
+            ~ $.maybe-struct-expr-struct-body.gist.indent(4)
             ~ "\n";
         }
 
@@ -64,13 +64,13 @@ our class StructExpr::Fields {
 
     method gist {
 
-        my @items = @.struct-expr-fields;
+        my @items = @.struct-expr-fields>>.gist;
 
         if $.maybe-struct-base {
-            @items.push: $.maybe-struct-base;
+            @items.push: $.maybe-struct-base.gist;
         }
 
-        @items.join(",")
+        @items.join(",\n")
     }
 }
 

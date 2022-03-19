@@ -1,5 +1,14 @@
 use Data::Dump::Tree;
 
+our class GenericArgs {
+
+    has @.args;
+
+    method gist {
+        "<" ~ @.args>>.gist.join(",") ~ ">"
+    }
+}
+
 our class TraitBound {
     has Bool $.qmark;
     has $.maybe-for-lifetimes;
@@ -128,7 +137,9 @@ our role GenericArgs::Actions {
     }
 
     method generic-args($/) {
-        make $<generic-arg>>>.made
+        make GenericArgs.new(
+            args => $<generic-arg>>>.made
+        )
     }
 
     method generic-arg:sym<lifetime>($/)                   { make $<lifetime>.made }

@@ -74,14 +74,14 @@ our role Pattern::Rules {
 
     #---------------------
     proto rule pattern-without-range { * }
+    rule pattern-without-range:sym<tuple-struct>     { <tuple-struct-pattern> } 
+    rule pattern-without-range:sym<identifier>       { <identifier-pattern>   } 
     rule pattern-without-range:sym<path>             { <path-pattern>         } 
     rule pattern-without-range:sym<literal>          { <literal-pattern>      } 
-    rule pattern-without-range:sym<identifier>       { <identifier-pattern>   } 
     rule pattern-without-range:sym<wildcard>         { <wildcard-pattern>     } 
     rule pattern-without-range:sym<rest>             { <rest-pattern>         } 
     rule pattern-without-range:sym<ref>              { <reference-pattern>    } 
     rule pattern-without-range:sym<struct>           { <struct-pattern>       } 
-    rule pattern-without-range:sym<tuple-struct>     { <tuple-struct-pattern> } 
     rule pattern-without-range:sym<tuple>            { <tuple-pattern>        } 
     rule pattern-without-range:sym<grouped>          { <grouped-pattern>      } 
     rule pattern-without-range:sym<slice>            { <slice-pattern>        } 

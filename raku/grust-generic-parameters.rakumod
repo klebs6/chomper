@@ -1,5 +1,18 @@
 use Data::Dump::Tree;
 
+our class GenericParams {
+    has @.params;
+
+    method gist {
+
+        my $builder = "<";
+
+        $builder ~= @.params>>.gist.join(",");
+
+        $builder ~ ">"
+    }
+}
+
 our class GenericParam {
     has @.outer-attributes;
     has $.generic-param-variant;
@@ -117,7 +130,9 @@ our role GenericParams::Rules {
 our role GenericParams::Actions {
 
     method generic-params {
-        make $<generic-param>>>.made
+        make GenericParams.new(
+            params => $<generic-param>>>.made
+        )
     }
 
     method generic-param {
