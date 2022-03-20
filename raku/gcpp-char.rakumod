@@ -206,3 +206,29 @@ our role CharacterLiteral::Actions {
         make $<universalcharactername>.made
     }
 }
+
+our role CharacterLiteral::Rules {
+
+    proto token character-literal-prefix { * }
+    token character-literal-prefix:sym<u> { 'u' }
+    token character-literal-prefix:sym<U> { 'U' }
+    token character-literal-prefix:sym<L> { 'L' }
+
+    token character-literal {
+        <character-literal-prefix>? '\'' <cchar>+ '\''
+    }
+
+    proto token cchar { * }
+    token cchar:sym<basic>     { <-[ \' \\ \r \n ]> }
+    token cchar:sym<escape>    { <escapesequence> }
+    token cchar:sym<universal> { <universalcharactername> }
+
+    proto token universalcharactername { * }
+    token universalcharactername:sym<one> { '\\u' <hexquad> }
+    token universalcharactername:sym<two> { '\\U' <hexquad> <hexquad> }
+
+    proto token schar { * }
+    token schar:sym<basic>  { <-[ " \\ \r \n ]> }
+    token schar:sym<escape> { <escapesequence> }
+    token schar:sym<ucn>    { <universalcharactername> }
+}

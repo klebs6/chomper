@@ -326,3 +326,55 @@ our role LambdaExpression::Actions {
         )
     }
 }
+
+our role LambdaExpression::Rules {
+
+    rule lambda-expression {
+        <lambda-introducer> <lambda-declarator>?  <compound-statement>
+    }
+
+    rule lambda-introducer {
+        <left-bracket> <lambda-capture>?  <right-bracket>
+    }
+
+    #-------------------------------
+    proto rule lambda-capture { * }
+    rule lambda-capture:sym<list> { <capture-list> }
+    rule lambda-capture:sym<def>  { <capture-default> [ <comma> <capture-list> ]? }
+
+    #-------------------------------
+    proto rule capture-default { * }
+    rule capture-default:sym<and>    { <and_> }
+    rule capture-default:sym<assign> { <assign> }
+
+    #-------------------------------
+    rule capture-list {
+        <capture> [ <comma> <capture> ]* <ellipsis>?
+    }
+
+    #-------------------------------
+    proto rule capture { * }
+    rule capture:sym<simple> { <simple-capture> }
+    rule capture:sym<init>   { <initcapture> }
+
+    #-------------------------------
+    proto rule simple-capture { * }
+    rule simple-capture:sym<id>   { <and_>? <identifier> }
+    rule simple-capture:sym<this> { <this> }
+
+    #-------------------------------
+    rule initcapture {
+        <and_>?  <identifier> <initializer>
+    }
+
+    #-------------------------------
+    rule lambda-declarator {
+        <left-paren>
+        <parameter-declaration-clause>?
+        <right-paren>
+        <mutable>?
+        <exception-specification>?
+        <attribute-specifier-seq>?
+        <trailing-return-type>?
+    }
+}

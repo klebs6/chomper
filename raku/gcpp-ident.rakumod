@@ -152,3 +152,28 @@ our role Identifier::Actions {
         )
     }
 }
+
+our role Identifier::Rules {
+
+    proto token identifier-start { * }
+    token identifier-start:sym<nondigit> { <nondigit> }
+    token identifier-start:sym<ucn>      { <universalcharactername> }
+
+    proto token identifier-continue { * }
+    token identifier-continue:sym<digit>    { <digit> }
+    token identifier-continue:sym<nondigit> { <nondigit> }
+    token identifier-continue:sym<ucn>      { <universalcharactername> }
+
+    token identifier {
+        <.identifier-start>
+        <.identifier-continue>*
+    }
+
+    token nondigit {
+        <[ a .. z A .. Z _]>
+    }
+
+    token digit {
+        <[ 0 .. 9 ]>
+    }
+}

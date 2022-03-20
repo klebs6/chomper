@@ -35,3 +35,16 @@ our role MultiLineMacro::Actions {
         make ~$/
     }
 }
+
+our role MultiLineMacro::Rules {
+
+    token multi-line-macro {
+        '#'
+        [ <-[ \n ]>*? '\\' '\r'? '\n' ]
+        <-[ \n ]>+
+    }
+
+    token directive {
+        '#' <-[ \n ]>*
+    }
+}

@@ -168,3 +168,19 @@ our role Statement::Actions {
         }
     }
 }
+
+our role Statement::Rules {
+
+    proto token statement { * }
+
+    token statement:sym<labeled>     { <comment>? <labeled-statement>     }
+    token statement:sym<declaration> { <comment>? <declaration-statement> }
+
+    rule compound-statement {
+        <left-brace> <statement-seq>?  <right-brace>
+    }
+
+    regex statement-seq {
+        <statement> [<ws> <statement>]*
+    }
+}

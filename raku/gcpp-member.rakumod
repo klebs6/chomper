@@ -329,3 +329,54 @@ our role Member::Actions {
         )
     }
 }
+
+our role Member::Rules {
+
+    proto rule member-specification-base { * }
+    rule member-specification-base:sym<decl>   { <memberdeclaration> }
+    rule member-specification-base:sym<access> { <access-specifier> <colon> }
+
+    rule member-specification {
+        <member-specification-base>+
+    }
+
+    proto rule memberdeclaration { * }
+
+    rule memberdeclaration:sym<basic> {
+        <attribute-specifier-seq>?  
+        <decl-specifier-seq>?  
+        <member-declarator-list>?  
+        <semi>
+    }
+
+    rule memberdeclaration:sym<func>          { <function-definition> }
+    rule memberdeclaration:sym<using>         { <using-declaration> }
+    rule memberdeclaration:sym<static-assert> { <static-assert-declaration> }
+    rule memberdeclaration:sym<template>      { <template-declaration> }
+    rule memberdeclaration:sym<alias>         { <alias-declaration> }
+    rule memberdeclaration:sym<empty>         { <empty-declaration> }
+
+    rule member-declarator-list {
+        <member-declarator> [ <comma> <member-declarator> ]*
+    }
+
+    proto rule member-declarator { * }
+
+    rule member-declarator:sym<virt> {
+        <declarator>
+        <virtual-specifier-seq>? 
+        <pure-specifier>?
+    }
+
+    rule member-declarator:sym<brace-or-eq> {
+        <declarator>
+        <brace-or-equal-initializer>?
+    }
+
+    rule member-declarator:sym<ident> {
+        <identifier>?
+        <attribute-specifier-seq>?
+        <colon>
+        <constant-expression>
+    }
+}

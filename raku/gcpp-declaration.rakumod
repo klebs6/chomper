@@ -312,3 +312,76 @@ our role Declaration::Actions {
         }
     }
 }
+
+our role Declaration::Rules {
+
+    rule declarationseq { <declaration>+ }
+
+    #-------------------------------
+    proto rule declaration { * }
+    rule declaration:sym<block-declaration>       { <block-declaration>         } 
+    rule declaration:sym<function-definition>     { <function-definition>       } 
+    rule declaration:sym<template-declaration>    { <template-declaration>      } 
+    rule declaration:sym<explicit-instantiation>  { <explicit-instantiation>    } 
+    rule declaration:sym<explicit-specialization> { <explicit-specialization>   } 
+    rule declaration:sym<linkage-specification>   { <linkage-specification>     } 
+    rule declaration:sym<namespace-definition>    { <namespace-definition>      } 
+    rule declaration:sym<empty-declaration>       { <empty-declaration>         } 
+    rule declaration:sym<attribute-declaration>   { <attribute-declaration>     } 
+
+    proto rule block-declaration { * }
+    rule block-declaration:sym<simple>            { <simple-declaration>        } 
+    rule block-declaration:sym<asm>               { <asm-definition>            } 
+    rule block-declaration:sym<namespace-alias>   { <namespace-alias-definition> } 
+    rule block-declaration:sym<using-decl>        { <using-declaration>         } 
+    rule block-declaration:sym<using-directive>   { <using-directive>           } 
+    rule block-declaration:sym<static-assert>     { <static-assert-declaration>  } 
+    rule block-declaration:sym<alias>             { <alias-declaration>         } 
+    rule block-declaration:sym<opaque-enum-decl>  { <opaque-enum-declaration>    } 
+
+    rule alias-declaration {
+        <using>
+        <identifier>
+        <attribute-specifier-seq>?
+        <assign>
+        <the-type-id>
+        <semi>
+    }
+
+    #---------------------------
+    proto rule simple-declaration { * }
+
+    rule simple-declaration:sym<basic> { 
+        <decl-specifier-seq>? 
+        <init-declarator-list>? 
+        <semi> 
+    }
+
+    rule simple-declaration:sym<init-list> { 
+        <attribute-specifier-seq> 
+        <decl-specifier-seq>? 
+        <init-declarator-list> 
+        <semi> 
+    }
+
+    rule static-assert-declaration {
+        <static_assert>
+        <left-paren>
+        <constant-expression>
+        <comma>
+        <string-literal>
+        <right-paren>
+        <semi>
+    }
+
+    rule empty-declaration {
+        <semi>
+    }
+
+    rule attribute-declaration {
+        <attribute-specifier-seq> <semi>
+    }
+
+    rule declaration-statement { <block-declaration> }
+
+}

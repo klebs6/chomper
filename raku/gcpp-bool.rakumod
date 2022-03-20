@@ -33,3 +33,10 @@ our role BooleanLiteral::Actions {
         make BooleanLiteral::T.new
     }
 }
+
+our role BooleanLiteral::Rules {
+
+    proto token boolean-literal { * }
+    token boolean-literal:sym<f> { <false_> }
+    token boolean-literal:sym<t> { <true_> }
+}

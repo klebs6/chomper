@@ -19,4 +19,8 @@ our role Typedef::Actions {
     method typedef-name($/) {
         make $<identifier>.made
     }
+
+    rule typedef-name { 
+        <identifier> 
+    }
 }

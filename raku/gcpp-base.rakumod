@@ -161,3 +161,40 @@ our role Base::Actions {
         make $<class-or-decl-type>.made
     }
 }
+
+our role Base::Rules {
+
+    rule base-type-specifier {
+        <class-or-decl-type>
+    }
+
+    rule base-clause {
+        <colon> <base-specifier-list>
+    }
+
+    rule base-specifier-list {
+        <base-specifier> <ellipsis>?  [ <comma> <base-specifier> <ellipsis>?  ]*
+    }
+
+    #-----------------------------
+    proto rule base-specifier { * }
+
+    rule base-specifier:sym<base-type> {
+        <attribute-specifier-seq>?
+        <base-type-specifier>
+    }
+
+    rule base-specifier:sym<virtual> {
+        <attribute-specifier-seq>?
+        <virtual> 
+        <access-specifier>? 
+        <base-type-specifier>
+    }
+
+    rule base-specifier:sym<access> {
+        <attribute-specifier-seq>?
+        <access-specifier> 
+        <virtual>? 
+        <base-type-specifier>
+    }
+}

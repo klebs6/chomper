@@ -218,3 +218,44 @@ our role Class::Actions {
         make ClassKey::Struct.new
     }
 }
+
+our role Class::Rules {
+
+    proto rule class-name { * }
+    rule class-name:sym<id>          { <identifier> }
+    rule class-name:sym<template-id> { <simple-template-id> }
+
+    rule class-specifier {
+        <class-head>
+        <left-brace>
+        <member-specification>?
+        <right-brace>
+    }
+
+    proto rule class-head { * }
+
+    rule class-head:sym<class> {
+        <class-key>
+        <attribute-specifier-seq>?
+        [ <class-head-name> <class-virt-specifier>? ]?
+        <base-clause>?
+    }
+
+    rule class-head:sym<union> {
+        <union>
+        <attribute-specifier-seq>?
+        [ <class-head-name> <class-virt-specifier>? ]?
+    }
+
+    rule class-head-name {
+        <nested-name-specifier>?  <class-name>
+    }
+
+    rule class-virt-specifier {
+        <final>
+    }
+
+    proto rule class-key { * }
+    rule class-key:sym<class>  { <class_> }
+    rule class-key:sym<struct> { <struct> }
+}

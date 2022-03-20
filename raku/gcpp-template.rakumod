@@ -198,3 +198,74 @@ our role Template::Actions {
         make $<id-expression>.made
     }
 }
+
+our role Template::Rules {
+
+    rule template-argument-list {
+        <template-argument> 
+        <ellipsis>? 
+        [ <comma> <template-argument> <ellipsis>? ]*
+    }
+
+    #---------------------
+    proto token template-argument { * }
+    token template-argument:sym<type-id>    { <the-type-id> }
+    token template-argument:sym<const-expr> { <constant-expression> }
+    token template-argument:sym<id-expr>    { <id-expression> }
+
+    rule simple-template-id {
+        <template-name>
+        <less>
+        <template-argument-list>?
+        <greater>
+    }
+
+    #-----------------------------
+    proto rule template-id { * }
+
+    rule template-id:sym<simple> {
+        <simple-template-id>
+    }
+
+    rule template-id:sym<operator-function-id> {
+        <operator-function-id>
+        <less>
+        <template-argument-list>?
+        <greater>
+    }
+
+    rule template-id:sym<literal-operator-id> {
+        <literal-operator-id>
+        <less>
+        <template-argument-list>?
+        <greater>
+    }
+
+    #-----------------------------
+    token template-name {
+        <identifier>
+    }
+
+    rule template-declaration {
+        <template>
+        <less>
+        <templateparameter-list>
+        <greater>
+        <declaration>
+    }
+
+    rule templateparameter-list {
+        <template-parameter>
+        [ <comma> <template-parameter> ]*
+    }
+
+    proto rule template-parameter { * }
+    rule template-parameter:sym<type>  { <type-parameter> }
+    rule template-parameter:sym<param> { <parameter-declaration> }
+
+    rule scoped-template-id {
+        <nested-name-specifier> 
+        <template> 
+        <simple-template-id>
+    }
+}

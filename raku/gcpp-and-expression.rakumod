@@ -31,3 +31,10 @@ our role AndExpression::Actions {
         }
     }
 }
+
+our role AndExpression::Rules {
+
+    rule and-expression {
+        <equality-expression> [ <and_> <equality-expression> ]*
+    }
+}

@@ -93,3 +93,21 @@ our role AdditiveExpression::Actions {
         }
     }
 }
+
+our role AdditiveExpression::Rules {
+
+    proto token additive-operator { * }
+    token additive-operator:sym<plus>  {  <plus> }
+    token additive-operator:sym<minus> {  <minus> }
+
+    #-----------------
+    rule additive-expression-tail {
+        <additive-operator> 
+        <multiplicative-expression>
+    }
+
+    rule additive-expression {
+        <multiplicative-expression>
+        <additive-expression-tail>*
+    }
+}

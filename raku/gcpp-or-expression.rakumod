@@ -67,3 +67,14 @@ our role OrExpression::Actions {
         }
     }
 }
+
+our role OrExpression::Rules {
+
+    rule exclusive-or-expression {
+        <and-expression> [ <caret> <and-expression> ]*
+    }
+
+    rule inclusive-or-expression {
+        <exclusive-or-expression> [ <or_> <exclusive-or-expression> ]*
+    }
+}

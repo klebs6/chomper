@@ -106,3 +106,30 @@ our role MemInitializer::Actions {
         make $<identifier>.made
     }
 }
+
+our role MemInitializer::Rules {
+
+    rule mem-initializer-list {
+        <mem-initializer>
+        <ellipsis>?
+        [ <comma> <mem-initializer> <ellipsis>? ]*
+    }
+
+    proto rule mem-initializer { * }
+
+    rule mem-initializer:sym<expr-list> {
+        <meminitializerid>
+        <left-paren> 
+        <expression-list>?  
+        <right-paren>
+    }
+
+    rule mem-initializer:sym<braced> {
+        <meminitializerid>
+        <braced-init-list>
+    }
+
+    proto rule meminitializerid { * }
+    rule meminitializerid:sym<class-or-decl> { <class-or-decl-type> }
+    rule meminitializerid:sym<ident>         { <identifier> }
+}

@@ -126,3 +126,32 @@ our role TypeName::Actions {
         )
     }
 }
+
+our role TypeName::Rules {
+
+    proto rule type-name-specifier { * }
+
+    rule type-name-specifier:sym<ident> {
+        <typename_>
+        <nested-name-specifier>
+        <identifier>
+    }
+
+    rule type-name-specifier:sym<template> {
+        <typename_>
+        <nested-name-specifier>
+        <template>?  
+        <simple-template-id>
+    }
+
+    proto rule the-type-name                   { * }
+    rule the-type-name:sym<simple-template-id> { <simple-template-id> }
+    rule the-type-name:sym<class>              { <class-name> }
+    rule the-type-name:sym<enum>               { <enum-name> }
+    rule the-type-name:sym<typedef>            { <typedef-name> }
+
+    rule full-type-name {
+        <nested-name-specifier>? 
+        <the-type-name>
+    }
+}

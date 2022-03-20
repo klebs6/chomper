@@ -170,3 +170,24 @@ our role Suffix::Actions {
         make Longlongsuffix::LL.new
     }
 }
+
+our role Suffix::Rules {
+
+    proto token integersuffix { * }
+    token integersuffix:sym<ul>  { <unsignedsuffix> <longsuffix>? }
+    token integersuffix:sym<ull> { <unsignedsuffix> <longlongsuffix>? }
+    token integersuffix:sym<lu>  { <longsuffix>     <unsignedsuffix>? }
+    token integersuffix:sym<llu> { <longlongsuffix> <unsignedsuffix>? }
+
+    token unsignedsuffix {
+        <[ u U ]>
+    }
+
+    token longsuffix {
+        <[ l L ]>
+    }
+
+    proto token longlongsuffix { * }
+    token longlongsuffix:sym<ll> { 'll' }
+    token longlongsuffix:sym<LL> { 'LL' }
+}

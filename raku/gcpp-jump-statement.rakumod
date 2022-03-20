@@ -102,3 +102,12 @@ our role JumpStatement::Actions {
         )
     }
 }
+
+our role JumpStatement::Rules {
+
+    proto rule jump-statement { * }
+    rule jump-statement:sym<break>    { <break_>                                        <semi> } 
+    rule jump-statement:sym<continue> { <continue_>                                     <semi> } 
+    rule jump-statement:sym<return>   { <return_> <return-statement-body>? <semi> } 
+    rule jump-statement:sym<goto>     { <goto_> <identifier>                            <semi> } 
+}

@@ -113,3 +113,18 @@ our role TypeId::Actions {
         make $<the-type-id>>>.made
     }
 }
+
+our role TypeId::Rules {
+
+    rule type-id-of-the-type-id {
+        <typeid_>
+    }
+
+    rule type-id-list {
+         <the-type-id> <ellipsis>? [ <comma> <the-type-id> <ellipsis>? ]*
+    }
+
+    rule the-type-id {
+        <type-specifier-seq> <abstract-declarator>?
+    }
+}

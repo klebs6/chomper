@@ -37,3 +37,23 @@ our role PointerDeclarator::Actions {
         }
     }
 }
+
+our role PointerDeclarator::Rules {
+
+    rule init-declarator-list {
+        <init-declarator> [ <comma> <init-declarator> ]*
+    }
+
+    rule init-declarator {
+        <declarator> <initializer>?
+    }
+
+    #--------------------------
+    proto rule declarator { * }
+    rule declarator:sym<ptr>    { <pointer-declarator> }
+    rule declarator:sym<no-ptr> { <no-pointer-declarator> <parameters-and-qualifiers> <trailing-return-type> }
+
+    rule pointer-declarator {
+        <augmented-pointer-operator>* <no-pointer-declarator>
+    }
+}

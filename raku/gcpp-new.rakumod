@@ -267,3 +267,45 @@ our role NewExpression::Actions {
         make $<braced-init-list>.made
     }
 }
+
+our role NewExpression::Rules {
+
+    proto rule new-expression { * }
+
+    rule new-expression:sym<new-type-id> {
+        <doublecolon>?
+        <new_>
+        <new-placement>?
+        <new-type-id>
+        <new-initializer>?
+    }
+
+    rule new-expression:sym<the-type-id> {
+        <doublecolon>?
+        <new_>
+        <new-placement>?
+        <left-paren> 
+        <the-type-id> 
+        <right-paren>
+        <new-initializer>?
+    }
+
+    rule new-placement {
+        <left-paren>
+        <expression-list>
+        <right-paren>
+    }
+
+    rule new-type-id {
+        <type-specifier-seq> <new-declarator>?
+    }
+
+    rule new-declarator {
+        <pointer-operator>* 
+        <no-pointer-new-declarator>?
+    }
+
+    proto rule new-initializer { * }
+    rule new-initializer:sym<expr-list> { <left-paren> <expression-list>?  <right-paren> }
+    rule new-initializer:sym<braced>    { <braced-init-list> }
+}

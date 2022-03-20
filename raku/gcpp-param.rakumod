@@ -147,3 +147,36 @@ our role Parameters::Actions {
         )
     }
 }
+
+our role Parameters::Rules {
+
+    rule parameter-declaration-clause {
+        <parameter-declaration-list> [ <comma>? <ellipsis> ]?
+    }
+
+    rule parameter-declaration-list {
+        <parameter-declaration> [ <comma> <parameter-declaration> ]*
+    }
+
+    #-----------------------------
+    proto rule parameter-declaration-body { * }
+    rule parameter-declaration-body:sym<decl> { <declarator> }
+    rule parameter-declaration-body:sym<abst> { <abstract-declarator>? }
+
+    rule parameter-declaration {
+        <attribute-specifier-seq>?
+        <decl-specifier-seq>
+        <parameter-declaration-body>
+        [ <assign> <initializer-clause> ]?
+    }
+
+    rule parameters-and-qualifiers {
+        <left-paren>
+        <parameter-declaration-clause>?
+        <right-paren>
+        <cvqualifierseq>?
+        <refqualifier>?
+        <exception-specification>?
+        <attribute-specifier-seq>?
+    }
+}

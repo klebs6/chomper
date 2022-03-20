@@ -214,3 +214,25 @@ our role IdExpression::Actions {
         )
     }
 }
+
+our role IdExpression::Rules {
+
+    proto regex id-expression { * }
+    regex id-expression:sym<qualified>   { <qualified-id> }
+    regex id-expression:sym<unqualified> { <unqualified-id> }
+
+    proto regex unqualified-id { * }
+    regex unqualified-id:sym<ident>               { <identifier> }
+    regex unqualified-id:sym<op-func-id>          { <operator-function-id> }
+    regex unqualified-id:sym<conversion-func-id>  { <conversion-function-id> }
+    regex unqualified-id:sym<literal-operator-id> { <literal-operator-id> }
+    regex unqualified-id:sym<tilde-classname>     { <tilde> <class-name> }
+    regex unqualified-id:sym<tilde-decltype>      { <tilde> <decltype-specifier> }
+    regex unqualified-id:sym<template-id>         { <template-id> }
+
+    regex qualified-id {
+        <nested-name-specifier> 
+        <template>?  
+        <unqualified-id>
+    }
+}

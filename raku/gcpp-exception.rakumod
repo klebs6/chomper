@@ -135,3 +135,30 @@ our role Exception::Actions {
         )
     }
 }
+
+our role Exception::Rules {
+
+    proto rule exception-declaration { * }
+
+    rule exception-declaration:sym<basic> {
+        <attribute-specifier-seq>?
+        <type-specifier-seq>
+        <some-declarator>?
+    }
+
+    rule exception-declaration:sym<ellipsis> {
+        <ellipsis>
+    }
+
+    rule throw-expression {
+        <throw> <assignment-expression>?
+    }
+
+    proto token exception-specification { * }
+    token exception-specification:sym<dynamic>  { <dynamic-exception-specification> }
+    token exception-specification:sym<noexcept> { <noe-except-specification> }
+
+    rule dynamic-exception-specification {
+        <throw> <left-paren> <type-id-list>?  <right-paren>
+    }
+}

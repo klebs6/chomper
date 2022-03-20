@@ -58,3 +58,11 @@ our role Access::Actions {
         make AccessSpecifier::Public.new
     }
 }
+
+our role Access::Rules {
+
+    proto rule access-specifier { * }
+    rule access-specifier:sym<private>   { <private> }
+    rule access-specifier:sym<protected> { <protected> }
+    rule access-specifier:sym<public>    { <public> }
+}

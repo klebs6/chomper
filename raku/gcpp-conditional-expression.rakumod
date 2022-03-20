@@ -63,3 +63,18 @@ our role ConditionalExpression::Actions {
         }
     }
 }
+
+our role ConditionalExpression::Rules {
+
+    rule conditional-expression-tail {
+        <question> 
+        <expression> 
+        <colon> 
+        <assignment-expression> 
+    }
+
+    rule conditional-expression {
+        <logical-or-expression>
+        <conditional-expression-tail>?
+    }
+}

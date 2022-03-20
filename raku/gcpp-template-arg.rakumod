@@ -52,3 +52,4 @@ our class TemplateArgument::IdExpr does ITemplateArgument {
         exit;
     }
 }
+

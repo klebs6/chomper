@@ -105,3 +105,16 @@ our role CastExpression::Actions {
         }
     }
 }
+
+our role CastExpression::Rules {
+
+    proto token cast-token { * }
+    token cast-token:sym<dyn>         { <dynamic_cast> }
+    token cast-token:sym<static>      { <static_cast> }
+    token cast-token:sym<reinterpret> { <reinterpret_cast> }
+    token cast-token:sym<const>       { <const_cast> }
+
+    rule cast-expression {
+        [ <left-paren> <the-type-id> <right-paren> ]* <unary-expression>
+    }
+}

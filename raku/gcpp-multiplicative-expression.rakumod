@@ -108,3 +108,21 @@ our role MultiplicativeExpression::Actions {
         )
     }
 }
+
+our role MultiplicativeExpression::Rules {
+
+    proto token multiplicative-operator { * }
+    token multiplicative-operator:sym<*> { <star> }
+    token multiplicative-operator:sym</> { <div_> }
+    token multiplicative-operator:sym<%> { <mod_> }
+
+    rule multiplicative-expression {
+        <pointer-member-expression>
+        <multiplicative-expression-tail>*
+    }
+
+    rule multiplicative-expression-tail {
+        <multiplicative-operator> 
+        <pointer-member-expression>
+    }
+}

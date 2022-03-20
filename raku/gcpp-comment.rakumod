@@ -67,3 +67,24 @@ our role Comment::Actions {
         make $<block-comment>.made
     }
 }
+
+our role Comment::Rules {
+
+    token block-comment {
+        '/*' .*?  '*/'
+    }
+
+    token line-comment {
+        '//' <-[ \r \n ]>*
+    }
+
+    proto rule comment { * }
+
+    regex comment:sym<line> {
+        [<line-comment> <ws>?]+
+    }
+
+    rule comment:sym<block> {
+        <block-comment>
+    }
+}

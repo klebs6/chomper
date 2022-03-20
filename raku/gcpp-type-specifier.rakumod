@@ -247,3 +247,74 @@ our role TypeSpecifier::Actions {
         make $<decltype-specifier>.made
     }
 }
+
+our role TypeSpecifier::Rules {
+
+    rule simple-int-type-specifier {
+        <simple-type-signedness-modifier>? 
+        <simple-type-length-modifier>* 
+        <int_>
+    }
+
+    rule simple-char-type-specifier {
+        <simple-type-signedness-modifier>?
+        <char_>
+    }
+
+    rule simple-char16-type-specifier {
+        <simple-type-signedness-modifier>?  
+        <char16>
+    }
+
+    rule simple-char32-type-specifier {
+        <simple-type-signedness-modifier>?
+        <char32>
+    }
+
+    rule simple-wchar-type-specifier {
+        <simple-type-signedness-modifier>? 
+        <wchar>
+    }
+
+    rule simple-double-type-specifier {
+        <simple-type-length-modifier>?
+        <double>
+    }
+
+    #------------------------------
+    proto regex simple-type-specifier { * }
+    regex simple-type-specifier:sym<int>                   { <simple-int-type-specifier>                                  } 
+    regex simple-type-specifier:sym<full>                  { <full-type-name>                                             } 
+    regex simple-type-specifier:sym<scoped>                { <scoped-template-id>                                         } 
+    regex simple-type-specifier:sym<signedness-mod>        { <simple-type-signedness-modifier>                               } 
+    regex simple-type-specifier:sym<signedness-mod-length> { <simple-type-signedness-modifier>?  <simple-type-length-modifier>+ } 
+    regex simple-type-specifier:sym<char>                  { <simple-char-type-specifier>                                 } 
+    regex simple-type-specifier:sym<char16>                { <simple-char16-type-specifier>                               } 
+    regex simple-type-specifier:sym<char32>                { <simple-char32-type-specifier>                               } 
+    regex simple-type-specifier:sym<wchar>                 { <simple-wchar-type-specifier>                                } 
+    regex simple-type-specifier:sym<bool>                  { <bool_>                                                      } 
+    regex simple-type-specifier:sym<float>                 { <float>                                                      } 
+    regex simple-type-specifier:sym<double>                { <simple-double-type-specifier>                               } 
+    regex simple-type-specifier:sym<void>                  { <void_>                                                       } 
+    regex simple-type-specifier:sym<auto>                  { <auto>                                                       } 
+    regex simple-type-specifier:sym<decltype>              { <decltype-specifier>                                          } 
+
+    proto rule type-specifier { * }
+    rule type-specifier:sym<trailing-type-specifier> { <trailing-type-specifier> }
+    rule type-specifier:sym<class-specifier>         { <class-specifier>        }
+    rule type-specifier:sym<enum-specifier>          { <enum-specifier>         }
+
+    proto rule trailing-type-specifier { * }
+    rule trailing-type-specifier:sym<cv-qualifier> { <cv-qualifier> <simple-type-specifier> }
+    rule trailing-type-specifier:sym<simple>       { <simple-type-specifier>     } 
+    rule trailing-type-specifier:sym<elaborated>   { <elaborated-type-specifier> } 
+    rule trailing-type-specifier:sym<typename>     { <type-name-specifier>       } 
+
+    rule type-specifier-seq {
+        <type-specifier>+ <attribute-specifier-seq>?
+    }
+
+    rule trailing-type-specifier-seq {
+        <trailing-type-specifier>+ <attribute-specifier-seq>?
+    }
+}

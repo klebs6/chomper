@@ -452,3 +452,99 @@ our role PostfixExpression::Actions {
         )
     }
 }
+
+our role PostfixExpression::Rules {
+
+    rule postfix-expression {  
+        <postfix-expression-body> <postfix-expression-tail>*
+    }
+
+    proto rule postfix-expression-tail { * }
+
+    proto rule bracket-tail { * }
+
+    rule bracket-tail:sym<expr> {
+        <left-bracket> 
+        <expression>
+        <right-bracket>
+    }
+
+    rule bracket-tail:sym<braced-init-list> {
+        <left-bracket> 
+        <braced-init-list>
+        <right-bracket>
+    }
+
+    rule postfix-expression-tail:sym<bracket> {
+        <bracket-tail>
+    }
+
+    rule postfix-expression-tail:sym<parens> { 
+        <left-paren> 
+        <expression-list>?  
+        <right-paren>
+    }
+
+    rule postfix-expression-tail:sym<indirection-id> { 
+        [ <dot> ||  <arrow> ]
+        <template>?  <id-expression> 
+    }
+
+    rule postfix-expression-tail:sym<indirection-pseudo-dtor> { 
+        [ <dot> ||  <arrow> ]
+        <pseudo-destructor-name> 
+    }
+
+    rule postfix-expression-tail:sym<pp> { 
+        <plus-plus>
+    }
+
+    rule postfix-expression-tail:sym<mm> { 
+        <minus-minus>
+    }
+
+    #-------------------------------------
+    #needs to stay like this for some reason..
+    #ie, cant be made proto without breaking some
+    #parses, for example:
+    #
+    # uint8_t{format}
+    token postfix-expression-body { 
+        || <postfix-expression-cast>
+        || <postfix-expression-list>
+        || <postfix-expression-typeid>
+        || <primary-expression>
+    }
+
+    rule postfix-expression-cast {
+        <cast-token>
+        <less> 
+        <the-type-id> 
+        <greater> 
+        <left-paren> 
+        <expression> 
+        <right-paren>
+    }
+
+    rule postfix-expression-typeid {
+        <type-id-of-the-type-id> 
+        <left-paren> 
+        [ <expression> ||  <the-type-id>] 
+        <right-paren>
+    }
+
+    #---------------------
+    proto token post-list-head { * }
+    token post-list-head:sym<simple>    { <simple-type-specifier> }
+    token post-list-head:sym<type-name> { <type-name-specifier> }
+
+    #---------------------
+    proto token post-list-tail { * }
+    token post-list-tail:sym<parenthesized> { <left-paren> <expression-list>?  <right-paren> }
+    token post-list-tail:sym<braced>        { <braced-init-list> }
+
+    token postfix-expression-list {
+        <post-list-head>
+        <post-list-tail>
+    }
+}

@@ -67,3 +67,16 @@ our role Linkage::Actions {
         )
     }
 }
+
+our role Linkage::Rules {
+
+    proto rule linkage-specification-body { * }
+    rule linkage-specification-body:sym<seq>  { <left-brace> <declarationseq>?  <right-brace> }
+    rule linkage-specification-body:sym<decl> {  <declaration> }
+
+    rule linkage-specification {
+        <extern>
+        <string-literal>
+        <linkage-specification-body>
+    }
+}

@@ -36,3 +36,18 @@ our role Literal::Actions {
         make $<user-defined-literal>.made
     }
 }
+
+our role Literal::Rules {
+
+    proto token literal { * }
+    token literal:sym<int>                  { <integer-literal> }
+    token literal:sym<char>                 { <character-literal> }
+    token literal:sym<float>                { <floating-literal> }
+
+    #Note: are we allowed to have many strings in a row?
+    token literal:sym<str>                  { <string-literal> } 
+
+    token literal:sym<bool>                 { <boolean-literal> }
+    token literal:sym<ptr>                  { <pointer-literal> }
+    token literal:sym<user-defined>         { <user-defined-literal> }
+}

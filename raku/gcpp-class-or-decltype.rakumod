@@ -54,3 +54,10 @@ our role ClassOrDeclType::Actions {
         make $<decltype-specifier>.made
     }
 }
+
+our role ClassOrDeclType::Rules {
+
+    proto rule class-or-decl-type { * }
+    rule class-or-decl-type:sym<class>    { <nested-name-specifier>?  <class-name> }
+    rule class-or-decl-type:sym<decltype> { <decltype-specifier> }
+}

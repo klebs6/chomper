@@ -154,3 +154,20 @@ our role AttributedStatement::Actions {
         make $<try-block>.made
     }
 }
+
+our role AttributedStatement::Rules {
+
+    token statement:sym<attributed> { 
+        <comment>?
+        <attribute-specifier-seq>?
+        <attributed-statement-body>
+    }
+
+    proto rule attributed-statement-body { * }
+    rule attributed-statement-body:sym<expression> { <expression-statement> }
+    rule attributed-statement-body:sym<compound>   { <compound-statement>   }
+    rule attributed-statement-body:sym<selection>  { <selection-statement>  }
+    rule attributed-statement-body:sym<iteration>  { <iteration-statement>  }
+    rule attributed-statement-body:sym<jump>       { <jump-statement>       }
+    rule attributed-statement-body:sym<try>        { <try-block>            }
+}

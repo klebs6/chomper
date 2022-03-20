@@ -278,3 +278,33 @@ our role AssignmentExpression::Actions {
         make AssignmentOperator::OrAssign.new
     }
 }
+
+our role AssignmentExpression::Rules {
+
+    proto rule assignment-expression { * }
+
+    rule assignment-expression:sym<throw> {  
+        <throw-expression>
+    }
+
+    rule assignment-expression:sym<basic> {  
+        <logical-or-expression> <assignment-operator> <initializer-clause>
+    }
+
+    rule assignment-expression:sym<conditional> {  
+        <conditional-expression>
+    }
+
+    proto token assignment-operator { * }
+    token assignment-operator:sym<assign>        { <assign>           } 
+    token assignment-operator:sym<star-assign>   { <star-assign>       } 
+    token assignment-operator:sym<div-assign>    { <div-assign>        } 
+    token assignment-operator:sym<mod-assign>    { <mod-assign>        } 
+    token assignment-operator:sym<plus-assign>   { <plus-assign>       } 
+    token assignment-operator:sym<minus-assign>  { <minus-assign>      } 
+    token assignment-operator:sym<rshift-assign> { <right-shift-assign> } 
+    token assignment-operator:sym<lshift-assign> { <left-shift-assign>  } 
+    token assignment-operator:sym<and-assign>    { <and-assign>        } 
+    token assignment-operator:sym<xor-assign>    { <xor-assign>        } 
+    token assignment-operator:sym<or-assign>     { <or-assign>         } 
+}

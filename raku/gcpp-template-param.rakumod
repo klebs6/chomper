@@ -39,6 +39,3 @@ our class TemplateParameter::Param does ITemplateParameter {
         exit;
     }
 }
-
-
-

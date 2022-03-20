@@ -218,3 +218,45 @@ our role Initializer::Actions {
         make $<initializer-list>.made
     }
 }
+
+our role Initializer::Rules {
+
+    proto rule initializer { * }
+
+    rule initializer:sym<brace-or-eq> {
+        <brace-or-equal-initializer>
+    }
+
+    rule initializer:sym<paren-expr-list> {
+        <left-paren> <expression-list> <right-paren>
+    }
+
+    #-----------------------------
+    proto rule brace-or-equal-initializer { * }
+    rule brace-or-equal-initializer:sym<assign-init>      { <assign> <initializer-clause> }
+    rule brace-or-equal-initializer:sym<braced-init-list> { <braced-init-list> }
+
+    #-----------------------------
+    proto rule initializer-clause { * }
+
+    rule initializer-clause:sym<assignment> {
+        <comment>?
+        <assignment-expression>
+    }
+
+    rule initializer-clause:sym<braced> {
+        <comment>?
+        <braced-init-list>
+    }
+
+    #-----------------------------
+    rule initializer-list {
+        <initializer-clause>
+        <ellipsis>?
+        [ <comma> <initializer-clause> <ellipsis>? ]*
+    }
+
+    rule braced-init-list {
+        <left-brace> [ <initializer-list> <comma>? ]?  <right-brace>
+    }
+}

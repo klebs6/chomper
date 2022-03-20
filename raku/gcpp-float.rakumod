@@ -191,3 +191,44 @@ our role FloatingLiteral::Actions {
         make Floatingsuffix.new
     }
 }
+
+our role FloatingLiteral::Rules {
+
+    proto token floating-literal { * }
+
+    token floating-literal:sym<frac> {
+        <fractionalconstant>
+        <exponentpart>?
+        <floatingsuffix>?
+    }
+
+    token floating-literal:sym<digit> {
+        <digitsequence>
+        <exponentpart>
+        <floatingsuffix>?
+    }
+
+    proto token fractionalconstant { * }
+    token fractionalconstant:sym<with-tail> { <digitsequence>?  '.' <digitsequence> }
+    token fractionalconstant:sym<no-tail>   { <digitsequence> '.' }
+
+    token exponentpart-prefix {
+        'e' || 'E'
+    }
+
+    token exponentpart {
+        <exponentpart-prefix> <sign>?  <digitsequence>
+    }
+
+    token sign {
+        <[ + - ]>
+    }
+
+    token digitsequence {
+        <digit> [  '\''?  <digit>]*
+    }
+
+    token floatingsuffix {
+        <[ f l F L ]>
+    }
+}

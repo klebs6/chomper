@@ -69,3 +69,19 @@ our role Align::Actions {
         )
     }
 }
+
+our role Align::Rules {
+
+    proto rule alignmentspecifierbody { * }
+    rule alignmentspecifierbody:sym<type-id>    { <the-type-id> }
+    rule alignmentspecifierbody:sym<const-expr> { <constant-expression> }
+
+    #--------------------
+    rule alignmentspecifier {
+        <alignas>
+        <left-paren>
+        <alignmentspecifierbody>
+        <ellipsis>?
+        <right-paren>
+    }
+}

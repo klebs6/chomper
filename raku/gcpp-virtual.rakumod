@@ -57,3 +57,14 @@ our role Virtual::Actions {
         make VirtualSpecifier::Final.new
     }
 }
+
+our role Virtual::Rules {
+
+    rule virtual-specifier-seq {
+        <virtual-specifier>+
+    }
+
+    proto rule virtual-specifier { * }
+    rule virtual-specifier:sym<override> { <override> }
+    rule virtual-specifier:sym<final>    { <final> }
+}

@@ -25,3 +25,12 @@ our role Instantiation::Actions {
         )
     }
 }
+
+our role Instantiation::Rules {
+
+    rule explicit-instantiation {
+        <extern>?
+        <template>
+        <declaration>
+    }
+}

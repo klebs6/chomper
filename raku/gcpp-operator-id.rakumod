@@ -66,3 +66,23 @@ our role OperatorId::Actions {
         )
     }
 }
+
+our role OperatorId::Rules {
+
+    rule operator-function-id {
+        <operator> <the-operator>
+    }
+
+    proto rule literal-operator-id { * }
+
+    rule literal-operator-id:sym<string-lit> {
+        <operator>
+        <string-literal> 
+        <identifier>
+    }
+
+    rule literal-operator-id:sym<user-defined> {
+        <operator>
+        <user-defined-string-literal>
+    }
+}

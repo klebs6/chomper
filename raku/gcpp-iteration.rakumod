@@ -146,3 +146,47 @@ our role IterationStatement::Actions {
         )
     }
 }
+
+our role IterationStatement::Rules {
+
+    proto rule iteration-statement { * }
+
+    rule iteration-statement:sym<while> {
+        <while_>
+        <left-paren>
+        <condition>
+        <right-paren>
+        <statement>
+    }
+
+    rule iteration-statement:sym<do> {
+        <do_>
+        <statement>
+        <while_>
+        <left-paren>
+        <expression>
+        <right-paren>
+        <semi>
+    }
+
+    rule iteration-statement:sym<for> {
+        <for_>
+        <left-paren>
+        <for-init-statement>
+        <condition>?
+        <semi>
+        <expression>?
+        <right-paren>
+        <statement>
+    }
+
+    rule iteration-statement:sym<for-range> {
+        <for_>
+        <left-paren>
+        <for-range-declaration>
+        <colon>
+        <for-range-initializer>
+        <right-paren>
+        <statement>
+    }
+}

@@ -37,3 +37,10 @@ our role ReturnStatement::Actions {
         make $<braced-init-list>.made
     }
 }
+
+our role ReturnStatement::Rules {
+
+    proto rule return-statement-body { * }
+    rule return-statement-body:sym<expr> { <expression> }
+    rule return-statement-body:sym<braced-init-list> { <braced-init-list> }
+}

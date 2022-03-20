@@ -68,3 +68,16 @@ our role ForRange::Actions {
         make $<braced-init-list>.made
     }
 }
+
+our role ForRange::Rules {
+
+    rule for-range-declaration {
+        <attribute-specifier-seq>?
+        <decl-specifier-seq>
+        <declarator>
+    }
+
+    proto rule for-range-initializer { * }
+    rule for-range-initializer:sym<expression>     { <expression> }
+    rule for-range-initializer:sym<braced-init-list> { <braced-init-list> }
+}

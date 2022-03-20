@@ -289,3 +289,48 @@ our role IntegerLiteral::Actions {
         )
     }
 }
+
+our role IntegerLiteral::Rules {
+
+    proto token integer-literal { * }
+    token integer-literal:sym<dec> { <decimal-literal>     <integersuffix>? }
+    token integer-literal:sym<oct> { <octal-literal>       <integersuffix>? }
+    token integer-literal:sym<hex> { <hexadecimal-literal> <integersuffix>? }
+    token integer-literal:sym<bin> { <binary-literal>      <integersuffix>? }
+
+    token hexquad {
+        <hexadecimaldigit> ** 4
+    }
+
+    token decimal-literal {
+        <nonzerodigit> [ '\''?  <digit>]*
+    }
+
+    token octal-literal {
+        '0' [ '\''?  <octaldigit>]*
+    }
+
+    token hexadecimal-literal {
+        [ '0x' || '0X' ] <hexadecimaldigit> [ '\''?  <hexadecimaldigit> ]*
+    }
+
+    token binary-literal {
+        [ '0b' || '0B' ] <binarydigit> [ '\''?  <binarydigit> ]*
+    }
+
+    token nonzerodigit {
+        <[ 1 .. 9 ]>
+    }
+
+    token octaldigit {
+        <[ 0 .. 7 ]>
+    }
+
+    token hexadecimaldigit {
+        <[ 0 .. 9 ]>
+    }
+
+    token binarydigit {
+        <[ 0 1 ]>
+    }
+}

@@ -120,3 +120,27 @@ our role ElaboratedTypeSpecifier::Actions {
         )
     }
 }
+
+our role ElaboratedTypeSpecifier::Rules {
+
+    proto rule elaborated-type-specifier { * }
+
+    rule elaborated-type-specifier:sym<class-ident> {
+        <class-key>
+        <attribute-specifier-seq>? 
+        <nested-name-specifier>? 
+        <identifier>
+    }
+
+    rule elaborated-type-specifier:sym<class-template-id> {
+        <class-key>
+        <simple-template-id>
+    }
+
+    rule elaborated-type-specifier:sym<class-nested-template-id> {
+        <class-key>
+        <nested-name-specifier> 
+        <template>? 
+        <simple-template-id>
+    }
+}

@@ -42,3 +42,10 @@ our role ForInitStatement::Actions {
         make $<simple-declaration>.made
     }
 }
+
+our role ForInitStatement::Rules {
+
+    proto rule for-init-statement { * }
+    rule for-init-statement:sym<expression-statement> { <expression-statement> }
+    rule for-init-statement:sym<simple-declaration> { <simple-declaration> }
+}

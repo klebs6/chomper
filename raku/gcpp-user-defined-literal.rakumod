@@ -278,3 +278,29 @@ our role UserDefinedLiteral::Actions {
         make $<identifier>.made
     }
 }
+
+our role UserDefinedLiteral::Rules {
+
+    proto token user-defined-literal { * }
+    token user-defined-literal:sym<int>   { <user-defined-integer-literal> }
+    token user-defined-literal:sym<float> { <user-defined-floating-literal> }
+    token user-defined-literal:sym<str>   { <user-defined-string-literal> }
+    token user-defined-literal:sym<char>  { <user-defined-character-literal> }
+
+    proto token user-defined-integer-literal { * }
+    token user-defined-integer-literal:sym<dec> { <decimal-literal> <udsuffix> }
+    token user-defined-integer-literal:sym<oct> { <octal-literal> <udsuffix> }
+    token user-defined-integer-literal:sym<hex> { <hexadecimal-literal> <udsuffix> }
+    token user-defined-integer-literal:sym<bin> { <binary-literal> <udsuffix> }
+
+    proto token user-defined-floating-literal { * }
+    token user-defined-floating-literal:sym<frac> { <fractionalconstant> <exponentpart>?  <udsuffix> }
+    token user-defined-floating-literal:sym<digi> { <digitsequence> <exponentpart> <udsuffix> }
+
+    token user-defined-string-literal    { <string-literal> <udsuffix> }
+    token user-defined-character-literal { <character-literal> <udsuffix> }
+
+    token udsuffix {
+        <identifier>
+    }
+}

@@ -95,3 +95,26 @@ our role UsingDirective::Actions {
         )
     }
 }
+
+our role UsingDirective::Rules {
+
+    proto rule using-declaration-prefix { * }
+    rule using-declaration-prefix:sym<nested> { [ <typename_>? <nested-name-specifier> ] }
+    rule using-declaration-prefix:sym<base>   { <doublecolon> }
+
+    rule using-declaration {
+        <using>
+        <using-declaration-prefix>
+        <unqualified-id>
+        <semi>
+    }
+
+    rule using-directive {
+        <attribute-specifier-seq>?
+        <using>
+        <namespace>
+        <nested-name-specifier>?
+        <namespace-name>
+        <semi>
+    }
+}

@@ -25,3 +25,12 @@ our role Pure::Actions {
         )
     }
 }
+
+our role Pure::Rules {
+
+    rule pure-specifier {
+        <assign>
+        <val=octal-literal>
+        #|{if($val.text.compareTo("0")!=0) throw new InputMismatchException(this); }
+    }
+}

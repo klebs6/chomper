@@ -164,3 +164,14 @@ our role Declarator::Actions {
         make $<abstract-declarator>.made
     }
 }
+
+our role Declarator::Rules {
+
+    proto rule some-declarator { * }
+    rule some-declarator:sym<basic>    { <declarator> }
+    rule some-declarator:sym<abstract> { <abstract-declarator> }
+
+    rule declaratorid {
+        <ellipsis>?  <id-expression>
+    }
+}

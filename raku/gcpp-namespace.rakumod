@@ -202,3 +202,46 @@ our role Namespace::Actions {
         }
     }
 }
+
+our role Namespace::Rules {
+
+    proto rule namespace-name { * }
+    rule namespace-name:sym<original> { <original-namespace-name> }
+    rule namespace-name:sym<alias>    { <namespace-alias> }
+
+    rule original-namespace-name {
+        <identifier>
+    }
+
+    #--------------------
+    proto rule namespace-tag { * }
+    rule namespace-tag:sym<ident>   { <identifier> }
+    rule namespace-tag:sym<ns-name> { <original-namespace-name> }
+
+    #--------------------
+    rule namespace-definition {
+        <inline>?
+        <namespace>
+        <namespace-tag>?
+        <left-brace>
+        <namespaceBody=declarationseq>?
+        <right-brace>
+    }
+
+    rule namespace-alias {
+        <identifier>
+    }
+
+    rule namespace-alias-definition {
+        <namespace>
+        <identifier>
+        <assign>
+        <qualifiednamespacespecifier>
+        <semi>
+    }
+
+    rule qualifiednamespacespecifier {
+        <nested-name-specifier>?
+        <namespace-name>
+    }
+}

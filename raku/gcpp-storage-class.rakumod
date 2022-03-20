@@ -85,3 +85,13 @@ our role StorageClass::Actions {
         make StorageClassSpecifier::Mutable.new
     }
 }
+
+our role StorageClass::Rules {
+
+    proto rule storage-class-specifier { * }
+    rule storage-class-specifier:sym<register>     { <register>     } 
+    rule storage-class-specifier:sym<static>       { <static>       } 
+    rule storage-class-specifier:sym<thread_local> { <thread_local> } 
+    rule storage-class-specifier:sym<extern>       { <extern>       } 
+    rule storage-class-specifier:sym<mutable>      { <mutable>      } 
+}

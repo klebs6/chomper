@@ -68,3 +68,31 @@ our role Try::Actions {
         )
     }
 }
+
+our role Try::Rules {
+
+    rule try-block {
+        <try_>
+        <compound-statement>
+        <handler-seq>
+    }
+
+    rule function-try-block {
+        <try_>
+        <constructor-initializer>?
+        <compound-statement>
+        <handler-seq>
+    }
+
+    rule handler-seq {
+        <handler>+
+    }
+
+    rule handler {
+        <catch>
+        <left-paren>
+        <exception-declaration>
+        <right-paren>
+        <compound-statement>
+    }
+}

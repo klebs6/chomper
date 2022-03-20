@@ -86,3 +86,15 @@ our role Balanced::Actions {
         make $<balanced-token-seq>.made
     }
 }
+
+our role Balanced::Rules {
+
+    rule balanced-token-seq {
+        <balancedrule>+
+    }
+
+    proto rule balancedrule { * }
+    rule balancedrule:sym<parens>   { <left-paren> <balanced-token-seq> <right-paren> }
+    rule balancedrule:sym<brackets> { <left-bracket> <balanced-token-seq> <right-bracket> }
+    rule balancedrule:sym<braces>   { <left-brace> <balanced-token-seq> <right-brace> }
+}

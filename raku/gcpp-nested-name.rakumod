@@ -178,3 +178,46 @@ our role NestedNameSpecifier::Actions {
         }
     }
 }
+
+our role NestedNameSpecifier::Rules {
+
+    proto regex nested-name-specifier-prefix { * }
+
+    regex nested-name-specifier-prefix:sym<null> {
+        <doublecolon>
+    }
+
+    regex nested-name-specifier-prefix:sym<type> {
+        <the-type-name>
+        <doublecolon>
+    }
+
+    regex nested-name-specifier-prefix:sym<ns> {
+        <namespace-name>
+        <doublecolon>
+    }
+
+    regex nested-name-specifier-prefix:sym<decl> {
+        <decltype-specifier>
+        <doublecolon>
+    }
+
+    proto regex nested-name-specifier-suffix { * }
+
+    regex nested-name-specifier-suffix:sym<id> {
+        <identifier>
+        <doublecolon>
+    }
+
+    regex nested-name-specifier-suffix:sym<template> {
+        <template>? 
+        <simple-template-id>
+        <doublecolon>
+    }
+
+    #-------------------------------
+    regex nested-name-specifier {
+        <nested-name-specifier-prefix> 
+        <nested-name-specifier-suffix>*
+    }
+}

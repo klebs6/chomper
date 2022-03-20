@@ -17,5 +17,11 @@ our role PointerLiteral::Actions {
     method pointer-literal($/) {
         make PointerLiteral.new
     }
+}
 
+our role PointerLiteral::Rules {
+
+    token pointer-literal {
+        <nullptr>
+    }
 }

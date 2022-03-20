@@ -94,3 +94,25 @@ our role Condition::Actions {
         )
     }
 }
+
+our role Condition::Rules {
+
+    proto rule condition { * }
+
+    rule condition:sym<expr> {
+        <expression>
+    }
+
+    #-----------------------------
+    proto rule condition-decl-tail { * }
+    rule condition-decl-tail:sym<assign-init> { <assign> <initializer-clause> }
+    rule condition-decl-tail:sym<braced-init> { <braced-init-list> }
+
+    #-----------------------------
+    rule condition:sym<decl> {
+        <attribute-specifier-seq>?
+        <decl-specifier-seq> 
+        <declarator>
+        <condition-decl-tail>
+    }
+}

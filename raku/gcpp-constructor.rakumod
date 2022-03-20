@@ -23,3 +23,10 @@ our role Constructor::Actions {
         )
     }
 }
+
+our role Constructor::Rules {
+
+    rule constructor-initializer {
+        <colon> <mem-initializer-list>
+    }
+}

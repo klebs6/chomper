@@ -92,3 +92,20 @@ our role EqualityExpression::Actions {
         }
     }
 }
+
+our role EqualityExpression::Rules {
+
+    proto token equality-operator { * }
+    token equality-operator:sym<eq>  { <equal> }
+    token equality-operator:sym<neq> { <not-equal> }
+
+    rule equality-expression-tail {
+        <equality-operator> 
+        <relational-expression>
+    }
+
+    rule equality-expression {
+        <relational-expression>
+        <equality-expression-tail>*
+    }
+}

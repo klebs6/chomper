@@ -88,3 +88,18 @@ our role Conversion::Actions {
         }
     }
 }
+
+our role Conversion::Rules {
+
+    rule conversion-function-id {
+        <operator> <conversion-type-id>
+    }
+
+    rule conversion-type-id {
+        <type-specifier-seq> <conversion-declarator>?
+    }
+
+    rule conversion-declarator {
+        <pointer-operator> <conversion-declarator>?
+    }
+}

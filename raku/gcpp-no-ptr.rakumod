@@ -149,4 +149,45 @@ our role NoPointerDeclarator::Actions {
     }
 }
 
+our role NoPointerDeclarator::Rules {
 
+    #applied a transfomation on this rule to
+    #prevent infinite loops
+    #
+    #if we get any bugs downstream come back to
+    #this
+    rule no-pointer-new-declarator {
+        <left-bracket>
+        <expression>
+        <right-bracket>
+        <attribute-specifier-seq>?
+        <no-pointer-new-declarator-tail>*
+    }
+
+    rule no-pointer-new-declarator-tail {
+        <left-bracket>
+        <constant-expression>
+        <right-bracket>
+        <attribute-specifier-seq>?
+    }
+
+    proto rule no-pointer-declarator-base { * }
+    rule no-pointer-declarator-base:sym<base>   { <declaratorid> <attribute-specifier-seq>? }
+    rule no-pointer-declarator-base:sym<parens> { <left-paren> <pointer-declarator> <right-paren> }
+
+    #------------------------------
+    proto rule no-pointer-declarator-tail { * }
+    rule no-pointer-declarator-tail:sym<basic>     { <parameters-and-qualifiers> }
+    rule no-pointer-declarator-tail:sym<bracketed> { 
+        <left-bracket> 
+        <constant-expression>?  
+        <right-bracket> 
+        <attribute-specifier-seq>? 
+    }
+
+    #------------------------------
+    rule no-pointer-declarator {
+        <no-pointer-declarator-base>
+        <no-pointer-declarator-tail>*
+    }
+}

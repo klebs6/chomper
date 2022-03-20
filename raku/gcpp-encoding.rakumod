@@ -65,3 +65,12 @@ our role Encoding::Actions {
         make Encodingprefix::L.new
     }
 }
+
+our role Encoding::Rules {
+
+    proto token encodingprefix { * }
+    token encodingprefix:sym<u8> { 'u8' }
+    token encodingprefix:sym<u>  { 'u' }
+    token encodingprefix:sym<U>  { 'U' }
+    token encodingprefix:sym<L>  { 'L' }
+}

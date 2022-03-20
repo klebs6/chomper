@@ -52,3 +52,37 @@ our role StringLiteral::Actions {
         )
     }
 }
+
+our role StringLiteral::Rules {
+
+    token string-literal-item {
+        <encodingprefix>?
+        [   
+           || <rawstring>
+           || '"' <schar>* '"'
+        ]
+    }
+
+    token string-literal {
+        <string-literal-item> 
+        [<ws> <string-literal-item>]*
+    }
+
+    token rawstring {
+        ||  'R"'
+            [   ||  [   ||  '\\'
+                            <[ " ( ) ]>
+                    ]
+                ||  <-[ \r \n   ( ]>
+            ]
+            '('
+            <-[ ) ]>*?
+            ')'
+            [   ||  [   ||  '\\'
+                            <[ " ( ) ]>
+                    ]
+                ||  <-[ \r \n   " ]>
+            ]
+            '"'
+    }
+}

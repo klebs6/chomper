@@ -219,3 +219,59 @@ our role Enum::Actions {
         make $<identifier>.made
     }
 }
+
+our role Enum::Rules {
+
+    rule elaborated-type-specifier:sym<enum> {
+        <enum_> <nested-name-specifier>? <identifier>
+    }
+
+    rule enum-name {
+        <identifier>
+    }
+
+    rule enum-specifier {
+        <enum-head>
+        <left-brace>
+        [ <enumerator-list> <comma>?  ]?
+        <right-brace>
+    }
+
+    rule enum-head {
+        <enumkey>
+        <attribute-specifier-seq>?
+        [ <nested-name-specifier>? <identifier> ]?
+        <enumbase>?
+    }
+
+    rule opaque-enum-declaration {
+        <enumkey>
+        <attribute-specifier-seq>?
+        <identifier>
+        <enumbase>?
+        <semi>
+    }
+
+    rule enumkey {
+        <enum_>
+        [  <class_> || <struct> ]?
+    }
+
+    rule enumbase {
+        <colon> <type-specifier-seq>
+    }
+
+    rule enumerator-list {
+        <enumerator-definition>
+        [ <comma> <enumerator-definition> ]*
+    }
+
+    rule enumerator-definition {
+        <enumerator>
+        [ <assign> <constant-expression> ]?
+    }
+
+    rule enumerator {
+        <identifier>
+    }
+}

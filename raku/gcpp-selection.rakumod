@@ -86,3 +86,25 @@ our role SelectionStatement::Actions {
         )
     }
 }
+
+our role SelectionStatement::Rules {
+
+    proto rule selection-statement { * }
+
+    rule selection-statement:sym<if> {  
+        <if_>
+        <left-paren>
+        <condition>
+        <right-paren>
+        <statement>
+        [ <comment>? <else_> <statement> ]?
+    }
+
+    rule selection-statement:sym<switch> {  
+        <switch> 
+        <left-paren> 
+        <condition> 
+        <right-paren> 
+        <statement>
+    }
+}

@@ -211,3 +211,44 @@ our role Function::Actions {
         )
     }
 }
+
+our role Function::Rules {
+
+    rule function-definition {
+        <attribute-specifier-seq>?
+        <decl-specifier-seq>?
+        <declarator>
+        <virtual-specifier-seq>?
+        <function-body>
+    }
+
+    #-----------------------------
+    proto rule function-body { * }
+
+    rule function-body:sym<compound> {
+        <constructor-initializer>?  <compound-statement>
+    }
+
+    rule function-body:sym<try> {
+        <function-try-block>
+    }
+
+    rule function-body:sym<assign-default> {
+        <assign> <default_> <semi>
+    }
+
+    rule function-body:sym<assign-delete> {
+        <assign> <delete> <semi>
+    }
+
+    rule trailing-return-type {
+        <arrow>
+        <trailing-type-specifier-seq>
+        <abstract-declarator>?
+    }
+
+    proto rule function-specifier { * }
+    rule function-specifier:sym<inline>   { <inline> }
+    rule function-specifier:sym<virtual>  { <virtual> }
+    rule function-specifier:sym<explicit> { <explicit> }
+}

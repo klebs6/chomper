@@ -63,3 +63,29 @@ our role DeclSpecifier::Actions {
         }
     }
 }
+
+our role DeclSpecifier::Rules {
+
+    proto rule decltype-specifier-body { * }
+    rule decltype-specifier-body:sym<expr> {  <expression> }
+    rule decltype-specifier-body:sym<auto> {  <auto> }
+
+    rule decltype-specifier {
+        <decltype>
+        <left-paren>
+        <decltype-specifier-body>
+        <right-paren>
+    }
+
+    proto token decl-specifier { * }
+    token decl-specifier:sym<storage-class> { <storage-class-specifier> }
+    token decl-specifier:sym<type>          { <type-specifier> }
+    token decl-specifier:sym<func>          { <function-specifier> }
+    token decl-specifier:sym<friend>        { <friend> }
+    token decl-specifier:sym<typedef>       { <typedef> }
+    token decl-specifier:sym<constexpr>     { <constexpr> }
+
+    regex decl-specifier-seq {
+        <decl-specifier> [<ws> <decl-specifier>]*?  <attribute-specifier-seq>?  
+    }
+}

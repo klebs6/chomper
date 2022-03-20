@@ -141,3 +141,23 @@ our role LabeledStatement::Actions {
         )
     }
 }
+
+our role LabeledStatement::Rules {
+
+    proto rule labeled-statement-label-body { * }
+    rule labeled-statement-label-body:sym<id>        { <identifier>                }
+    rule labeled-statement-label-body:sym<case-expr> { <case> <constant-expression> }
+    rule labeled-statement-label-body:sym<default>   { <default_>                   }
+
+    #-----------------------------
+    rule labeled-statement-label {
+        <attribute-specifier-seq>?
+        <labeled-statement-label-body>
+        <colon>
+    }
+
+    rule labeled-statement {
+        <labeled-statement-label>
+        <statement>
+    }
+}

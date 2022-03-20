@@ -76,3 +76,14 @@ our role TypeModifier::Actions {
         make SimpleTypeSignednessModifier::Signed.new
     }
 }
+
+our role TypeModifier::Rules {
+
+    proto rule simple-type-length-modifier { * }
+    rule simple-type-length-modifier:sym<short>  { <short> }
+    rule simple-type-length-modifier:sym<long_>  { <long_>  }
+
+    proto rule simple-type-signedness-modifier         { * }
+    rule simple-type-signedness-modifier:sym<unsigned> { <unsigned> }
+    rule simple-type-signedness-modifier:sym<signed>   { <signed> }
+}

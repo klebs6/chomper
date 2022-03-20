@@ -634,3 +634,47 @@ our role Operator::Actions {
         make TheOperator::Brak.new
     }
 }
+
+our role Operator::Rules {
+
+    proto token the-operator   { * }
+    token the-operator:sym<new>                { <new_>   [ <left-bracket> <right-bracket>]? } 
+    token the-operator:sym<delete>             { <delete> [ <left-bracket> <right-bracket>]? } 
+    token the-operator:sym<plus>               { <plus>                                    } 
+    token the-operator:sym<minus>              { <minus>                                   } 
+    token the-operator:sym<star>               { <star>                                    } 
+    token the-operator:sym<div_>               { <div_>                                     } 
+    token the-operator:sym<mod_>               { <mod_>                                     } 
+    token the-operator:sym<caret>              { <caret>                                   } 
+    token the-operator:sym<and_>               { <and_>    <!before <and_>>                  } 
+    token the-operator:sym<or_>                { <or_>                                      } 
+    token the-operator:sym<tilde>              { <tilde>                                   } 
+    token the-operator:sym<not>                { <not_>                                     } 
+    token the-operator:sym<assign>             { <assign>                                  } 
+    token the-operator:sym<greater>            { <greater>                                 } 
+    token the-operator:sym<less>               { <less>                                    } 
+    token the-operator:sym<greater-equal>      { <greater-equal>                            } 
+    token the-operator:sym<plus-assign>        { <plus-assign>                              } 
+    token the-operator:sym<minus-assign>       { <minus-assign>                             } 
+    token the-operator:sym<star-assign>        { <star-assign>                              } 
+    token the-operator:sym<mod-assign>         { <mod-assign>                               } 
+    token the-operator:sym<xor-assign>         { <xor-assign>                               } 
+    token the-operator:sym<and-assign>         { <and-assign>                               } 
+    token the-operator:sym<or-assign>          { <or-assign>                                } 
+    token the-operator:sym<LessLess>           { <less> <less>                             } 
+    token the-operator:sym<GreaterGreater>     { <greater> <greater>                       } 
+    token the-operator:sym<right-shift-assign> { <right-shift-assign>                        } 
+    token the-operator:sym<left-shift-assign>  { <left-shift-assign>                         } 
+    token the-operator:sym<equal>              { <equal>                                   } 
+    token the-operator:sym<not-equal>          { <not-equal>                                } 
+    token the-operator:sym<less-equal>         { <less-equal>                               } 
+    token the-operator:sym<and-and>            { <and-and>                                  } 
+    token the-operator:sym<or-or>              { <or-or>                                    } 
+    token the-operator:sym<plus-plus>          { <plus-plus>                                } 
+    token the-operator:sym<minus-minus>        { <minus-minus>                              } 
+    token the-operator:sym<comma>              { <comma>                                   } 
+    token the-operator:sym<arrow-star>         { <arrow-star>                               } 
+    token the-operator:sym<arrow>              { <arrow>                                   } 
+    token the-operator:sym<Parens>             { <left-paren>   <right-paren>   } 
+    token the-operator:sym<Brak>               { <left-bracket> <right-bracket> } 
+}

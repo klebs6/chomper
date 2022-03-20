@@ -60,3 +60,14 @@ our role LogicalExpression::Actions {
         }
     }
 }
+
+our role LogicalExpression::Rules {
+
+    rule logical-and-expression {
+        <inclusive-or-expression> [ <and-and> <inclusive-or-expression>]*
+    }
+
+    rule logical-or-expression {
+        <logical-and-expression> [ <or-or> <logical-and-expression> ]*
+    }
+}

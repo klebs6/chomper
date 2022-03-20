@@ -35,3 +35,10 @@ our role Ref::Actions {
         make Refqualifier::AndAnd.new
     }
 }
+
+our role Ref::Rules {
+
+    proto rule refqualifier { * }
+    rule refqualifier:sym<and>     { <and_> }
+    rule refqualifier:sym<and-and> { <and-and> }
+}

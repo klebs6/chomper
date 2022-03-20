@@ -26,3 +26,13 @@ our role DeleteExpression::Actions {
         )
     }
 }
+
+our role DeleteExpression::Rules {
+
+    rule delete-expression {
+        <doublecolon>?
+        <delete>
+        [ <left-bracket> <right-bracket> ]?
+        <cast-expression>
+    }
+}

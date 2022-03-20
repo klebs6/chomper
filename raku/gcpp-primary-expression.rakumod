@@ -104,3 +104,13 @@ our role PrimaryExpression::Actions {
         make $<lambda-expression>.made
     }
 }
+
+our role PrimaryExpression::Rules {
+
+    proto token primary-expression { * }
+    token primary-expression:sym<literal> { <literal>+ }
+    token primary-expression:sym<this>    { <this> }
+    token primary-expression:sym<expr>    { <left-paren> <expression> <right-paren> }
+    token primary-expression:sym<id>      { <id-expression> }
+    token primary-expression:sym<lambda>  { <lambda-expression> }
+}

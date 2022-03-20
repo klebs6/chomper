@@ -66,3 +66,22 @@ our role Expression::Actions {
         make $<conditional-expression>.made
     }
 }
+
+our role Expression::Rules {
+
+    rule expression-list {
+        <initializer-list>
+    }
+
+    rule expression {
+        <assignment-expression>+ %% <comma>
+    }
+
+    rule constant-expression { 
+        <conditional-expression> 
+    }
+
+    rule expression-statement {
+        <expression>? <semi>
+    }
+}

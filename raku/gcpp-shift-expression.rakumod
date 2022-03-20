@@ -90,3 +90,21 @@ our role ShiftExpression::Actions {
         make ShiftOperator::Left.new
     }
 }
+
+our role ShiftExpression::Rules {
+
+    rule shift-expression-tail {
+        <shift-operator>
+        <additive-expression>
+    }
+
+    rule shift-expression {
+        <additive-expression>
+        <shift-expression-tail>*
+    }
+
+    #-----------------------
+    proto rule shift-operator { * }
+    rule shift-operator:sym<right> { <greater> <greater> }
+    rule shift-operator:sym<left>  { <less> <less> }
+}

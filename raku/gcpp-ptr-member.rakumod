@@ -99,3 +99,20 @@ our role PointerMember::Actions {
         )
     }
 }
+
+our role PointerMember::Rules {
+
+    proto rule pointer-member-operator { * }
+    rule pointer-member-operator:sym<dot>   { <dot-star> }
+    rule pointer-member-operator:sym<arrow> { <arrow-star> }
+
+    rule pointer-member-expression {
+        <cast-expression>
+        <pointer-member-expression-tail>*
+    }
+
+    rule pointer-member-expression-tail {
+        <pointer-member-operator>
+        <cast-expression>
+    }
+}

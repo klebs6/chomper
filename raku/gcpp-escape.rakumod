@@ -269,3 +269,39 @@ our role Escape::Actions {
         )
     }
 }
+
+our role Escape::Rules {
+
+    proto token escapesequence { * }
+    token escapesequence:sym<simple> { <simpleescapesequence> }
+    token escapesequence:sym<octal>  { <octalescapesequence> }
+    token escapesequence:sym<hex>    { <hexadecimalescapesequence> }
+
+    proto token simpleescapesequence { * }
+    token simpleescapesequence:sym<slash>        { '\\\'' }
+    token simpleescapesequence:sym<quote>        { '\\"' }
+    token simpleescapesequence:sym<question>     { '\\?' }
+    token simpleescapesequence:sym<double-slash> { '\\\\' }
+    token simpleescapesequence:sym<a>            { '\\a' }
+    token simpleescapesequence:sym<b>            { '\\b' }
+    token simpleescapesequence:sym<f>            { '\\f' }
+    token simpleescapesequence:sym<n>            { '\\n' }
+    token simpleescapesequence:sym<r>            { '\\r' }
+    token simpleescapesequence:sym<t>            { '\\t' }
+    token simpleescapesequence:sym<v>            { '\\v' }
+    token simpleescapesequence:sym<rn-n> {
+        '\\'
+        [   
+            ||  '\r' '\n'?
+            ||  '\n'
+        ]
+    }
+
+    token octalescapesequence {
+        '\\' [<octaldigit> ** 1..3]
+    }
+
+    token hexadecimalescapesequence {
+        '\\x' <hexadecimaldigit>+
+    }
+}

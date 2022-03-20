@@ -168,3 +168,45 @@ our role AttributeSpecifierSeq::Actions {
         make $<balanced-token-seq>.made
     }
 }
+
+our role AttributeSpecifierSeq::Rules {
+
+    rule attribute-list {
+        <attribute>
+        [ <comma> <attribute> ]*
+        <ellipsis>?
+    }
+
+    rule attribute {
+        [ <attribute-namespace> <doublecolon> ]?
+        <identifier>
+        <attribute-argument-clause>?
+    }
+
+    rule attribute-namespace {
+        <identifier>
+    }
+
+    rule attribute-argument-clause {
+        <left-paren> <balanced-token-seq>?  <right-paren>
+    }
+
+    rule attribute-specifier-seq {
+        <attribute-specifier>+
+    }
+
+    #--------------------
+    proto rule attribute-specifier { * }
+
+    rule attribute-specifier:sym<double-braced> {
+        <left-bracket>
+        <left-bracket>
+        <attribute-list>?
+        <right-bracket>
+        <right-bracket>
+    }
+
+    rule attribute-specifier:sym<alignment> {
+        <alignmentspecifier>
+    }
+}

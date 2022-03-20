@@ -107,3 +107,29 @@ our role PointerOperator::Actions {
         }
     }
 }
+
+our role PointerOperator::Rules {
+
+    proto rule pointer-operator { * }
+
+    rule pointer-operator:sym<ref> {
+        <and_>
+        <attribute-specifier-seq>?
+    }
+
+    rule pointer-operator:sym<ref-ref> {
+        <and-and>
+        <attribute-specifier-seq>?
+    }
+
+    rule pointer-operator:sym<star> {
+        <nested-name-specifier>?
+        <star>
+        <attribute-specifier-seq>?
+        <cvqualifierseq>?
+    }
+
+    rule augmented-pointer-operator {
+        <pointer-operator> <const>?
+    }
+}

@@ -25,3 +25,13 @@ our role Specialize::Actions {
         )
     }
 }
+
+our role Specialize::Rules {
+
+    rule explicit-specialization {
+        <template>
+        <less>
+        <greater>
+        <declaration>
+    }
+}

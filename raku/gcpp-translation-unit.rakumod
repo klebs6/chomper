@@ -19,3 +19,9 @@ our role TranslationUnit::Actions {
         make $<declarationseq>.made
     }
 }
+
+our role TranslationUnit::Rules {
+    token translation-unit {
+        <declarationseq>?  $
+    }
+}

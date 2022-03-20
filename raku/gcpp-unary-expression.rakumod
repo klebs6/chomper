@@ -408,3 +408,46 @@ our role UnaryExpression::Actions {
         make UnaryOperator::Not.new
     }
 }
+
+our role UnaryExpression::Rules {
+
+    rule unary-expression { 
+        || <new-expression>
+        || <unary-expression-case>
+    }
+
+    proto rule unary-expression-case { * }
+    rule unary-expression-case:sym<postfix>  { <postfix-expression> }
+    rule unary-expression-case:sym<pp>       { <plus-plus> <unary-expression> }
+    rule unary-expression-case:sym<mm>       { <minus-minus> <unary-expression> }
+    rule unary-expression-case:sym<unary-op> { <unary-operator> <unary-expression> }
+    rule unary-expression-case:sym<sizeof>   { <sizeof> <unary-expression> }
+
+    rule unary-expression-case:sym<sizeof-typeid> {
+        <sizeof>
+        <left-paren>
+        <the-type-id>
+        <right-paren>
+    }
+
+    rule unary-expression-case:sym<sizeof-ids> {
+        <sizeof>
+        <ellipsis>
+        <left-paren>
+        <identifier>
+        <right-paren>
+    }
+
+    rule unary-expression-case:sym<alignof>  { <alignof> <left-paren> <the-type-id> <right-paren> }
+    rule unary-expression-case:sym<noexcept> { <no-except-expression> }
+    rule unary-expression-case:sym<delete>   { <delete-expression> }
+
+    proto rule unary-operator { * } 
+    rule unary-operator:sym<or_>   { <or_>   } 
+    rule unary-operator:sym<star>  { <star>  }
+    rule unary-operator:sym<and_>  { <and_>  } 
+    rule unary-operator:sym<plus>  { <plus>  } 
+    rule unary-operator:sym<tilde> { <tilde> } 
+    rule unary-operator:sym<minus> { <minus> } 
+    rule unary-operator:sym<not>   { <not_>  } 
+}

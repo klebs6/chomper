@@ -78,3 +78,16 @@ our role NoExceptExpression::Actions {
     }
 }
 
+our role NoExceptExpression::Rules {
+
+    rule no-except-expression {
+        <noexcept>
+        <left-paren>
+        <expression>
+        <right-paren>
+    }
+
+    proto token noe-except-specification { * }
+    token noe-except-specification:sym<full>         { <noexcept> <left-paren> <constant-expression> <right-paren> }
+    token noe-except-specification:sym<keyword-only> { <noexcept> }
+}

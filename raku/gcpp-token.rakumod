@@ -55,3 +55,17 @@ our class OrOr::Or does IOrOr {
 
     }
 }
+
+our role Token::Rules {
+
+    token whitespace {
+        <[   \t ]>+
+    }
+
+    token newline_ {
+        [   
+            ||  '\r' '\n'?
+            ||  '\n'
+        ]
+    }
+}

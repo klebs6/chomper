@@ -53,3 +53,14 @@ our role CV::Actions {
         make CvQualifier::Volatile.new
     }
 }
+
+our role CV::Rules {
+
+    rule cvqualifierseq {
+        <cv-qualifier>+
+    }
+
+    proto rule cv-qualifier { * }
+    rule cv-qualifier:sym<const>    { <const> }
+    rule cv-qualifier:sym<volatile> { <volatile> }
+}

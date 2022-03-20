@@ -125,3 +125,26 @@ our role TypeParameter::Actions {
         )
     }
 }
+
+our role TypeParameter::Rules {
+
+    proto rule type-parameter-base { * }
+
+    rule type-parameter-base:sym<basic> {
+       [ <template> <less> <templateparameter-list> <greater> ]? 
+       <class_>
+    }
+
+    rule type-parameter-base:sym<typename> {
+       <typename_>
+    }
+
+    proto rule type-parameter-suffix { * }
+    rule type-parameter-suffix:sym<maybe-ident>    { <ellipsis>? <identifier>? }
+    rule type-parameter-suffix:sym<assign-type-id> { <identifier>? <assign> <the-type-id> }
+
+    rule type-parameter {
+        <type-parameter-base>
+        <type-parameter-suffix>
+    }
+}

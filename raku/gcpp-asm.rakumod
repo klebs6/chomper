@@ -29,3 +29,14 @@ our role Asm::Actions {
         )
     }
 }
+
+our role Asm::Rules {
+
+    rule asm-definition {
+        <asm>
+        <left-paren>
+        <string-literal>
+        <right-paren>
+        <semi>
+    }
+}

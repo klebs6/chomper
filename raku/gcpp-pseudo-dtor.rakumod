@@ -94,3 +94,29 @@ our role PseudoDestructorName::Actions {
         )
     }
 }
+
+our role PseudoDestructorName::Rules {
+
+    proto rule pseudo-destructor-name { * }
+
+    rule pseudo-destructor-name:sym<basic> {
+        <nested-name-specifier>?
+        [ <the-type-name> <doublecolon> ]?
+        <tilde>
+        <the-type-name>
+    }
+
+    rule pseudo-destructor-name:sym<template> {
+        <nested-name-specifier>
+        <template>
+        <simple-template-id>
+        <doublecolon>
+        <tilde>
+        <the-type-name>
+    }
+
+    rule pseudo-destructor-name:sym<decltype> {
+        <tilde>
+        <decltype-specifier>
+    }
+}

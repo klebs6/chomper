@@ -1,5 +1,4 @@
 
-
 # rule abstract-declarator:sym<base> { <pointer-abstract-declarator> }
 our class AbstractDeclarator::Base does IAbstractDeclarator {
     has IPointerAbstractDeclarator $.pointer-abstract-declarator is required;
@@ -448,5 +447,88 @@ our role AbstractDeclarator::Actions {
     # rule no-pointer-abstract-pack-declarator { <ellipsis> <no-pointer-abstract-pack-declarator-body>* }
     method no-pointer-abstract-pack-declarator($/) {
         make $<no-pointer-abstract-pack-declarator-body>>>.made
+    }
+}
+
+our role AbstractDeclarator::Rules {
+
+    proto rule abstract-declarator { * }
+
+    rule abstract-declarator:sym<base> {
+        <pointer-abstract-declarator>
+    }
+
+    rule abstract-declarator:sym<aug> {
+        <no-pointer-abstract-declarator>? <parameters-and-qualifiers> <trailing-return-type>
+    }
+
+    rule abstract-declarator:sym<abstract-pack> {
+        <abstract-pack-declarator>
+    }
+
+    #-----------------------------
+    proto rule pointer-abstract-declarator { * }
+    rule pointer-abstract-declarator:sym<no-ptr> { <no-pointer-abstract-declarator> }
+    rule pointer-abstract-declarator:sym<ptr>    { <pointer-operator>+ <no-pointer-abstract-declarator>? }
+
+    #-----------------------------
+    proto rule no-pointer-abstract-declarator-body { * }
+
+    rule no-pointer-abstract-declarator-body:sym<base> {
+        <parameters-and-qualifiers>
+    }
+
+    rule no-pointer-abstract-declarator-body:sym<brack> {
+        <no-pointer-abstract-declarator> <no-pointer-abstract-declarator-bracketed-base>
+    }
+
+    rule no-pointer-abstract-declarator {
+        <no-pointer-abstract-declarator-base>
+        <no-pointer-abstract-declarator-body>*
+    }
+
+    #-----------------------------
+    proto rule no-pointer-abstract-declarator-base { * }
+    rule no-pointer-abstract-declarator-base:sym<basic>         { <parameters-and-qualifiers> }
+    rule no-pointer-abstract-declarator-base:sym<bracketed>     { <no-pointer-abstract-declarator-bracketed-base> }
+    rule no-pointer-abstract-declarator-base:sym<parenthesized> { 
+        <left-paren> 
+        <pointer-abstract-declarator> 
+        <right-paren> 
+    }
+
+    rule no-pointer-abstract-declarator-bracketed-base {
+        <left-bracket> 
+        <constant-expression>?  
+        <right-bracket> 
+        <attribute-specifier-seq>?
+    }
+
+    rule abstract-pack-declarator {
+        <pointer-operator>* 
+        <no-pointer-abstract-pack-declarator>
+    }
+
+    #-----------------------------
+    rule no-pointer-abstract-pack-declarator-basic {
+        <parameters-and-qualifiers>
+    }
+
+    rule no-pointer-abstract-pack-declarator-brackets {
+        <left-bracket> 
+        <constant-expression>?  
+        <right-bracket> 
+        <attribute-specifier-seq>?
+    }
+
+    #-----------------------------
+    proto rule no-pointer-abstract-pack-declarator-body { * }
+    rule no-pointer-abstract-pack-declarator-body:sym<basic> { <no-pointer-abstract-pack-declarator-basic> }
+    rule no-pointer-abstract-pack-declarator-body:sym<brack> { <no-pointer-abstract-pack-declarator-brackets> }
+
+    #-----------------------------
+    rule no-pointer-abstract-pack-declarator {
+        <ellipsis>
+        <no-pointer-abstract-pack-declarator-body>*
     }
 }

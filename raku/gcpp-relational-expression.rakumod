@@ -128,3 +128,25 @@ our role RelationalExpression::Actions {
         }
     }
 }
+
+our role RelationalExpression::Rules {
+
+    proto rule relational-operator { * }
+    rule relational-operator:sym<less>       { <less> }
+    rule relational-operator:sym<greater>    { <greater> }
+    rule relational-operator:sym<less-eq>    { <less-equal> }
+    rule relational-operator:sym<greater-eq> { <greater-equal> }
+
+    #-----------------------
+    regex relational-expression-tail {
+        <ws>
+        <relational-operator>
+        <ws>
+        <shift-expression>
+    }
+
+    regex relational-expression {
+        <shift-expression>
+        <relational-expression-tail>*
+    }
+}
