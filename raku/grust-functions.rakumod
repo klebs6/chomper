@@ -454,7 +454,7 @@ our role Function::Actions {
     method function-param($/) {
         make FunctionParam.new(
             maybe-comment          => $<comment>.made,
-            outer-attributes       => $<outer-attributes>>>.made,
+            outer-attributes       => $<outer-attribute>>>.made,
             function-param-variant => $<function-param-variant>.made,
             text                   => $/.Str,
         )

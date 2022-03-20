@@ -22,7 +22,7 @@ our class ClassSpecifier                           { ... }
 our class ClassVirtSpecifier                       { ... }
 our class CompoundStatement                        { ... }
 our class ConstantExpression                       { ... }
-our role  IConstantExpression                       {  }
+our role  IConstantExpression                      {     }
 our class ConstructorInitializer                   { ... }
 our class ConversionDeclarator                     { ... }
 our class ConversionFunctionId                     { ... }
@@ -361,24 +361,76 @@ our role IPointerMemberExpression  does IMultiplicativeExpression { }
 our role ICastExpression           does IPointerMemberExpression  { }
 
 # rule unary-expression { <new-expression> || <unary-expression-case> }
-our role IUnaryExpression       does ICastExpression { }
-our role IUnaryExpressionCase   does IUnaryExpression { }
-our role IPostfixExpressionBody does IUnaryExpressionCase { }
+our role IUnaryExpression       does ICastExpression        { }
+our role IUnaryExpressionCase   does IUnaryExpression       { }
+our role IPostfixExpressionBody does IUnaryExpressionCase   { }
 our role IPrimaryExpression     does IPostfixExpressionBody { }
-our role ILiteral               does IPrimaryExpression           { }
-our role IIdExpression          does IPrimaryExpression { }
+our role ILiteral               does IPrimaryExpression     { }
+our role IIdExpression          does IPrimaryExpression     { }
 
 #-------------------------------
-our class Not::Bang      does INot { }
-our class Not::Not       does INot { }
+our class Not::Bang does INot { 
+
+    has $.text;
+
+    method gist { 
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Not::Not does INot { 
+
+    has $.text;
+
+    method gist { 
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
 
 #-------------------------------
-our class AndAnd::AndAnd does IAndAnd { }
-our class AndAnd::And    does IAndAnd { }
+our class AndAnd::AndAnd does IAndAnd { 
+
+    has $.text;
+
+    method gist {
+
+    }
+}
+
+our class AndAnd::And does IAndAnd { 
+
+    has $.text;
+
+    method gist {
+
+    }
+}
+
 
 #-------------------------------
-our class OrOr::PipePipe does IOrOr { }
-our class OrOr::Or       does IOrOr { }
+our class OrOr::PipePipe does IOrOr { 
+
+    has $.text;
+
+    method gist {
+
+    }
+}
+
+our class OrOr::Or does IOrOr { 
+
+    has $.text;
+
+    method gist {
+
+    }
+}
+
 
 our role ICharacterLiteralPrefix { }
 
@@ -420,44 +472,134 @@ does ITheTypeName {
     has Str $.value is required; 
 }
 
-our class Nondigit { 
+our class Nondigit {
     has Str $.value is required; 
+
+    has $.text;
+
+    method gist {
+
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Digit { 
     has Str $.value is required; 
+
+    has $.text;
+
+    method gist {
+
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class DecimalLiteral { 
     has Str $.value is required; 
+
+    has $.text;
+
+    method gist {
+
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class OctalLiteral { 
     has Str $.value is required; 
+
+    has $.text;
+
+    method gist {
+
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class HexadecimalLiteral {
     has Str $.value is required; 
+
+    has $.text;
+
+    method gist {
+
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class BinaryLiteral { 
     has Str $.value is required; 
+
+    has $.text;
+
+    method gist {
+
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Nonzerodigit { 
     has Str $.value is required; 
+
+    has $.text;
+
+    method gist {
+
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Octaldigit { 
     has Str $.value is required; 
+
+    has $.text;
+
+    method gist {
+
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Hexadecimaldigit { 
     has Str $.value is required; 
+
+    has $.text;
+
+    method gist {
+
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Binarydigit { 
     has Str $.value is required; 
+
+    has $.text;
+
+    method gist {
+
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our subset Quad of List where (HexadecimalLiteral, HexadecimalLiteral, HexadecimalLiteral, HexadecimalLiteral);
@@ -465,94 +607,272 @@ our subset Quad of List where (HexadecimalLiteral, HexadecimalLiteral, Hexadecim
 #-------------------------------
 
 our class IntegerLiteral::Dec does IIntegerLiteral {
-    has DecimalLiteral     $.decimal-literal is required;
-    has IIntegersuffix      $.integersuffix;
+    has DecimalLiteral $.decimal-literal is required;
+    has IIntegersuffix $.integersuffix;
+
+    has $.text;
+
+    method gist {
+
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class IntegerLiteral::Oct does IIntegerLiteral {
     has OctalLiteral       $.octal-literal is required;
     has IIntegersuffix      $.integersuffix;
+
+    has $.text;
+
+    method gist {
+
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class IntegerLiteral::Hex does IIntegerLiteral {
     has HexadecimalLiteral $.hexadecimal-literal is required;
     has IIntegersuffix      $.integersuffix;
+
+    has $.text;
+
+    method gist {
+
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class IntegerLiteral::Bin does IIntegerLiteral {
     has BinaryLiteral      $.binary-literal is required;
     has IIntegersuffix      $.integersuffix;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------------------
 
-our class CharacterLiteralPrefix::U    does ICharacterLiteralPrefix { }
-our class CharacterLiteralPrefix::BigU does ICharacterLiteralPrefix { }
-our class CharacterLiteralPrefix::L    does ICharacterLiteralPrefix { }
+our class CharacterLiteralPrefix::U    does ICharacterLiteralPrefix { 
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class CharacterLiteralPrefix::BigU does ICharacterLiteralPrefix { 
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class CharacterLiteralPrefix::L    does ICharacterLiteralPrefix { 
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 #-------------------------------
 # token literal:sym<char> { <character-literal> }
-our class CharacterLiteral { 
+our class CharacterLiteral {
     has ICharacterLiteralPrefix $.character-literal-prefix;
     has ICchar                  @.cchar;
-}
 
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 our class FloatingLiteral::Frac does IFloatingLiteral {
     has IFractionalconstant $.fractionalconstant is required;
     has Exponentpart        $.exponentpart;
     has Floatingsuffix      $.floatingsuffix;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class FloatingLiteral::Digit does IFloatingLiteral {
     has Digitsequence  $.digitsequence is required;
     has Exponentpart   $.exponentpart  is required;
     has Floatingsuffix $.floatingsuffix;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token literal:sym<str> { <string-literal> }
 our class StringLiteral does ILiteral { 
     has Str $.value;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------------------
 
-our class BooleanLiteral::F does IBooleanLiteral { }
+our class BooleanLiteral::F does IBooleanLiteral { 
 
-our class BooleanLiteral::T does IBooleanLiteral { }
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class BooleanLiteral::T does IBooleanLiteral { 
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token literal:sym<ptr> { <pointer-literal> }
-our class PointerLiteral does ILiteral { }
+our class PointerLiteral does ILiteral {
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 #-------------------------------
 
 our class UserDefinedLiteral::Int { 
     has IUserDefinedIntegerLiteral   $.user-defined-integer-literal is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class UserDefinedLiteral::Float does IUserDefinedLiteral {
     has IUserDefinedFloatingLiteral  $.user-defined-floating-literal is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class UserDefinedLiteral::Str does IUserDefinedLiteral {
     has UserDefinedStringLiteral    $.user-defined-string-literal is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class UserDefinedLiteral::Char does IUserDefinedLiteral {
     has UserDefinedCharacterLiteral $.user-defined-character-literal is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------------------
 our class MultiLineMacro { 
     has Str $.content is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Directive { 
     has Str $.content is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Hexquad { 
     has Quad @hexadecimaldigit is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------------------
@@ -560,30 +880,78 @@ our class Hexquad {
 our class Universalcharactername {
     has Hexquad $.first is required;
     has Hexquad $.second;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------------------
 
 our class IdentifierStart::Nondigit does IIdentifierStart {
     has Nondigit $.nondigit is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class IdentifierStart::Ucn does IIdentifierStart {
     has Universalcharactername $.universalcharactername is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------------------
 
 our class IdentifierContinue::Digit does IIdentifierContinue {
     has Digit $.digit is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class IdentifierContinue::Nondigit does IIdentifierContinue {
     has Nondigit $.nondigit is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class IdentifierContinue::Ucn does IIdentifierContinue {
     has Universalcharactername $.universalcharactername is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------------------
@@ -591,128 +959,510 @@ our class IdentifierContinue::Ucn does IIdentifierContinue {
 our class Integersuffix::Ul does IIntegersuffix {
     has Unsignedsuffix $.unsignedsuffix is required;
     has Longsuffix     $.longsuffix;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Integersuffix::Ull does IIntegersuffix {
     has Unsignedsuffix $.unsignedsuffix is required;
     has ILonglongsuffix $.longlongsuffix;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Integersuffix::Lu does IIntegersuffix {
     has Longsuffix     $.longsuffix is required;
     has Unsignedsuffix $.unsignedsuffix;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Integersuffix::Llu does IIntegersuffix {
     has ILonglongsuffix $.longsuffix is required;
     has Unsignedsuffix $.unsignedsuffix;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
-our class Unsignedsuffix { }
-our class Longsuffix     { }
+our class Unsignedsuffix { 
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Longsuffix { 
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 #-------------------------------
-our class Longlongsuffix::Ll does ILonglongsuffix { }
-our class Longlongsuffix::LL does ILonglongsuffix { }
+our class Longlongsuffix::Ll does ILonglongsuffix { 
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Longlongsuffix::LL does ILonglongsuffix { 
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 #-------------------------------
 
 our class Cchar::Basic does ICchar {
     has Str $.value is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Cchar::Escape does ICchar {
     has IEscapesequence $.escapesequence is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Cchar::Universal does ICchar {
     has Universalcharactername $.universalcharactername is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------------------
 
 our class Escapesequence::Simple does IEscapesequence {
     has ISimpleescapesequence $.simpleescapesequence is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Escapesequence::Octal does IEscapesequence {
     has Octalescapesequence $.octalescapesequence is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Escapesequence::Hex does IEscapesequence {
     has Hexadecimalescapesequence $.hexadecimalescapesequence is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------------------
-our class Simpleescapesequence::Slash       does ISimpleescapesequence { }
-our class Simpleescapesequence::Quote       does ISimpleescapesequence { }
-our class Simpleescapesequence::Question    does ISimpleescapesequence { }
-our class Simpleescapesequence::DoubleSlash does ISimpleescapesequence { }
-our class Simpleescapesequence::A           does ISimpleescapesequence { }
-our class Simpleescapesequence::B           does ISimpleescapesequence { }
-our class Simpleescapesequence::F           does ISimpleescapesequence { }
-our class Simpleescapesequence::N           does ISimpleescapesequence { }
-our class Simpleescapesequence::R           does ISimpleescapesequence { }
-our class Simpleescapesequence::T           does ISimpleescapesequence { }
-our class Simpleescapesequence::V           does ISimpleescapesequence { }
-our class Simpleescapesequence::RnN         does ISimpleescapesequence { }
+our class Simpleescapesequence::Slash       does ISimpleescapesequence { 
+    has $.text;
 
-our class Octalescapesequence { 
-    has Octaldigit @.digits is required;
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
-our class Hexadecimalescapesequence { 
+our class Simpleescapesequence::Quote       does ISimpleescapesequence { 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Simpleescapesequence::Question    does ISimpleescapesequence { 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Simpleescapesequence::DoubleSlash does ISimpleescapesequence { 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Simpleescapesequence::A does ISimpleescapesequence { 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Simpleescapesequence::B does ISimpleescapesequence { 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Simpleescapesequence::F does ISimpleescapesequence { 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Simpleescapesequence::N does ISimpleescapesequence { 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Simpleescapesequence::R does ISimpleescapesequence { 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Simpleescapesequence::T does ISimpleescapesequence { 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Simpleescapesequence::V does ISimpleescapesequence { 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Simpleescapesequence::RnN does ISimpleescapesequence { 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+
+our class Octalescapesequence {
+    has Octaldigit @.digits is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Hexadecimalescapesequence {
     has Hexadecimaldigit @.digits is required;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------------------
 
 our class Fractionalconstant::WithTail does IFractionalconstant {
     has Str $.value is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Fractionalconstant::NoTail does IFractionalconstant {
     has Str $.value is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
-our class ExponentpartPrefix { }
+our class ExponentpartPrefix { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 our class Exponentpart { 
     has Str $.value is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
-our class Sign::Plus  { }
-our class Sign::Minus { }
+our class Sign::Plus { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Sign::Minus { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 our class Digitsequence { 
     has Digit @.digits is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
-our class Floatingsuffix { }
+our class Floatingsuffix { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 #-------------------------------
 
-our class Encodingprefix::U8 does IEncodingprefix { }
-our class Encodingprefix::u  does IEncodingprefix { }
-our class Encodingprefix::U  does IEncodingprefix { }
-our class Encodingprefix::L  does IEncodingprefix { }
+our class Encodingprefix::U8 does IEncodingprefix { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Encodingprefix::u  does IEncodingprefix { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Encodingprefix::U  does IEncodingprefix { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class Encodingprefix::L  does IEncodingprefix { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 #-------------------------------
 
 our class Schar::Basic does ISchar {
     has Str $.value is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Schar::Escape does ISchar {
     has IEscapesequence $.escapesequence is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Schar::Ucn does ISchar {
     has Universalcharactername $.universalcharactername is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class Rawstring { 
     has Str $.value is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------------------
@@ -720,21 +1470,53 @@ our class Rawstring {
 # token user-defined-integer-literal:sym<dec> { <decimal-literal> <udsuffix> }
 our class UserDefinedIntegerLiteral::Dec does IUserDefinedIntegerLiteral {
     has DecimalLiteral $.decimal-literal is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token user-defined-integer-literal:sym<oct> { <octal-literal> <udsuffix> }
 our class UserDefinedIntegerLiteral::Oct does IUserDefinedIntegerLiteral {
     has OctalLiteral $.octal-literal is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token user-defined-integer-literal:sym<hex> { <hexadecimal-literal> <udsuffix> }
 our class UserDefinedIntegerLiteral::Hex does IUserDefinedIntegerLiteral {
     has HexadecimalLiteral $.hexadecimal-literal is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token user-defined-integer-literal:sym<bin> { <binary-literal> <udsuffix> }      #-------------------
 our class UserDefinedIntegerLiteral::Bin does IUserDefinedIntegerLiteral {
     has BinaryLiteral $.binary-literal is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 
@@ -742,41 +1524,102 @@ our class UserDefinedIntegerLiteral::Bin does IUserDefinedIntegerLiteral {
 our class UserDefinedFloatingLiteral::Frac does IUserDefinedFloatingLiteral {
     has IFractionalconstant $.fractionalconstant is required;
     has Exponentpart        $.exponentpart;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
-# token user-defined-floating-literal:sym<digi> { <digitsequence> <exponentpart> <udsuffix> }      #-------------------
+# token user-defined-floating-literal:sym<digi> { <digitsequence> <exponentpart> <udsuffix> } #-------------------
 our class UserDefinedFloatingLiteral::Digi does IUserDefinedFloatingLiteral {
     has Str $.value is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
-# token user-defined-string-literal    { <string-literal> <udsuffix> }
+# token user-defined-string-literal { <string-literal> <udsuffix> }
 our class UserDefinedStringLiteral { 
     has Str $.value is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token user-defined-character-literal { <character-literal> <udsuffix> }
 our class UserDefinedCharacterLiteral { 
     has Str $.value is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
-# token udsuffix {         <identifier>     }
+# token udsuffix { <identifier> }
 our class Udsuffix { 
     has Str $.value is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
-# token block-comment {         '/*' .*?  '*/'     }
+# token block-comment { '/*' .*?  '*/' }
 our class BlockComment { 
     has Str $.value is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token line-comment {         '//' <-[ \r \n ]>*     }
 our class LineComment { 
     has Str $.value is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token translation-unit {         <declarationseq>?  $     }
 our class TranslationUnit { 
     has IDeclarationseq $.declarationseq;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #------------------------------
@@ -784,24 +1627,65 @@ our class TranslationUnit {
 # token primary-expression:sym<literal> { <literal>+ }
 our class PrimaryExpression::Literal does IPrimaryExpression {
     has ILiteral @.literal is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token primary-expression:sym<this>    { <this> }
-our class PrimaryExpression::This does IPrimaryExpression { }
+our class PrimaryExpression::This does IPrimaryExpression { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token primary-expression:sym<expr>    { <.left-paren> <expression> <.right-paren> }
 our class PrimaryExpression::Expr does IPrimaryExpression {
     has IExpression $.expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token primary-expression:sym<id>      { <id-expression> }
 our class PrimaryExpression::Id does IPrimaryExpression {
     has IIdExpression $.id-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token primary-expression:sym<lambda>  { <lambda-expression> }     
 our class PrimaryExpression::Lambda does IPrimaryExpression {
     has LambdaExpression $.lambda-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #------------------------------
@@ -809,49 +1693,120 @@ our class PrimaryExpression::Lambda does IPrimaryExpression {
 # regex id-expression:sym<qualified>   { <qualified-id> }
 our class IdExpression::Qualified does IIdExpression {
     has QualifiedId $.qualified-id is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex id-expression:sym<unqualified> { <unqualified-id> }     
 our class IdExpression::Unqualified does IIdExpression {
     has IUnqualifiedId $.unqualified-id is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #------------------------------
 
-
 # regex unqualified-id:sym<ident> { <identifier> }
 our class UnqualifiedId::Ident does IUnqualifiedId {
     has Identifier $.identifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex unqualified-id:sym<op-func-id>          { <operator-function-id> }
 our class UnqualifiedId::OpFuncId does IUnqualifiedId {
     has OperatorFunctionId $.operator-function-id is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex unqualified-id:sym<conversion-func-id>  { <conversion-function-id> }
 our class UnqualifiedId::ConversionFuncId does IUnqualifiedId {
     has ConversionFunctionId $.conversion-function-id is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex unqualified-id:sym<literal-operator-id> { <literal-operator-id> }
 our class UnqualifiedId::LiteralOperatorId does IUnqualifiedId {
     has ILiteralOperatorId $.literal-operator-id is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex unqualified-id:sym<tilde-classname>     { <tilde> <class-name> }
 our class UnqualifiedId::TildeClassname does IUnqualifiedId {
     has IClassName $.class-name is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex unqualified-id:sym<tilde-decltype>      { <tilde> <decltype-specifier> }
 our class UnqualifiedId::TildeDecltype does IUnqualifiedId {
     has DecltypeSpecifier $.decltype-specifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex unqualified-id:sym<template-id>  { <template-id> }
 our class UnqualifiedId::TemplateId does IUnqualifiedId {
     has ITemplateId $.template-id is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex qualified-id { <nested-name-specifier> <template>? <unqualified-id> }      
@@ -859,43 +1814,108 @@ our class QualifiedId does IIdExpression {
     has INestedNameSpecifier $.nested-name-specifier is required;
     has Bool                $.template              is required;
     has IUnqualifiedId      $.unqualified-id        is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 
 # regex nested-name-specifier-prefix:sym<null> { <doublecolon> }
-our class NestedNameSpecifierPrefix::Null does INestedNameSpecifierPrefix { }
+our class NestedNameSpecifierPrefix::Null does INestedNameSpecifierPrefix { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # regex nested-name-specifier-prefix:sym<type> { <the-type-name> <doublecolon> }
 our class NestedNameSpecifierPrefix::Type does INestedNameSpecifierPrefix {
     has ITheTypeName $.the-type-name is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex nested-name-specifier-prefix:sym<ns> { <namespace-name> <doublecolon> }
 our class NestedNameSpecifierPrefix::Ns does INestedNameSpecifierPrefix {
     has INamespaceName $.namespace-name is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex nested-name-specifier-prefix:sym<decl> { <decltype-specifier> <doublecolon> }
 our class NestedNameSpecifierPrefix::Decl does INestedNameSpecifierPrefix {
     has DecltypeSpecifier $.decltype-specifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #--------------------------
 # regex nested-name-specifier-suffix:sym<id> { <identifier> <doublecolon> }
 our class NestedNameSpecifierSuffix::Id does INestedNameSpecifierSuffix {
     has Identifier $.identifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex nested-name-specifier-suffix:sym<template> { <template>? <simple-template-id> <doublecolon> } 
 our class NestedNameSpecifierSuffix::Template does INestedNameSpecifierSuffix {
     has Bool             $.template is required;
     has SimpleTemplateId $.simple-template-id is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex nested-name-specifier { <nested-name-specifier-prefix> <nested-name-specifier-suffix>* }
 our class NestedNameSpecifier does INestedNameSpecifier { 
     has INestedNameSpecifierPrefix $.nested-name-specifier-prefix   is required;
     has INestedNameSpecifierSuffix @.nested-name-specifier-suffixes;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule lambda-expression { <lambda-introducer> <lambda-declarator>? <compound-statement> }
@@ -903,34 +1923,92 @@ our class LambdaExpression {
     has LambdaIntroducer  $.lambda-introducer is required;
     has LambdaDeclarator  $.lambda-declarator;
     has CompoundStatement $.compound-statement is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule lambda-introducer { <.left-bracket> <lambda-capture>? <.right-bracket> }
 our class LambdaIntroducer { 
     has ILambdaCapture $.lambda-capture;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule lambda-capture:sym<list> { <capture-list> }
 our class LambdaCapture::List does ILambdaCapture {
     has CaptureList $.capture-list is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule lambda-capture:sym<def> { <capture-default> [ <comma> <capture-list> ]? } 
 our class LambdaCapture::Def does ILambdaCapture {
     has ICaptureDefault $.capture-default is required;
     has CaptureList    $.capture-list;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule capture-default:sym<and> { <and_> }
-our class CaptureDefault::And does ICaptureDefault { }
+our class CaptureDefault::And does ICaptureDefault { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule capture-default:sym<assign> { <assign> } #-------------------------------
-our class CaptureDefault::Assign does ICaptureDefault { }
+our class CaptureDefault::Assign does ICaptureDefault { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule capture-list { <capture> [ <comma> <capture> ]* <ellipsis>? } #-------------------------------
-our class CaptureList { 
+our class CaptureList {
     has ICapture @.captures is required;
     has Bool     $.trailing-ellipsis is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------
@@ -938,28 +2016,68 @@ our class CaptureList {
 # rule capture:sym<simple> { <simple-capture> }
 our class Capture::Simple does ICapture {
     has ISimpleCapture $.simple-capture is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule capture:sym<init> { <initcapture> } #-------------------------------
 our class Capture::Init does ICapture {
     has Initcapture $.init-capture is required;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule simple-capture:sym<id> { <and_>? <identifier> }
 our class SimpleCapture::Id does ISimpleCapture {
     has Bool       $.has-and;
     has Identifier $.identifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule simple-capture:sym<this> { <this> } #-------------------------------
-our class SimpleCapture::This does ISimpleCapture { }
+our class SimpleCapture::This does ISimpleCapture { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule initcapture { <and_>? <identifier> <initializer> } #-------------------------------
 our class Initcapture { 
     has Bool $.has-and;
     has Identifier  $.identifier  is required;
     has IInitializer $.initializer is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule lambda-declarator { 
@@ -977,68 +2095,195 @@ our class LambdaDeclarator {
     has IExceptionSpecification    $.exception-specification;
     has IAttributeSpecifierSeq      $.attribute-specifier-seq;
     has TrailingReturnType         $.trailing-return-type;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule postfix-expression { <postfix-expression-body> <postfix-expression-tail>* }
 our class PostfixExpression 
-does IStatement
-does IReturnStatementBody
+does IStatement 
+does IReturnStatementBody 
 does IUnaryExpression { 
     has IPostfixExpressionBody $.postfix-expression-body is required;
     has IPostfixExpressionTail @.postfix-expression-tail;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
-our class PostfixExpressionTail::Null does IPostfixExpressionTail {}
+our class PostfixExpressionTail::Null does IPostfixExpressionTail {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 #------------------------------
 
 # rule bracket-tail { <.left-bracket> [ <expression> || <braced-init-list> ] <.right-bracket> }
 our class BracketTail::Expression does IPostfixExpressionTail { 
     has IExpression $.expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class BracketTail::BracedInitList does IPostfixExpressionTail { 
     has IBracketTail $.bracket-tail is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule postfix-expression-tail:sym<bracket> { <bracket-tail> }
 our class PostfixExpressionTail::Bracket does IPostfixExpressionTail {
     has IBracketTail $.bracket-tail is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule postfix-expression-tail:sym<parens> { <.left-paren> <expression-list>? <.right-paren> }
 our class PostfixExpressionTail::Parens does IPostfixExpressionTail {
     has ExpressionList $.expression-list;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule postfix-expression-tail:sym<indirection-id> { [ <dot> || <arrow> ] <template>? <id-expression> }
 our class PostfixExpressionTail::IndirectionId does IPostfixExpressionTail {
     has Bool         $.template is required;
     has IIdExpression $.id-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule postfix-expression-tail:sym<indirection-pseudo-dtor> { [ <dot> || <arrow> ] <pseudo-destructor-name> }
 our class PostfixExpressionTail::IndirectionPseudoDtor does IPostfixExpressionTail {
     has IPseudoDestructorName $.pseudo-destructor-name is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule postfix-expression-tail:sym<pp-mm> { [ <plus-plus> || <minus-minus> ] } 
-our class PostfixExpressionTail::PlusPlus does IPostfixExpressionTail { }
+our class PostfixExpressionTail::PlusPlus does IPostfixExpressionTail { 
 
-our class PostfixExpressionTail::MinusMinus does IPostfixExpressionTail { }
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+our class PostfixExpressionTail::MinusMinus does IPostfixExpressionTail { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 
 # token cast-token:sym<dyn> { <dynamic_cast> }
-our class CastToken::Dyn does ICastToken { }
+our class CastToken::Dyn does ICastToken { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token cast-token:sym<static> { <static_cast> }
-our class CastToken::Static does ICastToken { }
+our class CastToken::Static does ICastToken { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token cast-token:sym<reinterpret> { <reinterpret_cast> }
-our class CastToken::Reinterpret does ICastToken { }
+our class CastToken::Reinterpret does ICastToken { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token cast-token:sym<const> { <const_cast> }
-our class CastToken::Const does ICastToken { }
+our class CastToken::Const does ICastToken { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule postfix-expression-cast { 
 #   <cast-token> 
@@ -1050,13 +2295,21 @@ our class CastToken::Const does ICastToken { }
 #   <.right-paren> 
 # }
 our class PostfixExpressionCast 
-does IInitializer
-does IUnaryExpression
-does IPostfixExpressionBody 
-{ 
+does IInitializer 
+does IUnaryExpression 
+does IPostfixExpressionBody { 
+
     has ICastToken  $.cast-token  is required;
     has ITheTypeId  $.the-type-id is required;
     has IExpression $.expression  is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule postfix-expression-typeid { 
@@ -1068,24 +2321,54 @@ does IPostfixExpressionBody
 our class PostfixExpressionTypeid::Expr { 
     has TypeIdOfTheTypeId $.type-id-of-the-type-id is required;
     has IExpression       $.expression             is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class PostfixExpressionTypeid::TypeId { 
     has TypeIdOfTheTypeId $.type-id-of-the-type-id is required;
     has ITheTypeId        $.the-type-id            is required;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token post-list-head:sym<simple> { <simple-type-specifier> }
 our class PostListHead::Simple does IPostListHead {
     has ISimpleTypeSpecifier $.simple-type-specifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token post-list-head:sym<type-name> { <type-name-specifier> } 
 our class PostListHead::TypeName does IPostListHead {
     has ITypeNameSpecifier $.type-name-specifier is required;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 =begin comment
 # token post-list-tail:sym<parenthesized> { <.left-paren> <expression-list>? <.right-paren> }
@@ -1101,26 +2384,55 @@ our class PostListTail::Braced does IPostListTail {
 
 our class PostListTail does IPostListTail {
     has $.value is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token postfix-expression-list { <post-list-head> <post-list-tail> } 
 our class PostfixExpressionList 
-does IInitializer
-does IUnaryExpression
-does IPostfixExpressionBody 
-{ 
+does IInitializer 
+does IUnaryExpression 
+does IPostfixExpressionBody { 
+
     has IPostListHead $.post-list-head is required;
     has IPostListTail $.post-list-tail is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule type-id-of-the-type-id { <typeid_> }
-our class TypeIdOfTheTypeId { 
+our class TypeIdOfTheTypeId {
     has ITypeid $.typeid is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule expression-list { <initializer-list> }
 our class ExpressionList does IPostfixExpressionTail { 
     has InitializerList $.initializer-list is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------------------
@@ -1135,6 +2447,13 @@ our class PseudoDestructorName::Basic does IPseudoDestructorName {
     has Bool        $.nested-name-specifier;
     has ITheTypeName $.the-scoped-type-name;
     has ITheTypeName $.the-type-anme is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule pseudo-destructor-name:sym<template> { 
@@ -1147,22 +2466,52 @@ our class PseudoDestructorName::Basic does IPseudoDestructorName {
 # }
 our class PseudoDestructorName::Template does IPseudoDestructorName {
     has INestedNameSpecifier $.nested-name-specifier is required;
-    has SimpleTemplateId    $.simple-template-id    is required;
+    has SimpleTemplateId     $.simple-template-id    is required;
     has ITheTypeName         $.the-type-name         is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule pseudo-destructor-name:sym<decltype> { <tilde> <decltype-specifier> } #-------------------------------------
 our class PseudoDestructorName::Decltype does IPseudoDestructorName {
     has DecltypeSpecifier $.decltype-specifier is required;
-}
+    has $.text;
 
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 our class UnaryExpression::New does IUnaryExpression { 
     has INewExpression $.new-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 our class UnaryExpression::Case does IUnaryExpression {
     has IUnaryExpressionCase $.case is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #--------------------------
@@ -1170,78 +2519,212 @@ our class UnaryExpression::Case does IUnaryExpression {
 # rule unary-expression-case:sym<postfix> { <postfix-expression> }
 our class UnaryExpressionCase::Postfix does IUnaryExpressionCase {
     has PostfixExpression $.postfix-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule unary-expression-case:sym<pp> { <plus-plus> <unary-expression> }
 our class UnaryExpressionCase::PlusPlus does IUnaryExpressionCase {
     has IUnaryExpression $.unary-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule unary-expression-case:sym<mm> { <minus-minus> <unary-expression> }
 our class UnaryExpressionCase::MinusMinus does IUnaryExpressionCase {
     has IUnaryExpression $.unary-expression is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule unary-expression-case:sym<unary-op> { <unary-operator> <unary-expression> }
-our class UnaryExpressionCase::UnaryOp 
-does IPostfixExpressionBody
-does IUnaryExpressionCase {
+our class UnaryExpressionCase::UnaryOp does IPostfixExpressionBody does IUnaryExpressionCase {
     has IUnaryOperator   $.unary-operator   is required;
     has IUnaryExpression $.unary-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule unary-expression-case:sym<sizeof> { <sizeof> <unary-expression> }
 our class UnaryExpressionCase::Sizeof does IUnaryExpressionCase {
     has IUnaryExpression $.unary-expression is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule unary-expression-case:sym<sizeof-typeid> { <sizeof> <.left-paren> <the-type-id> <.right-paren> }
 our class UnaryExpressionCase::SizeofTypeid does IUnaryExpressionCase {
     has ITheTypeId $.the-type-id is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule unary-expression-case:sym<sizeof-ids> { <sizeof> <ellipsis> <.left-paren> <identifier> <.right-paren> }
 our class UnaryExpressionCase::SizeofIds does IUnaryExpressionCase {
     has Identifier $.identifier is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule unary-expression-case:sym<alignof> { <alignof> <.left-paren> <the-type-id> <.right-paren> }
 our class UnaryExpressionCase::Alignof does IUnaryExpressionCase {
     has ITheTypeId $.the-type-id is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule unary-expression-case:sym<noexcept> { <no-except-expression> }
 our class UnaryExpressionCase::Noexcept does IUnaryExpressionCase {
     has NoExceptExpression $.no-except-expression is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule unary-expression-case:sym<delete> { <delete-expression> } #--------------------------------------
 our class UnaryExpressionCase::Delete does IUnaryExpressionCase {
     has DeleteExpression $.delete-expression is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #---------------------------
 
 # rule unary-operator:sym<or_> { <or_> }
-our class UnaryOperator::Or does IUnaryOperator { }
+our class UnaryOperator::Or does IUnaryOperator { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule unary-operator:sym<star> { <star> }
-our class UnaryOperator::Star does IUnaryOperator { }
+our class UnaryOperator::Star does IUnaryOperator { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule unary-operator:sym<and_> { <and_> }
-our class UnaryOperator::And does IUnaryOperator { }
+our class UnaryOperator::And does IUnaryOperator { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule unary-operator:sym<plus> { <plus> }
-our class UnaryOperator::Plus does IUnaryOperator { }
+our class UnaryOperator::Plus does IUnaryOperator { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule unary-operator:sym<tilde> { <tilde> }
-our class UnaryOperator::Tilde does IUnaryOperator { }
+our class UnaryOperator::Tilde does IUnaryOperator { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule unary-operator:sym<minus> { <minus> }
-our class UnaryOperator::Minus does IUnaryOperator { }
+our class UnaryOperator::Minus does IUnaryOperator { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule unary-operator:sym<not> { <not_> } #--------------------------------------
-our class UnaryOperator::Not does IUnaryOperator { }
+our class UnaryOperator::Not does IUnaryOperator { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 #----------------------------------
 
@@ -1250,6 +2733,14 @@ our class NewExpression::NewTypeId does INewExpression {
     has NewPlacement   $.new-placement;
     has NewTypeId      $.new-type-id is required;
     has INewInitializer $.new-initializer;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule new-expression:sym<the-type-id> { <doublecolon>? <new_> <new-placement>? <.left-paren> <the-type-id> <.right-paren> <new-initializer>? }
@@ -1257,17 +2748,41 @@ our class NewExpression::TheTypeId does INewExpression {
     has NewPlacement    $.new-placement;
     has ITheTypeId      $.the-type-id is required;
     has INewInitializer $.new-initializer;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule new-placement { <.left-paren> <expression-list> <.right-paren> }
 our class NewPlacement { 
     has ExpressionList $.expression-list is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule new-type-id { <type-specifier-seq> <new-declarator>? }
 our class NewTypeId { 
     has ITypeSpecifierSeq $.type-specifier-seq is required;
     has NewDeclarator    $.new-declarator     is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule new-declarator { 
@@ -1277,220 +2792,568 @@ our class NewTypeId {
 our class NewDeclarator { 
     has IPointerOperator @.pointer-operators;
     has NoPointerNewDeclarator $.no-pointer-new-declarator;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule no-pointer-new-declarator { <.left-bracket> <expression> <.right-bracket> <attribute-specifier-seq>? <no-pointer-new-declarator-tail>* }
 our class NoPointerNewDeclarator { 
     has IExpression                $.expression is required;
     has IAttributeSpecifierSeq     $.attribute-specifier-seq;
     has NoPointerNewDeclaratorTail @.no-pointer-new-declarator-tail;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule no-pointer-new-declarator-tail { <.left-bracket> <constant-expression> <.right-bracket> <attribute-specifier-seq>? } #------------------------
 our class NoPointerNewDeclaratorTail {
     has IConstantExpression    $.constant-expression is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule new-initializer:sym<expr-list> { <.left-paren> <expression-list>? <.right-paren> }
 our class NewInitializer::ExprList does INewInitializer {
     has ExpressionList $.expression-list;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule new-initializer:sym<braced> { <braced-init-list> } #------------------------
 our class NewInitializer::Braced does INewInitializer {
     has BracedInitList $.braced-init-list is required;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule delete-expression { <doublecolon>? <delete> [ <.left-bracket> <.right-bracket> ]? <cast-expression> }
 our class DeleteExpression { 
     has ICastExpression $.cast-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule no-except-expression { <noexcept> <.left-paren> <expression> <.right-paren> }
 our class NoExceptExpression { 
     has IExpression $.expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule cast-expression { [ <.left-paren> <the-type-id> <.right-paren> ]* <unary-expression> }
 our class CastExpression does ICastExpression { 
     has ITheTypeId       @.the-type-ids     is required;
     has IUnaryExpression $.unary-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-----------------------
 
 # rule pointer-member-operator:sym<dot> { <dot-star> }
-our class PointerMemberOperator::Dot does IPointerMemberOperator { }
+our class PointerMemberOperator::Dot does IPointerMemberOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule pointer-member-operator:sym<arrow> { <arrow-star> }
-our class PointerMemberOperator::Arrow does IPointerMemberOperator { }
+our class PointerMemberOperator::Arrow does IPointerMemberOperator { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule pointer-member-expression { <cast-expression> <pointer-member-expression-tail>* }
-our class PointerMemberExpression 
-does IPointerMemberExpression { 
-    has ICastExpression              $.cast-expression is required;
+our class PointerMemberExpression does IPointerMemberExpression { 
+    has ICastExpression             $.cast-expression is required;
     has PointerMemberExpressionTail @.pointer-member-expression-tail;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule pointer-member-expression-tail { <pointer-member-operator> <cast-expression> }
 our class PointerMemberExpressionTail { 
     has IPointerMemberOperator $.pointer-member-operator is required;
     has ICastExpression         $.cast-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-----------------------
 
 # token multiplicative-operator:sym<*> { <star> }
-our class MultiplicativeOperator::Star does IMultiplicativeOperator { }
+our class MultiplicativeOperator::Star does IMultiplicativeOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token multiplicative-operator:sym</> { <div_> }
-our class MultiplicativeOperator::Slash does IMultiplicativeOperator { }
+our class MultiplicativeOperator::Slash does IMultiplicativeOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token multiplicative-operator:sym<%> { <mod_> }
-our class MultiplicativeOperator::Mod does IMultiplicativeOperator { }
+our class MultiplicativeOperator::Mod does IMultiplicativeOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule multiplicative-expression { <pointer-member-expression> <multiplicative-expression-tail>* }
-our class MultiplicativeExpression does IMultiplicativeExpression { 
+our class MultiplicativeExpression does IMultiplicativeExpression {
     has IPointerMemberExpression     $.pointer-member-expression is required;
     has MultiplicativeExpressionTail @.multiplicative-expression-tail is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule multiplicative-expression-tail { <multiplicative-operator> <pointer-member-expression> }
-our class MultiplicativeExpressionTail { 
+our class MultiplicativeExpressionTail {
     has IMultiplicativeOperator  $.multiplicative-operator is required;
     has IPointerMemberExpression $.pointer-member-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
-
 # token additive-operator:sym<plus> { <plus> }
-our class AdditiveOperator::Plus does IAdditiveOperator { }
+our class AdditiveOperator::Plus does IAdditiveOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token additive-operator:sym<minus> { <minus> }
-our class AdditiveOperator::Minus does IAdditiveOperator { }
+our class AdditiveOperator::Minus does IAdditiveOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule additive-expression-tail { <additive-operator> <multiplicative-expression> }
-our class AdditiveExpressionTail { 
+our class AdditiveExpressionTail {
     has IAdditiveOperator        $.additive-operator         is required;
     has IMultiplicativeExpression $.multiplicative-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule additive-expression { <multiplicative-expression> <additive-expression-tail>* }
-our class AdditiveExpression does IAdditiveExpression { 
+our class AdditiveExpression does IAdditiveExpression {
     has IMultiplicativeExpression $.multiplicative-expression is required;
     has AdditiveExpressionTail   @.additive-expression-tail;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule shift-expression-tail { <shift-operator> <additive-expression> }
-our class ShiftExpressionTail { 
+our class ShiftExpressionTail {
     has IShiftOperator      $.shift-operator      is required;
     has IAdditiveExpression $.additive-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule shift-expression { <additive-expression> <shift-expression-tail>* } #-----------------------
-our class ShiftExpression does IShiftExpression { 
+our class ShiftExpression does IShiftExpression {
     has IAdditiveExpression  $.additive-expression is required;
     has ShiftExpressionTail @.shift-expression-tail is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule shift-operator:sym<right> { <.greater> <.greater> }
-our class ShiftOperator::Right does IShiftOperator { }
+our class ShiftOperator::Right does IShiftOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule shift-operator:sym<left> { <.less> <.less> } #-----------------------
-our class ShiftOperator::Left does IShiftOperator { }
+our class ShiftOperator::Left does IShiftOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 
 # rule relational-operator:sym<less> { <.less> }
-our class RelationalOperator::Less does IRelationalOperator { }
+our class RelationalOperator::Less does IRelationalOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule relational-operator:sym<greater> { <.greater> }
-our class RelationalOperator::Greater does IRelationalOperator { }
+our class RelationalOperator::Greater does IRelationalOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule relational-operator:sym<less-eq> { <.less-equal> }
-our class RelationalOperator::LessEq does IRelationalOperator { }
+our class RelationalOperator::LessEq does IRelationalOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule relational-operator:sym<greater-eq> { <.greater-equal> } #-----------------------
-our class RelationalOperator::GreaterEq does IRelationalOperator { }
+our class RelationalOperator::GreaterEq does IRelationalOperator {
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # regex relational-expression-tail { <.ws> <relational-operator> <.ws> <shift-expression> }
-our class RelationalExpressionTail { 
+our class RelationalExpressionTail {
     has IRelationalOperator  $.relational-operator is required;
     has IShiftExpression     $.shift-expression    is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex relational-expression { <shift-expression> <relational-expression-tail>* } #-----------------------
-our class RelationalExpression does IRelationalExpression { 
+our class RelationalExpression does IRelationalExpression {
     has IShiftExpression         $.shift-expression is required;
     has RelationalExpressionTail @.relational-expression-tail;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token equality-operator:sym<eq> { <equal> }
-our class EqualityOperator::Eq does IEqualityOperator { }
+our class EqualityOperator::Eq does IEqualityOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token equality-operator:sym<neq> { <not-equal> } #-----------------------
-our class EqualityOperator::Neq does IEqualityOperator { }
+our class EqualityOperator::Neq does IEqualityOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule equality-expression-tail { <equality-operator> <relational-expression> }
-our class EqualityExpressionTail { 
+our class EqualityExpressionTail {
     has IEqualityOperator     $.equality-operator     is required;
     has IRelationalExpression $.relational-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule equality-expression { <relational-expression> <equality-expression-tail>* }
-our class EqualityExpression does IEqualityExpression { 
+our class EqualityExpression does IEqualityExpression {
     has IRelationalExpression  $.relational-expression is required;
     has EqualityExpressionTail @.equality-expression-tail;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule and-expression { <equality-expression> [ <and_> <equality-expression> ]* }
-our class AndExpression does IAndExpression { 
+our class AndExpression does IAndExpression {
     has IEqualityExpression @.equality-expressions is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule exclusive-or-expression { <and-expression> [ <caret> <and-expression> ]* }
-our class ExclusiveOrExpression does IExclusiveOrExpression { 
+our class ExclusiveOrExpression does IExclusiveOrExpression {
     has IAndExpression @.and-expressions is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule inclusive-or-expression { <exclusive-or-expression> [ <or_> <exclusive-or-expression> ]* }
-our class InclusiveOrExpression does IInclusiveOrExpression { 
+our class InclusiveOrExpression does IInclusiveOrExpression {
     has IExclusiveOrExpression @.exclusive-or-expressions is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule logical-and-expression { <inclusive-or-expression> [ <and-and> <inclusive-or-expression>]* }
-our class LogicalAndExpression does ILogicalAndExpression { 
+our class LogicalAndExpression does ILogicalAndExpression {
     has IInclusiveOrExpression @.inclusive-or-expressions is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 
 # rule logical-or-expression { <logical-and-expression> [ <or-or> <logical-and-expression> ]* }
-our class LogicalOrExpression 
-does ILogicalOrExpression { 
+our class LogicalOrExpression does ILogicalOrExpression {
     has ILogicalAndExpression @.logical-and-expressions is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule conditional-expression-tail { <question> <expression> <colon> <assignment-expression> }
-our class ConditionalExpressionTail { 
+our class ConditionalExpressionTail {
     has IExpression           $.question-expression   is required;
     has IAssignmentExpression $.assignment-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule conditional-expression { <logical-or-expression> <conditional-expression-tail>? } #-----------------------
-our class ConditionalExpression 
-does IMultiplicativeExpression
-does IConditionalExpression { 
+our class ConditionalExpression does IMultiplicativeExpression does IConditionalExpression {
     has ILogicalOrExpression      $.logical-or-expression is required;
     has ConditionalExpressionTail $.conditional-expression-tail;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule assignment-expression:sym<throw> { <throw-expression> }
 our class AssignmentExpression::Throw does IAssignmentExpression {
     has ThrowExpression $.throw-expression is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule assignment-expression:sym<basic> { 
@@ -1502,64 +3365,201 @@ our class AssignmentExpression::Basic does IAssignmentExpression {
     has ILogicalOrExpression $.logical-or-expression is required;
     has IAssignmentOperator  $.assignment-operator   is required;
     has IInitializerClause   $.initializer-clause    is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule assignment-expression:sym<conditional> { <conditional-expression> }
 our class AssignmentExpression::Conditional does IAssignmentExpression {
     has IConditionalExpression $.conditional-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
-
 # token assignment-operator:sym<assign> { <.assign> }
-our class AssignmentOperator::Assign does IAssignmentOperator { }
+our class AssignmentOperator::Assign does IAssignmentOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token assignment-operator:sym<star-assign> { <.star-assign> }
-our class AssignmentOperator::StarAssign does IAssignmentOperator { }
+our class AssignmentOperator::StarAssign does IAssignmentOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token assignment-operator:sym<div-assign> { <.div-assign> }
-our class AssignmentOperator::DivAssign does IAssignmentOperator { }
+our class AssignmentOperator::DivAssign does IAssignmentOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token assignment-operator:sym<mod-assign> { <.mod-assign> }
-our class AssignmentOperator::ModAssign does IAssignmentOperator { }
+our class AssignmentOperator::ModAssign does IAssignmentOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token assignment-operator:sym<plus-assign> { <.plus-assign> }
-our class AssignmentOperator::PlusAssign does IAssignmentOperator { }
+our class AssignmentOperator::PlusAssign does IAssignmentOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token assignment-operator:sym<minus-assign> { <.minus-assign> }
-our class AssignmentOperator::MinusAssign does IAssignmentOperator { }
+our class AssignmentOperator::MinusAssign does IAssignmentOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token assignment-operator:sym<rshift-assign> { <.right-shift-assign> }
-our class AssignmentOperator::RshiftAssign does IAssignmentOperator { }
+our class AssignmentOperator::RshiftAssign does IAssignmentOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token assignment-operator:sym<lshift-assign> { <.left-shift-assign> }
-our class AssignmentOperator::LshiftAssign does IAssignmentOperator { }
+our class AssignmentOperator::LshiftAssign does IAssignmentOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token assignment-operator:sym<and-assign> { <.and-assign> }
-our class AssignmentOperator::AndAssign does IAssignmentOperator { }
+our class AssignmentOperator::AndAssign does IAssignmentOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token assignment-operator:sym<xor-assign> { <.xor-assign> }
-our class AssignmentOperator::XorAssign does IAssignmentOperator { }
+our class AssignmentOperator::XorAssign does IAssignmentOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # token assignment-operator:sym<or-assign> { <.or-assign> }
-our class AssignmentOperator::OrAssign does IAssignmentOperator { }
+our class AssignmentOperator::OrAssign does IAssignmentOperator {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule expression { <assignment-expression>+ %% <.comma> }
 our class Expression 
-does IExpression
-does IForRangeInitializer
+does IExpression 
+does IForRangeInitializer 
 does ICondition { 
+
     has IAssignmentExpression @.assignment-expressions is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule constant-expression { <conditional-expression> }
-our class ConstantExpression does IConstantExpression { 
+our class ConstantExpression does IConstantExpression {
     has IConditionalExpression $.conditional-expression is required;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # regex comment:sym<line> { [<line-comment> <.ws>?]+ }
 our class Comment::Line does IComment {
     has LineComment @.line-comments is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token statement:sym<attributed> { <comment>? <attribute-specifier-seq>? <attributed-statement-body> }
@@ -1567,99 +3567,240 @@ our class Statement::Attributed does IStatement {
     has IComment                 $.comment;
     has IAttributeSpecifierSeq   $.attribute-specifier-seq;
     has IAttributedStatementBody $.attributed-statement-body is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token statement:sym<labeled> { <comment>? <labeled-statement> }
 our class Statement::Labeled does IStatement {
     has IComment         $.comment;
     has LabeledStatement $.labeled-statement is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # token statement:sym<declaration> { <comment>? <declaration-statement> }
 our class Statement::Declaration does IStatement {
     has IComment              $.comment;
     has IDeclarationStatement $.declaration-statement is required;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule attributed-statement-body:sym<expression> { <expression-statement> }
 our class AttributedStatementBody::Expression does IAttributedStatementBody {
     has ExpressionStatement $.expression-statement is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule attributed-statement-body:sym<compound> { <compound-statement> }
 our class AttributedStatementBody::Compound does IAttributedStatementBody {
     has CompoundStatement $.compound-statement is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule attributed-statement-body:sym<selection> { <selection-statement> }
 our class AttributedStatementBody::Selection does IAttributedStatementBody {
     has ISelectionStatement $.selection-statement is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule attributed-statement-body:sym<iteration> { <iteration-statement> }
 our class AttributedStatementBody::Iteration does IAttributedStatementBody {
     has IIterationStatement $.iteration-statement is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule attributed-statement-body:sym<jump> { <jump-statement> }
 our class AttributedStatementBody::Jump does IAttributedStatementBody {
     has IJumpStatement $.jump-statement is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule attributed-statement-body:sym<try> { <try-block> } #-----------------------------
 our class AttributedStatementBody::Try does IAttributedStatementBody {
     has TryBlock $.try-block is required;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule labeled-statement-label-body:sym<id> { <identifier> }
 our class LabeledStatementLabelBody::Id does ILabeledStatementLabelBody {
     has Identifier $.identifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule labeled-statement-label-body:sym<case-expr> { <case> <constant-expression> }
 our class LabeledStatementLabelBody::CaseExpr does ILabeledStatementLabelBody {
     has IConstantExpression $.constant-expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule labeled-statement-label-body:sym<default> { <default_> } #-----------------------------
-our class LabeledStatementLabelBody::Default does ILabeledStatementLabelBody { }
+our class LabeledStatementLabelBody::Default does ILabeledStatementLabelBody {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule labeled-statement-label { <attribute-specifier-seq>? <labeled-statement-label-body> <colon> }
-our class LabeledStatementLabel { 
+our class LabeledStatementLabel {
     has IAttributeSpecifierSeq     $.attribute-specifier-seq;
     has ILabeledStatementLabelBody $.labeled-statement-label-body is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule labeled-statement { <labeled-statement-label> <statement> }
-our class LabeledStatement { 
+our class LabeledStatement {
     has LabeledStatementLabel $.labeled-statement-label is required;
     has IStatement            $.statement is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule declaration-statement { <block-declaration> } #-----------------------------
-our class DeclarationStatement does IDeclarationStatement { 
+our class DeclarationStatement does IDeclarationStatement {
     has IBlockDeclaration $.block-declaration is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule expression-statement { <expression>? <semi> }
-our class ExpressionStatement 
-does IStatement { 
+our class ExpressionStatement does IStatement { 
     has IComment    $.comment;
     has IExpression $.expression;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule compound-statement { <.left-brace> <statement-seq>? <.right-brace> }
-our class CompoundStatement { 
+our class CompoundStatement {
     has StatementSeq $.statement-seq;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex statement-seq { <statement> [<.ws> <statement>]* } #-----------------------------
-our class StatementSeq { 
+our class StatementSeq {
     has IStatement @.statements is required;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule selection-statement:sym<if> { 
 #   <.if_> 
@@ -1670,12 +3811,20 @@ our class StatementSeq {
 #   [ <comment>? <else_> <statement> ]? 
 # }
 our class SelectionStatement::If 
-does IAttributedStatementBody
+does IAttributedStatementBody 
 does ISelectionStatement {
     has ICondition  $.condition is required;
     has IStatement  @.statements is required;
     has IComment    $.else-statement-comment;
     has IStatement  @.else-statements;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule selection-statement:sym<switch> { 
@@ -1688,23 +3837,53 @@ does ISelectionStatement {
 our class SelectionStatement::Switch does ISelectionStatement {
     has ICondition  $.condition is required;
     has IStatement $.statement is required;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule condition:sym<expr> { <expression> } #-----------------------------
 our class Condition::Expr does ICondition {
     has IExpression $.expression is required;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule condition-decl-tail:sym<assign-init> { <assign> <initializer-clause> }
 our class ConditionDeclTail::AssignInit does IConditionDeclTail {
     has IInitializerClause $.initializer-clause is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule condition-decl-tail:sym<braced-init> { <braced-init-list> } #-----------------------------
 our class ConditionDeclTail::BracedInit does IConditionDeclTail {
     has BracedInitList $.braced-init-list is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule condition:sym<decl> { 
@@ -1718,8 +3897,15 @@ our class Condition::Decl does ICondition {
     has IDeclSpecifierSeq      $.decl-specifier-seq  is required;
     has IDeclarator            $.declarator          is required;
     has IConditionDeclTail    $.condition-decl-tail is required;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule iteration-statement:sym<while> { 
 #   <while_> 
@@ -1730,6 +3916,14 @@ our class Condition::Decl does ICondition {
 our class IterationStatement::While does IIterationStatement {
     has ICondition $.condition is required;
     has IStatement @.statements is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule iteration-statement:sym<do> { 
@@ -1745,6 +3939,14 @@ our class IterationStatement::Do does IIterationStatement {
     has IComment    $.comment;
     has IStatement  $.statement is required;
     has IExpression $.expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule iteration-statement:sym<for> { 
@@ -1762,6 +3964,14 @@ our class IterationStatement::For does IIterationStatement {
     has ICondition        $.condition;
     has IExpression       $.expression;
     has IStatement        @.statements is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule iteration-statement:sym<for-range> { 
@@ -1777,35 +3987,83 @@ our class IterationStatement::ForRange does IIterationStatement {
     has ForRangeDeclaration  $.for-range-declaration is required;
     has IForRangeInitializer $.for-range-initializer is required;
     has IStatement           @.statements is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
-
 # rule for-init-statement:sym<expression-statement> { <expression-statement> }
-our class ForInitStatement::ExpressionStatement does IForInitStatement {
+our class ForInitStatement::ExpressionStatement 
+does IForInitStatement {
+
     has ExpressionStatement $.expression-statement is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule for-init-statement:sym<simple-declaration> { <simple-declaration> }
 our class ForInitStatement::SimpleDeclaration does IForInitStatement {
     has ISimpleDeclaration $.simple-declaration is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule for-range-declaration { <attribute-specifier-seq>? <decl-specifier-seq> <declarator> }
-our class ForRangeDeclaration { 
+our class ForRangeDeclaration {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
     has IDeclSpecifierSeq      $.decl-specifier-seq is required;
     has IDeclarator            $.declarator is required;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule for-range-initializer:sym<expression> { <expression> }
 our class ForRangeInitializer::Expression does IForRangeInitializer {
     has IExpression $.expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule for-range-initializer:sym<braced-init-list> { <braced-init-list> } #-------------------------------
 our class ForRangeInitializer::BracedInitList does IForRangeInitializer {
     has BracedInitList $.braced-init-list is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #----------------------
@@ -1813,25 +4071,58 @@ our class ForRangeInitializer::BracedInitList does IForRangeInitializer {
 # rule jump-statement:sym<break> { <break_> <semi> }
 our class JumpStatement::Break does IJumpStatement { 
     has IComment $.comment;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule jump-statement:sym<continue> { <continue_> <semi> }
-our class JumpStatement::Continue does IJumpStatement { 
+our class JumpStatement::Continue does IJumpStatement {
     has IComment $.comment;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule jump-statement:sym<return> { <return_> <return-statement-body>? <semi> }
 our class JumpStatement::Return 
-does IAttributedStatementBody
+does IAttributedStatementBody 
 does IJumpStatement {
+
     has IComment             $.comment;
     has IReturnStatementBody $.return-statement-body;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule jump-statement:sym<goto> { <goto_> <identifier> <semi> }
 our class JumpStatement::Goto does IJumpStatement {
     has IComment   $.comment;
     has Identifier $.identifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #----------------------
@@ -1839,16 +4130,40 @@ our class JumpStatement::Goto does IJumpStatement {
 # rule return-statement-body:sym<expr> { <expression> }
 our class ReturnStatementBody::Expr does IReturnStatementBody {
     has IExpression $.expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule return-statement-body:sym<braced-init-list> { <braced-init-list> }
 our class ReturnStatementBody::BracedInitList does IReturnStatementBody {
     has BracedInitList $.braced-init-list is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule declarationseq { <declaration>+ } #-------------------------------
 our class Declarationseq { 
     has IDeclaration @.declarations is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule alias-declaration { 
@@ -1864,25 +4179,51 @@ our class AliasDeclaration {
     has Identifier             $.identifier is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
     has ITheTypeId             $.the-type-id is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 
 # rule simple-declaration:sym<basic> { <decl-specifier-seq>? <init-declarator-list>? <.semi> }
 our class SimpleDeclaration::Basic 
-does IDeclarationStatement
+does IDeclarationStatement 
 does ISimpleDeclaration {
+
     has IComment           $.comment;
     has IDeclSpecifierSeq   $.decl-specifier-seq;
     has IInitDeclarator     @.init-declarator-list;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule simple-declaration:sym<init-list> { <attribute-specifier-seq> <decl-specifier-seq>? <init-declarator-list> <.semi> }
 our class SimpleDeclaration::InitList 
 does ISimpleDeclaration {
+
     has IComment            $.comment;
     has IAttributeSpecifier @.attribute-specifiers is required;
     has IDeclSpecifierSeq   $.decl-specifier-seq;
     has IInitDeclarator     @.init-declarator-list;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule static-assert-declaration { 
@@ -1898,17 +4239,41 @@ our class StaticAssertDeclaration {
     has IComment            $.comment;
     has IConstantExpression $.constant-expression is required;
     has StringLiteral       $.string-literal is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule empty-declaration { <.semi> }
 our class EmptyDeclaration { 
     has IComment           $.comment;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule attribute-declaration { <attribute-specifier-seq> <.semi> }
 our class AttributeDeclaration { 
     has IComment               $.comment;
     has IAttributeSpecifierSeq $.attribute-specifier-seq is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-------------------
@@ -1921,81 +4286,241 @@ our class AttributeDeclaration {
 our class DeclSpecifierSeq does IDeclSpecifierSeq { 
     has IDeclSpecifier        @.decl-specifiers is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule storage-class-specifier:sym<extern> { <.extern> }
-our class StorageClassSpecifier::Extern does IStorageClassSpecifier { }
+our class StorageClassSpecifier::Extern does IStorageClassSpecifier { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule storage-class-specifier:sym<mutable> { <.mutable> } #---------------------------
-our class StorageClassSpecifier::Mutable does IStorageClassSpecifier { }
+our class StorageClassSpecifier::Mutable does IStorageClassSpecifier { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule storage-class-specifier:sym<register> { <.register> }
-our class StorageClassSpecifier::Register does IStorageClassSpecifier { }
+our class StorageClassSpecifier::Register does IStorageClassSpecifier { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule storage-class-specifier:sym<static> { <.static> }
-our class StorageClassSpecifier::Static does IStorageClassSpecifier { }
+our class StorageClassSpecifier::Static does IStorageClassSpecifier { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule storage-class-specifier:sym<thread_local> { <.thread_local> }
-our class StorageClassSpecifier::Thread_local does IStorageClassSpecifier { }
+our class StorageClassSpecifier::Thread_local does IStorageClassSpecifier { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule function-specifier:sym<inline> { <.inline> }
-our class FunctionSpecifier::Inline does IFunctionSpecifier { }
+our class FunctionSpecifier::Inline does IFunctionSpecifier { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule function-specifier:sym<virtual> { <.virtual> }
-our class FunctionSpecifier::Virtual does IFunctionSpecifier { }
+our class FunctionSpecifier::Virtual does IFunctionSpecifier { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule function-specifier:sym<explicit> { <.explicit> }
-our class FunctionSpecifier::Explicit does IFunctionSpecifier { }
+our class FunctionSpecifier::Explicit does IFunctionSpecifier { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule typedef-name { <identifier> } #---------------------------
 our class TypedefName { 
     has Identifier $.identifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule trailing-type-specifier:sym<cv-qualifier> { <cv-qualifier> <simple-type-specifier> }
 our class TrailingTypeSpecifier::CvQualifier does ITrailingTypeSpecifier {
     has ICvQualifier         $.cv-qualifier          is required;
     has ISimpleTypeSpecifier $.simple-type-specifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule type-specifier-seq { <type-specifier>+ <attribute-specifier-seq>? }
 our class TypeSpecifierSeq does ITypeSpecifierSeq { 
     has ITypeNameSpecifier     @.type-specifiers is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule trailing-type-specifier-seq { <trailing-type-specifier>+ <attribute-specifier-seq>? }
 our class TrailingTypeSpecifierSeq { 
     has ITrailingTypeSpecifier @.trailing-type-specifiers is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule simple-type-length-modifier:sym<short> { <.short> }
-our class SimpleTypeLengthModifier::Short does ISimpleTypeLengthModifier { }
+our class SimpleTypeLengthModifier::Short does ISimpleTypeLengthModifier { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule simple-type-length-modifier:sym<long_> { <.long_> }
-our class SimpleTypeLengthModifier::Long does ISimpleTypeLengthModifier { }
+our class SimpleTypeLengthModifier::Long does ISimpleTypeLengthModifier { 
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule simple-type-signedness-modifier:sym<unsigned> { <.unsigned> }
-our class SimpleTypeSignednessModifier::Unsigned 
-does ISimpleTypeSignednessModifier { }
+our class SimpleTypeSignednessModifier::Unsigned does ISimpleTypeSignednessModifier { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule simple-type-signedness-modifier:sym<signed> { <.signed> }
-our class SimpleTypeSignednessModifier::Signed does ISimpleTypeSignednessModifier { }
+our class SimpleTypeSignednessModifier::Signed does ISimpleTypeSignednessModifier { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule full-type-name { <nested-name-specifier>? <the-type-name> }
-our class FullTypeName 
-does IPostListHead
-does IDeclSpecifier { 
+our class FullTypeName does IPostListHead does IDeclSpecifier { 
     has INestedNameSpecifier $.nested-name-specifier;
     has ITheTypeName         $.the-type-name is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule scoped-template-id { <nested-name-specifier> <.template> <simple-template-id> }
 our class ScopedTemplateId { 
     has INestedNameSpecifier $.nested-name-specifier is required;
     has SimpleTemplateId    $.simple-template-id is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule simple-int-type-specifier { 
@@ -2006,130 +4531,347 @@ our class ScopedTemplateId {
 our class SimpleIntTypeSpecifier { 
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
     has ISimpleTypeLengthModifier     @.simple-type-length-modifiers is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule simple-char-type-specifier { <simple-type-signedness-modifier>? <char_> }
 our class SimpleCharTypeSpecifier { 
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule simple-char16-type-specifier { <simple-type-signedness-modifier>? <char16> }
 our class SimpleChar16TypeSpecifier { 
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule simple-char32-type-specifier { <simple-type-signedness-modifier>? <char32> }
 our class SimpleChar32TypeSpecifier { 
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule simple-wchar-type-specifier { <simple-type-signedness-modifier>? <wchar> }
 our class SimpleWcharTypeSpecifier { 
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule simple-double-type-specifier { <simple-type-length-modifier>? <double> } #------------------------------
 our class SimpleDoubleTypeSpecifier { 
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex simple-type-specifier:sym<int> { <simple-int-type-specifier> }
 our class SimpleTypeSpecifier::Int_ does ISimpleTypeSpecifier {
     has SimpleIntTypeSpecifier $.simple-int-type-specifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex simple-type-specifier:sym<full> { <full-type-name> }
 our class SimpleTypeSpecifier::Full does ISimpleTypeSpecifier {
     has FullTypeName $.full-type-name is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex simple-type-specifier:sym<scoped> { <scoped-template-id> }
 our class SimpleTypeSpecifier::Scoped does ISimpleTypeSpecifier {
     has ScopedTemplateId $.scoped-template-id is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex simple-type-specifier:sym<signedness-mod> { <simple-type-signedness-modifier> }
 our class SimpleTypeSpecifier::SignednessMod does ISimpleTypeSpecifier {
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex simple-type-specifier:sym<signedness-mod-length> { <simple-type-signedness-modifier>? <simple-type-length-modifier>+ }
 our class SimpleTypeSpecifier::SignednessModLength does ISimpleTypeSpecifier {
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
     has ISimpleTypeLengthModifier     @.simple-type-length-modifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex simple-type-specifier:sym<char> { <simple-char-type-specifier> }
 our class SimpleTypeSpecifier::Char does ISimpleTypeSpecifier {
     has SimpleCharTypeSpecifier $.simple-char-type-specifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex simple-type-specifier:sym<char16> { <simple-char16-type-specifier> }
 our class SimpleTypeSpecifier::Char16 does ISimpleTypeSpecifier {
     has SimpleChar16TypeSpecifier $.simple-char16-type-specifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex simple-type-specifier:sym<char32> { <simple-char32-type-specifier> }
 our class SimpleTypeSpecifier::Char32 does ISimpleTypeSpecifier {
     has SimpleChar32TypeSpecifier $.simple-char32-type-specifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex simple-type-specifier:sym<wchar> { <simple-wchar-type-specifier> }
 our class SimpleTypeSpecifier::Wchar does ISimpleTypeSpecifier {
     has SimpleWcharTypeSpecifier $.simple-wchar-type-specifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex simple-type-specifier:sym<bool> { <bool_> }
-our class SimpleTypeSpecifier::Bool does ISimpleTypeSpecifier { }
+our class SimpleTypeSpecifier::Bool does ISimpleTypeSpecifier {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # regex simple-type-specifier:sym<float> { <float> }
-our class SimpleTypeSpecifier::Float does ISimpleTypeSpecifier { }
+our class SimpleTypeSpecifier::Float does ISimpleTypeSpecifier { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # regex simple-type-specifier:sym<double> { <simple-double-type-specifier> }
 our class SimpleTypeSpecifier::Double does ISimpleTypeSpecifier {
     has SimpleDoubleTypeSpecifier $.simple-double-type-specifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # regex simple-type-specifier:sym<void> { <void_> }
-our class SimpleTypeSpecifier::Void does ISimpleTypeSpecifier { }
+our class SimpleTypeSpecifier::Void does ISimpleTypeSpecifier { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # regex simple-type-specifier:sym<auto> { <auto> }
-our class SimpleTypeSpecifier::Auto does ISimpleTypeSpecifier { }
+our class SimpleTypeSpecifier::Auto does ISimpleTypeSpecifier { 
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # regex simple-type-specifier:sym<decltype> { <decltype-specifier> } #------------------------------
 our class SimpleTypeSpecifier::Decltype does ISimpleTypeSpecifier {
     has DecltypeSpecifier $.decltype-specifier is required;
-}
+    has $.text;
 
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule the-type-name:sym<simple-template-id> { <simple-template-id> }
 our class TheTypeName::SimpleTemplateId does ITheTypeName {
     has SimpleTemplateId $.simple-template-id is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule the-type-name:sym<class> { <class-name> }
 our class TheTypeName::Class does ITheTypeName {
     has IClassName $.class-name is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule the-type-name:sym<enum> { <enum-name> }
 our class TheTypeName::Enum does ITheTypeName {
     has EnumName $.enum-name is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule the-type-name:sym<typedef> { <typedef-name> } #------------------------------
 our class TheTypeName::Typedef does ITheTypeName {
     has TypedefName $.typedef-name is required;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule decltype-specifier-body:sym<expr> { <expression> }
 our class DecltypeSpecifierBody::Expr does IDecltypeSpecifierBody {
     has IExpression $.expression is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule decltype-specifier-body:sym<auto> { <auto> }
-our class DecltypeSpecifierBody::Auto does IDecltypeSpecifierBody { }
+our class DecltypeSpecifierBody::Auto does IDecltypeSpecifierBody {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule decltype-specifier { 
 #   <decltype> 
@@ -2139,900 +4881,73 @@ our class DecltypeSpecifierBody::Auto does IDecltypeSpecifierBody { }
 # } #------------------------------
 our class DecltypeSpecifier { 
     has IDecltypeSpecifierBody $.decltype-specifier-body is required;
-}
 
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule elaborated-type-specifier:sym<class-ident> { <.class-key> <attribute-specifier-seq>? <nested-name-specifier>? <identifier> }
 our class ElaboratedTypeSpecifier::ClassIdent does IElaboratedTypeSpecifier {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
     has INestedNameSpecifier   $.nested-name-specifier;
     has Identifier            $.identifier is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule elaborated-type-specifier:sym<class-template-id> { <.class-key> <simple-template-id> }
 our class ElaboratedTypeSpecifier::ClassTemplateId does IElaboratedTypeSpecifier {
     has SimpleTemplateId $.simple-template-id is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule elaborated-type-specifier:sym<class-nested-template-id> { <.class-key> <nested-name-specifier> <template>? <simple-template-id> }
 our class ElaboratedTypeSpecifier::ClassNestedTemplateId does IElaboratedTypeSpecifier {
     has INestedNameSpecifier $.nested-name-specifier is required;
     has SimpleTemplateId    $.simple-template-id is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 # rule elaborated-type-specifier:sym<enum> { <.enum_> <nested-name-specifier>? <identifier> } #------------------------------
 our class ElaboratedTypeSpecifier::Enum does IElaboratedTypeSpecifier {
     has INestedNameSpecifier $.nested-name-specifier;
     has Identifier          $.identifier is required;
-}
 
-# rule enum-name { <identifier> }
-our class EnumName { 
-    has Identifier $.identifier is required;
-}
+    has $.text;
 
-# rule enum-specifier { 
-#   <enum-head> 
-#   <.left-brace> 
-#   [ <enumerator-list> <.comma>? ]? 
-#   <.right-brace> 
-# }
-our class EnumSpecifier { 
-    has EnumeratorList $.enumerator-list;
-}
-
-# rule enum-head { 
-#   <.enumkey> 
-#   <attribute-specifier-seq>? 
-#   [ <nested-name-specifier>? <identifier> ]? 
-#   <enumbase>? 
-# }
-our class EnumHead { 
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has INestedNameSpecifier   $.nested-name-specifier;
-    has Identifier            $.identifier;
-    has IEnumBase              $.enum-base;
-}
-
-# rule opaque-enum-declaration { 
-#   <.enumkey> 
-#   <attribute-specifier-seq>? 
-#   <identifier> 
-#   <enumbase>? 
-#   <semi> 
-# }
-our class OpaqueEnumDeclaration { 
-    has IComment               $.comment;
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has Identifier             $.identifier is required;
-    has IEnumBase              $.enum-base is required;
-}
-
-# rule enumkey { <enum_> [ <class_> || <struct> ]? }
-our class Enumkey { }
-
-# rule enumbase { <colon> <type-specifier-seq> }
-our class Enumbase { 
-    has ITypeSpecifierSeq $.type-specifier-seq is required;
-}
-
-# rule enumerator-list { <enumerator-definition> [ <.comma> <enumerator-definition> ]* }
-our class EnumeratorList { 
-    has EnumeratorDefinition @.enumerator-definitions is required;
-}
-
-# rule enumerator-definition { <enumerator> [ <assign> <constant-expression> ]? }
-our class EnumeratorDefinition { 
-    has Enumerator          $.enumerator is required;
-    has IConstantExpression $.constant-expression;
-}
-
-# rule enumerator { <identifier> }
-our class Enumerator { 
-    has Identifier $.identifier is required;
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
 }
 
 #-----------------------
-
-# rule namespace-name:sym<original> { <original-namespace-name> }
-our class NamespaceName::Original does INamespaceName {
-    has OriginalNamespaceName $.original-namespace-name is required;
-}
-
-# rule namespace-name:sym<alias> { <namespace-alias> }
-our class NamespaceName::Alias does INamespaceName {
-    has NamespaceAlias $.namespace-alias is required;
-}
-
-# rule original-namespace-name { <identifier> } #--------------------
-our class OriginalNamespaceName { 
-    has Identifier $.identifier is required;
-}
-
-
-# rule namespace-tag:sym<ident> { <identifier> }
-our class NamespaceTag::Ident does INamespaceTag {
-    has Identifier $.identifier is required;
-}
-
-# rule namespace-tag:sym<ns-name> { <original-namespace-name> } #--------------------
-our class NamespaceTag::NsName does INamespaceTag {
-    has OriginalNamespaceName $.original-namespace-name is required;
-}
-
-# rule namespace-definition { 
-#   <inline>? 
-#   <namespace> 
-#   <namespace-tag>? 
-#   <.left-brace> 
-#   <namespaceBody=declarationseq>? 
-#   <.right-brace> 
-# }
-our class NamespaceDefinition { 
-    has Bool           $.inline is required;
-    has INamespaceTag   $.namespace-tag;
-    has IDeclarationseq $.namespace-body;
-}
-
-# rule namespace-alias { <identifier> }
-our class NamespaceAlias { 
-    has Identifier $.identifier is required;
-}
-
-# rule namespace-alias-definition { <namespace> <identifier> <assign> <qualifiednamespacespecifier> <semi> }
-our class NamespaceAliasDefinition { 
-    has IComment                    $.comment;
-    has Identifier                  $.identifier is required;
-    has Qualifiednamespacespecifier $.qualifiednamespacespecifier is required;
-}
-
-# rule qualifiednamespacespecifier { <nested-name-specifier>? <namespace-name> } #--------------------
-our class Qualifiednamespacespecifier { 
-    has INestedNameSpecifier $.nested-name-specifier;
-    has INamespaceName       $.namespace-name is required;
-}
-
-
-# rule using-declaration-prefix:sym<nested> { [ <typename_>? <nested-name-specifier> ] }
-our class UsingDeclarationPrefix::Nested does IUsingDeclarationPrefix {
-    has INestedNameSpecifier $.nested-name-specifier is required;
-}
-
-# rule using-declaration-prefix:sym<base> { <doublecolon> } #--------------------
-our class UsingDeclarationPrefix::Base does IUsingDeclarationPrefix { }
-
-# rule using-declaration { <using> <using-declaration-prefix> <unqualified-id> <semi> }
-our class UsingDeclaration { 
-    has IComment                $.comment;
-    has IUsingDeclarationPrefix $.using-declaration-prefix is required;
-    has IUnqualifiedId          $.unqualified-id is required;
-}
-
-# rule using-directive { 
-#   <attribute-specifier-seq>? 
-#   <using> 
-#   <namespace> 
-#   <nested-name-specifier>? 
-#   <namespace-name> 
-#   <semi> 
-# }
-our class UsingDirective { 
-    has IComment               $.comment;
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has INestedNameSpecifier    $.nested-name-specifier;
-    has INamespaceName         $.namespace-name is required;
-}
-
-# rule asm-definition { 
-#   <asm> 
-#   <.left-paren> 
-#   <string-literal> 
-#   <.right-paren> 
-#   <.semi> 
-# } #--------------------
-our class AsmDefinition { 
-    has IComment      $.comment;
-    has StringLiteral $.string-literal is required;
-}
-
-
-# rule linkage-specification-body:sym<seq> { <.left-brace> <declarationseq>? <.right-brace> }
-our class LinkageSpecificationBody::Seq does ILinkageSpecificationBody {
-    has IDeclarationseq $.declarationseq;
-}
-
-# rule linkage-specification-body:sym<decl> { <declaration> }
-our class LinkageSpecificationBody::Decl does ILinkageSpecificationBody {
-    has IDeclaration $.declaration is required;
-}
-
-# rule linkage-specification { 
-#   <extern> 
-#   <string-literal> 
-#   <linkage-specification-body> 
-# }
-our class LinkageSpecification { 
-    has StringLiteral            $.string-literal is required;
-    has ILinkageSpecificationBody $.linkage-specification-body is required;
-}
-
-# rule attribute-specifier-seq { <attribute-specifier>+ } #--------------------
-our class AttributeSpecifierSeq { 
-    has IAttributeSpecifier @.attribute-specifier is required;
-}
-
-
-# rule attribute-specifier:sym<double-braced> { 
-#   <.left-bracket> 
-#   <.left-bracket> 
-#   <attribute-list>? 
-#   <.right-bracket> 
-#   <.right-bracket> 
-# }
-our class AttributeSpecifier::DoubleBraced does IAttributeSpecifier {
-    has AttributeList $.attribute-list;
-}
-
-# rule attribute-specifier:sym<alignment> { <alignmentspecifier> } #--------------------
-our class AttributeSpecifier::Alignment does IAttributeSpecifier {
-    has IAlignmentSpecifier $.alignmentspecifier is required;
-}
-
-
-# rule alignmentspecifierbody:sym<type-id> { <the-type-id> }
-our class Alignmentspecifierbody::TypeId does IAlignmentspecifierbody {
-    has ITheTypeId $.the-type-id is required;
-}
-
-# rule alignmentspecifierbody:sym<const-expr> { <constant-expression> } #--------------------
-our class Alignmentspecifierbody::ConstExpr does IAlignmentspecifierbody {
-    has IConstantExpression $.constant-expression is required;
-}
-
-# rule alignmentspecifier { 
-#   <alignas> 
-#   <.left-paren> 
-#   <alignmentspecifierbody> 
-#   <ellipsis>? 
-#   <.right-paren> 
-# }
-our class Alignmentspecifier 
-does IAttributeSpecifier
-{ 
-    has IAlignmentspecifierbody $.alignmentspecifierbody is required;
-    has Bool                    $.has-ellipsis is required;
-}
-
-# rule attribute-list { <attribute> [ <.comma> <attribute> ]* <ellipsis>? }
-our class AttributeList { 
-    has Attribute @.attributes is required;
-    has Bool      $.has-ellipsis is required;
-}
-
-# rule attribute { 
-#   [ <attribute-namespace> <doublecolon> ]? 
-#   <identifier> 
-#   <attribute-argument-clause>? 
-# }
-our class Attribute { 
-    has AttributeNamespace      $.attribute-namespace;
-    has Identifier              $.identifier is required;
-    has AttributeArgumentClause $.attribute-argument-clause;
-}
-
-# rule attribute-namespace { <identifier> }
-our class AttributeNamespace { 
-    has Identifier $.identifier is required;
-}
-
-# rule attribute-argument-clause { <.left-paren> <balanced-token-seq>? <.right-paren> }
-our class AttributeArgumentClause { 
-    has BalancedTokenSeq $.balanced-token-seq;
-}
-
-# rule balanced-token-seq { <balancedrule>+ } #--------------------------
-our class BalancedTokenSeq { 
-    has IBalancedrule @.balancedrules is required;
-}
-
-
-# rule balancedrule:sym<parens> { 
-#   <.left-paren> 
-#   <balanced-token-seq> 
-#   <.right-paren> 
-# }
-our class Balancedrule::Parens does IBalancedrule {
-    has BalancedTokenSeq $.balanced-token-seq is required;
-}
-
-# rule balancedrule:sym<brackets> { <.left-bracket> <balanced-token-seq> <.right-bracket> }
-our class Balancedrule::Brackets does IBalancedrule {
-    has BalancedTokenSeq $.balanced-token-seq is required;
-}
-
-# rule balancedrule:sym<braces> { <.left-brace> <balanced-token-seq> <.right-brace> } #--------------------------
-our class Balancedrule::Braces does IBalancedrule {
-    has BalancedTokenSeq $.balanced-token-seq is required;
-}
-
-# rule init-declarator { <declarator> <initializer>? } #--------------------------
-our class InitDeclarator does IInitDeclarator { 
-    has IDeclarator  $.declarator is required;
-    has IInitializer $.initializer;
-}
-
-
-# rule declarator:sym<ptr> { <pointer-declarator> }
-our class Declarator::Ptr does IDeclarator {
-    has PointerDeclarator $.pointer-declarator is required;
-}
-
-# rule declarator:sym<no-ptr> { <no-pointer-declarator> <parameters-and-qualifiers> <trailing-return-type> }
-our class Declarator::NoPtr does IDeclarator {
-    has INoPointerDeclarator    $.no-pointer-declarator     is required;
-    has ParametersAndQualifiers $.parameters-and-qualifiers is required;
-    has TrailingReturnType      $.trailing-return-type      is required;
-}
-
-
-# rule pointer-declarator { <augmented-pointer-operator>* <no-pointer-declarator> }
-our class PointerDeclarator does IDeclarator { 
-    has IAugmentedPointerOperator @.augmented-pointer-operators;
-    has INoPointerDeclarator      $.no-pointer-declarator is required;
-}
-
-# rule augmented-pointer-operator { <pointer-operator> <const>? }
-our class AugmentedPointerOperator does IAugmentedPointerOperator { 
-    has IPointerOperator $.pointer-operator is required;
-    has Bool            $.const            is required;
-}
-
-
-# rule no-pointer-declarator-base:sym<base> { <declaratorid> <attribute-specifier-seq>? }
-our class NoPointerDeclaratorBase::Base does INoPointerDeclaratorBase {
-    has Declaratorid           $.declaratorid is required;
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-}
-
-# rule no-pointer-declarator-base:sym<parens> { <.left-paren> <pointer-declarator> <.right-paren> }
-our class NoPointerDeclaratorBase::Parens does INoPointerDeclaratorBase {
-    has PointerDeclarator $.pointer-declarator is required;
-}
-
-
-# rule no-pointer-declarator-tail:sym<basic> { <parameters-and-qualifiers> }
-our class NoPointerDeclaratorTail::Basic does INoPointerDeclaratorTail {
-    has ParametersAndQualifiers $.parameters-and-qualifiers is required;
-}
-
-# rule no-pointer-declarator-tail:sym<bracketed> { 
-#   <.left-bracket> 
-#   <constant-expression>? 
-#   <.right-bracket> 
-#   <attribute-specifier-seq>? 
-# } #------------------------------
-our class NoPointerDeclaratorTail::Bracketed does INoPointerDeclaratorTail {
-    has IConstantExpression    $.constant-expression;
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-}
-
-
-# rule no-pointer-declarator { 
-#   <no-pointer-declarator-base> 
-#   <no-pointer-declarator-tail>* 
-# } #------------------------------
-our class NoPointerDeclarator 
-does INoPointerDeclarator
-does IInitDeclarator
-does IDeclarator { 
-    has INoPointerDeclaratorBase $.no-pointer-declarator-base is required;
-    has INoPointerDeclaratorTail @.no-pointer-declarator-tail;
-}
-
-# rule parameters-and-qualifiers { 
-#   <.left-paren> 
-#   <parameter-declaration-clause>? 
-#   <.right-paren> 
-#   <cvqualifierseq>? 
-#   <refqualifier>? 
-#   <exception-specification>? 
-#   <attribute-specifier-seq>? 
-# }
-our class ParametersAndQualifiers 
-does INoPointerDeclaratorTail
-{
-    has ParameterDeclarationClause $.parameter-declaration-clause;
-    has Cvqualifierseq             $.cvqualifierseq;
-    has IRefqualifier               $.refqualifier;
-    has IExceptionSpecification     $.exception-specification;
-    has IAttributeSpecifierSeq      $.attribute-specifier-seq;
-}
-
-# rule trailing-return-type { 
-#   <arrow> 
-#   <trailing-type-specifier-seq> 
-#   <abstract-declarator>? 
-# }
-our class TrailingReturnType { 
-    has TrailingTypeSpecifierSeq $.trailing-type-specifier-seq is required;
-    has IAbstractDeclarator      $.abstract-declarator;
-}
-
-
-# rule pointer-operator:sym<ref> { <and_> <attribute-specifier-seq>? }
-our class PointerOperator::Ref does IPointerOperator {
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-}
-
-# rule pointer-operator:sym<ref-ref> { <and-and> <attribute-specifier-seq>? }
-our class PointerOperator::RefRef does IPointerOperator {
-    has IAndAnd $.and-and is required;
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-}
-
-# rule pointer-operator:sym<star> { <nested-name-specifier>? <star> <attribute-specifier-seq>? <cvqualifierseq>? }
-our class PointerOperator::Star does IPointerOperator {
-    has INestedNameSpecifier   $.nested-name-specifier;
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has Cvqualifierseq        $.cvqualifierseq;
-}
-
-# rule cvqualifierseq { <cv-qualifier>+ } #-----------------------------
-our class Cvqualifierseq { 
-    has ICvQualifier @.cv-qualifiers;
-}
-
-
-# rule cv-qualifier:sym<const> { <const> }
-our class CvQualifier::Const does ICvQualifier { }
-
-# rule cv-qualifier:sym<volatile> { <volatile> } #-----------------------------
-our class CvQualifier::Volatile does ICvQualifier { }
-
-
-# rule refqualifier:sym<and> { <and_> }
-our class Refqualifier::And does IRefqualifier { }
-
-# rule refqualifier:sym<and-and> { <and-and> } #-----------------------------
-our class Refqualifier::AndAnd does IRefqualifier { }
-
-# rule declaratorid { <ellipsis>? <id-expression> }
-our class Declaratorid 
-does INoPointerDeclaratorBase { 
-    has Bool         $.has-ellipsis  is required;
-    has IIdExpression $.id-expression is required;
-}
-
-# rule the-type-id { <type-specifier-seq> <abstract-declarator>? } #-----------------------------
-our class TheTypeId 
-does ITheTypeId
-does ITemplateArgument { 
-    has ITypeSpecifierSeq   $.type-specifier-seq is required;
-    has IAbstractDeclarator $.abstract-declarator;
-}
-
-
-# rule abstract-declarator:sym<base> { <pointer-abstract-declarator> }
-our class AbstractDeclarator::Base does IAbstractDeclarator {
-    has IPointerAbstractDeclarator $.pointer-abstract-declarator is required;
-}
-
-# rule abstract-declarator:sym<aug> { <no-pointer-abstract-declarator>? <parameters-and-qualifiers> <trailing-return-type> }
-our class AbstractDeclarator::Aug does IAbstractDeclarator {
-    has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator;
-    has ParametersAndQualifiers $.parameters-and-qualifiers is required;
-    has TrailingReturnType $.trailing-return-type is required;
-}
-
-# rule abstract-declarator:sym<abstract-pack> { <abstract-pack-declarator> } #-----------------------------
-our class AbstractDeclarator::AbstractPack does IAbstractDeclarator {
-    has AbstractPackDeclarator $.abstract-pack-declarator is required;
-}
-
-
-# rule pointer-abstract-declarator:sym<no-ptr> { <no-pointer-abstract-declarator> }
-our class PointerAbstractDeclarator::NoPtr does IPointerAbstractDeclarator {
-    has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator is required;
-}
-
-# rule pointer-abstract-declarator:sym<ptr> { 
-#   <pointer-operator>+ 
-#   <no-pointer-abstract-declarator>? 
-# } #-----------------------------
-our class PointerAbstractDeclarator::Ptr does IPointerAbstractDeclarator {
-    has IPointerOperator @.pointer-operators is required;
-    has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator;
-}
-
-
-# rule no-pointer-abstract-declarator-body:sym<base> { <parameters-and-qualifiers> }
-our class NoPointerAbstractDeclaratorBody::Base does INoPointerAbstractDeclaratorBody {
-    has ParametersAndQualifiers $.parameters-and-qualifiers is required;
-}
-
-# rule no-pointer-abstract-declarator-body:sym<brack> { <no-pointer-abstract-declarator> <no-pointer-abstract-declarator-bracketed-base> }
-our class NoPointerAbstractDeclaratorBody::Brack does INoPointerAbstractDeclaratorBody {
-    has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator is required;
-    has NoPointerAbstractDeclaratorBracketedBase $.no-pointer-abstract-declarator-bracketed-base is required;
-}
-
-# rule no-pointer-abstract-declarator { 
-#   <no-pointer-abstract-declarator-base> 
-#   <no-pointer-abstract-declarator-body>* 
-# } #-----------------------------
-our class NoPointerAbstractDeclarator { 
-    has INoPointerAbstractDeclaratorBase  $.no-pointer-abstract-declarator-base is required;
-    has INoPointerAbstractDeclaratorBody @.no-pointer-abstract-declarator-body is required;
-}
-
-
-# rule no-pointer-abstract-declarator-base:sym<basic> { <parameters-and-qualifiers> }
-our class NoPointerAbstractDeclaratorBase::Basic does INoPointerAbstractDeclaratorBase {
-    has ParametersAndQualifiers $.parameters-and-qualifiers is required;
-}
-
-# rule no-pointer-abstract-declarator-base:sym<bracketed> { <no-pointer-abstract-declarator-bracketed-base> }
-our class NoPointerAbstractDeclaratorBase::Bracketed does INoPointerAbstractDeclaratorBase {
-    has NoPointerAbstractDeclaratorBracketedBase $.no-pointer-abstract-declarator-bracketed-base is required;
-}
-
-# rule no-pointer-abstract-declarator-base:sym<parenthesized> { <.left-paren> <pointer-abstract-declarator> <.right-paren> }
-our class NoPointerAbstractDeclaratorBase::Parenthesized does INoPointerAbstractDeclaratorBase {
-    has IPointerAbstractDeclarator $.pointer-abstract-declarator is required;
-}
-
-# rule no-pointer-abstract-declarator-bracketed-base { 
-# <.left-bracket> 
-# <constant-expression>? 
-# <.right-bracket> 
-# <attribute-specifier-seq>? }
-our class NoPointerAbstractDeclaratorBracketedBase { 
-    has IConstantExpression    $.constant-expression;
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-}
-
-# rule abstract-pack-declarator { 
-#   <pointer-operator>* 
-#   <no-pointer-abstract-pack-declarator> 
-# } #-----------------------------
-our class AbstractPackDeclarator { 
-    has IPointerOperator                 @.pointer-operators is required;
-    has NoPointerAbstractPackDeclarator $.no-pointer-abstract-pack-declarator is required;
-}
-
-# rule no-pointer-abstract-pack-declarator-basic { <parameters-and-qualifiers> }
-our class NoPointerAbstractPackDeclaratorBasic { 
-    has ParametersAndQualifiers $.parameters-and-qualifiers is required;
-}
-
-# rule no-pointer-abstract-pack-declarator-brackets { 
-#   <.left-bracket> 
-#   <constant-expression>? 
-#   <.right-bracket> 
-#   <attribute-specifier-seq>? 
-# } #-----------------------------
-our class NoPointerAbstractPackDeclaratorBrackets { 
-    has IConstantExpression    $.constant-expression;
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-}
-
-
-# rule no-pointer-abstract-pack-declarator-body:sym<basic> { 
-#   <no-pointer-abstract-pack-declarator-basic> 
-# }
-our class NoPointerAbstractPackDeclaratorBody::Basic does INoPointerAbstractPackDeclaratorBody {
-    has NoPointerAbstractPackDeclaratorBasic $.no-pointer-abstract-pack-declarator-basic is required;
-}
-
-# rule no-pointer-abstract-pack-declarator-body:sym<brack> { 
-#   <no-pointer-abstract-pack-declarator-brackets> 
-# } #-----------------------------
-our class NoPointerAbstractPackDeclaratorBody::Brack does INoPointerAbstractPackDeclaratorBody {
-    has NoPointerAbstractPackDeclaratorBrackets $.no-pointer-abstract-pack-declarator-brackets is required;
-}
-
-# rule no-pointer-abstract-pack-declarator { 
-#   <ellipsis> 
-#   <no-pointer-abstract-pack-declarator-body>* 
-# }
-our class NoPointerAbstractPackDeclarator { 
-    has INoPointerAbstractPackDeclaratorBody @.no-pointer-abstract-pack-declarator-bodies is required;
-}
-
-# rule parameter-declaration-clause { 
-#   <parameter-declaration-list> 
-#   [ <.comma>? <ellipsis> ]? 
-# }
-# rule parameter-declaration-list { 
-#   <parameter-declaration> 
-#   [ <.comma> <parameter-declaration> ]* 
-# } #-----------------------------
-our class ParameterDeclarationClause { 
-    has ParameterDeclaration @.parameter-declaration-list is required;
-    has Bool                 $.has-ellipsis is required;
-}
-
-# rule parameter-declaration-body:sym<decl> { <declarator> }
-our class ParameterDeclarationBody::Decl does IParameterDeclarationBody {
-    has IDeclarator $.declarator is required;
-}
-
-# rule parameter-declaration-body:sym<abst> { <abstract-declarator>? }
-our class ParameterDeclarationBody::Abst does IParameterDeclarationBody {
-    has IAbstractDeclarator $.abstract-declarator;
-}
-
-# rule parameter-declaration { 
-#   <attribute-specifier-seq>? 
-#   <decl-specifier-seq> 
-#   <parameter-declaration-body> 
-#   [ <assign> <initializer-clause> ]? 
-# }
-our class ParameterDeclaration { 
-    has IAttributeSpecifierSeq    $.attribute-specifier-seq;
-    has IDeclSpecifierSeq         $.decl-specifier-seq is required;
-    has IParameterDeclarationBody $.parameter-declaration-body is required;
-    has IInitializerClause        $.initializer-clause;
-}
-
-# rule function-definition { 
-#   <attribute-specifier-seq>? 
-#   <decl-specifier-seq>? 
-#   <declarator> 
-#   <virtual-specifier-seq>? 
-#   <function-body> 
-# } #-----------------------------
-our class FunctionDefinition { 
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has IDeclSpecifierSeq       $.decl-specifier-seq;
-    has IDeclarator            $.declarator is required;
-    has VirtualSpecifierSeq    $.virtual-specifier-seq;
-    has IFunctionBody          $.function-body is required;
-}
-
-
-# rule function-body:sym<compound> { 
-#   <constructor-initializer>? 
-#   <compound-statement> 
-# }
-our class FunctionBody::Compound does IFunctionBody {
-    has ConstructorInitializer $.constructor-initializer;
-    has CompoundStatement      $.compound-statement is required;
-}
-
-# rule function-body:sym<try> { <function-try-block> }
-our class FunctionBody::Try does IFunctionBody {
-    has FunctionTryBlock $.function-try-block is required;
-}
-
-# rule function-body:sym<assign-default> { <assign> <default_> <semi> }
-our class FunctionBody::AssignDefault does IFunctionBody { 
-    has IComment      $.comment;
-}
-
-# rule function-body:sym<assign-delete> { <assign> <delete> <semi> }
-our class FunctionBody::AssignDelete does IFunctionBody { 
-    has IComment      $.comment;
-}
-
-
-# rule initializer:sym<brace-or-eq> { <brace-or-equal-initializer> }
-our class Initializer::BraceOrEq does IInitializer {
-    has IBraceOrEqualInitializer $.brace-or-equal-initializer is required;
-}
-
-our class Initializer does IInitializer {
-    has $.value is required;
-}
-
-# rule initializer:sym<paren-expr-list> { 
-#   <.left-paren> 
-#   <expression-list> 
-#   <.right-paren> 
-# } #-----------------------------
-our class Initializer::ParenExprList does IInitializer {
-    has ExpressionList $.expression-list is required;
-}
-
-
-# rule brace-or-equal-initializer:sym<assign-init> { <assign> <initializer-clause> }
-our class BraceOrEqualInitializer::AssignInit does IBraceOrEqualInitializer {
-    has IInitializerClause $.initializer-clause is required;
-}
-
-# rule brace-or-equal-initializer:sym<braced-init-list> { <braced-init-list> }
-our class BraceOrEqualInitializer::BracedInitList does IBraceOrEqualInitializer {
-    has BracedInitList $.braced-init-list is required;
-}
-
-
-# rule initializer-clause:sym<assignment> { <comment>? <assignment-expression> }
-our class InitializerClause::Assignment
-does IInitializerClause {
-    has IComment              $.comment;
-    has IAssignmentExpression $.assignment-expression is required;
-}
-
-# rule initializer-clause:sym<braced> { <comment>? <braced-init-list> } #-----------------------------
-our class InitializerClause::Braced
-does IInitializerClause {
-    has IComment       $.comment;
-    has BracedInitList $.braced-init-list is required;
-}
-
-# rule initializer-list { 
-#   <initializer-clause> 
-#   <ellipsis>? 
-#   [ <.comma> <initializer-clause> <ellipsis>? ]* 
-# }
-our class InitializerList 
-does IInitializerClause
-does IPostfixExpressionTail { 
-    has IInitializerClause @.clauses is required;
-}
-
-# rule braced-init-list { 
-#   <.left-brace> 
-#   [ <initializer-list> <.comma>? ]? 
-#   <.right-brace> 
-# } #-----------------------------
-our class BracedInitList
-does IReturnStatementBody
-does IInitializerClause {
-    has InitializerList $.initializer-list;
-}
-
-
-# rule class-name:sym<id> { <identifier> }
-our class ClassName::Id does IClassName {
-    has Identifier $.identifier is required;
-}
-
-# rule class-name:sym<template-id> { <simple-template-id> }
-our class ClassName::TemplateId does IClassName {
-    has SimpleTemplateId $.simple-template-id is required;
-}
-
-# rule class-specifier { 
-#   <class-head> 
-#   <.left-brace> 
-#   <member-specification>? 
-#   <.right-brace> 
-# } #-----------------------------
-our class ClassSpecifier { 
-    has MemberSpecification $.member-specification;
-}
-
-
-# rule class-head:sym<class> { 
-# <.class-key> 
-# <attribute-specifier-seq>? 
-# [ <class-head-name> <class-virt-specifier>? ]? 
-# <base-clause>? }
-our class ClassHead::Class does IClassHead {
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has ClassHeadName         $.class-head-name;
-    has ClassVirtSpecifier    $.class-virt-specifier;
-    has BaseClause            $.base-clause;
-}
-
-# rule class-head:sym<union> { 
-#   <union> 
-#   <attribute-specifier-seq>? 
-#   [ <class-head-name> <class-virt-specifier>? ]? 
-# } #-----------------------------
-our class ClassHead::Union does IClassHead {
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has ClassHeadName         $.class-head-name;
-    has ClassVirtSpecifier    $.class-virt-specifier;
-}
-
-# rule class-head-name { <nested-name-specifier>? <class-name> }
-our class ClassHeadName { 
-    has INestedNameSpecifier $.nested-name-specifier;
-    has IClassName           $.class-name is required;
-}
-
-# rule class-virt-specifier { <final> } #-----------------------------
-our class ClassVirtSpecifier { }
-
-
-# rule class-key:sym<class> { <.class_> }
-our class ClassKey::Class does IClassKey { }
-
-# rule class-key:sym<struct> { <.struct> } #-----------------------------
-our class ClassKey::Struct does IClassKey { }
-
-
-# rule member-specification-base:sym<decl> { <memberdeclaration> }
-our class MemberSpecificationBase::Decl does IMemberSpecificationBase {
-    has IMemberdeclaration $.memberdeclaration is required;
-}
-
-# rule member-specification-base:sym<access> { <access-specifier> <colon> }
-our class MemberSpecificationBase::Access does IMemberSpecificationBase {
-    has IAccessSpecifier $.access-specifier is required;
-}
-
-# rule member-specification { <member-specification-base>+ }
-our class MemberSpecification { 
-    has IMemberSpecificationBase @.member-specification-bases is required;
-}
-
-
-# rule memberdeclaration:sym<basic> { 
-#   <attribute-specifier-seq>? 
-#   <decl-specifier-seq>? 
-#   <member-declarator-list>? 
-#   <semi> 
-# }
-our class Memberdeclaration::Basic does IMemberdeclaration {
-    has IComment               $.comment;
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has IDeclSpecifierSeq       $.decl-specifier-seq;
-    has MemberDeclaratorList   $.member-declarator-list;
-}
-
-# rule memberdeclaration:sym<func> { <function-definition> }
-our class Memberdeclaration::Func does IMemberdeclaration {
-    has FunctionDefinition $.function-definition is required;
-}
-
-# rule memberdeclaration:sym<using> { <using-declaration> }
-our class Memberdeclaration::Using does IMemberdeclaration {
-    has UsingDeclaration $.using-declaration is required;
-}
-
-# rule memberdeclaration:sym<static-assert> { <static-assert-declaration> }
-our class Memberdeclaration::StaticAssert does IMemberdeclaration {
-    has StaticAssertDeclaration $.static-assert-declaration is required;
-}
-
-# rule memberdeclaration:sym<template> { <template-declaration> }
-our class Memberdeclaration::Template does IMemberdeclaration {
-    has TemplateDeclaration $.template-declaration is required;
-}
-
-# rule memberdeclaration:sym<alias> { <alias-declaration> }
-our class Memberdeclaration::Alias does IMemberdeclaration {
-    has AliasDeclaration $.alias-declaration is required;
-}
-
-# rule memberdeclaration:sym<empty> { <empty-declaration> }
-our class Memberdeclaration::Empty does IMemberdeclaration { }
-
-# rule member-declarator-list { <member-declarator> [ <.comma> <member-declarator> ]* }
-our class MemberDeclaratorList { 
-    has IMemberDeclarator @.member-declarators is required;
-}
-
-
-# rule member-declarator:sym<virt> { <declarator> <virtual-specifier-seq>? <pure-specifier>? }
-our class MemberDeclarator::Virt does IMemberDeclarator {
-    has IDeclarator         $.declarator is required;
-    has VirtualSpecifierSeq $.virtual-specifier-seq;
-    has PureSpecifier       $.pure-specifier;
-}
-
-# rule member-declarator:sym<brace-or-eq> { 
-#   <declarator> 
-#   <brace-or-equal-initializer>? 
-# }
-our class MemberDeclarator::BraceOrEq does IMemberDeclarator {
-    has IDeclarator              $.declarator is required;
-    has IBraceOrEqualInitializer $.brace-or-equal-initializer;
-}
-
-# rule member-declarator:sym<ident> { 
-#   <identifier>? 
-#   <attribute-specifier-seq>? 
-#   <colon> 
-#   <constant-expression> } #-----------------------------
-our class MemberDeclarator::Ident does IMemberDeclarator {
-    has Identifier             $.identifier;
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has IConstantExpression    $.constant-expression is required;
-}
 
 # rule virtual-specifier-seq { <virtual-specifier>+ } #-----------------------------
 our class VirtualSpecifierSeq { 
