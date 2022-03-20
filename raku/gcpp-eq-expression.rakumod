@@ -56,3 +56,39 @@ our class EqualityExpression does IEqualityExpression {
         exit;
     }
 }
+
+our role EqualityExpression::Actions {
+
+    # token equality-operator:sym<eq> { <equal> }
+    method equality-operator:sym<eq>($/) {
+        make EqualityOperator::Eq.new
+    }
+
+    # token equality-operator:sym<neq> { <not-equal> } 
+    method equality-operator:sym<neq>($/) {
+        make EqualityOperator::Neq.new
+    }
+
+    # rule equality-expression-tail { <equality-operator> <relational-expression> }
+    method equality-expression-tail($/) {
+        make EqualityExpressionTail.new(
+            equality-operator     => $<equality-operator>.made,
+            relational-expression => $<relational-expression>.made,
+        )
+    }
+
+    # rule equality-expression { <relational-expression> <equality-expression-tail>* }
+    method equality-expression($/) {
+        my $base = $<relational-expression>.made;
+        my @tail = $<equality-expression-tail>>>.made.List;
+
+        if @tail.elems gt 0 {
+            make EqualityExpression.new(
+                relational-expression    => $base,
+                equality-expression-tail => @tail,
+            )
+        } else {
+            make $base
+        }
+    }
+}

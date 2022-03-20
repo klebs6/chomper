@@ -177,3 +177,95 @@ our class Hexadecimalescapesequence {
         exit;
     }
 }
+
+our role Escape::Actions {
+
+    # token escapesequence:sym<simple> { <simpleescapesequence> }
+    method escapesequence:sym<simple>($/) {
+        make $<simpleescapesequence>.made
+    }
+
+    # token escapesequence:sym<octal> { <octalescapesequence> }
+    method escapesequence:sym<octal>($/) {
+        make $<octalescapesequence>.made
+    }
+
+    # token escapesequence:sym<hex> { <hexadecimalescapesequence> } 
+    method escapesequence:sym<hex>($/) {
+        make $<hexadecimalescapesequence>.made
+    }
+
+    # token simpleescapesequence:sym<slash> { '\\\'' }
+    method simpleescapesequence:sym<slash>($/) {
+        make Simpleescapesequence::Slash.new
+    }
+
+    # token simpleescapesequence:sym<quote> { '\\"' }
+    method simpleescapesequence:sym<quote>($/) {
+        make Simpleescapesequence::Quote.new
+    }
+
+    # token simpleescapesequence:sym<question> { '\\?' }
+    method simpleescapesequence:sym<question>($/) {
+        make Simpleescapesequence::Question.new
+    }
+
+    # token simpleescapesequence:sym<double-slash> { '\\\\' }
+    method simpleescapesequence:sym<double-slash>($/) {
+        make Simpleescapesequence::DoubleSlash.new
+    }
+
+    # token simpleescapesequence:sym<a> { '\\a' }
+    method simpleescapesequence:sym<a>($/) {
+        make Simpleescapesequence::A.new
+    }
+
+    # token simpleescapesequence:sym<b> { '\\b' }
+    method simpleescapesequence:sym<b>($/) {
+        make Simpleescapesequence::B.new
+    }
+
+    # token simpleescapesequence:sym<f> { '\\f' }
+    method simpleescapesequence:sym<f>($/) {
+        make Simpleescapesequence::F.new
+    }
+
+    # token simpleescapesequence:sym<n> { '\\n' }
+    method simpleescapesequence:sym<n>($/) {
+        make Simpleescapesequence::N.new
+    }
+
+    # token simpleescapesequence:sym<r> { '\\r' }
+    method simpleescapesequence:sym<r>($/) {
+        make Simpleescapesequence::R.new
+    }
+
+    # token simpleescapesequence:sym<t> { '\\t' }
+    method simpleescapesequence:sym<t>($/) {
+        make Simpleescapesequence::T.new
+    }
+
+    # token simpleescapesequence:sym<v> { '\\v' }
+    method simpleescapesequence:sym<v>($/) {
+        make Simpleescapesequence::V.new
+    }
+
+    # token simpleescapesequence:sym<rn-n> { '\\' [ || '\r' '\n'? || '\n' ] } 
+    method simpleescapesequence:sym<rn-n>($/) {
+        make Simpleescapesequence::RnN.new
+    }
+
+    # token octalescapesequence { '\\' [<octaldigit> ** 1..3] }
+    method octalescapesequence($/) {
+        make Octalescapesequence.new(
+            digits => $<octaldigit>>>.made,
+        )
+    }
+
+    # token hexadecimalescapesequence { '\\x' <hexadecimaldigit>+ }
+    method hexadecimalescapesequence($/) {
+        make Hexadecimalescapesequence.new(
+            digits => $<hexadecimaldigit>>>.made,
+        )
+    }
+}

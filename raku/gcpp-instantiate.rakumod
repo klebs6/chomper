@@ -15,3 +15,13 @@ our class ExplicitInstantiation {
         exit;
     }
 }
+
+our role Instantiation::Actions {
+
+    # rule explicit-instantiation { <extern>? <template> <declaration> }
+    method explicit-instantiation($/) {
+        make ExplicitInstantiation.new(
+            declaration => $<declaration>.made,
+        )
+    }
+}

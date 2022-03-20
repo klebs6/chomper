@@ -217,3 +217,115 @@ our class MemberDeclarator::Ident does IMemberDeclarator {
         exit;
     }
 }
+
+our role Member::Actions {
+
+    # rule member-specification-base:sym<decl> { <memberdeclaration> }
+    method member-specification-base:sym<decl>($/) {
+        make $<memberdeclaration>.made
+    }
+
+    # rule member-specification-base:sym<access> { <access-specifier> <colon> }
+    method member-specification-base:sym<access>($/) {
+        make MemberSpecificationBase::Access.new(
+            access-specifier => $<access-specifier>.made,
+        )
+    }
+
+    # rule member-specification { <member-specification-base>+ } 
+    method member-specification($/) {
+        make $<member-specification-base>>>.made
+    }
+
+    # rule memberdeclaration:sym<basic> { 
+    #   <attribute-specifier-seq>? 
+    #   <decl-specifier-seq>? 
+    #   <member-declarator-list>? 
+    #   <semi> 
+    # }
+    method memberdeclaration:sym<basic>($/) {
+        make Memberdeclaration::Basic.new(
+            comment                 => $<semi>.made,
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            decl-specifier-seq      => $<decl-specifier-seq>.made,
+            member-declarator-list  => $<member-declarator-list>.made,
+        )
+    }
+
+    # rule memberdeclaration:sym<func> { <function-definition> }
+    method memberdeclaration:sym<func>($/) {
+        make $<function-definition>.made
+    }
+
+    # rule memberdeclaration:sym<using> { <using-declaration> }
+    method memberdeclaration:sym<using>($/) {
+        make $<using-declaration>.made
+    }
+
+    # rule memberdeclaration:sym<static-assert> { <static-assert-declaration> }
+    method memberdeclaration:sym<static-assert>($/) {
+        make $<static-assert-declaration>.made
+    }
+
+    # rule memberdeclaration:sym<template> { <template-declaration> }
+    method memberdeclaration:sym<template>($/) {
+        make $<template-declaration>.made
+    }
+
+    # rule memberdeclaration:sym<alias> { <alias-declaration> }
+    method memberdeclaration:sym<alias>($/) {
+        make $<alias-declaration>.made
+    }
+
+    # rule memberdeclaration:sym<empty> { <empty-declaration> } 
+    method memberdeclaration:sym<empty>($/) {
+        make Memberdeclaration::Empty.new
+    }
+
+    # rule member-declarator-list { <member-declarator> [ <.comma> <member-declarator> ]* } 
+    method member-declarator-list($/) {
+        make $<member-declarator>>>.made
+    }
+
+    # rule member-declarator:sym<virt> { <declarator> <virtual-specifier-seq>? <pure-specifier>? }
+    method member-declarator:sym<virt>($/) {
+
+        my $base = $<declarator>.made;
+        my $t0   = $<virtual-specifier-seq>.made;
+        my $t1   = $<pure-specifier>.made;
+
+        if $t0 or $t1 {
+            make MemberDeclarator::Virt.new(
+                declarator            => $base,
+                virtual-specifier-seq => $t0,
+                pure-specifier        => $t1,
+            )
+        } else {
+            make $base
+        }
+    }
+
+    # rule member-declarator:sym<brace-or-eq> { <declarator> <brace-or-equal-initializer>? }
+    method member-declarator:sym<brace-or-eq>($/) {
+        my $body = $<declarator>.made;
+        my $tail = $<brace-or-equal-initializer>.made;
+
+        if $tail {
+            make MemberDeclarator::BraceOrEq.new(
+                declarator                 => $body,
+                brace-or-equal-initializer => $tail,
+            )
+        } else {
+            make $body
+        }
+    }
+
+    # rule member-declarator:sym<ident> { <identifier>? <attribute-specifier-seq>? <colon> <constant-expression> } 
+    method member-declarator:sym<ident>($/) {
+        make MemberDeclarator::Ident.new(
+            identifier              => $<identifier>.made,
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            constant-expression     => $<constant-expression>.made,
+        )
+    }
+}

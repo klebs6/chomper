@@ -23,3 +23,15 @@ our class Directive {
     }
 }
 
+our role MultiLineMacro::Actions {
+
+    # token multi-line-macro { '
+    method multi-line-macro($/) {
+        make ~$/
+    }
+
+    # token directive { '
+    method directive($/) {
+        make ~$/
+    }
+}

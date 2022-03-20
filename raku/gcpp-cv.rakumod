@@ -35,3 +35,21 @@ our class CvQualifier::Volatile does ICvQualifier {
         exit;
     }
 }
+
+our role CV::Actions {
+
+    # rule cvqualifierseq { <cv-qualifier>+ } 
+    method cvqualifierseq($/) {
+        make $<cv-qualifier>>>.made
+    }
+
+    # rule cv-qualifier:sym<const> { <const> }
+    method cv-qualifier:sym<const>($/) {
+        make CvQualifier::Const.new
+    }
+
+    # rule cv-qualifier:sym<volatile> { <volatile> } 
+    method cv-qualifier:sym<volatile>($/) {
+        make CvQualifier::Volatile.new
+    }
+}

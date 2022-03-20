@@ -12,3 +12,11 @@ our class TypedefName {
         exit;
     }
 }
+
+our role Typedef::Actions {
+
+    # rule typedef-name { <identifier> } 
+    method typedef-name($/) {
+        make $<identifier>.made
+    }
+}

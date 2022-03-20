@@ -83,3 +83,48 @@ our class RelationalExpression does IRelationalExpression {
     }
 }
 
+our role RelationalExpression::Actions {
+
+    # rule relational-operator:sym<less> { <.less> }
+    method relational-operator:sym<less>($/) {
+        make RelationalOperator::Less.new
+    }
+
+    # rule relational-operator:sym<greater> { <.greater> }
+    method relational-operator:sym<greater>($/) {
+        make RelationalOperator::Greater.new
+    }
+
+    # rule relational-operator:sym<less-eq> { <.less-equal> }
+    method relational-operator:sym<less-eq>($/) {
+        make RelationalOperator::LessEq.new
+    }
+
+    # rule relational-operator:sym<greater-eq> { <.greater-equal> } 
+    method relational-operator:sym<greater-eq>($/) {
+        make RelationalOperator::GreaterEq.new
+    }
+
+    # regex relational-expression-tail { <.ws> <relational-operator> <.ws> <shift-expression> }
+    method relational-expression-tail($/) {
+        make RelationalExpressionTail.new(
+            relational-operator => $<relational-operator>.made,
+            shift-expression    => $<shift-expression>.made,
+        )
+    }
+
+    # regex relational-expression { <shift-expression> <relational-expression-tail>* } 
+    method relational-expression($/) {
+        my $base = $<shift-expression>.made;
+        my @tail = $<relational-expression-tail>>>.made.List;
+
+        if @tail.elems gt 0 {
+            make RelationalExpression.new(
+                shift-expression           => $base,
+                relational-expression-tail => @tail,
+            )
+        } else {
+            make $base
+        }
+    }
+}

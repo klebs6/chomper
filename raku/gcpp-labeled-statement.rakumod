@@ -83,3 +83,61 @@ our class LabeledStatement {
         exit;
     }
 }
+
+our role LabeledStatement::Actions {
+
+    # token statement:sym<labeled> { 
+    #   <comment>? 
+    #   <labeled-statement> 
+    # }
+    method statement:sym<labeled>($/) {
+
+        my $comment = $<comment>.made;
+        my $body    = $<labeled-statement>.made;
+
+        if not $comment {
+
+            make $body
+
+        } else {
+
+            make Statement::Labeled.new(
+                comment           => $comment,
+                labeled-statement => $body,
+            )
+        }
+    }
+
+    # rule labeled-statement-label-body:sym<id> { <identifier> }
+    method labeled-statement-label-body:sym<id>($/) {
+        make $<identifier>.made
+    }
+
+    # rule labeled-statement-label-body:sym<case-expr> { <case> <constant-expression> }
+    method labeled-statement-label-body:sym<case-expr>($/) {
+        make LabeledStatementLabelBody::CaseExpr.new(
+            constant-expression => $<constant-expression>.made,
+        )
+    }
+
+    # rule labeled-statement-label-body:sym<default> { <default_> } 
+    method labeled-statement-label-body:sym<default>($/) {
+        make LabeledStatementLabelBody::Default.new
+    }
+
+    # rule labeled-statement-label { <attribute-specifier-seq>? <labeled-statement-label-body> <colon> }
+    method labeled-statement-label($/) {
+        make LabeledStatementLabel.new(
+            attribute-specifier-seq      => $<attribute-specifier-seq>.made,
+            labeled-statement-label-body => $<labeled-statement-label-body>.made,
+        )
+    }
+
+    # rule labeled-statement { <labeled-statement-label> <statement> }
+    method labeled-statement($/) {
+        make LabeledStatement.new(
+            labeled-statement-label => $<labeled-statement-label>.made,
+            statement               => $<statement>.made,
+        )
+    }
+}

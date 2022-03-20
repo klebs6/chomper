@@ -300,3 +300,153 @@ our class NoPointerAbstractPackDeclarator {
         exit;
     }
 }
+
+our role AbstractDeclarator::Actions {
+
+    # rule abstract-declarator:sym<base> { <pointer-abstract-declarator> }
+    method abstract-declarator:sym<base>($/) {
+        make $<pointer-abstract-declarator>.made
+    }
+
+    # rule abstract-declarator:sym<aug> { <no-pointer-abstract-declarator>? <parameters-and-qualifiers> <trailing-return-type> }
+    method abstract-declarator:sym<aug>($/) {
+        make AbstractDeclarator::Aug.new(
+            no-pointer-abstract-declarator => $<no-pointer-abstract-declarator>.made,
+            parameters-and-qualifiers      => $<parameters-and-qualifiers>.made,
+            trailing-return-type           => $<trailing-return-type>.made,
+        )
+    }
+
+    # rule abstract-declarator:sym<abstract-pack> { <abstract-pack-declarator> } 
+    method abstract-declarator:sym<abstract-pack>($/) {
+        make $<abstract-pack-declarator>.made
+    }
+
+    # rule pointer-abstract-declarator:sym<no-ptr> { <no-pointer-abstract-declarator> }
+    method pointer-abstract-declarator:sym<no-ptr>($/) {
+        make $<no-pointer-abstract-declarator>.made
+    }
+
+    # rule pointer-abstract-declarator:sym<ptr> { <pointer-operator>+ <no-pointer-abstract-declarator>? } 
+    method pointer-abstract-declarator:sym<ptr>($/) {
+        my @ops  = $<pointer-operator>>>.made;
+        my $tail = $<no-pointer-abstract-declarator>.made;
+
+        if $tail or @ops.elems gt 1 {
+            make PointerAbstractDeclarator::Ptr.new(
+                pointer-operators              => @ops,
+                no-pointer-abstract-declarator => $tail,
+            )
+        } else {
+            make @ops[0]
+        }
+    }
+
+    # rule no-pointer-abstract-declarator-body:sym<base> { <parameters-and-qualifiers> }
+    method no-pointer-abstract-declarator-body:sym<base>($/) {
+        make $<parameters-and-qualifiers>.made
+    }
+
+    # rule no-pointer-abstract-declarator-body:sym<brack> { <no-pointer-abstract-declarator> <no-pointer-abstract-declarator-bracketed-base> }
+    method no-pointer-abstract-declarator-body:sym<brack>($/) {
+        make NoPointerAbstractDeclaratorBody::Brack.new(
+            no-pointer-abstract-declarator                => $<no-pointer-abstract-declarator>.made,
+            no-pointer-abstract-declarator-bracketed-base => $<no-pointer-abstract-declarator-bracketed-base>.made,
+        )
+    }
+
+    # rule no-pointer-abstract-declarator { <no-pointer-abstract-declarator-base> <no-pointer-abstract-declarator-body>* } 
+    method no-pointer-abstract-declarator($/) {
+
+        my $base = $<no-pointer-abstract-declarator-base>.made;
+        my @body = $<no-pointer-abstract-declarator-body>>>.made;
+
+        if @body.elems gt 0 {
+            make NoPointerAbstractDeclarator.new(
+                no-pointer-abstract-declarator-base => $base,
+                no-pointer-abstract-declarator-body => @body,
+            )
+        } else {
+            make $base
+        }
+    }
+
+    # rule no-pointer-abstract-declarator-base:sym<basic> { <parameters-and-qualifiers> }
+    method no-pointer-abstract-declarator-base:sym<basic>($/) {
+        make $<parameters-and-qualifiers>.made
+    }
+
+    # rule no-pointer-abstract-declarator-base:sym<bracketed> { <no-pointer-abstract-declarator-bracketed-base> }
+    method no-pointer-abstract-declarator-base:sym<bracketed>($/) {
+        make $<no-pointer-abstract-declarator-bracketed-base>.made
+    }
+
+    # rule no-pointer-abstract-declarator-base:sym<parenthesized> { <.left-paren> <pointer-abstract-declarator> <.right-paren> }
+    method no-pointer-abstract-declarator-base:sym<parenthesized>($/) {
+        make $<pointer-abstract-declarator>.made
+    }
+
+    # rule no-pointer-abstract-declarator-bracketed-base { 
+    #   <.left-bracket> 
+    #   <constant-expression>? 
+    #   <.right-bracket> 
+    #   <attribute-specifier-seq>? 
+    # }
+    method no-pointer-abstract-declarator-bracketed-base($/) {
+        make NoPointerAbstractDeclaratorBracketedBase.new(
+            constant-expression     => $<constant-expression>.made,
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+        )
+    }
+
+    # rule abstract-pack-declarator { <pointer-operator>* <no-pointer-abstract-pack-declarator> } 
+    method abstract-pack-declarator($/) {
+
+        my @ops  = $<pointer-operator>>>.made;
+        my $body = $<no-pointer-abstract-pack-declarator>.made;
+
+        if @ops.elems gt 0 {
+            make AbstractPackDeclarator.new(
+                pointer-operators                   => @ops,
+                no-pointer-abstract-pack-declarator => $body,
+            )
+
+        } else {
+
+            make $body
+        }
+    }
+
+    # rule no-pointer-abstract-pack-declarator-basic { <parameters-and-qualifiers> }
+    method no-pointer-abstract-pack-declarator-basic($/) {
+        make $<parameters-and-qualifiers>.made
+    }
+
+    # rule no-pointer-abstract-pack-declarator-brackets { 
+    #   <.left-bracket> 
+    #   <constant-expression>? 
+    #   <.right-bracket> 
+    #   <attribute-specifier-seq>? 
+    # } 
+    method no-pointer-abstract-pack-declarator-brackets($/) {
+        make NoPointerAbstractPackDeclaratorBrackets.new(
+            constant-expression     => $<constant-expression>.made,
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+        )
+    }
+
+    # rule no-pointer-abstract-pack-declarator-body:sym<basic> { <no-pointer-abstract-pack-declarator-basic> }
+    method no-pointer-abstract-pack-declarator-body:sym<basic>($/) {
+        make $<no-pointer-abstract-pack-declarator-basic>.made
+    }
+
+    # rule no-pointer-abstract-pack-declarator-body:sym<brack> { <no-pointer-abstract-pack-declarator-brackets> } 
+    method no-pointer-abstract-pack-declarator-body:sym<brack>($/) {
+        make $<no-pointer-abstract-pack-declarator-brackets>.made
+    }
+
+    # rule no-pointer-abstract-pack-declarator { <ellipsis> <no-pointer-abstract-pack-declarator-body>* }
+    method no-pointer-abstract-pack-declarator($/) {
+        make $<no-pointer-abstract-pack-declarator-body>>>.made
+    }
+}

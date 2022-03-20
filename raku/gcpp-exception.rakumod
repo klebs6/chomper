@@ -94,3 +94,44 @@ our class DynamicExceptionSpecification {
         exit;
     }
 }
+
+our role Exception::Actions {
+
+    # rule exception-declaration:sym<basic> { <attribute-specifier-seq>? <type-specifier-seq> <some-declarator>? }
+    method exception-declaration:sym<basic>($/) {
+        make ExceptionDeclaration::Basic.new(
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            type-specifier-seq      => $<type-specifier-seq>.made,
+            some-declarator         => $<some-declarator>.made,
+        )
+    }
+
+    # rule exception-declaration:sym<ellipsis> { <ellipsis> }
+    method exception-declaration:sym<ellipsis>($/) {
+        make ExceptionDeclaration::Ellipsis.new
+    }
+
+    # rule throw-expression { <throw> <assignment-expression>? } 
+    method throw-expression($/) {
+        make ThrowExpression.new(
+            assignment-expression => $<assignment-expression>.made,
+        )
+    }
+
+    # token exception-specification:sym<dynamic> { <dynamic-exception-specification> }
+    method exception-specification:sym<dynamic>($/) {
+        make $<dynamic-exception-specification>.made
+    }
+
+    # token exception-specification:sym<noexcept> { <noe-except-specification> } 
+    method exception-specification:sym<noexcept>($/) {
+        make $<noe-except-specification>.made
+    }
+
+    # rule dynamic-exception-specification { <throw> <.left-paren> <type-id-list>? <.right-paren> }
+    method dynamic-exception-specification($/) {
+        make DynamicExceptionSpecification.new(
+            type-id-list => $<type-id-list>.made,
+        )
+    }
+}

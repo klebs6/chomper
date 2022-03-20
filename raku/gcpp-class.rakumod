@@ -138,3 +138,83 @@ our class ClassKey::Struct does IClassKey {
         exit;
     }
 }
+
+our role Class::Actions {
+
+    # rule class-name:sym<id> { <identifier> }
+    method class-name:sym<id>($/) {
+        make $<identifier>.made
+    }
+
+    # rule class-name:sym<template-id> { <simple-template-id> }
+    method class-name:sym<template-id>($/) {
+        make $<simple-template-id>.made
+    }
+
+    # rule class-specifier { <class-head> <.left-brace> <member-specification>? <.right-brace> } 
+    method class-specifier($/) {
+        make ClassSpecifier.new(
+            class-head           => $<class-head>.mde,
+            member-specification => $<member-specification>.made,
+        )
+    }
+
+    # rule class-head:sym<class> { 
+    #   <.class-key> 
+    #   <attribute-specifier-seq>? 
+    #   [ <class-head-name> <class-virt-specifier>? ]? 
+    #   <base-clause>? 
+    # }
+    method class-head:sym<class>($/) {
+        make ClassHead::Class.new(
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            class-head-name         => $<class-head-name>.made,
+            class-virt-specifier    => $<class-virt-specifier>.made,
+            base-clause             => $<base-clause>.made,
+        )
+    }
+
+    # rule class-head:sym<union> { 
+    #   <union> 
+    #   <attribute-specifier-seq>? 
+    #   [ <class-head-name> <class-virt-specifier>? ]? 
+    # } 
+    method class-head:sym<union>($/) {
+        make ClassHead::Union.new(
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            class-head-name         => $<class-head-name>.made,
+            class-virt-specifier    => $<class-virt-specifier>.made,
+        )
+    }
+
+    # rule class-head-name { <nested-name-specifier>? <class-name> }
+    method class-head-name($/) {
+
+        my $prefix = $<nested-name-specifier>.made;
+        my $body   = $<class-name>.made;
+
+        if $prefix {
+            make ClassHeadName.new(
+                nested-name-specifier => $prefix,
+                class-name            => $body,
+            )
+        } else {
+            make $body
+        }
+    }
+
+    # rule class-virt-specifier { <final> } 
+    method class-virt-specifier($/) {
+        make ClassVirtSpecifier.new
+    }
+
+    # rule class-key:sym<class> { <.class_> }
+    method class-key:sym<class>($/) {
+        make ClassKey::Class.new
+    }
+
+    # rule class-key:sym<struct> { <.struct> } 
+    method class-key:sym<struct>($/) {
+        make ClassKey::Struct.new
+    }
+}

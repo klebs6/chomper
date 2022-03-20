@@ -140,3 +140,74 @@ our class FunctionSpecifier::Explicit does IFunctionSpecifier {
     }
 }
 
+our role Function::Actions {
+
+    # rule function-specifier:sym<inline> { <.inline> }
+    method function-specifier:sym<inline>($/) {
+        make FunctionSpecifier::Inline.new
+    }
+
+    # rule function-specifier:sym<virtual> { <.virtual> }
+    method function-specifier:sym<virtual>($/) {
+        make FunctionSpecifier::Virtual.new
+    }
+
+    # rule function-specifier:sym<explicit> { <.explicit> }
+    method function-specifier:sym<explicit>($/) {
+        make FunctionSpecifier::Explicit.new
+    }
+
+    # rule trailing-return-type { <arrow> <trailing-type-specifier-seq> <abstract-declarator>? } 
+    method trailing-return-type($/) {
+        make TrailingReturnType.new(
+            trailing-type-specifier-seq => $<trailing-type-specifier-seq>.made,
+            abstract-declarator         => $<abstract-declarator>.made,
+        )
+    }
+
+    # rule function-definition { <attribute-specifier-seq>? <decl-specifier-seq>? <declarator> <virtual-specifier-seq>? <function-body> } 
+    method function-definition($/) {
+        make FunctionDefinition.new(
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            decl-specifier-seq      => $<decl-specifier-seq>.made,
+            declarator              => $<declarator>.made,
+            virtual-specifier-seq   => $<virtual-specifier-seq>.made,
+            function-body           => $<function-body>.made,
+        )
+    }
+
+    # rule function-body:sym<compound> { <constructor-initializer>? <compound-statement> }
+    method function-body:sym<compound>($/) {
+
+        my $prefix = $<constructor-initializer>.made;
+        my $body   = $<compound-statement>.made;
+
+        if $prefix {
+            make FunctionBody::Compound.new(
+                constructor-initializer => $prefix,
+                compound-statement      => $body,
+            )
+        } else {
+            make $body
+        }
+    }
+
+    # rule function-body:sym<try> { <function-try-block> }
+    method function-body:sym<try>($/) {
+        make $<function-try-block>.made
+    }
+
+    # rule function-body:sym<assign-default> { <assign> <default_> <semi> }
+    method function-body:sym<assign-default>($/) {
+        make FunctionBody::AssignDefault.new(
+            comment        => $<semi>.made,
+        )
+    }
+
+    # rule function-body:sym<assign-delete> { <assign> <delete> <semi> } 
+    method function-body:sym<assign-delete>($/) {
+        make FunctionBody::AssignDelete.new(
+            comment        => $<semi>.made,
+        )
+    }
+}

@@ -17,3 +17,12 @@ our class DeleteExpression {
     }
 }
 
+our role DeleteExpression::Actions {
+
+    # rule delete-expression { <doublecolon>? <delete> [ <.left-bracket> <.right-bracket> ]? <cast-expression> }
+    method delete-expression($/) {
+        make DeleteExpression.new(
+            cast-expression => $<cast-expression>.made,
+        )
+    }
+}

@@ -40,3 +40,21 @@ our class AccessSpecifier::Public does IAccessSpecifier {
         exit;
     }
 }
+
+our role Access::Actions {
+
+    # rule access-specifier:sym<private> { <private> }
+    method access-specifier:sym<private>($/) {
+        make AccessSpecifier::Private.new
+    }
+
+    # rule access-specifier:sym<protected> { <protected> }
+    method access-specifier:sym<protected>($/) {
+        make AccessSpecifier::Protected.new
+    }
+
+    # rule access-specifier:sym<public> { <public> }
+    method access-specifier:sym<public>($/) {
+        make AccessSpecifier::Public.new
+    }
+}

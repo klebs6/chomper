@@ -46,3 +46,24 @@ our class LinkageSpecification {
         exit;
     }
 }
+
+our role Linkage::Actions {
+
+    # rule linkage-specification-body:sym<seq> { <.left-brace> <declarationseq>? <.right-brace> }
+    method linkage-specification-body:sym<seq>($/) {
+        make $<declarationseq>.made
+    }
+
+    # rule linkage-specification-body:sym<decl> { <declaration> }
+    method linkage-specification-body:sym<decl>($/) {
+        make $<declaration>.made
+    }
+
+    # rule linkage-specification { <extern> <string-literal> <linkage-specification-body> }
+    method linkage-specification($/) {
+        make LinkageSpecification.new(
+            string-literal => $<string-literal>.made,
+            linkage-specification-body => $<linkage-specification-body>.made,
+        )
+    }
+}

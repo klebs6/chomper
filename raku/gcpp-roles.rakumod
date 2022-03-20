@@ -1,5 +1,3 @@
-#-------------------------------[fwd declare]
-
 our class AbstractPackDeclarator                   { ... }
 our class AliasDeclaration                         { ... }
 our class AsmDefinition                            { ... }

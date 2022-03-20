@@ -11,3 +11,11 @@ our class TranslationUnit {
         exit;
     }
 }
+
+our role TranslationUnit::Actions {
+
+    # token translation-unit { <declarationseq>? $ }
+    method translation-unit($/) {
+        make $<declarationseq>.made
+    }
+}

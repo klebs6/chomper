@@ -1,77 +1,3 @@
-# rule simple-template-id { 
-#   <template-name> 
-#   <less> 
-#   <template-argument-list>? 
-#   <greater> 
-# }
-our class SimpleTemplateId 
-does IDeclSpecifierSeq 
-does IPostListHead {
-
-    has Identifier           $.template-name is required;
-    has ITemplateArgument @.template-arguments;
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-# rule template-id:sym<simple> { 
-#   <simple-template-id> 
-# }
-our class TemplateId::Simple does ITemplateId {
-    has SimpleTemplateId $.simple-template-id is required;
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-# rule template-id:sym<operator-function-id> { 
-#   <operator-function-id> 
-#   <less> 
-#   <template-argument-list>? 
-#   <greater> 
-# }
-our class TemplateId::OperatorFunctionId does ITemplateId {
-    has OperatorFunctionId   $.operator-function-id is required;
-    has TemplateArgumentList $.template-argument-list;
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-# rule template-id:sym<literal-operator-id> { 
-#   <literal-operator-id> 
-#   <less> 
-#   <template-argument-list>? 
-#   <greater> 
-# }
-our class TemplateId::LiteralOperatorId does ITemplateId {
-    has ILiteralOperatorId   $.literal-operator-id is required;
-    has TemplateArgumentList $.template-argument-list;
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
 
 # rule template-argument-list { 
 #   <template-argument> 
@@ -115,7 +41,7 @@ our class TemplateArgument::ConstExpr does ITemplateArgument {
     }
 }
 
-# token template-argument:sym<id-expr> { <id-expression> } #---------------------
+# token template-argument:sym<id-expr> { <id-expression> }
 our class TemplateArgument::IdExpr does ITemplateArgument {
     has IIdExpression $.id-expression is required;
     has $.text;

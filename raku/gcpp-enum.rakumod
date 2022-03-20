@@ -154,3 +154,68 @@ our class Enumerator {
         exit;
     }
 }
+
+our role Enum::Actions {
+
+    # rule enum-name { <identifier> }
+    method enum-name($/) {
+        make $<identifier>.made
+    }
+
+    # rule enum-specifier { <enum-head> <.left-brace> [ <enumerator-list> <.comma>? ]? <.right-brace> }
+    method enum-specifier($/) {
+        make EnumSpecifier.new(
+            enumerator-list => $<enumerator-list>.made,
+        )
+    }
+
+    # rule enum-head { <.enumkey> <attribute-specifier-seq>? [ <nested-name-specifier>? <identifier> ]? <enumbase>? }
+    method enum-head($/) {
+        make EnumHead.new(
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            nested-name-specifier   => $<nested-name-specifier>.made,
+            identifier              => $<identifier>.made,
+            enum-base               => $<enum-base>.made,
+        )
+    }
+
+    # rule opaque-enum-declaration { <.enumkey> <attribute-specifier-seq>? <identifier> <enumbase>? <semi> }
+    method opaque-enum-declaration($/) {
+        make OpaqueEnumDeclaration.new(
+            comment                 => $<semi>.made,
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            identifier              => $<identifier>.made,
+            enum-base               => $<enum-base>.made,
+        )
+    }
+
+    # rule enumkey { <enum_> [ <class_> || <struct> ]? }
+    method enumkey($/) {
+        make Enumkey.new
+    }
+
+    # rule enumbase { <colon> <type-specifier-seq> }
+    method enumbase($/) {
+        make Enumbase.new(
+            type-specifier-seq => $<type-specifier-seq>.made,
+        )
+    }
+
+    # rule enumerator-list { <enumerator-definition> [ <.comma> <enumerator-definition> ]* }
+    method enumerator-list($/) {
+        make $<enumerator-definition>>>.made
+    }
+
+    # rule enumerator-definition { <enumerator> [ <assign> <constant-expression> ]? }
+    method enumerator-definition($/) {
+        make EnumeratorDefinition.new(
+            enumerator          => $<enumerator>.made,
+            constant-expression => $<constant-expression>.made,
+        )
+    }
+
+    # rule enumerator { <identifier> }
+    method enumerator($/) {
+        make $<identifier>.made
+    }
+}

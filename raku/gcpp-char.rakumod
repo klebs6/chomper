@@ -130,3 +130,79 @@ our class Universalcharactername {
         exit;
     }
 }
+
+#-------------------------------
+our role CharacterLiteral::Actions {
+
+    # token character-literal-prefix:sym<u> { 'u' }
+    method character-literal-prefix:sym<u>($/) {
+        make 'u'
+    }
+
+    # token character-literal-prefix:sym<U> { 'U' }
+    method character-literal-prefix:sym<U>($/) {
+        make 'U'
+    }
+
+    # token character-literal-prefix:sym<L> { 'L' }
+    method character-literal-prefix:sym<L>($/) {
+        make 'L'
+    }
+
+    # token character-literal { <character-literal-prefix>? '\'' <cchar>+ '\'' } 
+    method character-literal($/) {
+        make CharacterLiteral.new(
+            character-literal-prefix => $<character-literal-prefix>.made,
+            cchar                    => $<cchar>>>.made,
+        )
+    }
+
+    # token universalcharactername:sym<one> { '\\u' <hexquad> }
+    method universalcharactername:sym<one>($/) {
+        make Universalcharactername.new(
+            first => $<first>.made,
+        )
+    }
+
+    # token universalcharactername:sym<two> { '\\U' <hexquad> <hexquad> } 
+    method universalcharactername:sym<two>($/) {
+        make Universalcharactername.new(
+            first => $<first>.made,
+            second => $<second>.made,
+        )
+    }
+
+    # token cchar:sym<basic> { <-[ \' \\ \r \n ]> }
+    method cchar:sym<basic>($/) {
+        make Cchar::Basic.new(
+            value => ~$/,
+        )
+    }
+
+    # token cchar:sym<escape> { <escapesequence> }
+    method cchar:sym<escape>($/) {
+        make $<escapesequence>.made
+    }
+
+    # token cchar:sym<universal> { <universalcharactername> } 
+    method cchar:sym<universal>($/) {
+        make $<universalcharactername>.made
+    }
+
+    # token schar:sym<basic> { <-[ " \\ \r \n ]> }
+    method schar:sym<basic>($/) {
+        make Schar::Basic.new(
+            value => ~$/,
+        )
+    }
+
+    # token schar:sym<escape> { <escapesequence> }
+    method schar:sym<escape>($/) {
+        make $<escapesequence>.made
+    }
+
+    # token schar:sym<ucn> { <universalcharactername> }
+    method schar:sym<ucn>($/) {
+        make $<universalcharactername>.made
+    }
+}

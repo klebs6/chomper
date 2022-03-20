@@ -45,4 +45,22 @@ our class DecltypeSpecifier {
     }
 }
 
+our role Decltype::Actions {
 
+    # rule decltype-specifier-body:sym<expr> { <expression> }
+    method decltype-specifier-body:sym<expr>($/) {
+        make $<expression>.made
+    }
+
+    # rule decltype-specifier-body:sym<auto> { <auto> }
+    method decltype-specifier-body:sym<auto>($/) {
+        make DecltypeSpecifierBody::Auto.new
+    }
+
+    # rule decltype-specifier { <decltype> <.left-paren> <decltype-specifier-body> <.right-paren> } 
+    method decltype-specifier($/) {
+        make DecltypeSpecifier.new(
+            decltype-specifier-body => $<decltype-specifier-body>.made,
+        )
+    }
+}

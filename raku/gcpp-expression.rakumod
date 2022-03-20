@@ -41,3 +41,28 @@ our class ExpressionList does IPostfixExpressionTail {
     }
 }
 
+our role Expression::Actions {
+
+    # rule expression-list { <initializer-list> } 
+    method expression-list($/) {
+        make $<initializer-list>.made
+    }
+
+    # rule expression { <assignment-expression>+ %% <.comma> }
+    method expression($/) {
+        my @exprs = $<assignment-expression>>>.made;
+
+        if @exprs.elems gt 1 {
+            make Expression.new(
+                assignment-expressions => @exprs,
+            )
+        } else {
+            make @exprs[0]
+        }
+    }
+
+    # rule constant-expression { <conditional-expression> }
+    method constant-expression($/) {
+        make $<conditional-expression>.made
+    }
+}

@@ -22,3 +22,16 @@ our class Refqualifier::AndAnd does IRefqualifier {
         exit;
     }
 }
+
+our role Ref::Actions {
+
+    # rule refqualifier:sym<and> { <and_> }
+    method refqualifier:sym<and>($/) {
+        make Refqualifier::And.new
+    }
+
+    # rule refqualifier:sym<and-and> { <and-and> } 
+    method refqualifier:sym<and-and>($/) {
+        make Refqualifier::AndAnd.new
+    }
+}

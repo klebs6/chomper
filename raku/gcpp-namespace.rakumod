@@ -135,3 +135,70 @@ our class Qualifiednamespacespecifier {
         exit;
     }
 }
+
+our role Namespace::Actions {
+
+    # rule namespace-name:sym<original> { <original-namespace-name> }
+    method namespace-name:sym<original>($/) {
+        make $<original-namespace-name>.made
+    }
+
+    # rule namespace-name:sym<alias> { <namespace-alias> }
+    method namespace-name:sym<alias>($/) {
+        make $<namespace-alias>.made
+    }
+
+    # rule original-namespace-name { <identifier> } 
+    method original-namespace-name($/) {
+        make $<identifier>.made
+    }
+
+    # rule namespace-tag:sym<ident> { <identifier> }
+    method namespace-tag:sym<ident>($/) {
+        make $<identifier>.made
+    }
+
+    # rule namespace-tag:sym<ns-name> { <original-namespace-name> } 
+    method namespace-tag:sym<ns-name>($/) {
+        make $<original-namespace-name>.made
+    }
+
+    # rule namespace-definition { <inline>? <namespace> <namespace-tag>? <.left-brace> <namespaceBody=declarationseq>? <.right-brace> }
+    method namespace-definition($/) {
+        make NamespaceDefinition.new(
+            inline         => $<inline>.made,
+            namespace-tag  => $<namespace-tag>.made,
+            namespace-body => $<namespace-body>.made,
+        )
+    }
+
+    # rule namespace-alias { <identifier> }
+    method namespace-alias($/) {
+        make $<identifier>.made
+    }
+
+    # rule namespace-alias-definition { <namespace> <identifier> <assign> <qualifiednamespacespecifier> <semi> }
+    method namespace-alias-definition($/) {
+        make NamespaceAliasDefinition.new(
+            comment                     => $<semi>.made,
+            identifier                  => $<identifier>.made,
+            qualifiednamespacespecifier => $<qualifiednamespacespecifier>.made,
+        )
+    }
+
+    # rule qualifiednamespacespecifier { <nested-name-specifier>? <namespace-name> } 
+    method qualifiednamespacespecifier($/) {
+
+        my $prefix = $<nested-name-specifier>.made;
+        my $body   = $<namespace-name>.made;
+
+        if $prefix {
+            make Qualifiednamespacespecifier.new(
+                nested-name-specifier => $prefix,
+                namespace-name        => $body,
+            )
+        } else {
+            make $body
+        }
+    }
+}

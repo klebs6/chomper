@@ -294,3 +294,161 @@ does IPostfixExpressionTail {
         exit;
     }
 }
+
+our role PostfixExpression::Actions {
+
+    # rule postfix-expression { <postfix-expression-body> <postfix-expression-tail>* }
+    method postfix-expression($/) {
+
+        my $body = $<postfix-expression-body>.made;
+        my @tail = $<postfix-expression-tail>>>.made;
+
+        if @tail and @tail.elems gt 0 {
+            make PostfixExpression.new(
+                postfix-expression-body => $body,
+                postfix-expression-tail => @tail,
+            )
+        } else {
+            make $body
+        }
+    }
+
+    # rule bracket-tail { <.left-bracket> [ <expression> || <braced-init-list> ] <.right-bracket> }
+    method bracket-tail:sym<expr>($/) {
+        make $<expression>.made
+    }
+
+    method bracket-tail:sym<braced-init-list>($/) {
+        make $<braced-init-list>.made
+    }
+
+    # rule postfix-expression-tail:sym<bracket> { <bracket-tail> }
+    method postfix-expression-tail:sym<bracket>($/) {
+        make $<bracket-tail>.made
+    }
+
+    # rule postfix-expression-tail:sym<parens> { <.left-paren> <expression-list>? <.right-paren> }
+    method postfix-expression-tail:sym<parens>($/) {
+        make $<expression-list>.made // PostfixExpressionTail::Null.new
+    }
+
+    # rule postfix-expression-tail:sym<indirection-id> { [ <dot> || <arrow> ] <template>? <id-expression> }
+    method postfix-expression-tail:sym<indirection-id>($/) {
+        make PostfixExpressionTail::IndirectionId.new(
+            template      => $<template>.made,
+            id-expression => $<id-expression>.made,
+        )
+    }
+
+    # rule postfix-expression-tail:sym<indirection-pseudo-dtor> { [ <dot> || <arrow> ] <pseudo-destructor-name> }
+    method postfix-expression-tail:sym<indirection-pseudo-dtor>($/) {
+        make PostfixExpressionTail::IndirectionPseudoDtor.new(
+            pseudo-destructor-name => $<pseudo-destructor-name>.made,
+        )
+    }
+
+    # rule postfix-expression-tail:sym<pp-mm> { [ <plus-plus> || <minus-minus> ] } 
+    method postfix-expression-tail:sym<pp>($/) {
+        make PostfixExpressionTail::PlusPlus.new
+    }
+
+    method postfix-expression-tail:sym<mm>($/) {
+        make PostfixExpressionTail::MinusMinus.new
+    }
+
+    # token postfix-expression-body { 
+    #   || <postfix-expression-list> 
+    #   || <postfix-expression-cast> 
+    #   || <postfix-expression-typeid> 
+    #   || <primary-expression> 
+    # } 
+    method postfix-expression-body($/) {
+
+        given $/.keys[0] {
+            when "postfix-expression-list" {
+                make $<postfix-expression-list>.made
+            }
+            when "postfix-expression-cast" {
+                make $<postfix-expression-cast>.made
+            }
+            when "postfix-expression-typeid" {
+                make $<postfix-expression-type-id>.made
+            }
+            when "primary-expression" {
+                make $<primary-expression>.made
+            }
+            default {
+                die "bad switch";
+            }
+        }
+    }
+
+    # rule postfix-expression-cast { 
+    #   <cast-token> 
+    #   <less> 
+    #   <the-type-id> 
+    #   <greater> 
+    #   <.left-paren> 
+    #   <expression> 
+    #   <.right-paren> 
+    # }
+    method postfix-expression-cast($/) {
+        make PostfixExpressionCast.new(
+            cast-token  => $<cast-token>.made,
+            the-type-id => $<the-type-id>.made,
+            expression  => $<expression>.made,
+        )
+    }
+
+    # rule postfix-expression-typeid { 
+    #   <type-id-of-the-type-id> 
+    #   <.left-paren> 
+    #   [ <expression> || <the-type-id>] 
+    #   <.right-paren> 
+    # } 
+    method postfix-expression-typeid:sym<expr>($/) {
+        make PostfixExpressionTypeid::Expr.new(
+            type-id-of-the-type-id => $<type-id-of-the-type-id>.made,
+            expression             => $<expression>.made,
+        )
+    }
+
+    method postfix-expression-typeid:sym<type-id>($/) {
+        make PostfixExpressionTypeid::TypeId.new(
+            type-id-of-the-type-id => $<type-id-of-the-type-id>.made,
+            the-type-id            => $<the-type-id>.made,
+        )
+    }
+
+    # token post-list-head:sym<simple> { <simple-type-specifier> }
+    method post-list-head:sym<simple>($/) {
+        make $<simple-type-specifier>.made
+    }
+
+    # token post-list-head:sym<type-name> { <type-name-specifier> } 
+    method post-list-head:sym<type-name>($/) {
+        make $<type-name-specifier>.made
+    }
+
+    # token post-list-tail:sym<parenthesized> { <.left-paren> <expression-list>? <.right-paren> }
+    method post-list-tail:sym<parenthesized>($/) {
+        make PostListTail.new(
+            value => $<expression-list>.made
+        )
+    }
+
+    # token post-list-tail:sym<braced> { <braced-init-list> }
+    method post-list-tail:sym<braced>($/) {
+        make PostListTail.new(
+            value => $<braced-init-list>.made
+        )
+    }
+
+    # token postfix-expression-list { <post-list-head> <post-list-tail> } 
+    method postfix-expression-list($/) {
+        make PostfixExpressionList.new(
+            post-list-head => $<post-list-head>.made,
+            post-list-tail => $<post-list-tail>.made,
+        )
+    }
+}

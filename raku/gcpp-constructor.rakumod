@@ -14,3 +14,12 @@ our class ConstructorInitializer {
     }
 }
 
+our role Constructor::Actions {
+
+    # rule constructor-initializer { <colon> <mem-initializer-list> }
+    method constructor-initializer($/) {
+        make ConstructorInitializer.new(
+            mem-initializer-list => $<mem-initializer-list>.made,
+        )
+    }
+}

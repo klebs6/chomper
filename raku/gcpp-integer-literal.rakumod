@@ -192,3 +192,100 @@ our class Hexquad {
 
 our subset Quad of List where (HexadecimalLiteral, HexadecimalLiteral, HexadecimalLiteral, HexadecimalLiteral);
 
+our role IntegerLiteral::Actions {
+
+    # token integer-literal:sym<dec> { <decimal-literal> <integersuffix>? }
+    method integer-literal:sym<dec>($/) {
+        make IntegerLiteral::Dec.new(
+            decimal-literal => $<decimal-literal>.made,
+            integersuffix   => $<integersuffix>.made,
+        )
+    }
+
+    # token integer-literal:sym<oct> { <octal-literal> <integersuffix>? }
+    method integer-literal:sym<oct>($/) {
+        make IntegerLiteral::Oct.new(
+            octal-literal => $<octal-literal>.made,
+            integersuffix => $<integersuffix>.made,
+        )
+    }
+
+    # token integer-literal:sym<hex> { <hexadecimal-literal> <integersuffix>? }
+    method integer-literal:sym<hex>($/) {
+        make IntegerLiteral::Hex.new(
+            hexadecimal-literal => $<hexadecimal-literal>.made,
+            integersuffix       => $<integersuffix>.made,
+        )
+    }
+
+    # token integer-literal:sym<bin> { <binary-literal> <integersuffix>? } 
+    method integer-literal:sym<bin>($/) {
+        make IntegerLiteral::Bin.new(
+            binary-literal => $<binary-literal>.made,
+            integersuffix  => $<integersuffix>.made,
+        )
+    }
+
+    # token hexquad { <hexadecimaldigit> ** 4 }
+    method hexquad($/) {
+        make Hexquad.new(
+            hexadecimaldigit => $<hexadecimaldigit>>>.made,
+        )
+    }
+
+    # token decimal-literal { <nonzerodigit> [ '\''? <digit>]* }
+    method decimal-literal($/) {
+        make DecimalLiteral.new(
+            value => ~$/,
+        )
+    }
+
+    # token octal-literal { '0' [ '\''? <octaldigit>]* }
+    method octal-literal($/) {
+        make OctalLiteral.new(
+            value => ~$/,
+        )
+    }
+
+    # token hexadecimal-literal { [ '0x' || '0X' ] <hexadecimaldigit> [ '\''? <hexadecimaldigit> ]* }
+    method hexadecimal-literal($/) {
+        make HexadecimalLiteral.new(
+            value => ~$/,
+        )
+    }
+
+    # token binary-literal { [ '0b' || '0B' ] <binarydigit> [ '\''? <binarydigit> ]* }
+    method binary-literal($/) {
+        make BinaryLiteral.new(
+            value => ~$/,
+        )
+    }
+
+    # token nonzerodigit { <[ 1 .. 9 ]> }
+    method nonzerodigit($/) {
+        make Nonzerodigit.new(
+            value => ~$/,
+        )
+    }
+
+    # token octaldigit { <[ 0 .. 7 ]> }
+    method octaldigit($/) {
+        make Octaldigit.new(
+            value => ~$/,
+        )
+    }
+
+    # token hexadecimaldigit { <[ 0 .. 9 ]> }
+    method hexadecimaldigit($/) {
+        make Hexadecimaldigit.new(
+            value => ~$/,
+        )
+    }
+
+    # token binarydigit { <[ 0 1 ]> } 
+    method binarydigit($/) {
+        make Binarydigit.new(
+            value => ~$/,
+        )
+    }
+}

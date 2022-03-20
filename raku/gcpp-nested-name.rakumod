@@ -112,3 +112,69 @@ our class NestedNameSpecifier does INestedNameSpecifier {
     }
 }
 
+our role NestedNameSpecifier::Actions {
+
+    # regex nested-name-specifier-prefix:sym<null> { <doublecolon> }
+    method nested-name-specifier-prefix:sym<null>($/) {
+        make NestedNameSpecifierPrefix::Null.new
+    }
+
+    # regex nested-name-specifier-prefix:sym<type> { <the-type-name> <doublecolon> }
+    method nested-name-specifier-prefix:sym<type>($/) {
+        make NestedNameSpecifierPrefix::Type.new(
+            the-type-name => $<the-type-name>.made,
+        )
+    }
+
+    # regex nested-name-specifier-prefix:sym<ns> { <namespace-name> <doublecolon> }
+    method nested-name-specifier-prefix:sym<ns>($/) {
+        make NestedNameSpecifierPrefix::Ns.new(
+            namespace-name => $<namespace-name>.made,
+        )
+    }
+
+    # regex nested-name-specifier-prefix:sym<decl> { <decltype-specifier> <doublecolon> } 
+    method nested-name-specifier-prefix:sym<decl>($/) {
+        make NestedNameSpecifierPrefix::Decl.new(
+            decltype-specifier => $<decltype-specifier>.made,
+        )
+    }
+
+    # regex nested-name-specifier-suffix:sym<id> { <identifier> <doublecolon> }
+    method nested-name-specifier-suffix:sym<id>($/) {
+        make NestedNameSpecifierSuffix::Id.new(
+            identifier => $<identifier>.made,
+        )
+    }
+
+    # regex nested-name-specifier-suffix:sym<template> { 
+    #   <template>? 
+    #   <simple-template-id> 
+    #   <doublecolon> 
+    # } 
+    method nested-name-specifier-suffix:sym<template>($/) {
+        make NestedNameSpecifierSuffix::Template.new(
+            template           => $<template>.made,
+            simple-template-id => $<simple-template-id>.made,
+        )
+    }
+
+    # regex nested-name-specifier { 
+    #   <nested-name-specifier-prefix> 
+    #   <nested-name-specifier-suffix>* 
+    # }
+    method nested-name-specifier($/) {
+
+        my $base     = $<nested-name-specifier-prefix>.made;
+        my @suffixes = $<nested-name-specifier-suffix>>>.made;
+
+        if @suffixes.elems gt 0 {
+            make NestedNameSpecifier.new(
+                nested-name-specifier-prefix   => $base,
+                nested-name-specifier-suffixes => @suffixes,
+            )
+        } else {
+            make $base
+        }
+    }
+}

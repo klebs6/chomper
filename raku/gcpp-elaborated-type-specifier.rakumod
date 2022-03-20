@@ -75,3 +75,48 @@ does IElaboratedTypeSpecifier {
         exit;
     }
 }
+
+our role ElaboratedTypeSpecifier::Actions {
+
+    # rule elaborated-type-specifier:sym<class-ident> { 
+    #   <.class-key> 
+    #   <attribute-specifier-seq>? 
+    #   <nested-name-specifier>? 
+    #   <identifier> 
+    # }
+    method elaborated-type-specifier:sym<class-ident>($/) {
+        make ElaboratedTypeSpecifier::ClassIdent.new(
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            nested-name-specifier   => $<nested-name-specifier>.made,
+            identifier              => $<identifier>.made,
+        )
+    }
+
+    # rule elaborated-type-specifier:sym<class-template-id> { <.class-key> <simple-template-id> }
+    method elaborated-type-specifier:sym<class-template-id>($/) {
+        make ElaboratedTypeSpecifier::ClassTemplateId.new(
+            simple-template-id => $<simple-template-id>.made,
+        )
+    }
+
+    # rule elaborated-type-specifier:sym<class-nested-template-id> { 
+    #   <.class-key> 
+    #   <nested-name-specifier> 
+    #   <template>? 
+    #   <simple-template-id> 
+    # }
+    method elaborated-type-specifier:sym<class-nested-template-id>($/) {
+        make ElaboratedTypeSpecifier::ClassNestedTemplateId.new(
+            nested-name-specifier => $<nested-name-specifier>.made,
+            simple-template-id    => $<simple-template-id>.made,
+        )
+    }
+
+    # rule elaborated-type-specifier:sym<enum> { <.enum_> <nested-name-specifier>? <identifier> } 
+    method elaborated-type-specifier:sym<enum>($/) {
+        make ElaboratedTypeSpecifier::Enum.new(
+            nested-name-specifier => $<nested-name-specifier>.made,
+            identifier            => $<identifier>.made,
+        )
+    }
+}

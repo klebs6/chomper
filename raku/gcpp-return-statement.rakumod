@@ -25,4 +25,15 @@ our class ReturnStatementBody::BracedInitList does IReturnStatementBody {
     }
 }
 
+our role ReturnStatement::Actions {
 
+    # rule return-statement-body:sym<expr> { <expression> }
+    method return-statement-body:sym<expr>($/) {
+        make $<expression>.made
+    }
+
+    # rule return-statement-body:sym<braced-init-list> { <braced-init-list> }
+    method return-statement-body:sym<braced-init-list>($/) {
+        make $<braced-init-list>.made
+    }
+}

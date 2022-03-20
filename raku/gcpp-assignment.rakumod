@@ -192,3 +192,89 @@ does IAssignmentOperator {
         exit;
     }
 }
+
+our role AssignmentExpression::Actions {
+
+    # rule assignment-expression:sym<throw> { <throw-expression> }
+    method assignment-expression:sym<throw>($/) {
+        make AssignmentExpression::Throw.new(
+            throw-expression => $<throw-expression>.made,
+        )
+    }
+
+    # rule assignment-expression:sym<basic> { <logical-or-expression> <assignment-operator> <initializer-clause> }
+    method assignment-expression:sym<basic>($/) {
+        make AssignmentExpression::Basic.new(
+            logical-or-expression => $<logical-or-expression>.made,
+            assignment-operator   => $<assignment-operator>.made,
+            initializer-clause    => $<initializer-clause>.made,
+        )
+    }
+
+    # rule assignment-expression:sym<conditional> { <conditional-expression> }
+    method assignment-expression:sym<conditional>($/) {
+
+        my $res = $<conditional-expression>.made;
+
+        if $res.elems eq 1 {
+            make $res[0]
+        } else {
+            make $res
+        }
+    }
+
+    # token assignment-operator:sym<assign> { <.assign> }
+    method assignment-operator:sym<assign>($/) {
+        make AssignmentOperator::Assign.new
+    }
+
+    # token assignment-operator:sym<star-assign> { <.star-assign> }
+    method assignment-operator:sym<star-assign>($/) {
+        make AssignmentOperator::StarAssign.new
+    }
+
+    # token assignment-operator:sym<div-assign> { <.div-assign> }
+    method assignment-operator:sym<div-assign>($/) {
+        make AssignmentOperator::DivAssign.new
+    }
+
+    # token assignment-operator:sym<mod-assign> { <.mod-assign> }
+    method assignment-operator:sym<mod-assign>($/) {
+        make AssignmentOperator::ModAssign.new
+    }
+
+    # token assignment-operator:sym<plus-assign> { <.plus-assign> }
+    method assignment-operator:sym<plus-assign>($/) {
+        make AssignmentOperator::PlusAssign.new
+    }
+
+    # token assignment-operator:sym<minus-assign> { <.minus-assign> }
+    method assignment-operator:sym<minus-assign>($/) {
+        make AssignmentOperator::MinusAssign.new
+    }
+
+    # token assignment-operator:sym<rshift-assign> { <.right-shift-assign> }
+    method assignment-operator:sym<rshift-assign>($/) {
+        make AssignmentOperator::RshiftAssign.new
+    }
+
+    # token assignment-operator:sym<lshift-assign> { <.left-shift-assign> }
+    method assignment-operator:sym<lshift-assign>($/) {
+        make AssignmentOperator::LshiftAssign.new
+    }
+
+    # token assignment-operator:sym<and-assign> { <.and-assign> }
+    method assignment-operator:sym<and-assign>($/) {
+        make AssignmentOperator::AndAssign.new
+    }
+
+    # token assignment-operator:sym<xor-assign> { <.xor-assign> }
+    method assignment-operator:sym<xor-assign>($/) {
+        make AssignmentOperator::XorAssign.new
+    }
+
+    # token assignment-operator:sym<or-assign> { <.or-assign> }
+    method assignment-operator:sym<or-assign>($/) {
+        make AssignmentOperator::OrAssign.new
+    }
+}

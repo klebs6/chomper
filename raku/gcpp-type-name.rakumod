@@ -67,3 +67,62 @@ our class FullTypeName does IPostListHead does IDeclSpecifier {
         exit;
     }
 }
+
+our role TypeName::Actions {
+
+    # rule full-type-name { <nested-name-specifier>? <the-type-name> }
+    method full-type-name($/) {
+
+        my $prefix = $<nested-name-specifier>.made;
+        my $body   = $<the-type-name>.made;
+
+        if $prefix {
+
+            make FullTypeName.new(
+                nested-name-specifier => $prefix,
+                the-type-name         => $body,
+            )
+
+        } else {
+
+            make $body
+        }
+    }
+
+    # rule the-type-name:sym<simple-template-id> { <simple-template-id> }
+    method the-type-name:sym<simple-template-id>($/) {
+        make $<simple-template-id>.made
+    }
+
+    # rule the-type-name:sym<class> { <class-name> }
+    method the-type-name:sym<class>($/) {
+        make $<class-name>.made
+    }
+
+    # rule the-type-name:sym<enum> { <enum-name> }
+    method the-type-name:sym<enum>($/) {
+        make $<enum-name>.made
+    }
+
+    # rule the-type-name:sym<typedef> { <typedef-name> } 
+    method the-type-name:sym<typedef>($/) {
+        make $<typedef-name>.made
+    }
+
+    # rule type-name-specifier:sym<ident> { <typename_> <nested-name-specifier> <identifier> }
+    method type-name-specifier:sym<ident>($/) {
+        make TypeNameSpecifier::Ident.new(
+            nested-name-specifier => $<nested-name-specifier>.made,
+            identifier            => $<identifier>.made,
+        )
+    }
+
+    # rule type-name-specifier:sym<template> { <typename_> <nested-name-specifier> <template>? <simple-template-id> } 
+    method type-name-specifier:sym<template>($/) {
+        make TypeNameSpecifier::Template.new(
+            nested-name-specifier => $<nested-name-specifier>.made,
+            has-template          => $<has-template>.made,
+            simple-template-id    => $<simple-template-id>.made,
+        )
+    }
+}

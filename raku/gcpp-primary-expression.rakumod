@@ -70,3 +70,37 @@ our class PrimaryExpression::Lambda does IPrimaryExpression {
         exit;
     }
 }
+
+our role PrimaryExpression::Actions {
+
+    # token primary-expression:sym<literal> { <literal>+ }
+    method primary-expression:sym<literal>($/) {
+        my @literals = $<literal>>>.made;
+
+        if @literals.elems gt 1 {
+            make @literals
+        } else {
+            make @literals[0]
+        }
+    }
+
+    # token primary-expression:sym<this> { <this> }
+    method primary-expression:sym<this>($/) {
+        make PrimaryExpression::This.new
+    }
+
+    # token primary-expression:sym<expr> { <.left-paren> <expression> <.right-paren> }
+    method primary-expression:sym<expr>($/) {
+        make $<expression>.made
+    }
+
+    # token primary-expression:sym<id> { <id-expression> }
+    method primary-expression:sym<id>($/) {
+        make $<id-expression>.made
+    }
+
+    # token primary-expression:sym<lambda> { <lambda-expression> } 
+    method primary-expression:sym<lambda>($/) {
+        make $<lambda-expression>.made
+    }
+}

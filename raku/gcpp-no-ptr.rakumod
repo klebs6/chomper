@@ -88,3 +88,65 @@ does IInitDeclarator does IDeclarator {
     }
 }
 
+our role NoPointerDeclarator::Actions {
+
+    # rule no-pointer-declarator-base:sym<base> { <declaratorid> <attribute-specifier-seq>? }
+    method no-pointer-declarator-base:sym<base>($/) {
+        my $base  = $<declaratorid>.made;
+        my $maybe = $<attribute-specifier-seq>.made;
+
+        if $maybe {
+            make NoPointerDeclaratorBase::Base.new(
+                declaratorid            => $base,
+                attribute-specifier-seq => $maybe,
+            )
+
+        } else {
+            make $base
+        }
+    }
+
+    # rule no-pointer-declarator-base:sym<parens> { <.left-paren> <pointer-declarator> <.right-paren> } 
+    method no-pointer-declarator-base:sym<parens>($/) {
+        make $<pointer-declarator>.made
+    }
+
+    # rule no-pointer-declarator-tail:sym<basic> { <parameters-and-qualifiers> }
+    method no-pointer-declarator-tail:sym<basic>($/) {
+        make $<parameters-and-qualifiers>.made
+    }
+
+    # rule no-pointer-declarator-tail:sym<bracketed> { 
+    #   <.left-bracket> 
+    #   <constant-expression>? 
+    #   <.right-bracket> 
+    #   <attribute-specifier-seq>? 
+    # } 
+    method no-pointer-declarator-tail:sym<bracketed>($/) {
+        make NoPointerDeclaratorTail::Bracketed.new(
+            constant-expression     => $<constant-expression>.made,
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+        )
+    }
+
+    # rule no-pointer-declarator { <no-pointer-declarator-base> <no-pointer-declarator-tail>* } 
+    method no-pointer-declarator($/) {
+
+        my @tail = $<no-pointer-declarator-tail>>>.made;
+        my $base = $<no-pointer-declarator-base>.made;
+
+        if @tail.elems gt 0 {
+
+            make NoPointerDeclarator.new(
+                no-pointer-declarator-base => $base,
+                no-pointer-declarator-tail => @tail,
+            )
+
+        } else {
+
+            make $base
+        }
+    }
+}
+
+

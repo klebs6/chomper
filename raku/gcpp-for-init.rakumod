@@ -30,4 +30,15 @@ our class ForInitStatement::SimpleDeclaration does IForInitStatement {
     }
 }
 
+our role ForInitStatement::Actions {
 
+    # rule for-init-statement:sym<expression-statement> { <expression-statement> }
+    method for-init-statement:sym<expression-statement>($/) {
+        make $<expression-statement>.made
+    }
+
+    # rule for-init-statement:sym<simple-declaration> { <simple-declaration> }
+    method for-init-statement:sym<simple-declaration>($/) {
+        make $<simple-declaration>.made
+    }
+}

@@ -84,3 +84,32 @@ our class TypeIdOfTheTypeId {
         exit;
     }
 }
+
+our role TypeId::Actions {
+
+    # rule type-id-of-the-type-id { <typeid_> }
+    method type-id-of-the-type-id($/) {
+        make $<typeid>.made
+    }
+
+    # rule the-type-id { <type-specifier-seq> <abstract-declarator>? } 
+    method the-type-id($/) {
+
+        my $tail = $<abstract-declarator>.made;
+        my $body = $<type-specifier-seq>.made;
+
+        if $tail {
+            make TheTypeId.new(
+                type-specifier-seq  => $body,
+                abstract-declarator => $tail,
+            )
+        } else {
+            make $body
+        }
+    }
+
+    # rule type-id-list { <the-type-id> <ellipsis>? [ <.comma> <the-type-id> <ellipsis>? ]* } 
+    method type-id-list($/) {
+        make $<the-type-id>>>.made
+    }
+}

@@ -34,4 +34,32 @@ our class ConditionalExpression does IMultiplicativeExpression does IConditional
     }
 }
 
+our role ConditionalExpression::Actions {
 
+    # rule conditional-expression-tail { <question> <expression> <colon> <assignment-expression> }
+    method conditional-expression-tail($/) {
+        make ConditionalExpressionTail.new(
+            question-expression   => $<expression>.made,
+            assignment-expression => $<assignment-expression>.made,
+        )
+    }
+
+    # rule conditional-expression { <logical-or-expression> <conditional-expression-tail>? } 
+    method conditional-expression($/) {
+
+        my $base = $<logical-or-expression>.made;
+        my $tail = $<conditional-expression-tail>.made;
+
+        if $tail {
+
+            make ConditionalExpression.new(
+                logical-or-expression       => $base,
+                conditional-expression-tail => $tail,
+            )
+
+        } else {
+
+            make $base
+        }
+    }
+}

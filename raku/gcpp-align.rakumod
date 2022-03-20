@@ -49,3 +49,23 @@ does IAttributeSpecifier {
     }
 }
 
+our role Align::Actions {
+
+    # rule alignmentspecifierbody:sym<type-id> { <the-type-id> }
+    method alignmentspecifierbody:sym<type-id>($/) {
+        make $<the-type-id>.made
+    }
+
+    # rule alignmentspecifierbody:sym<const-expr> { <constant-expression> } 
+    method alignmentspecifierbody:sym<const-expr>($/) {
+        make $<constant-expression>.made
+    }
+
+    # rule alignmentspecifier { <alignas> <.left-paren> <alignmentspecifierbody> <ellipsis>? <.right-paren> }
+    method alignmentspecifier($/) {
+        make Alignmentspecifier.new(
+            alignmentspecifierbody => $<alignmentspecifierbody>.made,
+            has-ellipsis           => $<has-ellipsis>.made,
+        )
+    }
+}

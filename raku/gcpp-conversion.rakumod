@@ -48,3 +48,43 @@ our class ConversionDeclarator {
         exit;
     }
 }
+
+our role Conversion::Actions {
+
+    # rule conversion-function-id { <operator> <conversion-type-id> }
+    method conversion-function-id($/) {
+        make ConversionFunctionId.new(
+            conversion-type-id => $<conversion-type-id>.made,
+        )
+    }
+
+    # rule conversion-type-id { <type-specifier-seq> <conversion-declarator>? }
+    method conversion-type-id($/) {
+        my $base = $<type-specifier-seq>.made;
+        my $tail = $<conversion-declarator>.made;
+
+        if $tail {
+            make ConversionTypeId.new(
+                type-specifier-seq => $base,
+                conversion-declarator => $tail,
+            )
+        } else {
+            make $base
+        }
+    }
+
+    # rule conversion-declarator { <pointer-operator> <conversion-declarator>? }
+    method conversion-declarator($/) {
+        my $base = $<pointer-operator>.made;
+        my $tail = $<conversion-declarator>.made;
+
+        if $tail {
+            make ConversionDeclarator.new(
+                pointer-operator      => $base,
+                conversion-declarator => $tail,
+            )
+        } else {
+            make $base
+        }
+    }
+}

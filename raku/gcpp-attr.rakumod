@@ -114,20 +114,57 @@ our class AttributeArgumentClause {
     }
 }
 
-# rule attribute-declaration { 
-#   <attribute-specifier-seq> 
-#   <.semi> 
-# }
-our class AttributeDeclaration { 
-    has IComment               $.comment;
-    has IAttributeSpecifierSeq $.attribute-specifier-seq is required;
+our role AttributeSpecifierSeq::Actions {
 
-    has $.text;
+    # rule attribute-specifier-seq { <attribute-specifier>+ } 
+    method attribute-specifier-seq($/) {
+        make $<attribute-specifier>>>.made
+    }
 
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+    # rule attribute-specifier:sym<double-braced> { <.left-bracket> <.left-bracket> <attribute-list>? <.right-bracket> <.right-bracket> }
+    method attribute-specifier:sym<double-braced>($/) {
+        make $<attribute-list>.made
+    }
+
+    # rule attribute-specifier:sym<alignment> { <alignmentspecifier> } 
+    method attribute-specifier:sym<alignment>($/) {
+        make $<alignmentspecifier>.made
+    }
+
+    # rule attribute-list { <attribute> [ <.comma> <attribute> ]* <ellipsis>? }
+    method attribute-list($/) {
+
+        my $has-ellipsis = so $/<ellipsis>:exists;
+        my @attribs      = $<attribute>>>.made;
+
+        if $has-ellipsis {
+
+            make AttributeList.new(
+                attributes   => @attribs,
+                has-ellipsis => $has-ellipsis,
+            )
+
+        } else {
+            make @attribs[0]
+        }
+    }
+
+    # rule attribute { [ <attribute-namespace> <doublecolon> ]? <identifier> <attribute-argument-clause>? }
+    method attribute($/) {
+        make Attribute.new(
+            attribute-namespace       => $<attribute-namespace>.made,
+            identifier                => $<identifier>.made,
+            attribute-argument-clause => $<attribute-argument-clause>.made,
+        )
+    }
+
+    # rule attribute-namespace { <identifier> }
+    method attribute-namespace($/) {
+        make $<identifier>.made
+    }
+
+    # rule attribute-argument-clause { <.left-paren> <balanced-token-seq>? <.right-paren> }
+    method attribute-argument-clause($/) {
+        make $<balanced-token-seq>.made
     }
 }
-

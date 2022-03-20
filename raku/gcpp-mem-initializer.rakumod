@@ -73,5 +73,36 @@ our class Meminitializerid::Ident does IMeminitializerid {
     }
 }
 
+our role MemInitializer::Actions {
 
+    # rule mem-initializer-list { <mem-initializer> <ellipsis>? [ <.comma> <mem-initializer> <ellipsis>? ]* } 
+    method mem-initializer-list($/) {
+        make $<mem-initializer>>>.made;
+    }
 
+    # rule mem-initializer:sym<expr-list> { <meminitializerid> <.left-paren> <expression-list>? <.right-paren> }
+    method mem-initializer:sym<expr-list>($/) {
+        make MemInitializer::ExprList.new(
+            meminitializerid => $<meminitializerid>.made,
+            expression-list  => $<expression-list>.made,
+        )
+    }
+
+    # rule mem-initializer:sym<braced> { <meminitializerid> <braced-init-list> } 
+    method mem-initializer:sym<braced>($/) {
+        make MemInitializer::Braced.new(
+            meminitializerid => $<meminitializerid>.made,
+            braced-init-list => $<braced-init-list>.made,
+        )
+    }
+
+    # rule meminitializerid:sym<class-or-decl> { <class-or-decl-type> }
+    method meminitializerid:sym<class-or-decl>($/) {
+        make $<class-or-decl-type>.made
+    }
+
+    # rule meminitializerid:sym<ident> { <identifier> }
+    method meminitializerid:sym<ident>($/) {
+        make $<identifier>.made
+    }
+}

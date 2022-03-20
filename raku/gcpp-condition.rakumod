@@ -64,3 +64,33 @@ our class Condition::Decl does ICondition {
         exit;
     }
 }
+
+our role Condition::Actions {
+
+    # rule condition:sym<expr> { <expression> } 
+    method condition:sym<expr>($/) {
+        make $<expression>.made
+    }
+
+    # rule condition-decl-tail:sym<assign-init> { <assign> <initializer-clause> }
+    method condition-decl-tail:sym<assign-init>($/) {
+        make ConditionDeclTail::AssignInit.new(
+            initializer-clause => $<initializer-clause>.made,
+        )
+    }
+
+    # rule condition-decl-tail:sym<braced-init> { <braced-init-list> } 
+    method condition-decl-tail:sym<braced-init>($/) {
+        make $<braced-init-list>.made
+    }
+
+    # rule condition:sym<decl> { <attribute-specifier-seq>? <decl-specifier-seq> <declarator> <condition-decl-tail> } 
+    method condition:sym<decl>($/) {
+        make Condition::Decl.new(
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            decl-specifier-seq      => $<decl-specifier-seq>.made,
+            declarator              => $<declarator>.made,
+            condition-decl-tail     => $<condition-decl-tail>.made,
+        )
+    }
+}

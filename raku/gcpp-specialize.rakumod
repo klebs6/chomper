@@ -15,3 +15,13 @@ our class ExplicitSpecialization {
         exit;
     }
 }
+
+our role Specialize::Actions {
+
+    # rule explicit-specialization { <template> <less> <greater> <declaration> }
+    method explicit-specialization($/) {
+        make ExplicitSpecialization.new(
+            declaration => $<declaration>.made,
+        )
+    }
+}

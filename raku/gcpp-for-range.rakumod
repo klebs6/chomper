@@ -47,4 +47,24 @@ our class ForRangeInitializer::BracedInitList does IForRangeInitializer {
     }
 }
 
+our role ForRange::Actions {
 
+    # rule for-range-declaration { <attribute-specifier-seq>? <decl-specifier-seq> <declarator> }
+    method for-range-declaration($/) {
+        make ForRangeDeclaration.new(
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            decl-specifier-seq      => $<decl-specifier-seq>.made,
+            declarator              => $<declarator>.made,
+        )
+    }
+
+    # rule for-range-initializer:sym<expression> { <expression> }
+    method for-range-initializer:sym<expression>($/) {
+        make $<expression>.made
+    }
+
+    # rule for-range-initializer:sym<braced-init-list> { <braced-init-list> } 
+    method for-range-initializer:sym<braced-init-list>($/) {
+        make $<braced-init-list>.made
+    }
+}

@@ -61,3 +61,37 @@ our class UsingDirective {
         exit;
     }
 }
+
+our role UsingDirective::Actions {
+
+    # rule using-declaration-prefix:sym<nested> { [ <typename_>? <nested-name-specifier> ] }
+    method using-declaration-prefix:sym<nested>($/) {
+        make UsingDeclarationPrefix::Nested.new(
+            nested-name-specifier => $<nested-name-specifier>.made,
+        )
+    }
+
+    # rule using-declaration-prefix:sym<base> { <doublecolon> } 
+    method using-declaration-prefix:sym<base>($/) {
+        make UsingDeclarationPrefix::Base.new
+    }
+
+    # rule using-declaration { <using> <using-declaration-prefix> <unqualified-id> <semi> }
+    method using-declaration($/) {
+        make UsingDeclaration.new(
+            comment                  => $<semi>.made,
+            using-declaration-prefix => $<using-declaration-prefix>.made,
+            unqualified-id           => $<unqualified-id>.made,
+        )
+    }
+
+    # rule using-directive { <attribute-specifier-seq>? <using> <namespace> <nested-name-specifier>? <namespace-name> <semi> }
+    method using-directive($/) {
+        make UsingDirective.new(
+            comment                 => $<semi>.made,
+            attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            nested-name-specifier   => $<nested-name-specifier>.made,
+            namespace-name          => $<namespace-name>.made,
+        )
+    }
+}

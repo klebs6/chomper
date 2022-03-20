@@ -50,3 +50,31 @@ our class NoExceptExpression {
         exit;
     }
 }
+
+our role NoExceptExpression::Actions {
+
+    # rule no-except-expression { 
+    #   <noexcept> 
+    #   <.left-paren> 
+    #   <expression> 
+    #   <.right-paren> 
+    # }
+    method no-except-expression($/) {
+        make NoExceptExpression.new(
+            expression => $<expression>.made,
+        )
+    }
+
+    # token noe-except-specification:sym<full> { <noexcept> <.left-paren> <constant-expression> <.right-paren> }
+    method noe-except-specification:sym<full>($/) {
+        make NoeExceptSpecification::Full.new(
+            constant-expression => $<constant-expression>.made,
+        )
+    }
+
+    # token noe-except-specification:sym<keyword-only> { <noexcept> } 
+    method noe-except-specification:sym<keyword-only>($/) {
+        make NoeExceptSpecification::KeywordOnly.new
+    }
+}
+

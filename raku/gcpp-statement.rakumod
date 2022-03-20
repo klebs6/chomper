@@ -115,3 +115,56 @@ our class StatementSeq {
         exit;
     }
 }
+
+our role Statement::Actions {
+
+    # rule declaration-statement { <block-declaration> } 
+    method declaration-statement($/) {
+        make $<block-declaration>.made
+    }
+
+    # rule expression-statement { <expression>? <semi> }
+    method expression-statement($/) {
+
+        my $comment = $<semi>.made;
+        my $body    = $<expression>.made;
+
+        if $comment {
+            make ExpressionStatement.new(
+                comment    => $comment,
+                expression => $body,
+            )
+        } else {
+            make $body
+        }
+    }
+
+    # rule compound-statement { <.left-brace> <statement-seq>? <.right-brace> }
+    method compound-statement($/) {
+        make $<statement-seq>.made
+    }
+
+    # regex statement-seq { <statement> [<.ws> <statement>]* } 
+    method statement-seq($/) {
+        make $<statement>>>.made;
+    }
+
+    # token statement:sym<declaration> { <comment>? <declaration-statement> }
+    method statement:sym<declaration>($/) {
+
+        my $comment = $<comment>.made;
+        my $body    = $<declaration-statement>.made;
+
+        if not $comment {
+
+            make $body
+
+        } else {
+
+            make Statement::Declaration.new(
+                comment               => $comment,
+                declaration-statement => $body,
+            )
+        }
+    }
+}

@@ -29,3 +29,28 @@ our class ClassOrDeclType::Decltype does IClassOrDeclType {
     }
 }
 
+our role ClassOrDeclType::Actions {
+
+    # rule class-or-decl-type:sym<class> { <nested-name-specifier>? <class-name> }
+    method class-or-decl-type:sym<class>($/) {
+
+        my $prefix = $<nested-name-specifier>.made;
+        my $base   = $<class-name>.made;
+
+        if $prefix {
+            make ClassOrDeclType::Class.new(
+                nested-name-specifier => $prefix,
+                class-name            => $base,
+            )
+
+        } else {
+
+            make $base
+        }
+    }
+
+    # rule class-or-decl-type:sym<decltype> { <decltype-specifier> } 
+    method class-or-decl-type:sym<decltype>($/) {
+        make $<decltype-specifier>.made
+    }
+}

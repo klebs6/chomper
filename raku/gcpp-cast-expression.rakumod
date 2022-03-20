@@ -63,3 +63,45 @@ our class CastToken::Const does ICastToken {
         exit;
     }
 }
+
+our role CastExpression::Actions {
+
+    # token cast-token:sym<dyn> { <dynamic_cast> }
+    method cast-token:sym<dyn>($/) {
+        make CastToken::Dyn.new
+    }
+
+    # token cast-token:sym<static> { <static_cast> }
+    method cast-token:sym<static>($/) {
+        make CastToken::Static.new
+    }
+
+    # token cast-token:sym<reinterpret> { <reinterpret_cast> }
+    method cast-token:sym<reinterpret>($/) {
+        make CastToken::Reinterpret.new
+    }
+
+    # token cast-token:sym<const> { <const_cast> }
+    method cast-token:sym<const>($/) {
+        make CastToken::Const.new
+    }
+
+    # rule cast-expression { [ <.left-paren> <the-type-id> <.right-paren> ]* <unary-expression> }
+    method cast-expression($/) {
+
+        my $base     = $<unary-expression>.made;
+        my @type-ids = $<the-type-id>>>.made.List;
+
+        if @type-ids.elems gt 0 {
+
+            make CastExpression.new(
+                unary-expression => $base,
+                the-type-ids     => @type-ids,
+            )
+
+        } else {
+
+            make $base
+        }
+    }
+}

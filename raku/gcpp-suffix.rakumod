@@ -115,3 +115,58 @@ our class Udsuffix {
         exit;
     }
 }
+
+our role Suffix::Actions {
+
+    # token integersuffix:sym<ul> { <unsignedsuffix> <longsuffix>? }
+    method integersuffix:sym<ul>($/) {
+        make Integersuffix::Ul.new(
+            unsignedsuffix => $<unsignedsuffix>.made,
+            longsuffix     => $<longsuffix>.made,
+        )
+    }
+
+    # token integersuffix:sym<ull> { <unsignedsuffix> <longlongsuffix>? }
+    method integersuffix:sym<ull>($/) {
+        make Integersuffix::Ull.new(
+            unsignedsuffix => $<unsignedsuffix>.made,
+            longlongsuffix => $<longlongsuffix>.made,
+        )
+    }
+
+    # token integersuffix:sym<lu> { <longsuffix> <unsignedsuffix>? }
+    method integersuffix:sym<lu>($/) {
+        make Integersuffix::Lu.new(
+            longsuffix     => $<longsuffix>.made,
+            unsignedsuffix => $<unsignedsuffix>.made,
+        )
+    }
+
+    # token integersuffix:sym<llu> { <longlongsuffix> <unsignedsuffix>? } 
+    method integersuffix:sym<llu>($/) {
+        make Integersuffix::Llu.new(
+            longsuffix     => $<longsuffix>.made,
+            unsignedsuffix => $<unsignedsuffix>.made,
+        )
+    }
+
+    # token unsignedsuffix { <[ u U ]> }
+    method unsignedsuffix($/) {
+        make Unsignedsuffix.new
+    }
+
+    # token longsuffix { <[ l L ]> } 
+    method longsuffix($/) {
+        make Longsuffix.new
+    }
+
+    # token longlongsuffix:sym<ll> { 'll' }
+    method longlongsuffix:sym<ll>($/) {
+        make Longlongsuffix::Ll.new
+    }
+
+    # token longlongsuffix:sym<LL> { 'LL' } 
+    method longlongsuffix:sym<LL>($/) {
+        make Longlongsuffix::LL.new
+    }
+}

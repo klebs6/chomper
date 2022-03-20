@@ -43,3 +43,25 @@ our class Encodingprefix::L  does IEncodingprefix {
     }
 }
 
+our role Encoding::Actions {
+
+    # token encodingprefix:sym<u8> { 'u8' }
+    method encodingprefix:sym<u8>($/) {
+        make Encodingprefix::U8.new
+    }
+
+    # token encodingprefix:sym<u> { 'u' }
+    method encodingprefix:sym<u>($/) {
+        make Encodingprefix::U.new
+    }
+
+    # token encodingprefix:sym<U> { 'U' }
+    method encodingprefix:sym<U>($/) {
+        make Encodingprefix::U.new
+    }
+
+    # token encodingprefix:sym<L> { 'L' } 
+    method encodingprefix:sym<L>($/) {
+        make Encodingprefix::L.new
+    }
+}

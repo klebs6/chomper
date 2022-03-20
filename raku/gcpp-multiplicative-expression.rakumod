@@ -67,3 +67,44 @@ our class MultiplicativeExpressionTail {
         exit;
     }
 }
+
+our role MultiplicativeExpression::Actions {
+
+    # token multiplicative-operator:sym<*> { <star> }
+    method multiplicative-operator:sym<*>($/) {
+        make MultiplicativeOperator::Star.new
+    }
+
+    # token multiplicative-operator:sym</> { <div_> }
+    method multiplicative-operator:sym</>($/) {
+        make MultiplicativeOperator::Slash.new
+    }
+
+    # token multiplicative-operator:sym<%> { <mod_> }
+    method multiplicative-operator:sym<%>($/) {
+        make MultiplicativeOperator::Mod.new
+    }
+
+    # rule multiplicative-expression { <pointer-member-expression> <multiplicative-expression-tail>* }
+    method multiplicative-expression($/) {
+        my $base = $<pointer-member-expression>.made;
+        my @tail = $<multiplicative-expression-tail>>>.made.List;
+
+        if @tail.elems gt 0 {
+            make MultiplicativeExpression.new(
+                pointer-member-expression      => $base,
+                multiplicative-expression-tail => @tail,
+            )
+        } else {
+            make $base
+        }
+    }
+
+    # rule multiplicative-expression-tail { <multiplicative-operator> <pointer-member-expression> } 
+    method multiplicative-expression-tail($/) {
+        make MultiplicativeExpressionTail.new(
+            multiplicative-operator   => $<multiplicative-operator>.made,
+            pointer-member-expression => $<pointer-member-expression>.made,
+        )
+    }
+}

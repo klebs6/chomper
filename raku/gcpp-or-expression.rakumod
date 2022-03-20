@@ -30,3 +30,40 @@ our class InclusiveOrExpression does IInclusiveOrExpression {
     }
 }
 
+
+our role OrExpression::Actions {
+
+    # rule exclusive-or-expression { 
+    #   <and-expression> 
+    #   [ <caret> <and-expression> ]* 
+    # }
+    method exclusive-or-expression($/) {
+        my @and-expressions = $<and-expression>>>.made;
+
+        if @and-expressions.elems gt 1 {
+            make ExclusiveOrExpression.new(
+                and-expressions => @and-expressions,
+            )
+        } else {
+            make @and-expressions[0]
+        }
+    }
+
+    # rule inclusive-or-expression { 
+    #   <exclusive-or-expression> 
+    #   [ <or_> <exclusive-or-expression> ]* 
+    # }
+    method inclusive-or-expression($/) {
+
+        my @exclusive-or-expressions = $<exclusive-or-expression>>>.made;
+
+        if @exclusive-or-expressions.elems gt 1 {
+            make InclusiveOrExpression.new(
+                exclusive-or-expressions => @exclusive-or-expressions,
+            )
+
+        } else {
+            make @exclusive-or-expressions[0]
+        }
+    }
+}
