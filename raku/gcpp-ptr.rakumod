@@ -82,3 +82,15 @@ our class PointerOperator::Star does IPointerOperator {
         exit;
     }
 }
+
+# token literal:sym<ptr> { <pointer-literal> }
+our class PointerLiteral does ILiteral {
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
