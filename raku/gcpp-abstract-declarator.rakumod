@@ -19,9 +19,7 @@ our class AbstractDeclarator::Base does IAbstractDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.pointer-abstract-declarator.gist
     }
 }
 
@@ -38,9 +36,17 @@ our class AbstractDeclarator::Aug does IAbstractDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.no-pointer-abstract-declarator {
+            $builder ~= $.no-pointer-abstract-declarator.gist ~ " ";
+        }
+
+        $builder ~= $.parameters-and-qualifiers.gist ~ " ";
+        $builder ~= $.trailing-return-type.gist;
+
+        $builder
     }
 }
 
@@ -53,9 +59,7 @@ our class AbstractDeclarator::AbstractPack does IAbstractDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.abstract-pack-declarator.gist
     }
 }
 
@@ -68,9 +72,7 @@ our class PointerAbstractDeclarator::NoPtr does IPointerAbstractDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.no-pointer-abstract-declarator.gist
     }
 }
 
@@ -79,15 +81,20 @@ our class PointerAbstractDeclarator::NoPtr does IPointerAbstractDeclarator {
 #   <no-pointer-abstract-declarator>? 
 # }
 our class PointerAbstractDeclarator::Ptr does IPointerAbstractDeclarator {
-    has IPointerOperator @.pointer-operators is required;
+    has IPointerOperator            @.pointer-operators is required;
     has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = @.pointer-operators>>.gist.join(" ");
+
+        if $.no-pointer-abstract-declarator {
+            $builder ~= " " ~ $.no-pointer-abstract-declarator.gist
+        }
+
+        $builder
     }
 }
 
@@ -102,9 +109,7 @@ does INoPointerAbstractDeclaratorBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.parameters-and-qualifiers.gist
     }
 }
 
@@ -121,9 +126,9 @@ does INoPointerAbstractDeclaratorBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.no-pointer-abstract-declarator.gist 
+        ~ " " 
+        ~ $.no-pointer-abstract-declarator-bracketed-base.gist
     }
 }
 
@@ -138,9 +143,9 @@ our class NoPointerAbstractDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.no-pointer-abstract-declarator-base.gist
+        ~ " "
+        ~ @.no-pointer-abstract-declarator-body>>.gist.join(" ")
     }
 }
 
@@ -155,9 +160,7 @@ does INoPointerAbstractDeclaratorBase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.parameters-and-qualifiers.gist
     }
 }
 
@@ -172,9 +175,7 @@ does INoPointerAbstractDeclaratorBase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.no-pointer-abstract-declarator-bracketed-base.gist
     }
 }
 
@@ -191,9 +192,7 @@ does INoPointerAbstractDeclaratorBase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "(" ~ $.pointer-abstract-declarator.gist ~ ")"
     }
 }
 
@@ -210,9 +209,21 @@ our class NoPointerAbstractDeclaratorBracketedBase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+
+        $builder ~= "[";
+
+        if $.constant-expression {
+            $builder ~= $.constant-expression.gist;
+        }
+
+        $builder ~= "]";
+
+        if $.attribute-specifier-seq {
+            $builder ~= $.attribute-specifier-seq.gist;
+        }
+
+        $builder
     }
 }
 
@@ -227,9 +238,7 @@ our class AbstractPackDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.pointer-operators>>.gist.join(" ") ~ $.no-pointer-abstract-pack-declarator.gist
     }
 }
 
@@ -242,9 +251,7 @@ our class NoPointerAbstractPackDeclaratorBasic {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.parameters-and-qualifiers.gist
     }
 }
 
@@ -261,9 +268,20 @@ our class NoPointerAbstractPackDeclaratorBrackets {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "[";
+
+        if $.constant-expression {
+            $builder ~= $.constant-expression.gist;
+        }
+
+        $builder ~= "]";
+
+        if $.attribute-specifier-seq {
+            $builder ~= $.attribute-specifier-seq.gist;
+        }
+
+        $builder
     }
 }
 
@@ -276,9 +294,7 @@ our class NoPointerAbstractPackDeclaratorBody::Basic does INoPointerAbstractPack
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.no-pointer-abstract-pack-declarator-basic.gist
     }
 }
 
@@ -291,9 +307,7 @@ our class NoPointerAbstractPackDeclaratorBody::Brack does INoPointerAbstractPack
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.no-pointer-abstract-pack-declarator-brackets.gist
     }
 }
 
@@ -307,9 +321,7 @@ our class NoPointerAbstractPackDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "..." ~ @.no-pointer-abstract-pack-declarator-bodies>>.gist.join(" ")
     }
 }
 

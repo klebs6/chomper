@@ -8,9 +8,7 @@ our class AdditiveOperator::Plus does IAdditiveOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "+"
     }
 }
 
@@ -20,9 +18,7 @@ our class AdditiveOperator::Minus does IAdditiveOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "-"
     }
 }
 
@@ -31,15 +27,11 @@ our class AdditiveOperator::Minus does IAdditiveOperator {
 #   <multiplicative-expression> 
 # }
 our class AdditiveExpressionTail {
-    has IAdditiveOperator        $.additive-operator         is required;
+    has IAdditiveOperator         $.additive-operator         is required;
     has IMultiplicativeExpression $.multiplicative-expression is required;
 
-    has $.text;
-
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.additive-operator.gist ~ " " $.multiplicative-expresison.gist
     }
 }
 
@@ -49,14 +41,12 @@ our class AdditiveExpressionTail {
 # }
 our class AdditiveExpression does IAdditiveExpression {
     has IMultiplicativeExpression $.multiplicative-expression is required;
-    has AdditiveExpressionTail   @.additive-expression-tail;
-
-    has $.text;
+    has AdditiveExpressionTail    @.additive-expression-tail;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.multiplicative-expression.gist 
+        ~ " " 
+        ~ @.additive-expression-tail>>.gist.join(" ")
     }
 }
 

@@ -9,12 +9,9 @@ our class Alignmentspecifierbody::TypeId
 does IAlignmentspecifierbody {
 
     has ITheTypeId $.the-type-id is required;
-    has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.the-type-id.gist
     }
 }
 
@@ -23,12 +20,9 @@ our class Alignmentspecifierbody::ConstExpr
 does IAlignmentspecifierbody {
 
     has IConstantExpression $.constant-expression is required;
-    has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.constant-expression.gist
     }
 }
 
@@ -45,12 +39,15 @@ does IAttributeSpecifier {
     has IAlignmentspecifierbody $.alignmentspecifierbody is required;
     has Bool                    $.has-ellipsis is required;
 
-    has $.text;
-
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "alignas(" ~ $.alignmentspecifierbody.gist;
+
+        if $.has-ellipsis {
+            $builder ~= " ...";
+        }
+
+        $builder ~ ")"
     }
 }
 

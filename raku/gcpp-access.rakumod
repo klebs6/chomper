@@ -10,9 +10,7 @@ our class AccessSpecifier::Private does IAccessSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "private"
     }
 }
 
@@ -24,9 +22,7 @@ our class AccessSpecifier::Protected does IAccessSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "protected"
     }
 }
 
@@ -38,9 +34,7 @@ our class AccessSpecifier::Public does IAccessSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "public"
     }
 }
 
