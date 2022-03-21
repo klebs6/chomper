@@ -17,9 +17,7 @@ our class AsmDefinition {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "asm(" ~ $.string-literal.gist ~ ");"
     }
 }
 

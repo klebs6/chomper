@@ -94,6 +94,7 @@ our class TemplateArgument::IdExpr does ITemplateArgument {
 # }
 our class SimpleTemplateId 
 does IDeclSpecifierSeq 
+does ITheTypeName
 does IPostListHead {
 
     has Identifier           $.template-name is required;

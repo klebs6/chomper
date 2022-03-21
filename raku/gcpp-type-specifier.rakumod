@@ -102,7 +102,7 @@ our role TypeSpecifier::Actions {
         my $tail  = $<attribute-specifier-seq>.made;
         my @items = $<type-specifier>>>.made;
 
-        if $tail or @items.elems gt 1 {
+        if $tail {
 
             make TypeSpecifierSeq.new(
                 type-specifiers         => @items,
@@ -111,7 +111,14 @@ our role TypeSpecifier::Actions {
 
         } else {
 
-            make @items[0]
+            if @items.elems gt 1 {
+
+                make @items
+
+            } else {
+
+                make @items[0]
+            }
         }
     }
 

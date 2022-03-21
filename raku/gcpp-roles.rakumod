@@ -14,6 +14,7 @@ our role ISimpleTypeSpecifier { ... }
 our role IStatement           { ... }
 our role ITypeSpecifier       { ... }
 our role ITypeSpecifierSeq    { ... }
+our role ITemplateArgument    { ... }
 
 #-------------------------------
 our role  IConstantExpression                     { }
@@ -106,8 +107,14 @@ our role IFunctionSpecifier      does IDeclSpecifier    { }
 our role ITypeSpecifier          does IDeclSpecifier does ITypeSpecifierSeq    { }
 our role ITrailingTypeSpecifier  does ITypeSpecifier    { }
 our role ISimpleTypeLengthModifier                      { }
-our role ISimpleTypeSpecifier          does ITypeSpecifier { }
-our role ISimpleTypeSignednessModifier does ISimpleTypeSpecifier { }
+
+our role ISimpleTypeSpecifier          
+does ITemplateArgument
+does ITypeSpecifier { }
+
+our role ISimpleTypeSignednessModifier 
+does ISimpleTypeSpecifier { }
+
 our role ITheTypeName                                   { }
 our role IDecltypeSpecifierBody                         { }
 our role IElaboratedTypeSpecifier                       { }

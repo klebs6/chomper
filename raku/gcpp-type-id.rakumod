@@ -12,7 +12,7 @@ our class TheTypeId
 does ITheTypeId 
 does ITemplateArgument { 
 
-    has ITypeSpecifierSeq   $.type-specifier-seq is required;
+    has $.type-specifier-seq is required;
     has IAbstractDeclarator $.abstract-declarator;
     
     has $.text;

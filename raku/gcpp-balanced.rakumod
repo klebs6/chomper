@@ -9,9 +9,7 @@ our class BalancedTokenSeq {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.balancedrules>>.gist.join(" ")
     }
 }
 
@@ -27,9 +25,7 @@ our class Balancedrule::Parens does IBalancedrule {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "(" ~ $.balanced-token-seq.gist ~ ")"
     }
 }
 
@@ -44,9 +40,7 @@ our class Balancedrule::Brackets does IBalancedrule {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "[" ~ $.balanced-token-seq ~ "]"
     }
 }
 
@@ -61,9 +55,7 @@ our class Balancedrule::Braces does IBalancedrule {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "{" ~ $.balanced-token-seq ~ "}"
     }
 }
 

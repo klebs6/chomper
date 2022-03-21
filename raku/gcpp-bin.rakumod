@@ -8,10 +8,7 @@ our class BinaryLiteral {
     has $.text;
 
     method gist {
-
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -21,10 +18,7 @@ our class Binarydigit {
     has $.text;
 
     method gist {
-
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 

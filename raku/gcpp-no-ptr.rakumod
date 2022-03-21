@@ -10,7 +10,9 @@ use gcpp-ptr-declarator;
 #   <declaratorid> 
 #   <attribute-specifier-seq>? 
 # }
-our class NoPointerDeclaratorBase::Base does INoPointerDeclaratorBase {
+our class NoPointerDeclaratorBase::Base 
+does IAbstractDeclarator
+does INoPointerDeclaratorBase {
     has Declaratorid           $.declaratorid is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
 
@@ -28,7 +30,9 @@ our class NoPointerDeclaratorBase::Base does INoPointerDeclaratorBase {
 #   <pointer-declarator> 
 #   <.right-paren> 
 # }
-our class NoPointerDeclaratorBase::Parens does INoPointerDeclaratorBase {
+our class NoPointerDeclaratorBase::Parens 
+does IAbstractDeclarator
+does INoPointerDeclaratorBase {
     has PointerDeclarator $.pointer-declarator is required;
 
     has $.text;
@@ -80,6 +84,7 @@ our class NoPointerDeclaratorTail::Bracketed does INoPointerDeclaratorTail {
 #   <no-pointer-declarator-tail>* 
 # } #------------------------------
 our class NoPointerDeclarator 
+does IAbstractDeclarator
 does INoPointerDeclarator 
 does IInitDeclarator does IDeclarator {
 

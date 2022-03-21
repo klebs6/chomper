@@ -3,7 +3,7 @@ use Data::Dump::Tree;
 use gcpp-roles;
 
 # token block-comment { '/*' .*?  '*/' }
-our class BlockComment { 
+our class BlockComment does IComment {
     has Str $.value is required;
 
     has $.text;
@@ -16,7 +16,7 @@ our class BlockComment {
 }
 
 # token line-comment {         '//' <-[ \r \n ]>*     }
-our class LineComment { 
+our class LineComment does IComment {
     has Str $.value is required;
 
     has $.text;

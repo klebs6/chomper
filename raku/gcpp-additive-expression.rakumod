@@ -31,7 +31,7 @@ our class AdditiveExpressionTail {
     has IMultiplicativeExpression $.multiplicative-expression is required;
 
     method gist{
-        $.additive-operator.gist ~ " " $.multiplicative-expresison.gist
+        $.additive-operator.gist ~ " " ~ $.multiplicative-expresison.gist
     }
 }
 
@@ -39,7 +39,9 @@ our class AdditiveExpressionTail {
 #   <multiplicative-expression> 
 #   <additive-expression-tail>* 
 # }
-our class AdditiveExpression does IAdditiveExpression {
+our class AdditiveExpression 
+does IConstantExpression
+does IAdditiveExpression {
     has IMultiplicativeExpression $.multiplicative-expression is required;
     has AdditiveExpressionTail    @.additive-expression-tail;
 

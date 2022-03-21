@@ -22,7 +22,9 @@ our class AugmentedPointerOperator does IAugmentedPointerOperator {
 }
 
 # rule pointer-operator:sym<ref> { <and_> <attribute-specifier-seq>? }
-our class PointerOperator::Ref does IPointerOperator {
+our class PointerOperator::Ref 
+does ISomeDeclarator
+does IPointerOperator {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
 
     has $.text;

@@ -12,9 +12,7 @@ our class AndExpression does IAndExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.equality-expressions>>.gist.join(" & ")
     }
 }
 

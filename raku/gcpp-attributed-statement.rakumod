@@ -3,6 +3,26 @@ use Data::Dump::Tree;
 use gcpp-roles;
 use gcpp-statement;
 use gcpp-try;
+use gcpp-attr;
+
+# token statement:sym<attributed> { 
+#   <comment>? 
+#   <attribute-specifier-seq>? 
+#   <attributed-statement-body> 
+# }
+our class Statement::Attributed does IStatement {
+    has IComment                 $.comment;
+    has IAttributeSpecifierSeq   $.attribute-specifier-seq;
+    has                          $.attributed-statement-body is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule attributed-statement-body:sym<expression> { 
 #   <expression-statement> 
@@ -15,9 +35,7 @@ does IAttributedStatementBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.expression-statement.gist
     }
 }
 
@@ -32,9 +50,7 @@ does IAttributedStatementBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.compound-statement.gist
     }
 }
 
@@ -49,9 +65,7 @@ does IAttributedStatementBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.selection-statement.gist
     }
 }
 
@@ -66,9 +80,7 @@ does IAttributedStatementBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.iteration-statement.gist
     }
 }
 
@@ -83,9 +95,7 @@ does IAttributedStatementBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.jump-statement.gist
     }
 }
 
@@ -100,9 +110,7 @@ does IAttributedStatementBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.try-block.gist
     }
 }
 
@@ -121,11 +129,16 @@ our role AttributedStatement::Actions {
 
         } else {
 
-            make Statement::Attributed.new(
+            my $res = Statement::Attributed.new(
                 comment                   => $comment,
-                attribute-specifier-seq   => $attribs,
                 attributed-statement-body => $body,
-            )
+            );
+
+            if $attribs {
+                $res.attribute-specifier-seq = $attribs;
+            }
+
+            make $res
         }
     }
 

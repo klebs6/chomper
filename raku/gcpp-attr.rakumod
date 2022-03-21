@@ -16,12 +16,9 @@ our class AttributeSpecifierSeq {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.attribute-specifier>>.gist.join(" ")
     }
 }
-
 
 # rule attribute-specifier:sym<double-braced> { 
 #   <.left-bracket> 
@@ -36,9 +33,14 @@ our class AttributeSpecifier::DoubleBraced does IAttributeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "[[";
+
+        if $.attribute-list {
+            $builder ~= $.attribute-list.gist;
+        }
+
+        $builder ~ "]]"
     }
 }
 
@@ -51,9 +53,7 @@ our class AttributeSpecifier::Alignment does IAttributeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.alignmentspecifier.gist
     }
 }
 
@@ -69,9 +69,14 @@ our class AttributeList {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = @.attributes>>.gist.join(", ");
+
+        if $.has-ellipsis {
+            $builder ~= "...";
+        }
+
+        $builder
     }
 }
 
@@ -82,9 +87,7 @@ our class AttributeNamespace {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.identifier.gist
     }
 }
 
@@ -99,9 +102,14 @@ our class AttributeArgumentClause {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "(";
+
+        if $.balanced-token-seq {
+            $builder ~= $.balanced-token-seq.gist;
+        }
+
+        $builder ~ ")"
     }
 }
 
@@ -118,9 +126,20 @@ our class Attribute {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.attribute-namespace {
+            $builder ~= $.attribute-namespace.gist ~ "::";
+        }
+
+        $builder ~= $.identifier.gist;
+
+        if $.attribute-argument-clause {
+            $builder ~= " " ~ $.attribute-argument-clause.gist;
+        }
+
+        $builder
     }
 }
 

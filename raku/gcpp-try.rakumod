@@ -1,9 +1,43 @@
 use Data::Dump::Tree;
 
 use gcpp-roles;
-use gcpp-handler;
 use gcpp-statement;
 use gcpp-constructor;
+
+# rule handler { 
+#   <catch> 
+#   <.left-paren> 
+#   <exception-declaration> 
+#   <.right-paren> 
+#   <compound-statement> 
+# }
+our class Handler { 
+    has IExceptionDeclaration $.exception-declaration is required;
+    has $.compound-statement is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+# rule handler-seq { 
+#   <handler>+ 
+# }
+our class HandlerSeq { 
+    has Handler @.handlers is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule try-block { 
 #   <try_> 
@@ -11,8 +45,8 @@ use gcpp-constructor;
 #   <handler-seq> 
 # }
 our class TryBlock { 
-    has CompoundStatement $.compound-statement is required;
-    has HandlerSeq        $.handler-seq        is required;
+    has $.compound-statement is required;
+    has @.handler-seq is required;
 
     has $.text;
 
@@ -32,7 +66,7 @@ our class TryBlock {
 our class FunctionTryBlock { 
     has ConstructorInitializer $.constructor-initializer;
     has CompoundStatement      $.compound-statement is required;
-    has HandlerSeq             $.handler-seq is required;
+    has                        @.handler-seq is required;
 
     has $.text;
 

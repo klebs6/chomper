@@ -16,6 +16,7 @@ our class DecimalLiteral {
 }
 
 our class IntegerLiteral::Dec 
+does IConstantExpression
 does IIntegerLiteral {
 
     has DecimalLiteral $.decimal-literal is required;

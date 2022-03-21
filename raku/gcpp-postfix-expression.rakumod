@@ -141,7 +141,7 @@ does IStatement
 does IReturnStatementBody 
 does IUnaryExpression { 
     has IPostfixExpressionBody $.postfix-expression-body is required;
-    has IPostfixExpressionTail @.postfix-expression-tail;
+    has @.postfix-expression-tail;
 
     has $.text;
 

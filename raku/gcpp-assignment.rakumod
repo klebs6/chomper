@@ -11,9 +11,7 @@ does IAssignmentExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.throw-expression.gist
     }
 }
 
@@ -28,12 +26,15 @@ does IAssignmentExpression {
     has ILogicalOrExpression $.logical-or-expression is required;
     has IAssignmentOperator  $.assignment-operator   is required;
     has IInitializerClause   $.initializer-clause    is required;
+
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.logical-or-expression.gist 
+        ~ " " 
+        ~ $.assignment-operator.gist 
+        ~ " " 
+        ~ $.initializer-clause.gist
     }
 }
 
@@ -48,9 +49,7 @@ does IAssignmentExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.conditional-expression.gist
     }
 }
 
@@ -61,9 +60,7 @@ does IAssignmentOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "="
     }
 }
 
@@ -74,9 +71,7 @@ does IAssignmentOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "*="
     }
 }
 
@@ -87,9 +82,7 @@ does IAssignmentOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "/="
     }
 }
 
@@ -100,9 +93,7 @@ does IAssignmentOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "%="
     }
 }
 
@@ -113,9 +104,7 @@ does IAssignmentOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "+="
     }
 }
 
@@ -126,9 +115,7 @@ does IAssignmentOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "-="
     }
 }
 
@@ -139,9 +126,7 @@ does IAssignmentOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        ">>="
     }
 }
 
@@ -152,9 +137,7 @@ does IAssignmentOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "<<="
     }
 }
 
@@ -165,9 +148,7 @@ does IAssignmentOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "&="
     }
 }
 
@@ -178,9 +159,7 @@ does IAssignmentOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "^="
     }
 }
 
@@ -191,9 +170,7 @@ does IAssignmentOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "|="
     }
 }
 

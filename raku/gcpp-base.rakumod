@@ -14,9 +14,7 @@ our class BaseSpecifierList {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.base-specifiers>>.gist.join(", ")
     }
 }
 
@@ -29,10 +27,8 @@ our class BaseClause {
 
     has $.text;
 
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+    method gist {
+        ":" ~ $.base-specifier-list.gist
     }
 }
 
@@ -41,6 +37,10 @@ our class BaseClause {
 # }
 our class BaseTypeSpecifier { 
     has IClassOrDeclType $.class-or-decl-type is required;
+
+    method gist {
+        $.class-or-decl-type.gist
+    }
 }
 
 # rule base-specifier:sym<base-type> { 
@@ -54,9 +54,13 @@ our class BaseSpecifier::BaseType does IBaseSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        if $.attribute-specifier-seq {
+            $.attribute-specifier-seq.gist ~ " " ~ $.base-type-specifier.gist
+
+        } else {
+            $.base-type-specifier.gist
+        }
     }
 }
 

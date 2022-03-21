@@ -202,7 +202,9 @@ does INoPointerAbstractDeclaratorBase {
 #   <.right-bracket> 
 #   <attribute-specifier-seq>? 
 # }
-our class NoPointerAbstractDeclaratorBracketedBase { 
+our class NoPointerAbstractDeclaratorBracketedBase 
+does IAbstractDeclarator
+{ 
     has IConstantExpression    $.constant-expression;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
 

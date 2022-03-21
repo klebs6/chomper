@@ -6,7 +6,9 @@ use gcpp-roles;
 #   <augmented-pointer-operator>* 
 #   <no-pointer-declarator> 
 # }
-our class PointerDeclarator does IDeclarator { 
+our class PointerDeclarator 
+does ISomeDeclarator
+does IDeclarator { 
     has IAugmentedPointerOperator @.augmented-pointer-operators;
     has INoPointerDeclarator      $.no-pointer-declarator is required;
 

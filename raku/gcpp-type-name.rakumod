@@ -62,7 +62,11 @@ our class TheTypeName::Typedef does ITheTypeName {
 #   <nested-name-specifier>? 
 #   <the-type-name> 
 # }
-our class FullTypeName does IPostListHead does IDeclSpecifier { 
+our class FullTypeName 
+does IPostListHead 
+does IDeclSpecifier 
+does ISimpleTypeSpecifier
+{
     has INestedNameSpecifier $.nested-name-specifier;
     has ITheTypeName         $.the-type-name is required;
 

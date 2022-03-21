@@ -37,25 +37,6 @@ our class CompoundStatement {
     }
 }
 
-# token statement:sym<attributed> { 
-#   <comment>? 
-#   <attribute-specifier-seq>? 
-#   <attributed-statement-body> 
-# }
-our class Statement::Attributed does IStatement {
-    has IComment                 $.comment;
-    has IAttributeSpecifierSeq   $.attribute-specifier-seq;
-    has IAttributedStatementBody $.attributed-statement-body is required;
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
-
 # token statement:sym<labeled> { 
 #   <comment>? 
 #   <labeled-statement> 
