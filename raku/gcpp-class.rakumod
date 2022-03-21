@@ -1,3 +1,42 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-ident;
+use gcpp-template;
+use gcpp-member;
+use gcpp-attr;
+use gcpp-base;
+
+# rule class-virt-specifier { 
+#   <final> 
+# }
+our class ClassVirtSpecifier {
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+# rule class-head-name { 
+#   <nested-name-specifier>? 
+#   <class-name> 
+# }
+our class ClassHeadName { 
+    has INestedNameSpecifier $.nested-name-specifier;
+    has IClassName           $.class-name is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule class-name:sym<id> { <identifier> }
 our class ClassName::Id does IClassName {
@@ -80,36 +119,6 @@ our class ClassHead::Union does IClassHead {
     }
 }
 
-# rule class-head-name { 
-#   <nested-name-specifier>? 
-#   <class-name> 
-# }
-our class ClassHeadName { 
-    has INestedNameSpecifier $.nested-name-specifier;
-    has IClassName           $.class-name is required;
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-# rule class-virt-specifier { 
-#   <final> 
-# }
-our class ClassVirtSpecifier {
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
 
 # rule class-key:sym<class> { 
 #   <.class_> 

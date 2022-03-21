@@ -1,3 +1,6 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
 
 # token equality-operator:sym<eq> { <equal> }
 our class EqualityOperator::Eq does IEqualityOperator {

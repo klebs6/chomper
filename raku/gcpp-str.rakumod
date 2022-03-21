@@ -1,3 +1,8 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+
+
 # token literal:sym<str> { <string-literal> }
 our class StringLiteral does ILiteral { 
     has Str $.value;

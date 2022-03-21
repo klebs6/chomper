@@ -1,3 +1,10 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-attr;
+use gcpp-simple-type-specifier;
+use gcpp-attr;
+
 # rule trailing-type-specifier:sym<cv-qualifier> { 
 #   <cv-qualifier> 
 #   <simple-type-specifier> 

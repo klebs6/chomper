@@ -1,3 +1,12 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-ident;
+use gcpp-attr;
+use gcpp-str;
+
+our role IDeclarationseq { }
+
 # rule declarationseq { 
 #   <declaration>+ 
 # }

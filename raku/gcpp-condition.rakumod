@@ -1,3 +1,9 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-attr;
+use gcpp-expression;
+
 # rule condition:sym<expr> { 
 #   <expression> 
 # }

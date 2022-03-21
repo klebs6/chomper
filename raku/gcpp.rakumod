@@ -11,6 +11,7 @@ use gcpp-attr;
 use gcpp-attributed-statement;
 use gcpp-balanced;
 use gcpp-base;
+use gcpp-bin;
 use gcpp-bool;
 use gcpp-cast-expression;
 use gcpp-char;
@@ -22,6 +23,7 @@ use gcpp-conditional-expression;
 use gcpp-constructor;
 use gcpp-conversion;
 use gcpp-cv;
+use gcpp-dec;
 use gcpp-decl-specifier;
 use gcpp-declaration;
 use gcpp-declarator;
@@ -37,9 +39,9 @@ use gcpp-float;
 use gcpp-for-init;
 use gcpp-for-range;
 use gcpp-function;
+use gcpp-hex;
 use gcpp-id-expression;
 use gcpp-ident;
-use gcpp-initializer;
 use gcpp-instantiate;
 use gcpp-integer-literal;
 use gcpp-iteration;
@@ -59,6 +61,7 @@ use gcpp-nested-name;
 use gcpp-new;
 use gcpp-no-ptr;
 use gcpp-noexcept;
+use gcpp-oct;
 use gcpp-operator-id;
 use gcpp-operator;
 use gcpp-or-expression;
@@ -91,6 +94,7 @@ use gcpp-type-modifier;
 use gcpp-type-name;
 use gcpp-type-param;
 use gcpp-type-specifier;
+use gcpp-typedef;
 use gcpp-unary-expression;
 use gcpp-user-defined-literal;
 use gcpp-using-directive;
@@ -98,6 +102,7 @@ use gcpp-virtual;
 
 our role CPP14Parser 
 does AbstractDeclarator::Rules
+does Typedef::Rules
 does Access::Rules
 does AdditiveExpression::Rules
 does Align::Rules
@@ -108,6 +113,7 @@ does AttributeSpecifierSeq::Rules
 does AttributedStatement::Rules
 does Balanced::Rules
 does Base::Rules
+does Bin::Rules
 does BooleanLiteral::Rules
 does CV::Rules
 does CastExpression::Rules
@@ -119,6 +125,7 @@ does Condition::Rules
 does ConditionalExpression::Rules
 does Constructor::Rules
 does Conversion::Rules
+does Dec::Rules
 does DeclSpecifier::Rules
 does Declaration::Rules
 does Declarator::Rules
@@ -134,9 +141,9 @@ does FloatingLiteral::Rules
 does ForInitStatement::Rules
 does ForRange::Rules
 does Function::Rules
+does Hex::Rules
 does IdExpression::Rules
 does Identifier::Rules
-does Initializer::Rules
 does Instantiation::Rules
 does IntegerLiteral::Rules
 does IterationStatement::Rules
@@ -156,6 +163,7 @@ does NestedNameSpecifier::Rules
 does NewExpression::Rules
 does NoExceptExpression::Rules
 does NoPointerDeclarator::Rules
+does Oct::Rules
 does Operator::Rules
 does OperatorId::Rules
 does OrExpression::Rules

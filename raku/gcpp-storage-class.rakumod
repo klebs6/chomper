@@ -1,3 +1,7 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+
 # rule storage-class-specifier:sym<extern> { <.extern> }
 our class StorageClassSpecifier::Extern does IStorageClassSpecifier { 
 

@@ -1,3 +1,10 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-statement;
+use gcpp-expression;
+use gcpp-attr;
+
 # rule for-range-declaration { 
 #   <attribute-specifier-seq>? 
 #   <decl-specifier-seq> 

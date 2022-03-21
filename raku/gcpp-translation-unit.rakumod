@@ -1,3 +1,7 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-declaration;
 
 # token translation-unit {         <declarationseq>?  $     }
 our class TranslationUnit { 

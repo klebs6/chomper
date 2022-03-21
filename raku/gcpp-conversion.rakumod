@@ -1,10 +1,14 @@
+use Data::Dump::Tree;
 
-# rule conversion-function-id { 
-#   <operator> 
-#   <conversion-type-id> 
+use gcpp-roles;
+
+# rule conversion-declarator { 
+#   <pointer-operator> 
+#   <conversion-declarator>? 
 # }
-our class ConversionFunctionId { 
-    has ConversionTypeId $.conversion-type-id is required;
+our class ConversionDeclarator { 
+    has IPointerOperator      $.pointer-operator is required;
+    has ConversionDeclarator $.conversion-declarator;
 
     has $.text;
 
@@ -32,13 +36,12 @@ our class ConversionTypeId {
     }
 }
 
-# rule conversion-declarator { 
-#   <pointer-operator> 
-#   <conversion-declarator>? 
+# rule conversion-function-id { 
+#   <operator> 
+#   <conversion-type-id> 
 # }
-our class ConversionDeclarator { 
-    has IPointerOperator      $.pointer-operator is required;
-    has ConversionDeclarator $.conversion-declarator;
+our class ConversionFunctionId { 
+    has ConversionTypeId $.conversion-type-id is required;
 
     has $.text;
 

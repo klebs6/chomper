@@ -1,0 +1,17 @@
+#!/usr/bin/env raku
+"raku".IO.dir.grep(/gcpp/)
+==> map({
+    ($_, $_.IO.slurp.lines.grep(/Rules/))
+})
+==> map({
+    if $_[1] {
+        $_
+    }
+})
+==> map({
+    "does " ~ $_[1].split(" ")[2]
+})
+==> sort()
+==> map({
+    .say
+})

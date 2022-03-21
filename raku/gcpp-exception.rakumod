@@ -1,3 +1,27 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-attr;
+use gcpp-type-id;
+
+# rule dynamic-exception-specification { 
+#   <throw> 
+#   <.left-paren> 
+#   <type-id-list>? 
+#   <.right-paren> 
+# }
+our class DynamicExceptionSpecification { 
+    has TypeIdList $.type-id-list;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
 # rule exception-declaration:sym<basic> { 
 #   <attribute-specifier-seq>? 
 #   <type-specifier-seq> 
@@ -77,23 +101,6 @@ our class ExceptionSpecification::Noexcept does IExceptionSpecification {
     }
 }
 
-# rule dynamic-exception-specification { 
-#   <throw> 
-#   <.left-paren> 
-#   <type-id-list>? 
-#   <.right-paren> 
-# }
-our class DynamicExceptionSpecification { 
-    has TypeIdList $.type-id-list;
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
 
 our role Exception::Actions {
 

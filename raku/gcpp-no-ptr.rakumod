@@ -1,3 +1,10 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-attr;
+use gcpp-declarator;
+use gcpp-param;
+use gcpp-ptr-declarator;
 
 # rule no-pointer-declarator-base:sym<base> { 
 #   <declaratorid> 

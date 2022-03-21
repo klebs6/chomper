@@ -1,3 +1,10 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-type-name;
+use gcpp-template;
+use gcpp-decltype;
+
 # rule simple-int-type-specifier { 
 #   <simple-type-signedness-modifier>? 
 #   <simple-type-length-modifier>* 

@@ -1,3 +1,10 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-template;
+use gcpp-enum;
+use gcpp-typedef;
+
 # rule the-type-name:sym<simple-template-id> { <simple-template-id> }
 our class TheTypeName::SimpleTemplateId does ITheTypeName {
     has SimpleTemplateId $.simple-template-id is required;

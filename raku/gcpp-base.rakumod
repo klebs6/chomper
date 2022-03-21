@@ -1,3 +1,24 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-attr;
+
+# rule base-specifier-list { 
+#   <base-specifier> 
+#   <ellipsis>? 
+#   [ <.comma> <base-specifier> <ellipsis>? ]* 
+# } #-----------------------------
+our class BaseSpecifierList { 
+    has IBaseSpecifier @.base-specifiers is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule base-clause { 
 #   <colon> 
@@ -15,21 +36,11 @@ our class BaseClause {
     }
 }
 
-# rule base-specifier-list { 
-#   <base-specifier> 
-#   <ellipsis>? 
-#   [ <.comma> <base-specifier> <ellipsis>? ]* 
-# } #-----------------------------
-our class BaseSpecifierList { 
-    has IBaseSpecifier @.base-specifiers is required;
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
+# rule base-type-specifier { 
+#   <class-or-decl-type> 
+# }
+our class BaseTypeSpecifier { 
+    has IClassOrDeclType $.class-or-decl-type is required;
 }
 
 # rule base-specifier:sym<base-type> { 
@@ -90,12 +101,6 @@ our class BaseSpecifier::Access does IBaseSpecifier {
     }
 }
 
-# rule base-type-specifier { 
-#   <class-or-decl-type> 
-# }
-our class BaseTypeSpecifier { 
-    has IClassOrDeclType $.class-or-decl-type is required;
-}
 
 our role Base::Actions {
 

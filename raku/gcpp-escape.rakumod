@@ -1,3 +1,9 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-hex;
+use gcpp-oct;
+
 our class Escapesequence::Simple does IEscapesequence {
     has ISimpleescapesequence $.simpleescapesequence is required;
 
@@ -148,30 +154,6 @@ our class Simpleescapesequence::RnN does ISimpleescapesequence {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-our class Octalescapesequence {
-    has Octaldigit @.digits is required;
-
-    has $.text;
-
-    method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-our class Hexadecimalescapesequence {
-    has Hexadecimaldigit @.digits is required;
-
-    has $.text;
-
-    method gist {
         say "need write gist!";
         ddt self;
         exit;

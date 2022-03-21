@@ -1,3 +1,14 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-dec;
+use gcpp-oct;
+use gcpp-hex;
+use gcpp-bin;
+use gcpp-float;
+use gcpp-char;
+use gcpp-str;
+
 # token user-defined-integer-literal:sym<dec> { 
 #   <decimal-literal> 
 #   <udsuffix> 

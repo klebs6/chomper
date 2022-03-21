@@ -1,3 +1,6 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
 
 # token literal:sym<ptr> { <pointer-literal> }
 our class PointerLiteral does ILiteral {

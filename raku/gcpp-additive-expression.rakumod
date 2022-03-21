@@ -1,3 +1,6 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
 
 # token additive-operator:sym<plus> { <plus> }
 our class AdditiveOperator::Plus does IAdditiveOperator {

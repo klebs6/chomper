@@ -1,3 +1,30 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-attr;
+use gcpp-function;
+use gcpp-ident;
+use gcpp-declaration;
+use gcpp-template;
+use gcpp-virtual;
+use gcpp-pure;
+use gcpp-using-directive;
+
+# rule member-declarator-list { 
+#   <member-declarator> 
+#   [ <.comma> <member-declarator> ]* 
+# }
+our class MemberDeclaratorList { 
+    has IMemberDeclarator @.member-declarators is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule member-specification-base:sym<decl> { 
 #   <memberdeclaration> 
@@ -146,21 +173,6 @@ our class Memberdeclaration::Empty does IMemberdeclaration {
     }
 }
 
-# rule member-declarator-list { 
-#   <member-declarator> 
-#   [ <.comma> <member-declarator> ]* 
-# }
-our class MemberDeclaratorList { 
-    has IMemberDeclarator @.member-declarators is required;
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
 
 # rule member-declarator:sym<virt> { 
 #   <declarator> 

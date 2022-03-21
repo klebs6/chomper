@@ -1,3 +1,8 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-ident;
+use gcpp-template;
 
 # rule the-type-id { 
 #   <type-specifier-seq> 
@@ -75,7 +80,7 @@ our class TypeNameSpecifier::Template does ITypeNameSpecifier {
 
 # rule type-id-of-the-type-id { <typeid_> }
 our class TypeIdOfTheTypeId {
-    has ITypeid $.typeid is required;
+    has $.typeid is required;
     has $.text;
 
     method gist{

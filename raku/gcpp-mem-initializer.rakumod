@@ -1,3 +1,9 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-expression;
+use gcpp-ident;
+
 # rule mem-initializer-list { 
 #   <mem-initializer> 
 #   <ellipsis>? 

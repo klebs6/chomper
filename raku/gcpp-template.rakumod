@@ -1,3 +1,90 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-ident;
+use gcpp-str;
+use gcpp-param;
+use gcpp-operator-id;
+use gcpp-type-param;
+
+# rule template-parameter:sym<type> { <type-parameter> }
+our class TemplateParameter::Type does ITemplateParameter {
+    has TypeParameter $.type-parameter is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+# rule template-parameter:sym<param> { 
+#   <parameter-declaration> 
+# }
+our class TemplateParameter::Param does ITemplateParameter {
+    has ParameterDeclaration $.parameter-declaration is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+# rule template-argument-list { 
+#   <template-argument> 
+#   <ellipsis>? 
+#   [ <.comma> <template-argument> <ellipsis>? ]* 
+# }
+our class TemplateArgumentList { 
+    has ITemplateArgument @.template-arguments is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+# token template-argument:sym<type-id> { <the-type-id> }
+our class TemplateArgument::TypeId does ITemplateArgument {
+    has ITheTypeId $.the-type-id is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+# token template-argument:sym<const-expr> { <constant-expression> }
+our class TemplateArgument::ConstExpr does ITemplateArgument {
+    has IConstantExpression $.constant-expression is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+# token template-argument:sym<id-expr> { <id-expression> }
+our class TemplateArgument::IdExpr does ITemplateArgument {
+    has IIdExpression $.id-expression is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
 
 # rule simple-template-id { 
 #   <template-name> 

@@ -1,3 +1,9 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-ident;
+use gcpp-template;
+use gcpp-decltype;
 
 # regex nested-name-specifier-prefix:sym<null> { 
 #   <doublecolon> 

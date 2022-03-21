@@ -1,3 +1,7 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-digit;
 
 our class Fractionalconstant::WithTail 
 does IFractionalconstant {
@@ -62,18 +66,6 @@ our class Sign::Plus {
 }
 
 our class Sign::Minus { 
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-our class Digitsequence { 
-    has Digit @.digits is required;
 
     has $.text;
 

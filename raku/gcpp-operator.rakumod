@@ -1,3 +1,7 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+
 # token the-operator:sym<new> { 
 #   <new_> 
 #   [ <.left-bracket> <.right-bracket>]? 

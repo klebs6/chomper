@@ -1,3 +1,7 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-lambda;
 
 # token primary-expression:sym<literal> { <literal>+ }
 our class PrimaryExpression::Literal does IPrimaryExpression {

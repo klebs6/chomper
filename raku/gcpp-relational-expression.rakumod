@@ -1,3 +1,6 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
 
 # rule relational-operator:sym<less> { <.less> }
 our class RelationalOperator::Less does IRelationalOperator {

@@ -1,3 +1,23 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-ident;
+
+# rule templateparameter-list { 
+#   <template-parameter> 
+#   [ <.comma> <template-parameter> ]* 
+# }
+our class TemplateParameterList { 
+    has ITemplateParameter @.template-parameters is required;
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
 # rule type-parameter-base:sym<basic> { 
 #   [ <template> <less> <templateparameter-list> <greater> ]? 
 #   <class_> 

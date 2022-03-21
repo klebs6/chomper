@@ -1,3 +1,8 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-ident;
+use gcpp-attr;
 
 # rule labeled-statement-label-body:sym<id> { 
 #   <identifier> 

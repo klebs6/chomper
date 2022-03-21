@@ -1,3 +1,10 @@
+use Data::Dump::Tree;
+
+use gcpp-str;
+use gcpp-roles;
+use gcpp-ident;
+use gcpp-user-defined-literal;
+
 # rule operator-function-id { 
 #   <operator> 
 #   <the-operator> 

@@ -1,3 +1,13 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-align;
+use gcpp-ident;
+use gcpp-balanced;
+
+our class AttributeList { ... }
+
+our role IAttributeSpecifierSeq {  }
 
 # rule attribute-specifier-seq { <attribute-specifier>+ }
 our class AttributeSpecifierSeq { 
@@ -65,25 +75,6 @@ our class AttributeList {
     }
 }
 
-# rule attribute { 
-#   [ <attribute-namespace> <doublecolon> ]? 
-#   <identifier> 
-#   <attribute-argument-clause>? 
-# }
-our class Attribute { 
-    has AttributeNamespace      $.attribute-namespace;
-    has Identifier              $.identifier is required;
-    has AttributeArgumentClause $.attribute-argument-clause;
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
-
 # rule attribute-namespace { <identifier> }
 our class AttributeNamespace { 
     has Identifier $.identifier is required;
@@ -104,6 +95,25 @@ our class AttributeNamespace {
 # }
 our class AttributeArgumentClause { 
     has BalancedTokenSeq $.balanced-token-seq;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+# rule attribute { 
+#   [ <attribute-namespace> <doublecolon> ]? 
+#   <identifier> 
+#   <attribute-argument-clause>? 
+# }
+our class Attribute { 
+    has AttributeNamespace      $.attribute-namespace;
+    has Identifier              $.identifier is required;
+    has AttributeArgumentClause $.attribute-argument-clause;
 
     has $.text;
 

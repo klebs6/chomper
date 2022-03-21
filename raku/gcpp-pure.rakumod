@@ -1,3 +1,7 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-oct;
 
 # rule pure-specifier { 
 #   <assign> 

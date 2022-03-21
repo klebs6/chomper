@@ -1,3 +1,30 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-ident;
+use gcpp-conversion;
+use gcpp-decltype;
+use gcpp-operator-id;
+
+# regex qualified-id { 
+#   <nested-name-specifier> 
+#   <template>? 
+#   <unqualified-id> 
+# }
+our class QualifiedId does IIdExpression { 
+    has INestedNameSpecifier $.nested-name-specifier is required;
+    has Bool                $.template              is required;
+    has IUnqualifiedId      $.unqualified-id        is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
 # regex id-expression:sym<qualified> { 
 #   <qualified-id> 
 # }
@@ -135,24 +162,6 @@ our class UnqualifiedId::TemplateId does IUnqualifiedId {
     }
 }
 
-# regex qualified-id { 
-#   <nested-name-specifier> 
-#   <template>? 
-#   <unqualified-id> 
-# }
-our class QualifiedId does IIdExpression { 
-    has INestedNameSpecifier $.nested-name-specifier is required;
-    has Bool                $.template              is required;
-    has IUnqualifiedId      $.unqualified-id        is required;
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
 
 our role IdExpression::Actions {
 

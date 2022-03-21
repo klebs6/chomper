@@ -1,3 +1,8 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+
+our role IAlignmentSpecifier {  }
 
 # rule alignmentspecifierbody:sym<type-id> { <the-type-id> }
 our class Alignmentspecifierbody::TypeId 

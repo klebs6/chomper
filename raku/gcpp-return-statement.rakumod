@@ -1,3 +1,7 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-expression;
 
 # rule return-statement-body:sym<expr> { <expression> }
 our class ReturnStatementBody::Expr does IReturnStatementBody {

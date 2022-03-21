@@ -1,5 +1,18 @@
+use gcpp-roles;
+use gcpp-param;
+use gcpp-function;
+use gcpp-attr;
 
-# rule abstract-declarator:sym<base> { <pointer-abstract-declarator> }
+use Data::Dump::Tree;
+
+our class NoPointerAbstractDeclarator              { ... }
+our class AbstractPackDeclarator                   { ... }
+our class NoPointerAbstractDeclaratorBracketedBase { ... }
+our class NoPointerAbstractPackDeclarator          { ... }
+
+# rule abstract-declarator:sym<base> { 
+#   <pointer-abstract-declarator> 
+# }
 our class AbstractDeclarator::Base does IAbstractDeclarator {
     has IPointerAbstractDeclarator $.pointer-abstract-declarator is required;
 

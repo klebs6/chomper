@@ -1,4 +1,14 @@
+use Data::Dump::Tree;
 
+use gcpp-roles;
+use gcpp-ident;
+use gcpp-attr;
+
+our class EnumeratorList         { ... }
+our class EnumeratorDefinition   { ... }
+our class Enumerator { ... }
+
+our role IEnumBase {  }
 
 # rule enum-name { <identifier> }
 our class EnumName { 

@@ -1,3 +1,7 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+
 # token block-comment { '/*' .*?  '*/' }
 our class BlockComment { 
     has Str $.value is required;

@@ -1,3 +1,13 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-ident;
+use gcpp-attr;
+use gcpp-cv;
+
+our class ParameterDeclarationClause { ... }
+our class ParameterDeclaration { ... }
+
 # rule parameters-and-qualifiers { 
 #   <.left-paren> 
 #   <parameter-declaration-clause>? 

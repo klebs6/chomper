@@ -1,17 +1,7 @@
-# rule handler-seq { 
-#   <handler>+ 
-# }
-our class HandlerSeq { 
-    has Handler @.handlers is required;
+use Data::Dump::Tree;
 
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
+use gcpp-roles;
+use gcpp-statement;
 
 # rule handler { 
 #   <catch> 
@@ -32,3 +22,19 @@ our class Handler {
         exit;
     }
 }
+
+# rule handler-seq { 
+#   <handler>+ 
+# }
+our class HandlerSeq { 
+    has Handler @.handlers is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+

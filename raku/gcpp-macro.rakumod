@@ -1,3 +1,6 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
 
 our class MultiLineMacro { 
     has Str $.content is required;

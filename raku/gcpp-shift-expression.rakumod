@@ -1,3 +1,6 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
 
 # rule shift-expression-tail { <shift-operator> <additive-expression> }
 our class ShiftExpressionTail {

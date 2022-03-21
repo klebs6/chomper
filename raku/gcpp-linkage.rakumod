@@ -1,3 +1,8 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-declaration;
+use gcpp-str;
 
 # rule linkage-specification-body:sym<seq> { 
 #   <.left-brace> 

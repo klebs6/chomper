@@ -1,3 +1,9 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-attr;
+use gcpp-ident;
+use gcpp-template;
 
 # rule elaborated-type-specifier:sym<class-ident> { 
 #   <.class-key> 

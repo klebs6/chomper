@@ -1,3 +1,42 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-attr;
+use gcpp-labeled-statement;
+
+# regex statement-seq { 
+#   <statement> 
+#   [<.ws> <statement>]* 
+# }
+our class StatementSeq {
+    has IStatement @.statements is required;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
+# rule compound-statement { 
+#   <.left-brace> 
+#   <statement-seq>? 
+#   <.right-brace> 
+# }
+our class CompoundStatement {
+    has StatementSeq $.statement-seq;
+
+    has $.text;
+
+    method gist{
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
 # token statement:sym<attributed> { 
 #   <comment>? 
 #   <attribute-specifier-seq>? 
@@ -83,38 +122,7 @@ our class ExpressionStatement does IStatement {
     }
 }
 
-# rule compound-statement { 
-#   <.left-brace> 
-#   <statement-seq>? 
-#   <.right-brace> 
-# }
-our class CompoundStatement {
-    has StatementSeq $.statement-seq;
 
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-# regex statement-seq { 
-#   <statement> 
-#   [<.ws> <statement>]* 
-# }
-our class StatementSeq {
-    has IStatement @.statements is required;
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
 
 our role Statement::Actions {
 

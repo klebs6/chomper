@@ -1,3 +1,7 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+
 # rule explicit-instantiation { 
 #   <extern>? 
 #   <template> 

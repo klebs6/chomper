@@ -1,3 +1,8 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-template;
+use gcpp-decltype;
 
 # rule pseudo-destructor-name:sym<basic> { 
 #   <nested-name-specifier>? 

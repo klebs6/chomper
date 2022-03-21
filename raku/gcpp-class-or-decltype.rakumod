@@ -1,3 +1,7 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-decltype;
 
 # rule class-or-decl-type:sym<class> { 
 #   <nested-name-specifier>? 

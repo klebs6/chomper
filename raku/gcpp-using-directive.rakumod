@@ -1,3 +1,7 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-attr;
 
 # rule using-declaration-prefix:sym<nested> { [ <typename_>? <nested-name-specifier> ] }
 our class UsingDeclarationPrefix::Nested does IUsingDeclarationPrefix {

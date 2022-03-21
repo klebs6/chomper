@@ -1,13 +1,23 @@
+use Data::Dump::Tree;
 
-# rule lambda-expression { 
-#   <lambda-introducer> 
-#   <lambda-declarator>? 
-#   <compound-statement> 
+use gcpp-roles;
+use gcpp-statement;
+use gcpp-ident;
+use gcpp-param;
+use gcpp-attr;
+use gcpp-function;
+
+our class LambdaDeclarator { ... }
+our class CaptureList { ... }
+our class Initcapture { ... }
+
+# rule lambda-introducer { 
+#   <.left-bracket> 
+#   <lambda-capture>? 
+#   <.right-bracket> 
 # }
-our class LambdaExpression { 
-    has LambdaIntroducer  $.lambda-introducer is required;
-    has LambdaDeclarator  $.lambda-declarator;
-    has CompoundStatement $.compound-statement is required;
+our class LambdaIntroducer { 
+    has ILambdaCapture $.lambda-capture;
 
     has $.text;
 
@@ -18,13 +28,15 @@ our class LambdaExpression {
     }
 }
 
-# rule lambda-introducer { 
-#   <.left-bracket> 
-#   <lambda-capture>? 
-#   <.right-bracket> 
+# rule lambda-expression { 
+#   <lambda-introducer> 
+#   <lambda-declarator>? 
+#   <compound-statement> 
 # }
-our class LambdaIntroducer { 
-    has ILambdaCapture $.lambda-capture;
+our class LambdaExpression { 
+    has LambdaIntroducer  $.lambda-introducer is required;
+    has LambdaDeclarator  $.lambda-declarator;
+    has CompoundStatement $.compound-statement is required;
 
     has $.text;
 

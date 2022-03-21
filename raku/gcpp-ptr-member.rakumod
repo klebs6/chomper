@@ -1,3 +1,9 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+
+our class PointerMemberExpression     { ... }
+our class PointerMemberExpressionTail { ... }
 
 # rule pointer-member-operator:sym<dot> { 
 #   <dot-star> 

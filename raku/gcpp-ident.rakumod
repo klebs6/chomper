@@ -1,3 +1,9 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-char;
+use gcpp-digit;
+
 our class IdentifierStart::Nondigit 
 does IIdentifierStart {
 
@@ -91,18 +97,6 @@ does ITheTypeName {
     has Str $.value is required; 
 }
 
-our class Nondigit {
-    has Str $.value is required; 
-
-    has $.text;
-
-    method gist {
-
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
 
 our role Identifier::Actions {
 

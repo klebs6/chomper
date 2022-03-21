@@ -1,3 +1,12 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-try;
+use gcpp-constructor;
+use gcpp-virtual;
+use gcpp-attr;
+use gcpp-statement;
+use gcpp-type-specifier;
 
 # rule trailing-return-type { 
 #   <arrow> 

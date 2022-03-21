@@ -1,3 +1,10 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-param;
+use gcpp-function;
+use gcpp-expression;
+use gcpp-ptr-declarator;
 
 # rule init-declarator { 
 #   <declarator> 

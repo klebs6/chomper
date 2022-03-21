@@ -1,3 +1,9 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-attr;
+use gcpp-cv;
+
 # rule augmented-pointer-operator { 
 #   <pointer-operator> 
 #   <const>? 

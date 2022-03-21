@@ -1,3 +1,21 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-hex;
+
+our class Universalcharactername {
+    has Hexquad $.first is required;
+    has Hexquad $.second;
+
+    has $.text;
+
+    method gist {
+        say "need write gist!";
+        ddt self;
+        exit;
+    }
+}
+
 our class Cchar::Basic does ICchar {
     has Str $.value is required;
 
@@ -108,19 +126,6 @@ our class CharacterLiteralPrefix::L    does ICharacterLiteralPrefix {
 our class CharacterLiteral {
     has ICharacterLiteralPrefix $.character-literal-prefix;
     has ICchar                  @.cchar;
-
-    has $.text;
-
-    method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-our class Universalcharactername {
-    has Hexquad $.first is required;
-    has Hexquad $.second;
 
     has $.text;
 

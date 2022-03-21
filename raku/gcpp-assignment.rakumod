@@ -1,3 +1,7 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-exception;
 
 # rule assignment-expression:sym<throw> { <throw-expression> }
 our class AssignmentExpression::Throw 

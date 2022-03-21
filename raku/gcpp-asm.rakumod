@@ -1,3 +1,7 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-str;
 
 # rule asm-definition { 
 #   <asm> 

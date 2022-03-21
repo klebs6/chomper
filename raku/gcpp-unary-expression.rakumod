@@ -1,3 +1,11 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-ident;
+use gcpp-delete-expression;
+use gcpp-noexcept;
+use gcpp-postfix-expression;
+
 our class UnaryExpression::New 
 does IUnaryExpression { 
 

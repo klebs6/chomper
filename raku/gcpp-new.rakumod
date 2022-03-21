@@ -1,3 +1,14 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+use gcpp-expression;
+use gcpp-attr;
+
+our class NewPlacement               { ... }
+our class NewTypeId                  { ... }
+our class NoPointerNewDeclarator     { ... }
+our class NoPointerNewDeclaratorTail { ... }
+our class NewDeclarator              { ... }
 
 # rule new-expression:sym<new-type-id> { 
 #   <doublecolon>? 

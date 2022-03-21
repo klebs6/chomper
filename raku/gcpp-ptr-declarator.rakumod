@@ -1,3 +1,6 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
 
 # rule pointer-declarator { 
 #   <augmented-pointer-operator>* 

@@ -9,6 +9,7 @@ use gcpp-attr;
 use gcpp-attributed-statement;
 use gcpp-balanced;
 use gcpp-base;
+use gcpp-bin;
 use gcpp-bool;
 use gcpp-cast-expression;
 use gcpp-char;
@@ -20,6 +21,7 @@ use gcpp-conditional-expression;
 use gcpp-constructor;
 use gcpp-conversion;
 use gcpp-cv;
+use gcpp-dec;
 use gcpp-decl-specifier;
 use gcpp-declaration;
 use gcpp-declarator;
@@ -36,9 +38,9 @@ use gcpp-float;
 use gcpp-for-init;
 use gcpp-for-range;
 use gcpp-function;
+use gcpp-hex;
 use gcpp-id-expression;
 use gcpp-ident;
-use gcpp-initializer;
 use gcpp-instantiate;
 use gcpp-integer-literal;
 use gcpp-iteration;
@@ -57,6 +59,7 @@ use gcpp-nested-name;
 use gcpp-new;
 use gcpp-no-ptr;
 use gcpp-noexcept;
+use gcpp-oct;
 use gcpp-operator-id;
 use gcpp-operator;
 use gcpp-or-expression;
@@ -105,6 +108,7 @@ does AttributeSpecifierSeq::Actions
 does AttributedStatement::Actions
 does Balanced::Actions
 does Base::Actions
+does Bin::Actions
 does BooleanLiteral::Actions
 does CV::Actions
 does CastExpression::Actions
@@ -116,6 +120,7 @@ does Condition::Actions
 does ConditionalExpression::Actions
 does Constructor::Actions
 does Conversion::Actions
+does Dec::Actions
 does DeclSpecifier::Actions
 does Declaration::Actions
 does Declarator::Actions
@@ -132,9 +137,9 @@ does FloatingLiteral::Actions
 does ForInitStatement::Actions
 does ForRange::Actions
 does Function::Actions
+does Hex::Actions
 does IdExpression::Actions
 does Identifier::Actions
-does Initializer::Actions
 does Instantiation::Actions
 does IntegerLiteral::Actions
 does IterationStatement::Actions
@@ -146,6 +151,7 @@ does Literal::Actions
 does LogicalExpression::Actions
 does MemInitializer::Actions
 does Member::Actions
+does Typedef::Actions
 does MultiLineMacro::Actions
 does MultiplicativeExpression::Actions
 does Namespace::Actions
@@ -153,6 +159,7 @@ does NestedNameSpecifier::Actions
 does NewExpression::Actions
 does NoExceptExpression::Actions
 does NoPointerDeclarator::Actions
+does Oct::Actions
 does Operator::Actions
 does OperatorId::Actions
 does OrExpression::Actions

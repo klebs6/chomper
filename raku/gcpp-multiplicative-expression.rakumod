@@ -1,3 +1,9 @@
+use Data::Dump::Tree;
+
+use gcpp-roles;
+
+our class MultiplicativeExpressionTail { ... }
+
 # token multiplicative-operator:sym<*> { <star> }
 our class MultiplicativeOperator::Star does IMultiplicativeOperator {
 
