@@ -11,9 +11,7 @@ our class NamespaceAlias {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.identifier.gist
     }
 }
 
@@ -24,9 +22,7 @@ our class OriginalNamespaceName {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.identifier.gist
     }
 }
 
@@ -37,9 +33,7 @@ our class NamespaceName::Original does INamespaceName {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.original-namespace-name.gist
     }
 }
 
@@ -50,9 +44,7 @@ our class NamespaceName::Alias does INamespaceName {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.namespace-alias.gist
     }
 }
 
@@ -63,9 +55,7 @@ our class NamespaceTag::Ident does INamespaceTag {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.identifier.gist
     }
 }
 
@@ -76,9 +66,7 @@ our class NamespaceTag::NsName does INamespaceTag {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.original-namespace-name.gist
     }
 }
 
@@ -98,9 +86,26 @@ our class NamespaceDefinition {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.inline {
+            $builder ~= "inline ";
+        }
+
+        $builder ~= "namespace ";
+
+        if $.namespace-tag {
+            $builder ~= $.namespace-tag.gist;
+        }
+
+        $builder ~= "\{";
+
+        if $.namespace-body {
+            $builder ~= $.namespace-body.gist;
+        }
+
+        $builder ~ "{"
     }
 }
 
@@ -115,9 +120,15 @@ our class Qualifiednamespacespecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+
+        my $n = $.nested-name-specifier;
+
+        if $n {
+            $builder ~= $n.gist ~ " ";
+        }
+
+        $builder ~ $namespace-name.gist
     }
 }
 
@@ -136,9 +147,19 @@ our class NamespaceAliasDefinition {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist ~ "\n";
+        }
+
+        $builder 
+        ~ "namespace " 
+        ~ $.identifier.gist 
+        ~ " = " 
+        ~ $.qualifiednamespacespecifier.gist 
+        ~ ";"
     }
 }
 
@@ -164,12 +185,21 @@ our role Namespace::Actions {
         make $<identifier>.made
     }
 
-    # rule namespace-tag:sym<ns-name> { <original-namespace-name> } 
+    # rule namespace-tag:sym<ns-name> { 
+    #   <original-namespace-name> 
+    # }
     method namespace-tag:sym<ns-name>($/) {
         make $<original-namespace-name>.made
     }
 
-    # rule namespace-definition { <inline>? <namespace> <namespace-tag>? <.left-brace> <namespaceBody=declarationseq>? <.right-brace> }
+    # rule namespace-definition { 
+    #   <inline>? 
+    #   <namespace> 
+    #   <namespace-tag>? 
+    #   <.left-brace> 
+    #   <namespaceBody=declarationseq>? 
+    #   <.right-brace> 
+    # }
     method namespace-definition($/) {
         make NamespaceDefinition.new(
             inline         => $<inline>.made,

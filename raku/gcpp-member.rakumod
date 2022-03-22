@@ -20,9 +20,7 @@ our class MemberDeclaratorList {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.member-declarators>>.gist.join(",")
     }
 }
 
@@ -34,9 +32,7 @@ our class MemberSpecificationBase::Decl does IMemberSpecificationBase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.memberdeclaration.gist
     }
 }
 
@@ -49,9 +45,7 @@ our class MemberSpecificationBase::Access does IMemberSpecificationBase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.access-specifier.gist ~ ":"
     }
 }
 
@@ -63,9 +57,7 @@ our class MemberSpecification {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.member-specification-bases.join(" ")
     }
 }
 
@@ -78,14 +70,37 @@ our class MemberSpecification {
 our class Memberdeclaration::Basic does IMemberdeclaration {
     has IComment               $.comment;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has IDeclSpecifierSeq       $.decl-specifier-seq;
+    has IDeclSpecifierSeq      $.decl-specifier-seq;
     has MemberDeclaratorList   $.member-declarator-list;
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $buffer = "";
+
+        if $.comment {
+            $buffer ~= $.comment.gist ~ "\n";
+        }
+
+        my $a = $.attribute-specifier-seq;
+
+        if $a {
+            $buffer ~= $a.gist;
+        }
+
+        my $d = $.decl-specifier-seq;
+
+        if $d {
+            $buffer ~= " " ~ $d.gist;
+        }
+
+        my $m = $.member-declarator-list;
+
+        if $m {
+            $buffer ~= " " $m.gist;
+        }
+
+        $buffer ~ ";"
     }
 }
 
@@ -97,9 +112,7 @@ our class Memberdeclaration::Func does IMemberdeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.function-definition.gist
     }
 }
 
@@ -111,9 +124,7 @@ our class Memberdeclaration::Using does IMemberdeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.using-declaration.gist
     }
 }
 
@@ -125,9 +136,7 @@ our class Memberdeclaration::StaticAssert does IMemberdeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.static-assert-declaration.gist
     }
 }
 
@@ -139,9 +148,7 @@ our class Memberdeclaration::Template does IMemberdeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.template-declaration.gist
     }
 }
 
@@ -153,9 +160,7 @@ our class Memberdeclaration::Alias does IMemberdeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.alias-declaration.gist
     }
 }
 
@@ -167,12 +172,9 @@ our class Memberdeclaration::Empty does IMemberdeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        ""
     }
 }
-
 
 # rule member-declarator:sym<virt> { 
 #   <declarator> 
@@ -187,9 +189,21 @@ our class MemberDeclarator::Virt does IMemberDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $buffer = $.declarator.gist;
+
+        my $v = $.virtual-specifier-seq;
+
+        if $v {
+            $buffer ~= " " ~ $v.gist;
+        }
+
+        my $p = $.pure-specifier;
+
+        if $p {
+            $buffer ~= " " ~ $p.gist;
+        }
+
+        $buffer
     }
 }
 
@@ -204,9 +218,16 @@ our class MemberDeclarator::BraceOrEq does IMemberDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $buffer = $.declarator.gist;
+
+        my $i = $.brace-or-equal-initializer;
+
+        if $i {
+            $buffer ~= " " ~ $i.gist;
+        }
+
+        $buffer
     }
 }
 
@@ -224,9 +245,18 @@ our class MemberDeclarator::Ident does IMemberDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $buffer = "";
+
+        if $.identifier {
+            $buffer ~= $.identifier.gist;
+        }
+
+        if $.attribute-specifier-seq {
+            $buffer ~= " " ~ $.attribute-specifier-seq.gist;
+        }
+
+        $buffer ~ ": " ~ $.constant-expression.gist
     }
 }
 

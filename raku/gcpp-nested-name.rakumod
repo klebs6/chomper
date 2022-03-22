@@ -13,9 +13,7 @@ our class NestedNameSpecifierPrefix::Null does INestedNameSpecifierPrefix {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "::"
     }
 }
 
@@ -29,9 +27,7 @@ our class NestedNameSpecifierPrefix::Type does INestedNameSpecifierPrefix {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.the-type-name.gist ~ "::"
     }
 }
 
@@ -45,9 +41,7 @@ our class NestedNameSpecifierPrefix::Ns does INestedNameSpecifierPrefix {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.namespace-name.gist ~ "::"
     }
 }
 
@@ -61,9 +55,7 @@ our class NestedNameSpecifierPrefix::Decl does INestedNameSpecifierPrefix {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.decltype-specifier.gist ~ "::"
     }
 }
 
@@ -77,9 +69,7 @@ our class NestedNameSpecifierSuffix::Id does INestedNameSpecifierSuffix {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.identifier.gist ~ "::"
     }
 }
 
@@ -95,9 +85,16 @@ our class NestedNameSpecifierSuffix::Template does INestedNameSpecifierSuffix {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $bulider = "";
+
+        if $.template {
+            $builder ~= "template ";
+        }
+
+        $builder ~= $.simple-template-id.gist;
+
+        $builder ~ "::"
     }
 }
 
@@ -112,9 +109,14 @@ our class NestedNameSpecifier does INestedNameSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.nested-name-specifier-prefix.gist;
+
+        for @.nested-nme-specifier-suffixes {
+            $builder ~= $_.gist;
+        }
+
+        $builder
     }
 }
 

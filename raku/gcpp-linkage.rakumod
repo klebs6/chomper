@@ -15,9 +15,14 @@ our class LinkageSpecificationBody::Seq does ILinkageSpecificationBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $buffer ~= "\{";
+
+        if $.declarationseq {
+            $buffer ~= $.declarationseq.gist;
+        }
+
+        $buffer ~ "}"
     }
 }
 
@@ -28,9 +33,7 @@ our class LinkageSpecificationBody::Decl does ILinkageSpecificationBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.declaration.gist
     }
 }
 
@@ -46,9 +49,10 @@ our class LinkageSpecification {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "extern " 
+        ~ $.string-literal.gist 
+        ~ " " 
+        ~ $.linkage-specification-body.gist
     }
 }
 

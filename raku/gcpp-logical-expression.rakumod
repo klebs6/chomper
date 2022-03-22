@@ -12,9 +12,7 @@ our class LogicalAndExpression does ILogicalAndExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.inclusive-or-expressions>>.gist.join("&&")
     }
 }
 
@@ -28,9 +26,7 @@ our class LogicalOrExpression does ILogicalOrExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.logical-and-expressions>>.gist.join("||")
     }
 }
 

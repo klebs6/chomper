@@ -8,9 +8,7 @@ our class MultiLineMacro {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.content
     }
 }
 
@@ -20,9 +18,7 @@ our class Directive {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.content
     }
 }
 

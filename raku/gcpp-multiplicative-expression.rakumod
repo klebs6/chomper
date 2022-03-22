@@ -10,9 +10,7 @@ our class MultiplicativeOperator::Star does IMultiplicativeOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "*"
     }
 }
 
@@ -22,9 +20,7 @@ our class MultiplicativeOperator::Slash does IMultiplicativeOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "/"
     }
 }
 
@@ -34,9 +30,7 @@ our class MultiplicativeOperator::Mod does IMultiplicativeOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "%"
     }
 }
 
@@ -51,9 +45,16 @@ our class MultiplicativeExpression does IMultiplicativeExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $b = $.pointer-member-expression;
+        my @t = @.multiplicative-expression-tail;
+
+        my $buffer = $b.gist;
+
+        for @t {
+            $buffer ~= " " ~ $_.gist;
+        }
+
+        $buffer
     }
 }
 
@@ -68,9 +69,9 @@ our class MultiplicativeExpressionTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.multiplicative-operator.gist 
+        ~ " " 
+        ~ $.pointer-member-expression.gist
     }
 }
 

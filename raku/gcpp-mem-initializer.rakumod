@@ -14,9 +14,7 @@ our class MemInitializerList {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.mem-initializers>>.gist.join(", ")
     }
 }
 
@@ -28,13 +26,19 @@ our class MemInitializerList {
 # }
 our class MemInitializer::ExprList does IMemInitializer {
     has IMeminitializerid $.meminitializerid is required;
-    has ExpressionList   $.expression-list;
+    has ExpressionList    $.expression-list;
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = $.meminitializerid.gist;
+
+        $builder ~= "(";
+
+        if $.expression-list {
+            $builder ~= $.expression-list.gist;
+        }
+
+        $builder ~= ")"
     }
 }
 
@@ -44,13 +48,11 @@ our class MemInitializer::ExprList does IMemInitializer {
 # }
 our class MemInitializer::Braced does IMemInitializer {
     has IMeminitializerid $.meminitializerid is required;
-    has BracedInitList   $.braced-init-list   is required;
+    has BracedInitList    $.braced-init-list is required;
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.meminitializerid.gist ~ " " ~ $.braced-init-list.gist
     }
 }
 
@@ -61,9 +63,7 @@ our class Meminitializerid::ClassOrDecl does IMeminitializerid {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.class-or-decl-type.gist
     }
 }
 
@@ -73,9 +73,7 @@ our class Meminitializerid::Ident does IMeminitializerid {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.identifier.gist
     }
 }
 
