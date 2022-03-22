@@ -123,7 +123,9 @@ our class CharacterLiteralPrefix::L    does ICharacterLiteralPrefix {
 
 #-------------------------------
 # token literal:sym<char> { <character-literal> }
-our class CharacterLiteral {
+our class CharacterLiteral 
+does ILiteral
+does IInitializerClause {
     has ICharacterLiteralPrefix $.character-literal-prefix;
     has ICchar                  @.cchar;
 

@@ -2,6 +2,7 @@ use Data::Dump::Tree;
 
 use gcpp-roles;
 use gcpp-template;
+use gcpp-type-id;
 use gcpp-enum;
 use gcpp-typedef;
 

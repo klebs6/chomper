@@ -200,8 +200,6 @@ does IInitializerClause {
     }
 }
 
-
-
 our role Expression::Actions {
 
     # rule expression-list { <initializer-list> } 
@@ -224,7 +222,9 @@ our role Expression::Actions {
 
     # rule constant-expression { <conditional-expression> }
     method constant-expression($/) {
-        make $<conditional-expression>.made
+        make ConstantExpression.new(
+            conditional-expression => $<conditional-expression>.made
+        )
     }
 
     # rule initializer:sym<brace-or-eq> { <brace-or-equal-initializer> }

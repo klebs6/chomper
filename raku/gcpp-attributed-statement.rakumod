@@ -11,9 +11,9 @@ use gcpp-attr;
 #   <attributed-statement-body> 
 # }
 our class Statement::Attributed does IStatement {
-    has IComment                 $.comment;
-    has IAttributeSpecifierSeq   $.attribute-specifier-seq;
-    has                          $.attributed-statement-body is required;
+    has IComment  $.comment is rw;
+    has           @.attribute-specifier-seq is rw;
+    has           $.attributed-statement-body is required is rw;
 
     has $.text;
 
@@ -130,9 +130,12 @@ our role AttributedStatement::Actions {
         } else {
 
             my $res = Statement::Attributed.new(
-                comment                   => $comment,
                 attributed-statement-body => $body,
             );
+
+            if $comment {
+                $res.comment = $comment;
+            }
 
             if $attribs {
                 $res.attribute-specifier-seq = $attribs;

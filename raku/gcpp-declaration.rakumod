@@ -56,8 +56,8 @@ does IDeclarationStatement
 does ISimpleDeclaration {
 
     has IComment           $.comment;
-    has IDeclSpecifierSeq   $.decl-specifier-seq;
-    has IInitDeclarator     @.init-declarator-list;
+    has IDeclSpecifierSeq  $.decl-specifier-seq;
+    has IInitDeclarator    @.init-declarator-list;
 
     has $.text;
 

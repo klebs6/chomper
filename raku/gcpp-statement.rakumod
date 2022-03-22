@@ -25,8 +25,8 @@ our class StatementSeq {
 #   <statement-seq>? 
 #   <.right-brace> 
 # }
-our class CompoundStatement {
-    has StatementSeq $.statement-seq;
+our class CompoundStatement does IStatement {
+    has $.statement-seq;
 
     has $.text;
 
@@ -130,7 +130,9 @@ our role Statement::Actions {
 
     # rule compound-statement { <.left-brace> <statement-seq>? <.right-brace> }
     method compound-statement($/) {
-        make $<statement-seq>.made
+        make CompoundStatement.new(
+            statement-seq => $<statement-seq>.made
+        )
     }
 
     # regex statement-seq { <statement> [<.ws> <statement>]* } 

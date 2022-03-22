@@ -95,10 +95,11 @@ our class TemplateArgument::IdExpr does ITemplateArgument {
 our class SimpleTemplateId 
 does IDeclSpecifierSeq 
 does ITheTypeName
+does ITheTypeId
 does IPostListHead {
 
-    has Identifier           $.template-name is required;
-    has ITemplateArgument @.template-arguments;
+    has Identifier $.template-name is required;
+    has @.template-arguments;
 
     has $.text;
 

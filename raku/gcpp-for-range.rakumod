@@ -67,7 +67,9 @@ our role ForRange::Actions {
 
     # rule for-range-initializer:sym<expression> { <expression> }
     method for-range-initializer:sym<expression>($/) {
-        make $<expression>.made
+        make ForRangeInitializer::Expression.new(
+            expression => $<expression>.made
+        )
     }
 
     # rule for-range-initializer:sym<braced-init-list> { <braced-init-list> } 

@@ -147,7 +147,12 @@ our role Parameters::Actions {
         make $<abstract-declarator>.made
     }
 
-    # rule parameter-declaration { <attribute-specifier-seq>? <decl-specifier-seq> <parameter-declaration-body> [ <assign> <initializer-clause> ]? }
+    # rule parameter-declaration { 
+    #   <attribute-specifier-seq>? 
+    #   <decl-specifier-seq> 
+    #   <parameter-declaration-body> 
+    #   [ <assign> <initializer-clause> ]? 
+    # }
     method parameter-declaration($/) {
         make ParameterDeclaration.new(
             attribute-specifier-seq    => $<attribute-specifier-seq>.made,

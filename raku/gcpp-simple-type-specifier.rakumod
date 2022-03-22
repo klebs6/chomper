@@ -10,7 +10,9 @@ use gcpp-decltype;
 #   <simple-type-length-modifier>* 
 #   <int_> 
 # }
-our class SimpleIntTypeSpecifier { 
+our class SimpleIntTypeSpecifier 
+does ISimpleTypeSpecifier
+{ 
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
     has ISimpleTypeLengthModifier     @.simple-type-length-modifiers is required;
 
@@ -27,7 +29,9 @@ our class SimpleIntTypeSpecifier {
 #   <simple-type-signedness-modifier>? 
 #   <char_> 
 # }
-our class SimpleCharTypeSpecifier { 
+our class SimpleCharTypeSpecifier 
+does ISimpleTypeSpecifier
+{
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
 
     has $.text;
@@ -43,7 +47,9 @@ our class SimpleCharTypeSpecifier {
 #   <simple-type-signedness-modifier>? 
 #   <char16> 
 # }
-our class SimpleChar16TypeSpecifier { 
+our class SimpleChar16TypeSpecifier 
+does ISimpleTypeSpecifier
+{ 
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
 
     has $.text;
@@ -59,7 +65,9 @@ our class SimpleChar16TypeSpecifier {
 #   <simple-type-signedness-modifier>? 
 #   <char32> 
 # }
-our class SimpleChar32TypeSpecifier { 
+our class SimpleChar32TypeSpecifier 
+does ISimpleTypeSpecifier
+{ 
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
 
     has $.text;
@@ -75,7 +83,9 @@ our class SimpleChar32TypeSpecifier {
 #   <simple-type-signedness-modifier>? 
 #   <wchar> 
 # }
-our class SimpleWcharTypeSpecifier { 
+our class SimpleWcharTypeSpecifier 
+does ISimpleTypeSpecifier
+{ 
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
 
     has $.text;
@@ -91,7 +101,9 @@ our class SimpleWcharTypeSpecifier {
 #   <simple-type-length-modifier>? 
 #   <double> 
 # }
-our class SimpleDoubleTypeSpecifier { 
+our class SimpleDoubleTypeSpecifier 
+does ISimpleTypeSpecifier
+{ 
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
 
     has $.text;

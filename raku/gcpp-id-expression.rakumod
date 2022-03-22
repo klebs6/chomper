@@ -11,7 +11,9 @@ use gcpp-operator-id;
 #   <template>? 
 #   <unqualified-id> 
 # }
-our class QualifiedId does IIdExpression { 
+our class QualifiedId 
+does INoPointerDeclaratorBase
+does IIdExpression { 
     has INestedNameSpecifier $.nested-name-specifier is required;
     has Bool                $.template              is required;
     has IUnqualifiedId      $.unqualified-id        is required;

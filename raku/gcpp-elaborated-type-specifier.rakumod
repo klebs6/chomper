@@ -5,6 +5,10 @@ use gcpp-attr;
 use gcpp-ident;
 use gcpp-template;
 
+our role IElaboratedTypeSpecifier                       
+does IDeclSpecifierSeq
+{ }
+
 # rule elaborated-type-specifier:sym<class-ident> { 
 #   <.class-key> 
 #   <attribute-specifier-seq>? 

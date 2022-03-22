@@ -8,6 +8,8 @@ use gcpp-roles;
 # }
 our class PointerDeclarator 
 does ISomeDeclarator
+does IInitDeclarator
+does IParameterDeclarationBody
 does IDeclarator { 
     has IAugmentedPointerOperator @.augmented-pointer-operators;
     has INoPointerDeclarator      $.no-pointer-declarator is required;

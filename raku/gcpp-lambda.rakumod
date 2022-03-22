@@ -228,12 +228,16 @@ our role LambdaExpression::Actions {
 
     # rule lambda-introducer { <.left-bracket> <lambda-capture>? <.right-bracket> } 
     method lambda-introducer($/) {
-        make $<lambda-capture>.made
+        make LambdaIntroducer.new(
+            lambda-capture => $<lambda-capture>.made
+        )
     }
 
     # rule lambda-capture:sym<list> { <capture-list> }
     method lambda-capture:sym<list>($/) {
-        make $<capture-list>.made
+        make LambdaCapture::List.new(
+            capture-list => $<capture-list>.made
+        )
     }
 
     # rule lambda-capture:sym<def> { <capture-default> [ <.comma> <capture-list> ]? } 
@@ -281,12 +285,16 @@ our role LambdaExpression::Actions {
 
     # rule capture:sym<simple> { <simple-capture> }
     method capture:sym<simple>($/) {
-        make Capture::Simple.new
+        make Capture::Simple.new(
+            simple-capture => $<simple-capture>.made,
+        )
     }
 
     # rule capture:sym<init> { <initcapture> } 
     method capture:sym<init>($/) {
-        make Capture::Init.new
+        make Capture::Init.new(
+            init-capture => $<init-capture>.made,
+        )
     }
 
     # rule simple-capture:sym<id> { <and_>? <identifier> }
@@ -297,11 +305,14 @@ our role LambdaExpression::Actions {
 
         if $has-and {
             make SimpleCapture::Id.new(
-                has-and_   => $<and_>.made,
+                has-and_   => True,
                 identifier => $id,
             )
         } else {
-            make $id
+            make SimpleCapture::Id.new(
+                has-and_   => False,
+                identifier => $id,
+            )
         }
     }
 

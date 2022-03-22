@@ -110,6 +110,8 @@ our role ISimpleTypeLengthModifier                      { }
 
 our role ISimpleTypeSpecifier          
 does ITemplateArgument
+does IDeclSpecifierSeq
+does ITheTypeId
 does ITypeSpecifier { }
 
 our role ISimpleTypeSignednessModifier 
@@ -117,7 +119,7 @@ does ISimpleTypeSpecifier { }
 
 our role ITheTypeName                                   { }
 our role IDecltypeSpecifierBody                         { }
-our role IElaboratedTypeSpecifier                       { }
+
 our role INamespaceName                                 { }
 our role INamespaceTag                                  { }
 our role IUsingDeclarationPrefix                        { }
@@ -189,9 +191,17 @@ our role ICastExpression           does IPointerMemberExpression  { }
 our role IUnaryExpression       does ICastExpression        { }
 our role IUnaryExpressionCase   does IUnaryExpression       { }
 our role IPostfixExpressionBody does IUnaryExpressionCase   { }
-our role IPrimaryExpression     does IPostfixExpressionBody { }
+
+our role IPrimaryExpression     
+does IConstantExpression
+does IPostfixExpressionBody { }
+
 our role ILiteral               does IPrimaryExpression     { }
-our role IIdExpression          does IPrimaryExpression     { }
+
+our role IIdExpression          
+does IInitDeclarator
+does IDeclarator #should we be?
+does IPrimaryExpression     { }
 
 our role ICharacterLiteralPrefix { }
 
