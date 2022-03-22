@@ -18,9 +18,17 @@ our class ForRangeDeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.attribute-specifier-seq {j
+            $builder ~= $.attribute-specifier-seq.gist ~ " ";
+        }
+
+        $builder ~= $.decl-specifier-seq.gist;
+        $builder ~= $.declarator.gist;
+
+        $builder
     }
 }
 
@@ -33,9 +41,7 @@ our class ForRangeInitializer::Expression does IForRangeInitializer {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.expression.gist
     }
 }
 
@@ -48,9 +54,7 @@ our class ForRangeInitializer::BracedInitList does IForRangeInitializer {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.braced-init-list.gist
     }
 }
 

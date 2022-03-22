@@ -18,9 +18,13 @@ does IIterationStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "while(" ~ $.condition.gist ~ ")" ~ " \{";
+
+        for @.statements {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder ~ "}"
     }
 }
 
@@ -41,9 +45,15 @@ our class IterationStatement::Do does IIterationStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist ~ "\n";
+        }
+
+        $builder ~= "do " ~ $.statement.gist;
+
+        $builder ~ " while(" ~ $.expression.gist ~ ");"
     }
 }
 
@@ -66,9 +76,26 @@ our class IterationStatement::For does IIterationStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "for(" ~ $.for-init-statement.gist;
+
+        if $.condition {
+            $builder ~= " " ~ $.condition.gist;
+        }
+
+        $builder ~= ";";
+
+        if $.expression {
+            $builder ~= " " ~ $.expression.gist;
+        }
+
+        $builder ~= ") \{";
+
+        for @.statements {
+            $builder ~= $_.gist.indent(4) ~ "\n";
+        }
+
+        $builder ~ "}"
     }
 }
 
@@ -89,9 +116,16 @@ our class IterationStatement::ForRange does IIterationStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "for(";
+
+        $builder ~= $.for-range-declaration.gist ~ ": " ~ $.for-range-initializer.gist ~ ") \{\n";
+
+        for @.statements {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder ~ "}"
     }
 }
 

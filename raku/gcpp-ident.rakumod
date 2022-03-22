@@ -12,9 +12,7 @@ does IIdentifierStart {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.nondigit.gist
     }
 }
 
@@ -26,9 +24,7 @@ does IIdentifierStart {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.universalcharactername.gist
     }
 }
 
@@ -40,9 +36,7 @@ does IIdentifierContinue {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.digit.gist
     }
 }
 
@@ -54,9 +48,7 @@ does IIdentifierContinue {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.nondigit.gist
     }
 }
 
@@ -68,9 +60,7 @@ does IIdentifierContinue {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.universalcharactername.gist
     }
 }
 
@@ -95,6 +85,10 @@ does IDeclSpecifierSeq
 does INoPointerDeclaratorBase
 does ITheTypeName { 
     has Str $.value is required; 
+
+    method gist {
+        $.value
+    }
 }
 
 

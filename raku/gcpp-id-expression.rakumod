@@ -21,9 +21,13 @@ does IIdExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = $.nested-name-specifier.gist;
+
+        if $.template {
+            $builder ~= " template ";
+        }
+
+        $builder ~ $.unqualified-id.gist
     }
 }
 
@@ -36,9 +40,7 @@ our class IdExpression::Qualified does IIdExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.qualified-id.gist
     }
 }
 
@@ -49,9 +51,7 @@ our class IdExpression::Unqualified does IIdExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.unqualified-id.gist
     }
 }
 
@@ -66,9 +66,7 @@ our class UnqualifiedId::Ident does IUnqualifiedId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.identifier.gist
     }
 }
 
@@ -81,9 +79,7 @@ our class UnqualifiedId::OpFuncId does IUnqualifiedId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.operator-function-id.gist
     }
 }
 
@@ -96,9 +92,7 @@ our class UnqualifiedId::ConversionFuncId does IUnqualifiedId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.conversion-function-id.gist
     }
 }
 
@@ -111,9 +105,7 @@ our class UnqualifiedId::LiteralOperatorId does IUnqualifiedId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.literal-operator-id.gist
     }
 }
 
@@ -127,9 +119,7 @@ our class UnqualifiedId::TildeClassname does IUnqualifiedId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "~" ~ $.class-name.gist
     }
 }
 
@@ -143,9 +133,7 @@ our class UnqualifiedId::TildeDecltype does IUnqualifiedId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "~" ~ $.decltype-specifier.gist
     }
 }
 
@@ -158,12 +146,9 @@ our class UnqualifiedId::TemplateId does IUnqualifiedId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.template-id.gist
     }
 }
-
 
 our role IdExpression::Actions {
 

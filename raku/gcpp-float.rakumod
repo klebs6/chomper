@@ -32,9 +32,7 @@ our class ExponentpartPrefix {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        'e'
     }
 }
 
@@ -71,9 +69,7 @@ our class Floatingsuffix {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        'f'
     }
 }
 
@@ -85,9 +81,17 @@ our class FloatingLiteral::Frac does IFloatingLiteral {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = $.fractionalconstant.gist;
+
+        if $.exponentpart {
+            $builder ~= $.exponentpart.gist;
+        }
+
+        if $.floatingsuffix {
+            $builder ~= $.floatingsuffix.gist;
+        }
+
+        $builder
     }
 }
 
@@ -99,9 +103,14 @@ our class FloatingLiteral::Digit does IFloatingLiteral {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.digitsequence.gist ~ $.exponentpart.gist;
+
+        if $.floatingsuffix {
+            $builder ~= $.floatingsuffix.gist;
+        }
+
+        $builder
     }
 }
 

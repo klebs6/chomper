@@ -79,4 +79,3 @@ our role Keyword::Rules {
     token wchar            { 'wchar_t'          } 
     token while_           { 'while'            } 
 }
-

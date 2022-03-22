@@ -14,9 +14,7 @@ does IForInitStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.expression-statement.gist
     }
 }
 
@@ -29,9 +27,7 @@ our class ForInitStatement::SimpleDeclaration does IForInitStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.simple-declaration.gist
     }
 }
 

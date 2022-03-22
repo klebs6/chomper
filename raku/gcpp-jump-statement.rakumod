@@ -13,9 +13,14 @@ our class JumpStatement::Break does IJumpStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist;
+        }
+
+        $builder ~ "break;"
     }
 }
 
@@ -29,9 +34,13 @@ our class JumpStatement::Continue does IJumpStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist;
+        }
+
+        $builder ~ "continue;"
     }
 }
 
@@ -50,9 +59,20 @@ does IJumpStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist ~ "\n";
+        }
+
+        $builder ~= "return";
+
+        if $.return-statement-body {
+            $builder ~= " " ~ $.return-statement-body.gist;
+        }
+
+        $builder ~ ";"
     }
 }
 
@@ -68,9 +88,14 @@ our class JumpStatement::Goto does IJumpStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "goto " ~ $.identifier ~ ";";
+
+        if $.comment {
+            $builder = $.comment.gist ~ "\n" ~ $builder;
+        }
+
+        $builder
     }
 }
 

@@ -14,9 +14,14 @@ our class ExplicitInstantiation {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.extern {
+            $builder ~= "extern ";
+        }
+
+        $builder ~ "template " ~ $.declaration.gist
     }
 }
 

@@ -15,9 +15,7 @@ does ILabeledStatementLabelBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.identifier.gist
     }
 }
 
@@ -33,9 +31,7 @@ does ILabeledStatementLabelBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "case " ~ $.constant-expression.gist
     }
 }
 
@@ -48,9 +44,7 @@ does ILabeledStatementLabelBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "default"
     }
 }
 
@@ -66,9 +60,18 @@ our class LabeledStatementLabel {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        my $a = $.attribute-specifier-seq;
+
+        if $a {
+            $builder ~= $a.gist ~ " ";
+        }
+
+        $builder ~= $.labeled-statement-label-body.gist;
+
+        $builder ~ ":"
     }
 }
 
@@ -83,9 +86,7 @@ our class LabeledStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.labeled-statement-label.gist ~ " " ~ $.statement.gist
     }
 }
 

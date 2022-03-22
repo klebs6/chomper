@@ -22,9 +22,14 @@ our class LambdaIntroducer {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "[";
+
+        if $.lambda-capture {
+            $builder ~= $.lambda-capture.gist;
+        }
+
+        $buidler ~ "]"
     }
 }
 
@@ -41,9 +46,13 @@ our class LambdaExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = $.lambda-introducer.gist;
+
+        if $.lambda-declarator {
+            $builder ~= " " ~ $.lambda-declarator.gist;
+        }
+
+        $builder ~ " " ~ $.compound-statement.gist
     }
 }
 
@@ -54,9 +63,7 @@ our class LambdaCapture::List does ILambdaCapture {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.capture-list.gist
     }
 }
 
@@ -71,9 +78,16 @@ our class LambdaCapture::Def does ILambdaCapture {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.capture-default.gist;
+
+        my $l = $.capture-list;
+
+        if $l {
+            $builder ~= ", " ~ $l;
+        }
+
+        $builder
     }
 }
 
@@ -83,9 +97,7 @@ our class CaptureDefault::And does ICaptureDefault {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "&"
     }
 }
 
@@ -95,9 +107,7 @@ our class CaptureDefault::Assign does ICaptureDefault {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "="
     }
 }
 
@@ -109,9 +119,13 @@ our class CaptureList {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = @.captures>>.gist.join(", ");
+
+        if $.trailing-ellipsis {
+            $builder ~ "..."
+        } else {
+            $builder
+        }
     }
 }
 
@@ -122,9 +136,7 @@ our class Capture::Simple does ICapture {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.simple-capture.gist
     }
 }
 
@@ -135,9 +147,7 @@ our class Capture::Init does ICapture {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.init-capture.gist
     }
 }
 
@@ -149,9 +159,11 @@ our class SimpleCapture::Id does ISimpleCapture {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        if $.has-and {
+            "&" ~ $.identifier.gist
+        } else {
+            $.identifier.gist
+        }
     }
 }
 
@@ -161,9 +173,7 @@ our class SimpleCapture::This does ISimpleCapture {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "this"
     }
 }
 
@@ -180,9 +190,16 @@ our class Initcapture {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.has-and {
+            $builder ~= "&";
+        }
+
+        $builder ~= $.identifier.gist;
+
+        $builder ~ " " ~ $.initializer.gist
     }
 }
 
@@ -199,15 +216,45 @@ our class LambdaDeclarator {
     has ParameterDeclarationClause $.parameter-declaration-clause is required;
     has Bool                       $.mutable                      is required;
     has IExceptionSpecification    $.exception-specification;
-    has IAttributeSpecifierSeq      $.attribute-specifier-seq;
+    has IAttributeSpecifierSeq     $.attribute-specifier-seq;
     has TrailingReturnType         $.trailing-return-type;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+
+        $builder ~= "(";
+
+        my $d = $.parameter-declaration-clause;
+
+        if $d {
+            $builder ~= $d.gist;
+        }
+
+        $builder ~= ")";
+
+        if $.mutable {
+            $builder ~= " mutable";
+        }
+
+        my $x = $.exception-specification;
+        my $y = $.attribute-specifier-seq;
+        my $z = $.trailing-return-type;
+
+        if $x {
+            $builder ~= " " ~ $x.gist;
+        }
+
+        if $y {
+            $builder ~= " " ~ $y.gist;
+        }
+
+        if $z {
+            $builder ~= " " ~ $z.gist;
+        }
+
+        $builder
     }
 }
 

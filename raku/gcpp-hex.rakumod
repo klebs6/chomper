@@ -8,10 +8,7 @@ our class HexadecimalLiteral {
     has $.text;
 
     method gist {
-
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -21,24 +18,19 @@ our class Hexadecimaldigit {
     has $.text;
 
     method gist {
-
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
 our subset Quad of List where (HexadecimalLiteral, HexadecimalLiteral, HexadecimalLiteral, HexadecimalLiteral);
 
 our class Hexquad { 
-    has Quad @hexadecimaldigit is required;
+    has Quad @.hexadecimaldigit is required;
 
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.hexadecimaldigit>>.gist.join("")
     }
 }
 
@@ -52,9 +44,13 @@ does IIntegerLiteral {
 
     method gist {
 
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = $.hexadecimal-literal.gist;
+
+        if $.integersuffix {
+            $builder ~= $.integersuffix.gist;
+        }
+
+        $builder
     }
 }
 
@@ -64,9 +60,7 @@ our class Hexadecimalescapesequence {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.digits>>.gist.join("")
     }
 }
 

@@ -20,9 +20,13 @@ our class TrailingReturnType {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = '-> ' ~ $.trailing-type-specifier.gist;
+
+        if $.abstract-declarator {
+            $builder ~= " " ~ $.abstract-declarator.gist;
+        }
+
+        $builder
     }
 }
 
@@ -43,9 +47,27 @@ our class FunctionDefinition {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+
+        my $a = $.attribute-specifier-seq;
+        my $d = $.decl-specifier-seq;
+        my $v = $.virtual-specifier-seq;
+
+        if $a {
+            $builder ~= $a.gist ~ " ";
+        }
+
+        if $d {
+            $builder ~= $d.gist ~ " ";
+        }
+
+        $builder ~= $.declarator.gist;
+
+        if $v {
+            $builder ~= $v.gist ~ " ";
+        }
+
+        $builder ~ $.function-body.gist
     }
 }
 
@@ -60,9 +82,16 @@ our class FunctionBody::Compound does IFunctionBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        my $i = $.constructor-initializer;
+
+        if $i {
+            $builder ~= $i.gist ~ " ";
+        }
+
+        $builder ~ $.compound-statement.gist
     }
 }
 
@@ -73,9 +102,7 @@ our class FunctionBody::Try does IFunctionBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.function-try-block.gist
     }
 }
 
@@ -90,9 +117,7 @@ our class FunctionBody::AssignDefault does IFunctionBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "= default;"
     }
 }
 
@@ -107,9 +132,7 @@ our class FunctionBody::AssignDelete does IFunctionBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "= delete;"
     }
 }
 
@@ -119,9 +142,7 @@ our class FunctionSpecifier::Inline does IFunctionSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "inline"
     }
 }
 
@@ -131,9 +152,7 @@ our class FunctionSpecifier::Virtual does IFunctionSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "virtual"
     }
 }
 
@@ -143,9 +162,7 @@ our class FunctionSpecifier::Explicit does IFunctionSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "explicit"
     }
 }
 
