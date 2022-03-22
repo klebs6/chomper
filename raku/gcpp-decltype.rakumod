@@ -11,9 +11,7 @@ our class DecltypeSpecifierBody::Expr does IDecltypeSpecifierBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.expression.gist
     }
 }
 
@@ -25,9 +23,7 @@ our class DecltypeSpecifierBody::Auto does IDecltypeSpecifierBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "auto"
     }
 }
 
@@ -43,9 +39,7 @@ our class DecltypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "decltype(" ~ $.decltype-specifier-body.gist ~ ")"
     }
 }
 

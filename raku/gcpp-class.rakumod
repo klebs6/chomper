@@ -15,9 +15,7 @@ our class ClassVirtSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "final"
     }
 }
 
@@ -32,9 +30,14 @@ our class ClassHeadName {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.nested-name-specifier {
+            $builder ~= $.nested-name-specifier.gist;
+        }
+
+        $builder ~ $.class-name.gist
     }
 }
 
@@ -44,9 +47,7 @@ our class ClassName::Id does IClassName {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.identifier.gist
     }
 }
 
@@ -56,9 +57,7 @@ our class ClassName::TemplateId does IClassName {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.simple-template-id.gist
     }
 }
 
@@ -69,34 +68,59 @@ our class ClassName::TemplateId does IClassName {
 #   <.right-brace> 
 # } #-----------------------------
 our class ClassSpecifier { 
+    has IClassHead $.class-head is required;
     has MemberSpecification $.member-specification;
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.class-head.gist ~ " \{\n";
+
+        if $.member-specification {
+            $builder ~= $.member-specification.gist;
+        }
+
+        $builder ~ "}"
     }
 }
 
 
 # rule class-head:sym<class> { 
-# <.class-key> 
-# <attribute-specifier-seq>? 
-# [ <class-head-name> <class-virt-specifier>? ]? 
-# <base-clause>? }
+#   <.class-key> 
+#   <attribute-specifier-seq>? 
+#   [ <class-head-name> <class-virt-specifier>? ]? 
+#   <base-clause>? 
+# }
 our class ClassHead::Class does IClassHead {
+    has ClassKey               $.class-key is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has ClassHeadName         $.class-head-name;
-    has ClassVirtSpecifier    $.class-virt-specifier;
-    has BaseClause            $.base-clause;
+    has ClassHeadName          $.class-head-name;
+    has ClassVirtSpecifier     $.class-virt-specifier;
+    has BaseClause             $.base-clause;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.class-key.gist ~ " ";
+
+        if $.attribute-specifier-seq {
+            $builder ~= $.attribute-specifier-seq.gist ~ " ";
+        }
+
+        if $.class-head-name {
+            $builder ~= $.class-head-name.gist ~ " ";
+
+            if $.class-virt-specifier {
+                $builder ~= $.class-virt-specifier.gist ~ " ";
+            }
+        }
+
+        if $.base-clause {
+            $builder ~= $.base-clause.gist;
+        }
+
+        $builder
     }
 }
 
@@ -113,9 +137,23 @@ our class ClassHead::Union does IClassHead {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "union ";
+
+        if $.attribute-specifier-seq {
+            $builder ~= $.attribute-specifier-seq.gist;
+        }
+
+        if $.class-head-name {
+
+            $builder ~= $.class-head-name.gist ~ " ";
+
+            if $.class-virt-specifier {
+                $builder ~= $.class-virt-specifier.gist ~ " ";
+            }
+        }
+
+        $builder
     }
 }
 
@@ -128,9 +166,7 @@ our class ClassKey::Class does IClassKey {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "class"
     }
 }
 
@@ -142,9 +178,7 @@ our class ClassKey::Struct does IClassKey {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "struct"
     }
 }
 

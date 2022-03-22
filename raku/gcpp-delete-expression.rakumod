@@ -9,14 +9,26 @@ use gcpp-roles;
 #   <cast-expression> 
 # }
 our class DeleteExpression { 
+    has Bool            $.has-doublecolon is required;
+    has Bool            $.has-array       is required;
     has ICastExpression $.cast-expression is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+
+        if $.has-doublecolon {
+            $builder ~= "::";
+        }
+
+        $builder ~= "delete";
+
+        if $.has-array {
+            $builder ~= "[]";
+        }
+
+        $builder ~ " " ~ $.cast-expression.gist
     }
 }
 

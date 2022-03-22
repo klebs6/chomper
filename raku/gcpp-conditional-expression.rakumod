@@ -15,9 +15,7 @@ our class ConditionalExpressionTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "? " ~ $.expression.gist ~ ": " ~ $.assignment-expression.gist
     }
 }
 
@@ -32,9 +30,16 @@ our class ConditionalExpression does IMultiplicativeExpression does IConditional
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.logical-or-expression.gist;
+
+        my $t = $.conditional-expression-tail;
+
+        if $t {
+            $builder ~= " " ~ $t.gist;
+        }
+
+        $builder
     }
 }
 

@@ -13,9 +13,14 @@ our class CastExpression does ICastExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if @.the-type-ids {
+            $builder ~= "(" ~ $_.gist ~ ")";
+        }
+
+        $builder ~ $.unary-expression.gist
     }
 }
 
@@ -25,9 +30,7 @@ our class CastToken::Dyn does ICastToken {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "dynamic_cast"
     }
 }
 
@@ -37,9 +40,7 @@ our class CastToken::Static does ICastToken {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "static_cast"
     }
 }
 
@@ -49,9 +50,7 @@ our class CastToken::Reinterpret does ICastToken {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "reinterpret_cast"
     }
 }
 
@@ -61,9 +60,7 @@ our class CastToken::Const does ICastToken {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "const_cast"
     }
 }
 

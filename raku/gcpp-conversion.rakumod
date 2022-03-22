@@ -13,9 +13,16 @@ our class ConversionDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.pointer-operator.gist;
+
+        my $x = $.conversion-declarator;
+
+        if $x {
+            $builder ~= " " ~ $x.gist;
+        }
+
+        $builder
     }
 }
 
@@ -30,9 +37,16 @@ our class ConversionTypeId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        $builder ~= $.type-specifier-seq.gist ~ " ";
+
+        if $.conversion-declarator {
+            $builder ~= $.conversion-declarator.gist
+        }
+
+        $builder
     }
 }
 
@@ -46,9 +60,7 @@ our class ConversionFunctionId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "operator " ~ $.conversion-type-id.gist
     }
 }
 

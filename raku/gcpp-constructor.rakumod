@@ -12,9 +12,7 @@ our class ConstructorInitializer {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        ":" ~ $.mem-initializer-list.gist
     }
 }
 

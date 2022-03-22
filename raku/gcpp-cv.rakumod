@@ -9,9 +9,7 @@ our class Cvqualifierseq {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.cv_qualifiers>>.gist.join(" ")
     }
 }
 
@@ -21,9 +19,7 @@ our class CvQualifier::Const does ICvQualifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "const"
     }
 }
 
@@ -33,9 +29,7 @@ our class CvQualifier::Volatile does ICvQualifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "volatile"
     }
 }
 

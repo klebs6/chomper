@@ -7,9 +7,7 @@ our class BooleanLiteral::F does IBooleanLiteral {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "False"
     }
 }
 
@@ -18,9 +16,7 @@ our class BooleanLiteral::T does IBooleanLiteral {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "True"
     }
 }
 

@@ -17,9 +17,14 @@ our class InitDeclarator does IInitDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.declarator.gist;
+
+        if $.initializer {
+            $builder ~= " " ~ $.initializer.gist;
+        }
+
+        $builder
     }
 }
 
@@ -31,9 +36,7 @@ our class Declarator::Ptr does IDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.pointer-declarator.gist
     }
 }
 
@@ -50,9 +53,11 @@ our class Declarator::NoPtr does IDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.no-pointer-declarator.gist
+        ~ " "
+        ~ $.parameters-and-qualifiers.gist
+        ~ " "
+        ~ $.trailing-return-type.gist
     }
 }
 
@@ -63,15 +68,16 @@ our class Declarator::NoPtr does IDeclarator {
 our class Declaratorid 
 does INoPointerDeclaratorBase { 
 
-    has Bool         $.has-ellipsis  is required;
+    has Bool          $.has-ellipsis  is required;
     has IIdExpression $.id-expression is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.has-ellipsis ?? "..." !! "";
+
+        $builder ~ $.id-expression.gist
     }
 }
 
@@ -84,9 +90,7 @@ our class SomeDeclarator::Basic does ISomeDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.declarator.gist
     }
 }
 
@@ -99,9 +103,7 @@ our class SomeDeclarator::Abstract does ISomeDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.abstract-declarator.gist
     }
 }
 

@@ -17,16 +17,32 @@ does IDeclSpecifierSeq
 # }
 our class ElaboratedTypeSpecifier::ClassIdent 
 does IElaboratedTypeSpecifier {
+    has IClassKey              $.class-key is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
     has INestedNameSpecifier   $.nested-name-specifier;
-    has Identifier            $.identifier is required;
+    has Identifier             $.identifier is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.class-key.gist ~ " ";
+
+        #--------------
+        my $a = $.attribute-specifier-seq;
+
+        if $a {
+            $builder ~= $a.gist ~ " ";
+        }
+
+        #--------------
+        my $n = $.nested-name-specifier;
+
+        if $n {
+            $builder ~= $n.gist ~ " ";
+        }
+
+        $builder ~ $.identifier.gist
     }
 }
 
@@ -36,14 +52,13 @@ does IElaboratedTypeSpecifier {
 # }
 our class ElaboratedTypeSpecifier::ClassTemplateId 
 does IElaboratedTypeSpecifier {
+    has ClassKey         $.class-key is required;
     has SimpleTemplateId $.simple-template-id is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.class-key.gist ~ " " $.simple-template-id.gist
     }
 }
 
@@ -55,15 +70,22 @@ does IElaboratedTypeSpecifier {
 # }
 our class ElaboratedTypeSpecifier::ClassNestedTemplateId 
 does IElaboratedTypeSpecifier {
+    has ClassKey             $.class-key is required;
     has INestedNameSpecifier $.nested-name-specifier is required;
-    has SimpleTemplateId    $.simple-template-id is required;
+    has Bool                 $.has-template-kw is required;
+    has SimpleTemplateId     $.simple-template-id is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.class-key.gist ~ " " ~ $.nested-name-specifier.gist ~ " ";
+
+        if $.has-template-kw {
+            $builder ~= "template ";
+        }
+
+        $builder ~ $.simple-template-id.gist
     }
 }
 
@@ -75,14 +97,21 @@ does IElaboratedTypeSpecifier {
 our class ElaboratedTypeSpecifier::Enum 
 does IElaboratedTypeSpecifier {
     has INestedNameSpecifier $.nested-name-specifier;
-    has Identifier          $.identifier is required;
+    has Identifier           $.identifier is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "enum ";
+
+        my $n = $.nested-name-specifier;
+
+        if $n {
+            $builder ~= $.n.gist ~ " ";
+        }
+
+        $builder ~ $.identifier
     }
 }
 

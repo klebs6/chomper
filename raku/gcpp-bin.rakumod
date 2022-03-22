@@ -25,15 +25,20 @@ our class Binarydigit {
 our class IntegerLiteral::Bin 
 does IIntegerLiteral {
 
-    has BinaryLiteral      $.binary-literal is required;
-    has IIntegersuffix      $.integersuffix;
+    has BinaryLiteral  $.binary-literal is required;
+    has IIntegersuffix $.integersuffix;
 
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.binary-literal.gist;
+
+        if $.integersuffix {
+            $builder ~= $.integersuffix.gist;
+        }
+
+        $builder
     }
 }
 

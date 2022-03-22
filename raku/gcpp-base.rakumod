@@ -78,9 +78,20 @@ our class BaseSpecifier::Virtual does IBaseSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.attribute-specifier-seq {
+            $builder ~= $.attribute-specifier-seq.gist ~ " ";
+        }
+
+        $builder ~= " virtual ";
+
+        if $.access-specifier {
+            $builder ~= $.access-specifier.gist;
+        }
+
+        $builder ~ $.base-type-specifier.gist
     }
 }
 
@@ -93,15 +104,26 @@ our class BaseSpecifier::Virtual does IBaseSpecifier {
 our class BaseSpecifier::Access does IBaseSpecifier {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
     has IAccessSpecifier       $.access-specifier    is required;
-    has Bool                  $.is-virtual          is required;
-    has BaseTypeSpecifier     $.base-type-specifier is required;
+    has Bool                   $.is-virtual          is required;
+    has BaseTypeSpecifier      $.base-type-specifier is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.attribute-specifier-seq {
+            $builder ~= $.attribute-specifier-seq.gist ~ " ";
+        }
+
+        $builder ~= $.access-specifier.gist ~ " ";
+
+        if $.is-virtual {
+            $builder ~= "virtual ";
+        }
+
+        $builder ~ $.base-type-specifier.gist
     }
 }
 

@@ -13,9 +13,7 @@ our class Condition::Expr does ICondition {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.expression.gist
     }
 }
 
@@ -29,9 +27,7 @@ our class ConditionDeclTail::AssignInit does IConditionDeclTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "= " ~ $.initializer-clause.gist
     }
 }
 
@@ -44,9 +40,7 @@ our class ConditionDeclTail::BracedInit does IConditionDeclTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.braced-init-list.gist
     }
 }
 
@@ -65,9 +59,16 @@ our class Condition::Decl does ICondition {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.attribute-specifier-seq {
+            $builder ~= $.attribute-specifier-seq.gist ~ " ";
+        }
+
+        $builder ~= $.decl-specifier-seq.gist ~ " ";
+        $builder ~= $.declarator.gist ~ " ";
+        $builder ~ $.condition-decl-tail.gist
     }
 }
 

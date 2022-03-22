@@ -8,10 +8,7 @@ our class Digit {
     has $.text;
 
     method gist {
-
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -21,10 +18,7 @@ our class Nonzerodigit {
     has $.text;
 
     method gist {
-
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -34,10 +28,7 @@ our class Nondigit {
     has $.text;
 
     method gist {
-
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -47,8 +38,6 @@ our class Digitsequence {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.digits>>.gist.join("")
     }
 }

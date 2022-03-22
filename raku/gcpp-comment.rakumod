@@ -9,9 +9,7 @@ our class BlockComment does IComment {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -22,9 +20,7 @@ our class LineComment does IComment {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -37,9 +33,7 @@ our class Comment::Line does IComment {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.line-comments>>.gist.join("\n")
     }
 }
 

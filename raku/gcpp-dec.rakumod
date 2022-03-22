@@ -8,10 +8,7 @@ our class DecimalLiteral {
     has $.text;
 
     method gist {
-
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -25,10 +22,7 @@ does IIntegerLiteral {
     has $.text;
 
     method gist {
-
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.decimal-literal.gist ~ $.integersuffix.gist
     }
 }
 

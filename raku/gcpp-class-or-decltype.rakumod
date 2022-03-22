@@ -13,9 +13,14 @@ our class ClassOrDeclType::Class does IClassOrDeclType {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.nested-name-specifier {
+            $builder ~= $.nested-name-specifier.gist;
+        }
+
+        $builder ~ $.class-name.gist
     }
 }
 
@@ -27,9 +32,7 @@ our class ClassOrDeclType::Decltype does IClassOrDeclType {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.decltype-specifier.gist
     }
 }
 

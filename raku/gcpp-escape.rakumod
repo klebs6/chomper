@@ -10,9 +10,7 @@ our class Escapesequence::Simple does IEscapesequence {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.simpleescapesequence.gist
     }
 }
 
@@ -22,9 +20,7 @@ our class Escapesequence::Octal does IEscapesequence {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.octalescapesequence.gist
     }
 }
 
@@ -34,9 +30,7 @@ our class Escapesequence::Hex does IEscapesequence {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.hexadecimalescapesequence.gist
     }
 }
 

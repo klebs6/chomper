@@ -18,9 +18,20 @@ our class Statement::Attributed does IStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist ~ "\n";
+        }
+
+        for @.attribute-specifier-seq {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder ~= $.attributed-statement-body.gist;
+
+        $builder
     }
 }
 

@@ -16,9 +16,7 @@ our class Declarationseq {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.declarations>>.gist.join(" ")
     }
 }
 
@@ -39,12 +37,24 @@ our class AliasDeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist ~ "\n";
+        }
+
+        $builder ~= "using " ~ $.identifier.gist ~ " ";
+
+        my $a = $.attribute-specifier-seq;
+
+        if $a {
+            $builder ~= $a.gist ~ " ";
+        }
+
+        $builder ~ "= " ~ $.the-type-id.gist ~ ";"
     }
 }
-
 
 # rule simple-declaration:sym<basic> { 
 #   <decl-specifier-seq>? 
@@ -62,9 +72,22 @@ does ISimpleDeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist ~ "\n";
+        }
+
+        if $decl-specifier-seq {
+            $builder ~= $decl-specifier-seq.gist ~ " ";
+        }
+
+        for @.init-declarator-list {
+            $builder ~= $_.gist ~ " ";
+        }
+
+        $builder ~ ";"
     }
 }
 
@@ -85,9 +108,26 @@ does ISimpleDeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist ~ "\n";
+        }
+
+        for @.attribute-specifiers {
+            $builder ~= $_.gist ~ " ";
+        }
+
+        if $.decl-specifier-seq {
+            $builder ~= $.decl-specifier-seq.gist ~ " ";
+        }
+
+        for @.init-declarator-list {
+            $builder ~= $_.gist ~ " ";
+        }
+
+        $builder ~ ";"
     }
 }
 
@@ -108,9 +148,18 @@ our class StaticAssertDeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist ~ "\n";
+        }
+
+        $builder ~ "static_assert(" 
+        ~ $.constant-expression.gist 
+        ~ ", " 
+        ~ $.string-literal.gist;
+        ~ ");"
     }
 }
 
@@ -121,9 +170,7 @@ our class EmptyDeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        ";"
     }
 }
 
@@ -138,9 +185,16 @@ our class AttributeDeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist ~ "\n";
+        }
+
+        $builder ~= $.attribute-specifier-seq.gist;
+
+        $builder ~ ";"
     }
 }
 
@@ -392,5 +446,4 @@ our role Declaration::Rules {
     }
 
     rule declaration-statement { <block-declaration> }
-
 }

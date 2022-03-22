@@ -10,9 +10,11 @@ our class Universalcharactername {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        if $.second {
+            "\\U" ~ $.first.gist ~ $.second.gist
+        } else {
+            "\\u" ~ $.first.gist
+        }
     }
 }
 
@@ -22,9 +24,7 @@ our class Cchar::Basic does ICchar {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -34,9 +34,7 @@ our class Cchar::Escape does ICchar {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.escapesequence.gist
     }
 }
 
@@ -46,9 +44,7 @@ our class Cchar::Universal does ICchar {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.universalcharactername.gist
     }
 }
 
@@ -58,9 +54,7 @@ our class Schar::Basic does ISchar {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value.gist
     }
 }
 
@@ -70,9 +64,7 @@ our class Schar::Escape does ISchar {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.escapesequence.gist
     }
 }
 
@@ -82,9 +74,7 @@ our class Schar::Ucn does ISchar {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.universalcharactername.gist
     }
 }
 
@@ -93,9 +83,7 @@ our class CharacterLiteralPrefix::U    does ICharacterLiteralPrefix {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        'u'
     }
 }
 
@@ -104,9 +92,7 @@ our class CharacterLiteralPrefix::BigU does ICharacterLiteralPrefix {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        'U'
     }
 }
 
@@ -115,9 +101,7 @@ our class CharacterLiteralPrefix::L    does ICharacterLiteralPrefix {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        'L'
     }
 }
 
@@ -132,9 +116,20 @@ does IInitializerClause {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.character-literal-prefix {
+            $builder ~= $.character-literal-prefix.gist;
+        }
+
+        $builder = "'";
+
+        for @.cchar {
+            $builder ~= $_.gist;
+        }
+
+        $builder ~ "'"
     }
 }
 
