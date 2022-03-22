@@ -8,9 +8,7 @@ our class EqualityOperator::Eq does IEqualityOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "=="
     }
 }
 
@@ -20,9 +18,7 @@ our class EqualityOperator::Neq does IEqualityOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "!="
     }
 }
 
@@ -37,9 +33,9 @@ our class EqualityExpressionTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.equality-operator.gist 
+        ~ " " 
+        ~ $.relational-expression.gist
     }
 }
 
@@ -54,9 +50,8 @@ our class EqualityExpression does IEqualityExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.relational-expression.gist
+        ~ @.equality-expression-tail>>.gist.join(" ")
     }
 }
 
