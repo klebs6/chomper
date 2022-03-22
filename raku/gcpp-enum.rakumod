@@ -17,9 +17,7 @@ our class EnumName {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.identifier.gist
     }
 }
 
@@ -30,14 +28,20 @@ our class EnumName {
 #   <.right-brace> 
 # }
 our class EnumSpecifier { 
+    has EnumHead       $.enum-head is required;
     has EnumeratorList $.enumerator-list;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.enum-head.gist ~ "\{\n";
+
+        if $.enumerator-list {
+            $builder ~= $.enumerator-list.gist.indent(4);
+        }
+
+        $builder ~ "}"
     }
 }
 
@@ -48,17 +52,42 @@ our class EnumSpecifier {
 #   <enumbase>? 
 # }
 our class EnumHead { 
+    has EnumKey                $.enum-key is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
     has INestedNameSpecifier   $.nested-name-specifier;
-    has Identifier            $.identifier;
+    has Identifier             $.identifier;
     has IEnumBase              $.enum-base;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.enum-key.gist ~ " ";
+
+        my $a = $.attribute-specifier-seq;
+
+        if $a {
+            $builder ~= $a ~ " ";
+        }
+
+        my $i = $.identifier;
+
+        if $i {
+
+            my $n = $.nested-name-specifier;
+
+            if $n {
+                $builder ~= $n.gist ~ " ";
+            }
+
+            $builder ~= $i.gist ~ " ";
+        }
+
+        if $.enum-base {
+            $builder ~= $.enum-base.gist;
+        }
+
+        $builder
     }
 }
 
@@ -70,6 +99,7 @@ our class EnumHead {
 #   <semi> 
 # }
 our class OpaqueEnumDeclaration { 
+    has EnumKey                $.enum-key is required;
     has IComment               $.comment;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
     has Identifier             $.identifier is required;
@@ -78,9 +108,26 @@ our class OpaqueEnumDeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.enum-key.gist;
+
+        if $.comment {
+            $builder ~= $.comment.gist ~ "\n";
+        }
+
+        my $a = $.attribute-specifier-seq;
+
+        if $a {
+            $builder ~= $a.gist ~ " ";
+        }
+
+        $builder ~= $.identifier.gist;
+
+        if $.enum-base {
+            $builder ~= "\n" ~ $.enum-base.gist;
+        }
+
+        $builder ~ ";"
     }
 }
 
@@ -91,11 +138,22 @@ our class OpaqueEnumDeclaration {
 our class Enumkey { 
 
     has $.text;
+    has Bool $.has-modifier is required;
+    has Bool $.is-class;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "enum";
+
+        if $.has-modifier {
+            if $.is-class {
+                $builder ~= " class";
+            } else {
+                $builder ~= " struct";
+            }
+        }
+
+        $builder
     }
 }
 
@@ -110,9 +168,7 @@ our class Enumbase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        ": " ~ $.type-specifier-seq.gist
     }
 }
 
@@ -127,9 +183,7 @@ our class EnumeratorList {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.enumerator-definitions>>.gist.join(", ")
     }
 }
 
@@ -144,9 +198,16 @@ our class EnumeratorDefinition {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.enumerator.gist;
+
+        my $c = $.constant-expression;
+
+        if $c {
+            $builder ~= " = " ~ $c.gist;
+        }
+
+        $builder
     }
 }
 
@@ -159,9 +220,7 @@ our class Enumerator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.identifier.gist
     }
 }
 
