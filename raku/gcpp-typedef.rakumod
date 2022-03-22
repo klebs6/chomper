@@ -3,24 +3,18 @@ use Data::Dump::Tree;
 use gcpp-roles;
 use gcpp-ident;
 
-# rule typedef-name { 
-#   <identifier> 
-# }
 our class TypedefName { 
     has Identifier $.identifier is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.identifier.gist
     }
 }
 
 our role Typedef::Actions {
 
-    # rule typedef-name { <identifier> } 
     method typedef-name($/) {
         make $<identifier>.made
     }

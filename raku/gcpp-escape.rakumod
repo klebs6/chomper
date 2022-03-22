@@ -38,9 +38,7 @@ our class Simpleescapesequence::Slash does ISimpleescapesequence {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '\\\''
     }
 }
 
@@ -48,9 +46,7 @@ our class Simpleescapesequence::Quote does ISimpleescapesequence {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '\\"'
     }
 }
 
@@ -58,9 +54,7 @@ our class Simpleescapesequence::Question does ISimpleescapesequence {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '\\?'
     }
 }
 
@@ -68,9 +62,7 @@ our class Simpleescapesequence::DoubleSlash does ISimpleescapesequence {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '\\\\'
     }
 }
 
@@ -78,9 +70,7 @@ our class Simpleescapesequence::A does ISimpleescapesequence {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '\\a'
     }
 }
 
@@ -88,9 +78,7 @@ our class Simpleescapesequence::B does ISimpleescapesequence {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '\\b'
     }
 }
 
@@ -98,9 +86,7 @@ our class Simpleescapesequence::F does ISimpleescapesequence {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '\\f'
     }
 }
 
@@ -108,9 +94,7 @@ our class Simpleescapesequence::N does ISimpleescapesequence {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '\\n'
     }
 }
 
@@ -118,9 +102,7 @@ our class Simpleescapesequence::R does ISimpleescapesequence {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '\\r'
     }
 }
 
@@ -128,9 +110,7 @@ our class Simpleescapesequence::T does ISimpleescapesequence {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '\\t'
     }
 }
 
@@ -138,9 +118,7 @@ our class Simpleescapesequence::V does ISimpleescapesequence {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '\\v'
     }
 }
 
@@ -148,9 +126,7 @@ our class Simpleescapesequence::RnN does ISimpleescapesequence {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '\\\n'
     }
 }
 

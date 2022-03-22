@@ -16,9 +16,7 @@ does IPostfixExpressionTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.clauses>>.gist.join(", ")
     }
 }
 
@@ -36,9 +34,9 @@ does IInitializerClause {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "\{" 
+        ~ $.initializer-list.gist
+        ~ "}"
     }
 }
 
@@ -53,9 +51,7 @@ does ICondition {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.assignment-expression>>.gist.join(", ")
     }
 }
 
@@ -66,9 +62,7 @@ our class ConstantExpression does IConstantExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.conditional-expression.gist
     }
 }
 
@@ -79,9 +73,7 @@ our class ExpressionList does IPostfixExpressionTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.initializer-list.gist
     }
 }
 
@@ -96,9 +88,7 @@ our class Initializer::ParenExprList does IInitializer {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "(" ~ $.expression-list.gist ~ ")"
     }
 }
 
@@ -111,9 +101,7 @@ our class Initializer::BraceOrEq does IInitializer {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.brace-or-equal-initializer.gist
     }
 }
 
@@ -123,9 +111,7 @@ our class Initializer does IInitializer {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -139,9 +125,7 @@ our class BraceOrEqualInitializer::AssignInit does IBraceOrEqualInitializer {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "= " ~ $.initializer-clause.gist
     }
 }
 
@@ -156,9 +140,7 @@ does IBraceOrEqualInitializer {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.braced-init-list.gist
     }
 }
 
@@ -175,9 +157,18 @@ does IInitializerClause {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $c = $.comment;
+        my $x = $.assignment-expression;
+
+        if $c {
+
+            $c.gist ~ "\n" ~ $.x.gist
+
+        } else {
+
+            $x.gist
+        }
     }
 }
 
@@ -194,9 +185,17 @@ does IInitializerClause {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $c = $.comment;
+        my $x = $.braced-init-list;
+
+        if $c {
+
+            $c.gist ~ "\n" ~ $.x.gist
+
+        } else {
+
+            $x.gist
+        }
     }
 }
 

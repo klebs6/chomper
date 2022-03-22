@@ -16,9 +16,14 @@ our class DynamicExceptionSpecification {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "throw(";
+
+        if $.type-id-list {
+            $builder ~= $.type-id-list.gist;
+        }
+
+        $builder ~ ")"
     }
 }
 
@@ -35,9 +40,24 @@ our class ExceptionDeclaration::Basic does IExceptionDeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        my $a = $.attribute-specifier-seq;
+
+        if $a {
+            $builder ~= $a.gist ~ "\n";
+        }
+
+        $builder ~= $.type-specifier-seq.gist;
+
+        my $b = $.some-declarator;
+
+        if $b {
+            $builder ~= "\n" ~ $b.gist;
+        }
+
+        $builder
     }
 }
 
@@ -49,9 +69,7 @@ our class ExceptionDeclaration::Ellipsis does IExceptionDeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "..."
     }
 }
 
@@ -65,9 +83,14 @@ our class ThrowExpression does IAssignmentExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "throw";
+
+        if $.assignment-expression {
+            $builder ~= " " ~ $.assignment-expression.gist;
+        }
+
+        $builder
     }
 }
 
@@ -80,9 +103,7 @@ our class ExceptionSpecification::Dynamic does IExceptionSpecification {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.dynamic-exception-specification.gist
     }
 }
 
@@ -95,12 +116,9 @@ our class ExceptionSpecification::Noexcept does IExceptionSpecification {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.noe-except-specification.gist
     }
 }
-
 
 our role Exception::Actions {
 

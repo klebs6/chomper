@@ -11,9 +11,7 @@ does IFractionalconstant {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -25,9 +23,7 @@ does IFractionalconstant {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -48,9 +44,7 @@ our class Exponentpart {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -59,9 +53,7 @@ our class Sign::Plus {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "+"
     }
 }
 
@@ -70,9 +62,7 @@ our class Sign::Minus {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "-"
     }
 }
 
