@@ -17,13 +17,12 @@ our class UserDefinedIntegerLiteral::Dec
 does IUserDefinedIntegerLiteral {
 
     has DecimalLiteral $.decimal-literal is required;
+    has Identifier     $.suffix is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.decimal-literal.gist ~ $.suffix.gist
     }
 }
 
@@ -35,13 +34,12 @@ our class UserDefinedIntegerLiteral::Oct
 does IUserDefinedIntegerLiteral {
 
     has OctalLiteral $.octal-literal is required;
+    has Identifier   $.suffix is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.octal-literal.gist ~ $.suffix.gist
     }
 }
 
@@ -53,13 +51,12 @@ our class UserDefinedIntegerLiteral::Hex
 does IUserDefinedIntegerLiteral {
 
     has HexadecimalLiteral $.hexadecimal-literal is required;
+    has Identifier         $.suffix is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.hexadecimal-literal.gist ~ $.suffix.gist
     }
 }
 
@@ -71,13 +68,12 @@ our class UserDefinedIntegerLiteral::Bin
 does IUserDefinedIntegerLiteral {
 
     has BinaryLiteral $.binary-literal is required;
+    has Identifier         $.suffix is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.binary-literal.gist ~ $.suffix.gist
     }
 }
 
@@ -91,13 +87,12 @@ does IUserDefinedFloatingLiteral {
 
     has IFractionalconstant $.fractionalconstant is required;
     has Exponentpart        $.exponentpart;
+    has Identifier          $.suffix is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.fractionalconstant.gist.maybe-extend($.exponentpart) ~ $.suffix.gist
     }
 }
 
@@ -111,12 +106,8 @@ does IUserDefinedFloatingLiteral {
 
     has Str $.value is required;
 
-    has $.text;
-
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -127,12 +118,9 @@ does IUserDefinedFloatingLiteral {
 our class UserDefinedStringLiteral {
 
     has Str $.value is required;
-    has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -142,24 +130,17 @@ our class UserDefinedStringLiteral {
 # }
 our class UserDefinedCharacterLiteral {
     has Str $.value is required;
-    has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
 our class UserDefinedLiteral::Int {
     has IUserDefinedIntegerLiteral   $.user-defined-integer-literal is required;
 
-    has $.text;
-
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.user-defined-integer-literal.gist
     }
 }
 
@@ -168,12 +149,8 @@ does IUserDefinedLiteral {
 
     has IUserDefinedFloatingLiteral  $.user-defined-floating-literal is required;
 
-    has $.text;
-
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.user-defined-floating-literal.gist
     }
 }
 
@@ -185,9 +162,7 @@ does IUserDefinedLiteral {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.user-defined-string-literal.gist
     }
 }
 
@@ -199,9 +174,7 @@ does IUserDefinedLiteral {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.user-defined-character-literal.gist
     }
 }
 

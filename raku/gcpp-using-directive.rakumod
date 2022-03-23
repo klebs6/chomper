@@ -3,32 +3,42 @@ use Data::Dump::Tree;
 use gcpp-roles;
 use gcpp-attr;
 
-# rule using-declaration-prefix:sym<nested> { [ <typename_>? <nested-name-specifier> ] }
+# rule using-declaration-prefix:sym<nested> { 
+#   [ <typename_>? <nested-name-specifier> ] 
+# }
 our class UsingDeclarationPrefix::Nested does IUsingDeclarationPrefix {
+    has Bool $.has-typename is required;
     has INestedNameSpecifier $.nested-name-specifier is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        if $.has-typename {
+            $.nested-name-specifier.gist
+        } else {
+            "typename " ~ $.nested-name-specifier.gist
+        }
     }
 }
 
-# rule using-declaration-prefix:sym<base> { <doublecolon> }
+# rule using-declaration-prefix:sym<base> { 
+#   <doublecolon> 
+# }
 our class UsingDeclarationPrefix::Base does IUsingDeclarationPrefix {
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "::"
     }
 }
 
-# rule using-declaration { <using> <using-declaration-prefix> <unqualified-id> <semi> }
+# rule using-declaration { 
+#   <using> 
+#   <using-declaration-prefix> 
+#   <unqualified-id> 
+#   <semi> 
+# }
 our class UsingDeclaration { 
     has IComment                $.comment;
     has IUsingDeclarationPrefix $.using-declaration-prefix is required;
@@ -37,9 +47,19 @@ our class UsingDeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist ~ "\n";
+        }
+
+        $builder 
+        ~ "using " 
+        ~ $.using-declaration-prefix.gist 
+        ~ " " 
+        ~ $.unqualified-id.gist 
+        ~ ";"
     }
 }
 
@@ -60,9 +80,24 @@ our class UsingDirective {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        my $a = $.attribute-specifier-seq;
+
+        if $a {
+            $builder ~= $a.gist ~ "\n";
+        }
+
+        $builder ~= "using namespace ";
+
+        my $b = $.nested-name-specifier;
+
+        if $b {
+            $builder ~= $b.gist;
+        }
+
+        $builder ~ $.namespace-name.gist ~ ";"
     }
 }
 
