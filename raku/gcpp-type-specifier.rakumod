@@ -16,9 +16,7 @@ our class TrailingTypeSpecifier::CvQualifier does ITrailingTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.cv-qualifier.gist ~ " " ~ $.simple-type-specifier.gist
     }
 }
 
@@ -33,9 +31,12 @@ our class TypeSpecifierSeq does ITypeSpecifierSeq {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = @.type-specifiers>>.gist.join(" ");
+
+        $builder.&maybe-extend($.attribute-specifier-seq);
+
+        $builder
     }
 }
 
@@ -50,9 +51,11 @@ our class TrailingTypeSpecifierSeq {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = @.trailing-type-specifiers>>.gist.join(" ");
+
+        $builder.&maybe-extend($.attribute-specifier-seq);
+
+        $builder
     }
 }
 

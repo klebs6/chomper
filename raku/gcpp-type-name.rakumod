@@ -12,9 +12,7 @@ our class TheTypeName::SimpleTemplateId does ITheTypeName {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.simple-template-id.gist
     }
 }
 
@@ -25,9 +23,7 @@ our class TheTypeName::Class does ITheTypeName {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.class-name.gist
     }
 }
 
@@ -38,9 +34,7 @@ our class TheTypeName::Enum does ITheTypeName {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.enum-name.gist
     }
 }
 
@@ -53,9 +47,7 @@ our class TheTypeName::Typedef does ITheTypeName {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.typedef-name.gist
     }
 }
 
@@ -74,9 +66,12 @@ does ISimpleTypeSpecifier
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        $builder.&maybe-extend($.nested-name-specifier);
+
+        $builder ~ $.the-type-name.gist
     }
 }
 

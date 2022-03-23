@@ -12,9 +12,7 @@ our class TemplateParameterList {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.template-parameters>>.gist.join(", ")
     }
 }
 
@@ -27,9 +25,12 @@ our class TypeParameterBase::Basic does ITypeParameterBase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        if $.templateparameter-list {
+            "template<" ~ $.templateparameter-list.gist ~ "> " ~ "class"
+        } else {
+            "class"
+        }
     }
 }
 
@@ -41,9 +42,7 @@ our class TypeParameterBase::Typename does ITypeParameterBase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "typename"
     }
 }
 
@@ -58,9 +57,18 @@ our class TypeParameterSuffix::MaybeIdent does ITypeParameterSuffix {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.has-ellipsis {
+            $builder ~= "...";
+        }
+
+        if $.identifier {
+            $builder ~= $.identifier.gist;
+        }
+
+        $builder
     }
 }
 
@@ -76,9 +84,13 @@ our class TypeParameterSuffix::AssignTypeId does ITypeParameterSuffix {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+
+        if $.identifer {
+            $builder ~= $.identifier.gist ~ " ";
+        }
+
+        $builder ~ "= " ~ $.the-type-id.gist
     }
 }
 
@@ -93,9 +105,7 @@ our class TypeParameter {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.type-parameter-base.gist ~ $.type-parameter-suffix.gist
     }
 }
 
