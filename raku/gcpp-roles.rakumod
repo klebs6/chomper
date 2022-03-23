@@ -218,3 +218,9 @@ our role IBooleanLiteral     does ILiteral { }
 
 # token literal:sym<user-defined> { <user-defined-literal> }
 our role IUserDefinedLiteral does ILiteral { }
+
+our sub maybe-extend($_ is rw, $expr) {
+    if $expr {
+        $_ ~= $expr.gist
+    }
+}

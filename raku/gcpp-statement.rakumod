@@ -14,9 +14,7 @@ our class StatementSeq {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.statements>>.gist.join(" ")
     }
 }
 
@@ -31,9 +29,9 @@ our class CompoundStatement does IStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "\{";
+        $builder.&maybe-extend($.statement-seq.gist);
+        $builder ~ "}"
     }
 }
 
@@ -48,9 +46,14 @@ our class Statement::Labeled does IStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist ~ "\n";
+        }
+
+        $builder ~ $.labeled-statement.gist
     }
 }
 
@@ -65,9 +68,14 @@ our class Statement::Declaration does IStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist ~ "\n";
+        }
+
+        $builder ~ $.declaration-statement.gist
     }
 }
 
@@ -80,9 +88,7 @@ our class DeclarationStatement does IDeclarationStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.block-declaration.gist
     }
 }
 
@@ -97,13 +103,15 @@ our class ExpressionStatement does IStatement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+
+        if $.comment {
+            $builder ~= $.comment.gist ~ "\n";
+        }
+
+        $builder ~ $.expression.gist ~ ";"
     }
 }
-
-
 
 our role Statement::Actions {
 

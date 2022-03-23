@@ -14,9 +14,7 @@ our class ExplicitSpecialization {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "template<>" ~ $.declaration.gist
     }
 }
 

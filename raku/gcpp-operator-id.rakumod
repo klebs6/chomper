@@ -14,9 +14,7 @@ our class OperatorFunctionId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "operator " ~ $.the-operator.gist
     }
 }
 
@@ -28,9 +26,7 @@ our class LiteralOperatorId::StringLit does ILiteralOperatorId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "operator " ~ $.string-literal.gist ~ $.identifier.gist
     }
 }
 
@@ -43,9 +39,7 @@ our class LiteralOperatorId::UserDefined does ILiteralOperatorId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "operator " ~ $.user-defined-string-literal.gist
     }
 }
 

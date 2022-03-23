@@ -25,9 +25,20 @@ our class NewExpression::NewTypeId does INewExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "new ";
+
+        if $.new-placement {
+            $builder ~= $.new-placement.gist ~ " ";
+        }
+
+        $builder ~= $.new-type-id.gist;
+
+        if $.new-initializer {
+            $builder ~= " " ~ $.new-initializer.gist;
+        }
+
+        $builder
     }
 }
 
@@ -48,9 +59,20 @@ our class NewExpression::TheTypeId does INewExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "new ";
+
+        if $.new-placement {
+            $builder ~= $.new-placement.gist;
+        }
+
+        $builder ~= "(" ~ $.the-type-id.gist ~ ")";
+
+        if $.new-initializer {
+            $builder ~= " " ~ $.new-initializer.gist;
+        }
+
+        $builder
     }
 }
 
@@ -65,9 +87,7 @@ our class NewPlacement {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "(" ~ $.expression-list.gist ~ ")"
     }
 }
 
@@ -82,9 +102,13 @@ our class NewTypeId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = $.type-specifier-seq.gist;
+
+        if $.new-declarator {
+            $builder ~= " " ~ $.new-declarator.gist;
+        }
+
+        $builder
     }
 }
 
@@ -99,9 +123,13 @@ our class NewDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = @.pointer-operators>>.gist.join(" ");
+
+        if $.no-pointer-new-declarator {
+            $builder ~= " " ~ $.no-pointer-new-declarator.gist;
+        }
+
+        $builder
     }
 }
 
@@ -120,9 +148,14 @@ our class NoPointerNewDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "[" ~ $.expression.gist ~ "]";
+
+        if $.attribute-specifier-seq  {
+            $builder ~= " " ~ $.attribute-specifier-seq.gist;
+        }
+
+        $builder ~ @.no-pointer-new-declarator-tail>>.gist.join(" ")
     }
 }
 
@@ -139,9 +172,13 @@ our class NoPointerNewDeclaratorTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "[" ~ $.constant-expression.gist ~ "]";
+
+        if $.attribute-specifier-seq {
+            $builder ~= " " ~ $.attribute-specifier-seq.gist;
+        }
+
+        $builder
     }
 }
 
@@ -157,9 +194,16 @@ our class NewInitializer::ExprList does INewInitializer {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "(";
+
+        if $.expression-list {
+            $builder ~= $.expression-list.gist;
+        }
+
+        $builder ~= ")";
+
+        $builder
     }
 }
 
@@ -172,9 +216,7 @@ our class NewInitializer::Braced does INewInitializer {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.braced-init-list.gist
     }
 }
 
@@ -317,6 +359,14 @@ our role NewExpression::Rules {
     }
 
     proto rule new-initializer { * }
-    rule new-initializer:sym<expr-list> { <left-paren> <expression-list>?  <right-paren> }
-    rule new-initializer:sym<braced>    { <braced-init-list> }
+
+    rule new-initializer:sym<expr-list> { 
+        <left-paren> 
+        <expression-list>?  
+        <right-paren> 
+    }
+
+    rule new-initializer:sym<braced> { 
+        <braced-init-list> 
+    }
 }

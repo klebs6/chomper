@@ -10,18 +10,19 @@ use gcpp-cv;
 # }
 our class AugmentedPointerOperator does IAugmentedPointerOperator { 
     has IPointerOperator $.pointer-operator is required;
-    has Bool            $.const            is required;
+    has Bool             $.const            is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.pointer-operator.gist.&maybe-extend($.const)
     }
 }
 
-# rule pointer-operator:sym<ref> { <and_> <attribute-specifier-seq>? }
+# rule pointer-operator:sym<ref> { 
+#   <and_> 
+#   <attribute-specifier-seq>? 
+# }
 our class PointerOperator::Ref 
 does ISomeDeclarator
 does IPointerOperator {
@@ -30,9 +31,7 @@ does IPointerOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "&".&maybe-extend($.attribute-specifier-seq)
     }
 }
 
@@ -47,9 +46,7 @@ our class PointerOperator::RefRef does IPointerOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "&&".&maybe-extend($.attribute-specifier-seq)
     }
 }
 
@@ -67,22 +64,35 @@ our class PointerOperator::Star does IPointerOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+
+        $builder.&maybe-extend($.nested-name-specifier);
+
+        $builder ~= "*";
+
+        $builder.&maybe-extend($.attribute-specifier-seq);
+        $builder.&maybe-extend($.cvqualifierseq);
+
+        $builder
     }
 }
 
 our role PointerOperator::Actions {
 
-    # rule pointer-operator:sym<ref> { <and_> <attribute-specifier-seq>? }
+    # rule pointer-operator:sym<ref> { 
+    #   <and_> 
+    #   <attribute-specifier-seq>? 
+    # }
     method pointer-operator:sym<ref>($/) {
         make PointerOperator::Ref.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
         )
     }
 
-    # rule pointer-operator:sym<ref-ref> { <and-and> <attribute-specifier-seq>? }
+    # rule pointer-operator:sym<ref-ref> { 
+    #   <and-and> 
+    #   <attribute-specifier-seq>? 
+    # }
     method pointer-operator:sym<ref-ref>($/) {
         make PointerOperator::RefRef.new(
             and-and                 => $<and-and>.made,
@@ -90,7 +100,12 @@ our role PointerOperator::Actions {
         )
     }
 
-    # rule pointer-operator:sym<star> { <nested-name-specifier>? <star> <attribute-specifier-seq>? <cvqualifierseq>? }
+    # rule pointer-operator:sym<star> { 
+    #   <nested-name-specifier>? 
+    #   <star> 
+    #   <attribute-specifier-seq>? 
+    #   <cvqualifierseq>? 
+    # }
     method pointer-operator:sym<star>($/) {
         make PointerOperator::Star.new(
             nested-name-specifier   => $<nested-name-specifier>.made,
@@ -99,7 +114,10 @@ our role PointerOperator::Actions {
         )
     }
 
-    # rule augmented-pointer-operator { <pointer-operator> <const>? } 
+    # rule augmented-pointer-operator { 
+    #   <pointer-operator> 
+    #   <const>? 
+    # } 
     method augmented-pointer-operator($/) {
 
         my $const = $<const>.made;

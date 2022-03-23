@@ -25,9 +25,9 @@ does IPostfixExpressionBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.cast-token.gist 
+        ~ "<" ~ $.the-type-id.gist ~ ">" 
+        ~ "(" $.expression.gist ~ ")"
     }
 }
 
@@ -44,9 +44,14 @@ our class PostfixExpressionTypeid::Expr {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.type-id-of-the-type-id.gist;
+
+        $builder ~= "(";
+        $builder ~= $.expression.gist;
+        $builder ~= ")";
+
+        $builder
     }
 }
 
@@ -57,9 +62,13 @@ our class PostfixExpressionTypeid::TypeId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = $.type-id-of-the-type-id.gist;
+
+        $builder ~= "(";
+        $builder ~= $.the-type-id.gist;
+        $builder ~= ")";
+
+        $builder
     }
 }
 
@@ -70,9 +79,7 @@ our class PostListHead::Simple does IPostListHead {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.simple-type-specifier.gist
     }
 }
 
@@ -83,32 +90,17 @@ our class PostListHead::TypeName does IPostListHead {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.type-name-specifier.gist
     }
 }
 
-=begin comment
-# token post-list-tail:sym<parenthesized> { <.left-paren> <expression-list>? <.right-paren> }
-our class PostListTail::Parenthesized does IPostListTail {
-    has ExpressionList $.expression-list;
-}
-
-# token post-list-tail:sym<braced> { <braced-init-list> }
-our class PostListTail::Braced does IPostListTail {
-    has BracedInitList $.braced-init-list is required;
-}
-=end comment
 
 our class PostListTail does IPostListTail {
     has $.value is required;
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value.gist
     }
 }
 
@@ -126,9 +118,7 @@ does IPostfixExpressionBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.post-list-head.gist ~ $.post-list-tail.gist
     }
 }
 
@@ -146,21 +136,7 @@ does IUnaryExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
-    }
-}
-
-our class PostfixExpressionTail::Null 
-does IPostfixExpressionTail {
-
-    has $.text;
-
-    method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.postfix-expression-body.gist ~ @.postfix-expression-tail>>.gist.join("")
     }
 }
 
@@ -179,9 +155,7 @@ does IPostfixExpressionTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "[" ~ $.expression ~ "]"
     }
 }
 
@@ -193,9 +167,7 @@ does IPostfixExpressionTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.bracket-tail.gist
     }
 }
 
@@ -210,9 +182,7 @@ does IPostfixExpressionTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.bracket-tail.gist
     }
 }
 
@@ -229,9 +199,9 @@ does IPostfixExpressionTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "(";
+        $builder.maybe-extend($.expression-list);
+        $builder ~ ")"
     }
 }
 
@@ -243,15 +213,27 @@ does IPostfixExpressionTail {
 our class PostfixExpressionTail::IndirectionId 
 does IPostfixExpressionTail {
 
-    has Bool         $.template is required;
+    has Bool          $.indirect is required;
+    has Bool          $.template is required;
     has IIdExpression $.id-expression is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.indirect {
+            $builder ~= "->";
+        } else {
+            $builder ~= ".";
+        }
+
+        if $.template {
+            $builder ~= "template ";
+        }
+
+        $builder ~ $.id-expression.gist
     }
 }
 
@@ -262,14 +244,22 @@ does IPostfixExpressionTail {
 our class PostfixExpressionTail::IndirectionPseudoDtor 
 does IPostfixExpressionTail {
 
+    has Bool                  $.indirect is required;
     has IPseudoDestructorName $.pseudo-destructor-name is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        if $.indirect {
+            $builder ~= "->";
+        } else {
+            $builder ~= ".";
+        }
+
+        $builder ~ $.pseudo-destructor-name.gist
     }
 }
 
@@ -282,9 +272,7 @@ does IPostfixExpressionTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "++"
     }
 }
 
@@ -294,9 +282,7 @@ does IPostfixExpressionTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "--"
     }
 }
 
@@ -334,7 +320,9 @@ our role PostfixExpression::Actions {
 
     # rule postfix-expression-tail:sym<parens> { <.left-paren> <expression-list>? <.right-paren> }
     method postfix-expression-tail:sym<parens>($/) {
-        make $<expression-list>.made // PostfixExpressionTail::Null.new
+        make PostfixExpressionTail::Parens.new(
+            expression-list => $<expression-list>.made,
+        )
     }
 
     # rule postfix-expression-tail:sym<indirection-id> { [ <dot> || <arrow> ] <template>? <id-expression> }
@@ -553,3 +541,15 @@ our role PostfixExpression::Rules {
         <post-list-tail>
     }
 }
+
+=begin comment
+# token post-list-tail:sym<parenthesized> { <.left-paren> <expression-list>? <.right-paren> }
+our class PostListTail::Parenthesized does IPostListTail {
+    has ExpressionList $.expression-list;
+}
+
+# token post-list-tail:sym<braced> { <braced-init-list> }
+our class PostListTail::Braced does IPostListTail {
+    has BracedInitList $.braced-init-list is required;
+}
+=end comment

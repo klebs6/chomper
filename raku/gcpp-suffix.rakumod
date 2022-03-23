@@ -14,9 +14,7 @@ does IIntegersuffix {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.unsignedsuffix.gist.&maybe-extend($.longsuffix)
     }
 }
 
@@ -29,9 +27,7 @@ does IIntegersuffix {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.unsignedsuffix.gist.&maybe-extend($.longlongsuffix)
     }
 }
 
@@ -44,9 +40,7 @@ does IIntegersuffix {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.longsuffix.gist.&maybe-extend($.unsignedsuffix)
     }
 }
 
@@ -59,9 +53,7 @@ does IIntegersuffix {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.longsuffix.gist.&maybe-extend($.unsignedsuffix)
     }
 }
 
@@ -70,9 +62,7 @@ our class Unsignedsuffix {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "u"
     }
 }
 
@@ -81,9 +71,7 @@ our class Longsuffix {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "l"
     }
 }
 
@@ -93,9 +81,7 @@ does ILonglongsuffix {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "ll"
     }
 }
 
@@ -105,9 +91,7 @@ does ILonglongsuffix {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "LL"
     }
 }
 
@@ -117,9 +101,7 @@ our class Udsuffix {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 

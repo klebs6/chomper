@@ -12,9 +12,7 @@ our class ExclusiveOrExpression does IExclusiveOrExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.and-expressions>>.gist.join(" ^ ")
     }
 }
 
@@ -28,9 +26,7 @@ our class InclusiveOrExpression does IInclusiveOrExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.exclusive-or-expressions>>.gist.join(" | ")
     }
 }
 

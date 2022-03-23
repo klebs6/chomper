@@ -29,9 +29,19 @@ does INoPointerDeclaratorTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "(";
+
+        $bulider.&maybe-extend($.parameter-declaration-clause);
+
+        $builder ~= ") ";
+
+        $bulider.&maybe-extend($.cvqualifierseq,          padr => True);
+        $bulider.&maybe-extend($.refqualifier,            padr => True);
+        $bulider.&maybe-extend($.exception-specification, padr => True);
+        $bulider.&maybe-extend($.attribute-specifier-seq);
+
+        $builder
     }
 }
 
@@ -50,9 +60,14 @@ our class ParameterDeclarationClause {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = @.parameter-declaration-list>>.gist.join(", ");
+
+        if $.has-ellipsis {
+            $builder ~= "...";
+        }
+
+        $builder
     }
 }
 
@@ -63,9 +78,7 @@ our class ParameterDeclarationBody::Decl does IParameterDeclarationBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.declarator.gist
     }
 }
 
@@ -76,9 +89,11 @@ our class ParameterDeclarationBody::Abst does IParameterDeclarationBody {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        if $.abstract-declarator {
+            $.abstract-declarator.gist
+        } else {
+            ""
+        }
     }
 }
 
@@ -97,9 +112,19 @@ our class ParameterDeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        $builder.&maybe-extend($.attribute-specifier-seq, padr => True);
+
+        $builder ~= $.decl-specifier-seq.gist ~ " ";
+        $builder ~= $.parameter-declaration-body.gist ~ " ";
+
+        if $.initializer-clause {
+            $builder ~= "= " ~ $.initializer-clause.gist;
+        }
+
+        $builder
     }
 }
 

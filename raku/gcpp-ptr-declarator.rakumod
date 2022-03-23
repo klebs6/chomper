@@ -17,9 +17,8 @@ does IDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.augmented-pointer-operators>>.gist.join(" ") 
+        ~ $.no-pointer-declarator.gist
     }
 }
 

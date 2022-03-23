@@ -13,9 +13,7 @@ our class PointerMemberOperator::Dot does IPointerMemberOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        ".*"
     }
 }
 
@@ -27,9 +25,7 @@ our class PointerMemberOperator::Arrow does IPointerMemberOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "->*"
     }
 }
 
@@ -44,9 +40,8 @@ our class PointerMemberExpression does IPointerMemberExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.cast-expression.gist 
+        ~ @.pointer-member-expression-tail>>.gist.join(" ")
     }
 }
 
@@ -56,14 +51,12 @@ our class PointerMemberExpression does IPointerMemberExpression {
 # }
 our class PointerMemberExpressionTail { 
     has IPointerMemberOperator $.pointer-member-operator is required;
-    has ICastExpression         $.cast-expression is required;
+    has ICastExpression        $.cast-expression is required;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.pointer-member-operator.gist ~ " " ~ $.cast-expression.gist
     }
 }
 
@@ -79,7 +72,10 @@ our role PointerMember::Actions {
         make PointerMemberOperator::Arrow.new
     }
 
-    # rule pointer-member-expression { <cast-expression> <pointer-member-expression-tail>* }
+    # rule pointer-member-expression { 
+    #   <cast-expression> 
+    #   <pointer-member-expression-tail>* 
+    # }
     method pointer-member-expression($/) {
 
         my $base = $<cast-expression>.made;
@@ -97,7 +93,10 @@ our role PointerMember::Actions {
         }
     }
 
-    # rule pointer-member-expression-tail { <pointer-member-operator> <cast-expression> } 
+    # rule pointer-member-expression-tail { 
+    #   <pointer-member-operator> 
+    #   <cast-expression> 
+    # }
     method pointer-member-expression-tail($/) {
         make PointerMemberExpressionTail.new(
             pointer-member-operator => $<pointer-member-operator>.made,

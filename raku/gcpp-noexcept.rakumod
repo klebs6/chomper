@@ -15,9 +15,7 @@ does INoeExceptSpecification {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "noexcept(" ~ $.constant-expression.gist ~ ")"
     }
 }
 
@@ -30,9 +28,7 @@ does INoeExceptSpecification {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "noexcept"
     }
 }
 
@@ -48,9 +44,7 @@ our class NoExceptExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "noexcept(" ~ $.expression.gist ~ ")"
     }
 }
 
@@ -68,14 +62,21 @@ our role NoExceptExpression::Actions {
         )
     }
 
-    # token noe-except-specification:sym<full> { <noexcept> <.left-paren> <constant-expression> <.right-paren> }
+    # token noe-except-specification:sym<full> { 
+    #   <noexcept> 
+    #   <.left-paren> 
+    #   <constant-expression> 
+    #   <.right-paren> 
+    # }
     method noe-except-specification:sym<full>($/) {
         make NoeExceptSpecification::Full.new(
             constant-expression => $<constant-expression>.made,
         )
     }
 
-    # token noe-except-specification:sym<keyword-only> { <noexcept> } 
+    # token noe-except-specification:sym<keyword-only> { 
+    #   <noexcept> 
+    # }
     method noe-except-specification:sym<keyword-only>($/) {
         make NoeExceptSpecification::KeywordOnly.new
     }
@@ -91,6 +92,15 @@ our role NoExceptExpression::Rules {
     }
 
     proto token noe-except-specification { * }
-    token noe-except-specification:sym<full>         { <noexcept> <left-paren> <constant-expression> <right-paren> }
-    token noe-except-specification:sym<keyword-only> { <noexcept> }
+
+    token noe-except-specification:sym<full> { 
+        <noexcept> 
+        <left-paren> 
+        <constant-expression> 
+        <right-paren> 
+    }
+
+    token noe-except-specification:sym<keyword-only> { 
+        <noexcept> 
+    }
 }

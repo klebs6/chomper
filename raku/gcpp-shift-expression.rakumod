@@ -10,9 +10,7 @@ our class ShiftExpressionTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.shift-operator.gist ~ " " ~ $.additive-expression.gist
     }
 }
 
@@ -24,9 +22,7 @@ our class ShiftExpression does IShiftExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.additive-expression.gist ~ " " ~ @.shift-expression-tail>>.gist./join(" ")
     }
 }
 
@@ -36,9 +32,7 @@ our class ShiftOperator::Right does IShiftOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        ">>"
     }
 }
 
@@ -48,9 +42,7 @@ our class ShiftOperator::Left does IShiftOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "<<"
     }
 }
 

@@ -19,9 +19,16 @@ does INoPointerDeclaratorBase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.declaratorid.gist;
+
+        my $a = $.attribute-specifier-seq;
+
+        if $a {
+            $builder ~= " " ~ $.a.gist;
+        }
+
+        $builder
     }
 }
 
@@ -38,9 +45,7 @@ does INoPointerDeclaratorBase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "(" ~ $.pointer-declarator.gist ~ ")"
     }
 }
 
@@ -53,9 +58,7 @@ our class NoPointerDeclaratorTail::Basic does INoPointerDeclaratorTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.parameters-and-qualifiers.gist
     }
 }
 
@@ -72,9 +75,16 @@ our class NoPointerDeclaratorTail::Bracketed does INoPointerDeclaratorTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "[";
+
+        $builder.&maybe-extend($.constant-expression);
+
+        $builder ~= "]";
+
+        $builder.&maybe-extend($.attribute-specifier-seq);
+
+        $builder
     }
 }
 
@@ -94,9 +104,14 @@ does IInitDeclarator does IDeclarator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.no-pointer-declarator-base.gist;
+
+        for @.no-pointer-declarator-tail {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder
     }
 }
 

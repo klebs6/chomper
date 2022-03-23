@@ -10,9 +10,7 @@ our class StringLiteral does ILiteral {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -22,9 +20,7 @@ our class Rawstring {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 

@@ -8,9 +8,7 @@ our class StorageClassSpecifier::Extern does IStorageClassSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "extern"
     }
 }
 
@@ -20,9 +18,7 @@ our class StorageClassSpecifier::Mutable does IStorageClassSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "mutable"
     }
 }
 
@@ -32,9 +28,7 @@ our class StorageClassSpecifier::Register does IStorageClassSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "register"
     }
 }
 
@@ -44,9 +38,7 @@ our class StorageClassSpecifier::Static does IStorageClassSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "static"
     }
 }
 
@@ -56,9 +48,7 @@ our class StorageClassSpecifier::Thread_local does IStorageClassSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "thread_local"
     }
 }
 

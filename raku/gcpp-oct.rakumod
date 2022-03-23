@@ -5,26 +5,16 @@ use gcpp-roles;
 our class OctalLiteral { 
     has Str $.value is required; 
 
-    has $.text;
-
     method gist {
-
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
 our class Octaldigit { 
     has Str $.value is required; 
 
-    has $.text;
-
     method gist {
-
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.value
     }
 }
 
@@ -37,10 +27,7 @@ does IIntegerLiteral {
     has $.text;
 
     method gist {
-
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.octal-literal.gist.&maybe-extend($.integersuffix)
     }
 }
 
@@ -50,9 +37,7 @@ our class Octalescapesequence {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.digits>>.gist.join("")
     }
 }
 

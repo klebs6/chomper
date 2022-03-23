@@ -16,7 +16,7 @@ our class UsingDeclarationPrefix::Nested does IUsingDeclarationPrefix {
     }
 }
 
-# rule using-declaration-prefix:sym<base> { <doublecolon> } #--------------------
+# rule using-declaration-prefix:sym<base> { <doublecolon> }
 our class UsingDeclarationPrefix::Base does IUsingDeclarationPrefix {
 
     has $.text;

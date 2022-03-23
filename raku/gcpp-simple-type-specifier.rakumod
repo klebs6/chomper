@@ -19,9 +19,16 @@ does ISimpleTypeSpecifier
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+
+        for @.simple-type-length-modifiers {
+            $builder  ~= $_.gist ~ " ";
+        }
+
+        $builder ~ "int"
     }
 }
 
@@ -37,9 +44,9 @@ does ISimpleTypeSpecifier
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+        $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $builder ~ "char"
     }
 }
 
@@ -55,9 +62,9 @@ does ISimpleTypeSpecifier
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+        $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $bulider ~ "char16"
     }
 }
 
@@ -73,9 +80,9 @@ does ISimpleTypeSpecifier
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+        $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $bulider ~ "char32"
     }
 }
 
@@ -91,9 +98,9 @@ does ISimpleTypeSpecifier
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+        $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $bulider ~ "wchar"
     }
 }
 
@@ -109,9 +116,9 @@ does ISimpleTypeSpecifier
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+        $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $bulider ~ "double"
     }
 }
 
@@ -124,9 +131,7 @@ our class SimpleTypeSpecifier::Int_ does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.simple-int-type-specifier.gist
     }
 }
 
@@ -137,9 +142,7 @@ our class SimpleTypeSpecifier::Full does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.full-type-name.gist
     }
 }
 
@@ -150,9 +153,7 @@ our class SimpleTypeSpecifier::Scoped does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.scoped-template-id.gist
     }
 }
 
@@ -163,9 +164,7 @@ our class SimpleTypeSpecifier::SignednessMod does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.simple-type-signedness-modifier.gist
     }
 }
 
@@ -177,9 +176,15 @@ our class SimpleTypeSpecifier::SignednessModLength does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $builder = "";
+
+        $builder.&maybe-extend($.simple-type-signedness-modifier);
+
+        for @.simple-type-length-modifier {
+            $builder ~= $_.gist;
+        }
+
+        $builder
     }
 }
 
@@ -190,9 +195,7 @@ our class SimpleTypeSpecifier::Char does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.simple-char-type-specifier.gist
     }
 }
 
@@ -203,9 +206,7 @@ our class SimpleTypeSpecifier::Char16 does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.simple-char16-type-specifier.gist
     }
 }
 
@@ -216,9 +217,7 @@ our class SimpleTypeSpecifier::Char32 does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.simple-char32-type-specifier.gist
     }
 }
 
@@ -229,9 +228,7 @@ our class SimpleTypeSpecifier::Wchar does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.simple-wchar-type-specifier.gist
     }
 }
 
@@ -241,9 +238,7 @@ our class SimpleTypeSpecifier::Bool does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "bool"
     }
 }
 
@@ -253,9 +248,7 @@ our class SimpleTypeSpecifier::Float does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "float"
     }
 }
 
@@ -266,9 +259,7 @@ our class SimpleTypeSpecifier::Double does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.simple-double-type-specifier.gist
     }
 }
 
@@ -278,9 +269,7 @@ our class SimpleTypeSpecifier::Void does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "void"
     }
 }
 
@@ -290,9 +279,7 @@ our class SimpleTypeSpecifier::Auto does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "auto"
     }
 }
 
@@ -304,8 +291,6 @@ our class SimpleTypeSpecifier::Decltype does ISimpleTypeSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.decltype-specifier.gist
     }
 }

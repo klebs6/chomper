@@ -8,9 +8,7 @@ our class Refqualifier::And does IRefqualifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "&"
     }
 }
 
@@ -20,9 +18,7 @@ our class Refqualifier::AndAnd does IRefqualifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "&&"
     }
 }
 

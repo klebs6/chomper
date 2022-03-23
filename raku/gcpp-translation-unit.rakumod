@@ -3,16 +3,14 @@ use Data::Dump::Tree;
 use gcpp-roles;
 use gcpp-declaration;
 
-# token translation-unit {         <declarationseq>?  $     }
+# token translation-unit { <declarationseq>? $ }
 our class TranslationUnit { 
     has IDeclarationseq $.declarationseq;
 
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.declarationseq.gist
     }
 }
 

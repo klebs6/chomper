@@ -8,23 +8,34 @@ use gcpp-roles;
 # }
 our class TheOperator::New does ITheOperator { 
 
+    has Bool $.has-brackets is required;
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        if $.has-brackets {
+            "new[]"
+        } else {
+            "new"
+        }
     }
 }
 
-# token the-operator:sym<delete> { <delete> [ <.left-bracket> <.right-bracket>]? }
+# token the-operator:sym<delete> { 
+#   <delete> 
+#   [ <.left-bracket> <.right-bracket>]? 
+# }
 our class TheOperator::Delete does ITheOperator { 
+
+    has Bool $.has-brackets is required;
+
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        if $.has-brackets {
+            "delete[]" 
+        } else {
+            "delete" 
+        }
     }
 }
 
@@ -33,9 +44,7 @@ our class TheOperator::Plus does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "+"
     }
 }
 
@@ -44,9 +53,7 @@ our class TheOperator::Minus does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "-"
     }
 }
 
@@ -55,9 +62,7 @@ our class TheOperator::Star does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "*"
     }
 }
 
@@ -66,9 +71,7 @@ our class TheOperator::Div does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "/"
     }
 }
 
@@ -77,9 +80,7 @@ our class TheOperator::Mod does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "%"
     }
 }
 
@@ -88,9 +89,7 @@ our class TheOperator::Caret does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "^"
     }
 }
 
@@ -99,9 +98,7 @@ our class TheOperator::And does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "&"
     }
 }
 
@@ -110,9 +107,7 @@ our class TheOperator::Or does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "|"
     }
 }
 
@@ -121,9 +116,7 @@ our class TheOperator::Tilde does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "~"
     }
 }
 
@@ -132,9 +125,7 @@ our class TheOperator::Not does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "!"
     }
 }
 
@@ -143,9 +134,7 @@ our class TheOperator::Assign does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "="
     }
 }
 
@@ -154,9 +143,7 @@ our class TheOperator::Greater does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        ">"
     }
 }
 
@@ -165,9 +152,7 @@ our class TheOperator::Less does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "<"
     }
 }
 
@@ -176,9 +161,7 @@ our class TheOperator::GreaterEqual does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        ">="
     }
 }
 
@@ -187,9 +170,7 @@ our class TheOperator::PlusAssign does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "+="
     }
 }
 
@@ -198,9 +179,7 @@ our class TheOperator::MinusAssign does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "-="
     }
 }
 
@@ -209,9 +188,7 @@ our class TheOperator::StarAssign does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "*="
     }
 }
 
@@ -220,9 +197,7 @@ our class TheOperator::ModAssign does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "%="
     }
 }
 
@@ -231,9 +206,7 @@ our class TheOperator::XorAssign does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "^="
     }
 }
 
@@ -242,9 +215,7 @@ our class TheOperator::AndAssign does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "&="
     }
 }
 
@@ -253,9 +224,7 @@ our class TheOperator::OrAssign does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "|="
     }
 }
 
@@ -264,9 +233,7 @@ our class TheOperator::LessLess does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "<<"
     }
 }
 
@@ -275,9 +242,7 @@ our class TheOperator::GreaterGreater does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        ">>"
     }
 }
 
@@ -286,9 +251,7 @@ our class TheOperator::RightShiftAssign does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        ">>="
     }
 }
 
@@ -297,9 +260,7 @@ our class TheOperator::LeftShiftAssign does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "<<="
     }
 }
 
@@ -308,9 +269,7 @@ our class TheOperator::Equal does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "=="
     }
 }
 
@@ -319,9 +278,7 @@ our class TheOperator::NotEqual does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "!="
     }
 }
 
@@ -330,9 +287,7 @@ our class TheOperator::LessEqual does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "<="
     }
 }
 
@@ -341,9 +296,7 @@ our class TheOperator::AndAnd does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "&&"
     }
 }
 
@@ -352,9 +305,7 @@ our class TheOperator::OrOr does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "||"
     }
 }
 
@@ -363,9 +314,7 @@ our class TheOperator::PlusPlus does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "++"
     }
 }
 
@@ -374,9 +323,7 @@ our class TheOperator::MinusMinus does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "--"
     }
 }
 
@@ -385,9 +332,7 @@ our class TheOperator::Comma does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        ","
     }
 }
 
@@ -396,9 +341,7 @@ our class TheOperator::ArrowStar does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "->*"
     }
 }
 
@@ -407,9 +350,7 @@ our class TheOperator::Arrow does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "->"
     }
 }
 
@@ -418,9 +359,7 @@ our class TheOperator::Parens does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "()"
     }
 }
 
@@ -429,9 +368,7 @@ our class TheOperator::Brak does ITheOperator {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+        "[]"
     }
 }
 
@@ -644,41 +581,41 @@ our role Operator::Rules {
     proto token the-operator   { * }
     token the-operator:sym<new>                { <new_>   [ <left-bracket> <right-bracket>]? } 
     token the-operator:sym<delete>             { <delete> [ <left-bracket> <right-bracket>]? } 
-    token the-operator:sym<plus>               { <plus>                                    } 
-    token the-operator:sym<minus>              { <minus>                                   } 
-    token the-operator:sym<star>               { <star>                                    } 
-    token the-operator:sym<div_>               { <div_>                                     } 
-    token the-operator:sym<mod_>               { <mod_>                                     } 
-    token the-operator:sym<caret>              { <caret>                                   } 
+    token the-operator:sym<plus>               { <plus>                                      } 
+    token the-operator:sym<minus>              { <minus>                                     } 
+    token the-operator:sym<star>               { <star>                                      } 
+    token the-operator:sym<div_>               { <div_>                                      } 
+    token the-operator:sym<mod_>               { <mod_>                                      } 
+    token the-operator:sym<caret>              { <caret>                                     } 
     token the-operator:sym<and_>               { <and_>    <!before <and_>>                  } 
-    token the-operator:sym<or_>                { <or_>                                      } 
-    token the-operator:sym<tilde>              { <tilde>                                   } 
-    token the-operator:sym<not>                { <not_>                                     } 
-    token the-operator:sym<assign>             { <assign>                                  } 
-    token the-operator:sym<greater>            { <greater>                                 } 
-    token the-operator:sym<less>               { <less>                                    } 
-    token the-operator:sym<greater-equal>      { <greater-equal>                            } 
-    token the-operator:sym<plus-assign>        { <plus-assign>                              } 
-    token the-operator:sym<minus-assign>       { <minus-assign>                             } 
-    token the-operator:sym<star-assign>        { <star-assign>                              } 
-    token the-operator:sym<mod-assign>         { <mod-assign>                               } 
-    token the-operator:sym<xor-assign>         { <xor-assign>                               } 
-    token the-operator:sym<and-assign>         { <and-assign>                               } 
-    token the-operator:sym<or-assign>          { <or-assign>                                } 
-    token the-operator:sym<LessLess>           { <less> <less>                             } 
-    token the-operator:sym<GreaterGreater>     { <greater> <greater>                       } 
+    token the-operator:sym<or_>                { <or_>                                       } 
+    token the-operator:sym<tilde>              { <tilde>                                     } 
+    token the-operator:sym<not>                { <not_>                                      } 
+    token the-operator:sym<assign>             { <assign>                                    } 
+    token the-operator:sym<greater>            { <greater>                                   } 
+    token the-operator:sym<less>               { <less>                                      } 
+    token the-operator:sym<greater-equal>      { <greater-equal>                             } 
+    token the-operator:sym<plus-assign>        { <plus-assign>                               } 
+    token the-operator:sym<minus-assign>       { <minus-assign>                              } 
+    token the-operator:sym<star-assign>        { <star-assign>                               } 
+    token the-operator:sym<mod-assign>         { <mod-assign>                                } 
+    token the-operator:sym<xor-assign>         { <xor-assign>                                } 
+    token the-operator:sym<and-assign>         { <and-assign>                                } 
+    token the-operator:sym<or-assign>          { <or-assign>                                 } 
+    token the-operator:sym<LessLess>           { <less> <less>                               } 
+    token the-operator:sym<GreaterGreater>     { <greater> <greater>                         } 
     token the-operator:sym<right-shift-assign> { <right-shift-assign>                        } 
     token the-operator:sym<left-shift-assign>  { <left-shift-assign>                         } 
-    token the-operator:sym<equal>              { <equal>                                   } 
-    token the-operator:sym<not-equal>          { <not-equal>                                } 
-    token the-operator:sym<less-equal>         { <less-equal>                               } 
-    token the-operator:sym<and-and>            { <and-and>                                  } 
-    token the-operator:sym<or-or>              { <or-or>                                    } 
-    token the-operator:sym<plus-plus>          { <plus-plus>                                } 
-    token the-operator:sym<minus-minus>        { <minus-minus>                              } 
-    token the-operator:sym<comma>              { <comma>                                   } 
-    token the-operator:sym<arrow-star>         { <arrow-star>                               } 
-    token the-operator:sym<arrow>              { <arrow>                                   } 
-    token the-operator:sym<Parens>             { <left-paren>   <right-paren>   } 
-    token the-operator:sym<Brak>               { <left-bracket> <right-bracket> } 
+    token the-operator:sym<equal>              { <equal>                                     } 
+    token the-operator:sym<not-equal>          { <not-equal>                                 } 
+    token the-operator:sym<less-equal>         { <less-equal>                                } 
+    token the-operator:sym<and-and>            { <and-and>                                   } 
+    token the-operator:sym<or-or>              { <or-or>                                     } 
+    token the-operator:sym<plus-plus>          { <plus-plus>                                 } 
+    token the-operator:sym<minus-minus>        { <minus-minus>                               } 
+    token the-operator:sym<comma>              { <comma>                                     } 
+    token the-operator:sym<arrow-star>         { <arrow-star>                                } 
+    token the-operator:sym<arrow>              { <arrow>                                     } 
+    token the-operator:sym<Parens>             { <left-paren>   <right-paren>                } 
+    token the-operator:sym<Brak>               { <left-bracket> <right-bracket>              } 
 }

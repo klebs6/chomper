@@ -11,19 +11,26 @@ use gcpp-decltype;
 #   <the-type-name> 
 # }
 our class PseudoDestructorName::Basic does IPseudoDestructorName {
-    has Bool        $.nested-name-specifier;
+    has Bool         $.nested-name-specifier;
     has ITheTypeName $.the-scoped-type-name;
-    has ITheTypeName $.the-type-anme is required;
+    has ITheTypeName $.the-type-name is required;
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "";
+
+        $builder.&maybe-extend($.nested-name-specifier);
+
+        if $.the-scoped-type-name {
+            $builder ~= $.the-scoped-type-name.gist ~ "::";
+        }
+
+        $builder ~ "~" ~ $.the-type-name.gist
     }
 }
 
-# rule pseudo-destructor-name:sym<template> { 
+# rule pseudo-destructor-name:sym<template> {
 #   <nested-name-specifier> 
 #   <template> 
 #   <simple-template-id> 
@@ -39,21 +46,22 @@ our class PseudoDestructorName::Template does IPseudoDestructorName {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.nested-name-specifier.gist 
+        ~ " template " 
+        ~ $.simple-template-id.gist
+        ~ "::"
+        ~ "~"
+        ~ $.the-type-name.gist
     }
 }
 
-# rule pseudo-destructor-name:sym<decltype> { <tilde> <decltype-specifier> } #-------------------------------------
+# rule pseudo-destructor-name:sym<decltype> { <tilde> <decltype-specifier> }
 our class PseudoDestructorName::Decltype does IPseudoDestructorName {
     has DecltypeSpecifier $.decltype-specifier is required;
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "~" ~ $.decltype-specifier.gist
     }
 }
 

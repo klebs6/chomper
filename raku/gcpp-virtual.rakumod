@@ -11,9 +11,7 @@ our class VirtualSpecifierSeq {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.virtual-specifiers>>.gist.join(" ")
     }
 }
 
@@ -25,9 +23,7 @@ our class VirtualSpecifier::Override does IVirtualSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "override"
     }
 }
 
@@ -37,9 +33,7 @@ our class VirtualSpecifier::Final does IVirtualSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "final"
     }
 }
 

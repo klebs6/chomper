@@ -13,9 +13,7 @@ our class TemplateParameter::Type does ITemplateParameter {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.type-parameter.gist
     }
 }
 
@@ -27,9 +25,7 @@ our class TemplateParameter::Param does ITemplateParameter {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.parameter-declaration.gist
     }
 }
 # rule template-argument-list { 
@@ -43,9 +39,7 @@ our class TemplateArgumentList {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.template-arguments>>.gist.join(", ")
     }
 }
 
@@ -56,9 +50,7 @@ our class TemplateArgument::TypeId does ITemplateArgument {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.the-type-id.gist
     }
 }
 
@@ -68,9 +60,7 @@ our class TemplateArgument::ConstExpr does ITemplateArgument {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.constant-expression.gist
     }
 }
 
@@ -80,9 +70,7 @@ our class TemplateArgument::IdExpr does ITemplateArgument {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.id-expression.gist
     }
 }
 
@@ -104,9 +92,7 @@ does IPostListHead {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.template-name ~ "<"  ~ @.template-arguments>>.gist.join(", ") ~ ">"
     }
 }
 
@@ -119,9 +105,7 @@ our class TemplateId::Simple does ITemplateId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.simple-template-id.gist
     }
 }
 
@@ -138,9 +122,8 @@ our class TemplateId::OperatorFunctionId does ITemplateId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $maybe-args = $.template-argument-list ?? $.template-argument-list.gist !! "";
+        $.operator-function-id.gist ~ "<" ~ $maybe-args ~ ">"
     }
 }
 
@@ -157,9 +140,8 @@ our class TemplateId::LiteralOperatorId does ITemplateId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        my $maybe-args = $.template-argument-list ?? $.template-argument-list.gist !! "";
+        $.literal-operator-id.gist ~ "<" ~ $maybe-args ~ ">"
     }
 }
 
@@ -176,9 +158,7 @@ our class TemplateDeclaration {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "template<" ~ $.templateparameter-list.gist ~ ">" ~ $.declaration.gist
     }
 }
 
@@ -194,9 +174,7 @@ our class ScopedTemplateId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.nested-name-specifier.gist ~ " template " ~ $.simple-template-id.gist
     }
 }
 

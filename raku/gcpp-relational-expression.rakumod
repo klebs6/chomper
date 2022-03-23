@@ -8,9 +8,7 @@ our class RelationalOperator::Less does IRelationalOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "<"
     }
 }
 
@@ -20,9 +18,7 @@ our class RelationalOperator::Greater does IRelationalOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        ">"
     }
 }
 
@@ -32,9 +28,7 @@ our class RelationalOperator::LessEq does IRelationalOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "<="
     }
 }
 
@@ -44,9 +38,7 @@ our class RelationalOperator::GreaterEq does IRelationalOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        ">="
     }
 }
 
@@ -63,9 +55,10 @@ our class RelationalExpressionTail {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        " " 
+        ~ $.relational-operator.gist 
+        ~ " " 
+        ~ $.shift-expression.gist
     }
 }
 
@@ -80,9 +73,9 @@ our class RelationalExpression does IRelationalExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.shift-expression.gist 
+        ~ " " 
+        ~ @.relational-expression-tail>>.gist.join(" ")
     }
 }
 

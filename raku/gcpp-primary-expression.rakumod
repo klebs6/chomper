@@ -10,9 +10,7 @@ our class PrimaryExpression::Literal does IPrimaryExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.literal>>.gist.join(" ")
     }
 }
 
@@ -22,9 +20,7 @@ our class PrimaryExpression::This does IPrimaryExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "this"
     }
 }
 
@@ -39,9 +35,7 @@ our class PrimaryExpression::Expr does IPrimaryExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "(" ~ $.expression.gist ~ ")"
     }
 }
 
@@ -54,9 +48,7 @@ our class PrimaryExpression::Id does IPrimaryExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.id-expression.gist
     }
 }
 
@@ -69,9 +61,7 @@ our class PrimaryExpression::Lambda does IPrimaryExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.lambda-expression.gist
     }
 }
 

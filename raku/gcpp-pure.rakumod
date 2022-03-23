@@ -14,9 +14,7 @@ our class PureSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "= " ~ $.val.gist
     }
 }
 
