@@ -10,9 +10,7 @@ our class SimpleTypeLengthModifier::Short does ISimpleTypeLengthModifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "short"
     }
 }
 
@@ -24,9 +22,7 @@ our class SimpleTypeLengthModifier::Long does ISimpleTypeLengthModifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "long"
     }
 }
 
@@ -38,9 +34,7 @@ our class SimpleTypeSignednessModifier::Unsigned does ISimpleTypeSignednessModif
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "unsigned"
     }
 }
 
@@ -52,9 +46,7 @@ our class SimpleTypeSignednessModifier::Signed does ISimpleTypeSignednessModifie
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "signed"
     }
 }
 

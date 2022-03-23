@@ -18,9 +18,10 @@ our class Handler {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "catch(" 
+        ~ $.exception-declaration.gist 
+        ~ ")" 
+        ~ $.compound-statement.gist
     }
 }
 
@@ -33,9 +34,7 @@ our class HandlerSeq {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.handlers>>.gist.join("\n")
     }
 }
 
@@ -51,9 +50,14 @@ our class TryBlock {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "try " ~ $.compound-statement.gist;
+
+        for @.handler-seq {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder
     }
 }
 
@@ -71,9 +75,18 @@ our class FunctionTryBlock {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "try ";
+
+        $builder.&maybe-extend($.constructor-initializer);
+
+        $builder ~= $.compound-statement.gist;
+
+        for @.handler-seq {
+            $builder ~= $_.gist ~ "\n";
+        }
+
+        $builder
     }
 }
 

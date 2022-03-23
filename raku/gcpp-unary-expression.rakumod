@@ -14,9 +14,7 @@ does IUnaryExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.new-expression.gist
     }
 }
 
@@ -28,9 +26,7 @@ does IUnaryExpression {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.case.gist
     }
 }
 
@@ -45,9 +41,7 @@ does IUnaryExpressionCase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.postfix-expression.gist
     }
 }
 
@@ -63,9 +57,7 @@ does IUnaryExpressionCase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "++"
     }
 }
 
@@ -80,9 +72,7 @@ does IUnaryExpressionCase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "--"
     }
 }
 
@@ -100,9 +90,7 @@ does IUnaryExpressionCase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.unary-operator.gist ~ " " ~ $.unary-expression.gist
     }
 }
 
@@ -117,9 +105,7 @@ does IUnaryExpressionCase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "sizeof " ~ $.unary-expression.gist
     }
 }
 
@@ -136,9 +122,7 @@ does IUnaryExpressionCase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "sizeof(" ~ $.the-type-id.gist ~ ")"
     }
 }
 
@@ -156,9 +140,7 @@ does IUnaryExpressionCase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "sizeof ... (" ~ $.identifier.gist ~ ")"
     }
 }
 
@@ -175,9 +157,7 @@ does IUnaryExpressionCase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "alignof(" ~ $.the-type-id.gist ~ ")"
     }
 }
 
@@ -191,9 +171,7 @@ does IUnaryExpressionCase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.no-except-expression.gist
     }
 }
 
@@ -207,9 +185,7 @@ does IUnaryExpressionCase {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.delete-expression.gist
     }
 }
 
@@ -221,9 +197,7 @@ our class UnaryOperator::Or does IUnaryOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '|'
     }
 }
 
@@ -233,9 +207,7 @@ our class UnaryOperator::Star does IUnaryOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '*'
     }
 }
 
@@ -245,9 +217,7 @@ our class UnaryOperator::And does IUnaryOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '&'
     }
 }
 
@@ -257,9 +227,7 @@ our class UnaryOperator::Plus does IUnaryOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '+'
     }
 }
 
@@ -269,9 +237,7 @@ our class UnaryOperator::Tilde does IUnaryOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '~'
     }
 }
 
@@ -284,9 +250,7 @@ does IUnaryOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '-'
     }
 }
 
@@ -299,9 +263,7 @@ does IUnaryOperator {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        '!'
     }
 }
 

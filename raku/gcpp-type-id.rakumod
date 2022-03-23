@@ -18,9 +18,14 @@ does ITemplateArgument {
     has $.text;
 
     method gist {
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = $.type-specifier-seq.gist;
+
+        if $.abstract-declarator {
+            $builder ~= " " ~ $.abstract-declarator.gist;
+        }
+
+        $builder
     }
 }
 
@@ -35,9 +40,7 @@ our class TypeIdList {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        @.the-type-ids>>.gist.join(", ")
     }
 }
 
@@ -52,9 +55,10 @@ our class TypeNameSpecifier::Ident does ITypeNameSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        "typename " 
+        ~ $.nested-name-specifier.gist 
+        ~ " " 
+        ~ $.identifier.gist
     }
 }
 
@@ -72,9 +76,16 @@ our class TypeNameSpecifier::Template does ITypeNameSpecifier {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+
+        my $builder = "typename "
+        ~ $.nested-name-specifier.gist
+        ~ " ";
+
+        if $.has-template {
+            $builder ~= "template ";
+        }
+
+        $builder ~ $.simple-template-id.gist
     }
 }
 
@@ -84,9 +95,7 @@ our class TypeIdOfTheTypeId {
     has $.text;
 
     method gist{
-        say "need write gist!";
-        ddt self;
-        exit;
+        $.typeid.gist
     }
 }
 
