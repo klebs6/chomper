@@ -22,7 +22,7 @@ does ISimpleTypeSpecifier
 
         my $builder = "";
 
-        $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
 
         for @.simple-type-length-modifiers {
             $builder  ~= $_.gist ~ " ";
@@ -45,7 +45,7 @@ does ISimpleTypeSpecifier
 
     method gist{
         my $builder = "";
-        $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
         $builder ~ "char"
     }
 }
@@ -63,8 +63,8 @@ does ISimpleTypeSpecifier
 
     method gist{
         my $builder = "";
-        $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
-        $bulider ~ "char16"
+        $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $builder ~ "char16"
     }
 }
 
@@ -81,8 +81,8 @@ does ISimpleTypeSpecifier
 
     method gist{
         my $builder = "";
-        $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
-        $bulider ~ "char32"
+        $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $builder ~ "char32"
     }
 }
 
@@ -99,8 +99,8 @@ does ISimpleTypeSpecifier
 
     method gist{
         my $builder = "";
-        $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
-        $bulider ~ "wchar"
+        $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $builder ~ "wchar"
     }
 }
 
@@ -117,8 +117,8 @@ does ISimpleTypeSpecifier
 
     method gist{
         my $builder = "";
-        $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
-        $bulider ~ "double"
+        $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $builder ~ "double"
     }
 }
 
@@ -178,7 +178,7 @@ our class SimpleTypeSpecifier::SignednessModLength does ISimpleTypeSpecifier {
     method gist{
         my $builder = "";
 
-        $builder.&maybe-extend($.simple-type-signedness-modifier);
+        $builder = $builder.&maybe-extend($.simple-type-signedness-modifier);
 
         for @.simple-type-length-modifier {
             $builder ~= $_.gist;

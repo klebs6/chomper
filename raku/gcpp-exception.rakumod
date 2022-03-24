@@ -128,6 +128,7 @@ our role Exception::Actions {
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
             type-specifier-seq      => $<type-specifier-seq>.made,
             some-declarator         => $<some-declarator>.made,
+            text                    => ~$/,
         )
     }
 
@@ -140,6 +141,7 @@ our role Exception::Actions {
     method throw-expression($/) {
         make ThrowExpression.new(
             assignment-expression => $<assignment-expression>.made,
+            text                  => ~$/,
         )
     }
 
@@ -157,6 +159,7 @@ our role Exception::Actions {
     method dynamic-exception-specification($/) {
         make DynamicExceptionSpecification.new(
             type-id-list => $<type-id-list>.made,
+            text         => ~$/,
         )
     }
 }

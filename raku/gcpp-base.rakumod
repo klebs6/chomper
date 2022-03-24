@@ -134,6 +134,7 @@ our role Base::Actions {
     method base-clause($/) {
         make BaseClause.new(
             base-specifier-list => $<base-specifier-list>.made,
+            text                => ~$/,
         )
     }
 
@@ -152,6 +153,7 @@ our role Base::Actions {
             make BaseSpecifier::BaseType.new(
                 attribute-specifier-seq => $prefix,
                 base-type-specifier     => $base,
+                text                    => ~$/,
             )
         } else {
             make $base
@@ -169,6 +171,7 @@ our role Base::Actions {
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
             access-specifier        => $<access-specifier>.made,
             base-type-specifier     => $<base-type-specifier>.made,
+            text                    => ~$/,
         )
     }
 
@@ -184,6 +187,7 @@ our role Base::Actions {
             access-specifier        => $<access-specifier>.made,
             is-virtual              => $<is-virtual>.made,
             base-type-specifier     => $<base-type-specifier>.made,
+            text                    => ~$/,
         )
     }
 

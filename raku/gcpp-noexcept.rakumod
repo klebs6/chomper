@@ -59,6 +59,7 @@ our role NoExceptExpression::Actions {
     method no-except-expression($/) {
         make NoExceptExpression.new(
             expression => $<expression>.made,
+            text       => ~$/,
         )
     }
 
@@ -71,6 +72,7 @@ our role NoExceptExpression::Actions {
     method noe-except-specification:sym<full>($/) {
         make NoeExceptSpecification::Full.new(
             constant-expression => $<constant-expression>.made,
+            text                => ~$/,
         )
     }
 

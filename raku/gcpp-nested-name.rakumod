@@ -86,7 +86,7 @@ our class NestedNameSpecifierSuffix::Template does INestedNameSpecifierSuffix {
 
     method gist{
 
-        my $bulider = "";
+        my $builder = "";
 
         if $.template {
             $builder ~= "template ";
@@ -131,6 +131,7 @@ our role NestedNameSpecifier::Actions {
     method nested-name-specifier-prefix:sym<type>($/) {
         make NestedNameSpecifierPrefix::Type.new(
             the-type-name => $<the-type-name>.made,
+            text          => ~$/,
         )
     }
 
@@ -138,6 +139,7 @@ our role NestedNameSpecifier::Actions {
     method nested-name-specifier-prefix:sym<ns>($/) {
         make NestedNameSpecifierPrefix::Ns.new(
             namespace-name => $<namespace-name>.made,
+            text           => ~$/,
         )
     }
 
@@ -145,6 +147,7 @@ our role NestedNameSpecifier::Actions {
     method nested-name-specifier-prefix:sym<decl>($/) {
         make NestedNameSpecifierPrefix::Decl.new(
             decltype-specifier => $<decltype-specifier>.made,
+            text               => ~$/,
         )
     }
 
@@ -152,6 +155,7 @@ our role NestedNameSpecifier::Actions {
     method nested-name-specifier-suffix:sym<id>($/) {
         make NestedNameSpecifierSuffix::Id.new(
             identifier => $<identifier>.made,
+            text       => ~$/,
         )
     }
 
@@ -164,6 +168,7 @@ our role NestedNameSpecifier::Actions {
         make NestedNameSpecifierSuffix::Template.new(
             template           => $<template>.made,
             simple-template-id => $<simple-template-id>.made,
+            text               => ~$/,
         )
     }
 
@@ -180,6 +185,7 @@ our role NestedNameSpecifier::Actions {
             make NestedNameSpecifier.new(
                 nested-name-specifier-prefix   => $base,
                 nested-name-specifier-suffixes => @suffixes,
+                text                           => ~$/,
             )
         } else {
             make $base

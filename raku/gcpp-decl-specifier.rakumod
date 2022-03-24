@@ -3,6 +3,10 @@ use Data::Dump::Tree;
 use gcpp-roles;
 use gcpp-attr;
 
+our class DeclSpecifier::Friend    does IDeclSpecifier { }
+our class DeclSpecifier::Typedef   does IDeclSpecifier { }
+our class DeclSpecifier::Constexpr does IDeclSpecifier { }
+
 # regex decl-specifier-seq { 
 #   <decl-specifier> 
 #   [<.ws> <decl-specifier>]*? 
@@ -51,6 +55,7 @@ our role DeclSpecifier::Actions {
         make $<function-specifier>.made
     }
 
+
     # token decl-specifier:sym<friend> { 
     #   <.friend> 
     # }
@@ -85,6 +90,7 @@ our role DeclSpecifier::Actions {
             make DeclSpecifierSeq.new(
                 decl-specifiers         => @specifiers,
                 attribute-specifier-seq => $seq // Nil,
+                text                    => ~$/,
             )
         } else {
             make @specifiers[0]

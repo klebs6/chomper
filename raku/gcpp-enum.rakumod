@@ -7,6 +7,8 @@ use gcpp-attr;
 our class EnumeratorList         { ... }
 our class EnumeratorDefinition   { ... }
 our class Enumerator { ... }
+our class EnumHead { ... }
+our class EnumKey { ... }
 
 our role IEnumBase {  }
 
@@ -135,7 +137,7 @@ our class OpaqueEnumDeclaration {
 #   <enum_> 
 #   [ <class_> || <struct> ]? 
 # }
-our class Enumkey { 
+our class EnumKey { 
 
     has $.text;
     has Bool $.has-modifier is required;
@@ -235,6 +237,7 @@ our role Enum::Actions {
     method enum-specifier($/) {
         make EnumSpecifier.new(
             enumerator-list => $<enumerator-list>.made,
+            text            => ~$/,
         )
     }
 
@@ -245,6 +248,7 @@ our role Enum::Actions {
             nested-name-specifier   => $<nested-name-specifier>.made,
             identifier              => $<identifier>.made,
             enum-base               => $<enum-base>.made,
+            text                    => ~$/,
         )
     }
 
@@ -255,18 +259,20 @@ our role Enum::Actions {
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
             identifier              => $<identifier>.made,
             enum-base               => $<enum-base>.made,
+            text                    => ~$/,
         )
     }
 
     # rule enumkey { <enum_> [ <class_> || <struct> ]? }
     method enumkey($/) {
-        make Enumkey.new
+        make EnumKey.new
     }
 
     # rule enumbase { <colon> <type-specifier-seq> }
     method enumbase($/) {
         make Enumbase.new(
             type-specifier-seq => $<type-specifier-seq>.made,
+            text               => ~$/,
         )
     }
 
@@ -280,6 +286,7 @@ our role Enum::Actions {
         make EnumeratorDefinition.new(
             enumerator          => $<enumerator>.made,
             constant-expression => $<constant-expression>.made,
+            text                => ~$/,
         )
     }
 

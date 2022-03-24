@@ -18,6 +18,8 @@ our class ParameterDeclaration { ... }
 #   <attribute-specifier-seq>? 
 # }
 our class ParametersAndQualifiers 
+does IAbstractDeclarator
+does IParameterDeclarationBody
 does INoPointerDeclaratorTail {
 
     has ParameterDeclarationClause $.parameter-declaration-clause;
@@ -32,14 +34,14 @@ does INoPointerDeclaratorTail {
 
         my $builder = "(";
 
-        $bulider.&maybe-extend($.parameter-declaration-clause);
+        $builder = $builder.&maybe-extend($.parameter-declaration-clause);
 
         $builder ~= ") ";
 
-        $bulider.&maybe-extend($.cvqualifierseq,          padr => True);
-        $bulider.&maybe-extend($.refqualifier,            padr => True);
-        $bulider.&maybe-extend($.exception-specification, padr => True);
-        $bulider.&maybe-extend($.attribute-specifier-seq);
+        $builder = $builder.&maybe-extend($.cvqualifierseq,          padr => True);
+        $builder = $builder.&maybe-extend($.refqualifier,            padr => True);
+        $builder = $builder.&maybe-extend($.exception-specification, padr => True);
+        $builder = $builder.&maybe-extend($.attribute-specifier-seq);
 
         $builder
     }
@@ -115,7 +117,7 @@ our class ParameterDeclaration {
 
         my $builder = "";
 
-        $builder.&maybe-extend($.attribute-specifier-seq, padr => True);
+        $builder = $builder.&maybe-extend($.attribute-specifier-seq, padr => True);
 
         $builder ~= $.decl-specifier-seq.gist ~ " ";
         $builder ~= $.parameter-declaration-body.gist ~ " ";
@@ -146,6 +148,7 @@ our role Parameters::Actions {
             refqualifier                 => $<refqualifier>.made,
             exception-specification      => $<exception-specification>.made,
             attribute-specifier-seq      => $<attribute-specifier-seq>.made,
+            text                         => ~$/,
         )
     }
 
@@ -154,6 +157,7 @@ our role Parameters::Actions {
         make ParameterDeclarationClause.new(
             parameter-declaration-list => $<parameter-declaration-list>.made,
             has-ellipsis               => $<has-ellipsis>.made,
+            text                       => ~$/,
         )
     }
 
@@ -184,6 +188,7 @@ our role Parameters::Actions {
             decl-specifier-seq         => $<decl-specifier-seq>.made,
             parameter-declaration-body => $<parameter-declaration-body>.made,
             initializer-clause         => $<initializer-clause>.made,
+            text                       => ~$/,
         )
     }
 }

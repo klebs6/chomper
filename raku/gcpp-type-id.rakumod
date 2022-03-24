@@ -49,7 +49,9 @@ our class TypeIdList {
 #   <nested-name-specifier> 
 #   <identifier> 
 # }
-our class TypeNameSpecifier::Ident does ITypeNameSpecifier {
+our class TypeNameSpecifier::Ident 
+does IDeclSpecifierSeq
+does ITypeNameSpecifier {
     has INestedNameSpecifier $.nested-name-specifier is required;
     has Identifier $.identifier is required;
     has $.text;
@@ -116,6 +118,7 @@ our role TypeId::Actions {
             make TheTypeId.new(
                 type-specifier-seq  => $body,
                 abstract-declarator => $tail,
+                text                => ~$/,
             )
         } else {
             make $body

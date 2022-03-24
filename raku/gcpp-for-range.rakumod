@@ -21,7 +21,7 @@ our class ForRangeDeclaration {
 
         my $builder = "";
 
-        if $.attribute-specifier-seq {j
+        if $.attribute-specifier-seq {
             $builder ~= $.attribute-specifier-seq.gist ~ " ";
         }
 
@@ -66,6 +66,7 @@ our role ForRange::Actions {
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
             decl-specifier-seq      => $<decl-specifier-seq>.made,
             declarator              => $<declarator>.made,
+            text                    => ~$/,
         )
     }
 
@@ -73,6 +74,7 @@ our role ForRange::Actions {
     method for-range-initializer:sym<expression>($/) {
         make ForRangeInitializer::Expression.new(
             expression => $<expression>.made
+            text       => ~$/,
         )
     }
 

@@ -31,7 +31,7 @@ our class AdditiveExpressionTail {
     has IMultiplicativeExpression $.multiplicative-expression is required;
 
     method gist{
-        $.additive-operator.gist ~ " " ~ $.multiplicative-expresison.gist
+        $.additive-operator.gist ~ " " ~ $.multiplicative-expression.gist
     }
 }
 
@@ -69,6 +69,7 @@ our role AdditiveExpression::Actions {
         make AdditiveExpressionTail.new(
             additive-operator         => $<additive-operator>.made,
             multiplicative-expression => $<multiplicative-expression>.made,
+            text                      => ~$/,
         )
     }
 
@@ -81,6 +82,7 @@ our role AdditiveExpression::Actions {
             make AdditiveExpression.new(
                 multiplicative-expression => $base,
                 additive-expression-tail  => @tail,
+                text => ~$/,
             )
 
         } else {

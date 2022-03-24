@@ -43,6 +43,7 @@ our role OrExpression::Actions {
         if @and-expressions.elems gt 1 {
             make ExclusiveOrExpression.new(
                 and-expressions => @and-expressions,
+                text            => ~$/,
             )
         } else {
             make @and-expressions[0]
@@ -60,6 +61,7 @@ our role OrExpression::Actions {
         if @exclusive-or-expressions.elems gt 1 {
             make InclusiveOrExpression.new(
                 exclusive-or-expressions => @exclusive-or-expressions,
+                text                     => ~$/,
             )
 
         } else {

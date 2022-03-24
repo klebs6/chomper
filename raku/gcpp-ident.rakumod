@@ -65,6 +65,7 @@ does IIdentifierContinue {
 }
 
 our class Identifier 
+does INewTypeId
 does ITheTypeId
 does ITemplateArgument
 does ISimpleTypeSpecifier
@@ -74,6 +75,7 @@ does IPointerMemberExpression
 does INoPointerDeclarator
 does IForRangeInitializer
 does IMultiplicativeExpression
+does IParameterDeclarationBody
 does IInitDeclarator
 does IUnqualifiedId
 does IIdExpression

@@ -115,6 +115,7 @@ our role TypeParameter::Actions {
     method type-parameter-base:sym<basic>($/) {
         make TypeParameterBase::Basic.new(
             templateparameter-list => $<templateparameter-list>.made,
+            text                   => ~$/,
         )
     }
 
@@ -133,6 +134,7 @@ our role TypeParameter::Actions {
             make TypeParameterSuffix::MaybeIdent.new(
                 has-ellipsis => $has-ellipsis,
                 identifier   => $base,
+                text         => ~$/,
             )
         } else {
             make $base
@@ -144,6 +146,7 @@ our role TypeParameter::Actions {
         make TypeParameterSuffix::AssignTypeId.new(
             identifier  => $<identifier>.made,
             the-type-id => $<the-type-id>.made,
+            text        => ~$/,
         )
     }
 
@@ -152,6 +155,7 @@ our role TypeParameter::Actions {
         make TypeParameter.new(
             type-parameter-base   => $<type-parameter-base>.made,
             type-parameter-suffix => $<type-parameter-suffix>.made,
+            text                  => ~$/,
         )
     }
 }

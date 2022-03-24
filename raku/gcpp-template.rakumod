@@ -185,6 +185,7 @@ our role Template::Actions {
         make ScopedTemplateId.new(
             nested-name-specifier => $<nested-name-specifier>.made,
             simple-template-id    => $<simple-template-id>.made,
+            text                  => ~$/,
         )
     }
 
@@ -193,6 +194,7 @@ our role Template::Actions {
         make TemplateDeclaration.new(
             templateparameter-list => $<templateparameter-list>.made,
             declaration            => $<declaration>.made,
+            text                   => ~$/,
         )
     }
 
@@ -216,6 +218,7 @@ our role Template::Actions {
         make SimpleTemplateId.new(
             template-name      => $<template-name>.made,
             template-arguments => $<template-argument-list>.made.List,
+            text               => ~$/,
         )
     }
 
@@ -229,6 +232,7 @@ our role Template::Actions {
         make TemplateId::OperatorFunctionId.new(
             operator-function-id   => $<operator-function-id>.made,
             template-argument-list => $<template-argument-list>.made,
+            text                   => ~$/,
         )
     }
 
@@ -237,6 +241,7 @@ our role Template::Actions {
         make TemplateId::LiteralOperatorId.new(
             literal-operator-id    => $<literal-operator-id>.made,
             template-argument-list => $<template-argument-list>.made,
+            text                   => ~$/,
         )
     }
 

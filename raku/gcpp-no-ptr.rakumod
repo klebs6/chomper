@@ -78,11 +78,11 @@ our class NoPointerDeclaratorTail::Bracketed does INoPointerDeclaratorTail {
 
         my $builder = "[";
 
-        $builder.&maybe-extend($.constant-expression);
+        $builder = $builder.&maybe-extend($.constant-expression);
 
         $builder ~= "]";
 
-        $builder.&maybe-extend($.attribute-specifier-seq);
+        $builder = $builder.&maybe-extend($.attribute-specifier-seq);
 
         $builder
     }

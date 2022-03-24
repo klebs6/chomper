@@ -70,6 +70,7 @@ our role Conversion::Actions {
     method conversion-function-id($/) {
         make ConversionFunctionId.new(
             conversion-type-id => $<conversion-type-id>.made,
+            text               => ~$/,
         )
     }
 
@@ -80,8 +81,9 @@ our role Conversion::Actions {
 
         if $tail {
             make ConversionTypeId.new(
-                type-specifier-seq => $base,
+                type-specifier-seq    => $base,
                 conversion-declarator => $tail,
+                text                  => ~$/,
             )
         } else {
             make $base
@@ -97,6 +99,7 @@ our role Conversion::Actions {
             make ConversionDeclarator.new(
                 pointer-operator      => $base,
                 conversion-declarator => $tail,
+                text                  => ~$/,
             )
         } else {
             make $base

@@ -171,6 +171,7 @@ our role AttributeSpecifierSeq::Actions {
             make AttributeList.new(
                 attributes   => @attribs,
                 has-ellipsis => $has-ellipsis,
+                text         => ~$/,
             )
 
         } else {
@@ -184,6 +185,7 @@ our role AttributeSpecifierSeq::Actions {
             attribute-namespace       => $<attribute-namespace>.made,
             identifier                => $<identifier>.made,
             attribute-argument-clause => $<attribute-argument-clause>.made,
+            text                      => ~$/,
         )
     }
 

@@ -1,7 +1,12 @@
 #!/usr/bin/env raku
-use cpp-translate;
 use cpp-actions;
+use gcpp;
 use Data::Dump::Tree;
+
+grammar G does Cpp::Parser {}
+
+use Grammar::Tracer;
+grammar GD does Cpp::Parser {}
 
 sub MAIN(:$stdin = Nil) {
 
@@ -9,11 +14,41 @@ sub MAIN(:$stdin = Nil) {
         ?? $stdin.IO.slurp.chomp 
         !! $*IN.slurp.chomp;
 
-    my $translated = cpp-translate($in);
+    $in = $in.subst(/^\s+/,"");
 
-    if $translated {
-        say $translated;
-        #say $translated.made;
-        ddt $translated.made;
+    my $rule = "statement-seq";
+
+    my $actions = Cpp::Actions.new;
+
+    my $parsed = 
+    G.parse($in, :$rule, :$actions) 
+    // 
+    GD.parse($in, :$rule, :$actions);
+
+    if $parsed {
+
+        say $parsed;
+
+        my $made = $parsed.made;
+
+        ddt $made;
+
+        say "---------------------[gists]";
+
+        for $made.List>>.gist.join("") {
+            say $_.gist;
+        }
+
+        my $stripped      = $made.List>>.gist.join("").subst(:g, /<.ws>/,"");
+        my $orig-stripped = $in.subst(:g, /<.ws>/,"");
+
+        if not $stripped eq $orig-stripped {
+            say "-----------------------------";
+            say "round trip bug!!!";
+            say "";
+            say "orig:  $orig-stripped";
+            say "rtrip: $stripped";
+            die;
+        }
     }
 }

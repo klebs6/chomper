@@ -68,6 +68,7 @@ our role Align::Actions {
         make Alignmentspecifier.new(
             alignmentspecifierbody => $<alignmentspecifierbody>.made,
             has-ellipsis           => $<has-ellipsis>.made,
+            text                   => ~$/,
         )
     }
 }

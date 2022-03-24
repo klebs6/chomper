@@ -49,6 +49,7 @@ our role Bin::Actions {
         make IntegerLiteral::Bin.new(
             binary-literal => $<binary-literal>.made,
             integersuffix  => $<integersuffix>.made,
+            text           => ~$/,
         )
     }
 

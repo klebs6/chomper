@@ -156,6 +156,7 @@ our role CharacterLiteral::Actions {
         make CharacterLiteral.new(
             character-literal-prefix => $<character-literal-prefix>.made,
             cchar                    => $<cchar>>>.made,
+            text                     => ~$/,
         )
     }
 
@@ -163,14 +164,16 @@ our role CharacterLiteral::Actions {
     method universalcharactername:sym<one>($/) {
         make Universalcharactername.new(
             first => $<first>.made,
+            text  => ~$/,
         )
     }
 
     # token universalcharactername:sym<two> { '\\U' <hexquad> <hexquad> } 
     method universalcharactername:sym<two>($/) {
         make Universalcharactername.new(
-            first => $<first>.made,
+            first  => $<first>.made,
             second => $<second>.made,
+            text   => ~$/,
         )
     }
 

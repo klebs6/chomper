@@ -66,12 +66,12 @@ our class PointerOperator::Star does IPointerOperator {
     method gist{
         my $builder = "";
 
-        $builder.&maybe-extend($.nested-name-specifier);
+        $builder = $builder.&maybe-extend($.nested-name-specifier);
 
         $builder ~= "*";
 
-        $builder.&maybe-extend($.attribute-specifier-seq);
-        $builder.&maybe-extend($.cvqualifierseq);
+        $builder = $builder.&maybe-extend($.attribute-specifier-seq);
+        $builder = $builder.&maybe-extend($.cvqualifierseq);
 
         $builder
     }
@@ -86,6 +86,7 @@ our role PointerOperator::Actions {
     method pointer-operator:sym<ref>($/) {
         make PointerOperator::Ref.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            text                    => ~$/,
         )
     }
 
@@ -97,6 +98,7 @@ our role PointerOperator::Actions {
         make PointerOperator::RefRef.new(
             and-and                 => $<and-and>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            text                    => ~$/,
         )
     }
 
@@ -111,6 +113,7 @@ our role PointerOperator::Actions {
             nested-name-specifier   => $<nested-name-specifier>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
             cvqualifierseq          => $<cvqualifierseq>.made,
+            text                    => ~$/,
         )
     }
 
@@ -127,6 +130,7 @@ our role PointerOperator::Actions {
             make AugmentedPointerOperator.new(
                 pointer-operator => $body,
                 const            => $const,
+                text             => ~$/,
             )
         } else {
             make $body

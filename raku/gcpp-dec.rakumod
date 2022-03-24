@@ -33,6 +33,7 @@ our role Dec::Actions {
         make IntegerLiteral::Dec.new(
             decimal-literal => $<decimal-literal>.made,
             integersuffix   => $<integersuffix>.made,
+            text            => ~$/,
         )
     }
 

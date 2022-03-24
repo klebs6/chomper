@@ -40,6 +40,7 @@ our role LogicalExpression::Actions {
         if @inclusive-or-expressions.elems gt 1 {
             make LogicalAndExpression.new(
                 inclusive-or-expressions => @inclusive-or-expressions,
+                text                     => ~$/,
             )
         } else {
             make @inclusive-or-expressions[0]
@@ -54,6 +55,7 @@ our role LogicalExpression::Actions {
         if @exprs.elems gt 1 {
             make LogicalOrExpression.new(
                 logical-and-expressions => @exprs,
+                text                    => ~$/,
             )
         } else {
             make @exprs[0]

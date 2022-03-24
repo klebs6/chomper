@@ -80,11 +80,13 @@ our role SelectionStatement::Actions {
                 statements             => @statements[0].List,
                 else-statement-comment => $<comment>.made // Nil,
                 else-statements        => @statements[1].List,
+                text                   => ~$/,
             )
         } else {
             make SelectionStatement::If.new(
                 condition              => $<condition>.made,
                 statements             => @statements[0].List,
+                text                   => ~$/,
             )
         }
     }
@@ -100,6 +102,7 @@ our role SelectionStatement::Actions {
         make SelectionStatement::Switch.new(
             condition => $<condition>.made,
             statement => $<statement>.made,
+            text      => ~$/,
         )
     }
 }

@@ -1,13 +1,14 @@
 use gcpp;
 use cpp-actions;
+use Data::Dump::Tree;
 
 our sub cpp-translate($in) {
 
-    grammar G does CPP14Parser {}
+    grammar G does Cpp::Parser {}
 
     use Grammar::Tracer;
-    grammar GD does CPP14Parser {}
+    grammar GD does Cpp::Parser {}
 
-    G.parse($in, actions => CPP14Parser::Actions.new)
+    G.parse($in, actions => Cpp::Actions.new)
     // do { say "Bad $in"; say GD.parse($in); Nil }
 }

@@ -125,6 +125,7 @@ our role Declarator::Actions {
             make InitDeclarator.new(
                 declarator  => $body,
                 initializer => Initializer.new(value => $initializer),
+                text        => ~$/,
             )
 
         } else {
@@ -144,6 +145,7 @@ our role Declarator::Actions {
             no-pointer-declarator     => $<no-pointer-declarator>.made,
             parameters-and-qualifiers => $<parameters-and-qualifiers>.made,
             trailing-return-type      => $<trailing-return-type>.made,
+            text                      => ~$/,
         )
     }
 
@@ -157,6 +159,7 @@ our role Declarator::Actions {
             make Declaratorid.new(
                 has-ellipsis  => $has-ellipsis,
                 id-expression => $body,
+                text          => ~$/,
             )
         } else {
             make $body

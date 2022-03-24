@@ -38,7 +38,8 @@ our role CV::Actions {
     # rule cvqualifierseq { <cv-qualifier>+ } 
     method cvqualifierseq($/) {
         make Cvqualifierseq.new(
-            cv-qualifiers => $<cv-qualifier>>>.made
+            cv-qualifiers => $<cv-qualifier>>>.made,
+            text          => ~$/,
         )
     }
 

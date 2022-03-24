@@ -23,7 +23,8 @@ our role Pure::Actions {
     # rule pure-specifier { <assign> <val=octal-literal> 
     method pure-specifier($/) {
         make PureSpecifier.new(
-            val => $<val>.made,
+            val  => $<val>.made,
+            text => ~$/,
         )
     }
 }

@@ -18,8 +18,8 @@ our class NewDeclarator              { ... }
 #   <new-initializer>? 
 # }
 our class NewExpression::NewTypeId does INewExpression {
-    has NewPlacement   $.new-placement;
-    has NewTypeId      $.new-type-id is required;
+    has NewPlacement    $.new-placement;
+    has INewTypeId      $.new-type-id is required;
     has INewInitializer $.new-initializer;
 
     has $.text;
@@ -95,7 +95,7 @@ our class NewPlacement {
 #   <type-specifier-seq> 
 #   <new-declarator>? 
 # }
-our class NewTypeId { 
+our class NewTypeId does INewTypeId { 
     has ITypeSpecifierSeq $.type-specifier-seq is required;
     has NewDeclarator    $.new-declarator     is required;
 
@@ -234,6 +234,7 @@ our role NewExpression::Actions {
             new-placement   => $<new-placement>.made,
             new-type-id     => $<new-type-id>.made,
             new-initializer => $<new-initializer>.made,
+            text            => ~$/,
         )
     }
 
@@ -251,6 +252,7 @@ our role NewExpression::Actions {
             new-placement   => $<new-placement>.made,
             the-type-id     => $<the-type-id>.made,
             new-initializer => $<new-initializer>.made,
+            text            => ~$/,
         )
     }
 
@@ -269,6 +271,7 @@ our role NewExpression::Actions {
             make NewTypeId.new(
                 type-specifier-seq => $base,
                 new-declarator     => $new-declarator,
+                text               => ~$/,
             )
         } else {
             make $base
@@ -287,6 +290,7 @@ our role NewExpression::Actions {
             make NewDeclarator.new(
                 pointer-operators         => @ops,
                 no-pointer-new-declarator => $base,
+                text                      => ~$/,
             )
         } else {
             make $base
@@ -299,6 +303,7 @@ our role NewExpression::Actions {
             expression                     => $<expression>.made,
             attribute-specifier-seq        => $<attribute-specifier-seq>.made,
             no-pointer-new-declarator-tail => $<no-pointer-new-declarator-tail>>>.made,
+            text                           => ~$/,
         )
     }
 
@@ -307,6 +312,7 @@ our role NewExpression::Actions {
         make NoPointerNewDeclaratorTail.new(
             constant-expression     => $<constant-expression>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            text                    => ~$/,
         )
     }
 

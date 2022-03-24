@@ -107,6 +107,7 @@ our role UsingDirective::Actions {
     method using-declaration-prefix:sym<nested>($/) {
         make UsingDeclarationPrefix::Nested.new(
             nested-name-specifier => $<nested-name-specifier>.made,
+            text                  => ~$/,
         )
     }
 
@@ -121,6 +122,7 @@ our role UsingDirective::Actions {
             comment                  => $<semi>.made,
             using-declaration-prefix => $<using-declaration-prefix>.made,
             unqualified-id           => $<unqualified-id>.made,
+            text                     => ~$/,
         )
     }
 
@@ -131,6 +133,7 @@ our role UsingDirective::Actions {
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
             nested-name-specifier   => $<nested-name-specifier>.made,
             namespace-name          => $<namespace-name>.made,
+            text                    => ~$/,
         )
     }
 }

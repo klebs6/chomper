@@ -24,6 +24,7 @@ our role Specialize::Actions {
     method explicit-specialization($/) {
         make ExplicitSpecialization.new(
             declaration => $<declaration>.made,
+            text        => ~$/,
         )
     }
 }

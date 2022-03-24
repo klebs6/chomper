@@ -22,6 +22,7 @@ our role Constructor::Actions {
     method constructor-initializer($/) {
         make ConstructorInitializer.new(
             mem-initializer-list => $<mem-initializer-list>.made,
+            text                 => ~$/,
         )
     }
 }

@@ -20,7 +20,7 @@ our class PseudoDestructorName::Basic does IPseudoDestructorName {
 
         my $builder = "";
 
-        $builder.&maybe-extend($.nested-name-specifier);
+        $builder = $builder.&maybe-extend($.nested-name-specifier);
 
         if $.the-scoped-type-name {
             $builder ~= $.the-scoped-type-name.gist ~ "::";
@@ -78,6 +78,7 @@ our role PseudoDestructorName::Actions {
             nested-name-specifier => $<nested-name-specifier>.made,
             the-scoped-type-name  => $<the-scoped-type-name>.made,
             the-type-anme         => $<the-type-anme>.made,
+            text                  => ~$/,
         )
     }
 
@@ -94,6 +95,7 @@ our role PseudoDestructorName::Actions {
             nested-name-specifier => $<nested-name-specifier>.made,
             simple-template-id    => $<simple-template-id>.made,
             the-type-name         => $<the-type-name>.made,
+            text                  => ~$/,
         )
     }
 
@@ -104,6 +106,7 @@ our role PseudoDestructorName::Actions {
     method pseudo-destructor-name:sym<decltype>($/) {
         make PseudoDestructorName::Decltype.new(
             decltype-specifier => $<decltype-specifier>.made,
+            text               => ~$/,
         )
     }
 }

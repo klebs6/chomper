@@ -100,7 +100,7 @@ use gcpp-user-defined-literal;
 use gcpp-using-directive;
 use gcpp-virtual;
 
-our role CPP14Parser 
+our role Cpp::Parser 
 does AbstractDeclarator::Rules
 does Typedef::Rules
 does Access::Rules

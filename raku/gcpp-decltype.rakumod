@@ -59,6 +59,7 @@ our role Decltype::Actions {
     method decltype-specifier($/) {
         make DecltypeSpecifier.new(
             decltype-specifier-body => $<decltype-specifier-body>.made,
+            text                    => ~$/,
         )
     }
 }

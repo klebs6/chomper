@@ -22,7 +22,7 @@ our class ShiftExpression does IShiftExpression {
     has $.text;
 
     method gist{
-        $.additive-expression.gist ~ " " ~ @.shift-expression-tail>>.gist./join(" ")
+        $.additive-expression.gist ~ " " ~ @.shift-expression-tail>>.gist.join(" ")
     }
 }
 
@@ -53,6 +53,7 @@ our role ShiftExpression::Actions {
         make ShiftExpressionTail.new(
             shift-operator      => $<shift-operator>.made,
             additive-expression => $<additive-expression>.made,
+            text                => ~$/,
         )
     }
 
@@ -67,6 +68,7 @@ our role ShiftExpression::Actions {
             make ShiftExpression.new(
                 additive-expression   => $base,
                 shift-expression-tail => @tail,
+                text                  => ~$/,
             )
 
         } else {

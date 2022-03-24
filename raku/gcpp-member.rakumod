@@ -97,7 +97,7 @@ our class Memberdeclaration::Basic does IMemberdeclaration {
         my $m = $.member-declarator-list;
 
         if $m {
-            $buffer ~= " " $m.gist;
+            $buffer ~= " " ~ $m.gist;
         }
 
         $buffer ~ ";"
@@ -271,6 +271,7 @@ our role Member::Actions {
     method member-specification-base:sym<access>($/) {
         make MemberSpecificationBase::Access.new(
             access-specifier => $<access-specifier>.made,
+            text             => ~$/,
         )
     }
 
@@ -291,6 +292,7 @@ our role Member::Actions {
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
             decl-specifier-seq      => $<decl-specifier-seq>.made,
             member-declarator-list  => $<member-declarator-list>.made,
+            text                    => ~$/,
         )
     }
 
@@ -341,6 +343,7 @@ our role Member::Actions {
                 declarator            => $base,
                 virtual-specifier-seq => $t0,
                 pure-specifier        => $t1,
+                text                  => ~$/,
             )
         } else {
             make $base
@@ -356,6 +359,7 @@ our role Member::Actions {
             make MemberDeclarator::BraceOrEq.new(
                 declarator                 => $body,
                 brace-or-equal-initializer => $tail,
+                text                       => ~$/,
             )
         } else {
             make $body
@@ -368,6 +372,7 @@ our role Member::Actions {
             identifier              => $<identifier>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
             constant-expression     => $<constant-expression>.made,
+            text                    => ~$/,
         )
     }
 }

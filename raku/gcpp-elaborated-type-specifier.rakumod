@@ -52,13 +52,13 @@ does IElaboratedTypeSpecifier {
 # }
 our class ElaboratedTypeSpecifier::ClassTemplateId 
 does IElaboratedTypeSpecifier {
-    has ClassKey         $.class-key is required;
+    has IClassKey        $.class-key is required;
     has SimpleTemplateId $.simple-template-id is required;
 
     has $.text;
 
     method gist{
-        $.class-key.gist ~ " " $.simple-template-id.gist
+        $.class-key.gist ~ " " ~ $.simple-template-id.gist
     }
 }
 
@@ -70,7 +70,7 @@ does IElaboratedTypeSpecifier {
 # }
 our class ElaboratedTypeSpecifier::ClassNestedTemplateId 
 does IElaboratedTypeSpecifier {
-    has ClassKey             $.class-key is required;
+    has IClassKey            $.class-key is required;
     has INestedNameSpecifier $.nested-name-specifier is required;
     has Bool                 $.has-template-kw is required;
     has SimpleTemplateId     $.simple-template-id is required;
@@ -128,6 +128,8 @@ our role ElaboratedTypeSpecifier::Actions {
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
             nested-name-specifier   => $<nested-name-specifier>.made,
             identifier              => $<identifier>.made,
+            class-key               => $<class-key>.made,
+            text                    => ~$/,
         )
     }
 
@@ -135,6 +137,8 @@ our role ElaboratedTypeSpecifier::Actions {
     method elaborated-type-specifier:sym<class-template-id>($/) {
         make ElaboratedTypeSpecifier::ClassTemplateId.new(
             simple-template-id => $<simple-template-id>.made,
+            class-key          => $<class-key>.made,
+            text               => ~$/,
         )
     }
 
@@ -148,6 +152,8 @@ our role ElaboratedTypeSpecifier::Actions {
         make ElaboratedTypeSpecifier::ClassNestedTemplateId.new(
             nested-name-specifier => $<nested-name-specifier>.made,
             simple-template-id    => $<simple-template-id>.made,
+            class-key             => $<class-key>.made,
+            text                  => ~$/,
         )
     }
 
@@ -156,6 +162,7 @@ our role ElaboratedTypeSpecifier::Actions {
         make ElaboratedTypeSpecifier::Enum.new(
             nested-name-specifier => $<nested-name-specifier>.made,
             identifier            => $<identifier>.made,
+            text                  => ~$/,
         )
     }
 }

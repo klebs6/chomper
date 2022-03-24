@@ -28,6 +28,7 @@ our role Asm::Actions {
         make AsmDefinition.new(
             comment        => $<semi>.made,
             string-literal => $<string-literal>.made,
+            text           => ~$/,
         )
     }
 }

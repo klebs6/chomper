@@ -85,6 +85,7 @@ our role PointerMember::Actions {
             make PointerMemberExpression.new(
                 cast-expression                => $base,
                 pointer-member-expression-tail => @tail,
+                text                           => ~$/,
             )
 
         } else {
@@ -101,6 +102,7 @@ our role PointerMember::Actions {
         make PointerMemberExpressionTail.new(
             pointer-member-operator => $<pointer-member-operator>.made,
             cast-expression         => $<cast-expression>.made,
+            text                    => ~$/,
         )
     }
 }

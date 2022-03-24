@@ -79,8 +79,8 @@ does ISimpleDeclaration {
             $builder ~= $.comment.gist ~ "\n";
         }
 
-        if $decl-specifier-seq {
-            $builder ~= $decl-specifier-seq.gist ~ " ";
+        if $.decl-specifier-seq {
+            $builder ~= $.decl-specifier-seq.gist ~ " ";
         }
 
         for @.init-declarator-list {
@@ -309,6 +309,7 @@ our role Declaration::Actions {
             identifier              => $<identifier>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
             the-type-id             => $<the-type-id>.made,
+            text                    => ~$/,
         )
     }
 
@@ -318,6 +319,7 @@ our role Declaration::Actions {
             comment              => $<semi>.made,
             decl-specifier-seq   => $<decl-specifier-seq>.made,
             init-declarator-list => $<init-declarator-list>.made,
+            text                 => ~$/,
         )
     }
 
@@ -328,6 +330,7 @@ our role Declaration::Actions {
             attribute-specifiers => $<attribute-specifier-seq>.made,
             decl-specifier-seq   => $<decl-specifier-seq>.made,
             init-declarator-list => $<init-declarator-list>.made,
+            text                 => ~$/,
         )
     }
 
@@ -344,6 +347,7 @@ our role Declaration::Actions {
         make StaticAssertDeclaration.new(
             constant-expression => $<constant-expression>.made,
             string-literal      => $<string-literal>.made,
+            text                => ~$/,
         )
     }
 
@@ -355,6 +359,7 @@ our role Declaration::Actions {
         if $comment {
             make EmptyDeclaration.new(
                 comment => $comment,
+                text    => ~$/,
             )
         }
     }
@@ -369,6 +374,7 @@ our role Declaration::Actions {
             make AttributeDeclaration.new(
                 comment                 => $comment,
                 attribute-specifier-seq => $body,
+                text                    => ~$/,
             )
         } else {
             make $body

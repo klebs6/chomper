@@ -188,6 +188,7 @@ our role Function::Actions {
         make TrailingReturnType.new(
             trailing-type-specifier-seq => $<trailing-type-specifier-seq>.made,
             abstract-declarator         => $<abstract-declarator>.made,
+            text                        => ~$/,
         )
     }
 
@@ -199,6 +200,7 @@ our role Function::Actions {
             declarator              => $<declarator>.made,
             virtual-specifier-seq   => $<virtual-specifier-seq>.made,
             function-body           => $<function-body>.made,
+            text                    => ~$/,
         )
     }
 
@@ -212,6 +214,7 @@ our role Function::Actions {
             make FunctionBody::Compound.new(
                 constructor-initializer => $prefix,
                 compound-statement      => $body,
+                text                    => ~$/,
             )
         } else {
             make $body
@@ -227,6 +230,7 @@ our role Function::Actions {
     method function-body:sym<assign-default>($/) {
         make FunctionBody::AssignDefault.new(
             comment        => $<semi>.made,
+            text           => ~$/,
         )
     }
 
@@ -234,6 +238,7 @@ our role Function::Actions {
     method function-body:sym<assign-delete>($/) {
         make FunctionBody::AssignDelete.new(
             comment        => $<semi>.made,
+            text           => ~$/,
         )
     }
 }

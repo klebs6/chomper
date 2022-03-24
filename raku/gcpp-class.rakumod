@@ -7,6 +7,7 @@ use gcpp-member;
 use gcpp-attr;
 use gcpp-base;
 
+
 # rule class-virt-specifier { 
 #   <final> 
 # }
@@ -92,7 +93,7 @@ our class ClassSpecifier {
 #   <base-clause>? 
 # }
 our class ClassHead::Class does IClassHead {
-    has ClassKey               $.class-key is required;
+    has IClassKey              $.class-key is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
     has ClassHeadName          $.class-head-name;
     has ClassVirtSpecifier     $.class-virt-specifier;

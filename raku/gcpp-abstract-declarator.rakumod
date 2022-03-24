@@ -341,6 +341,7 @@ our role AbstractDeclarator::Actions {
             no-pointer-abstract-declarator => $<no-pointer-abstract-declarator>.made,
             parameters-and-qualifiers      => $<parameters-and-qualifiers>.made,
             trailing-return-type           => $<trailing-return-type>.made,
+            text                           => ~$/,
         )
     }
 

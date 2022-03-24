@@ -211,6 +211,7 @@ our role Escape::Actions {
     method octalescapesequence($/) {
         make Octalescapesequence.new(
             digits => $<octaldigit>>>.made,
+            text   => ~$/,
         )
     }
 
@@ -218,6 +219,7 @@ our role Escape::Actions {
     method hexadecimalescapesequence($/) {
         make Hexadecimalescapesequence.new(
             digits => $<hexadecimaldigit>>>.made,
+            text   => ~$/,
         )
     }
 }

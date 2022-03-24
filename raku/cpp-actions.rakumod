@@ -96,7 +96,7 @@ use gcpp-user-defined-literal;
 use gcpp-using-directive;
 use gcpp-virtual;
 
-our class CPP14Parser::Actions 
+our class Cpp::Actions
 does AbstractDeclarator::Actions
 does Access::Actions
 does AdditiveExpression::Actions

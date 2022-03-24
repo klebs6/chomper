@@ -136,6 +136,7 @@ our role IterationStatement::Actions {
         make IterationStatement::While.new(
             condition  => $<condition>.made,
             statements => $<statement>.made.List,
+            text       => ~$/,
         )
     }
 
@@ -145,6 +146,7 @@ our role IterationStatement::Actions {
             comment    => $<semi>.made // Nil,
             statement  => $<statement>.made,
             expression => $<expression>.made,
+            text       => ~$/,
         )
     }
 
@@ -165,6 +167,7 @@ our role IterationStatement::Actions {
             condition          => $<condition>.made,
             expression         => $<expression>.made,
             statements         => $<statement>.made.List,
+            text               => ~$/,
         )
     }
 
@@ -182,6 +185,7 @@ our role IterationStatement::Actions {
             for-range-declaration => $<for-range-declaration>.made,
             for-range-initializer => $<for-range-initializer>.made,
             statements            => $<statement>.made.List,
+            text                  => ~$/,
         )
     }
 }

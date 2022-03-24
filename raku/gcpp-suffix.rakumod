@@ -112,6 +112,7 @@ our role Suffix::Actions {
         make Integersuffix::Ul.new(
             unsignedsuffix => $<unsignedsuffix>.made,
             longsuffix     => $<longsuffix>.made,
+            text           => ~$/,
         )
     }
 
@@ -120,6 +121,7 @@ our role Suffix::Actions {
         make Integersuffix::Ull.new(
             unsignedsuffix => $<unsignedsuffix>.made,
             longlongsuffix => $<longlongsuffix>.made,
+            text           => ~$/,
         )
     }
 
@@ -128,6 +130,7 @@ our role Suffix::Actions {
         make Integersuffix::Lu.new(
             longsuffix     => $<longsuffix>.made,
             unsignedsuffix => $<unsignedsuffix>.made,
+            text           => ~$/,
         )
     }
 
@@ -136,6 +139,7 @@ our role Suffix::Actions {
         make Integersuffix::Llu.new(
             longsuffix     => $<longsuffix>.made,
             unsignedsuffix => $<unsignedsuffix>.made,
+            text           => ~$/,
         )
     }
 

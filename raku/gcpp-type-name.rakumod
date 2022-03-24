@@ -69,7 +69,7 @@ does ISimpleTypeSpecifier
 
         my $builder = "";
 
-        $builder.&maybe-extend($.nested-name-specifier);
+        $builder = $builder.&maybe-extend($.nested-name-specifier);
 
         $builder ~ $.the-type-name.gist
     }
@@ -88,6 +88,7 @@ our role TypeName::Actions {
             make FullTypeName.new(
                 nested-name-specifier => $prefix,
                 the-type-name         => $body,
+                text                  => ~$/,
             )
 
         } else {
@@ -121,6 +122,7 @@ our role TypeName::Actions {
         make TypeNameSpecifier::Ident.new(
             nested-name-specifier => $<nested-name-specifier>.made,
             identifier            => $<identifier>.made,
+            text                  => ~$/,
         )
     }
 
@@ -130,6 +132,7 @@ our role TypeName::Actions {
             nested-name-specifier => $<nested-name-specifier>.made,
             has-template          => $<has-template>.made,
             simple-template-id    => $<simple-template-id>.made,
+            text                  => ~$/,
         )
     }
 }

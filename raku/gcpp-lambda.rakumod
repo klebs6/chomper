@@ -29,7 +29,7 @@ our class LambdaIntroducer {
             $builder ~= $.lambda-capture.gist;
         }
 
-        $buidler ~ "]"
+        $builder ~ "]"
     }
 }
 
@@ -58,7 +58,7 @@ our class LambdaExpression {
 
 # rule lambda-capture:sym<list> { <capture-list> }
 our class LambdaCapture::List does ILambdaCapture {
-    has CaptureList $.capture-list is required;
+    has ICaptureList $.capture-list is required;
 
     has $.text;
 
@@ -73,7 +73,7 @@ our class LambdaCapture::List does ILambdaCapture {
 # }
 our class LambdaCapture::Def does ILambdaCapture {
     has ICaptureDefault $.capture-default is required;
-    has CaptureList    $.capture-list;
+    has ICaptureList    $.capture-list;
 
     has $.text;
 
@@ -92,7 +92,9 @@ our class LambdaCapture::Def does ILambdaCapture {
 }
 
 # rule capture-default:sym<and> { <and_> }
-our class CaptureDefault::And does ICaptureDefault { 
+our class CaptureDefault::And 
+does ILambdaCapture
+does ICaptureDefault { 
 
     has $.text;
 
@@ -102,7 +104,9 @@ our class CaptureDefault::And does ICaptureDefault {
 }
 
 # rule capture-default:sym<assign> { <assign> }
-our class CaptureDefault::Assign does ICaptureDefault { 
+our class CaptureDefault::Assign 
+does ILambdaCapture
+does ICaptureDefault { 
 
     has $.text;
 
@@ -112,7 +116,7 @@ our class CaptureDefault::Assign does ICaptureDefault {
 }
 
 # rule capture-list { <capture> [ <comma> <capture> ]* <ellipsis>? } 
-our class CaptureList {
+our class CaptureList does ICaptureList {
     has ICapture @.captures is required;
     has Bool     $.trailing-ellipsis is required;
 
@@ -270,20 +274,23 @@ our role LambdaExpression::Actions {
             lambda-introducer  => $<lambda-introducer>.made,
             lambda-declarator  => $<lambda-declarator>.made,
             compound-statement => $<compound-statement>.made,
+            text               => ~$/,
         )
     }
 
     # rule lambda-introducer { <.left-bracket> <lambda-capture>? <.right-bracket> } 
     method lambda-introducer($/) {
         make LambdaIntroducer.new(
-            lambda-capture => $<lambda-capture>.made
+            lambda-capture => $<lambda-capture>.made,
+            text           => ~$/,
         )
     }
 
     # rule lambda-capture:sym<list> { <capture-list> }
     method lambda-capture:sym<list>($/) {
         make LambdaCapture::List.new(
-            capture-list => $<capture-list>.made
+            capture-list => $<capture-list>.made,
+            text         => ~$/,
         )
     }
 
@@ -297,6 +304,7 @@ our role LambdaExpression::Actions {
             make LambdaCapture::Def.new(
                 capture-default => $body,
                 capture-list    => $tail,
+                text            => ~$/,
             )
 
         } else {
@@ -324,6 +332,7 @@ our role LambdaExpression::Actions {
             make CaptureList.new(
                 captures          => @captures,
                 trailing-ellipsis => $has-ellipsis,
+                text              => ~$/,
             )
         } else {
             make @captures[0]
@@ -334,6 +343,7 @@ our role LambdaExpression::Actions {
     method capture:sym<simple>($/) {
         make Capture::Simple.new(
             simple-capture => $<simple-capture>.made,
+            text           => ~$/,
         )
     }
 
@@ -341,6 +351,7 @@ our role LambdaExpression::Actions {
     method capture:sym<init>($/) {
         make Capture::Init.new(
             init-capture => $<init-capture>.made,
+            text         => ~$/,
         )
     }
 
@@ -354,11 +365,13 @@ our role LambdaExpression::Actions {
             make SimpleCapture::Id.new(
                 has-and_   => True,
                 identifier => $id,
+                text       => ~$/,
             )
         } else {
             make SimpleCapture::Id.new(
                 has-and_   => False,
                 identifier => $id,
+                text       => ~$/,
             )
         }
     }
@@ -374,6 +387,7 @@ our role LambdaExpression::Actions {
             has-and     => $<has-and>.made,
             identifier  => $<identifier>.made,
             initializer => $<initializer>.made,
+            text        => ~$/,
         )
     }
 
@@ -393,6 +407,7 @@ our role LambdaExpression::Actions {
             exception-specification      => $<exception-specification>.made,
             attribute-specifier-seq      => $<attribute-specifier-seq>.made,
             trailing-return-type         => $<trailing-return-type>.made,
+            text                         => ~$/,
         )
     }
 }

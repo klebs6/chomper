@@ -9,6 +9,7 @@ use gcpp-roles;
 # }
 our class InitializerList 
 does IInitializerClause 
+does IReturnStatementBody
 does IPostfixExpressionTail {
 
     has IInitializerClause @.clauses is required;
@@ -67,7 +68,9 @@ our class ConstantExpression does IConstantExpression {
 }
 
 # rule expression-list { <initializer-list> }
-our class ExpressionList does IPostfixExpressionTail { 
+our class ExpressionList 
+does INewInitializer
+does IPostfixExpressionTail { 
     has InitializerList $.initializer-list is required;
 
     has $.text;
@@ -203,7 +206,10 @@ our role Expression::Actions {
 
     # rule expression-list { <initializer-list> } 
     method expression-list($/) {
-        make $<initializer-list>.made
+        make ExpressionList.new(
+            initializer-list => $<initializer-list>.made
+            text             => ~$/,
+        )
     }
 
     # rule expression { <assignment-expression>+ %% <.comma> }
@@ -213,6 +219,7 @@ our role Expression::Actions {
         if @exprs.elems gt 1 {
             make Expression.new(
                 assignment-expressions => @exprs,
+                text                   => ~$/,
             )
         } else {
             make @exprs[0]
@@ -223,6 +230,7 @@ our role Expression::Actions {
     method constant-expression($/) {
         make ConstantExpression.new(
             conditional-expression => $<conditional-expression>.made
+            text                   => ~$/,
         )
     }
 
@@ -256,6 +264,7 @@ our role Expression::Actions {
             make InitializerClause::Assignment.new(
                 comment               => $comment,
                 assignment-expression => $base,
+                text                  => ~$/,
             )
         } else {
             make $base
@@ -272,6 +281,7 @@ our role Expression::Actions {
             make InitializerClause::Braced.new(
                 comment          => $comment,
                 braced-init-list => $base,
+                text             => ~$/,
             )
         } else {
             make $base
@@ -280,7 +290,10 @@ our role Expression::Actions {
 
     # rule initializer-list { <initializer-clause> <ellipsis>? [ <.comma> <initializer-clause> <ellipsis>? ]* }
     method initializer-list($/) {
-        make InitializerList.new(clauses => $<initializer-clause>>>.made)
+        make InitializerList.new(
+            clauses => $<initializer-clause>>>.made,
+            text    => ~$/,
+        )
     }
 
     # rule braced-init-list { <.left-brace> [ <initializer-list> <.comma>? ]? <.right-brace> } 

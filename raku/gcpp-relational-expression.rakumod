@@ -106,6 +106,7 @@ our role RelationalExpression::Actions {
         make RelationalExpressionTail.new(
             relational-operator => $<relational-operator>.made,
             shift-expression    => $<shift-expression>.made,
+            text                => ~$/,
         )
     }
 
@@ -118,6 +119,7 @@ our role RelationalExpression::Actions {
             make RelationalExpression.new(
                 shift-expression           => $base,
                 relational-expression-tail => @tail,
+                text                       => ~$/,
             )
         } else {
             make $base

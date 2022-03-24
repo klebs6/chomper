@@ -287,6 +287,7 @@ our role UnaryExpression::Actions {
     method unary-expression-case:sym<pp>($/) {
         make UnaryExpressionCase::PlusPlus.new(
             unary-expression => $<unary-expression>.made,
+            text             => ~$/,
         )
     }
 
@@ -294,14 +295,16 @@ our role UnaryExpression::Actions {
     method unary-expression-case:sym<mm>($/) {
         make UnaryExpressionCase::MinusMinus.new(
             unary-expression => $<unary-expression>.made,
+            text             => ~$/,
         )
     }
 
     # rule unary-expression-case:sym<unary-op> { <unary-operator> <unary-expression> }
     method unary-expression-case:sym<unary-op>($/) {
         make UnaryExpressionCase::UnaryOp.new(
-            unary-operator => $<unary-operator>.made,
+            unary-operator   => $<unary-operator>.made,
             unary-expression => $<unary-expression>.made,
+            text             => ~$/,
         )
     }
 
@@ -309,6 +312,7 @@ our role UnaryExpression::Actions {
     method unary-expression-case:sym<sizeof>($/) {
         make UnaryExpressionCase::Sizeof.new(
             unary-expression => $<unary-expression>.made,
+            text             => ~$/,
         )
     }
 
@@ -316,6 +320,7 @@ our role UnaryExpression::Actions {
     method unary-expression-case:sym<sizeof-typeid>($/) {
         make UnaryExpressionCase::SizeofTypeid.new(
             the-type-id => $<the-type-id>.made,
+            text        => ~$/,
         )
     }
 
@@ -323,6 +328,7 @@ our role UnaryExpression::Actions {
     method unary-expression-case:sym<sizeof-ids>($/) {
         make UnaryExpressionCase::SizeofIds.new(
             identifier => $<identifier>.made,
+            text       => ~$/,
         )
     }
 
@@ -330,6 +336,7 @@ our role UnaryExpression::Actions {
     method unary-expression-case:sym<alignof>($/) {
         make UnaryExpressionCase::Alignof.new(
             the-type-id => $<the-type-id>.made,
+            text        => ~$/,
         )
     }
 

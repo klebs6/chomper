@@ -34,7 +34,7 @@ our class TypeSpecifierSeq does ITypeSpecifierSeq {
 
         my $builder = @.type-specifiers>>.gist.join(" ");
 
-        $builder.&maybe-extend($.attribute-specifier-seq);
+        $builder = $builder.&maybe-extend($.attribute-specifier-seq);
 
         $builder
     }
@@ -53,7 +53,7 @@ our class TrailingTypeSpecifierSeq {
     method gist{
         my $builder = @.trailing-type-specifiers>>.gist.join(" ");
 
-        $builder.&maybe-extend($.attribute-specifier-seq);
+        $builder = $builder.&maybe-extend($.attribute-specifier-seq);
 
         $builder
     }
@@ -81,6 +81,7 @@ our role TypeSpecifier::Actions {
         make TrailingTypeSpecifier::CvQualifier.new(
             cv-qualifier          => $<cv-qualifier>.made,
             simple-type-specifier => $<simple-type-specifier>.made,
+            text                  => ~$/,
         )
     }
 
@@ -110,6 +111,7 @@ our role TypeSpecifier::Actions {
             make TypeSpecifierSeq.new(
                 type-specifiers         => @items,
                 attribute-specifier-seq => $tail,
+                text                    => ~$/,
             )
 
         } else {
@@ -134,6 +136,7 @@ our role TypeSpecifier::Actions {
             make TrailingTypeSpecifierSeq.new(
                 trailing-type-specifiers => @items,
                 attribute-specifier-seq  => $tail,
+                text                     => ~$/,
             )
         } else {
             make @items[0]
@@ -145,6 +148,7 @@ our role TypeSpecifier::Actions {
         make SimpleIntTypeSpecifier.new(
             simple-type-signedness-modifier => $<simple-type-signedness-modifier>.made,
             simple-type-length-modifiers    => $<simple-type-length-modifier>>>.made,
+                text                        => ~$/,
         )
     }
 
@@ -152,6 +156,7 @@ our role TypeSpecifier::Actions {
     method simple-char-type-specifier($/) {
         make SimpleCharTypeSpecifier.new(
             simple-type-signedness-modifier => $<simple-type-signedness-modifier>.made,
+            text                            => ~$/,
         )
     }
 
@@ -159,6 +164,7 @@ our role TypeSpecifier::Actions {
     method simple-char16-type-specifier($/) {
         make SimpleChar16TypeSpecifier.new(
             simple-type-signedness-modifier => $<simple-type-signedness-modifier>.made,
+            text                            => ~$/,
         )
     }
 
@@ -166,6 +172,7 @@ our role TypeSpecifier::Actions {
     method simple-char32-type-specifier($/) {
         make SimpleChar32TypeSpecifier.new(
             simple-type-signedness-modifier => $<simple-type-signedness-modifier>.made,
+            text                            => ~$/,
         )
     }
 
@@ -173,6 +180,7 @@ our role TypeSpecifier::Actions {
     method simple-wchar-type-specifier($/) {
         make SimpleWcharTypeSpecifier.new(
             simple-type-signedness-modifier => $<simple-type-signedness-modifier>.made,
+            text                            => ~$/,
         )
     }
 
@@ -180,6 +188,7 @@ our role TypeSpecifier::Actions {
     method simple-double-type-specifier($/) {
         make SimpleDoubleTypeSpecifier.new(
             simple-type-signedness-modifier => $<simple-type-signedness-modifier>.made,
+            text                            => ~$/,
         )
     }
 
@@ -211,6 +220,7 @@ our role TypeSpecifier::Actions {
         make SimpleTypeSpecifier::SignednessModLength.new(
             simple-type-signedness-modifier => $<simple-type-signedness-modifier>.made,
             simple-type-length-modifier     => $<simple-type-length-modifier>>>.made,
+            text                            => ~$/,
         )
     }
 

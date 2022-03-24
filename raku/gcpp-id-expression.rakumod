@@ -186,6 +186,7 @@ our role IdExpression::Actions {
     method unqualified-id:sym<tilde-classname>($/) {
         make UnqualifiedId::TildeClassname.new(
             class-name => $<class-name>.made,
+            text       => ~$/,
         )
     }
 
@@ -193,6 +194,7 @@ our role IdExpression::Actions {
     method unqualified-id:sym<tilde-decltype>($/) {
         make UnqualifiedId::TildeDecltype.new(
             decltype-specifier => $<decltype-specifier>.made,
+            text               => ~$/,
         )
     }
 
@@ -207,6 +209,7 @@ our role IdExpression::Actions {
             nested-name-specifier => $<nested-name-specifier>.made,
             template              => $<template>.made,
             unqualified-id        => $<unqualified-id>.made,
+            text                  => ~$/,
         )
     }
 }

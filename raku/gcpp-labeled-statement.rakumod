@@ -79,7 +79,7 @@ our class LabeledStatementLabel {
 #   <labeled-statement-label> 
 #   <statement> 
 # }
-our class LabeledStatement {
+our class LabeledStatement does IStatement {
     has LabeledStatementLabel $.labeled-statement-label is required;
     has IStatement            $.statement is required;
 
@@ -110,6 +110,7 @@ our role LabeledStatement::Actions {
             make Statement::Labeled.new(
                 comment           => $comment,
                 labeled-statement => $body,
+                text              => ~$/,
             )
         }
     }
@@ -123,6 +124,7 @@ our role LabeledStatement::Actions {
     method labeled-statement-label-body:sym<case-expr>($/) {
         make LabeledStatementLabelBody::CaseExpr.new(
             constant-expression => $<constant-expression>.made,
+            text                => ~$/,
         )
     }
 
@@ -136,6 +138,7 @@ our role LabeledStatement::Actions {
         make LabeledStatementLabel.new(
             attribute-specifier-seq      => $<attribute-specifier-seq>.made,
             labeled-statement-label-body => $<labeled-statement-label-body>.made,
+            text                         => ~$/,
         )
     }
 
@@ -144,6 +147,7 @@ our role LabeledStatement::Actions {
         make LabeledStatement.new(
             labeled-statement-label => $<labeled-statement-label>.made,
             statement               => $<statement>.made,
+            text                    => ~$/,
         )
     }
 }

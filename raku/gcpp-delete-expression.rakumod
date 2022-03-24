@@ -38,6 +38,7 @@ our role DeleteExpression::Actions {
     method delete-expression($/) {
         make DeleteExpression.new(
             cast-expression => $<cast-expression>.made,
+            text            => ~$/,
         )
     }
 }

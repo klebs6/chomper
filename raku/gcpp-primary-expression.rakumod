@@ -86,21 +86,24 @@ our role PrimaryExpression::Actions {
     # token primary-expression:sym<expr> { <.left-paren> <expression> <.right-paren> }
     method primary-expression:sym<expr>($/) {
         make PrimaryExpression::Expr.new(
-            expression => $<expression>.made
+            expression => $<expression>.made,
+            text       => ~$/,
         )
     }
 
     # token primary-expression:sym<id> { <id-expression> }
     method primary-expression:sym<id>($/) {
         make PrimaryExpression::Id.new(
-            id-expression => $<id-expression>.made
+            id-expression => $<id-expression>.made,
+            text          => ~$/,
         )
     }
 
     # token primary-expression:sym<lambda> { <lambda-expression> } 
     method primary-expression:sym<lambda>($/) {
         make PrimaryExpression::Lambda.new(
-            lambda-expression => $<lambda-expression>.made
+            lambda-expression => $<lambda-expression>.made,
+            text              => ~$/,
         )
     }
 }

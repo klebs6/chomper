@@ -83,6 +83,7 @@ our role Condition::Actions {
     method condition-decl-tail:sym<assign-init>($/) {
         make ConditionDeclTail::AssignInit.new(
             initializer-clause => $<initializer-clause>.made,
+            text               => ~$/,
         )
     }
 
@@ -98,6 +99,7 @@ our role Condition::Actions {
             decl-specifier-seq      => $<decl-specifier-seq>.made,
             declarator              => $<declarator>.made,
             condition-decl-tail     => $<condition-decl-tail>.made,
+            text                    => ~$/,
         )
     }
 }

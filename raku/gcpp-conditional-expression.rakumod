@@ -50,6 +50,7 @@ our role ConditionalExpression::Actions {
         make ConditionalExpressionTail.new(
             question-expression   => $<expression>.made,
             assignment-expression => $<assignment-expression>.made,
+            text                  => ~$/,
         )
     }
 
@@ -64,6 +65,7 @@ our role ConditionalExpression::Actions {
             make ConditionalExpression.new(
                 logical-or-expression       => $base,
                 conditional-expression-tail => $tail,
+                text                        => ~$/,
             )
 
         } else {

@@ -26,6 +26,7 @@ our role AndExpression::Actions {
         if @equality-expressions.elems gt 1 {
             make AndExpression.new(
                 equality-expressions => @equality-expressions,
+                text                 => ~$/,
             )
 
         } else {

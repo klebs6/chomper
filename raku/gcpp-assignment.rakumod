@@ -180,6 +180,7 @@ our role AssignmentExpression::Actions {
     method assignment-expression:sym<throw>($/) {
         make AssignmentExpression::Throw.new(
             throw-expression => $<throw-expression>.made,
+            text             => ~$/,
         )
     }
 
@@ -189,6 +190,7 @@ our role AssignmentExpression::Actions {
             logical-or-expression => $<logical-or-expression>.made,
             assignment-operator   => $<assignment-operator>.made,
             initializer-clause    => $<initializer-clause>.made,
+            text                  => ~$/,
         )
     }
 

@@ -71,6 +71,7 @@ our role Hex::Actions {
         make IntegerLiteral::Hex.new(
             hexadecimal-literal => $<hexadecimal-literal>.made,
             integersuffix       => $<integersuffix>.made,
+            text                => ~$/,
         )
     }
 
@@ -78,6 +79,7 @@ our role Hex::Actions {
     method hexquad($/) {
         make Hexquad.new(
             hexadecimaldigit => $<hexadecimaldigit>>>.made,
+            text             => ~$/,
         )
     }
 

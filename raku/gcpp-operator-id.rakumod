@@ -49,6 +49,7 @@ our role OperatorId::Actions {
     method operator-function-id($/) {
         make OperatorFunctionId.new(
             the-operator => $<the-operator>.made,
+            text         => ~$/,
         )
     }
 
@@ -57,6 +58,7 @@ our role OperatorId::Actions {
         make LiteralOperatorId::StringLit.new(
             string-literal => $<string-literal>.made,
             identifier     => $<identifier>.made,
+            text           => ~$/,
         )
     }
 
@@ -64,6 +66,7 @@ our role OperatorId::Actions {
     method literal-operator-id:sym<user-defined>($/) {
         make LiteralOperatorId::UserDefined.new(
             user-defined-string-literal => $<user-defined-string-literal>.made,
+            text                        => ~$/,
         )
     }
 }

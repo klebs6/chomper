@@ -35,6 +35,7 @@ our role PointerDeclarator::Actions {
             make PointerDeclarator.new(
                 augmented-pointer-operators => @augmented,
                 no-pointer-declarator       => $base,
+                text                        => ~$/,
             )
 
         } else {

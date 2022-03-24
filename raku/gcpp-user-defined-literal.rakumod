@@ -8,6 +8,7 @@ use gcpp-bin;
 use gcpp-float;
 use gcpp-char;
 use gcpp-str;
+use gcpp-ident;
 
 # token user-defined-integer-literal:sym<dec> { 
 #   <decimal-literal> 
@@ -204,6 +205,8 @@ our role UserDefinedLiteral::Actions {
     method user-defined-integer-literal:sym<dec>($/) {
         make UserDefinedIntegerLiteral::Dec.new(
             decimal-literal => $<decimal-literal>.made,
+            suffix          => $<udsuffix>.made,
+            text            => ~$/,
         )
     }
 
@@ -211,6 +214,8 @@ our role UserDefinedLiteral::Actions {
     method user-defined-integer-literal:sym<oct>($/) {
         make UserDefinedIntegerLiteral::Oct.new(
             octal-literal => $<octal-literal>.made,
+            suffix        => $<udsuffix>.made,
+            text          => ~$/,
         )
     }
 
@@ -218,6 +223,8 @@ our role UserDefinedLiteral::Actions {
     method user-defined-integer-literal:sym<hex>($/) {
         make UserDefinedIntegerLiteral::Hex.new(
             hexadecimal-literal => $<hexadecimal-literal>.made,
+            suffix              => $<udsuffix>.made,
+            text                => ~$/,
         )
     }
 
@@ -225,6 +232,8 @@ our role UserDefinedLiteral::Actions {
     method user-defined-integer-literal:sym<bin>($/) {
         make UserDefinedIntegerLiteral::Bin.new(
             binary-literal => $<binary-literal>.made,
+            suffix         => $<udsuffix>.made,
+            text           => ~$/,
         )
     }
 
@@ -232,7 +241,8 @@ our role UserDefinedLiteral::Actions {
     method user-defined-floating-literal:sym<frac>($/) {
         make UserDefinedFloatingLiteral::Frac.new(
             fractionalconstant => $<fractionalconstant>.made,
-            exponentpart => $<exponentpart>.made,
+            exponentpart       => $<exponentpart>.made,
+            text               => ~$/,
         )
     }
 

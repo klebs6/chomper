@@ -105,7 +105,7 @@ our class NamespaceDefinition {
             $builder ~= $.namespace-body.gist;
         }
 
-        $builder ~ "{"
+        $builder ~ "}"
     }
 }
 
@@ -119,7 +119,7 @@ our class Qualifiednamespacespecifier {
 
     has $.text;
 
-    method gist{
+    method gist {
         my $builder = "";
 
         my $n = $.nested-name-specifier;
@@ -128,7 +128,7 @@ our class Qualifiednamespacespecifier {
             $builder ~= $n.gist ~ " ";
         }
 
-        $builder ~ $namespace-name.gist
+        $builder ~ $.namespace-name.gist
     }
 }
 
@@ -146,7 +146,7 @@ our class NamespaceAliasDefinition {
 
     has $.text;
 
-    method gist{
+    method gist {
 
         my $builder = "";
 
@@ -205,6 +205,7 @@ our role Namespace::Actions {
             inline         => $<inline>.made,
             namespace-tag  => $<namespace-tag>.made,
             namespace-body => $<namespace-body>.made,
+            text           => ~$/,
         )
     }
 
@@ -219,6 +220,7 @@ our role Namespace::Actions {
             comment                     => $<semi>.made,
             identifier                  => $<identifier>.made,
             qualifiednamespacespecifier => $<qualifiednamespacespecifier>.made,
+            text                        => ~$/,
         )
     }
 
@@ -232,6 +234,7 @@ our role Namespace::Actions {
             make Qualifiednamespacespecifier.new(
                 nested-name-specifier => $prefix,
                 namespace-name        => $body,
+                text                  => ~$/,
             )
         } else {
             make $body

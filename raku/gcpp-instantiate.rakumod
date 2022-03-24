@@ -31,6 +31,7 @@ our role Instantiation::Actions {
     method explicit-instantiation($/) {
         make ExplicitInstantiation.new(
             declaration => $<declaration>.made,
+            text        => ~$/,
         )
     }
 }

@@ -97,6 +97,7 @@ our role CastExpression::Actions {
             make CastExpression.new(
                 unary-expression => $base,
                 the-type-ids     => @type-ids,
+                text             => ~$/,
             )
 
         } else {

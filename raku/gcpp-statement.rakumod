@@ -30,7 +30,7 @@ our class CompoundStatement does IStatement {
 
     method gist{
         my $builder = "\{";
-        $builder.&maybe-extend($.statement-seq.gist);
+        $builder = $builder.&maybe-extend($.statement-seq.gist);
         $builder ~ "}"
     }
 }
@@ -130,6 +130,7 @@ our role Statement::Actions {
             make ExpressionStatement.new(
                 comment    => $comment,
                 expression => $body,
+                text       => ~$/,
             )
         } else {
             make $body
@@ -139,7 +140,8 @@ our role Statement::Actions {
     # rule compound-statement { <.left-brace> <statement-seq>? <.right-brace> }
     method compound-statement($/) {
         make CompoundStatement.new(
-            statement-seq => $<statement-seq>.made
+            statement-seq => $<statement-seq>.made,
+            text          => ~$/,
         )
     }
 
@@ -163,6 +165,7 @@ our role Statement::Actions {
             make Statement::Declaration.new(
                 comment               => $comment,
                 declaration-statement => $body,
+                text                  => ~$/,
             )
         }
     }

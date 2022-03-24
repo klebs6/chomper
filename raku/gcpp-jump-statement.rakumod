@@ -105,6 +105,7 @@ our role JumpStatement::Actions {
     method jump-statement:sym<break>($/) {
         make JumpStatement::Break.new(
             comment => $<semi>.made,
+            text    => ~$/,
         )
     }
 
@@ -112,6 +113,7 @@ our role JumpStatement::Actions {
     method jump-statement:sym<continue>($/) {
         make JumpStatement::Continue.new(
             comment => $<semi>.made,
+            text    => ~$/,
         )
     }
 
@@ -120,6 +122,7 @@ our role JumpStatement::Actions {
         make JumpStatement::Return.new(
             comment               => $<semi>.made,
             return-statement-body => $<return-statement-body>.made,
+            text                  => ~$/,
         )
     }
 
@@ -128,6 +131,7 @@ our role JumpStatement::Actions {
         make JumpStatement::Goto.new(
             comment    => $<semi>.made,
             identifier => $<identifier>.made,
+            text       => ~$/,
         )
     }
 }

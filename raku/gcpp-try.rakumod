@@ -78,7 +78,7 @@ our class FunctionTryBlock {
 
         my $builder = "try ";
 
-        $builder.&maybe-extend($.constructor-initializer);
+        $builder = $builder.&maybe-extend($.constructor-initializer);
 
         $builder ~= $.compound-statement.gist;
 
@@ -97,6 +97,7 @@ our role Try::Actions {
         make TryBlock.new(
             compound-statement => $<compound-statement>.made,
             handler-seq        => $<handler-seq>.made,
+            text               => ~$/,
         )
     }
 
@@ -106,6 +107,7 @@ our role Try::Actions {
             constructor-initializer => $<constructor-initializer>.made,
             compound-statement      => $<compound-statement>.made,
             handler-seq             => $<handler-seq>.made,
+            text                    => ~$/,
         )
     }
 
@@ -119,6 +121,7 @@ our role Try::Actions {
         make Handler.new(
             exception-declaration => $<exception-declaration>.made,
             compound-statement    => $<compound-statement>.made,
+            text                  => ~$/,
         )
     }
 }

@@ -122,6 +122,7 @@ our role FloatingLiteral::Actions {
             fractionalconstant => $<fractionalconstant>.made,
             exponentpart       => $<exponentpart>.made,
             floatingsuffix     => $<floatingsuffix>.made,
+            text               => ~$/,
         )
     }
 
@@ -131,6 +132,7 @@ our role FloatingLiteral::Actions {
             digitsequence  => $<digitsequence>.made,
             exponentpart   => $<exponentpart>.made,
             floatingsuffix => $<floatingsuffix>.made,
+            text           => ~$/,
         )
     }
 
@@ -174,6 +176,7 @@ our role FloatingLiteral::Actions {
     method digitsequence($/) {
         make Digitsequence.new(
             digits => $<digit>>>.made,
+            text   => ~$/,
         )
     }
 

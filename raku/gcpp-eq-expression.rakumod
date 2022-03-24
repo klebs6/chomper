@@ -72,6 +72,7 @@ our role EqualityExpression::Actions {
         make EqualityExpressionTail.new(
             equality-operator     => $<equality-operator>.made,
             relational-expression => $<relational-expression>.made,
+            text                  => ~$/,
         )
     }
 
@@ -84,6 +85,7 @@ our role EqualityExpression::Actions {
             make EqualityExpression.new(
                 relational-expression    => $base,
                 equality-expression-tail => @tail,
+                text                     => ~$/,
             )
         } else {
             make $base

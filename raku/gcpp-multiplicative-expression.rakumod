@@ -101,6 +101,7 @@ our role MultiplicativeExpression::Actions {
             make MultiplicativeExpression.new(
                 pointer-member-expression      => $base,
                 multiplicative-expression-tail => @tail,
+                text                           => ~$/,
             )
         } else {
             make $base
@@ -112,6 +113,7 @@ our role MultiplicativeExpression::Actions {
         make MultiplicativeExpressionTail.new(
             multiplicative-operator   => $<multiplicative-operator>.made,
             pointer-member-expression => $<pointer-member-expression>.made,
+            text                      => ~$/,
         )
     }
 }

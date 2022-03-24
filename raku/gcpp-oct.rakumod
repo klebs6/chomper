@@ -48,6 +48,7 @@ our role Oct::Actions {
         make IntegerLiteral::Oct.new(
             octal-literal => $<octal-literal>.made,
             integersuffix => $<integersuffix>.made,
+            text          => ~$/,
         )
     }
 

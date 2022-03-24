@@ -16,6 +16,8 @@ our role ITypeSpecifier       { ... }
 our role ITypeSpecifierSeq    { ... }
 our role ITemplateArgument    { ... }
 
+our role INewTypeId           {  }
+
 #-------------------------------
 our role  IConstantExpression                     { }
 our role IDeclarationStatement                    { }
@@ -54,7 +56,8 @@ our role INestedNameSpecifierPrefix does INestedNameSpecifier { }
 our role INestedNameSpecifierSuffix                           { }
 our role ILambdaCapture                                       { }
 our role ICaptureDefault                                      { }
-our role ICapture                                             { }
+our role ICaptureList                                         { }
+our role ICapture    does ICaptureList                        { }
 our role ISimpleCapture                                       { }
 our role IBracketTail                                         { }
 our role ICastToken                                           { }
@@ -219,8 +222,10 @@ our role IBooleanLiteral     does ILiteral { }
 # token literal:sym<user-defined> { <user-defined-literal> }
 our role IUserDefinedLiteral does ILiteral { }
 
-our sub maybe-extend($_ is rw, $expr) {
+our sub maybe-extend($in, $expr) {
+    my $res = $in;
     if $expr {
-        $_ ~= $expr.gist
+        $res ~= $expr.gist
     }
+    $res
 }

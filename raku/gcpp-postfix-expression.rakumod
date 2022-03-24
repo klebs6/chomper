@@ -27,7 +27,7 @@ does IPostfixExpressionBody {
     method gist{
         $.cast-token.gist 
         ~ "<" ~ $.the-type-id.gist ~ ">" 
-        ~ "(" $.expression.gist ~ ")"
+        ~ "(" ~ $.expression.gist ~ ")"
     }
 }
 
@@ -200,7 +200,7 @@ does IPostfixExpressionTail {
 
     method gist{
         my $builder = "(";
-        $builder.maybe-extend($.expression-list);
+        $builder = $builder.&maybe-extend($.expression-list);
         $builder ~ ")"
     }
 }
@@ -298,6 +298,7 @@ our role PostfixExpression::Actions {
             make PostfixExpression.new(
                 postfix-expression-body => $body,
                 postfix-expression-tail => @tail,
+                text                    => ~$/,
             )
         } else {
             make $body
@@ -322,14 +323,17 @@ our role PostfixExpression::Actions {
     method postfix-expression-tail:sym<parens>($/) {
         make PostfixExpressionTail::Parens.new(
             expression-list => $<expression-list>.made,
+            text            => ~$/,
         )
     }
 
     # rule postfix-expression-tail:sym<indirection-id> { [ <dot> || <arrow> ] <template>? <id-expression> }
     method postfix-expression-tail:sym<indirection-id>($/) {
         make PostfixExpressionTail::IndirectionId.new(
+            indirect      => so $/<arrow>:exists,
             template      => $<template>.made,
             id-expression => $<id-expression>.made,
+            text          => ~$/,
         )
     }
 
@@ -337,6 +341,7 @@ our role PostfixExpression::Actions {
     method postfix-expression-tail:sym<indirection-pseudo-dtor>($/) {
         make PostfixExpressionTail::IndirectionPseudoDtor.new(
             pseudo-destructor-name => $<pseudo-destructor-name>.made,
+            text                   => ~$/,
         )
     }
 
@@ -390,6 +395,7 @@ our role PostfixExpression::Actions {
             cast-token  => $<cast-token>.made,
             the-type-id => $<the-type-id>.made,
             expression  => $<expression>.made,
+            text        => ~$/,
         )
     }
 
@@ -403,6 +409,7 @@ our role PostfixExpression::Actions {
         make PostfixExpressionTypeid::Expr.new(
             type-id-of-the-type-id => $<type-id-of-the-type-id>.made,
             expression             => $<expression>.made,
+            text                   => ~$/,
         )
     }
 
@@ -410,6 +417,7 @@ our role PostfixExpression::Actions {
         make PostfixExpressionTypeid::TypeId.new(
             type-id-of-the-type-id => $<type-id-of-the-type-id>.made,
             the-type-id            => $<the-type-id>.made,
+            text                   => ~$/,
         )
     }
 
@@ -442,6 +450,7 @@ our role PostfixExpression::Actions {
         make PostfixExpressionList.new(
             post-list-head => $<post-list-head>.made,
             post-list-tail => $<post-list-tail>.made,
+            text           => ~$/,
         )
     }
 }

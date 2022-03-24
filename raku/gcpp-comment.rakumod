@@ -57,6 +57,7 @@ our role Comment::Actions {
     method comment:sym<line>($/) {
         make Comment::Line.new(
             line-comments => $<line-comment>>>.made,
+            text          => ~$/,
         )
     }
 
