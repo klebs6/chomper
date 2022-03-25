@@ -40,6 +40,7 @@ does INoPointerDeclaratorBase {
 # }
 our class NoPointerDeclaratorBase::Parens 
 does IAbstractDeclarator
+does IParameterDeclarationBody
 does IInitDeclarator
 does INoPointerDeclaratorBase {
     has IPointerDeclarator $.pointer-declarator is required;
@@ -96,6 +97,7 @@ our class NoPointerDeclaratorTail::Bracketed does INoPointerDeclaratorTail {
 #   <no-pointer-declarator-tail>* 
 # } #------------------------------
 our class NoPointerDeclarator 
+does IPointerDeclarator
 does IAbstractDeclarator
 does INoPointerDeclarator 
 does IInitDeclarator does IDeclarator {

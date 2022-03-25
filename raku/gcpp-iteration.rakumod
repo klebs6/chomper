@@ -18,13 +18,13 @@ does IIterationStatement {
     has $.text;
 
     method gist{
-        my $builder = "while(" ~ $.condition.gist ~ ")" ~ " \{";
+        my $builder = "while(" ~ $.condition.gist ~ ")";
 
         for @.statements {
             $builder ~= $_.gist ~ "\n";
         }
 
-        $builder ~ "}"
+        $builder
     }
 }
 
@@ -89,13 +89,13 @@ our class IterationStatement::For does IIterationStatement {
             $builder ~= " " ~ $.expression.gist;
         }
 
-        $builder ~= ") \{";
+        $builder ~= ")";
 
         for @.statements {
             $builder ~= $_.gist.indent(4) ~ "\n";
         }
 
-        $builder ~ "}"
+        $builder
     }
 }
 
@@ -119,13 +119,13 @@ our class IterationStatement::ForRange does IIterationStatement {
 
         my $builder = "for(";
 
-        $builder ~= $.for-range-declaration.gist ~ ": " ~ $.for-range-initializer.gist ~ ") \{\n";
+        $builder ~= $.for-range-declaration.gist ~ ": " ~ $.for-range-initializer.gist ~ ")";
 
         for @.statements {
             $builder ~= $_.gist ~ "\n";
         }
 
-        $builder ~ "}"
+        $builder
     }
 }
 

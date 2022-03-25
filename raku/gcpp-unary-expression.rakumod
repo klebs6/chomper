@@ -57,7 +57,7 @@ does IUnaryExpressionCase {
     has $.text;
 
     method gist{
-        "++"
+        "++" ~ $.unary-expression.gist
     }
 }
 
@@ -72,7 +72,7 @@ does IUnaryExpressionCase {
     has $.text;
 
     method gist{
-        "--"
+        "--" ~ $.unary-expression.gist
     }
 }
 

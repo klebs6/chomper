@@ -137,7 +137,7 @@ our role Suffix::Actions {
     # token integersuffix:sym<llu> { <longlongsuffix> <unsignedsuffix>? } 
     method integersuffix:sym<llu>($/) {
         make Integersuffix::Llu.new(
-            longsuffix     => $<longsuffix>.made,
+            longsuffix     => $<longlongsuffix>.made,
             unsignedsuffix => $<unsignedsuffix>.made,
             text           => ~$/,
         )

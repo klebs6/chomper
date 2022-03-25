@@ -15,7 +15,7 @@ our class ConditionalExpressionTail {
     has $.text;
 
     method gist{
-        "? " ~ $.expression.gist ~ ": " ~ $.assignment-expression.gist
+        "? " ~ $.question-expression.gist ~ ": " ~ $.assignment-expression.gist
     }
 }
 

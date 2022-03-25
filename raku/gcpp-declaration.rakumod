@@ -83,7 +83,7 @@ does ISimpleDeclaration {
             $builder ~= $.decl-specifier-seq.gist;
         }
 
-        my $declarator-list = @.init-declarator-list>>.gist.join(" ");
+        my $declarator-list = @.init-declarator-list>>.gist.join(", ");
 
         if $declarator-list {
             $builder ~= $declarator-list.chomp;

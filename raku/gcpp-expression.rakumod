@@ -323,7 +323,9 @@ our role Expression::Actions {
 
     # rule braced-init-list { <.left-brace> [ <initializer-list> <.comma>? ]? <.right-brace> } 
     method braced-init-list($/) {
-        make $<initializer-list>.made
+        make BracedInitList.new(
+            initializer-list => $<initializer-list>.made
+        )
     }
 }
 

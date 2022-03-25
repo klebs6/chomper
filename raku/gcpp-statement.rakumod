@@ -14,7 +14,7 @@ our class StatementSeq {
     has $.text;
 
     method gist{
-        @.statements>>.gist.join(" ")
+        @.statements>>.gist.join("\n")
     }
 }
 

@@ -161,6 +161,7 @@ does IUnaryExpression {
 #   <.right-bracket>
 # }
 our class BracketTail::Expression 
+does IBracketTail
 does IPostfixExpressionTail { 
 
     has IExpression $.expression is required;
@@ -168,11 +169,12 @@ does IPostfixExpressionTail {
     has $.text;
 
     method gist{
-        "[" ~ $.expression ~ "]"
+        "[" ~ $.expression.gist ~ "]"
     }
 }
 
 our class BracketTail::BracedInitList 
+does IBracketTail
 does IPostfixExpressionTail {
 
     has IBracketTail $.bracket-tail is required;
@@ -320,16 +322,22 @@ our role PostfixExpression::Actions {
 
     # rule bracket-tail { <.left-bracket> [ <expression> || <braced-init-list> ] <.right-bracket> }
     method bracket-tail:sym<expr>($/) {
-        make $<expression>.made
+        make BracketTail::Expression.new(
+            expression => $<expression>.made
+        )
     }
 
     method bracket-tail:sym<braced-init-list>($/) {
-        make $<braced-init-list>.made
+        make BracketTail::BracedInitList.new(
+            braced-init-list => $<braced-init-list>.made
+        )
     }
 
     # rule postfix-expression-tail:sym<bracket> { <bracket-tail> }
     method postfix-expression-tail:sym<bracket>($/) {
-        make $<bracket-tail>.made
+        make PostfixExpressionTail::Bracket.new(
+            bracket-tail => $<bracket-tail>.made
+        )
     }
 
     # rule postfix-expression-tail:sym<parens> { <.left-paren> <expression-list>? <.right-paren> }

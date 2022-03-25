@@ -19,7 +19,7 @@ does ITemplateArgument {
 
     method gist {
 
-        my $builder = $.type-specifier-seq.gist;
+        my $builder = $.type-specifier-seq>>.gist.join(" ");
 
         if $.abstract-declarator {
             $builder ~= " " ~ $.abstract-declarator.gist;
