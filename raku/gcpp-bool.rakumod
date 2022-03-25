@@ -7,7 +7,7 @@ our class BooleanLiteral::F does IBooleanLiteral {
     has $.text;
 
     method gist {
-        "False"
+        "false"
     }
 }
 
@@ -16,7 +16,7 @@ our class BooleanLiteral::T does IBooleanLiteral {
     has $.text;
 
     method gist {
-        "True"
+        "true"
     }
 }
 

@@ -8,6 +8,7 @@ use gcpp-roles;
 # }
 our class PointerDeclarator 
 does ISomeDeclarator
+does IPointerDeclarator
 does IInitDeclarator
 does IParameterDeclarationBody
 does IDeclarator { 

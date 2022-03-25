@@ -54,7 +54,7 @@ our class TryBlock {
         my $builder = "try " ~ $.compound-statement.gist;
 
         for @.handler-seq {
-            $builder ~= $_.gist ~ "\n";
+            $builder ~= " " ~ $_.gist ~ "\n";
         }
 
         $builder

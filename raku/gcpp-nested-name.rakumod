@@ -112,7 +112,7 @@ our class NestedNameSpecifier does INestedNameSpecifier {
 
         my $builder = $.nested-name-specifier-prefix.gist;
 
-        for @.nested-nme-specifier-suffixes {
+        for @.nested-name-specifier-suffixes {
             $builder ~= $_.gist;
         }
 

@@ -12,6 +12,7 @@ use gcpp-ptr-declarator;
 # }
 our class NoPointerDeclaratorBase::Base 
 does IAbstractDeclarator
+does IInitDeclarator
 does INoPointerDeclaratorBase {
     has Declaratorid           $.declaratorid is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
@@ -39,8 +40,9 @@ does INoPointerDeclaratorBase {
 # }
 our class NoPointerDeclaratorBase::Parens 
 does IAbstractDeclarator
+does IInitDeclarator
 does INoPointerDeclaratorBase {
-    has PointerDeclarator $.pointer-declarator is required;
+    has IPointerDeclarator $.pointer-declarator is required;
 
     has $.text;
 
@@ -126,6 +128,7 @@ our role NoPointerDeclarator::Actions {
             make NoPointerDeclaratorBase::Base.new(
                 declaratorid            => $base,
                 attribute-specifier-seq => $maybe,
+                text                    => ~$/,
             )
 
         } else {
@@ -135,7 +138,9 @@ our role NoPointerDeclarator::Actions {
 
     # rule no-pointer-declarator-base:sym<parens> { <.left-paren> <pointer-declarator> <.right-paren> } 
     method no-pointer-declarator-base:sym<parens>($/) {
-        make $<pointer-declarator>.made
+        make NoPointerDeclaratorBase::Parens.new(
+            pointer-declarator => $<pointer-declarator>.made
+        )
     }
 
     # rule no-pointer-declarator-tail:sym<basic> { <parameters-and-qualifiers> }
@@ -153,6 +158,7 @@ our role NoPointerDeclarator::Actions {
         make NoPointerDeclaratorTail::Bracketed.new(
             constant-expression     => $<constant-expression>.made,
             attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            text                    => ~$/,
         )
     }
 
@@ -167,6 +173,7 @@ our role NoPointerDeclarator::Actions {
             make NoPointerDeclarator.new(
                 no-pointer-declarator-base => $base,
                 no-pointer-declarator-tail => @tail,
+                text                       => ~$/,
             )
 
         } else {

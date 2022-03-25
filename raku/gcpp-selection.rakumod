@@ -22,20 +22,18 @@ does ISelectionStatement {
 
     method gist{
 
-        my $builder = "if (" ~ $.condition.gist ~ ") \{";
+        my $builder = "if (" ~ $.condition.gist ~ ") ";
 
         for @.statements {
             $builder ~= $_.gist.indent(4) ~ "\n";
         }
-
-        $builder ~= "}";
 
         if $.else-statement-comment {
             $builder ~= "\n" ~ $.else-statement-comment.gist;
         }
 
         for @.else-statements {
-            $builder ~= $_.gist ~ "\n";
+            $builder ~= "else " ~ $_.gist ~ "\n";
         }
 
         $builder

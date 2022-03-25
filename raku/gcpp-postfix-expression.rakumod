@@ -95,12 +95,25 @@ our class PostListHead::TypeName does IPostListHead {
 }
 
 
-our class PostListTail does IPostListTail {
+our class PostListTail::Parens does IPostListTail {
     has $.value is required;
     has $.text;
 
     method gist{
-        $.value.gist
+        if $.value {
+            "(" ~ $.value.gist ~ ")"
+        } else {
+            "()"
+        }
+    }
+}
+
+our class PostListTail::Braces does IPostListTail {
+    has $.value is required;
+    has $.text;
+
+    method gist{
+        "\{" ~ $.value.gist ~ "}"
     }
 }
 
@@ -433,14 +446,14 @@ our role PostfixExpression::Actions {
 
     # token post-list-tail:sym<parenthesized> { <.left-paren> <expression-list>? <.right-paren> }
     method post-list-tail:sym<parenthesized>($/) {
-        make PostListTail.new(
+        make PostListTail::Parens.new(
             value => $<expression-list>.made
         )
     }
 
     # token post-list-tail:sym<braced> { <braced-init-list> }
     method post-list-tail:sym<braced>($/) {
-        make PostListTail.new(
+        make PostListTail::Braces.new(
             value => $<braced-init-list>.made
         )
     }

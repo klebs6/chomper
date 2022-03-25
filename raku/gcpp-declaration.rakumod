@@ -80,11 +80,13 @@ does ISimpleDeclaration {
         }
 
         if $.decl-specifier-seq {
-            $builder ~= $.decl-specifier-seq.gist ~ " ";
+            $builder ~= $.decl-specifier-seq.gist;
         }
 
-        for @.init-declarator-list {
-            $builder ~= $_.gist ~ " ";
+        my $declarator-list = @.init-declarator-list>>.gist.join(" ");
+
+        if $declarator-list {
+            $builder ~= $declarator-list.chomp;
         }
 
         $builder ~ ";"
@@ -158,7 +160,7 @@ our class StaticAssertDeclaration {
         $builder ~ "static_assert(" 
         ~ $.constant-expression.gist 
         ~ ", " 
-        ~ $.string-literal.gist;
+        ~ $.string-literal.gist
         ~ ");"
     }
 }

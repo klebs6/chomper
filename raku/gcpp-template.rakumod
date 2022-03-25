@@ -92,7 +92,7 @@ does IPostListHead {
     has $.text;
 
     method gist{
-        $.template-name ~ "<"  ~ @.template-arguments>>.gist.join(", ") ~ ">"
+        $.template-name.gist ~ "<"  ~ @.template-arguments>>.gist.join(", ") ~ ">"
     }
 }
 

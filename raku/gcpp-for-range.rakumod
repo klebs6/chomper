@@ -73,7 +73,7 @@ our role ForRange::Actions {
     # rule for-range-initializer:sym<expression> { <expression> }
     method for-range-initializer:sym<expression>($/) {
         make ForRangeInitializer::Expression.new(
-            expression => $<expression>.made
+            expression => $<expression>.made,
             text       => ~$/,
         )
     }

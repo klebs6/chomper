@@ -17,6 +17,7 @@ our role ITypeSpecifierSeq    { ... }
 our role ITemplateArgument    { ... }
 
 our role INewTypeId           {  }
+our role IPointerDeclarator  {  }
 
 #-------------------------------
 our role  IConstantExpression                     { }
@@ -222,10 +223,21 @@ our role IBooleanLiteral     does ILiteral { }
 # token literal:sym<user-defined> { <user-defined-literal> }
 our role IUserDefinedLiteral does ILiteral { }
 
-our sub maybe-extend($in, $expr) {
+our sub maybe-extend($in, $expr, :$padr = False, :$padl = False) {
+
     my $res = $in;
+
     if $expr {
-        $res ~= $expr.gist
+        if $padl {
+            $res ~= " ";
+        }
+
+        $res ~= $expr.gist;
+
+        if $padr {
+            $res ~= " ";
+        }
     }
+
     $res
 }

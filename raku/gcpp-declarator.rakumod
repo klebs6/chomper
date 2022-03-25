@@ -21,7 +21,7 @@ our class InitDeclarator does IInitDeclarator {
         my $builder = $.declarator.gist;
 
         if $.initializer {
-            $builder ~= " " ~ $.initializer.gist;
+            $builder ~= $.initializer.gist;
         }
 
         $builder
@@ -124,7 +124,7 @@ our role Declarator::Actions {
 
             make InitDeclarator.new(
                 declarator  => $body,
-                initializer => Initializer.new(value => $initializer),
+                initializer => $initializer,
                 text        => ~$/,
             )
 

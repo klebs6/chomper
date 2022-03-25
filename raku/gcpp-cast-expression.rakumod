@@ -16,8 +16,8 @@ our class CastExpression does ICastExpression {
 
         my $builder = "";
 
-        if @.the-type-ids {
-            $builder ~= "(" ~ $_.gist ~ ")";
+        for @.the-type-ids {
+            $builder ~= "(" ~ $_.gist ~ ") ";
         }
 
         $builder ~ $.unary-expression.gist

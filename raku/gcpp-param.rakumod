@@ -119,11 +119,11 @@ our class ParameterDeclaration {
 
         $builder = $builder.&maybe-extend($.attribute-specifier-seq, padr => True);
 
-        $builder ~= $.decl-specifier-seq.gist ~ " ";
-        $builder ~= $.parameter-declaration-body.gist ~ " ";
+        $builder ~= $.decl-specifier-seq.gist;
+        $builder = $builder.&maybe-extend($.parameter-declaration-body, padl => True);
 
         if $.initializer-clause {
-            $builder ~= "= " ~ $.initializer-clause.gist;
+            $builder ~= " = " ~ $.initializer-clause.gist;
         }
 
         $builder

@@ -27,6 +27,7 @@ does IPostfixExpressionTail {
 #   <.right-brace> 
 # } #-----------------------------
 our class BracedInitList 
+does IBraceOrEqualInitializer
 does IReturnStatementBody 
 does IInitializerClause {
 
@@ -41,6 +42,19 @@ does IInitializerClause {
     }
 }
 
+our class AssignInit 
+does IBraceOrEqualInitializer
+does IInitializerClause {
+
+    has IInitializer $.initializer-clause;
+
+    has $.text;
+
+    method gist{
+        "= " ~ $.initializer-clause.gist
+    }
+}
+
 # rule expression { <assignment-expression>+ %% <.comma> }
 our class Expression 
 does IExpression 
@@ -52,7 +66,7 @@ does ICondition {
     has $.text;
 
     method gist{
-        @.assignment-expression>>.gist.join(", ")
+        @.assignment-expressions>>.gist.join(", ")
     }
 }
 
@@ -69,6 +83,7 @@ our class ConstantExpression does IConstantExpression {
 
 # rule expression-list { <initializer-list> }
 our class ExpressionList 
+does IInitializer
 does INewInitializer
 does IPostfixExpressionTail { 
     has InitializerList $.initializer-list is required;
@@ -108,15 +123,17 @@ our class Initializer::BraceOrEq does IInitializer {
     }
 }
 
+=begin comment
 our class Initializer does IInitializer {
     has $.value is required;
 
     has $.text;
 
     method gist{
-        $.value
+        $.value.gist
     }
 }
+=end comment
 
 # rule brace-or-equal-initializer:sym<assign-init> { 
 #   <assign> 
@@ -166,7 +183,7 @@ does IInitializerClause {
 
         if $c {
 
-            $c.gist ~ "\n" ~ $.x.gist
+            $c.gist ~ "\n" ~ $x.gist
 
         } else {
 
@@ -207,7 +224,7 @@ our role Expression::Actions {
     # rule expression-list { <initializer-list> } 
     method expression-list($/) {
         make ExpressionList.new(
-            initializer-list => $<initializer-list>.made
+            initializer-list => $<initializer-list>.made,
             text             => ~$/,
         )
     }
@@ -229,29 +246,37 @@ our role Expression::Actions {
     # rule constant-expression { <conditional-expression> }
     method constant-expression($/) {
         make ConstantExpression.new(
-            conditional-expression => $<conditional-expression>.made
+            conditional-expression => $<conditional-expression>.made,
             text                   => ~$/,
         )
     }
 
     # rule initializer:sym<brace-or-eq> { <brace-or-equal-initializer> }
     method initializer:sym<brace-or-eq>($/) {
-        make $<brace-or-equal-initializer>.made
+        make Initializer::BraceOrEq.new(
+            brace-or-equal-initializer => $<brace-or-equal-initializer>.made
+        )
     }
 
     # rule initializer:sym<paren-expr-list> { <.left-paren> <expression-list> <.right-paren> } 
     method initializer:sym<paren-expr-list>($/) {
-        make $<expression-list>.made
+        make Initializer::ParenExprList.new(
+            expression-list => $<expression-list>.made
+        )
     }
 
     # rule brace-or-equal-initializer:sym<assign-init> { <assign> <initializer-clause> }
     method brace-or-equal-initializer:sym<assign-init>($/) {
-        make $<initializer-clause>.made
+        make AssignInit.new(
+            initializer-clause => $<initializer-clause>.made
+        )
     }
 
     # rule brace-or-equal-initializer:sym<braced-init-list> { <braced-init-list> } 
     method brace-or-equal-initializer:sym<braced-init-list>($/) {
-        make $<braced-init-list>.made
+        make BracedInitList.new(
+            initializer-list => $<braced-init-list>.made
+        )
     }
 
     # rule initializer-clause:sym<assignment> { <comment>? <assignment-expression> }

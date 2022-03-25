@@ -85,6 +85,7 @@ does IPostListHead
 does IDeclarator
 does IDeclSpecifierSeq
 does INoPointerDeclaratorBase
+does IPointerDeclarator
 does ITheTypeName { 
     has Str $.value is required; 
 

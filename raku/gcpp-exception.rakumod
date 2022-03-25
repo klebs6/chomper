@@ -46,7 +46,7 @@ our class ExceptionDeclaration::Basic does IExceptionDeclaration {
         my $a = $.attribute-specifier-seq;
 
         if $a {
-            $builder ~= $a.gist ~ "\n";
+            $builder ~= $a.gist ~ " ";
         }
 
         $builder ~= $.type-specifier-seq.gist;
@@ -54,7 +54,7 @@ our class ExceptionDeclaration::Basic does IExceptionDeclaration {
         my $b = $.some-declarator;
 
         if $b {
-            $builder ~= "\n" ~ $b.gist;
+            $builder ~= $b.gist;
         }
 
         $builder

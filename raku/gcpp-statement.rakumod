@@ -29,9 +29,10 @@ our class CompoundStatement does IStatement {
     has $.text;
 
     method gist{
-        my $builder = "\{";
-        $builder = $builder.&maybe-extend($.statement-seq.gist);
-        $builder ~ "}"
+        my $builder = "\{\n";
+        $builder = $builder.&maybe-extend($.statement-seq>>.gist>>.indent(4).join("\n"));
+        $builder ~ "\n}"
+        
     }
 }
 
@@ -133,7 +134,10 @@ our role Statement::Actions {
                 text       => ~$/,
             )
         } else {
-            make $body
+            make ExpressionStatement.new(
+                expression => $body,
+                text       => ~$/,
+            )
         }
     }
 

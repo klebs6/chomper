@@ -22,7 +22,11 @@ does IIntegerLiteral {
     has $.text;
 
     method gist {
-        $.decimal-literal.gist ~ $.integersuffix.gist
+        if $.integersuffix {
+            $.decimal-literal.gist ~ $.integersuffix.gist
+        } else {
+            $.decimal-literal.gist
+        }
     }
 }
 
