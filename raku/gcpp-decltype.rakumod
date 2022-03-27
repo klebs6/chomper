@@ -10,8 +10,8 @@ our class DecltypeSpecifierBody::Expr does IDecltypeSpecifierBody {
 
     has $.text;
 
-    method gist{
-        $.expression.gist
+    method gist(:$treemark=False) {
+        $.expression.gist(:$treemark)
     }
 }
 
@@ -22,7 +22,7 @@ our class DecltypeSpecifierBody::Auto does IDecltypeSpecifierBody {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "auto"
     }
 }
@@ -38,8 +38,8 @@ our class DecltypeSpecifier {
 
     has $.text;
 
-    method gist{
-        "decltype(" ~ $.decltype-specifier-body.gist ~ ")"
+    method gist(:$treemark=False) {
+        "decltype(" ~ $.decltype-specifier-body.gist(:$treemark) ~ ")"
     }
 }
 

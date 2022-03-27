@@ -13,8 +13,8 @@ our class PureSpecifier {
 
     has $.text;
 
-    method gist{
-        "= " ~ $.val.gist
+    method gist(:$treemark=False) {
+        " = " ~ $.val.gist(:$treemark)
     }
 }
 

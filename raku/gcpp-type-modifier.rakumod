@@ -9,7 +9,7 @@ our class SimpleTypeLengthModifier::Short does ISimpleTypeLengthModifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "short"
     }
 }
@@ -21,7 +21,7 @@ our class SimpleTypeLengthModifier::Long does ISimpleTypeLengthModifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "long"
     }
 }
@@ -33,7 +33,7 @@ our class SimpleTypeSignednessModifier::Unsigned does ISimpleTypeSignednessModif
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "unsigned"
     }
 }
@@ -45,7 +45,7 @@ our class SimpleTypeSignednessModifier::Signed does ISimpleTypeSignednessModifie
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "signed"
     }
 }

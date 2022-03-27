@@ -74,12 +74,14 @@ our role BlockComment::Rules {
 our role BlockComment::Actions {
 
     method block-comment($/) {
-        make $<block-comment-continue>>>.made.join("")
+        make "/*" ~ $<block-comment-continue>>>.made.join("") ~ "*/"
     }
 
     method block-comment-continue($/) {
         if ~$/.keys[0] eq "block-comment-inner" {
             make ~$/
+        } else {
+            make ""
         }
     }
 }

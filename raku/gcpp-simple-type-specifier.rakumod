@@ -18,14 +18,14 @@ does ISimpleTypeSpecifier
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
 
         for @.simple-type-length-modifiers {
-            $builder  ~= $_.gist ~ " ";
+            $builder  ~= $_.gist(:$treemark) ~ " ";
         }
 
         $builder ~ "int"
@@ -43,7 +43,7 @@ does ISimpleTypeSpecifier
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
         $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
         $builder ~ "char"
@@ -61,7 +61,7 @@ does ISimpleTypeSpecifier
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
         $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
         $builder ~ "char16"
@@ -79,7 +79,7 @@ does ISimpleTypeSpecifier
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
         $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
         $builder ~ "char32"
@@ -97,7 +97,7 @@ does ISimpleTypeSpecifier
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
         $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
         $builder ~ "wchar"
@@ -115,7 +115,7 @@ does ISimpleTypeSpecifier
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
         $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
         $builder ~ "double"
@@ -130,8 +130,8 @@ our class SimpleTypeSpecifier::Int_ does ISimpleTypeSpecifier {
 
     has $.text;
 
-    method gist{
-        $.simple-int-type-specifier.gist
+    method gist(:$treemark=False) {
+        $.simple-int-type-specifier.gist(:$treemark)
     }
 }
 
@@ -141,8 +141,8 @@ our class SimpleTypeSpecifier::Full does ISimpleTypeSpecifier {
 
     has $.text;
 
-    method gist{
-        $.full-type-name.gist
+    method gist(:$treemark=False) {
+        $.full-type-name.gist(:$treemark)
     }
 }
 
@@ -152,8 +152,8 @@ our class SimpleTypeSpecifier::Scoped does ISimpleTypeSpecifier {
 
     has $.text;
 
-    method gist{
-        $.scoped-template-id.gist
+    method gist(:$treemark=False) {
+        $.scoped-template-id.gist(:$treemark)
     }
 }
 
@@ -163,8 +163,8 @@ our class SimpleTypeSpecifier::SignednessMod does ISimpleTypeSpecifier {
 
     has $.text;
 
-    method gist{
-        $.simple-type-signedness-modifier.gist
+    method gist(:$treemark=False) {
+        $.simple-type-signedness-modifier.gist(:$treemark)
     }
 }
 
@@ -175,13 +175,13 @@ our class SimpleTypeSpecifier::SignednessModLength does ISimpleTypeSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
 
         $builder = $builder.&maybe-extend($.simple-type-signedness-modifier);
 
         for @.simple-type-length-modifier {
-            $builder ~= $_.gist;
+            $builder ~= $_.gist(:$treemark);
         }
 
         $builder
@@ -194,8 +194,8 @@ our class SimpleTypeSpecifier::Char does ISimpleTypeSpecifier {
 
     has $.text;
 
-    method gist{
-        $.simple-char-type-specifier.gist
+    method gist(:$treemark=False) {
+        $.simple-char-type-specifier.gist(:$treemark)
     }
 }
 
@@ -205,8 +205,8 @@ our class SimpleTypeSpecifier::Char16 does ISimpleTypeSpecifier {
 
     has $.text;
 
-    method gist{
-        $.simple-char16-type-specifier.gist
+    method gist(:$treemark=False) {
+        $.simple-char16-type-specifier.gist(:$treemark)
     }
 }
 
@@ -216,8 +216,8 @@ our class SimpleTypeSpecifier::Char32 does ISimpleTypeSpecifier {
 
     has $.text;
 
-    method gist{
-        $.simple-char32-type-specifier.gist
+    method gist(:$treemark=False) {
+        $.simple-char32-type-specifier.gist(:$treemark)
     }
 }
 
@@ -227,8 +227,8 @@ our class SimpleTypeSpecifier::Wchar does ISimpleTypeSpecifier {
 
     has $.text;
 
-    method gist{
-        $.simple-wchar-type-specifier.gist
+    method gist(:$treemark=False) {
+        $.simple-wchar-type-specifier.gist(:$treemark)
     }
 }
 
@@ -237,7 +237,7 @@ our class SimpleTypeSpecifier::Bool does ISimpleTypeSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "bool"
     }
 }
@@ -247,7 +247,7 @@ our class SimpleTypeSpecifier::Float does ISimpleTypeSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "float"
     }
 }
@@ -258,8 +258,8 @@ our class SimpleTypeSpecifier::Double does ISimpleTypeSpecifier {
 
     has $.text;
 
-    method gist{
-        $.simple-double-type-specifier.gist
+    method gist(:$treemark=False) {
+        $.simple-double-type-specifier.gist(:$treemark)
     }
 }
 
@@ -268,7 +268,7 @@ our class SimpleTypeSpecifier::Void does ISimpleTypeSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "void"
     }
 }
@@ -278,7 +278,7 @@ our class SimpleTypeSpecifier::Auto does ISimpleTypeSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "auto"
     }
 }
@@ -290,7 +290,7 @@ our class SimpleTypeSpecifier::Decltype does ISimpleTypeSpecifier {
     has DecltypeSpecifier $.decltype-specifier is required;
     has $.text;
 
-    method gist{
-        $.decltype-specifier.gist
+    method gist(:$treemark=False) {
+        $.decltype-specifier.gist(:$treemark)
     }
 }

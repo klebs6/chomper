@@ -12,15 +12,15 @@ our class ClassOrDeclType::Class does IClassOrDeclType {
     has IClassName           $.class-name is required;
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.nested-name-specifier {
-            $builder ~= $.nested-name-specifier.gist;
+            $builder ~= $.nested-name-specifier.gist(:$treemark);
         }
 
-        $builder ~ $.class-name.gist
+        $builder ~ $.class-name.gist(:$treemark)
     }
 }
 
@@ -31,8 +31,8 @@ our class ClassOrDeclType::Decltype does IClassOrDeclType {
     has DecltypeSpecifier $.decltype-specifier is required;
     has $.text;
 
-    method gist{
-        $.decltype-specifier.gist
+    method gist(:$treemark=False) {
+        $.decltype-specifier.gist(:$treemark)
     }
 }
 

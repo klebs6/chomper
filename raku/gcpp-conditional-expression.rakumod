@@ -14,8 +14,8 @@ our class ConditionalExpressionTail {
 
     has $.text;
 
-    method gist{
-        "? " ~ $.question-expression.gist ~ ": " ~ $.assignment-expression.gist
+    method gist(:$treemark=False) {
+        "? " ~ $.question-expression.gist(:$treemark) ~ ": " ~ $.assignment-expression.gist(:$treemark)
     }
 }
 
@@ -29,14 +29,14 @@ our class ConditionalExpression does IMultiplicativeExpression does IConditional
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.logical-or-expression.gist;
+        my $builder = $.logical-or-expression.gist(:$treemark);
 
         my $t = $.conditional-expression-tail;
 
         if $t {
-            $builder ~= " " ~ $t.gist;
+            $builder ~= " " ~ $t.gist(:$treemark);
         }
 
         $builder

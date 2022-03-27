@@ -6,7 +6,7 @@ our class BooleanLiteral::F does IBooleanLiteral {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "false"
     }
 }
@@ -15,7 +15,7 @@ our class BooleanLiteral::T does IBooleanLiteral {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "true"
     }
 }

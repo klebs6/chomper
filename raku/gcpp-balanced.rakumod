@@ -8,8 +8,8 @@ our class BalancedTokenSeq {
 
     has $.text;
 
-    method gist{
-        @.balancedrules>>.gist.join(" ")
+    method gist(:$treemark=False) {
+        @.balancedrules>>.gist(:$treemark).join(" ")
     }
 }
 
@@ -24,8 +24,8 @@ our class Balancedrule::Parens does IBalancedrule {
 
     has $.text;
 
-    method gist{
-        "(" ~ $.balanced-token-seq.gist ~ ")"
+    method gist(:$treemark=False) {
+        "(" ~ $.balanced-token-seq.gist(:$treemark) ~ ")"
     }
 }
 
@@ -39,7 +39,7 @@ our class Balancedrule::Brackets does IBalancedrule {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "[" ~ $.balanced-token-seq ~ "]"
     }
 }
@@ -54,7 +54,7 @@ our class Balancedrule::Braces does IBalancedrule {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "{" ~ $.balanced-token-seq ~ "}"
     }
 }

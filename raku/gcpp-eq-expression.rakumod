@@ -7,7 +7,7 @@ our class EqualityOperator::Eq does IEqualityOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "=="
     }
 }
@@ -17,7 +17,7 @@ our class EqualityOperator::Neq does IEqualityOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "!="
     }
 }
@@ -32,10 +32,10 @@ our class EqualityExpressionTail {
 
     has $.text;
 
-    method gist{
-        $.equality-operator.gist 
+    method gist(:$treemark=False) {
+        $.equality-operator.gist(:$treemark) 
         ~ " " 
-        ~ $.relational-expression.gist
+        ~ $.relational-expression.gist(:$treemark)
     }
 }
 
@@ -49,9 +49,9 @@ our class EqualityExpression does IEqualityExpression {
 
     has $.text;
 
-    method gist{
-        $.relational-expression.gist
-        ~ @.equality-expression-tail>>.gist.join(" ")
+    method gist(:$treemark=False) {
+        $.relational-expression.gist(:$treemark)
+        ~ @.equality-expression-tail>>.gist(:$treemark).join(" ")
     }
 }
 

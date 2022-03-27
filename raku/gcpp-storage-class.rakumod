@@ -7,7 +7,7 @@ our class StorageClassSpecifier::Extern does IStorageClassSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "extern"
     }
 }
@@ -17,7 +17,7 @@ our class StorageClassSpecifier::Mutable does IStorageClassSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "mutable"
     }
 }
@@ -27,7 +27,7 @@ our class StorageClassSpecifier::Register does IStorageClassSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "register"
     }
 }
@@ -37,7 +37,7 @@ our class StorageClassSpecifier::Static does IStorageClassSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "static"
     }
 }
@@ -47,7 +47,7 @@ our class StorageClassSpecifier::Thread_local does IStorageClassSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "thread_local"
     }
 }

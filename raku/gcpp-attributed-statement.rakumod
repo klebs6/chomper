@@ -17,19 +17,19 @@ our class Statement::Attributed does IStatement {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist ~ "\n";
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
         for @.attribute-specifier-seq {
-            $builder ~= $_.gist ~ "\n";
+            $builder ~= $_.gist(:$treemark) ~ "\n";
         }
 
-        $builder ~= $.attributed-statement-body.gist;
+        $builder ~= $.attributed-statement-body.gist(:$treemark);
 
         $builder
     }
@@ -45,8 +45,8 @@ does IAttributedStatementBody {
 
     has $.text;
 
-    method gist{
-        $.expression-statement.gist
+    method gist(:$treemark=False) {
+        $.expression-statement.gist(:$treemark)
     }
 }
 
@@ -60,8 +60,8 @@ does IAttributedStatementBody {
 
     has $.text;
 
-    method gist{
-        $.compound-statement.gist
+    method gist(:$treemark=False) {
+        $.compound-statement.gist(:$treemark)
     }
 }
 
@@ -75,8 +75,8 @@ does IAttributedStatementBody {
 
     has $.text;
 
-    method gist{
-        $.selection-statement.gist
+    method gist(:$treemark=False) {
+        $.selection-statement.gist(:$treemark)
     }
 }
 
@@ -90,8 +90,8 @@ does IAttributedStatementBody {
 
     has $.text;
 
-    method gist{
-        $.iteration-statement.gist
+    method gist(:$treemark=False) {
+        $.iteration-statement.gist(:$treemark)
     }
 }
 
@@ -105,8 +105,8 @@ does IAttributedStatementBody {
 
     has $.text;
 
-    method gist{
-        $.jump-statement.gist
+    method gist(:$treemark=False) {
+        $.jump-statement.gist(:$treemark)
     }
 }
 
@@ -120,8 +120,8 @@ does IAttributedStatementBody {
 
     has $.text;
 
-    method gist{
-        $.try-block.gist
+    method gist(:$treemark=False) {
+        $.try-block.gist(:$treemark)
     }
 }
 

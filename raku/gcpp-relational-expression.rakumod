@@ -7,7 +7,7 @@ our class RelationalOperator::Less does IRelationalOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "<"
     }
 }
@@ -17,7 +17,7 @@ our class RelationalOperator::Greater does IRelationalOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         ">"
     }
 }
@@ -27,7 +27,7 @@ our class RelationalOperator::LessEq does IRelationalOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "<="
     }
 }
@@ -37,7 +37,7 @@ our class RelationalOperator::GreaterEq does IRelationalOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         ">="
     }
 }
@@ -54,11 +54,11 @@ our class RelationalExpressionTail {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         " " 
-        ~ $.relational-operator.gist 
+        ~ $.relational-operator.gist(:$treemark) 
         ~ " " 
-        ~ $.shift-expression.gist
+        ~ $.shift-expression.gist(:$treemark)
     }
 }
 
@@ -72,10 +72,10 @@ our class RelationalExpression does IRelationalExpression {
 
     has $.text;
 
-    method gist{
-        $.shift-expression.gist 
+    method gist(:$treemark=False) {
+        $.shift-expression.gist(:$treemark) 
         ~ " " 
-        ~ @.relational-expression-tail>>.gist.join(" ")
+        ~ @.relational-expression-tail>>.gist(:$treemark).join(" ")
     }
 }
 

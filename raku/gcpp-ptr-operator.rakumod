@@ -14,8 +14,8 @@ our class AugmentedPointerOperator does IAugmentedPointerOperator {
 
     has $.text;
 
-    method gist{
-        $.pointer-operator.gist.&maybe-extend($.const)
+    method gist(:$treemark=False) {
+        $.pointer-operator.gist(:$treemark).&maybe-extend($.const)
     }
 }
 
@@ -30,7 +30,7 @@ does IPointerOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "&".&maybe-extend($.attribute-specifier-seq)
     }
 }
@@ -45,7 +45,7 @@ our class PointerOperator::RefRef does IPointerOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "&&".&maybe-extend($.attribute-specifier-seq)
     }
 }
@@ -63,7 +63,7 @@ our class PointerOperator::Star does IPointerOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
 
         $builder = $builder.&maybe-extend($.nested-name-specifier);

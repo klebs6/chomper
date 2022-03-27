@@ -20,20 +20,20 @@ does ISelectionStatement {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = "if (" ~ $.condition.gist ~ ") ";
+        my $builder = "if (" ~ $.condition.gist(:$treemark) ~ ") ";
 
         for @.statements {
-            $builder ~= $_.gist.indent(4) ~ "\n";
+            $builder ~= $_.gist(:$treemark).indent(4) ~ "\n";
         }
 
         if $.else-statement-comment {
-            $builder ~= "\n" ~ $.else-statement-comment.gist;
+            $builder ~= "\n" ~ $.else-statement-comment.gist(:$treemark);
         }
 
         for @.else-statements {
-            $builder ~= "else " ~ $_.gist ~ "\n";
+            $builder ~= "else " ~ $_.gist(:$treemark) ~ "\n";
         }
 
         $builder
@@ -53,8 +53,8 @@ our class SelectionStatement::Switch does ISelectionStatement {
 
     has $.text;
 
-    method gist{
-        "switch (" ~ $.condition.gist ~ ") " ~ $.statement.gist
+    method gist(:$treemark=False) {
+        "switch (" ~ $.condition.gist(:$treemark) ~ ") " ~ $.statement.gist(:$treemark)
     }
 }
 

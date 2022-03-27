@@ -14,8 +14,8 @@ does INoeExceptSpecification {
 
     has $.text;
 
-    method gist{
-        "noexcept(" ~ $.constant-expression.gist ~ ")"
+    method gist(:$treemark=False) {
+        "noexcept(" ~ $.constant-expression.gist(:$treemark) ~ ")"
     }
 }
 
@@ -27,7 +27,7 @@ does INoeExceptSpecification {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "noexcept"
     }
 }
@@ -43,8 +43,8 @@ our class NoExceptExpression {
 
     has $.text;
 
-    method gist{
-        "noexcept(" ~ $.expression.gist ~ ")"
+    method gist(:$treemark=False) {
+        "noexcept(" ~ $.expression.gist(:$treemark) ~ ")"
     }
 }
 

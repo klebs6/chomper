@@ -129,27 +129,27 @@ our role GenericParams::Rules {
 
 our role GenericParams::Actions {
 
-    method generic-params {
+    method generic-params($/) {
         make GenericParams.new(
             params => $<generic-param>>>.made
         )
     }
 
-    method generic-param {
+    method generic-param($/) {
         make GenericParam.new(
-            outer-attributes      => $<outer-attribute>.made,
+            outer-attributes      => $<outer-attribute>>>.made,
             generic-param-variant => $<generic-param-variant>.made,
             text                  => $/.Str,
         )
     }
 
     #-----------------
-    method generic-param-variant:sym<lt>    { make $<lifetime-param>.made }
-    method generic-param-variant:sym<type>  { make $<type-param>.made }
-    method generic-param-variant:sym<const> { make $<const-param>.made }
+    method generic-param-variant:sym<lt>($/)    { make $<lifetime-param>.made }
+    method generic-param-variant:sym<type>($/)  { make $<type-param>.made }
+    method generic-param-variant:sym<const>($/) { make $<const-param>.made }
 
     #-----------------
-    method lifetime-param {
+    method lifetime-param($/) {
         make LifetimeParam.new(
             lifetime-or-label     => $<lifetime-or-label>.made,
             maybe-lifetime-bounds => $<lifetime-bounds>.made,
@@ -157,7 +157,7 @@ our role GenericParams::Actions {
         )
     }
 
-    method type-param {
+    method type-param($/) {
         make TypeParam.new(
             identifier              => $<identifier>.made,
             maybe-type-param-bounds => $<type-param-bounds>.made,
@@ -166,7 +166,7 @@ our role GenericParams::Actions {
         )
     }
 
-    method const-param {
+    method const-param($/) {
         make ConstParam.new(
             identifier => $<identifier>.made,
             type       => $<type>.made,

@@ -12,8 +12,8 @@ our class TemplateParameter::Type does ITemplateParameter {
     has TypeParameter $.type-parameter is required;
     has $.text;
 
-    method gist{
-        $.type-parameter.gist
+    method gist(:$treemark=False) {
+        $.type-parameter.gist(:$treemark)
     }
 }
 
@@ -24,8 +24,8 @@ our class TemplateParameter::Param does ITemplateParameter {
     has ParameterDeclaration $.parameter-declaration is required;
     has $.text;
 
-    method gist{
-        $.parameter-declaration.gist
+    method gist(:$treemark=False) {
+        $.parameter-declaration.gist(:$treemark)
     }
 }
 # rule template-argument-list { 
@@ -38,8 +38,8 @@ our class TemplateArgumentList {
 
     has $.text;
 
-    method gist{
-        @.template-arguments>>.gist.join(", ")
+    method gist(:$treemark=False) {
+        @.template-arguments>>.gist(:$treemark).join(", ")
     }
 }
 
@@ -49,8 +49,8 @@ our class TemplateArgument::TypeId does ITemplateArgument {
 
     has $.text;
 
-    method gist{
-        $.the-type-id.gist
+    method gist(:$treemark=False) {
+        $.the-type-id.gist(:$treemark)
     }
 }
 
@@ -59,8 +59,8 @@ our class TemplateArgument::ConstExpr does ITemplateArgument {
     has IConstantExpression $.constant-expression is required;
     has $.text;
 
-    method gist{
-        $.constant-expression.gist
+    method gist(:$treemark=False) {
+        $.constant-expression.gist(:$treemark)
     }
 }
 
@@ -69,8 +69,8 @@ our class TemplateArgument::IdExpr does ITemplateArgument {
     has IIdExpression $.id-expression is required;
     has $.text;
 
-    method gist{
-        $.id-expression.gist
+    method gist(:$treemark=False) {
+        $.id-expression.gist(:$treemark)
     }
 }
 
@@ -91,8 +91,8 @@ does IPostListHead {
 
     has $.text;
 
-    method gist{
-        $.template-name.gist ~ "<"  ~ @.template-arguments>>.gist.join(", ") ~ ">"
+    method gist(:$treemark=False) {
+        $.template-name.gist(:$treemark) ~ "<"  ~ @.template-arguments>>.gist(:$treemark).join(", ") ~ ">"
     }
 }
 
@@ -104,8 +104,8 @@ our class TemplateId::Simple does ITemplateId {
 
     has $.text;
 
-    method gist{
-        $.simple-template-id.gist
+    method gist(:$treemark=False) {
+        $.simple-template-id.gist(:$treemark)
     }
 }
 
@@ -121,9 +121,9 @@ our class TemplateId::OperatorFunctionId does ITemplateId {
 
     has $.text;
 
-    method gist{
-        my $maybe-args = $.template-argument-list ?? $.template-argument-list.gist !! "";
-        $.operator-function-id.gist ~ "<" ~ $maybe-args ~ ">"
+    method gist(:$treemark=False) {
+        my $maybe-args = $.template-argument-list ?? $.template-argument-list.gist(:$treemark) !! "";
+        $.operator-function-id.gist(:$treemark) ~ "<" ~ $maybe-args ~ ">"
     }
 }
 
@@ -139,9 +139,9 @@ our class TemplateId::LiteralOperatorId does ITemplateId {
 
     has $.text;
 
-    method gist{
-        my $maybe-args = $.template-argument-list ?? $.template-argument-list.gist !! "";
-        $.literal-operator-id.gist ~ "<" ~ $maybe-args ~ ">"
+    method gist(:$treemark=False) {
+        my $maybe-args = $.template-argument-list ?? $.template-argument-list.gist(:$treemark) !! "";
+        $.literal-operator-id.gist(:$treemark) ~ "<" ~ $maybe-args ~ ">"
     }
 }
 
@@ -157,8 +157,8 @@ our class TemplateDeclaration {
     has IDeclaration          $.declaration            is required;
     has $.text;
 
-    method gist{
-        "template<" ~ $.templateparameter-list.gist ~ ">" ~ $.declaration.gist
+    method gist(:$treemark=False) {
+        "template<" ~ $.templateparameter-list.gist(:$treemark) ~ ">" ~ $.declaration.gist(:$treemark)
     }
 }
 
@@ -173,8 +173,8 @@ our class ScopedTemplateId {
 
     has $.text;
 
-    method gist{
-        $.nested-name-specifier.gist ~ " template " ~ $.simple-template-id.gist
+    method gist(:$treemark=False) {
+        $.nested-name-specifier.gist(:$treemark) ~ " template " ~ $.simple-template-id.gist(:$treemark)
     }
 }
 

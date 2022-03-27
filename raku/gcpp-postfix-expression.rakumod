@@ -24,10 +24,10 @@ does IPostfixExpressionBody {
 
     has $.text;
 
-    method gist{
-        $.cast-token.gist 
-        ~ "<" ~ $.the-type-id.gist ~ ">" 
-        ~ "(" ~ $.expression.gist ~ ")"
+    method gist(:$treemark=False) {
+        $.cast-token.gist(:$treemark) 
+        ~ "<" ~ $.the-type-id.gist(:$treemark) ~ ">" 
+        ~ "(" ~ $.expression.gist(:$treemark) ~ ")"
     }
 }
 
@@ -43,12 +43,12 @@ our class PostfixExpressionTypeid::Expr {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.type-id-of-the-type-id.gist;
+        my $builder = $.type-id-of-the-type-id.gist(:$treemark);
 
         $builder ~= "(";
-        $builder ~= $.expression.gist;
+        $builder ~= $.expression.gist(:$treemark);
         $builder ~= ")";
 
         $builder
@@ -61,11 +61,11 @@ our class PostfixExpressionTypeid::TypeId {
 
     has $.text;
 
-    method gist{
-        my $builder = $.type-id-of-the-type-id.gist;
+    method gist(:$treemark=False) {
+        my $builder = $.type-id-of-the-type-id.gist(:$treemark);
 
         $builder ~= "(";
-        $builder ~= $.the-type-id.gist;
+        $builder ~= $.the-type-id.gist(:$treemark);
         $builder ~= ")";
 
         $builder
@@ -78,8 +78,8 @@ our class PostListHead::Simple does IPostListHead {
 
     has $.text;
 
-    method gist{
-        $.simple-type-specifier.gist
+    method gist(:$treemark=False) {
+        $.simple-type-specifier.gist(:$treemark)
     }
 }
 
@@ -89,8 +89,8 @@ our class PostListHead::TypeName does IPostListHead {
 
     has $.text;
 
-    method gist{
-        $.type-name-specifier.gist
+    method gist(:$treemark=False) {
+        $.type-name-specifier.gist(:$treemark)
     }
 }
 
@@ -99,9 +99,9 @@ our class PostListTail::Parens does IPostListTail {
     has $.value is required;
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         if $.value {
-            "(" ~ $.value.gist ~ ")"
+            "(" ~ $.value.gist(:$treemark) ~ ")"
         } else {
             "()"
         }
@@ -112,8 +112,8 @@ our class PostListTail::Braces does IPostListTail {
     has $.value is required;
     has $.text;
 
-    method gist{
-        "\{" ~ $.value.gist ~ "}"
+    method gist(:$treemark=False) {
+        "\{" ~ $.value.gist(:$treemark) ~ "}"
     }
 }
 
@@ -130,8 +130,8 @@ does IPostfixExpressionBody {
     has IPostListTail $.post-list-tail is required;
     has $.text;
 
-    method gist{
-        $.post-list-head.gist ~ $.post-list-tail.gist
+    method gist(:$treemark=False) {
+        $.post-list-head.gist(:$treemark) ~ $.post-list-tail.gist(:$treemark)
     }
 }
 
@@ -148,8 +148,8 @@ does IUnaryExpression {
 
     has $.text;
 
-    method gist{
-        $.postfix-expression-body.gist ~ @.postfix-expression-tail>>.gist.join("")
+    method gist(:$treemark=False) {
+        $.postfix-expression-body.gist(:$treemark) ~ @.postfix-expression-tail>>.gist(:$treemark).join("")
     }
 }
 
@@ -168,8 +168,8 @@ does IPostfixExpressionTail {
 
     has $.text;
 
-    method gist{
-        "[" ~ $.expression.gist ~ "]"
+    method gist(:$treemark=False) {
+        "[" ~ $.expression.gist(:$treemark) ~ "]"
     }
 }
 
@@ -181,8 +181,8 @@ does IPostfixExpressionTail {
 
     has $.text;
 
-    method gist{
-        $.bracket-tail.gist
+    method gist(:$treemark=False) {
+        $.bracket-tail.gist(:$treemark)
     }
 }
 
@@ -196,8 +196,8 @@ does IPostfixExpressionTail {
 
     has $.text;
 
-    method gist{
-        $.bracket-tail.gist
+    method gist(:$treemark=False) {
+        $.bracket-tail.gist(:$treemark)
     }
 }
 
@@ -213,7 +213,7 @@ does IPostfixExpressionTail {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "(";
         $builder = $builder.&maybe-extend($.expression-list);
         $builder ~ ")"
@@ -234,7 +234,7 @@ does IPostfixExpressionTail {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
@@ -248,7 +248,7 @@ does IPostfixExpressionTail {
             $builder ~= "template ";
         }
 
-        $builder ~ $.id-expression.gist
+        $builder ~ $.id-expression.gist(:$treemark)
     }
 }
 
@@ -264,7 +264,7 @@ does IPostfixExpressionTail {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
@@ -274,7 +274,7 @@ does IPostfixExpressionTail {
             $builder ~= ".";
         }
 
-        $builder ~ $.pseudo-destructor-name.gist
+        $builder ~ $.pseudo-destructor-name.gist(:$treemark)
     }
 }
 
@@ -286,7 +286,7 @@ does IPostfixExpressionTail {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "++"
     }
 }
@@ -296,7 +296,7 @@ does IPostfixExpressionTail {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "--"
     }
 }

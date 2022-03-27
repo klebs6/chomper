@@ -9,8 +9,8 @@ our class TranslationUnit {
 
     has $.text;
 
-    method gist{
-        $.declarationseq.gist
+    method gist(:$treemark=False) {
+        $.declarationseq.gist(:$treemark)
     }
 }
 

@@ -18,8 +18,8 @@ our class AbstractDeclarator::Base does IAbstractDeclarator {
 
     has $.text;
 
-    method gist{
-        $.pointer-abstract-declarator.gist
+    method gist(:$treemark=False) {
+        $.pointer-abstract-declarator.gist(:$treemark)
     }
 }
 
@@ -35,16 +35,16 @@ our class AbstractDeclarator::Aug does IAbstractDeclarator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.no-pointer-abstract-declarator {
-            $builder ~= $.no-pointer-abstract-declarator.gist ~ " ";
+            $builder ~= $.no-pointer-abstract-declarator.gist(:$treemark) ~ " ";
         }
 
-        $builder ~= $.parameters-and-qualifiers.gist ~ " ";
-        $builder ~= $.trailing-return-type.gist;
+        $builder ~= $.parameters-and-qualifiers.gist(:$treemark) ~ " ";
+        $builder ~= $.trailing-return-type.gist(:$treemark);
 
         $builder
     }
@@ -58,8 +58,8 @@ our class AbstractDeclarator::AbstractPack does IAbstractDeclarator {
 
     has $.text;
 
-    method gist{
-        $.abstract-pack-declarator.gist
+    method gist(:$treemark=False) {
+        $.abstract-pack-declarator.gist(:$treemark)
     }
 }
 
@@ -71,8 +71,8 @@ our class PointerAbstractDeclarator::NoPtr does IPointerAbstractDeclarator {
 
     has $.text;
 
-    method gist{
-        $.no-pointer-abstract-declarator.gist
+    method gist(:$treemark=False) {
+        $.no-pointer-abstract-declarator.gist(:$treemark)
     }
 }
 
@@ -86,12 +86,12 @@ our class PointerAbstractDeclarator::Ptr does IPointerAbstractDeclarator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = @.pointer-operators>>.gist.join(" ");
+        my $builder = @.pointer-operators>>.gist(:$treemark).join(" ");
 
         if $.no-pointer-abstract-declarator {
-            $builder ~= " " ~ $.no-pointer-abstract-declarator.gist
+            $builder ~= " " ~ $.no-pointer-abstract-declarator.gist(:$treemark)
         }
 
         $builder
@@ -108,8 +108,8 @@ does INoPointerAbstractDeclaratorBody {
 
     has $.text;
 
-    method gist{
-        $.parameters-and-qualifiers.gist
+    method gist(:$treemark=False) {
+        $.parameters-and-qualifiers.gist(:$treemark)
     }
 }
 
@@ -125,10 +125,10 @@ does INoPointerAbstractDeclaratorBody {
 
     has $.text;
 
-    method gist{
-        $.no-pointer-abstract-declarator.gist 
+    method gist(:$treemark=False) {
+        $.no-pointer-abstract-declarator.gist(:$treemark) 
         ~ " " 
-        ~ $.no-pointer-abstract-declarator-bracketed-base.gist
+        ~ $.no-pointer-abstract-declarator-bracketed-base.gist(:$treemark)
     }
 }
 
@@ -142,10 +142,10 @@ our class NoPointerAbstractDeclarator {
 
     has $.text;
 
-    method gist{
-        $.no-pointer-abstract-declarator-base.gist
+    method gist(:$treemark=False) {
+        $.no-pointer-abstract-declarator-base.gist(:$treemark)
         ~ " "
-        ~ @.no-pointer-abstract-declarator-body>>.gist.join(" ")
+        ~ @.no-pointer-abstract-declarator-body>>.gist(:$treemark).join(" ")
     }
 }
 
@@ -159,8 +159,8 @@ does INoPointerAbstractDeclaratorBase {
 
     has $.text;
 
-    method gist{
-        $.parameters-and-qualifiers.gist
+    method gist(:$treemark=False) {
+        $.parameters-and-qualifiers.gist(:$treemark)
     }
 }
 
@@ -174,8 +174,8 @@ does INoPointerAbstractDeclaratorBase {
 
     has $.text;
 
-    method gist{
-        $.no-pointer-abstract-declarator-bracketed-base.gist
+    method gist(:$treemark=False) {
+        $.no-pointer-abstract-declarator-bracketed-base.gist(:$treemark)
     }
 }
 
@@ -191,8 +191,8 @@ does INoPointerAbstractDeclaratorBase {
 
     has $.text;
 
-    method gist{
-        "(" ~ $.pointer-abstract-declarator.gist ~ ")"
+    method gist(:$treemark=False) {
+        "(" ~ $.pointer-abstract-declarator.gist(:$treemark) ~ ")"
     }
 }
 
@@ -211,19 +211,19 @@ does IAbstractDeclarator
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
 
         $builder ~= "[";
 
         if $.constant-expression {
-            $builder ~= $.constant-expression.gist;
+            $builder ~= $.constant-expression.gist(:$treemark);
         }
 
         $builder ~= "]";
 
         if $.attribute-specifier-seq {
-            $builder ~= $.attribute-specifier-seq.gist;
+            $builder ~= $.attribute-specifier-seq.gist(:$treemark);
         }
 
         $builder
@@ -240,8 +240,8 @@ our class AbstractPackDeclarator {
 
     has $.text;
 
-    method gist{
-        @.pointer-operators>>.gist.join(" ") ~ $.no-pointer-abstract-pack-declarator.gist
+    method gist(:$treemark=False) {
+        @.pointer-operators>>.gist(:$treemark).join(" ") ~ $.no-pointer-abstract-pack-declarator.gist(:$treemark)
     }
 }
 
@@ -253,8 +253,8 @@ our class NoPointerAbstractPackDeclaratorBasic {
 
     has $.text;
 
-    method gist{
-        $.parameters-and-qualifiers.gist
+    method gist(:$treemark=False) {
+        $.parameters-and-qualifiers.gist(:$treemark)
     }
 }
 
@@ -270,18 +270,18 @@ our class NoPointerAbstractPackDeclaratorBrackets {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "[";
 
         if $.constant-expression {
-            $builder ~= $.constant-expression.gist;
+            $builder ~= $.constant-expression.gist(:$treemark);
         }
 
         $builder ~= "]";
 
         if $.attribute-specifier-seq {
-            $builder ~= $.attribute-specifier-seq.gist;
+            $builder ~= $.attribute-specifier-seq.gist(:$treemark);
         }
 
         $builder
@@ -296,8 +296,8 @@ our class NoPointerAbstractPackDeclaratorBody::Basic does INoPointerAbstractPack
 
     has $.text;
 
-    method gist{
-        $.no-pointer-abstract-pack-declarator-basic.gist
+    method gist(:$treemark=False) {
+        $.no-pointer-abstract-pack-declarator-basic.gist(:$treemark)
     }
 }
 
@@ -309,8 +309,8 @@ our class NoPointerAbstractPackDeclaratorBody::Brack does INoPointerAbstractPack
 
     has $.text;
 
-    method gist{
-        $.no-pointer-abstract-pack-declarator-brackets.gist
+    method gist(:$treemark=False) {
+        $.no-pointer-abstract-pack-declarator-brackets.gist(:$treemark)
     }
 }
 
@@ -323,8 +323,8 @@ our class NoPointerAbstractPackDeclarator {
 
     has $.text;
 
-    method gist{
-        "..." ~ @.no-pointer-abstract-pack-declarator-bodies>>.gist.join(" ")
+    method gist(:$treemark=False) {
+        "..." ~ @.no-pointer-abstract-pack-declarator-bodies>>.gist(:$treemark).join(" ")
     }
 }
 

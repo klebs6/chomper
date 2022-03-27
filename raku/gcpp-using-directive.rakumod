@@ -12,11 +12,11 @@ our class UsingDeclarationPrefix::Nested does IUsingDeclarationPrefix {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         if $.has-typename {
-            $.nested-name-specifier.gist
+            $.nested-name-specifier.gist(:$treemark)
         } else {
-            "typename " ~ $.nested-name-specifier.gist
+            "typename " ~ $.nested-name-specifier.gist(:$treemark)
         }
     }
 }
@@ -28,7 +28,7 @@ our class UsingDeclarationPrefix::Base does IUsingDeclarationPrefix {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "::"
     }
 }
@@ -46,19 +46,19 @@ our class UsingDeclaration {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist ~ "\n";
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
         $builder 
         ~ "using " 
-        ~ $.using-declaration-prefix.gist 
+        ~ $.using-declaration-prefix.gist(:$treemark) 
         ~ " " 
-        ~ $.unqualified-id.gist 
+        ~ $.unqualified-id.gist(:$treemark) 
         ~ ";"
     }
 }
@@ -79,14 +79,14 @@ our class UsingDirective {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         my $a = $.attribute-specifier-seq;
 
         if $a {
-            $builder ~= $a.gist ~ "\n";
+            $builder ~= $a.gist(:$treemark) ~ "\n";
         }
 
         $builder ~= "using namespace ";
@@ -94,10 +94,10 @@ our class UsingDirective {
         my $b = $.nested-name-specifier;
 
         if $b {
-            $builder ~= $b.gist;
+            $builder ~= $b.gist(:$treemark);
         }
 
-        $builder ~ $.namespace-name.gist ~ ";"
+        $builder ~ $.namespace-name.gist(:$treemark) ~ ";"
     }
 }
 

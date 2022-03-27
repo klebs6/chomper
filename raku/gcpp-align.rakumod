@@ -10,8 +10,8 @@ does IAlignmentspecifierbody {
 
     has ITheTypeId $.the-type-id is required;
 
-    method gist{
-        $.the-type-id.gist
+    method gist(:$treemark=False) {
+        $.the-type-id.gist(:$treemark)
     }
 }
 
@@ -21,8 +21,8 @@ does IAlignmentspecifierbody {
 
     has IConstantExpression $.constant-expression is required;
 
-    method gist{
-        $.constant-expression.gist
+    method gist(:$treemark=False) {
+        $.constant-expression.gist(:$treemark)
     }
 }
 
@@ -39,9 +39,9 @@ does IAttributeSpecifier {
     has IAlignmentspecifierbody $.alignmentspecifierbody is required;
     has Bool                    $.has-ellipsis is required;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = "alignas(" ~ $.alignmentspecifierbody.gist;
+        my $builder = "alignas(" ~ $.alignmentspecifierbody.gist(:$treemark);
 
         if $.has-ellipsis {
             $builder ~= " ...";

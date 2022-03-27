@@ -17,9 +17,9 @@ does IDeclarator {
 
     has $.text;
 
-    method gist{
-        @.augmented-pointer-operators>>.gist.join(" ") 
-        ~ $.no-pointer-declarator.gist
+    method gist(:$treemark=False) {
+        @.augmented-pointer-operators>>.gist(:$treemark).join(" ") 
+        ~ $.no-pointer-declarator.gist(:$treemark)
     }
 }
 

@@ -15,8 +15,8 @@ our class Declarationseq {
 
     has $.text;
 
-    method gist{
-        @.declarations>>.gist.join(" ")
+    method gist(:$treemark=False) {
+        @.declarations>>.gist(:$treemark).join(" ")
     }
 }
 
@@ -36,23 +36,23 @@ our class AliasDeclaration {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist ~ "\n";
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
-        $builder ~= "using " ~ $.identifier.gist ~ " ";
+        $builder ~= "using " ~ $.identifier.gist(:$treemark) ~ " ";
 
         my $a = $.attribute-specifier-seq;
 
         if $a {
-            $builder ~= $a.gist ~ " ";
+            $builder ~= $a.gist(:$treemark) ~ " ";
         }
 
-        $builder ~ "= " ~ $.the-type-id.gist ~ ";"
+        $builder ~ " = " ~ $.the-type-id.gist(:$treemark) ~ ";"
     }
 }
 
@@ -71,19 +71,19 @@ does ISimpleDeclaration {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist ~ "\n";
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
         if $.decl-specifier-seq {
-            $builder ~= $.decl-specifier-seq.gist;
+            $builder ~= $.decl-specifier-seq.gist(:$treemark) ~ " ";
         }
 
-        my $declarator-list = @.init-declarator-list>>.gist.join(", ");
+        my $declarator-list = @.init-declarator-list>>.gist(:$treemark).join(", ");
 
         if $declarator-list {
             $builder ~= $declarator-list.chomp;
@@ -109,24 +109,24 @@ does ISimpleDeclaration {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist ~ "\n";
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
         for @.attribute-specifiers {
-            $builder ~= $_.gist ~ " ";
+            $builder ~= $_.gist(:$treemark) ~ " ";
         }
 
         if $.decl-specifier-seq {
-            $builder ~= $.decl-specifier-seq.gist ~ " ";
+            $builder ~= $.decl-specifier-seq.gist(:$treemark) ~ " ";
         }
 
         for @.init-declarator-list {
-            $builder ~= $_.gist ~ " ";
+            $builder ~= $_.gist(:$treemark) ~ " ";
         }
 
         $builder ~ ";"
@@ -149,18 +149,18 @@ our class StaticAssertDeclaration {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist ~ "\n";
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
         $builder ~ "static_assert(" 
-        ~ $.constant-expression.gist 
+        ~ $.constant-expression.gist(:$treemark) 
         ~ ", " 
-        ~ $.string-literal.gist
+        ~ $.string-literal.gist(:$treemark)
         ~ ");"
     }
 }
@@ -171,7 +171,7 @@ our class EmptyDeclaration {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         ";"
     }
 }
@@ -186,15 +186,15 @@ our class AttributeDeclaration {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist ~ "\n";
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
-        $builder ~= $.attribute-specifier-seq.gist;
+        $builder ~= $.attribute-specifier-seq.gist(:$treemark);
 
         $builder ~ ";"
     }

@@ -7,7 +7,7 @@ our class Digit {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -17,7 +17,7 @@ our class Nonzerodigit {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -27,7 +27,7 @@ our class Nondigit {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -37,7 +37,7 @@ our class Digitsequence {
 
     has $.text;
 
-    method gist{
-        @.digits>>.gist.join("")
+    method gist(:$treemark=False) {
+        @.digits>>.gist(:$treemark).join("")
     }
 }

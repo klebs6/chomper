@@ -7,7 +7,7 @@ our class DecimalLiteral {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -21,11 +21,11 @@ does IIntegerLiteral {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         if $.integersuffix {
-            $.decimal-literal.gist ~ $.integersuffix.gist
+            $.decimal-literal.gist(:$treemark) ~ $.integersuffix.gist(:$treemark)
         } else {
-            $.decimal-literal.gist
+            $.decimal-literal.gist(:$treemark)
         }
     }
 }

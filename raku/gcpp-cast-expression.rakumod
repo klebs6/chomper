@@ -12,15 +12,15 @@ our class CastExpression does ICastExpression {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         for @.the-type-ids {
-            $builder ~= "(" ~ $_.gist ~ ") ";
+            $builder ~= "(" ~ $_.gist(:$treemark) ~ ") ";
         }
 
-        $builder ~ $.unary-expression.gist
+        $builder ~ $.unary-expression.gist(:$treemark)
     }
 }
 
@@ -29,7 +29,7 @@ our class CastToken::Dyn does ICastToken {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "dynamic_cast"
     }
 }
@@ -39,7 +39,7 @@ our class CastToken::Static does ICastToken {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "static_cast"
     }
 }
@@ -49,7 +49,7 @@ our class CastToken::Reinterpret does ICastToken {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "reinterpret_cast"
     }
 }
@@ -59,7 +59,7 @@ our class CastToken::Const does ICastToken {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "const_cast"
     }
 }

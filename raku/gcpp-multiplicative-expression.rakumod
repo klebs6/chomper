@@ -9,7 +9,7 @@ our class MultiplicativeOperator::Star does IMultiplicativeOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "*"
     }
 }
@@ -19,7 +19,7 @@ our class MultiplicativeOperator::Slash does IMultiplicativeOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "/"
     }
 }
@@ -29,7 +29,7 @@ our class MultiplicativeOperator::Mod does IMultiplicativeOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "%"
     }
 }
@@ -44,14 +44,14 @@ our class MultiplicativeExpression does IMultiplicativeExpression {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $b = $.pointer-member-expression;
         my @t = @.multiplicative-expression-tail;
 
-        my $buffer = $b.gist;
+        my $buffer = $b.gist(:$treemark);
 
         for @t {
-            $buffer ~= " " ~ $_.gist;
+            $buffer ~= " " ~ $_.gist(:$treemark);
         }
 
         $buffer
@@ -68,10 +68,10 @@ our class MultiplicativeExpressionTail {
 
     has $.text;
 
-    method gist{
-        $.multiplicative-operator.gist 
+    method gist(:$treemark=False) {
+        $.multiplicative-operator.gist(:$treemark) 
         ~ " " 
-        ~ $.pointer-member-expression.gist
+        ~ $.pointer-member-expression.gist(:$treemark)
     }
 }
 

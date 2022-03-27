@@ -11,8 +11,8 @@ our class TemplateParameterList {
     has ITemplateParameter @.template-parameters is required;
     has $.text;
 
-    method gist{
-        @.template-parameters>>.gist.join(", ")
+    method gist(:$treemark=False) {
+        @.template-parameters>>.gist(:$treemark).join(", ")
     }
 }
 
@@ -24,10 +24,10 @@ our class TypeParameterBase::Basic does ITypeParameterBase {
     has TemplateParameterList $.templateparameter-list;
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         if $.templateparameter-list {
-            "template<" ~ $.templateparameter-list.gist ~ "> " ~ "class"
+            "template<" ~ $.templateparameter-list.gist(:$treemark) ~ "> " ~ "class"
         } else {
             "class"
         }
@@ -41,7 +41,7 @@ our class TypeParameterBase::Typename does ITypeParameterBase {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "typename"
     }
 }
@@ -56,7 +56,7 @@ our class TypeParameterSuffix::MaybeIdent does ITypeParameterSuffix {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
@@ -65,7 +65,7 @@ our class TypeParameterSuffix::MaybeIdent does ITypeParameterSuffix {
         }
 
         if $.identifier {
-            $builder ~= $.identifier.gist;
+            $builder ~= $.identifier.gist(:$treemark);
         }
 
         $builder
@@ -83,14 +83,14 @@ our class TypeParameterSuffix::AssignTypeId does ITypeParameterSuffix {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
 
         if $.identifer {
-            $builder ~= $.identifier.gist ~ " ";
+            $builder ~= $.identifier.gist(:$treemark) ~ " ";
         }
 
-        $builder ~ "= " ~ $.the-type-id.gist
+        $builder ~ " = " ~ $.the-type-id.gist(:$treemark)
     }
 }
 
@@ -104,8 +104,8 @@ our class TypeParameter {
 
     has $.text;
 
-    method gist{
-        $.type-parameter-base.gist ~ $.type-parameter-suffix.gist
+    method gist(:$treemark=False) {
+        $.type-parameter-base.gist(:$treemark) ~ $.type-parameter-suffix.gist(:$treemark)
     }
 }
 

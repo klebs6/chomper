@@ -21,12 +21,12 @@ our class LambdaIntroducer {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "[";
 
         if $.lambda-capture {
-            $builder ~= $.lambda-capture.gist;
+            $builder ~= $.lambda-capture.gist(:$treemark);
         }
 
         $builder ~ "]"
@@ -45,14 +45,14 @@ our class LambdaExpression {
 
     has $.text;
 
-    method gist{
-        my $builder = $.lambda-introducer.gist;
+    method gist(:$treemark=False) {
+        my $builder = $.lambda-introducer.gist(:$treemark);
 
         if $.lambda-declarator {
-            $builder ~= " " ~ $.lambda-declarator.gist;
+            $builder ~= " " ~ $.lambda-declarator.gist(:$treemark);
         }
 
-        $builder ~ " " ~ $.compound-statement.gist
+        $builder ~ " " ~ $.compound-statement.gist(:$treemark)
     }
 }
 
@@ -62,8 +62,8 @@ our class LambdaCapture::List does ILambdaCapture {
 
     has $.text;
 
-    method gist{
-        $.capture-list.gist
+    method gist(:$treemark=False) {
+        $.capture-list.gist(:$treemark)
     }
 }
 
@@ -77,9 +77,9 @@ our class LambdaCapture::Def does ILambdaCapture {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.capture-default.gist;
+        my $builder = $.capture-default.gist(:$treemark);
 
         my $l = $.capture-list;
 
@@ -98,7 +98,7 @@ does ICaptureDefault {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "&"
     }
 }
@@ -110,7 +110,7 @@ does ICaptureDefault {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "="
     }
 }
@@ -122,8 +122,8 @@ our class CaptureList does ICaptureList {
 
     has $.text;
 
-    method gist{
-        my $builder = @.captures>>.gist.join(", ");
+    method gist(:$treemark=False) {
+        my $builder = @.captures>>.gist(:$treemark).join(", ");
 
         if $.trailing-ellipsis {
             $builder ~ "..."
@@ -139,8 +139,8 @@ our class Capture::Simple does ICapture {
 
     has $.text;
 
-    method gist{
-        $.simple-capture.gist
+    method gist(:$treemark=False) {
+        $.simple-capture.gist(:$treemark)
     }
 }
 
@@ -150,8 +150,8 @@ our class Capture::Init does ICapture {
 
     has $.text;
 
-    method gist{
-        $.init-capture.gist
+    method gist(:$treemark=False) {
+        $.init-capture.gist(:$treemark)
     }
 }
 
@@ -162,11 +162,11 @@ our class SimpleCapture::Id does ISimpleCapture {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         if $.has-and {
-            "&" ~ $.identifier.gist
+            "&" ~ $.identifier.gist(:$treemark)
         } else {
-            $.identifier.gist
+            $.identifier.gist(:$treemark)
         }
     }
 }
@@ -176,7 +176,7 @@ our class SimpleCapture::This does ISimpleCapture {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "this"
     }
 }
@@ -193,7 +193,7 @@ our class Initcapture {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
@@ -201,9 +201,9 @@ our class Initcapture {
             $builder ~= "&";
         }
 
-        $builder ~= $.identifier.gist;
+        $builder ~= $.identifier.gist(:$treemark);
 
-        $builder ~ " " ~ $.initializer.gist
+        $builder ~ " " ~ $.initializer.gist(:$treemark)
     }
 }
 
@@ -225,7 +225,7 @@ our class LambdaDeclarator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
 
         $builder ~= "(";
@@ -233,7 +233,7 @@ our class LambdaDeclarator {
         my $d = $.parameter-declaration-clause;
 
         if $d {
-            $builder ~= $d.gist;
+            $builder ~= $d.gist(:$treemark);
         }
 
         $builder ~= ")";
@@ -247,15 +247,15 @@ our class LambdaDeclarator {
         my $z = $.trailing-return-type;
 
         if $x {
-            $builder ~= " " ~ $x.gist;
+            $builder ~= " " ~ $x.gist(:$treemark);
         }
 
         if $y {
-            $builder ~= " " ~ $y.gist;
+            $builder ~= " " ~ $y.gist(:$treemark);
         }
 
         if $z {
-            $builder ~= " " ~ $z.gist;
+            $builder ~= " " ~ $z.gist(:$treemark);
         }
 
         $builder

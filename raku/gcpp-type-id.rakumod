@@ -17,12 +17,12 @@ does ITemplateArgument {
     
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
 
-        my $builder = $.type-specifier-seq>>.gist.join(" ");
+        my $builder = $.type-specifier-seq>>.gist(:$treemark).join(" ");
 
         if $.abstract-declarator {
-            $builder ~= " " ~ $.abstract-declarator.gist;
+            $builder ~= " " ~ $.abstract-declarator.gist(:$treemark);
         }
 
         $builder
@@ -39,8 +39,8 @@ our class TypeIdList {
 
     has $.text;
 
-    method gist{
-        @.the-type-ids>>.gist.join(", ")
+    method gist(:$treemark=False) {
+        @.the-type-ids>>.gist(:$treemark).join(", ")
     }
 }
 
@@ -56,11 +56,11 @@ does ITypeNameSpecifier {
     has Identifier $.identifier is required;
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "typename " 
-        ~ $.nested-name-specifier.gist 
+        ~ $.nested-name-specifier.gist(:$treemark) 
         ~ " " 
-        ~ $.identifier.gist
+        ~ $.identifier.gist(:$treemark)
     }
 }
 
@@ -77,17 +77,17 @@ our class TypeNameSpecifier::Template does ITypeNameSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "typename "
-        ~ $.nested-name-specifier.gist
+        ~ $.nested-name-specifier.gist(:$treemark)
         ~ " ";
 
         if $.has-template {
             $builder ~= "template ";
         }
 
-        $builder ~ $.simple-template-id.gist
+        $builder ~ $.simple-template-id.gist(:$treemark)
     }
 }
 
@@ -96,8 +96,8 @@ our class TypeIdOfTheTypeId {
     has $.typeid is required;
     has $.text;
 
-    method gist{
-        $.typeid.gist
+    method gist(:$treemark=False) {
+        $.typeid.gist(:$treemark)
     }
 }
 

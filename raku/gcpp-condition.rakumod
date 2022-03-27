@@ -12,8 +12,8 @@ our class Condition::Expr does ICondition {
 
     has $.text;
 
-    method gist{
-        $.expression.gist
+    method gist(:$treemark=False) {
+        $.expression.gist(:$treemark)
     }
 }
 
@@ -26,8 +26,8 @@ our class ConditionDeclTail::AssignInit does IConditionDeclTail {
 
     has $.text;
 
-    method gist{
-        "= " ~ $.initializer-clause.gist
+    method gist(:$treemark=False) {
+        " = " ~ $.initializer-clause.gist(:$treemark)
     }
 }
 
@@ -39,8 +39,8 @@ our class ConditionDeclTail::BracedInit does IConditionDeclTail {
 
     has $.text;
 
-    method gist{
-        $.braced-init-list.gist
+    method gist(:$treemark=False) {
+        $.braced-init-list.gist(:$treemark)
     }
 }
 
@@ -58,17 +58,17 @@ our class Condition::Decl does ICondition {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.attribute-specifier-seq {
-            $builder ~= $.attribute-specifier-seq.gist ~ " ";
+            $builder ~= $.attribute-specifier-seq.gist(:$treemark) ~ " ";
         }
 
-        $builder ~= $.decl-specifier-seq.gist ~ " ";
-        $builder ~= $.declarator.gist ~ " ";
-        $builder ~ $.condition-decl-tail.gist
+        $builder ~= $.decl-specifier-seq.gist(:$treemark) ~ " ";
+        $builder ~= $.declarator.gist(:$treemark) ~ " ";
+        $builder ~ $.condition-decl-tail.gist(:$treemark)
     }
 }
 

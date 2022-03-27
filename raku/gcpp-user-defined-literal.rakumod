@@ -22,8 +22,8 @@ does IUserDefinedIntegerLiteral {
 
     has $.text;
 
-    method gist{
-        $.decimal-literal.gist ~ $.suffix.gist
+    method gist(:$treemark=False) {
+        $.decimal-literal.gist(:$treemark) ~ $.suffix.gist(:$treemark)
     }
 }
 
@@ -39,8 +39,8 @@ does IUserDefinedIntegerLiteral {
 
     has $.text;
 
-    method gist{
-        $.octal-literal.gist ~ $.suffix.gist
+    method gist(:$treemark=False) {
+        $.octal-literal.gist(:$treemark) ~ $.suffix.gist(:$treemark)
     }
 }
 
@@ -56,8 +56,8 @@ does IUserDefinedIntegerLiteral {
 
     has $.text;
 
-    method gist{
-        $.hexadecimal-literal.gist ~ $.suffix.gist
+    method gist(:$treemark=False) {
+        $.hexadecimal-literal.gist(:$treemark) ~ $.suffix.gist(:$treemark)
     }
 }
 
@@ -73,8 +73,8 @@ does IUserDefinedIntegerLiteral {
 
     has $.text;
 
-    method gist{
-        $.binary-literal.gist ~ $.suffix.gist
+    method gist(:$treemark=False) {
+        $.binary-literal.gist(:$treemark) ~ $.suffix.gist(:$treemark)
     }
 }
 
@@ -92,8 +92,8 @@ does IUserDefinedFloatingLiteral {
 
     has $.text;
 
-    method gist{
-        $.fractionalconstant.gist.maybe-extend($.exponentpart) ~ $.suffix.gist
+    method gist(:$treemark=False) {
+        $.fractionalconstant.gist(:$treemark).maybe-extend($.exponentpart) ~ $.suffix.gist(:$treemark)
     }
 }
 
@@ -107,7 +107,7 @@ does IUserDefinedFloatingLiteral {
 
     has Str $.value is required;
 
-    method gist{
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -120,7 +120,7 @@ our class UserDefinedStringLiteral {
 
     has Str $.value is required;
 
-    method gist{
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -132,7 +132,7 @@ our class UserDefinedStringLiteral {
 our class UserDefinedCharacterLiteral {
     has Str $.value is required;
 
-    method gist{
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -140,8 +140,8 @@ our class UserDefinedCharacterLiteral {
 our class UserDefinedLiteral::Int {
     has IUserDefinedIntegerLiteral   $.user-defined-integer-literal is required;
 
-    method gist {
-        $.user-defined-integer-literal.gist
+    method gist(:$treemark=False) {
+        $.user-defined-integer-literal.gist(:$treemark)
     }
 }
 
@@ -150,8 +150,8 @@ does IUserDefinedLiteral {
 
     has IUserDefinedFloatingLiteral  $.user-defined-floating-literal is required;
 
-    method gist {
-        $.user-defined-floating-literal.gist
+    method gist(:$treemark=False) {
+        $.user-defined-floating-literal.gist(:$treemark)
     }
 }
 
@@ -162,8 +162,8 @@ does IUserDefinedLiteral {
 
     has $.text;
 
-    method gist {
-        $.user-defined-string-literal.gist
+    method gist(:$treemark=False) {
+        $.user-defined-string-literal.gist(:$treemark)
     }
 }
 
@@ -174,8 +174,8 @@ does IUserDefinedLiteral {
 
     has $.text;
 
-    method gist {
-        $.user-defined-character-literal.gist
+    method gist(:$treemark=False) {
+        $.user-defined-character-literal.gist(:$treemark)
     }
 }
 

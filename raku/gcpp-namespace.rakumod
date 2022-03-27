@@ -10,8 +10,8 @@ our class NamespaceAlias {
 
     has $.text;
 
-    method gist{
-        $.identifier.gist
+    method gist(:$treemark=False) {
+        $.identifier.gist(:$treemark)
     }
 }
 
@@ -21,8 +21,8 @@ our class OriginalNamespaceName {
 
     has $.text;
 
-    method gist{
-        $.identifier.gist
+    method gist(:$treemark=False) {
+        $.identifier.gist(:$treemark)
     }
 }
 
@@ -32,8 +32,8 @@ our class NamespaceName::Original does INamespaceName {
 
     has $.text;
 
-    method gist{
-        $.original-namespace-name.gist
+    method gist(:$treemark=False) {
+        $.original-namespace-name.gist(:$treemark)
     }
 }
 
@@ -43,8 +43,8 @@ our class NamespaceName::Alias does INamespaceName {
 
     has $.text;
 
-    method gist{
-        $.namespace-alias.gist
+    method gist(:$treemark=False) {
+        $.namespace-alias.gist(:$treemark)
     }
 }
 
@@ -54,8 +54,8 @@ our class NamespaceTag::Ident does INamespaceTag {
 
     has $.text;
 
-    method gist{
-        $.identifier.gist
+    method gist(:$treemark=False) {
+        $.identifier.gist(:$treemark)
     }
 }
 
@@ -65,8 +65,8 @@ our class NamespaceTag::NsName does INamespaceTag {
 
     has $.text;
 
-    method gist{
-        $.original-namespace-name.gist
+    method gist(:$treemark=False) {
+        $.original-namespace-name.gist(:$treemark)
     }
 }
 
@@ -85,7 +85,7 @@ our class NamespaceDefinition {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
@@ -96,13 +96,13 @@ our class NamespaceDefinition {
         $builder ~= "namespace ";
 
         if $.namespace-tag {
-            $builder ~= $.namespace-tag.gist;
+            $builder ~= $.namespace-tag.gist(:$treemark);
         }
 
         $builder ~= "\{";
 
         if $.namespace-body {
-            $builder ~= $.namespace-body.gist;
+            $builder ~= $.namespace-body.gist(:$treemark);
         }
 
         $builder ~ "}"
@@ -119,16 +119,16 @@ our class Qualifiednamespacespecifier {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         my $builder = "";
 
         my $n = $.nested-name-specifier;
 
         if $n {
-            $builder ~= $n.gist ~ " ";
+            $builder ~= $n.gist(:$treemark) ~ " ";
         }
 
-        $builder ~ $.namespace-name.gist
+        $builder ~ $.namespace-name.gist(:$treemark)
     }
 }
 
@@ -146,19 +146,19 @@ our class NamespaceAliasDefinition {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist ~ "\n";
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
         $builder 
         ~ "namespace " 
-        ~ $.identifier.gist 
+        ~ $.identifier.gist(:$treemark) 
         ~ " = " 
-        ~ $.qualifiednamespacespecifier.gist 
+        ~ $.qualifiednamespacespecifier.gist(:$treemark) 
         ~ ";"
     }
 }

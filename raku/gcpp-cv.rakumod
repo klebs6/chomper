@@ -8,8 +8,8 @@ our class Cvqualifierseq {
 
     has $.text;
 
-    method gist{
-        @.cv_qualifiers>>.gist.join(" ")
+    method gist(:$treemark=False) {
+        @.cv_qualifiers>>.gist(:$treemark).join(" ")
     }
 }
 
@@ -18,7 +18,7 @@ our class CvQualifier::Const does ICvQualifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "const"
     }
 }
@@ -28,7 +28,7 @@ our class CvQualifier::Volatile does ICvQualifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "volatile"
     }
 }

@@ -2,12 +2,23 @@ use Data::Dump::Tree;
 
 use gcpp-roles;
 
+our class EmptyInitializerList 
+does IInitializerList
+does IInitializerClause 
+does IReturnStatementBody
+does IPostfixExpressionTail {
+    method gist(:$treemark=False) {
+        ""
+    }
+}
+
 # rule initializer-list { 
 #   <initializer-clause> 
 #   <ellipsis>? 
 #   [ <.comma> <initializer-clause> <ellipsis>? ]* 
 # }
 our class InitializerList 
+does IInitializerList
 does IInitializerClause 
 does IReturnStatementBody
 does IPostfixExpressionTail {
@@ -16,8 +27,8 @@ does IPostfixExpressionTail {
 
     has $.text;
 
-    method gist{
-        @.clauses>>.gist.join(", ")
+    method gist(:$treemark=False) {
+        @.clauses>>.gist(:$treemark).join(", ")
     }
 }
 
@@ -31,14 +42,19 @@ does IBraceOrEqualInitializer
 does IReturnStatementBody 
 does IInitializerClause {
 
-    has InitializerList $.initializer-list;
+    has IInitializerList $.initializer-list;
 
     has $.text;
 
-    method gist{
-        "\{" 
-        ~ $.initializer-list.gist
-        ~ "}"
+    method gist(:$treemark=False) {
+        if $.initializer-list {
+            "\{" 
+            ~ $.initializer-list.gist(:$treemark)
+            ~ "}"
+
+        } else {
+            "\{" ~ "}"
+        }
     }
 }
 
@@ -50,8 +66,8 @@ does IInitializerClause {
 
     has $.text;
 
-    method gist{
-        "= " ~ $.initializer-clause.gist
+    method gist(:$treemark=False) {
+        " = " ~ $.initializer-clause.gist(:$treemark)
     }
 }
 
@@ -65,8 +81,8 @@ does ICondition {
 
     has $.text;
 
-    method gist{
-        @.assignment-expressions>>.gist.join(", ")
+    method gist(:$treemark=False) {
+        @.assignment-expressions>>.gist(:$treemark).join(", ")
     }
 }
 
@@ -76,8 +92,8 @@ our class ConstantExpression does IConstantExpression {
 
     has $.text;
 
-    method gist{
-        $.conditional-expression.gist
+    method gist(:$treemark=False) {
+        $.conditional-expression.gist(:$treemark)
     }
 }
 
@@ -90,8 +106,8 @@ does IPostfixExpressionTail {
 
     has $.text;
 
-    method gist{
-        $.initializer-list.gist
+    method gist(:$treemark=False) {
+        $.initializer-list.gist(:$treemark)
     }
 }
 
@@ -105,8 +121,8 @@ our class Initializer::ParenExprList does IInitializer {
 
     has $.text;
 
-    method gist{
-        "(" ~ $.expression-list.gist ~ ")"
+    method gist(:$treemark=False) {
+        "(" ~ $.expression-list.gist(:$treemark) ~ ")"
     }
 }
 
@@ -118,8 +134,8 @@ our class Initializer::BraceOrEq does IInitializer {
 
     has $.text;
 
-    method gist{
-        $.brace-or-equal-initializer.gist
+    method gist(:$treemark=False) {
+        $.brace-or-equal-initializer.gist(:$treemark)
     }
 }
 
@@ -129,8 +145,8 @@ our class Initializer does IInitializer {
 
     has $.text;
 
-    method gist{
-        $.value.gist
+    method gist(:$treemark=False) {
+        $.value.gist(:$treemark)
     }
 }
 =end comment
@@ -144,8 +160,8 @@ our class BraceOrEqualInitializer::AssignInit does IBraceOrEqualInitializer {
 
     has $.text;
 
-    method gist{
-        "= " ~ $.initializer-clause.gist
+    method gist(:$treemark=False) {
+        " = " ~ $.initializer-clause.gist(:$treemark)
     }
 }
 
@@ -159,8 +175,8 @@ does IBraceOrEqualInitializer {
 
     has $.text;
 
-    method gist{
-        $.braced-init-list.gist
+    method gist(:$treemark=False) {
+        $.braced-init-list.gist(:$treemark)
     }
 }
 
@@ -176,18 +192,18 @@ does IInitializerClause {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $c = $.comment;
         my $x = $.assignment-expression;
 
         if $c {
 
-            $c.gist ~ "\n" ~ $x.gist
+            $c.gist(:$treemark) ~ "\n" ~ $x.gist(:$treemark)
 
         } else {
 
-            $x.gist
+            $x.gist(:$treemark)
         }
     }
 }
@@ -204,17 +220,17 @@ does IInitializerClause {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $c = $.comment;
         my $x = $.braced-init-list;
 
         if $c {
 
-            $c.gist ~ "\n" ~ $.x.gist
+            $c.gist(:$treemark) ~ "\n" ~ $.x.gist(:$treemark)
 
         } else {
 
-            $x.gist
+            $x.gist(:$treemark)
         }
     }
 }
@@ -315,10 +331,19 @@ our role Expression::Actions {
 
     # rule initializer-list { <initializer-clause> <ellipsis>? [ <.comma> <initializer-clause> <ellipsis>? ]* }
     method initializer-list($/) {
-        make InitializerList.new(
-            clauses => $<initializer-clause>>>.made,
-            text    => ~$/,
-        )
+
+        my @clauses = $<initializer-clause>>>.made;
+
+        if @clauses {
+            make InitializerList.new(
+                clauses => @clauses,
+                text    => ~$/,
+            )
+        } else {
+            make EmptyInitializerList.new(
+                text    => ~$/,
+            )
+        }
     }
 
     # rule braced-init-list { <.left-brace> [ <initializer-list> <.comma>? ]? <.right-brace> } 

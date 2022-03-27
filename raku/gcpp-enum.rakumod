@@ -18,8 +18,8 @@ our class EnumName {
 
     has $.text;
 
-    method gist{
-        $.identifier.gist
+    method gist(:$treemark=False) {
+        $.identifier.gist(:$treemark)
     }
 }
 
@@ -35,12 +35,12 @@ our class EnumSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.enum-head.gist ~ "\{\n";
+        my $builder = $.enum-head.gist(:$treemark) ~ "\{\n";
 
         if $.enumerator-list {
-            $builder ~= $.enumerator-list.gist.indent(4);
+            $builder ~= $.enumerator-list.gist(:$treemark).indent(4);
         }
 
         $builder ~ "}"
@@ -62,9 +62,9 @@ our class EnumHead {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.enum-key.gist ~ " ";
+        my $builder = $.enum-key.gist(:$treemark) ~ " ";
 
         my $a = $.attribute-specifier-seq;
 
@@ -79,14 +79,14 @@ our class EnumHead {
             my $n = $.nested-name-specifier;
 
             if $n {
-                $builder ~= $n.gist ~ " ";
+                $builder ~= $n.gist(:$treemark) ~ " ";
             }
 
-            $builder ~= $i.gist ~ " ";
+            $builder ~= $i.gist(:$treemark) ~ " ";
         }
 
         if $.enum-base {
-            $builder ~= $.enum-base.gist;
+            $builder ~= $.enum-base.gist(:$treemark);
         }
 
         $builder
@@ -109,24 +109,24 @@ our class OpaqueEnumDeclaration {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.enum-key.gist;
+        my $builder = $.enum-key.gist(:$treemark);
 
         if $.comment {
-            $builder ~= $.comment.gist ~ "\n";
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
         my $a = $.attribute-specifier-seq;
 
         if $a {
-            $builder ~= $a.gist ~ " ";
+            $builder ~= $a.gist(:$treemark) ~ " ";
         }
 
-        $builder ~= $.identifier.gist;
+        $builder ~= $.identifier.gist(:$treemark);
 
         if $.enum-base {
-            $builder ~= "\n" ~ $.enum-base.gist;
+            $builder ~= "\n" ~ $.enum-base.gist(:$treemark);
         }
 
         $builder ~ ";"
@@ -143,7 +143,7 @@ our class EnumKey {
     has Bool $.has-modifier is required;
     has Bool $.is-class;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "enum";
 
@@ -169,8 +169,8 @@ our class Enumbase {
 
     has $.text;
 
-    method gist{
-        ": " ~ $.type-specifier-seq.gist
+    method gist(:$treemark=False) {
+        ": " ~ $.type-specifier-seq.gist(:$treemark)
     }
 }
 
@@ -184,8 +184,8 @@ our class EnumeratorList {
 
     has $.text;
 
-    method gist{
-        @.enumerator-definitions>>.gist.join(", ")
+    method gist(:$treemark=False) {
+        @.enumerator-definitions>>.gist(:$treemark).join(", ")
     }
 }
 
@@ -199,14 +199,14 @@ our class EnumeratorDefinition {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.enumerator.gist;
+        my $builder = $.enumerator.gist(:$treemark);
 
         my $c = $.constant-expression;
 
         if $c {
-            $builder ~= " = " ~ $c.gist;
+            $builder ~= " = " ~ $c.gist(:$treemark);
         }
 
         $builder
@@ -221,8 +221,8 @@ our class Enumerator {
 
     has $.text;
 
-    method gist{
-        $.identifier.gist
+    method gist(:$treemark=False) {
+        $.identifier.gist(:$treemark)
     }
 }
 

@@ -8,8 +8,8 @@ our class TypedefName {
 
     has $.text;
 
-    method gist{
-        $.identifier.gist
+    method gist(:$treemark=False) {
+        $.identifier.gist(:$treemark)
     }
 }
 

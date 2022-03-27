@@ -57,6 +57,4 @@ our role Python3::Grammar::TypedArgList {
     rule tfpdef {
         <NAME> [ <COLON> <test> ]?
     }
-
 }
-

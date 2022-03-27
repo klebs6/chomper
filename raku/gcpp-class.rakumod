@@ -15,7 +15,7 @@ our class ClassVirtSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "final"
     }
 }
@@ -30,15 +30,15 @@ our class ClassHeadName {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.nested-name-specifier {
-            $builder ~= $.nested-name-specifier.gist;
+            $builder ~= $.nested-name-specifier.gist(:$treemark);
         }
 
-        $builder ~ $.class-name.gist
+        $builder ~ $.class-name.gist(:$treemark)
     }
 }
 
@@ -47,8 +47,8 @@ our class ClassName::Id does IClassName {
     has Identifier $.identifier is required;
     has $.text;
 
-    method gist{
-        $.identifier.gist
+    method gist(:$treemark=False) {
+        $.identifier.gist(:$treemark)
     }
 }
 
@@ -57,8 +57,8 @@ our class ClassName::TemplateId does IClassName {
     has SimpleTemplateId $.simple-template-id is required;
     has $.text;
 
-    method gist{
-        $.simple-template-id.gist
+    method gist(:$treemark=False) {
+        $.simple-template-id.gist(:$treemark)
     }
 }
 
@@ -73,12 +73,12 @@ our class ClassSpecifier {
     has MemberSpecification $.member-specification;
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.class-head.gist ~ " \{\n";
+        my $builder = $.class-head.gist(:$treemark) ~ " \{\n";
 
         if $.member-specification {
-            $builder ~= $.member-specification.gist;
+            $builder ~= $.member-specification.gist(:$treemark);
         }
 
         $builder ~ "}"
@@ -101,24 +101,24 @@ our class ClassHead::Class does IClassHead {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.class-key.gist ~ " ";
+        my $builder = $.class-key.gist(:$treemark) ~ " ";
 
         if $.attribute-specifier-seq {
-            $builder ~= $.attribute-specifier-seq.gist ~ " ";
+            $builder ~= $.attribute-specifier-seq.gist(:$treemark) ~ " ";
         }
 
         if $.class-head-name {
-            $builder ~= $.class-head-name.gist ~ " ";
+            $builder ~= $.class-head-name.gist(:$treemark) ~ " ";
 
             if $.class-virt-specifier {
-                $builder ~= $.class-virt-specifier.gist ~ " ";
+                $builder ~= $.class-virt-specifier.gist(:$treemark) ~ " ";
             }
         }
 
         if $.base-clause {
-            $builder ~= $.base-clause.gist;
+            $builder ~= $.base-clause.gist(:$treemark);
         }
 
         $builder
@@ -137,20 +137,20 @@ our class ClassHead::Union does IClassHead {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "union ";
 
         if $.attribute-specifier-seq {
-            $builder ~= $.attribute-specifier-seq.gist;
+            $builder ~= $.attribute-specifier-seq.gist(:$treemark);
         }
 
         if $.class-head-name {
 
-            $builder ~= $.class-head-name.gist ~ " ";
+            $builder ~= $.class-head-name.gist(:$treemark) ~ " ";
 
             if $.class-virt-specifier {
-                $builder ~= $.class-virt-specifier.gist ~ " ";
+                $builder ~= $.class-virt-specifier.gist(:$treemark) ~ " ";
             }
         }
 
@@ -166,7 +166,7 @@ our class ClassKey::Class does IClassKey {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "class"
     }
 }
@@ -178,7 +178,7 @@ our class ClassKey::Struct does IClassKey {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "struct"
     }
 }

@@ -13,8 +13,8 @@ does IUnaryExpression {
 
     has $.text;
 
-    method gist{
-        $.new-expression.gist
+    method gist(:$treemark=False) {
+        $.new-expression.gist(:$treemark)
     }
 }
 
@@ -25,8 +25,8 @@ does IUnaryExpression {
 
     has $.text;
 
-    method gist{
-        $.case.gist
+    method gist(:$treemark=False) {
+        $.case.gist(:$treemark)
     }
 }
 
@@ -40,8 +40,8 @@ does IUnaryExpressionCase {
 
     has $.text;
 
-    method gist{
-        $.postfix-expression.gist
+    method gist(:$treemark=False) {
+        $.postfix-expression.gist(:$treemark)
     }
 }
 
@@ -56,8 +56,8 @@ does IUnaryExpressionCase {
 
     has $.text;
 
-    method gist{
-        "++" ~ $.unary-expression.gist
+    method gist(:$treemark=False) {
+        "++" ~ $.unary-expression.gist(:$treemark)
     }
 }
 
@@ -71,8 +71,8 @@ does IUnaryExpressionCase {
     has IUnaryExpression $.unary-expression is required;
     has $.text;
 
-    method gist{
-        "--" ~ $.unary-expression.gist
+    method gist(:$treemark=False) {
+        "--" ~ $.unary-expression.gist(:$treemark)
     }
 }
 
@@ -89,8 +89,8 @@ does IUnaryExpressionCase {
 
     has $.text;
 
-    method gist{
-        $.unary-operator.gist ~ " " ~ $.unary-expression.gist
+    method gist(:$treemark=False) {
+        $.unary-operator.gist(:$treemark) ~ " " ~ $.unary-expression.gist(:$treemark)
     }
 }
 
@@ -104,8 +104,8 @@ does IUnaryExpressionCase {
     has IUnaryExpression $.unary-expression is required;
     has $.text;
 
-    method gist{
-        "sizeof " ~ $.unary-expression.gist
+    method gist(:$treemark=False) {
+        "sizeof " ~ $.unary-expression.gist(:$treemark)
     }
 }
 
@@ -121,8 +121,8 @@ does IUnaryExpressionCase {
     has ITheTypeId $.the-type-id is required;
     has $.text;
 
-    method gist{
-        "sizeof(" ~ $.the-type-id.gist ~ ")"
+    method gist(:$treemark=False) {
+        "sizeof(" ~ $.the-type-id.gist(:$treemark) ~ ")"
     }
 }
 
@@ -139,8 +139,8 @@ does IUnaryExpressionCase {
     has Identifier $.identifier is required;
     has $.text;
 
-    method gist{
-        "sizeof ... (" ~ $.identifier.gist ~ ")"
+    method gist(:$treemark=False) {
+        "sizeof ... (" ~ $.identifier.gist(:$treemark) ~ ")"
     }
 }
 
@@ -156,8 +156,8 @@ does IUnaryExpressionCase {
     has ITheTypeId $.the-type-id is required;
     has $.text;
 
-    method gist{
-        "alignof(" ~ $.the-type-id.gist ~ ")"
+    method gist(:$treemark=False) {
+        "alignof(" ~ $.the-type-id.gist(:$treemark) ~ ")"
     }
 }
 
@@ -170,8 +170,8 @@ does IUnaryExpressionCase {
     has NoExceptExpression $.no-except-expression is required;
     has $.text;
 
-    method gist{
-        $.no-except-expression.gist
+    method gist(:$treemark=False) {
+        $.no-except-expression.gist(:$treemark)
     }
 }
 
@@ -184,8 +184,8 @@ does IUnaryExpressionCase {
     has DeleteExpression $.delete-expression is required;
     has $.text;
 
-    method gist{
-        $.delete-expression.gist
+    method gist(:$treemark=False) {
+        $.delete-expression.gist(:$treemark)
     }
 }
 
@@ -196,7 +196,7 @@ our class UnaryOperator::Or does IUnaryOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '|'
     }
 }
@@ -206,7 +206,7 @@ our class UnaryOperator::Star does IUnaryOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '*'
     }
 }
@@ -216,7 +216,7 @@ our class UnaryOperator::And does IUnaryOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '&'
     }
 }
@@ -226,7 +226,7 @@ our class UnaryOperator::Plus does IUnaryOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '+'
     }
 }
@@ -236,7 +236,7 @@ our class UnaryOperator::Tilde does IUnaryOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '~'
     }
 }
@@ -249,7 +249,7 @@ does IUnaryOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '-'
     }
 }
@@ -262,7 +262,7 @@ does IUnaryOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '!'
     }
 }

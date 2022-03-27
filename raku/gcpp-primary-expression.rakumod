@@ -9,8 +9,8 @@ our class PrimaryExpression::Literal does IPrimaryExpression {
 
     has $.text;
 
-    method gist{
-        @.literal>>.gist.join(" ")
+    method gist(:$treemark=False) {
+        @.literal>>.gist(:$treemark).join(" ")
     }
 }
 
@@ -19,7 +19,7 @@ our class PrimaryExpression::This does IPrimaryExpression {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "this"
     }
 }
@@ -34,8 +34,8 @@ our class PrimaryExpression::Expr does IPrimaryExpression {
 
     has $.text;
 
-    method gist{
-        "(" ~ $.expression.gist ~ ")"
+    method gist(:$treemark=False) {
+        "(" ~ $.expression.gist(:$treemark) ~ ")"
     }
 }
 
@@ -47,8 +47,8 @@ our class PrimaryExpression::Id does IPrimaryExpression {
 
     has $.text;
 
-    method gist{
-        $.id-expression.gist
+    method gist(:$treemark=False) {
+        $.id-expression.gist(:$treemark)
     }
 }
 
@@ -60,8 +60,8 @@ our class PrimaryExpression::Lambda does IPrimaryExpression {
 
     has $.text;
 
-    method gist{
-        $.lambda-expression.gist
+    method gist(:$treemark=False) {
+        $.lambda-expression.gist(:$treemark)
     }
 }
 

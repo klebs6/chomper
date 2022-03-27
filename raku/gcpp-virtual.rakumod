@@ -10,8 +10,8 @@ our class VirtualSpecifierSeq {
 
     has $.text;
 
-    method gist{
-        @.virtual-specifiers>>.gist.join(" ")
+    method gist(:$treemark=False) {
+        @.virtual-specifiers>>.gist(:$treemark).join(" ")
     }
 }
 
@@ -22,7 +22,7 @@ our class VirtualSpecifier::Override does IVirtualSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "override"
     }
 }
@@ -32,7 +32,7 @@ our class VirtualSpecifier::Final does IVirtualSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "final"
     }
 }

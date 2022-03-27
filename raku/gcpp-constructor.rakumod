@@ -11,8 +11,8 @@ our class ConstructorInitializer {
     has MemInitializerList $.mem-initializer-list is required;
     has $.text;
 
-    method gist{
-        ":" ~ $.mem-initializer-list.gist
+    method gist(:$treemark=False) {
+        ":" ~ $.mem-initializer-list.gist(:$treemark)
     }
 }
 

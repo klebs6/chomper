@@ -16,17 +16,17 @@ our class PseudoDestructorName::Basic does IPseudoDestructorName {
     has ITheTypeName $.the-type-name is required;
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         $builder = $builder.&maybe-extend($.nested-name-specifier);
 
         if $.the-scoped-type-name {
-            $builder ~= $.the-scoped-type-name.gist ~ "::";
+            $builder ~= $.the-scoped-type-name.gist(:$treemark) ~ "::";
         }
 
-        $builder ~ "~" ~ $.the-type-name.gist
+        $builder ~ "~" ~ $.the-type-name.gist(:$treemark)
     }
 }
 
@@ -45,13 +45,13 @@ our class PseudoDestructorName::Template does IPseudoDestructorName {
 
     has $.text;
 
-    method gist{
-        $.nested-name-specifier.gist 
+    method gist(:$treemark=False) {
+        $.nested-name-specifier.gist(:$treemark) 
         ~ " template " 
-        ~ $.simple-template-id.gist
+        ~ $.simple-template-id.gist(:$treemark)
         ~ "::"
         ~ "~"
-        ~ $.the-type-name.gist
+        ~ $.the-type-name.gist(:$treemark)
     }
 }
 
@@ -60,8 +60,8 @@ our class PseudoDestructorName::Decltype does IPseudoDestructorName {
     has DecltypeSpecifier $.decltype-specifier is required;
     has $.text;
 
-    method gist{
-        "~" ~ $.decltype-specifier.gist
+    method gist(:$treemark=False) {
+        "~" ~ $.decltype-specifier.gist(:$treemark)
     }
 }
 

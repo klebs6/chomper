@@ -19,11 +19,11 @@ our class TrailingReturnType {
 
     has $.text;
 
-    method gist{
-        my $builder = '-> ' ~ $.trailing-type-specifier.gist;
+    method gist(:$treemark=False) {
+        my $builder = '-> ' ~ $.trailing-type-specifier.gist(:$treemark);
 
         if $.abstract-declarator {
-            $builder ~= " " ~ $.abstract-declarator.gist;
+            $builder ~= " " ~ $.abstract-declarator.gist(:$treemark);
         }
 
         $builder
@@ -46,7 +46,7 @@ our class FunctionDefinition {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
 
         my $a = $.attribute-specifier-seq;
@@ -54,20 +54,20 @@ our class FunctionDefinition {
         my $v = $.virtual-specifier-seq;
 
         if $a {
-            $builder ~= $a.gist ~ " ";
+            $builder ~= $a.gist(:$treemark) ~ " ";
         }
 
         if $d {
-            $builder ~= $d.gist ~ " ";
+            $builder ~= $d.gist(:$treemark) ~ " ";
         }
 
-        $builder ~= $.declarator.gist;
+        $builder ~= $.declarator.gist(:$treemark);
 
         if $v {
-            $builder ~= $v.gist ~ " ";
+            $builder ~= $v.gist(:$treemark) ~ " ";
         }
 
-        $builder ~ $.function-body.gist
+        $builder ~ $.function-body.gist(:$treemark)
     }
 }
 
@@ -81,17 +81,17 @@ our class FunctionBody::Compound does IFunctionBody {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         my $i = $.constructor-initializer;
 
         if $i {
-            $builder ~= $i.gist ~ " ";
+            $builder ~= $i.gist(:$treemark) ~ " ";
         }
 
-        $builder ~ $.compound-statement.gist
+        $builder ~ $.compound-statement.gist(:$treemark)
     }
 }
 
@@ -101,8 +101,8 @@ our class FunctionBody::Try does IFunctionBody {
 
     has $.text;
 
-    method gist{
-        $.function-try-block.gist
+    method gist(:$treemark=False) {
+        $.function-try-block.gist(:$treemark)
     }
 }
 
@@ -116,8 +116,8 @@ our class FunctionBody::AssignDefault does IFunctionBody {
 
     has $.text;
 
-    method gist{
-        "= default;"
+    method gist(:$treemark=False) {
+        " = default;"
     }
 }
 
@@ -131,8 +131,8 @@ our class FunctionBody::AssignDelete does IFunctionBody {
 
     has $.text;
 
-    method gist{
-        "= delete;"
+    method gist(:$treemark=False) {
+        " = delete;"
     }
 }
 
@@ -141,7 +141,7 @@ our class FunctionSpecifier::Inline does IFunctionSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "inline"
     }
 }
@@ -151,7 +151,7 @@ our class FunctionSpecifier::Virtual does IFunctionSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "virtual"
     }
 }
@@ -161,7 +161,7 @@ our class FunctionSpecifier::Explicit does IFunctionSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "explicit"
     }
 }

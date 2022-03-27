@@ -13,7 +13,7 @@ our class ExplicitInstantiation {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
@@ -21,7 +21,7 @@ our class ExplicitInstantiation {
             $builder ~= "extern ";
         }
 
-        $builder ~ "template " ~ $.declaration.gist
+        $builder ~ "template " ~ $.declaration.gist(:$treemark)
     }
 }
 

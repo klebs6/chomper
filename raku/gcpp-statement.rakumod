@@ -13,8 +13,8 @@ our class StatementSeq {
 
     has $.text;
 
-    method gist{
-        @.statements>>.gist.join("\n")
+    method gist(:$treemark=False) {
+        @.statements>>.gist(:$treemark).join("\n")
     }
 }
 
@@ -28,9 +28,9 @@ our class CompoundStatement does IStatement {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "\{\n";
-        $builder = $builder.&maybe-extend($.statement-seq>>.gist>>.indent(4).join("\n"));
+        $builder = $builder.&maybe-extend($.statement-seq>>.gist(:$treemark)>>.indent(4).join("\n"));
         $builder ~ "\n}"
         
     }
@@ -46,15 +46,15 @@ our class Statement::Labeled does IStatement {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist ~ "\n";
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
-        $builder ~ $.labeled-statement.gist
+        $builder ~ $.labeled-statement.gist(:$treemark)
     }
 }
 
@@ -68,15 +68,15 @@ our class Statement::Declaration does IStatement {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist ~ "\n";
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
-        $builder ~ $.declaration-statement.gist
+        $builder ~ $.declaration-statement.gist(:$treemark)
     }
 }
 
@@ -88,8 +88,8 @@ our class DeclarationStatement does IDeclarationStatement {
 
     has $.text;
 
-    method gist{
-        $.block-declaration.gist
+    method gist(:$treemark=False) {
+        $.block-declaration.gist(:$treemark)
     }
 }
 
@@ -103,14 +103,14 @@ our class ExpressionStatement does IStatement {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist ~ "\n";
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
-        $builder ~ $.expression.gist ~ ";"
+        $builder ~ $.expression.gist(:$treemark) ~ ";"
     }
 }
 

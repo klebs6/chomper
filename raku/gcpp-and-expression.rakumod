@@ -11,8 +11,8 @@ our class AndExpression does IAndExpression {
 
     has $.text;
 
-    method gist{
-        @.equality-expressions>>.gist.join(" & ")
+    method gist(:$treemark=False) {
+        @.equality-expressions>>.gist(:$treemark).join(" & ")
     }
 }
 

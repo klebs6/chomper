@@ -11,8 +11,8 @@ our class ExclusiveOrExpression does IExclusiveOrExpression {
 
     has $.text;
 
-    method gist{
-        @.and-expressions>>.gist.join(" ^ ")
+    method gist(:$treemark=False) {
+        @.and-expressions>>.gist(:$treemark).join(" ^ ")
     }
 }
 
@@ -25,8 +25,8 @@ our class InclusiveOrExpression does IInclusiveOrExpression {
 
     has $.text;
 
-    method gist{
-        @.exclusive-or-expressions>>.gist.join(" | ")
+    method gist(:$treemark=False) {
+        @.exclusive-or-expressions>>.gist(:$treemark).join(" | ")
     }
 }
 

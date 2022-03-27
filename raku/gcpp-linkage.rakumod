@@ -14,12 +14,12 @@ our class LinkageSpecificationBody::Seq does ILinkageSpecificationBody {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $buffer ~= "\{";
 
         if $.declarationseq {
-            $buffer ~= $.declarationseq.gist;
+            $buffer ~= $.declarationseq.gist(:$treemark);
         }
 
         $buffer ~ "}"
@@ -32,8 +32,8 @@ our class LinkageSpecificationBody::Decl does ILinkageSpecificationBody {
 
     has $.text;
 
-    method gist{
-        $.declaration.gist
+    method gist(:$treemark=False) {
+        $.declaration.gist(:$treemark)
     }
 }
 
@@ -48,11 +48,11 @@ our class LinkageSpecification {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "extern " 
-        ~ $.string-literal.gist 
+        ~ $.string-literal.gist(:$treemark) 
         ~ " " 
-        ~ $.linkage-specification-body.gist
+        ~ $.linkage-specification-body.gist(:$treemark)
     }
 }
 

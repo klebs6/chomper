@@ -24,18 +24,18 @@ our class NewExpression::NewTypeId does INewExpression {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "new ";
 
         if $.new-placement {
-            $builder ~= $.new-placement.gist ~ " ";
+            $builder ~= $.new-placement.gist(:$treemark) ~ " ";
         }
 
-        $builder ~= $.new-type-id.gist;
+        $builder ~= $.new-type-id.gist(:$treemark);
 
         if $.new-initializer {
-            $builder ~= " " ~ $.new-initializer.gist;
+            $builder ~= " " ~ $.new-initializer.gist(:$treemark);
         }
 
         $builder
@@ -58,18 +58,18 @@ our class NewExpression::TheTypeId does INewExpression {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "new ";
 
         if $.new-placement {
-            $builder ~= $.new-placement.gist;
+            $builder ~= $.new-placement.gist(:$treemark);
         }
 
-        $builder ~= "(" ~ $.the-type-id.gist ~ ")";
+        $builder ~= "(" ~ $.the-type-id.gist(:$treemark) ~ ")";
 
         if $.new-initializer {
-            $builder ~= " " ~ $.new-initializer.gist;
+            $builder ~= " " ~ $.new-initializer.gist(:$treemark);
         }
 
         $builder
@@ -86,8 +86,8 @@ our class NewPlacement {
 
     has $.text;
 
-    method gist{
-        "(" ~ $.expression-list.gist ~ ")"
+    method gist(:$treemark=False) {
+        "(" ~ $.expression-list.gist(:$treemark) ~ ")"
     }
 }
 
@@ -101,11 +101,11 @@ our class NewTypeId does INewTypeId {
 
     has $.text;
 
-    method gist{
-        my $builder = $.type-specifier-seq.gist;
+    method gist(:$treemark=False) {
+        my $builder = $.type-specifier-seq.gist(:$treemark);
 
         if $.new-declarator {
-            $builder ~= " " ~ $.new-declarator.gist;
+            $builder ~= " " ~ $.new-declarator.gist(:$treemark);
         }
 
         $builder
@@ -122,11 +122,11 @@ our class NewDeclarator {
 
     has $.text;
 
-    method gist{
-        my $builder = @.pointer-operators>>.gist.join(" ");
+    method gist(:$treemark=False) {
+        my $builder = @.pointer-operators>>.gist(:$treemark).join(" ");
 
         if $.no-pointer-new-declarator {
-            $builder ~= " " ~ $.no-pointer-new-declarator.gist;
+            $builder ~= " " ~ $.no-pointer-new-declarator.gist(:$treemark);
         }
 
         $builder
@@ -147,15 +147,15 @@ our class NoPointerNewDeclarator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = "[" ~ $.expression.gist ~ "]";
+        my $builder = "[" ~ $.expression.gist(:$treemark) ~ "]";
 
         if $.attribute-specifier-seq  {
-            $builder ~= " " ~ $.attribute-specifier-seq.gist;
+            $builder ~= " " ~ $.attribute-specifier-seq.gist(:$treemark);
         }
 
-        $builder ~ @.no-pointer-new-declarator-tail>>.gist.join(" ")
+        $builder ~ @.no-pointer-new-declarator-tail>>.gist(:$treemark).join(" ")
     }
 }
 
@@ -171,11 +171,11 @@ our class NoPointerNewDeclaratorTail {
 
     has $.text;
 
-    method gist{
-        my $builder = "[" ~ $.constant-expression.gist ~ "]";
+    method gist(:$treemark=False) {
+        my $builder = "[" ~ $.constant-expression.gist(:$treemark) ~ "]";
 
         if $.attribute-specifier-seq {
-            $builder ~= " " ~ $.attribute-specifier-seq.gist;
+            $builder ~= " " ~ $.attribute-specifier-seq.gist(:$treemark);
         }
 
         $builder
@@ -193,12 +193,12 @@ our class NewInitializer::ExprList does INewInitializer {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "(";
 
         if $.expression-list {
-            $builder ~= $.expression-list.gist;
+            $builder ~= $.expression-list.gist(:$treemark);
         }
 
         $builder ~= ")";
@@ -215,8 +215,8 @@ our class NewInitializer::Braced does INewInitializer {
 
     has $.text;
 
-    method gist{
-        $.braced-init-list.gist
+    method gist(:$treemark=False) {
+        $.braced-init-list.gist(:$treemark)
     }
 }
 

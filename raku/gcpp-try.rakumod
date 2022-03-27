@@ -17,11 +17,11 @@ our class Handler {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "catch(" 
-        ~ $.exception-declaration.gist 
+        ~ $.exception-declaration.gist(:$treemark) 
         ~ ")" 
-        ~ $.compound-statement.gist
+        ~ $.compound-statement.gist(:$treemark)
     }
 }
 
@@ -33,8 +33,8 @@ our class HandlerSeq {
 
     has $.text;
 
-    method gist{
-        @.handlers>>.gist.join("\n")
+    method gist(:$treemark=False) {
+        @.handlers>>.gist(:$treemark).join("\n")
     }
 }
 
@@ -43,18 +43,18 @@ our class HandlerSeq {
 #   <compound-statement> 
 #   <handler-seq> 
 # }
-our class TryBlock { 
+our class TryBlock does IStatement { 
     has $.compound-statement is required;
     has @.handler-seq is required;
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = "try " ~ $.compound-statement.gist;
+        my $builder = "try " ~ $.compound-statement.gist(:$treemark);
 
         for @.handler-seq {
-            $builder ~= " " ~ $_.gist ~ "\n";
+            $builder ~= " " ~ $_.gist(:$treemark) ~ "\n";
         }
 
         $builder
@@ -74,16 +74,16 @@ our class FunctionTryBlock {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "try ";
 
         $builder = $builder.&maybe-extend($.constructor-initializer);
 
-        $builder ~= $.compound-statement.gist;
+        $builder ~= $.compound-statement.gist(:$treemark);
 
         for @.handler-seq {
-            $builder ~= $_.gist ~ "\n";
+            $builder ~= $_.gist(:$treemark) ~ "\n";
         }
 
         $builder

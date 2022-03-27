@@ -18,9 +18,9 @@ our class DeclSpecifierSeq does IDeclSpecifierSeq {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = @.decl-specifiers>>.gist.join(" ");
+        my $builder = @.decl-specifiers>>.gist(:$treemark).join(" ");
 
         my $ass = $.attribute-specifier-seq;
 

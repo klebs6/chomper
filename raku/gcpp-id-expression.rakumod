@@ -20,14 +20,14 @@ does IIdExpression {
 
     has $.text;
 
-    method gist{
-        my $builder = $.nested-name-specifier.gist;
+    method gist(:$treemark=False) {
+        my $builder = $.nested-name-specifier.gist(:$treemark);
 
         if $.template {
             $builder ~= " template ";
         }
 
-        $builder ~ $.unqualified-id.gist
+        $builder ~ $.unqualified-id.gist(:$treemark)
     }
 }
 
@@ -39,8 +39,8 @@ our class IdExpression::Qualified does IIdExpression {
 
     has $.text;
 
-    method gist{
-        $.qualified-id.gist
+    method gist(:$treemark=False) {
+        $.qualified-id.gist(:$treemark)
     }
 }
 
@@ -50,8 +50,8 @@ our class IdExpression::Unqualified does IIdExpression {
 
     has $.text;
 
-    method gist{
-        $.unqualified-id.gist
+    method gist(:$treemark=False) {
+        $.unqualified-id.gist(:$treemark)
     }
 }
 
@@ -65,8 +65,8 @@ our class UnqualifiedId::Ident does IUnqualifiedId {
 
     has $.text;
 
-    method gist{
-        $.identifier.gist
+    method gist(:$treemark=False) {
+        $.identifier.gist(:$treemark)
     }
 }
 
@@ -78,8 +78,8 @@ our class UnqualifiedId::OpFuncId does IUnqualifiedId {
 
     has $.text;
 
-    method gist{
-        $.operator-function-id.gist
+    method gist(:$treemark=False) {
+        $.operator-function-id.gist(:$treemark)
     }
 }
 
@@ -91,8 +91,8 @@ our class UnqualifiedId::ConversionFuncId does IUnqualifiedId {
 
     has $.text;
 
-    method gist{
-        $.conversion-function-id.gist
+    method gist(:$treemark=False) {
+        $.conversion-function-id.gist(:$treemark)
     }
 }
 
@@ -104,8 +104,8 @@ our class UnqualifiedId::LiteralOperatorId does IUnqualifiedId {
 
     has $.text;
 
-    method gist{
-        $.literal-operator-id.gist
+    method gist(:$treemark=False) {
+        $.literal-operator-id.gist(:$treemark)
     }
 }
 
@@ -118,8 +118,8 @@ our class UnqualifiedId::TildeClassname does IUnqualifiedId {
 
     has $.text;
 
-    method gist{
-        "~" ~ $.class-name.gist
+    method gist(:$treemark=False) {
+        "~" ~ $.class-name.gist(:$treemark)
     }
 }
 
@@ -132,8 +132,8 @@ our class UnqualifiedId::TildeDecltype does IUnqualifiedId {
 
     has $.text;
 
-    method gist{
-        "~" ~ $.decltype-specifier.gist
+    method gist(:$treemark=False) {
+        "~" ~ $.decltype-specifier.gist(:$treemark)
     }
 }
 
@@ -145,8 +145,8 @@ our class UnqualifiedId::TemplateId does IUnqualifiedId {
 
     has $.text;
 
-    method gist{
-        $.template-id.gist
+    method gist(:$treemark=False) {
+        $.template-id.gist(:$treemark)
     }
 }
 

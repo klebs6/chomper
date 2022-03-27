@@ -13,8 +13,8 @@ our class MemInitializerList {
     has IMemInitializer @.mem-initializers is required;
     has $.text;
 
-    method gist{
-        @.mem-initializers>>.gist.join(", ")
+    method gist(:$treemark=False) {
+        @.mem-initializers>>.gist(:$treemark).join(", ")
     }
 }
 
@@ -29,13 +29,13 @@ our class MemInitializer::ExprList does IMemInitializer {
     has ExpressionList    $.expression-list;
     has $.text;
 
-    method gist{
-        my $builder = $.meminitializerid.gist;
+    method gist(:$treemark=False) {
+        my $builder = $.meminitializerid.gist(:$treemark);
 
         $builder ~= "(";
 
         if $.expression-list {
-            $builder ~= $.expression-list.gist;
+            $builder ~= $.expression-list.gist(:$treemark);
         }
 
         $builder ~= ")"
@@ -51,8 +51,8 @@ our class MemInitializer::Braced does IMemInitializer {
     has BracedInitList    $.braced-init-list is required;
     has $.text;
 
-    method gist{
-        $.meminitializerid.gist ~ " " ~ $.braced-init-list.gist
+    method gist(:$treemark=False) {
+        $.meminitializerid.gist(:$treemark) ~ " " ~ $.braced-init-list.gist(:$treemark)
     }
 }
 
@@ -62,8 +62,8 @@ our class Meminitializerid::ClassOrDecl does IMeminitializerid {
     has IClassOrDeclType $.class-or-decl-type is required;
     has $.text;
 
-    method gist{
-        $.class-or-decl-type.gist
+    method gist(:$treemark=False) {
+        $.class-or-decl-type.gist(:$treemark)
     }
 }
 
@@ -72,8 +72,8 @@ our class Meminitializerid::Ident does IMeminitializerid {
     has Identifier $.identifier is required;
     has $.text;
 
-    method gist{
-        $.identifier.gist
+    method gist(:$treemark=False) {
+        $.identifier.gist(:$treemark)
     }
 }
 

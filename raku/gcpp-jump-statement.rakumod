@@ -12,12 +12,12 @@ our class JumpStatement::Break does IJumpStatement {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist;
+            $builder ~= $.comment.gist(:$treemark);
         }
 
         $builder ~ "break;"
@@ -33,11 +33,11 @@ our class JumpStatement::Continue does IJumpStatement {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist;
+            $builder ~= $.comment.gist(:$treemark);
         }
 
         $builder ~ "continue;"
@@ -58,18 +58,18 @@ does IJumpStatement {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist ~ "\n";
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
         $builder ~= "return";
 
         if $.return-statement-body {
-            $builder ~= " " ~ $.return-statement-body.gist;
+            $builder ~= " " ~ $.return-statement-body.gist(:$treemark);
         }
 
         $builder ~ ";"
@@ -87,12 +87,12 @@ our class JumpStatement::Goto does IJumpStatement {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "goto " ~ $.identifier ~ ";";
 
         if $.comment {
-            $builder = $.comment.gist ~ "\n" ~ $builder;
+            $builder = $.comment.gist(:$treemark) ~ "\n" ~ $builder;
         }
 
         $builder

@@ -8,7 +8,7 @@ our class BlockComment does IComment {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -19,7 +19,7 @@ our class LineComment does IComment {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -32,8 +32,8 @@ our class Comment::Line does IComment {
 
     has $.text;
 
-    method gist{
-        @.line-comments>>.gist.join("\n")
+    method gist(:$treemark=False) {
+        @.line-comments>>.gist(:$treemark).join("\n")
     }
 }
 

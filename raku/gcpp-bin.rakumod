@@ -7,7 +7,7 @@ our class BinaryLiteral {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -17,7 +17,7 @@ our class Binarydigit {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -30,12 +30,12 @@ does IIntegerLiteral {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
 
-        my $builder = $.binary-literal.gist;
+        my $builder = $.binary-literal.gist(:$treemark);
 
         if $.integersuffix {
-            $builder ~= $.integersuffix.gist;
+            $builder ~= $.integersuffix.gist(:$treemark);
         }
 
         $builder

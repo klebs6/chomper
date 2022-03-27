@@ -9,11 +9,11 @@ our class Universalcharactername {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         if $.second {
-            "\\U" ~ $.first.gist ~ $.second.gist
+            "\\U" ~ $.first.gist(:$treemark) ~ $.second.gist(:$treemark)
         } else {
-            "\\u" ~ $.first.gist
+            "\\u" ~ $.first.gist(:$treemark)
         }
     }
 }
@@ -23,7 +23,7 @@ our class Cchar::Basic does ICchar {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -33,8 +33,8 @@ our class Cchar::Escape does ICchar {
 
     has $.text;
 
-    method gist {
-        $.escapesequence.gist
+    method gist(:$treemark=False) {
+        $.escapesequence.gist(:$treemark)
     }
 }
 
@@ -43,8 +43,8 @@ our class Cchar::Universal does ICchar {
 
     has $.text;
 
-    method gist {
-        $.universalcharactername.gist
+    method gist(:$treemark=False) {
+        $.universalcharactername.gist(:$treemark)
     }
 }
 
@@ -53,8 +53,8 @@ our class Schar::Basic does ISchar {
 
     has $.text;
 
-    method gist{
-        $.value.gist
+    method gist(:$treemark=False) {
+        $.value.gist(:$treemark)
     }
 }
 
@@ -63,8 +63,8 @@ our class Schar::Escape does ISchar {
 
     has $.text;
 
-    method gist{
-        $.escapesequence.gist
+    method gist(:$treemark=False) {
+        $.escapesequence.gist(:$treemark)
     }
 }
 
@@ -73,8 +73,8 @@ our class Schar::Ucn does ISchar {
 
     has $.text;
 
-    method gist{
-        $.universalcharactername.gist
+    method gist(:$treemark=False) {
+        $.universalcharactername.gist(:$treemark)
     }
 }
 
@@ -82,7 +82,7 @@ our class CharacterLiteralPrefix::U    does ICharacterLiteralPrefix {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         'u'
     }
 }
@@ -91,7 +91,7 @@ our class CharacterLiteralPrefix::BigU does ICharacterLiteralPrefix {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         'U'
     }
 }
@@ -100,7 +100,7 @@ our class CharacterLiteralPrefix::L    does ICharacterLiteralPrefix {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         'L'
     }
 }
@@ -115,18 +115,18 @@ does IInitializerClause {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.character-literal-prefix {
-            $builder ~= $.character-literal-prefix.gist;
+            $builder ~= $.character-literal-prefix.gist(:$treemark);
         }
 
         $builder = "'";
 
         for @.cchar {
-            $builder ~= $_.gist;
+            $builder ~= $_.gist(:$treemark);
         }
 
         $builder ~ "'"

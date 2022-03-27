@@ -30,7 +30,7 @@ does INoPointerDeclaratorTail {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "(";
 
@@ -61,9 +61,9 @@ our class ParameterDeclarationClause {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = @.parameter-declaration-list>>.gist.join(", ");
+        my $builder = @.parameter-declaration-list>>.gist(:$treemark).join(", ");
 
         if $.has-ellipsis {
             $builder ~= "...";
@@ -79,8 +79,8 @@ our class ParameterDeclarationBody::Decl does IParameterDeclarationBody {
 
     has $.text;
 
-    method gist{
-        $.declarator.gist
+    method gist(:$treemark=False) {
+        $.declarator.gist(:$treemark)
     }
 }
 
@@ -90,9 +90,9 @@ our class ParameterDeclarationBody::Abst does IParameterDeclarationBody {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         if $.abstract-declarator {
-            $.abstract-declarator.gist
+            $.abstract-declarator.gist(:$treemark)
         } else {
             ""
         }
@@ -113,17 +113,17 @@ our class ParameterDeclaration {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         $builder = $builder.&maybe-extend($.attribute-specifier-seq, padr => True);
 
-        $builder ~= $.decl-specifier-seq.gist;
+        $builder ~= $.decl-specifier-seq.gist(:$treemark);
         $builder = $builder.&maybe-extend($.parameter-declaration-body, padl => True);
 
         if $.initializer-clause {
-            $builder ~= " = " ~ $.initializer-clause.gist;
+            $builder ~= " = " ~ $.initializer-clause.gist(:$treemark);
         }
 
         $builder

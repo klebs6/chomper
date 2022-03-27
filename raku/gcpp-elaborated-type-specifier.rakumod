@@ -24,25 +24,25 @@ does IElaboratedTypeSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.class-key.gist ~ " ";
+        my $builder = $.class-key.gist(:$treemark) ~ " ";
 
         #--------------
         my $a = $.attribute-specifier-seq;
 
         if $a {
-            $builder ~= $a.gist ~ " ";
+            $builder ~= $a.gist(:$treemark) ~ " ";
         }
 
         #--------------
         my $n = $.nested-name-specifier;
 
         if $n {
-            $builder ~= $n.gist ~ " ";
+            $builder ~= $n.gist(:$treemark) ~ " ";
         }
 
-        $builder ~ $.identifier.gist
+        $builder ~ $.identifier.gist(:$treemark)
     }
 }
 
@@ -57,8 +57,8 @@ does IElaboratedTypeSpecifier {
 
     has $.text;
 
-    method gist{
-        $.class-key.gist ~ " " ~ $.simple-template-id.gist
+    method gist(:$treemark=False) {
+        $.class-key.gist(:$treemark) ~ " " ~ $.simple-template-id.gist(:$treemark)
     }
 }
 
@@ -77,15 +77,15 @@ does IElaboratedTypeSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.class-key.gist ~ " " ~ $.nested-name-specifier.gist ~ " ";
+        my $builder = $.class-key.gist(:$treemark) ~ " " ~ $.nested-name-specifier.gist(:$treemark) ~ " ";
 
         if $.has-template-kw {
             $builder ~= "template ";
         }
 
-        $builder ~ $.simple-template-id.gist
+        $builder ~ $.simple-template-id.gist(:$treemark)
     }
 }
 
@@ -101,14 +101,14 @@ does IElaboratedTypeSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "enum ";
 
         my $n = $.nested-name-specifier;
 
         if $n {
-            $builder ~= $.n.gist ~ " ";
+            $builder ~= $.n.gist(:$treemark) ~ " ";
         }
 
         $builder ~ $.identifier

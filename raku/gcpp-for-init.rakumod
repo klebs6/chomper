@@ -13,8 +13,8 @@ does IForInitStatement {
 
     has $.text;
 
-    method gist{
-        $.expression-statement.gist
+    method gist(:$treemark=False) {
+        $.expression-statement.gist(:$treemark)
     }
 }
 
@@ -26,8 +26,8 @@ our class ForInitStatement::SimpleDeclaration does IForInitStatement {
 
     has $.text;
 
-    method gist{
-        $.simple-declaration.gist
+    method gist(:$treemark=False) {
+        $.simple-declaration.gist(:$treemark)
     }
 }
 

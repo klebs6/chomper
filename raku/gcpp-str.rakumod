@@ -9,7 +9,7 @@ our class StringLiteral does ILiteral {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -19,7 +19,7 @@ our class Rawstring {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         $.value
     }
 }

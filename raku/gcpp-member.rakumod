@@ -19,8 +19,8 @@ our class MemberDeclaratorList {
 
     has $.text;
 
-    method gist{
-        @.member-declarators>>.gist.join(",")
+    method gist(:$treemark=False) {
+        @.member-declarators>>.gist(:$treemark).join(",")
     }
 }
 
@@ -31,8 +31,8 @@ our class MemberSpecificationBase::Decl does IMemberSpecificationBase {
     has IMemberdeclaration $.memberdeclaration is required;
     has $.text;
 
-    method gist{
-        $.memberdeclaration.gist
+    method gist(:$treemark=False) {
+        $.memberdeclaration.gist(:$treemark)
     }
 }
 
@@ -44,8 +44,8 @@ our class MemberSpecificationBase::Access does IMemberSpecificationBase {
     has IAccessSpecifier $.access-specifier is required;
     has $.text;
 
-    method gist{
-        $.access-specifier.gist ~ ":"
+    method gist(:$treemark=False) {
+        $.access-specifier.gist(:$treemark) ~ ":"
     }
 }
 
@@ -56,7 +56,7 @@ our class MemberSpecification {
     has IMemberSpecificationBase @.member-specification-bases is required;
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         @.member-specification-bases.join(" ")
     }
 }
@@ -74,30 +74,30 @@ our class Memberdeclaration::Basic does IMemberdeclaration {
     has MemberDeclaratorList   $.member-declarator-list;
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $buffer = "";
 
         if $.comment {
-            $buffer ~= $.comment.gist ~ "\n";
+            $buffer ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
         my $a = $.attribute-specifier-seq;
 
         if $a {
-            $buffer ~= $a.gist;
+            $buffer ~= $a.gist(:$treemark);
         }
 
         my $d = $.decl-specifier-seq;
 
         if $d {
-            $buffer ~= " " ~ $d.gist;
+            $buffer ~= " " ~ $d.gist(:$treemark);
         }
 
         my $m = $.member-declarator-list;
 
         if $m {
-            $buffer ~= " " ~ $m.gist;
+            $buffer ~= " " ~ $m.gist(:$treemark);
         }
 
         $buffer ~ ";"
@@ -111,8 +111,8 @@ our class Memberdeclaration::Func does IMemberdeclaration {
     has FunctionDefinition $.function-definition is required;
     has $.text;
 
-    method gist{
-        $.function-definition.gist
+    method gist(:$treemark=False) {
+        $.function-definition.gist(:$treemark)
     }
 }
 
@@ -123,8 +123,8 @@ our class Memberdeclaration::Using does IMemberdeclaration {
     has UsingDeclaration $.using-declaration is required;
     has $.text;
 
-    method gist{
-        $.using-declaration.gist
+    method gist(:$treemark=False) {
+        $.using-declaration.gist(:$treemark)
     }
 }
 
@@ -135,8 +135,8 @@ our class Memberdeclaration::StaticAssert does IMemberdeclaration {
     has StaticAssertDeclaration $.static-assert-declaration is required;
     has $.text;
 
-    method gist{
-        $.static-assert-declaration.gist
+    method gist(:$treemark=False) {
+        $.static-assert-declaration.gist(:$treemark)
     }
 }
 
@@ -147,8 +147,8 @@ our class Memberdeclaration::Template does IMemberdeclaration {
     has TemplateDeclaration $.template-declaration is required;
     has $.text;
 
-    method gist{
-        $.template-declaration.gist
+    method gist(:$treemark=False) {
+        $.template-declaration.gist(:$treemark)
     }
 }
 
@@ -159,8 +159,8 @@ our class Memberdeclaration::Alias does IMemberdeclaration {
     has AliasDeclaration $.alias-declaration is required;
     has $.text;
 
-    method gist{
-        $.alias-declaration.gist
+    method gist(:$treemark=False) {
+        $.alias-declaration.gist(:$treemark)
     }
 }
 
@@ -171,7 +171,7 @@ our class Memberdeclaration::Empty does IMemberdeclaration {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         ""
     }
 }
@@ -188,19 +188,19 @@ our class MemberDeclarator::Virt does IMemberDeclarator {
 
     has $.text;
 
-    method gist{
-        my $buffer = $.declarator.gist;
+    method gist(:$treemark=False) {
+        my $buffer = $.declarator.gist(:$treemark);
 
         my $v = $.virtual-specifier-seq;
 
         if $v {
-            $buffer ~= " " ~ $v.gist;
+            $buffer ~= " " ~ $v.gist(:$treemark);
         }
 
         my $p = $.pure-specifier;
 
         if $p {
-            $buffer ~= " " ~ $p.gist;
+            $buffer ~= " " ~ $p.gist(:$treemark);
         }
 
         $buffer
@@ -217,14 +217,14 @@ our class MemberDeclarator::BraceOrEq does IMemberDeclarator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $buffer = $.declarator.gist;
+        my $buffer = $.declarator.gist(:$treemark);
 
         my $i = $.brace-or-equal-initializer;
 
         if $i {
-            $buffer ~= " " ~ $i.gist;
+            $buffer ~= " " ~ $i.gist(:$treemark);
         }
 
         $buffer
@@ -244,19 +244,19 @@ our class MemberDeclarator::Ident does IMemberDeclarator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $buffer = "";
 
         if $.identifier {
-            $buffer ~= $.identifier.gist;
+            $buffer ~= $.identifier.gist(:$treemark);
         }
 
         if $.attribute-specifier-seq {
-            $buffer ~= " " ~ $.attribute-specifier-seq.gist;
+            $buffer ~= " " ~ $.attribute-specifier-seq.gist(:$treemark);
         }
 
-        $buffer ~ ": " ~ $.constant-expression.gist
+        $buffer ~ ": " ~ $.constant-expression.gist(:$treemark)
     }
 }
 

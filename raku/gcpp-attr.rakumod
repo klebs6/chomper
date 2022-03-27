@@ -15,8 +15,8 @@ our class AttributeSpecifierSeq {
 
     has $.text;
 
-    method gist{
-        @.attribute-specifier>>.gist.join(" ")
+    method gist(:$treemark=False) {
+        @.attribute-specifier>>.gist(:$treemark).join(" ")
     }
 }
 
@@ -32,12 +32,12 @@ our class AttributeSpecifier::DoubleBraced does IAttributeSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "[[";
 
         if $.attribute-list {
-            $builder ~= $.attribute-list.gist;
+            $builder ~= $.attribute-list.gist(:$treemark);
         }
 
         $builder ~ "]]"
@@ -52,8 +52,8 @@ our class AttributeSpecifier::Alignment does IAttributeSpecifier {
 
     has $.text;
 
-    method gist{
-        $.alignmentspecifier.gist
+    method gist(:$treemark=False) {
+        $.alignmentspecifier.gist(:$treemark)
     }
 }
 
@@ -68,9 +68,9 @@ our class AttributeList {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = @.attributes>>.gist.join(", ");
+        my $builder = @.attributes>>.gist(:$treemark).join(", ");
 
         if $.has-ellipsis {
             $builder ~= "...";
@@ -86,8 +86,8 @@ our class AttributeNamespace {
 
     has $.text;
 
-    method gist{
-        $.identifier.gist
+    method gist(:$treemark=False) {
+        $.identifier.gist(:$treemark)
     }
 }
 
@@ -101,12 +101,12 @@ our class AttributeArgumentClause {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "(";
 
         if $.balanced-token-seq {
-            $builder ~= $.balanced-token-seq.gist;
+            $builder ~= $.balanced-token-seq.gist(:$treemark);
         }
 
         $builder ~ ")"
@@ -125,18 +125,18 @@ our class Attribute {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.attribute-namespace {
-            $builder ~= $.attribute-namespace.gist ~ "::";
+            $builder ~= $.attribute-namespace.gist(:$treemark) ~ "::";
         }
 
-        $builder ~= $.identifier.gist;
+        $builder ~= $.identifier.gist(:$treemark);
 
         if $.attribute-argument-clause {
-            $builder ~= " " ~ $.attribute-argument-clause.gist;
+            $builder ~= " " ~ $.attribute-argument-clause.gist(:$treemark);
         }
 
         $builder

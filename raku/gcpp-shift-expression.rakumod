@@ -9,8 +9,8 @@ our class ShiftExpressionTail {
 
     has $.text;
 
-    method gist{
-        $.shift-operator.gist ~ " " ~ $.additive-expression.gist
+    method gist(:$treemark=False) {
+        $.shift-operator.gist(:$treemark) ~ " " ~ $.additive-expression.gist(:$treemark)
     }
 }
 
@@ -21,8 +21,8 @@ our class ShiftExpression does IShiftExpression {
 
     has $.text;
 
-    method gist{
-        $.additive-expression.gist ~ " " ~ @.shift-expression-tail>>.gist.join(" ")
+    method gist(:$treemark=False) {
+        $.additive-expression.gist(:$treemark) ~ " " ~ @.shift-expression-tail>>.gist(:$treemark).join(" ")
     }
 }
 
@@ -31,7 +31,7 @@ our class ShiftOperator::Right does IShiftOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         ">>"
     }
 }
@@ -41,7 +41,7 @@ our class ShiftOperator::Left does IShiftOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "<<"
     }
 }

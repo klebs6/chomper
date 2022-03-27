@@ -7,7 +7,7 @@ our class PointerLiteral does ILiteral {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "nullptr"
     }
 }

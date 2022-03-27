@@ -5,7 +5,7 @@ use gcpp-roles;
 our class OctalLiteral { 
     has Str $.value is required; 
 
-    method gist {
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -13,7 +13,7 @@ our class OctalLiteral {
 our class Octaldigit { 
     has Str $.value is required; 
 
-    method gist {
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -26,8 +26,8 @@ does IIntegerLiteral {
 
     has $.text;
 
-    method gist {
-        $.octal-literal.gist.&maybe-extend($.integersuffix)
+    method gist(:$treemark=False) {
+        $.octal-literal.gist(:$treemark).&maybe-extend($.integersuffix)
     }
 }
 
@@ -36,8 +36,8 @@ our class Octalescapesequence {
 
     has $.text;
 
-    method gist {
-        @.digits>>.gist.join("")
+    method gist(:$treemark=False) {
+        @.digits>>.gist(:$treemark).join("")
     }
 }
 

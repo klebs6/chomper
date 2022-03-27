@@ -12,7 +12,7 @@ our class NestedNameSpecifierPrefix::Null does INestedNameSpecifierPrefix {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "::"
     }
 }
@@ -26,8 +26,8 @@ our class NestedNameSpecifierPrefix::Type does INestedNameSpecifierPrefix {
 
     has $.text;
 
-    method gist{
-        $.the-type-name.gist ~ "::"
+    method gist(:$treemark=False) {
+        $.the-type-name.gist(:$treemark) ~ "::"
     }
 }
 
@@ -40,8 +40,8 @@ our class NestedNameSpecifierPrefix::Ns does INestedNameSpecifierPrefix {
 
     has $.text;
 
-    method gist{
-        $.namespace-name.gist ~ "::"
+    method gist(:$treemark=False) {
+        $.namespace-name.gist(:$treemark) ~ "::"
     }
 }
 
@@ -54,8 +54,8 @@ our class NestedNameSpecifierPrefix::Decl does INestedNameSpecifierPrefix {
 
     has $.text;
 
-    method gist{
-        $.decltype-specifier.gist ~ "::"
+    method gist(:$treemark=False) {
+        $.decltype-specifier.gist(:$treemark) ~ "::"
     }
 }
 
@@ -68,8 +68,8 @@ our class NestedNameSpecifierSuffix::Id does INestedNameSpecifierSuffix {
 
     has $.text;
 
-    method gist{
-        $.identifier.gist ~ "::"
+    method gist(:$treemark=False) {
+        $.identifier.gist(:$treemark) ~ "::"
     }
 }
 
@@ -84,7 +84,7 @@ our class NestedNameSpecifierSuffix::Template does INestedNameSpecifierSuffix {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
@@ -92,7 +92,7 @@ our class NestedNameSpecifierSuffix::Template does INestedNameSpecifierSuffix {
             $builder ~= "template ";
         }
 
-        $builder ~= $.simple-template-id.gist;
+        $builder ~= $.simple-template-id.gist(:$treemark);
 
         $builder ~ "::"
     }
@@ -108,12 +108,12 @@ our class NestedNameSpecifier does INestedNameSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.nested-name-specifier-prefix.gist;
+        my $builder = $.nested-name-specifier-prefix.gist(:$treemark);
 
         for @.nested-name-specifier-suffixes {
-            $builder ~= $_.gist;
+            $builder ~= $_.gist(:$treemark);
         }
 
         $builder

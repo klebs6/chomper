@@ -7,7 +7,7 @@ our class MultiLineMacro {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         $.content
     }
 }
@@ -17,7 +17,7 @@ our class Directive {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         $.content
     }
 }

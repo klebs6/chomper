@@ -17,11 +17,11 @@ does IIterationStatement {
 
     has $.text;
 
-    method gist{
-        my $builder = "while(" ~ $.condition.gist ~ ")";
+    method gist(:$treemark=False) {
+        my $builder = "while(" ~ $.condition.gist(:$treemark) ~ ")";
 
         for @.statements {
-            $builder ~= $_.gist ~ "\n";
+            $builder ~= $_.gist(:$treemark) ~ "\n";
         }
 
         $builder
@@ -44,16 +44,16 @@ our class IterationStatement::Do does IIterationStatement {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
 
         if $.comment {
-            $builder ~= $.comment.gist ~ "\n";
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
-        $builder ~= "do " ~ $.statement.gist;
+        $builder ~= "do " ~ $.statement.gist(:$treemark);
 
-        $builder ~ " while(" ~ $.expression.gist ~ ");"
+        $builder ~ " while(" ~ $.expression.gist(:$treemark) ~ ");"
     }
 }
 
@@ -75,24 +75,24 @@ our class IterationStatement::For does IIterationStatement {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = "for(" ~ $.for-init-statement.gist;
+        my $builder = "for(" ~ $.for-init-statement.gist(:$treemark);
 
         if $.condition {
-            $builder ~= " " ~ $.condition.gist;
+            $builder ~= " " ~ $.condition.gist(:$treemark);
         }
 
         $builder ~= ";";
 
         if $.expression {
-            $builder ~= " " ~ $.expression.gist;
+            $builder ~= " " ~ $.expression.gist(:$treemark);
         }
 
         $builder ~= ")";
 
         for @.statements {
-            $builder ~= $_.gist.indent(4) ~ "\n";
+            $builder ~= $_.gist(:$treemark).indent(4) ~ "\n";
         }
 
         $builder
@@ -115,14 +115,14 @@ our class IterationStatement::ForRange does IIterationStatement {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "for(";
 
-        $builder ~= $.for-range-declaration.gist ~ ": " ~ $.for-range-initializer.gist ~ ")";
+        $builder ~= $.for-range-declaration.gist(:$treemark) ~ ": " ~ $.for-range-initializer.gist(:$treemark) ~ ")";
 
         for @.statements {
-            $builder ~= $_.gist ~ "\n";
+            $builder ~= $_.gist(:$treemark) ~ "\n";
         }
 
         $builder

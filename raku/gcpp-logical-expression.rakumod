@@ -11,8 +11,8 @@ our class LogicalAndExpression does ILogicalAndExpression {
 
     has $.text;
 
-    method gist{
-        @.inclusive-or-expressions>>.gist.join("&&")
+    method gist(:$treemark=False) {
+        @.inclusive-or-expressions>>.gist(:$treemark).join("&&")
     }
 }
 
@@ -25,8 +25,8 @@ our class LogicalOrExpression does ILogicalOrExpression {
 
     has $.text;
 
-    method gist{
-        @.logical-and-expressions>>.gist.join("||")
+    method gist(:$treemark=False) {
+        @.logical-and-expressions>>.gist(:$treemark).join("||")
     }
 }
 

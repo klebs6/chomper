@@ -9,8 +9,8 @@ our class Escapesequence::Simple does IEscapesequence {
 
     has $.text;
 
-    method gist {
-        $.simpleescapesequence.gist
+    method gist(:$treemark=False) {
+        $.simpleescapesequence.gist(:$treemark)
     }
 }
 
@@ -19,8 +19,8 @@ our class Escapesequence::Octal does IEscapesequence {
 
     has $.text;
 
-    method gist {
-        $.octalescapesequence.gist
+    method gist(:$treemark=False) {
+        $.octalescapesequence.gist(:$treemark)
     }
 }
 
@@ -29,15 +29,15 @@ our class Escapesequence::Hex does IEscapesequence {
 
     has $.text;
 
-    method gist {
-        $.hexadecimalescapesequence.gist
+    method gist(:$treemark=False) {
+        $.hexadecimalescapesequence.gist(:$treemark)
     }
 }
 
 our class Simpleescapesequence::Slash does ISimpleescapesequence { 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '\\\''
     }
 }
@@ -45,7 +45,7 @@ our class Simpleescapesequence::Slash does ISimpleescapesequence {
 our class Simpleescapesequence::Quote does ISimpleescapesequence { 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '\\"'
     }
 }
@@ -53,7 +53,7 @@ our class Simpleescapesequence::Quote does ISimpleescapesequence {
 our class Simpleescapesequence::Question does ISimpleescapesequence { 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '\\?'
     }
 }
@@ -61,7 +61,7 @@ our class Simpleescapesequence::Question does ISimpleescapesequence {
 our class Simpleescapesequence::DoubleSlash does ISimpleescapesequence { 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '\\\\'
     }
 }
@@ -69,7 +69,7 @@ our class Simpleescapesequence::DoubleSlash does ISimpleescapesequence {
 our class Simpleescapesequence::A does ISimpleescapesequence { 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '\\a'
     }
 }
@@ -77,7 +77,7 @@ our class Simpleescapesequence::A does ISimpleescapesequence {
 our class Simpleescapesequence::B does ISimpleescapesequence { 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '\\b'
     }
 }
@@ -85,7 +85,7 @@ our class Simpleescapesequence::B does ISimpleescapesequence {
 our class Simpleescapesequence::F does ISimpleescapesequence { 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '\\f'
     }
 }
@@ -93,7 +93,7 @@ our class Simpleescapesequence::F does ISimpleescapesequence {
 our class Simpleescapesequence::N does ISimpleescapesequence { 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '\\n'
     }
 }
@@ -101,7 +101,7 @@ our class Simpleescapesequence::N does ISimpleescapesequence {
 our class Simpleescapesequence::R does ISimpleescapesequence { 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '\\r'
     }
 }
@@ -109,7 +109,7 @@ our class Simpleescapesequence::R does ISimpleescapesequence {
 our class Simpleescapesequence::T does ISimpleescapesequence { 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '\\t'
     }
 }
@@ -117,7 +117,7 @@ our class Simpleescapesequence::T does ISimpleescapesequence {
 our class Simpleescapesequence::V does ISimpleescapesequence { 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '\\v'
     }
 }
@@ -125,7 +125,7 @@ our class Simpleescapesequence::V does ISimpleescapesequence {
 our class Simpleescapesequence::RnN does ISimpleescapesequence { 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         '\\\n'
     }
 }

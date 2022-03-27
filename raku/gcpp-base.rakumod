@@ -13,8 +13,8 @@ our class BaseSpecifierList {
 
     has $.text;
 
-    method gist{
-        @.base-specifiers>>.gist.join(", ")
+    method gist(:$treemark=False) {
+        @.base-specifiers>>.gist(:$treemark).join(", ")
     }
 }
 
@@ -27,8 +27,8 @@ our class BaseClause {
 
     has $.text;
 
-    method gist {
-        ":" ~ $.base-specifier-list.gist
+    method gist(:$treemark=False) {
+        ":" ~ $.base-specifier-list.gist(:$treemark)
     }
 }
 
@@ -38,8 +38,8 @@ our class BaseClause {
 our class BaseTypeSpecifier { 
     has IClassOrDeclType $.class-or-decl-type is required;
 
-    method gist {
-        $.class-or-decl-type.gist
+    method gist(:$treemark=False) {
+        $.class-or-decl-type.gist(:$treemark)
     }
 }
 
@@ -53,13 +53,13 @@ our class BaseSpecifier::BaseType does IBaseSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         if $.attribute-specifier-seq {
-            $.attribute-specifier-seq.gist ~ " " ~ $.base-type-specifier.gist
+            $.attribute-specifier-seq.gist(:$treemark) ~ " " ~ $.base-type-specifier.gist(:$treemark)
 
         } else {
-            $.base-type-specifier.gist
+            $.base-type-specifier.gist(:$treemark)
         }
     }
 }
@@ -77,21 +77,21 @@ our class BaseSpecifier::Virtual does IBaseSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.attribute-specifier-seq {
-            $builder ~= $.attribute-specifier-seq.gist ~ " ";
+            $builder ~= $.attribute-specifier-seq.gist(:$treemark) ~ " ";
         }
 
         $builder ~= " virtual ";
 
         if $.access-specifier {
-            $builder ~= $.access-specifier.gist;
+            $builder ~= $.access-specifier.gist(:$treemark);
         }
 
-        $builder ~ $.base-type-specifier.gist
+        $builder ~ $.base-type-specifier.gist(:$treemark)
     }
 }
 
@@ -109,21 +109,21 @@ our class BaseSpecifier::Access does IBaseSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.attribute-specifier-seq {
-            $builder ~= $.attribute-specifier-seq.gist ~ " ";
+            $builder ~= $.attribute-specifier-seq.gist(:$treemark) ~ " ";
         }
 
-        $builder ~= $.access-specifier.gist ~ " ";
+        $builder ~= $.access-specifier.gist(:$treemark) ~ " ";
 
         if $.is-virtual {
             $builder ~= "virtual ";
         }
 
-        $builder ~ $.base-type-specifier.gist
+        $builder ~ $.base-type-specifier.gist(:$treemark)
     }
 }
 

@@ -16,12 +16,12 @@ our class InitDeclarator does IInitDeclarator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.declarator.gist;
+        my $builder = $.declarator.gist(:$treemark);
 
         if $.initializer {
-            $builder ~= $.initializer.gist;
+            $builder ~= $.initializer.gist(:$treemark);
         }
 
         $builder
@@ -35,8 +35,8 @@ our class Declarator::Ptr does IDeclarator {
 
     has $.text;
 
-    method gist{
-        $.pointer-declarator.gist
+    method gist(:$treemark=False) {
+        $.pointer-declarator.gist(:$treemark)
     }
 }
 
@@ -52,12 +52,12 @@ our class Declarator::NoPtr does IDeclarator {
 
     has $.text;
 
-    method gist{
-        $.no-pointer-declarator.gist
+    method gist(:$treemark=False) {
+        $.no-pointer-declarator.gist(:$treemark)
         ~ " "
-        ~ $.parameters-and-qualifiers.gist
+        ~ $.parameters-and-qualifiers.gist(:$treemark)
         ~ " "
-        ~ $.trailing-return-type.gist
+        ~ $.trailing-return-type.gist(:$treemark)
     }
 }
 
@@ -73,11 +73,11 @@ does INoPointerDeclaratorBase {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = $.has-ellipsis ?? "..." !! "";
 
-        $builder ~ $.id-expression.gist
+        $builder ~ $.id-expression.gist(:$treemark)
     }
 }
 
@@ -89,8 +89,8 @@ our class SomeDeclarator::Basic does ISomeDeclarator {
 
     has $.text;
 
-    method gist{
-        $.declarator.gist
+    method gist(:$treemark=False) {
+        $.declarator.gist(:$treemark)
     }
 }
 
@@ -102,8 +102,8 @@ our class SomeDeclarator::Abstract does ISomeDeclarator {
 
     has $.text;
 
-    method gist{
-        $.abstract-declarator.gist
+    method gist(:$treemark=False) {
+        $.abstract-declarator.gist(:$treemark)
     }
 }
 

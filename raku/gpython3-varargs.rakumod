@@ -62,4 +62,3 @@ our role Python3::Grammar::VarArgsList {
         <NAME>
     }
 }
-

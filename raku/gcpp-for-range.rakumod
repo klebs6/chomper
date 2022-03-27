@@ -17,16 +17,16 @@ our class ForRangeDeclaration {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         if $.attribute-specifier-seq {
-            $builder ~= $.attribute-specifier-seq.gist ~ " ";
+            $builder ~= $.attribute-specifier-seq.gist(:$treemark) ~ " ";
         }
 
-        $builder ~= $.decl-specifier-seq.gist;
-        $builder ~= $.declarator.gist;
+        $builder ~= $.decl-specifier-seq.gist(:$treemark);
+        $builder ~= $.declarator.gist(:$treemark);
 
         $builder
     }
@@ -40,8 +40,8 @@ our class ForRangeInitializer::Expression does IForRangeInitializer {
 
     has $.text;
 
-    method gist{
-        $.expression.gist
+    method gist(:$treemark=False) {
+        $.expression.gist(:$treemark)
     }
 }
 
@@ -53,8 +53,8 @@ our class ForRangeInitializer::BracedInitList does IForRangeInitializer {
 
     has $.text;
 
-    method gist{
-        $.braced-init-list.gist
+    method gist(:$treemark=False) {
+        $.braced-init-list.gist(:$treemark)
     }
 }
 

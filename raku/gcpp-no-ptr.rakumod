@@ -19,14 +19,14 @@ does INoPointerDeclaratorBase {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.declaratorid.gist;
+        my $builder = $.declaratorid.gist(:$treemark);
 
         my $a = $.attribute-specifier-seq;
 
         if $a {
-            $builder ~= " " ~ $.a.gist;
+            $builder ~= " " ~ $.a.gist(:$treemark);
         }
 
         $builder
@@ -47,8 +47,8 @@ does INoPointerDeclaratorBase {
 
     has $.text;
 
-    method gist{
-        "(" ~ $.pointer-declarator.gist ~ ")"
+    method gist(:$treemark=False) {
+        "(" ~ $.pointer-declarator.gist(:$treemark) ~ ")"
     }
 }
 
@@ -60,8 +60,8 @@ our class NoPointerDeclaratorTail::Basic does INoPointerDeclaratorTail {
 
     has $.text;
 
-    method gist{
-        $.parameters-and-qualifiers.gist
+    method gist(:$treemark=False) {
+        $.parameters-and-qualifiers.gist(:$treemark)
     }
 }
 
@@ -77,7 +77,7 @@ our class NoPointerDeclaratorTail::Bracketed does INoPointerDeclaratorTail {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "[";
 
@@ -107,12 +107,12 @@ does IInitDeclarator does IDeclarator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.no-pointer-declarator-base.gist;
+        my $builder = $.no-pointer-declarator-base.gist(:$treemark);
 
         for @.no-pointer-declarator-tail {
-            $builder ~= $_.gist ~ "\n";
+            $builder ~= $_.gist(:$treemark) ~ "\n";
         }
 
         $builder

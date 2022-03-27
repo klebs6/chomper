@@ -9,7 +9,7 @@ our class ReturnStatementBody::Expr does IReturnStatementBody {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         say "need write gist!";
         ddt self;
         exit;
@@ -22,7 +22,7 @@ our class ReturnStatementBody::BracedInitList does IReturnStatementBody {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         say "need write gist!";
         ddt self;
         exit;

@@ -14,8 +14,8 @@ does ILabeledStatementLabelBody {
 
     has $.text;
 
-    method gist{
-        $.identifier.gist
+    method gist(:$treemark=False) {
+        $.identifier.gist(:$treemark)
     }
 }
 
@@ -30,8 +30,8 @@ does ILabeledStatementLabelBody {
 
     has $.text;
 
-    method gist{
-        "case " ~ $.constant-expression.gist
+    method gist(:$treemark=False) {
+        "case " ~ $.constant-expression.gist(:$treemark)
     }
 }
 
@@ -43,7 +43,7 @@ does ILabeledStatementLabelBody {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "default"
     }
 }
@@ -59,17 +59,17 @@ our class LabeledStatementLabel {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         my $a = $.attribute-specifier-seq;
 
         if $a {
-            $builder ~= $a.gist ~ " ";
+            $builder ~= $a.gist(:$treemark) ~ " ";
         }
 
-        $builder ~= $.labeled-statement-label-body.gist;
+        $builder ~= $.labeled-statement-label-body.gist(:$treemark);
 
         $builder ~ ":"
     }
@@ -85,8 +85,8 @@ our class LabeledStatement does IStatement {
 
     has $.text;
 
-    method gist{
-        $.labeled-statement-label.gist ~ " " ~ $.statement.gist
+    method gist(:$treemark=False) {
+        $.labeled-statement-label.gist(:$treemark) ~ " " ~ $.statement.gist(:$treemark)
     }
 }
 

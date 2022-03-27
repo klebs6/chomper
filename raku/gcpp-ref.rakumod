@@ -7,7 +7,7 @@ our class Refqualifier::And does IRefqualifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "&"
     }
 }
@@ -17,7 +17,7 @@ our class Refqualifier::AndAnd does IRefqualifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "&&"
     }
 }

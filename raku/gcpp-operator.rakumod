@@ -11,7 +11,7 @@ our class TheOperator::New does ITheOperator {
     has Bool $.has-brackets is required;
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         if $.has-brackets {
             "new[]"
         } else {
@@ -30,7 +30,7 @@ our class TheOperator::Delete does ITheOperator {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         if $.has-brackets {
             "delete[]" 
         } else {
@@ -43,7 +43,7 @@ our class TheOperator::Delete does ITheOperator {
 our class TheOperator::Plus does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "+"
     }
 }
@@ -52,7 +52,7 @@ our class TheOperator::Plus does ITheOperator {
 our class TheOperator::Minus does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "-"
     }
 }
@@ -61,7 +61,7 @@ our class TheOperator::Minus does ITheOperator {
 our class TheOperator::Star does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "*"
     }
 }
@@ -70,7 +70,7 @@ our class TheOperator::Star does ITheOperator {
 our class TheOperator::Div does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "/"
     }
 }
@@ -79,7 +79,7 @@ our class TheOperator::Div does ITheOperator {
 our class TheOperator::Mod does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "%"
     }
 }
@@ -88,7 +88,7 @@ our class TheOperator::Mod does ITheOperator {
 our class TheOperator::Caret does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "^"
     }
 }
@@ -97,7 +97,7 @@ our class TheOperator::Caret does ITheOperator {
 our class TheOperator::And does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "&"
     }
 }
@@ -106,7 +106,7 @@ our class TheOperator::And does ITheOperator {
 our class TheOperator::Or does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "|"
     }
 }
@@ -115,7 +115,7 @@ our class TheOperator::Or does ITheOperator {
 our class TheOperator::Tilde does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "~"
     }
 }
@@ -124,7 +124,7 @@ our class TheOperator::Tilde does ITheOperator {
 our class TheOperator::Not does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "!"
     }
 }
@@ -133,7 +133,7 @@ our class TheOperator::Not does ITheOperator {
 our class TheOperator::Assign does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "="
     }
 }
@@ -142,7 +142,7 @@ our class TheOperator::Assign does ITheOperator {
 our class TheOperator::Greater does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         ">"
     }
 }
@@ -151,7 +151,7 @@ our class TheOperator::Greater does ITheOperator {
 our class TheOperator::Less does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "<"
     }
 }
@@ -160,7 +160,7 @@ our class TheOperator::Less does ITheOperator {
 our class TheOperator::GreaterEqual does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         ">="
     }
 }
@@ -169,7 +169,7 @@ our class TheOperator::GreaterEqual does ITheOperator {
 our class TheOperator::PlusAssign does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "+="
     }
 }
@@ -178,7 +178,7 @@ our class TheOperator::PlusAssign does ITheOperator {
 our class TheOperator::MinusAssign does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "-="
     }
 }
@@ -187,7 +187,7 @@ our class TheOperator::MinusAssign does ITheOperator {
 our class TheOperator::StarAssign does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "*="
     }
 }
@@ -196,7 +196,7 @@ our class TheOperator::StarAssign does ITheOperator {
 our class TheOperator::ModAssign does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "%="
     }
 }
@@ -205,7 +205,7 @@ our class TheOperator::ModAssign does ITheOperator {
 our class TheOperator::XorAssign does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "^="
     }
 }
@@ -214,7 +214,7 @@ our class TheOperator::XorAssign does ITheOperator {
 our class TheOperator::AndAssign does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "&="
     }
 }
@@ -223,7 +223,7 @@ our class TheOperator::AndAssign does ITheOperator {
 our class TheOperator::OrAssign does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "|="
     }
 }
@@ -232,7 +232,7 @@ our class TheOperator::OrAssign does ITheOperator {
 our class TheOperator::LessLess does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "<<"
     }
 }
@@ -241,7 +241,7 @@ our class TheOperator::LessLess does ITheOperator {
 our class TheOperator::GreaterGreater does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         ">>"
     }
 }
@@ -250,7 +250,7 @@ our class TheOperator::GreaterGreater does ITheOperator {
 our class TheOperator::RightShiftAssign does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         ">>="
     }
 }
@@ -259,7 +259,7 @@ our class TheOperator::RightShiftAssign does ITheOperator {
 our class TheOperator::LeftShiftAssign does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "<<="
     }
 }
@@ -268,7 +268,7 @@ our class TheOperator::LeftShiftAssign does ITheOperator {
 our class TheOperator::Equal does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "=="
     }
 }
@@ -277,7 +277,7 @@ our class TheOperator::Equal does ITheOperator {
 our class TheOperator::NotEqual does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "!="
     }
 }
@@ -286,7 +286,7 @@ our class TheOperator::NotEqual does ITheOperator {
 our class TheOperator::LessEqual does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "<="
     }
 }
@@ -295,7 +295,7 @@ our class TheOperator::LessEqual does ITheOperator {
 our class TheOperator::AndAnd does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "&&"
     }
 }
@@ -304,7 +304,7 @@ our class TheOperator::AndAnd does ITheOperator {
 our class TheOperator::OrOr does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "||"
     }
 }
@@ -313,7 +313,7 @@ our class TheOperator::OrOr does ITheOperator {
 our class TheOperator::PlusPlus does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "++"
     }
 }
@@ -322,7 +322,7 @@ our class TheOperator::PlusPlus does ITheOperator {
 our class TheOperator::MinusMinus does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "--"
     }
 }
@@ -331,7 +331,7 @@ our class TheOperator::MinusMinus does ITheOperator {
 our class TheOperator::Comma does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         ","
     }
 }
@@ -340,7 +340,7 @@ our class TheOperator::Comma does ITheOperator {
 our class TheOperator::ArrowStar does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "->*"
     }
 }
@@ -349,7 +349,7 @@ our class TheOperator::ArrowStar does ITheOperator {
 our class TheOperator::Arrow does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "->"
     }
 }
@@ -358,7 +358,7 @@ our class TheOperator::Arrow does ITheOperator {
 our class TheOperator::Parens does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "()"
     }
 }
@@ -367,7 +367,7 @@ our class TheOperator::Parens does ITheOperator {
 our class TheOperator::Brak does ITheOperator { 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "[]"
     }
 }

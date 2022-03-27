@@ -13,8 +13,8 @@ our class OperatorFunctionId {
     has ITheOperator $.the-operator is required;
     has $.text;
 
-    method gist{
-        "operator " ~ $.the-operator.gist
+    method gist(:$treemark=False) {
+        "operator " ~ $.the-operator.gist(:$treemark)
     }
 }
 
@@ -25,8 +25,8 @@ our class LiteralOperatorId::StringLit does ILiteralOperatorId {
     has Identifier    $.identifier     is required;
     has $.text;
 
-    method gist{
-        "operator " ~ $.string-literal.gist ~ $.identifier.gist
+    method gist(:$treemark=False) {
+        "operator " ~ $.string-literal.gist(:$treemark) ~ $.identifier.gist(:$treemark)
     }
 }
 
@@ -38,8 +38,8 @@ our class LiteralOperatorId::UserDefined does ILiteralOperatorId {
     has UserDefinedStringLiteral $.user-defined-string-literal is required;
     has $.text;
 
-    method gist{
-        "operator " ~ $.user-defined-string-literal.gist
+    method gist(:$treemark=False) {
+        "operator " ~ $.user-defined-string-literal.gist(:$treemark)
     }
 }
 

@@ -15,7 +15,7 @@ our class DeleteExpression {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         my $builder = "";
 
         if $.has-doublecolon {
@@ -28,7 +28,7 @@ our class DeleteExpression {
             $builder ~= "[]";
         }
 
-        $builder ~ " " ~ $.cast-expression.gist
+        $builder ~ " " ~ $.cast-expression.gist(:$treemark)
     }
 }
 

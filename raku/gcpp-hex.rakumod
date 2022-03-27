@@ -7,7 +7,7 @@ our class HexadecimalLiteral {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -17,7 +17,7 @@ our class Hexadecimaldigit {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         $.value
     }
 }
@@ -29,8 +29,8 @@ our class Hexquad {
 
     has $.text;
 
-    method gist {
-        @.hexadecimaldigit>>.gist.join("")
+    method gist(:$treemark=False) {
+        @.hexadecimaldigit>>.gist(:$treemark).join("")
     }
 }
 
@@ -42,12 +42,12 @@ does IIntegerLiteral {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
 
-        my $builder = $.hexadecimal-literal.gist;
+        my $builder = $.hexadecimal-literal.gist(:$treemark);
 
         if $.integersuffix {
-            $builder ~= $.integersuffix.gist;
+            $builder ~= $.integersuffix.gist(:$treemark);
         }
 
         $builder
@@ -59,8 +59,8 @@ our class Hexadecimalescapesequence {
 
     has $.text;
 
-    method gist {
-        @.digits>>.gist.join("")
+    method gist(:$treemark=False) {
+        @.digits>>.gist(:$treemark).join("")
     }
 }
 

@@ -17,7 +17,8 @@ our role ITypeSpecifierSeq    { ... }
 our role ITemplateArgument    { ... }
 
 our role INewTypeId           {  }
-our role IPointerDeclarator  {  }
+our role IPointerDeclarator   {  }
+our role IInitializerList     {  }
 
 #-------------------------------
 our role  IConstantExpression                     { }

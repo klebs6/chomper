@@ -1,6 +1,8 @@
 #!/usr/bin/env raku
 use cpp-actions;
 use gcpp;
+use translate-ir;
+use translate-io;
 use Data::Dump::Tree;
 
 grammar G does Cpp::Parser {}
@@ -31,7 +33,7 @@ sub MAIN(:$stdin = Nil) {
 
         my $made = $parsed.made;
 
-        ddt $made;
+        #ddt $made;
 
         say "---------------------[gists]";
 
@@ -50,5 +52,13 @@ sub MAIN(:$stdin = Nil) {
             say "rtrip: $stripped";
             die;
         }
+
+        say "-------------[cpp round trip success]-------------";
+
+        translate-ir(
+            $made, 
+            TranslationSource::<Cpp>, 
+            TranslationTarget::<Rust>
+        );
     }
 }

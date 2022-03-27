@@ -10,8 +10,8 @@ does IAssignmentExpression {
     has ThrowExpression $.throw-expression is required;
     has $.text;
 
-    method gist{
-        $.throw-expression.gist
+    method gist(:$treemark=False) {
+        $.throw-expression.gist(:$treemark)
     }
 }
 
@@ -29,12 +29,12 @@ does IAssignmentExpression {
 
     has $.text;
 
-    method gist{
-        $.logical-or-expression.gist 
+    method gist(:$treemark=False) {
+        $.logical-or-expression.gist(:$treemark) 
         ~ " " 
-        ~ $.assignment-operator.gist 
+        ~ $.assignment-operator.gist(:$treemark) 
         ~ " " 
-        ~ $.initializer-clause.gist
+        ~ $.initializer-clause.gist(:$treemark)
     }
 }
 
@@ -48,8 +48,8 @@ does IAssignmentExpression {
 
     has $.text;
 
-    method gist{
-        $.conditional-expression.gist
+    method gist(:$treemark=False) {
+        $.conditional-expression.gist(:$treemark)
     }
 }
 
@@ -59,7 +59,7 @@ does IAssignmentOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "="
     }
 }
@@ -70,7 +70,7 @@ does IAssignmentOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "*="
     }
 }
@@ -81,7 +81,7 @@ does IAssignmentOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "/="
     }
 }
@@ -92,7 +92,7 @@ does IAssignmentOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "%="
     }
 }
@@ -103,7 +103,7 @@ does IAssignmentOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "+="
     }
 }
@@ -114,7 +114,7 @@ does IAssignmentOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "-="
     }
 }
@@ -125,7 +125,7 @@ does IAssignmentOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         ">>="
     }
 }
@@ -136,7 +136,7 @@ does IAssignmentOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "<<="
     }
 }
@@ -147,7 +147,7 @@ does IAssignmentOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "&="
     }
 }
@@ -158,7 +158,7 @@ does IAssignmentOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "^="
     }
 }
@@ -169,7 +169,7 @@ does IAssignmentOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "|="
     }
 }

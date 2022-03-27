@@ -15,8 +15,8 @@ our class TrailingTypeSpecifier::CvQualifier does ITrailingTypeSpecifier {
 
     has $.text;
 
-    method gist{
-        $.cv-qualifier.gist ~ " " ~ $.simple-type-specifier.gist
+    method gist(:$treemark=False) {
+        $.cv-qualifier.gist(:$treemark) ~ " " ~ $.simple-type-specifier.gist(:$treemark)
     }
 }
 
@@ -30,9 +30,9 @@ our class TypeSpecifierSeq does ITypeSpecifierSeq {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = @.type-specifiers>>.gist.join(" ");
+        my $builder = @.type-specifiers>>.gist(:$treemark).join(" ");
 
         $builder = $builder.&maybe-extend($.attribute-specifier-seq);
 
@@ -50,8 +50,8 @@ our class TrailingTypeSpecifierSeq {
 
     has $.text;
 
-    method gist{
-        my $builder = @.trailing-type-specifiers>>.gist.join(" ");
+    method gist(:$treemark=False) {
+        my $builder = @.trailing-type-specifiers>>.gist(:$treemark).join(" ");
 
         $builder = $builder.&maybe-extend($.attribute-specifier-seq);
 

@@ -16,8 +16,8 @@ our class AsmDefinition {
 
     has $.text;
 
-    method gist{
-        "asm(" ~ $.string-literal.gist ~ ");"
+    method gist(:$treemark=False) {
+        "asm(" ~ $.string-literal.gist(:$treemark) ~ ");"
     }
 }
 

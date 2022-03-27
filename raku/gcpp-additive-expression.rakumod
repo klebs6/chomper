@@ -7,7 +7,7 @@ our class AdditiveOperator::Plus does IAdditiveOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "+"
     }
 }
@@ -17,7 +17,7 @@ our class AdditiveOperator::Minus does IAdditiveOperator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "-"
     }
 }
@@ -30,8 +30,8 @@ our class AdditiveExpressionTail {
     has IAdditiveOperator         $.additive-operator         is required;
     has IMultiplicativeExpression $.multiplicative-expression is required;
 
-    method gist{
-        $.additive-operator.gist ~ " " ~ $.multiplicative-expression.gist
+    method gist(:$treemark=False) {
+        $.additive-operator.gist(:$treemark) ~ " " ~ $.multiplicative-expression.gist(:$treemark)
     }
 }
 
@@ -45,10 +45,10 @@ does IAdditiveExpression {
     has IMultiplicativeExpression $.multiplicative-expression is required;
     has AdditiveExpressionTail    @.additive-expression-tail;
 
-    method gist{
-        $.multiplicative-expression.gist 
+    method gist(:$treemark=False) {
+        $.multiplicative-expression.gist(:$treemark) 
         ~ " " 
-        ~ @.additive-expression-tail>>.gist.join(" ")
+        ~ @.additive-expression-tail>>.gist(:$treemark).join(" ")
     }
 }
 

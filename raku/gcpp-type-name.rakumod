@@ -11,8 +11,8 @@ our class TheTypeName::SimpleTemplateId does ITheTypeName {
     has SimpleTemplateId $.simple-template-id is required;
     has $.text;
 
-    method gist{
-        $.simple-template-id.gist
+    method gist(:$treemark=False) {
+        $.simple-template-id.gist(:$treemark)
     }
 }
 
@@ -22,8 +22,8 @@ our class TheTypeName::Class does ITheTypeName {
 
     has $.text;
 
-    method gist{
-        $.class-name.gist
+    method gist(:$treemark=False) {
+        $.class-name.gist(:$treemark)
     }
 }
 
@@ -33,8 +33,8 @@ our class TheTypeName::Enum does ITheTypeName {
 
     has $.text;
 
-    method gist{
-        $.enum-name.gist
+    method gist(:$treemark=False) {
+        $.enum-name.gist(:$treemark)
     }
 }
 
@@ -46,8 +46,8 @@ our class TheTypeName::Typedef does ITheTypeName {
 
     has $.text;
 
-    method gist{
-        $.typedef-name.gist
+    method gist(:$treemark=False) {
+        $.typedef-name.gist(:$treemark)
     }
 }
 
@@ -65,13 +65,13 @@ does ISimpleTypeSpecifier
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
         $builder = $builder.&maybe-extend($.nested-name-specifier);
 
-        $builder ~ $.the-type-name.gist
+        $builder ~ $.the-type-name.gist(:$treemark)
     }
 }
 

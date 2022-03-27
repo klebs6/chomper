@@ -13,8 +13,8 @@ our class ExplicitSpecialization {
 
     has $.text;
 
-    method gist{
-        "template<>" ~ $.declaration.gist
+    method gist(:$treemark=False) {
+        "template<>" ~ $.declaration.gist(:$treemark)
     }
 }
 

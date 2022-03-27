@@ -12,14 +12,14 @@ our class ConversionDeclarator {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
-        my $builder = $.pointer-operator.gist;
+        my $builder = $.pointer-operator.gist(:$treemark);
 
         my $x = $.conversion-declarator;
 
         if $x {
-            $builder ~= " " ~ $x.gist;
+            $builder ~= " " ~ $x.gist(:$treemark);
         }
 
         $builder
@@ -36,14 +36,14 @@ our class ConversionTypeId {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
 
         my $builder = "";
 
-        $builder ~= $.type-specifier-seq.gist ~ " ";
+        $builder ~= $.type-specifier-seq.gist(:$treemark) ~ " ";
 
         if $.conversion-declarator {
-            $builder ~= $.conversion-declarator.gist
+            $builder ~= $.conversion-declarator.gist(:$treemark)
         }
 
         $builder
@@ -59,8 +59,8 @@ our class ConversionFunctionId {
 
     has $.text;
 
-    method gist{
-        "operator " ~ $.conversion-type-id.gist
+    method gist(:$treemark=False) {
+        "operator " ~ $.conversion-type-id.gist(:$treemark)
     }
 }
 

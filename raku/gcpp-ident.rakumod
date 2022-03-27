@@ -11,8 +11,8 @@ does IIdentifierStart {
 
     has $.text;
 
-    method gist {
-        $.nondigit.gist
+    method gist(:$treemark=False) {
+        $.nondigit.gist(:$treemark)
     }
 }
 
@@ -23,8 +23,8 @@ does IIdentifierStart {
 
     has $.text;
 
-    method gist {
-        $.universalcharactername.gist
+    method gist(:$treemark=False) {
+        $.universalcharactername.gist(:$treemark)
     }
 }
 
@@ -35,8 +35,8 @@ does IIdentifierContinue {
 
     has $.text;
 
-    method gist {
-        $.digit.gist
+    method gist(:$treemark=False) {
+        $.digit.gist(:$treemark)
     }
 }
 
@@ -47,8 +47,8 @@ does IIdentifierContinue {
 
     has $.text;
 
-    method gist {
-        $.nondigit.gist
+    method gist(:$treemark=False) {
+        $.nondigit.gist(:$treemark)
     }
 }
 
@@ -59,8 +59,8 @@ does IIdentifierContinue {
 
     has $.text;
 
-    method gist {
-        $.universalcharactername.gist
+    method gist(:$treemark=False) {
+        $.universalcharactername.gist(:$treemark)
     }
 }
 
@@ -89,11 +89,10 @@ does IPointerDeclarator
 does ITheTypeName { 
     has Str $.value is required; 
 
-    method gist {
+    method gist(:$treemark=False) {
         $.value
     }
 }
-
 
 our role Identifier::Actions {
 

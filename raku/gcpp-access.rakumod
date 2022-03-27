@@ -9,7 +9,7 @@ our class AccessSpecifier::Private does IAccessSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "private"
     }
 }
@@ -21,7 +21,7 @@ our class AccessSpecifier::Protected does IAccessSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "protected"
     }
 }
@@ -33,7 +33,7 @@ our class AccessSpecifier::Public does IAccessSpecifier {
 
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         "public"
     }
 }

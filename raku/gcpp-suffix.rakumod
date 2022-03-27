@@ -13,8 +13,8 @@ does IIntegersuffix {
 
     has $.text;
 
-    method gist {
-        $.unsignedsuffix.gist.&maybe-extend($.longsuffix)
+    method gist(:$treemark=False) {
+        $.unsignedsuffix.gist(:$treemark).&maybe-extend($.longsuffix)
     }
 }
 
@@ -26,8 +26,8 @@ does IIntegersuffix {
 
     has $.text;
 
-    method gist {
-        $.unsignedsuffix.gist.&maybe-extend($.longlongsuffix)
+    method gist(:$treemark=False) {
+        $.unsignedsuffix.gist(:$treemark).&maybe-extend($.longlongsuffix)
     }
 }
 
@@ -39,8 +39,8 @@ does IIntegersuffix {
 
     has $.text;
 
-    method gist {
-        $.longsuffix.gist.&maybe-extend($.unsignedsuffix)
+    method gist(:$treemark=False) {
+        $.longsuffix.gist(:$treemark).&maybe-extend($.unsignedsuffix)
     }
 }
 
@@ -52,8 +52,8 @@ does IIntegersuffix {
 
     has $.text;
 
-    method gist {
-        $.longsuffix.gist.&maybe-extend($.unsignedsuffix)
+    method gist(:$treemark=False) {
+        $.longsuffix.gist(:$treemark).&maybe-extend($.unsignedsuffix)
     }
 }
 
@@ -61,7 +61,7 @@ our class Unsignedsuffix {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "u"
     }
 }
@@ -70,7 +70,7 @@ our class Longsuffix {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "l"
     }
 }
@@ -80,7 +80,7 @@ does ILonglongsuffix {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "ll"
     }
 }
@@ -90,7 +90,7 @@ does ILonglongsuffix {
 
     has $.text;
 
-    method gist {
+    method gist(:$treemark=False) {
         "LL"
     }
 }
@@ -100,7 +100,7 @@ our class Udsuffix {
     has Str $.value is required;
     has $.text;
 
-    method gist{
+    method gist(:$treemark=False) {
         $.value
     }
 }
