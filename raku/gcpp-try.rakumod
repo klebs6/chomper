@@ -4,6 +4,8 @@ use gcpp-roles;
 use gcpp-statement;
 use gcpp-constructor;
 
+use tree-mark;
+
 # rule handler { 
 #   <catch> 
 #   <.left-paren> 
@@ -18,10 +20,25 @@ our class Handler {
     has $.text;
 
     method gist(:$treemark=False) {
-        "catch(" 
-        ~ $.exception-declaration.gist(:$treemark) 
-        ~ ")" 
-        ~ $.compound-statement.gist(:$treemark)
+        my $builder = "catch(";
+
+        if $treemark {
+            $builder ~= sigil(TreeMark::<_Declaration>);
+
+        } else {
+            $builder ~= $.exception-declaration.gist(:$treemark);
+        }
+
+        $builder ~= ")";
+
+        if $treemark {
+            $builder ~= " " ~ sigil(TreeMark::<_Statements>);
+
+        } else {
+            $builder ~= $.compound-statement.gist(:$treemark);
+        }
+
+        $builder
     }
 }
 
@@ -51,7 +68,14 @@ our class TryBlock does IStatement {
 
     method gist(:$treemark=False) {
 
-        my $builder = "try " ~ $.compound-statement.gist(:$treemark);
+        my $builder = "try ";
+
+        if $treemark {
+            $builder ~= sigil(TreeMark::<_Statements>);
+
+        } else {
+            $builder ~= $.compound-statement.gist(:$treemark);
+        }
 
         for @.handler-seq {
             $builder ~= " " ~ $_.gist(:$treemark) ~ "\n";

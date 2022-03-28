@@ -6,6 +6,8 @@ use gcpp-conversion;
 use gcpp-decltype;
 use gcpp-operator-id;
 
+use tree-mark;
+
 # regex qualified-id { 
 #   <nested-name-specifier> 
 #   <template>? 
@@ -21,6 +23,11 @@ does IIdExpression {
     has $.text;
 
     method gist(:$treemark=False) {
+
+        if $treemark {
+            return sigil(TreeMark::<_Identifier>);
+        }
+
         my $builder = $.nested-name-specifier.gist(:$treemark);
 
         if $.template {

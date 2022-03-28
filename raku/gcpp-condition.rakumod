@@ -4,6 +4,8 @@ use gcpp-roles;
 use gcpp-attr;
 use gcpp-expression;
 
+use tree-mark;
+
 # rule condition:sym<expr> { 
 #   <expression> 
 # }
@@ -59,6 +61,10 @@ our class Condition::Decl does ICondition {
     has $.text;
 
     method gist(:$treemark=False) {
+
+        if $treemark {
+            return sigil(TreeMark::<_Condition>);
+        }
 
         my $builder = "";
 

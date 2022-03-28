@@ -2,6 +2,8 @@ use Data::Dump::Tree;
 
 use gcpp-roles;
 
+use tree-mark;
+
 # rule selection-statement:sym<if> { 
 #   <.if_> 
 #   <.left-paren> 
@@ -22,18 +24,38 @@ does ISelectionStatement {
 
     method gist(:$treemark=False) {
 
-        my $builder = "if (" ~ $.condition.gist(:$treemark) ~ ") ";
+        my $builder = "if (";
 
-        for @.statements {
-            $builder ~= $_.gist(:$treemark).indent(4) ~ "\n";
+        if $treemark {
+            $builder ~= sigil(TreeMark::<_Condition>);
+
+        } else {
+            $builder ~= $.condition.gist(:$treemark);
         }
 
-        if $.else-statement-comment {
+        $builder ~= ") ";
+
+        if $treemark {
+
+            $builder ~= sigil(TreeMark::<_Statements>);
+
+        } else {
+            for @.statements {
+                $builder ~= $_.gist(:$treemark).indent(4) ~ "\n";
+            }
+        }
+
+        if $.else-statement-comment and not $treemark {
             $builder ~= "\n" ~ $.else-statement-comment.gist(:$treemark);
         }
 
         for @.else-statements {
-            $builder ~= "else " ~ $_.gist(:$treemark) ~ "\n";
+            if $treemark {
+                $builder ~= " else " ~ sigil(TreeMark::<_Statements>) ~ "\n";
+
+            } else {
+                $builder ~= "else " ~ $_.gist(:$treemark) ~ "\n";
+            }
         }
 
         $builder

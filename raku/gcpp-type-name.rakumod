@@ -6,6 +6,8 @@ use gcpp-type-id;
 use gcpp-enum;
 use gcpp-typedef;
 
+use tree-mark;
+
 # rule the-type-name:sym<simple-template-id> { <simple-template-id> }
 our class TheTypeName::SimpleTemplateId does ITheTypeName {
     has SimpleTemplateId $.simple-template-id is required;
@@ -66,6 +68,10 @@ does ISimpleTypeSpecifier
     has $.text;
 
     method gist(:$treemark=False) {
+
+        if $treemark {
+            return sigil(TreeMark::<_Type>);
+        }
 
         my $builder = "";
 

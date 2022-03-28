@@ -4,6 +4,8 @@ use gcpp-roles;
 use gcpp-type-id;
 use gcpp-expression;
 
+use tree-mark;
+
 # rule postfix-expression-cast { 
 #   <cast-token> 
 #   <less> 
@@ -149,6 +151,11 @@ does IUnaryExpression {
     has $.text;
 
     method gist(:$treemark=False) {
+
+        if $treemark {
+            return sigil(TreeMark::<_Expression>);
+        }
+
         $.postfix-expression-body.gist(:$treemark) ~ @.postfix-expression-tail>>.gist(:$treemark).join("")
     }
 }

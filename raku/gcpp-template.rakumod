@@ -7,6 +7,8 @@ use gcpp-param;
 use gcpp-operator-id;
 use gcpp-type-param;
 
+use tree-mark;
+
 # rule template-parameter:sym<type> { <type-parameter> }
 our class TemplateParameter::Type does ITemplateParameter {
     has TypeParameter $.type-parameter is required;
@@ -92,6 +94,11 @@ does IPostListHead {
     has $.text;
 
     method gist(:$treemark=False) {
+
+        if $treemark {
+            return sigil(TreeMark::<_TemplateId>) 
+        }
+
         $.template-name.gist(:$treemark) ~ "<"  ~ @.template-arguments>>.gist(:$treemark).join(", ") ~ ">"
     }
 }

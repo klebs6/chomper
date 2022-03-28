@@ -48,6 +48,7 @@ our class PrimaryExpression::Id does IPrimaryExpression {
     has $.text;
 
     method gist(:$treemark=False) {
+
         $.id-expression.gist(:$treemark)
     }
 }

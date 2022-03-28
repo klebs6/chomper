@@ -2,6 +2,8 @@ use Data::Dump::Tree;
 
 use gcpp-roles;
 
+use tree-mark;
+
 our class EmptyInitializerList 
 does IInitializerList
 does IInitializerClause 
@@ -82,6 +84,11 @@ does ICondition {
     has $.text;
 
     method gist(:$treemark=False) {
+
+        if $treemark {
+            return sigil(TreeMark::<_Expression>);
+        }
+
         @.assignment-expressions>>.gist(:$treemark).join(", ")
     }
 }
@@ -107,6 +114,11 @@ does IPostfixExpressionTail {
     has $.text;
 
     method gist(:$treemark=False) {
+
+        if $treemark {
+            return sigil(TreeMark::<_ExprList>);
+        }
+
         $.initializer-list.gist(:$treemark)
     }
 }
@@ -122,6 +134,7 @@ our class Initializer::ParenExprList does IInitializer {
     has $.text;
 
     method gist(:$treemark=False) {
+
         "(" ~ $.expression-list.gist(:$treemark) ~ ")"
     }
 }

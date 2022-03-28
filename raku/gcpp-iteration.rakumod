@@ -2,6 +2,7 @@ use Data::Dump::Tree;
 
 use gcpp-roles;
 use gcpp-for-range;
+use tree-mark;
 
 # rule iteration-statement:sym<while> { 
 #   <while_> 
@@ -18,10 +19,29 @@ does IIterationStatement {
     has $.text;
 
     method gist(:$treemark=False) {
-        my $builder = "while(" ~ $.condition.gist(:$treemark) ~ ")";
 
-        for @.statements {
-            $builder ~= $_.gist(:$treemark) ~ "\n";
+        my $builder = "while(";
+
+        if $treemark {
+
+            $builder ~= sigil(TreeMark::<_Condition>);
+
+        } else {
+
+            $builder ~= $.condition.gist(:$treemark);
+        }
+
+        $builder ~= ")";
+
+        if $treemark {
+
+            $builder ~= sigil(TreeMark::<_Statements>);
+
+        } else {
+
+            for @.statements {
+                $builder ~= $_.gist(:$treemark) ~ "\n";
+            }
         }
 
         $builder
@@ -119,10 +139,28 @@ our class IterationStatement::ForRange does IIterationStatement {
 
         my $builder = "for(";
 
-        $builder ~= $.for-range-declaration.gist(:$treemark) ~ ": " ~ $.for-range-initializer.gist(:$treemark) ~ ")";
+        if $treemark {
 
-        for @.statements {
-            $builder ~= $_.gist(:$treemark) ~ "\n";
+            $builder ~= sigil(TreeMark::<_Declaration>);
+            $builder ~= ": ";
+            $builder ~= sigil(TreeMark::<_Expression>);
+
+        } else {
+
+            $builder ~= $.for-range-declaration.gist(:$treemark);
+            $builder ~= ": ";
+            $builder ~= $.for-range-initializer.gist(:$treemark);
+        }
+
+        $builder ~= ")";
+
+        if $treemark {
+            $builder ~= " " ~ sigil(TreeMark::<_Statements>);
+
+        } else {
+            for @.statements {
+                $builder ~= $_.gist(:$treemark) ~ "\n";
+            }
         }
 
         $builder
@@ -131,7 +169,13 @@ our class IterationStatement::ForRange does IIterationStatement {
 
 our role IterationStatement::Actions {
 
-    # rule iteration-statement:sym<while> { <while_> <.left-paren> <condition> <.right-paren> <statement> }
+    # rule iteration-statement:sym<while> { 
+    #   <while_> 
+    #   <.left-paren> 
+    #   <condition> 
+    #   <.right-paren> 
+    #   <statement> 
+    # }
     method iteration-statement:sym<while>($/) {
         make IterationStatement::While.new(
             condition  => $<condition>.made,
@@ -140,7 +184,15 @@ our role IterationStatement::Actions {
         )
     }
 
-    # rule iteration-statement:sym<do> { <do_> <statement> <while_> <.left-paren> <expression> <.right-paren> <semi> }
+    # rule iteration-statement:sym<do> { 
+    #   <do_> 
+    #   <statement> 
+    #   <while_> 
+    #   <.left-paren> 
+    #   <expression> 
+    #   <.right-paren> 
+    #   <semi> 
+    # }
     method iteration-statement:sym<do>($/) {
         make IterationStatement::Do.new(
             comment    => $<semi>.made // Nil,

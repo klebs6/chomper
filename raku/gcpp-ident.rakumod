@@ -1,5 +1,7 @@
 use Data::Dump::Tree;
 
+use tree-mark;
+
 use gcpp-roles;
 use gcpp-char;
 use gcpp-digit;
@@ -90,6 +92,11 @@ does ITheTypeName {
     has Str $.value is required; 
 
     method gist(:$treemark=False) {
+
+        if $treemark {
+            return sigil(TreeMark::<_Identifier>); 
+        }
+
         $.value
     }
 }

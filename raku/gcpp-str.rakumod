@@ -1,7 +1,7 @@
 use Data::Dump::Tree;
 
 use gcpp-roles;
-
+use tree-mark;
 
 # token literal:sym<str> { <string-literal> }
 our class StringLiteral does ILiteral { 
@@ -10,7 +10,11 @@ our class StringLiteral does ILiteral {
     has $.text;
 
     method gist(:$treemark=False) {
-        $.value
+        if $treemark {
+            sigil(TreeMark::<_Literal>)
+        } else {
+            $.value
+        }
     }
 }
 

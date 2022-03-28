@@ -33,7 +33,8 @@ sub MAIN(:$stdin = Nil) {
 
         my $made = $parsed.made;
 
-        #ddt $made;
+        ddt $made;
+        say $made>>.gist(treemark => True).join("\n");
 
         say "---------------------[gists]";
 
