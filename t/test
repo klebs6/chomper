@@ -1,7 +1,0 @@
-#!/usr/bin/env raku
-
-use t_default_value;
-
-test-default-values();
-test-struct-member-declaration();
-
