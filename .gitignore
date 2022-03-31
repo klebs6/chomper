@@ -7,3 +7,4 @@ raku/.precomp/*
 /vendor
 /.cargo
 Cargo.lock
+/txt
