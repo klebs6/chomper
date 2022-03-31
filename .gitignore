@@ -8,3 +8,4 @@ raku/.precomp/*
 /.cargo
 Cargo.lock
 /txt
+/t
