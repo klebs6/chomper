@@ -1,7 +1,7 @@
 #!/usr/bin/env raku
 use antlr-grammar;
 
-my $translator = "/Users/kleb/bethesda/work/repo/translator";
+my $translator = %*ENV<WORK> ~ "/repo/translator";
 my $in         = $translator ~ "/u/json.g4";
 my $out        = $translator ~ "/raku/gjson.rakumod";
 

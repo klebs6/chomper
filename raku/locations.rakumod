@@ -1,11 +1,11 @@
 our $whitelist-file = 
-"/Users/kleb/bethesda/work/repo/translator/txt/whitelist.txt";
+%*ENV<WORK> ~ "/repo/translator/txt/whitelist.txt";
 
 our $text-typemap-file =
-"/Users/kleb/bethesda/work/repo/translator/txt/text-typemap.txt";
+%*ENV<WORK> ~ "/repo/translator/txt/text-typemap.txt";
 
 our $snake-case-file = 
-"/Users/kleb/bethesda/work/repo/translator/txt/snake-cased.txt";
+%*ENV<WORK> ~ "/repo/translator/txt/snake-cased.txt";
 
 our sub whitelist($type) {
     spurt $whitelist-file, "$type\n", :append;

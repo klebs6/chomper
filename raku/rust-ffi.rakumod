@@ -15,7 +15,7 @@ sub get_rust_fname(
 )
 returns Str is encoded('utf8')
 is native(
-"/Users/kleb/bethesda/work/repo/translator/target/debug/translator"
+%*ENV<WORK> ~ "/repo/translator/target/debug/translator"
 ) { * }
 
 sub get_rust_current_function_linerange( 
@@ -26,7 +26,7 @@ sub get_rust_current_function_linerange(
 )
 returns Pointer[LineRange]
 is native(
-"/Users/kleb/bethesda/work/repo/translator/target/debug/translator"
+%*ENV<WORK> ~ "/repo/translator/target/debug/translator"
 ) { * }
 
 our sub get-rust-fn(
