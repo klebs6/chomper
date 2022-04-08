@@ -12,6 +12,14 @@ our class Trait {
 
     has $.text;
 
+    method has-name {
+        True
+    }
+
+    method name {
+        $.identifier.gist
+    }
+
     method gist {
 
         my $builder = "";
@@ -110,6 +118,10 @@ our class TraitImpl {
 
     has $.text;
 
+    method has-name {
+        False
+    }
+
     method gist {
 
         my $builder = "";
@@ -164,6 +176,14 @@ our class TraitAlias {
     has $.maybe-where-clause;
 
     has $.text;
+
+    method has-name {
+        True
+    }
+
+    method name {
+        $.identifier.gist
+    }
 
     method gist {
 
@@ -257,11 +277,13 @@ our role Trait::Rules {
 our role Trait::Actions {
 
     method trait($/) {
+        my @bounds = $/<type-param-bounds>:exists ?? $<type-param-bounds>>>.made !! [];
+
         make Trait.new(
             unsafe                  => so $<kw-unsafe>:exists,
             identifier              => $<identifier>.made,
             maybe-generic-params    => $<generic-params>.made,
-            maybe-type-param-bounds => $<type-param-bounds>>>.made,
+            maybe-type-param-bounds => @bounds,
             maybe-where-clause      => $<where-clause>.made,
             inner-attributes        => $<inner-attribute>>>.made,
             associated-items        => $<associated-item>>>.made,

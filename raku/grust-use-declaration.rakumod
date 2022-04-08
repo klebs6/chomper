@@ -8,6 +8,14 @@ our class UseDeclaration {
     method gist {
         "use " ~ $.use-tree.gist ~ ";"
     }
+
+    method has-name {
+        False
+    }
+
+    method get-concrete-leafs {
+        $.use-tree.get-concrete-leafs()
+    }
 }
 
 our class UseTreeBasic {
@@ -25,6 +33,10 @@ our class UseTreeBasic {
 
             "*"
         }
+    }
+
+    method get-concrete-leafs {
+        []
     }
 }
 
@@ -50,6 +62,10 @@ our class UseTreeComplex {
 
         $builder ~ '}'
     }
+
+    method get-concrete-leafs {
+        @.use-trees>>.get-concrete-leafs
+    }
 }
 
 our class UseTreeAs {
@@ -67,6 +83,10 @@ our class UseTreeAs {
         }
 
         $builder
+    }
+
+    method get-concrete-leafs {
+        $.simple-path.get-rightmost-element()
     }
 }
 

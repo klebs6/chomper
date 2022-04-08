@@ -2,6 +2,10 @@ use translate-io;
 use translate-python;
 use translate-cpp;
 
+our sub translate-cpp-to-rust($ir) {
+    translate-ir($ir, TranslationSource::<Cpp>, TranslationTarget::<Rust>)
+}
+
 our sub translate-ir(
     $ir, 
     TranslationSource $src,

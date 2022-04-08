@@ -8,6 +8,10 @@ our class SimplePath {
     method gist {
         @.simple-path-segments>>.gist.join("::")
     }
+
+    method get-rightmost-element {
+        @.simple-path-segments[*-1]
+    }
 }
 
 our role SimplePath::Rules {

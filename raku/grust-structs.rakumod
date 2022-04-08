@@ -1,12 +1,22 @@
 use Data::Dump::Tree;
+use grust-comment;
 
 our class Struct {
     has $.identifier;
     has $.maybe-generic-params;
     has $.maybe-where-clause;
     has @.maybe-struct-fields;
+    has $.maybe-inner-trailing-comment;
 
     has $.text;
+
+    method has-name {
+        True
+    }
+
+    method name {
+        $.identifier.gist
+    }
 
     method gist {
 
@@ -24,6 +34,11 @@ our class Struct {
 
             $builder ~= '{';
             $builder ~= @.maybe-struct-fields>>.gist.join(",\n").indent(4);
+
+            if $.maybe-inner-trailing-comment {
+                $builder ~= $.maybe-inner-trailing-comment.gist.indent(4);
+            }
+
             $builder ~= '}';
 
         } else {
@@ -41,6 +56,14 @@ our class TupleStruct {
     has $.maybe-where-clause;
 
     has $.text;
+
+    method has-name {
+        True
+    }
+
+    method name {
+        $.identifier.gist
+    }
 
     method gist {
 
@@ -99,6 +122,29 @@ our class StructField {
     }
 }
 
+our class StructFieldItem {
+    has StructField $.struct-field       is required;
+    has Bool        $.has-trailing-comma is required;
+    has             $.maybe-trailing-comment;
+
+    has $.text;
+
+    method gist {
+
+        my $builder = $.struct-field.gist;
+
+        if $.has-trailing-comma {
+            $builder ~= ",";
+        }
+
+        if $.maybe-trailing-comment {
+            $builder ~= " " ~ $.maybe-trailing-comment.gist;
+        }
+
+        $builder
+    }
+}
+
 our class TupleField {
     has $.maybe-comment;
     has @.outer-attributes;
@@ -140,7 +186,7 @@ our role Struct::Rules {
         <where-clause>?
         [
             | <tok-semi>
-            | <tok-lbrace> <struct-fields>? <tok-rbrace>
+            | <tok-lbrace> <struct-fields>? <comment>? <tok-rbrace>
         ]
     }
 
@@ -155,8 +201,17 @@ our role Struct::Rules {
         <tok-semi>
     }
 
-    rule struct-fields {
-        <struct-field>+ %% <tok-comma>
+    regex struct-fields {
+        [<inner-struct-field-item>* % <.ws>]
+        <outer-struct-field-item>
+    }
+
+    regex inner-struct-field-item {
+        <struct-field> \h* <tok-comma>  \h* <line-comment>?
+    }
+
+    regex outer-struct-field-item {
+        <struct-field> \h* <tok-comma>? \h* <line-comment>?
     }
 
     rule struct-field {
@@ -187,11 +242,12 @@ our role Struct::Actions {
 
     method struct-struct($/) {
         make Struct.new(
-            identifier           => $<identifier>.made,
-            maybe-generic-params => $<generic-params>.made,
-            maybe-where-clause   => $<where-clause>.made,
-            maybe-struct-fields  => $<struct-fields>.made,
-            text                 => $/.Str,
+            identifier                   => $<identifier>.made,
+            maybe-generic-params         => $<generic-params>.made,
+            maybe-where-clause           => $<where-clause>.made,
+            maybe-struct-fields          => $<struct-fields>.made,
+            maybe-inner-trailing-comment => $<comment>.made,
+            text                         => $/.Str,
         )
     }
 
@@ -205,8 +261,32 @@ our role Struct::Actions {
         )
     }
 
+    method inner-struct-field-item($/) {
+        make StructFieldItem.new(
+            struct-field           => $<struct-field>.made,
+            has-trailing-comma     => $/<comma>:exists,
+            maybe-trailing-comment => Comment.new(
+                text => $<line-comment>.made,
+                line => True,
+            ),
+        )
+    }
+
+    method outer-struct-field-item($/) {
+        make StructFieldItem.new(
+            struct-field           => $<struct-field>.made,
+            has-trailing-comma     => $/<comma>:exists,
+            maybe-trailing-comment => Comment.new(
+                text => $<line-comment>.made,
+                line => True,
+            ),
+        )
+    }
+
     method struct-fields($/) {
-        make $<struct-field>>>.made
+        my @inner = $<inner-struct-field-item>>>.made;
+        my $outer = $<outer-struct-field-item>.made;
+        make [|@inner, $outer]
     }
 
     method struct-field($/) {

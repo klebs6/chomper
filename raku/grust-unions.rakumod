@@ -8,6 +8,14 @@ our class Union {
 
     has $.text;
 
+    method has-name {
+        True
+    }
+
+    method name {
+        $.identifier.gist
+    }
+
     method gist {
 
         my $builder = "union ";

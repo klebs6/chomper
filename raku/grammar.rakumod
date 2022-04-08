@@ -119,7 +119,6 @@ does FunctionHeader {
         [<use-dispatch-helper> ';']?
     }
 
-
     rule using-declaration {
         [
             | <.using> <lhs=type> '=' <rhs=type> ';'

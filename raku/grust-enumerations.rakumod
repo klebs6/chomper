@@ -8,6 +8,14 @@ our class Enumeration {
 
     has $.text;
 
+    method has-name {
+        True
+    }
+
+    method name {
+        $.identifier.gist
+    }
+
     method gist {
 
         my $builder = "enum " ~ $.identifier.gist;

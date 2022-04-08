@@ -29,7 +29,10 @@ sub is-not-strict-or-reserved-keyword($token) {
     my $strict   = $StrictKeywords::strict-keyword;
     my $reserved = $ReservedKeywords::reserved-keyword;
 
-    $token !~~ /$strict | $reserved/
+    [
+        $token !~~ /^^ $strict $$/,
+        $token !~~ /^^ $reserved $$/
+    ].all
 }
 
 our role Identifiers::Rules {

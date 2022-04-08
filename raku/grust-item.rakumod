@@ -43,6 +43,17 @@ our class VisItem {
 
         $builder
     }
+
+    method is-public returns Bool {
+        #TODO: check the "so" clause
+        so $.maybe-visibility ?? True !! False
+    }
+
+    method maybe-item-name {
+        if $.vis-item-variant.has-name() {
+            return $.vis-item-variant.name();
+        }
+    }
 }
 
 our class InitExpression {
@@ -61,6 +72,14 @@ our class ConstantItem {
     has $.maybe-init-expression;
 
     has $.text;
+
+    method has-name {
+        True
+    }
+
+    method name {
+        $.identifier-or-underscore.gist
+    }
 
     method gist {
 
@@ -88,6 +107,14 @@ our class StaticItem {
 
     has $.text;
 
+    method has-name {
+        True
+    }
+
+    method name {
+        $.identifier.gist
+    }
+
     method gist {
         my $builder = "";
 
@@ -113,10 +140,16 @@ our class StaticItem {
 
 our role Item::Rules {
 
-    rule crate-item {
+    proto rule crate-item { * }
+
+    rule crate-item:sym<item> {
         <comment>?
         <outer-attribute>*
         <item-variant>
+    }
+
+    rule crate-item:sym<comment> {
+        <comment>
     }
 
     proto rule item-variant { * }
@@ -176,13 +209,17 @@ our role Item::Rules {
 
 our role Item::Actions {
 
-    method crate-item($/) {
+    method crate-item:sym<item>($/) {
         make CrateItem.new(
             maybe-comment    => $<comment>.made,
             outer-attributes => $<outer-attribute>>>.made,
             item-variant     => $<item-variant>.made,
             text             => $/.Str,
         )
+    }
+
+    method crate-item:sym<comment>($/) {
+        make $<comment>.made
     }
 
     method item-variant:sym<vis>($/)   { make $<vis-item>.made }

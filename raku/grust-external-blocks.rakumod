@@ -8,6 +8,10 @@ our class ExternBlock {
 
     has $.text;
 
+    method has-name {
+        False
+    }
+
     method gist {
 
         my $builder;

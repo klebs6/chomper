@@ -60,6 +60,14 @@ our class ExternCrate {
 
         $builder ~ ";"
     }
+
+    method name {
+        $.crate-ref.gist
+    }
+
+    method has-name {
+        True
+    }
 }
 
 our class ModuleSemi {
@@ -79,6 +87,14 @@ our class ModuleSemi {
         $builder ~= "mod " ~ $.identifier.gist ~ ";";
 
         $builder
+    }
+
+    method name {
+        $.identifier.gist
+    }
+
+    method has-name {
+        True
     }
 }
 
@@ -115,6 +131,14 @@ our class ModuleBlock {
         $builder ~= "\n\}";
 
         $builder
+    }
+
+    method name {
+        $.identifier.gist
+    }
+
+    method has-name {
+        True
     }
 }
 

@@ -9,6 +9,14 @@ our class TypeAlias {
 
     has $.text;
 
+    method has-name {
+        True
+    }
+
+    method name {
+        $.identifier.gist
+    }
+
     method gist {
 
         my $builder = "type " ~ $.identifier.gist;

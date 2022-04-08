@@ -110,5 +110,4 @@ our role Python3::Grammar::Indent {
         }
         $should-skip
     }
-
 }

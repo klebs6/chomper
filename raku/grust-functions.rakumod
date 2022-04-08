@@ -46,6 +46,14 @@ our class Function {
 
         $builder
     }
+
+    method has-name {
+        True
+    }
+
+    method name {
+        $.identifier.gist
+    }
 }
 
 our class FunctionQualifiers {
@@ -266,6 +274,7 @@ our role Function::Rules {
         <tok-lparen>
         <function-parameters>?
         <tok-rparen>
+        <comment>?
         <function-return-type>?
         <where-clause>?
         [

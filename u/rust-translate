@@ -3,6 +3,9 @@
 use rust-grammar;
 use Data::Dump::Tree;
 
+my $do-made       = True;
+my $do-round-trip = False;
+
 sub MAIN(:$stdin = Nil) {
 
     my $in = $stdin 
@@ -11,7 +14,7 @@ sub MAIN(:$stdin = Nil) {
 
     $in = $in.subst(/^\s+/,"");
 
-    my $rule = "statements";
+    my $rule = "crate";
 
     my $actions = Rust::Actions.new;
 
@@ -24,9 +27,14 @@ sub MAIN(:$stdin = Nil) {
 
         say $parsed;
 
+        return unless $do-made;
+
         my $made = $parsed.made;
 
         ddt $made;
+
+        return unless $do-round-trip;
+
         say "---------------------[gists]";
 
         for $made.List>>.gist.join("") {

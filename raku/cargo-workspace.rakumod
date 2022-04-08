@@ -1,5 +1,21 @@
 use Config::TOML;
 
+our sub get-crate-files($crate, 
+    :$exclude-boilerplate=True) {
+
+    my @all = ($crate ~ "/src")[0].IO.dir;
+
+    if $exclude-boilerplate {
+
+        @all.grep: {
+            [$_ !~~ /lib.rs/, $_ !~~ /imports.rs/].all
+        }
+
+    } else {
+
+        @all
+    }
+}
 #----------------------------------------------
 our sub maybe-create-directory($name) {
     if not $name.IO.d {

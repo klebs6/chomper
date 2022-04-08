@@ -147,17 +147,18 @@ our role TypeName::Rules {
 
     proto rule type-name-specifier { * }
 
-    rule type-name-specifier:sym<ident> {
-        <typename_>
-        <nested-name-specifier>
-        <identifier>
-    }
-
+    #TODO: should this be first or second?
     rule type-name-specifier:sym<template> {
         <typename_>
         <nested-name-specifier>
         <template>?  
         <simple-template-id>
+    }
+
+    rule type-name-specifier:sym<ident> {
+        <typename_>
+        <nested-name-specifier>
+        <identifier>
     }
 
     proto rule the-type-name                   { * }

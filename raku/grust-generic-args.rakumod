@@ -87,12 +87,12 @@ our role GenericArgs::Rules {
         <tok-gt>
     }
 
-    proto rule generic-arg { * }
-
-    rule generic-arg:sym<lifetime>             { <lifetime> }
-    rule generic-arg:sym<generic-args-binding> { <generic-args-binding> }
-    rule generic-arg:sym<type>                 { <type> }
-    rule generic-arg:sym<generic-args-const>   { <generic-args-const> }
+    rule generic-arg {  
+        || <lifetime>
+        || <type>
+        || <generic-args-binding>
+        || <generic-args-const>
+    }
 
     proto rule generic-args-const                    { * }
     rule generic-args-const:sym<block>               { <block-expression> }
@@ -142,10 +142,23 @@ our role GenericArgs::Actions {
         )
     }
 
-    method generic-arg:sym<lifetime>($/)                   { make $<lifetime>.made }
-    method generic-arg:sym<generic-args-binding>($/)       { make $<generic-args-binding>.made }
-    method generic-arg:sym<type>($/)                       { make $<type>.made }
-    method generic-arg:sym<generic-args-const>($/)         { make $<generic-args-const>.made }
+    method generic-arg($/) { 
+        my $key = $/.keys[0];
+        given $key {
+            when "lifetime" {
+                make $<lifetime>.made 
+            }
+            when "generic-args-binding" {
+                make $<generic-args-binding>.made 
+            }
+            when "type" {
+                make $<type>.made 
+            }
+            when "generic-args-const" {
+                make $<generic-args-const>.made 
+            }
+        }
+    }
 
     method generic-args-const:sym<block>($/)               { make $<block-expression>.made }
     method generic-args-const:sym<lit>($/)                 { make $<literal-expression>.made }

@@ -2,6 +2,28 @@ use Data::Dump::Tree;
 
 use doxy-comment;
 
+our class Comment {
+    has Str  $.text;
+    has Bool $.line;
+
+    method gist {
+
+        if $.line {
+
+            my @lines = $.text.split("\n");
+
+            @lines.map: {
+
+                "// " ~ $_
+
+            }.join("\n")
+
+        } else {
+            "/* " ~ $.text ~ " */"
+        }
+    }
+}
+
 our role Comment::Rules 
 {
     proto rule comment { * }
@@ -13,14 +35,16 @@ our role Comment::Rules
 our role Comment::Actions {
 
     method comment:sym<line>($/)  { 
-
-        make 
-        parse-doxy-comment(
-            "\n/*\n" 
-            ~ $<line-comment>>>.made.join("\n")
-            ~ "\n*/"
+        make Comment.new(
+            text => $<line-comment>>>.made.join("\n"),
+            line => True,
         )
     }
 
-    method comment:sym<block>($/) { make $<block-comment>.made }
+    method comment:sym<block>($/) { 
+        make Comment.new(
+            text => $<block-comment>.made,
+            line => False,
+        )
+    }
 }

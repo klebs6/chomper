@@ -196,8 +196,15 @@ our role Rust::Actions::Role
     does WeakKeywords::Actions 
     does WhereClause::Actions {}
 
-our grammar Rust::Grammar does Rust::Grammar::Role {}
-our class Rust::Actions does Rust::Actions::Role {}
+our grammar Rust::Grammar 
+does Rust::Grammar::Role 
+{}
+
+our class Rust::Actions 
+does Rust::Actions::Role 
+{}
 
 use Grammar::Tracer;
-our grammar Rust::GrammarD does Rust::Grammar::Role {}
+our grammar Rust::GrammarD 
+does Rust::Grammar::Role 
+{}

@@ -20,7 +20,14 @@ our role BlockComment::Rules {
     }
 
     token block-comment-begin {
-        \/\*
+
+        \/\* 
+
+        #this is a hack because i havn't debugged
+        #"doc-comment" yet and we get these on
+        #structs
+        \*? 
+
         { 
             self.push-state(BlockCommentState::<initial>);
             self.push-state(BlockCommentState::<blockcomment>);
@@ -74,7 +81,7 @@ our role BlockComment::Rules {
 our role BlockComment::Actions {
 
     method block-comment($/) {
-        make "/*" ~ $<block-comment-continue>>>.made.join("") ~ "*/"
+        make $<block-comment-continue>>>.made.join("")
     }
 
     method block-comment-continue($/) {

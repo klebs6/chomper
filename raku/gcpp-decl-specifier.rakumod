@@ -101,8 +101,8 @@ our role DeclSpecifier::Actions {
 our role DeclSpecifier::Rules {
 
     proto rule decltype-specifier-body { * }
-    rule decltype-specifier-body:sym<expr> {  <expression> }
-    rule decltype-specifier-body:sym<auto> {  <auto> }
+    rule decltype-specifier-body:sym<expr> { <expression> }
+    rule decltype-specifier-body:sym<auto> { <auto> }
 
     rule decltype-specifier {
         <decltype>
