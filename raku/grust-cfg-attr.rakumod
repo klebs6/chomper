@@ -53,11 +53,18 @@ our class InnerAttribute {
 
 our class OuterAttribute {
     has $.attr;
+    has $.maybe-comment;
 
     has $.text;
 
     method gist {
-        "#[" ~ $.attr.gist ~ "]"
+        my $builder = "#[" ~ $.attr.gist ~ "]";
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist;
+        }
+
+        $builder
     }
 }
 
@@ -130,6 +137,7 @@ our role CfgAttr::Rules {
         <tok-lbrack>
         <attr>
         <tok-rbrack>
+        <line-comment>?
     }
 
     rule attr {
@@ -180,8 +188,9 @@ our role CfgAttr::Actions {
 
     method outer-attribute($/) {
         make OuterAttribute.new(
-            attr => $<attr>.made,
-            text => $/.Str,
+            attr          => $<attr>.made,
+            maybe-comment => $<line-comment>.made,
+            text          => $/.Str,
         )
     }
 

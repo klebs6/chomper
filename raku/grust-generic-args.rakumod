@@ -1,5 +1,23 @@
 use Data::Dump::Tree;
 
+our class GenericArgConstGeneric {
+    has $.identifier;
+    has $.type;
+    has $.maybe-default;
+
+    method gist {
+
+        my $builder 
+        = "const " ~ $.identifier.gist ~ ": " ~ $.type.gist;
+
+        if $.maybe-default {
+            $builder ~= $.maybe-default.gist;
+        }
+
+        $builder
+    }
+}
+
 our class GenericArgs {
 
     has @.args;
@@ -89,8 +107,9 @@ our role GenericArgs::Rules {
 
     rule generic-arg {  
         || <lifetime>
-        || <type>
+        || <generic-args-const-generic>
         || <generic-args-binding>
+        || <type>
         || <generic-args-const>
     }
 
@@ -99,6 +118,17 @@ our role GenericArgs::Rules {
     rule generic-args-const:sym<lit>                 { <literal-expression> }
     rule generic-args-const:sym<minus-lit>           { <minus-literal-expression> }
     rule generic-args-const:sym<simple-path-segment> { <simple-path-segment> }
+
+    rule generic-args-const-generic {  
+        <kw-const> 
+        <identifier> 
+        <tok-colon> 
+        <type> 
+        [
+            <tok-eq> 
+            <literal-expression>
+        ]?
+    }
 
     rule minus-literal-expression {
         <tok-minus> <literal-expression>
@@ -157,6 +187,9 @@ our role GenericArgs::Actions {
             when "generic-args-const" {
                 make $<generic-args-const>.made 
             }
+            when "generic-args-const-generic" {
+                make $<generic-args-const-generic>.made 
+            }
         }
     }
 
@@ -164,6 +197,15 @@ our role GenericArgs::Actions {
     method generic-args-const:sym<lit>($/)                 { make $<literal-expression>.made }
     method generic-args-const:sym<minus-lit>($/)           { make $<minus-literal-expression>.made }
     method generic-args-const:sym<simple-path-segment>($/) { make $<simple-path-segment>.made }
+
+    #-----------------------
+    method generic-args-const-generic($/) { 
+        make GenericArgConstGeneric.new(
+            identifier    => $<identifier>.made,
+            type          => $<type>.made,
+            maybe-default => $<literal-expression>.made,
+        )
+    }
 
     method minus-literal-expression($/) {
         make MinusLiteralExpression.new(

@@ -76,11 +76,19 @@ our class TypeParam {
 our class ConstParam {
     has $.identifier;
     has $.type;
+    has $.maybe-default;
 
     has $.text;
 
     method gist {
-        "const " ~ $.identifier ~ ": " ~ $.type.gist
+
+        my $builder = "const " ~ $.identifier ~ ": " ~ $.type.gist;
+
+        if $.maybe-default {
+            $builder ~= " = " ~ $.maybe-default.gist;
+        }
+
+        $builder
     }
 }
 
@@ -124,6 +132,7 @@ our role GenericParams::Rules {
         <identifier> 
         <tok-colon> 
         <type>
+        [ <tok-eq> <literal-expression> ]?
     }
 }
 
@@ -168,9 +177,10 @@ our role GenericParams::Actions {
 
     method const-param($/) {
         make ConstParam.new(
-            identifier => $<identifier>.made,
-            type       => $<type>.made,
-            text       => $/.Str,
+            identifier    => $<identifier>.made,
+            type          => $<type>.made,
+            maybe-default => $<literal-expression>.made,
+            text          => $/.Str,
         )
     }
 }

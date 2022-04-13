@@ -135,13 +135,23 @@ our class MaybeNamedParam {
 
 our role BareFunctionType::Rules {
 
-    rule bare-function-type {
-        <for-lifetimes>?
+    regex bare-function-type {
+
+        #this needs to be uncommented but for
+        #some reason it breaks function args that
+        #begin with "for"
+        #<for-lifetimes>? 
+
+        <.ws>
         <function-type-qualifiers>
+        <.ws>
         <kw-fn>
         <tok-lparen>
+        <.ws>
         <bare-function-parameters>?
+        <.ws>
         <tok-rparen>
+        <.ws>
         <bare-function-return-type>?
     }
 

@@ -6,7 +6,7 @@ our class Struct {
     has $.maybe-generic-params;
     has $.maybe-where-clause;
     has @.maybe-struct-fields;
-    has $.maybe-inner-trailing-comment;
+    has @.maybe-inner-trailing-comments;
 
     has $.text;
 
@@ -35,8 +35,8 @@ our class Struct {
             $builder ~= '{';
             $builder ~= @.maybe-struct-fields>>.gist.join(",\n").indent(4);
 
-            if $.maybe-inner-trailing-comment {
-                $builder ~= $.maybe-inner-trailing-comment.gist.indent(4);
+            if @.maybe-inner-trailing-comments {
+                $builder ~= @.maybe-inner-trailing-comments.gist.indent(4);
             }
 
             $builder ~= '}';
@@ -186,7 +186,7 @@ our role Struct::Rules {
         <where-clause>?
         [
             | <tok-semi>
-            | <tok-lbrace> <struct-fields>? <comment>? <tok-rbrace>
+            | <tok-lbrace> <struct-fields>? <comment>* <tok-rbrace>
         ]
     }
 
@@ -203,6 +203,7 @@ our role Struct::Rules {
 
     regex struct-fields {
         [<inner-struct-field-item>* % <.ws>]
+        <.ws>
         <outer-struct-field-item>
     }
 
@@ -246,7 +247,7 @@ our role Struct::Actions {
             maybe-generic-params         => $<generic-params>.made,
             maybe-where-clause           => $<where-clause>.made,
             maybe-struct-fields          => $<struct-fields>.made,
-            maybe-inner-trailing-comment => $<comment>.made,
+            maybe-inner-trailing-comments => $<comment>>>.made,
             text                         => $/.Str,
         )
     }

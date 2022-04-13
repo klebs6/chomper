@@ -13,8 +13,11 @@ our role Punctuation::Rules {
     Macro Kleene Matcher, Use wildcards)
     token tok-star         { '*' <!before '='>   } 
 
+    token tok-tilde        { '~' }
+
     #`(Division)
     token tok-slash        { '/' <!before '='> } 
+    token tok-backslash    { \\ } 
 
     #`(Remainder)
     token tok-percent      { '%' <!before '='>  } 
@@ -161,7 +164,9 @@ our role Punctuation::Rules {
     token punctuation:sym<tok-plus>         { <tok-plus> } 
     token punctuation:sym<tok-minus>        { <tok-minus> } 
     token punctuation:sym<tok-star>         { <tok-star> } 
+    token punctuation:sym<tok-tilde>        { <tok-tilde> } 
     token punctuation:sym<tok-slash>        { <tok-slash> } 
+    token punctuation:sym<tok-backslash>    { <tok-backslash> } 
     token punctuation:sym<tok-percent>      { <tok-percent> } 
     token punctuation:sym<tok-caret>        { <tok-caret> } 
     token punctuation:sym<tok-not>          { <tok-not> } 

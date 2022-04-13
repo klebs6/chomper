@@ -6,6 +6,14 @@ our class Comment {
     has Str  $.text;
     has Bool $.line;
 
+    method maybe-item-name{
+        Nil
+    }
+
+    method item-variant {
+        self
+    }
+
     method gist {
 
         if $.line {

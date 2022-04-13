@@ -188,6 +188,7 @@ our role Item::Rules {
     }
 
     rule constant-item {
+        <kw-default>?
         <kw-const> 
         <identifier-or-underscore> 
         <tok-colon> 

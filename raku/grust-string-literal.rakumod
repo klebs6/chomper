@@ -14,7 +14,7 @@ our role StringLiteral::Rules {
 
     token string-literal {
         <tok-double-quote>
-        <string-literal-inner>*
+        <.string-literal-inner>*
         <tok-double-quote>
     }
 

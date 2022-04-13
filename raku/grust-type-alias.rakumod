@@ -44,6 +44,7 @@ our class TypeAlias {
 our role TypeAlias::Rules {
 
     rule type-alias {
+        <kw-default>?
         <kw-type>
         <identifier>
         <generic-params>?

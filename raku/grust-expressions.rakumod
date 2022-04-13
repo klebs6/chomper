@@ -1,5 +1,10 @@
 use Data::Dump::Tree;
 
+our class CommentedExpression {
+    has $.comment;
+    has $.expression;
+}
+
 our class BaseExpression {
     has @.outer-attributes;
     has $.expression-item;
@@ -858,6 +863,11 @@ our role Expression::Rules {
         <assign-expression>
     }
 
+    rule maybe-commented-expression {
+        <comment>?
+        <expression>
+    }
+
     #-------------------------
     proto rule expression-item { * }
 
@@ -1679,6 +1689,21 @@ our role Expression::Actions {
 
     method expression($/) {
         make $<assign-expression>.made;
+    }
+
+    method maybe-commented-expression($/) {
+
+        if $/<comment>:exists {
+
+            make CommentedExpression.new(
+                comment    => $<comment>.made,
+                expression => $<expression>.made,
+            )
+
+        } else {
+
+            make $<expression>.made;
+        }
     }
 
     #-------------------------

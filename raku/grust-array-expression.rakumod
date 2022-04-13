@@ -41,11 +41,11 @@ our role ArrayExpression::Rules {
     proto rule array-elements { * }
 
     rule array-elements:sym<semi> {
-        <expression> <tok-semi> <expression>
+        <maybe-commented-expression> <tok-semi> <maybe-commented-expression>
     }
 
     rule array-elements:sym<commas> {
-        <expression>+ %% <tok-comma>
+        <maybe-commented-expression>+ %% <tok-comma>
     }
 
     rule array-expression {
@@ -57,15 +57,15 @@ our role ArrayExpression::Actions {
 
     method array-elements:sym<semi>($/) {
         make ArrayElementsItemQuantity.new(
-            expression => $<expression>>>.made[0],
-            quantifier => $<expression>>>.made[1],
+            expression => $<maybe-commented-expression>>>.made[0],
+            quantifier => $<maybe-commented-expression>>>.made[1],
             text       => $/.Str,
         )
     }
 
     method array-elements:sym<commas>($/) {
         make ArrayElementsList.new(
-            expressions => $<expression>>>.made,
+            expressions => $<maybe-commented-expression>>>.made,
             text        => $/.Str,
         )
     }

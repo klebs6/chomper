@@ -5,6 +5,7 @@ our class Enumeration {
     has $.maybe-generic-params;
     has $.maybe-where-clause;
     has @.maybe-enum-items;
+    has $.maybe-trailing-body-comment;
 
     has $.text;
 
@@ -35,6 +36,10 @@ our class Enumeration {
             $builder ~= $item.indent(4);
         }
 
+        if $.maybe-trailing-body-comment {
+            $builder ~= $.maybe-trailing-body-comment.gist;
+        }
+
         $builder ~= "\n\}";
     }
 }
@@ -44,12 +49,17 @@ our class EnumItem {
     has $.maybe-visibility;
     has $.identifier;
     has $.maybe-enum-variant;
+    has $.maybe-comment;
 
     has $.text;
 
     method gist {
 
         my $builder = "";
+
+        if $.maybe-comment {
+            $builder ~= $.maybe-comment.gist ~ "\n";
+        }
 
         for @.outer-attributes {
             $builder ~= $_.gist ~ "\n";
@@ -125,6 +135,7 @@ our role Enumeration::Rules {
         <where-clause>? 
         <tok-lbrace> 
         <enum-items>? 
+        <comment>?
         <tok-rbrace>
     }
 
@@ -133,6 +144,7 @@ our role Enumeration::Rules {
     }
 
     rule enum-item {
+        <comment>?
         <outer-attribute>*
         <visibility>?
         <identifier>
@@ -163,11 +175,12 @@ our role Enumeration::Actions {
 
     method enumeration($/) {
         make Enumeration.new(
-            identifier           => $<identifier>.made,
-            maybe-generic-params => $<generic-params>.made,
-            maybe-where-clause   => $<where-clause>.made,
-            maybe-enum-items     => $<enum-items>.made,
-            text                 => $/.Str,
+            identifier                  => $<identifier>.made,
+            maybe-generic-params        => $<generic-params>.made,
+            maybe-where-clause          => $<where-clause>.made,
+            maybe-enum-items            => $<enum-items>.made,
+            maybe-trailing-body-comment => $<comment>.made,
+            text                        => $/.Str,
         )
     }
 
@@ -179,6 +192,7 @@ our role Enumeration::Actions {
         make EnumItem.new(
             outer-attributes        => $<outer-attribute>>>.made,
             maybe-visibility        => $<visibility>.made,
+            maybe-comment           => $<comment>.made,
             identifier              => $<identifier>.made,
             maybe-enum-item-variant => $<enum-item-variant>.made,
             text                    => $/.Str,

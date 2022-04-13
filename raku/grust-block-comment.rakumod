@@ -42,7 +42,11 @@ our role BlockComment::Rules {
 
     token block-comment-push {
         <?{self.peek-state().Str eq "blockcomment" }>
-        \/\*
+        \/\* 
+
+        #see above
+        \*?
+
         { 
             self.push-state(BlockCommentState::<blockcomment>) 
         }

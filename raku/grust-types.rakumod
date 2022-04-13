@@ -131,7 +131,7 @@ our role Type::Rules {
 
     rule tuple-type {
         <tok-lparen>
-        [[<.ws> <type>]+ %% <tok-comma>]
+        [[<.ws> <type>]* %% <tok-comma>]
         <tok-rparen>
     }
 

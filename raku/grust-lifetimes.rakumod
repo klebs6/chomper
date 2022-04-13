@@ -102,8 +102,8 @@ our role Lifetimes::Rules {
     token lifetime:sym<static>  { \' <static> }
     token lifetime:sym<unnamed> { \' _ }
 
-    rule for-lifetimes {
-        <kw-for> <generic-params>
+    regex for-lifetimes {
+        <kw-for> <.ws> <generic-params>
     }
 }
 

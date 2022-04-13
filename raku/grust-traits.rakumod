@@ -72,6 +72,10 @@ our class InherentImpl {
 
     has $.text;
 
+    method has-name {
+        False
+    }
+
     method gist {
         my $builder = "impl";
 
@@ -106,6 +110,7 @@ our class InherentImpl {
 }
 
 our class TraitImpl {
+    has Bool $.default is required;
     has Bool $.unsafe;
     has $.maybe-generic-params;
     has Bool $.bang;
@@ -125,6 +130,10 @@ our class TraitImpl {
     method gist {
 
         my $builder = "";
+
+        if $.default {
+            $builder ~= "default ";
+        }
 
         if $.unsafe {
             $builder ~= "unsafe ";
@@ -246,6 +255,7 @@ our role Trait::Rules {
     }
 
     rule trait-impl {
+        <kw-default>?
         <kw-unsafe>?
         <kw-impl>
         <generic-params>?
@@ -309,6 +319,7 @@ our role Trait::Actions {
 
     method trait-impl($/) {
         make TraitImpl.new(
+            default              => $/<kw-default>:exists,
             unsafe               => $/<kw-unsafe>:exists,
             maybe-generic-params => $<generic-params>.made,
             bang                 => so $/<tok-bang>:exists,

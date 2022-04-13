@@ -80,10 +80,16 @@ our class AssociatedItemFunction {
 
 our role AssociatedItem::Rules {
 
-    rule associated-item {
+    proto rule associated-item { * }
+
+    rule associated-item:sym<basic> {
         <comment>?
         <outer-attribute>*
         <associated-item-variant>
+    }
+
+    rule associated-item:sym<block-comment> {
+        <block-comment>
     }
 
     #---------------------
@@ -100,13 +106,17 @@ our role AssociatedItem::Rules {
 
 our role AssociatedItem::Actions {
 
-    method associated-item($/) {
+    method associated-item:sym<basic>($/) {
         make AssociatedItem.new(
             maybe-comment    => $<comment>.made,
             outer-attributes => $<outer-attribute>>>.made,
             variant          => $<associated-item-variant>.made,
             text             => $/.Str,
         )
+    }
+
+    method associated-item:sym<block-comment>($/) {
+        make $<block-comment>.made
     }
 
     #---------------------

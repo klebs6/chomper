@@ -19,6 +19,7 @@ our role StrictKeywords::Rules {
     token kw-const     { const }
     token kw-continue  { continue }
     token kw-crate     { crate }
+    token kw-default   { default } 
     token kw-else      { else }
     token kw-enum      { enum }
     token kw-extern    { extern }
@@ -38,7 +39,7 @@ our role StrictKeywords::Rules {
     token kw-ref       { ref }
     token kw-return    { return }
     token kw-selfvalue { self }
-    token kw-selftype  { Self }
+    token kw-selftype  { Self <!before \w> }
     token kw-static    { static }
     token kw-struct    { struct }
     token kw-super     { super }

@@ -14,7 +14,9 @@ our class UseDeclaration {
     }
 
     method get-concrete-leafs {
-        $.use-tree.get-concrete-leafs()
+        $.use-tree.get-concrete-leafs().grep: {
+            $_ !~~ Nil
+        }
     }
 }
 
@@ -36,7 +38,7 @@ our class UseTreeBasic {
     }
 
     method get-concrete-leafs {
-        []
+        Nil
     }
 }
 

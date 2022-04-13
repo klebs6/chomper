@@ -20,11 +20,25 @@ our class Crate::Grammar::Actions does Rust::Actions::Role {
 #outer-attributes
 our sub get-naked-crate-items-for-file($file) {
 
+    my @crate-items 
+    = get-crate-items(:$file);
+
+    my @variants 
+    = @crate-items>>.item-variant;
+
+    say "returning crate items for $file";
+
+    @variants[0]
+}
+
+#"naked" implies that we strip the
+#outer-attributes
+our sub get-crate-items(:$file) {
+
     my $text    = $file.IO.slurp;
     my $actions = Crate::Grammar::Actions.new;
     my $items   = Crate::Grammar.subparse($text, :$actions, :g);
 
     my @made = |$items>>.made;
-    my @variants = @made>>.crate-items>>.item-variant;
-    @variants[0]
+    @made>>.crate-items
 }

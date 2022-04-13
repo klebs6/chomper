@@ -1,21 +1,21 @@
 use Config::TOML;
 
-our sub get-crate-files($crate, 
-    :$exclude-boilerplate=True) {
+our sub add-neighbor-dependency(
+    :$src, 
+    :$dst, 
+    Bool :$write) 
+{
+    add-workspace-crate-to-neighbor-cargo-toml(
+        workspace-crate => $src, 
+        neighbor        => $dst,
+        :$write
+    );
 
-    my @all = ($crate ~ "/src")[0].IO.dir;
-
-    if $exclude-boilerplate {
-
-        @all.grep: {
-            [$_ !~~ /lib.rs/, $_ !~~ /imports.rs/].all
-        }
-
-    } else {
-
-        @all
-    }
+    glob-import-from-crates($dst, [
+        $src.subst(:g, "-","_")
+    ]);
 }
+
 #----------------------------------------------
 our sub maybe-create-directory($name) {
     if not $name.IO.d {
@@ -64,6 +64,7 @@ our sub glob-import-from-crates($name, @crates) {
     for @crates -> $crate {
 
         my $imports = qq:to/END/;
+
         pub(crate) use {$crate}::*;
         END
 
@@ -132,10 +133,11 @@ our sub crates-exist-in-workspace(@crates) {
 
     my $workspace-toml = get-workspace-toml();
 
-    my @workspace-crates = $workspace-toml<workspace><members>.List;
+    my Set $workspace-crates 
+    = $workspace-toml<workspace><members>.Set;
 
     for @crates {
-        return False if not $_ (elem) @workspace-crates;
+        return False if not $_.chomp.trim (elem) $workspace-crates;
     }
 
     True
@@ -147,7 +149,6 @@ our sub add-workspace-crate-to-neighbor-cargo-toml(
     :$neighbor, 
     :$write)
 {
-
     die "crate DNE: $workspace-crate" if not crates-exist-in-workspace([$workspace-crate, $neighbor]);
 
     my $neighbor-cargo-toml-file = $neighbor ~ "/Cargo.toml";
@@ -222,5 +223,19 @@ our sub batch-add-dependencies-to-cargo-toml(
             :$ver, 
             :$write
         );
+    }
+}
+
+our sub get-crate-files($crate) {
+
+    my @all = ($crate ~ "/src")[0].IO.dir;
+
+    #exclude boilerplate
+    @all.grep: {
+        [
+            $_ !~~ /lib.rs/, 
+            $_ !~~ /imports.rs/,
+            $_ !~~ /proto/,
+        ].all
     }
 }

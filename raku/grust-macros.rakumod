@@ -61,6 +61,10 @@ our class MacroInvocation {
 
     has $!text;
 
+    method maybe-item-name {
+        Nil
+    }
+
     method gist {
 
         my $builder = "";
@@ -98,6 +102,10 @@ our class MacroRulesDefinition {
     has $.macro-rules-def;
 
     has $.text;
+
+    method maybe-item-name {
+        $.identifier.gist
+    }
 
     method gist {
         "macro_rules!" 
@@ -273,9 +281,9 @@ our role MacroInvocation::Rules {
 
     proto rule token-tree { * }
 
-    rule token-tree:sym<leaf> { <rust-token-no-delim> }
-
-    rule token-tree:sym<tree> { <delim-token-tree> }
+    rule token-tree:sym<block-comment> { <block-comment> }
+    rule token-tree:sym<leaf>          { <rust-token-no-delim> }
+    rule token-tree:sym<tree>          { <delim-token-tree> }
 
     proto rule macro-invocation { * }
 
