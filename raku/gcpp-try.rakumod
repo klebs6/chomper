@@ -102,7 +102,7 @@ our class FunctionTryBlock {
 
         my $builder = "try ";
 
-        $builder = $builder.&maybe-extend($.constructor-initializer);
+        $builder = $builder.&maybe-extend(:$treemark,$.constructor-initializer);
 
         $builder ~= $.compound-statement.gist(:$treemark);
 

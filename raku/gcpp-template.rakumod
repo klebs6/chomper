@@ -86,6 +86,7 @@ our class SimpleTemplateId
 does IDeclSpecifierSeq 
 does ITheTypeName
 does ITheTypeId
+does IIdExpression
 does IPostListHead {
 
     has Identifier $.template-name is required;

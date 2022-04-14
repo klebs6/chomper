@@ -30,7 +30,7 @@ our class CompoundStatement does IStatement {
 
     method gist(:$treemark=False) {
         my $builder = "\{\n";
-        $builder = $builder.&maybe-extend($.statement-seq>>.gist(:$treemark)>>.indent(4).join("\n"));
+        $builder = $builder.&maybe-extend(:$treemark,$.statement-seq>>.gist(:$treemark)>>.indent(4).join("\n"));
         $builder ~ "\n}"
         
     }

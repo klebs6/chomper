@@ -1,3 +1,4 @@
+unit module Rust;
 use Data::Dump::Tree;
 
 our class CommentedExpression {
@@ -875,15 +876,19 @@ our role Expression::Rules {
         #<?{$NOBLOCK eq False}> 
         <expression-with-block> 
     }
+
     rule expression-item:sym<macro>    { <macro-expression> } 
+
+    #NOTE: moved path and literal expressions
+    #above struct... does this break something?
+    rule expression-item:sym<literal>  { <literal-expression> } 
+    rule expression-item:sym<path>     { <path-expression>    }
 
     rule expression-item:sym<struct>   { 
         #<?{$NOSTRUCT eq False}>  #why does <?{True}> break matching here?
         <struct-expression> 
     }
 
-    rule expression-item:sym<literal>  { <literal-expression> } 
-    rule expression-item:sym<path>     { <path-expression>    }
     rule expression-item:sym<grouped>  { <tok-lparen> <expression> <tok-rparen> }
     rule expression-item:sym<array>    { <array-expression>   }
     rule expression-item:sym<tuple>    { <tuple-expression>   }
@@ -1720,6 +1725,7 @@ our role Expression::Actions {
     }
 
     method expression-item:sym<literal>($/)      { make $<literal-expression>.made } 
+
     method expression-item:sym<path>($/)         { make $<path-expression>.made    }
 
     method expression-item:sym<grouped>($/)  { 

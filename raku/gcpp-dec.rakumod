@@ -8,6 +8,11 @@ our class DecimalLiteral {
     has $.text;
 
     method gist(:$treemark=False) {
+
+        if $treemark { 
+            return "N";
+        }
+
         $.value
     }
 }
@@ -22,6 +27,11 @@ does IIntegerLiteral {
     has $.text;
 
     method gist(:$treemark=False) {
+
+        if $treemark { 
+            return "N";
+        }
+
         if $.integersuffix {
             $.decimal-literal.gist(:$treemark) ~ $.integersuffix.gist(:$treemark)
         } else {

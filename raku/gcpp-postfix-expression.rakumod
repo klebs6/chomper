@@ -1,3 +1,5 @@
+unit module Cpp;
+
 use Data::Dump::Tree;
 
 use gcpp-roles;
@@ -132,6 +134,10 @@ does IPostfixExpressionBody {
     has IPostListTail $.post-list-tail is required;
     has $.text;
 
+    method token-types {
+        [$.post-list-head.WHAT.^name, $.post-list-tail.WHAT.^name]
+    }
+
     method gist(:$treemark=False) {
         $.post-list-head.gist(:$treemark) ~ $.post-list-tail.gist(:$treemark)
     }
@@ -144,7 +150,8 @@ does IPostfixExpressionBody {
 our class PostfixExpression 
 does IStatement 
 does IReturnStatementBody 
-does IUnaryExpression { 
+does IUnaryExpression {
+
     has IPostfixExpressionBody $.postfix-expression-body is required;
     has @.postfix-expression-tail;
 
@@ -156,7 +163,8 @@ does IUnaryExpression {
             return sigil(TreeMark::<_Expression>);
         }
 
-        $.postfix-expression-body.gist(:$treemark) ~ @.postfix-expression-tail>>.gist(:$treemark).join("")
+        $.postfix-expression-body.gist(:$treemark) 
+        ~ @.postfix-expression-tail>>.gist(:$treemark).join("")
     }
 }
 
@@ -222,7 +230,7 @@ does IPostfixExpressionTail {
 
     method gist(:$treemark=False) {
         my $builder = "(";
-        $builder = $builder.&maybe-extend($.expression-list);
+        $builder = $builder.&maybe-extend(:$treemark,$.expression-list);
         $builder ~ ")"
     }
 }

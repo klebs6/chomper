@@ -17,7 +17,8 @@ our class NewDeclarator              { ... }
 #   <new-type-id> 
 #   <new-initializer>? 
 # }
-our class NewExpression::NewTypeId does INewExpression {
+our class NewExpression::NewTypeId 
+does INewExpression {
     has NewPlacement    $.new-placement;
     has INewTypeId      $.new-type-id is required;
     has INewInitializer $.new-initializer;
@@ -35,7 +36,7 @@ our class NewExpression::NewTypeId does INewExpression {
         $builder ~= $.new-type-id.gist(:$treemark);
 
         if $.new-initializer {
-            $builder ~= " " ~ $.new-initializer.gist(:$treemark);
+            $builder ~= " (" ~ $.new-initializer.gist(:$treemark) ~ ")";
         }
 
         $builder

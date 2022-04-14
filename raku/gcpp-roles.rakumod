@@ -68,7 +68,7 @@ our role IPostListTail                                        { }
 our role IPseudoDestructorName                                { }
 
 our role IUnaryOperator                                       { }
-our role INewExpression                                       { }
+our role INewExpression does IInitializerClause               { }
 our role INewInitializer                                      { }
 our role IPointerMemberOperator                               { }
 our role IMultiplicativeOperator                              { }
@@ -224,7 +224,7 @@ our role IBooleanLiteral     does ILiteral { }
 # token literal:sym<user-defined> { <user-defined-literal> }
 our role IUserDefinedLiteral does ILiteral { }
 
-our sub maybe-extend($in, $expr, :$padr = False, :$padl = False) {
+our sub maybe-extend($in, $expr, :$treemark,:$padr = False, :$padl = False) {
 
     my $res = $in;
 
@@ -233,7 +233,7 @@ our sub maybe-extend($in, $expr, :$padr = False, :$padl = False) {
             $res ~= " ";
         }
 
-        $res ~= $expr.gist;
+        $res ~= $expr.gist(:$treemark);
 
         if $padr {
             $res ~= " ";

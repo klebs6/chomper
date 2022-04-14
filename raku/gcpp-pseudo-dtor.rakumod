@@ -20,7 +20,7 @@ our class PseudoDestructorName::Basic does IPseudoDestructorName {
 
         my $builder = "";
 
-        $builder = $builder.&maybe-extend($.nested-name-specifier);
+        $builder = $builder.&maybe-extend(:$treemark,$.nested-name-specifier);
 
         if $.the-scoped-type-name {
             $builder ~= $.the-scoped-type-name.gist(:$treemark) ~ "::";

@@ -81,11 +81,11 @@ our class NoPointerDeclaratorTail::Bracketed does INoPointerDeclaratorTail {
 
         my $builder = "[";
 
-        $builder = $builder.&maybe-extend($.constant-expression);
+        $builder = $builder.&maybe-extend(:$treemark,$.constant-expression);
 
         $builder ~= "]";
 
-        $builder = $builder.&maybe-extend($.attribute-specifier-seq);
+        $builder = $builder.&maybe-extend(:$treemark,$.attribute-specifier-seq);
 
         $builder
     }
@@ -112,7 +112,7 @@ does IInitDeclarator does IDeclarator {
         my $builder = $.no-pointer-declarator-base.gist(:$treemark);
 
         for @.no-pointer-declarator-tail {
-            $builder ~= $_.gist(:$treemark) ~ "\n";
+            $builder ~= $_.gist(:$treemark);
         }
 
         $builder

@@ -6,6 +6,11 @@ our class OctalLiteral {
     has Str $.value is required; 
 
     method gist(:$treemark=False) {
+
+        if $treemark { 
+            return "N";
+        }
+
         $.value
     }
 }
@@ -21,13 +26,18 @@ our class Octaldigit {
 our class IntegerLiteral::Oct 
 does IIntegerLiteral {
 
-    has OctalLiteral       $.octal-literal is required;
-    has IIntegersuffix      $.integersuffix;
+    has OctalLiteral    $.octal-literal is required;
+    has IIntegersuffix  $.integersuffix;
 
     has $.text;
 
     method gist(:$treemark=False) {
-        $.octal-literal.gist(:$treemark).&maybe-extend($.integersuffix)
+
+        if $treemark { 
+            return "N";
+        }
+
+        $.octal-literal.gist(:$treemark).&maybe-extend(:$treemark,$.integersuffix)
     }
 }
 

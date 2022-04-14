@@ -16,12 +16,12 @@ our sub translate-ir(
     given ($src,$dst) {
         when (TranslationSource::<Cpp>,TranslationTarget::<Rust>) {
             for $ir.List {
-                translate-cpp-ir-to-rust($_.WHAT.^name, $_);
+                say translate-cpp-ir-to-rust($_.WHAT.^name, $_);
             }
         }
         when (TranslationSource::<Python>,TranslationTarget::<Rust>) {
             for $ir.List {
-                translate-python-ir-to-rust($_.WHAT.^name, $_);
+                say translate-python-ir-to-rust($_.WHAT.^name, $_);
             }
         }
         default {

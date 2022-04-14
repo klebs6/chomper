@@ -1,7 +1,14 @@
 use translate-io;
+use to-rust-type;
+use to-rust-ident;
+use to-rust-params;
+use translate-postfix-expression-list;
 use gcpp-roles;
 use gcpp-try;
+use gcpp-primary-expression;
 use gcpp-statement;
+use gcpp-eq-expression;
+use gcpp-logical-expression;
 use gcpp-declaration;
 use gcpp-selection;
 use gcpp-iteration;
@@ -15,16 +22,16 @@ proto sub to-rust($x) is export { * };
 our sub translate-cpp-ir-to-rust($typename, IStatement $item)
 {
     given $typename {
-        when "TryBlock"                     { to-rust($item); }
-        when "ExpressionStatement"          { to-rust($item); }
-        when "CompoundStatement"            { to-rust($item); }
-        when "JumpStatement::Return"        { to-rust($item); }
-        when "JumpStatement::Continue"      { to-rust($item); }
-        when "IterationStatement::ForRange" { to-rust($item); }
-        when "IterationStatement::While"    { to-rust($item); }
-        when "IterationStatement::For"      { to-rust($item); }
-        when "SimpleDeclaration::Basic"     { to-rust($item); }
-        when "SelectionStatement::If"       { to-rust($item); }
+        when "TryBlock"                     { to-rust($item) }
+        when "ExpressionStatement"          { to-rust($item) }
+        when "CompoundStatement"            { to-rust($item) }
+        when "JumpStatement::Return"        { to-rust($item) }
+        when "JumpStatement::Continue"      { to-rust($item) }
+        when "IterationStatement::ForRange" { to-rust($item) }
+        when "IterationStatement::While"    { to-rust($item) }
+        when "IterationStatement::For"      { to-rust($item) }
+        when "SimpleDeclaration::Basic"     { to-rust($item) }
+        when "SelectionStatement::If"       { to-rust($item) }
         default {
             die "need to add $typename to translate-cpp-ir-to-rust";
         }
@@ -41,12 +48,38 @@ multi sub to-rust(
     }.join("\n")
 }
 
+multi sub to-rust(EqualityExpression $item) {
+    ddt $item;
+    exit;
+}
+
 multi sub translate-condition($condition, "! I") {
     $condition.gist
 }
 
 multi sub translate-condition($condition, "! E") {
     "!" ~ to-rust($condition.unary-expression)
+}
+
+multi sub translate-condition($condition, "E == E") {
+    to-rust($condition)
+}
+
+multi sub translate-condition($condition, "E != I") {
+    to-rust($condition)
+}
+
+multi sub translate-condition($condition, "E == I") {
+    to-rust($condition)
+}
+
+multi sub translate-condition($condition, "! I()") {
+
+    "!" ~ to-rust($condition.unary-expression)
+}
+
+multi sub translate-condition($condition, "E == E || (! E && E == E)") {
+    to-rust($condition)
 }
 
 multi sub translate-condition($condition, $treemark) {
@@ -85,6 +118,12 @@ multi sub to-rust(
 }
 
 multi sub to-rust(
+    PrimaryExpression::Id:D $item)
+{
+    $item.gist
+}
+
+multi sub to-rust(
     BooleanLiteral::T:D $item)
 {
     $item.gist
@@ -95,7 +134,7 @@ multi sub to-rust(
 {
     debug "will translate SimpleDeclaration::Basic to Rust!";
     my $mask = $item.gist(treemark => True);
-    translate-simple-declaration-to-rust($mask, $item);
+    translate-simple-declaration-to-rust($mask, $item)
 }
 
 multi sub translate-simple-declaration-to-rust(
@@ -124,6 +163,8 @@ multi sub translate-simple-declaration-to-rust(
     SimpleDeclaration::Basic $item) 
 {
     debug "mask I(Es);";
+    ddt $item;
+    exit;
 }
 
 multi sub translate-simple-declaration-to-rust(
@@ -131,6 +172,27 @@ multi sub translate-simple-declaration-to-rust(
     SimpleDeclaration::Basic $item) 
 {
     debug "mask I (I);";
+}
+
+multi sub translate-simple-declaration-to-rust(
+    "T I = E;",
+    SimpleDeclaration::Basic $item) 
+{
+    debug "mask T I = E;";
+    ddt $item;
+}
+
+multi sub translate-simple-declaration-to-rust(
+    "T I(Es);",
+    SimpleDeclaration::Basic $item) 
+{
+    debug "mask T I(Es);";
+    my $rust-type   = to-rust-type($item.decl-specifier-seq);
+    my $rust-ident  = to-rust-ident($item.init-declarator-list[0].declarator);
+    my $rust-params = to-rust-params($item.init-declarator-list[0].initializer);
+    qq:to/END/
+    let {$rust-ident}: {$rust-type} = {$rust-type}::new($rust-params);
+    END
 }
 
 multi sub to-rust(
@@ -141,16 +203,54 @@ multi sub to-rust(
 }
 
 multi sub to-rust(
+    LogicalAndExpression $item)
+{
+    debug "will translate LogicalAndExpression to Rust!";
+
+}
+
+multi sub to-rust(
+    LogicalOrExpression $item)
+{
+    debug "will translate LogicalOrExpression to Rust!";
+
+}
+
+multi sub to-rust(
     PostfixExpression $item)
 {
     debug "will translate PostfixExpression to Rust!";
+    ddt $item;
+    say $item.gist(treemark => True);
+    exit;
 
 }
 
 multi sub to-rust(
     PostfixExpressionList $item)
 {
-    debug "will translate PostfixExpression to Rust!";
+    translate-postfix-expression-list($item, $item.token-types)
+}
+
+multi sub to-rust(
+    IterationStatement::ForRange $item)
+{
+    debug "will translate IterationStatement::ForRange to Rust!";
+
+}
+
+multi sub to-rust(
+    IterationStatement::For $item)
+{
+    debug "will translate IterationStatement::For to Rust!";
+
+}
+
+multi sub to-rust(
+    IterationStatement::While $item)
+{
+    debug "will translate IterationStatement::While to Rust!";
+
 }
 
 multi sub to-rust(

@@ -98,7 +98,12 @@ our role Condition::Actions {
         make $<braced-init-list>.made
     }
 
-    # rule condition:sym<decl> { <attribute-specifier-seq>? <decl-specifier-seq> <declarator> <condition-decl-tail> } 
+    # rule condition:sym<decl> { 
+    #   <attribute-specifier-seq>? 
+    #   <decl-specifier-seq> 
+    #   <declarator> 
+    #   <condition-decl-tail> 
+    # }
     method condition:sym<decl>($/) {
         make Condition::Decl.new(
             attribute-specifier-seq => $<attribute-specifier-seq>.made,

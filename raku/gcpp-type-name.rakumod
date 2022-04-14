@@ -75,7 +75,7 @@ does ISimpleTypeSpecifier
 
         my $builder = "";
 
-        $builder = $builder.&maybe-extend($.nested-name-specifier);
+        $builder = $builder.&maybe-extend(:$treemark,$.nested-name-specifier);
 
         $builder ~ $.the-type-name.gist(:$treemark)
     }

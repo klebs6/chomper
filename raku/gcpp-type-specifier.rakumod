@@ -16,7 +16,11 @@ our class TrailingTypeSpecifier::CvQualifier does ITrailingTypeSpecifier {
     has $.text;
 
     method gist(:$treemark=False) {
-        $.cv-qualifier.gist(:$treemark) ~ " " ~ $.simple-type-specifier.gist(:$treemark)
+        if $treemark {
+            "T"
+        } else {
+            $.cv-qualifier.gist(:$treemark) ~ " " ~ $.simple-type-specifier.gist(:$treemark)
+        }
     }
 }
 
@@ -34,7 +38,7 @@ our class TypeSpecifierSeq does ITypeSpecifierSeq {
 
         my $builder = @.type-specifiers>>.gist(:$treemark).join(" ");
 
-        $builder = $builder.&maybe-extend($.attribute-specifier-seq);
+        $builder = $builder.&maybe-extend(:$treemark,$.attribute-specifier-seq);
 
         $builder
     }
@@ -53,26 +57,45 @@ our class TrailingTypeSpecifierSeq {
     method gist(:$treemark=False) {
         my $builder = @.trailing-type-specifiers>>.gist(:$treemark).join(" ");
 
-        $builder = $builder.&maybe-extend($.attribute-specifier-seq);
+        $builder = $builder.&maybe-extend(:$treemark,$.attribute-specifier-seq);
 
         $builder
     }
 }
 
+our class TypeSpecifier 
+does IDeclSpecifierSeq {
+    has $.value is required;
+
+    method gist(:$treemark=False) {
+        if $treemark {
+            return "T"
+        }
+
+        $.value.gist(:$treemark)
+    }
+}
+
 our role TypeSpecifier::Actions {
 
+    method type-specifier($/) {
+        make TypeSpecifier.new(
+            value => $<type-specifier-item>.made
+        )
+    }
+
     # rule type-specifier:sym<trailing-type-specifier> { <trailing-type-specifier> }
-    method type-specifier:sym<trailing-type-specifier>($/) {
+    method type-specifier-item:sym<trailing-type-specifier>($/) {
         make $<trailing-type-specifier>.made
     }
 
     # rule type-specifier:sym<class-specifier> { <class-specifier> }
-    method type-specifier:sym<class-specifier>($/) {
+    method type-specifier-item:sym<class-specifier>($/) {
         make $<class-specifier>.made
     }
 
     # rule type-specifier:sym<enum-specifier> { <enum-specifier> } 
-    method type-specifier:sym<enum-specifier>($/) {
+    method type-specifier-item:sym<enum-specifier>($/) {
         make $<enum-specifier>.made
     }
 
@@ -326,10 +349,12 @@ our role TypeSpecifier::Rules {
     regex simple-type-specifier:sym<auto>                  { <auto>                                                       } 
     regex simple-type-specifier:sym<decltype>              { <decltype-specifier>                                          } 
 
-    proto rule type-specifier { * }
-    rule type-specifier:sym<trailing-type-specifier> { <trailing-type-specifier> }
-    rule type-specifier:sym<class-specifier>         { <class-specifier>        }
-    rule type-specifier:sym<enum-specifier>          { <enum-specifier>         }
+    rule type-specifier { <type-specifier-item> }
+
+    proto rule type-specifier-item { * }
+    rule type-specifier-item:sym<trailing-type-specifier> { <trailing-type-specifier> }
+    rule type-specifier-item:sym<class-specifier>         { <class-specifier>        }
+    rule type-specifier-item:sym<enum-specifier>          { <enum-specifier>         }
 
     proto rule trailing-type-specifier { * }
     rule trailing-type-specifier:sym<cv-qualifier> { <cv-qualifier> <simple-type-specifier> }

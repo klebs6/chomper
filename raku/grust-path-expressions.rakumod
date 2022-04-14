@@ -1,3 +1,5 @@
+unit module Rust;
+
 use Data::Dump::Tree;
 
 our class PathInExpression {

@@ -34,14 +34,14 @@ does INoPointerDeclaratorTail {
 
         my $builder = "(";
 
-        $builder = $builder.&maybe-extend($.parameter-declaration-clause);
+        $builder = $builder.&maybe-extend(:$treemark,$.parameter-declaration-clause);
 
         $builder ~= ") ";
 
-        $builder = $builder.&maybe-extend($.cvqualifierseq,          padr => True);
-        $builder = $builder.&maybe-extend($.refqualifier,            padr => True);
-        $builder = $builder.&maybe-extend($.exception-specification, padr => True);
-        $builder = $builder.&maybe-extend($.attribute-specifier-seq);
+        $builder = $builder.&maybe-extend(:$treemark,$.cvqualifierseq,          padr => True);
+        $builder = $builder.&maybe-extend(:$treemark,$.refqualifier,            padr => True);
+        $builder = $builder.&maybe-extend(:$treemark,$.exception-specification, padr => True);
+        $builder = $builder.&maybe-extend(:$treemark,$.attribute-specifier-seq);
 
         $builder
     }
@@ -115,12 +115,16 @@ our class ParameterDeclaration {
 
     method gist(:$treemark=False) {
 
+        if $treemark {
+            return "P";
+        }
+
         my $builder = "";
 
-        $builder = $builder.&maybe-extend($.attribute-specifier-seq, padr => True);
+        $builder = $builder.&maybe-extend(:$treemark,$.attribute-specifier-seq, padr => True);
 
         $builder ~= $.decl-specifier-seq.gist(:$treemark);
-        $builder = $builder.&maybe-extend($.parameter-declaration-body, padl => True);
+        $builder = $builder.&maybe-extend(:$treemark,$.parameter-declaration-body, padl => True);
 
         if $.initializer-clause {
             $builder ~= " = " ~ $.initializer-clause.gist(:$treemark);

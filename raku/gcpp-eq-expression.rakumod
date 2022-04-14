@@ -50,8 +50,14 @@ our class EqualityExpression does IEqualityExpression {
     has $.text;
 
     method gist(:$treemark=False) {
-        $.relational-expression.gist(:$treemark)
-        ~ @.equality-expression-tail>>.gist(:$treemark).join(" ")
+
+        my $builder = $.relational-expression.gist(:$treemark);
+
+        for @.equality-expression-tail {
+            $builder ~= " " ~ $_.gist(:$treemark);
+        }
+
+        $builder
     }
 }
 

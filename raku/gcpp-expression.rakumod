@@ -100,6 +100,7 @@ our class ConstantExpression does IConstantExpression {
     has $.text;
 
     method gist(:$treemark=False) {
+
         $.conditional-expression.gist(:$treemark)
     }
 }

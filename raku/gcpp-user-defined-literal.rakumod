@@ -93,7 +93,7 @@ does IUserDefinedFloatingLiteral {
     has $.text;
 
     method gist(:$treemark=False) {
-        $.fractionalconstant.gist(:$treemark).maybe-extend($.exponentpart) ~ $.suffix.gist(:$treemark)
+        $.fractionalconstant.gist(:$treemark).maybe-extend(:$treemark,$.exponentpart) ~ $.suffix.gist(:$treemark)
     }
 }
 

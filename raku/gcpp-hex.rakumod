@@ -44,6 +44,10 @@ does IIntegerLiteral {
 
     method gist(:$treemark=False) {
 
+        if $treemark { 
+            return "N";
+        }
+
         my $builder = $.hexadecimal-literal.gist(:$treemark);
 
         if $.integersuffix {

@@ -22,7 +22,7 @@ does ISimpleTypeSpecifier
 
         my $builder = "";
 
-        $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $builder = $builder.&maybe-extend(:$treemark,$.simple-type-signedness-modifier, padr => True);
 
         for @.simple-type-length-modifiers {
             $builder  ~= $_.gist(:$treemark) ~ " ";
@@ -45,7 +45,7 @@ does ISimpleTypeSpecifier
 
     method gist(:$treemark=False) {
         my $builder = "";
-        $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $builder = $builder.&maybe-extend(:$treemark,$.simple-type-signedness-modifier, padr => True);
         $builder ~ "char"
     }
 }
@@ -63,7 +63,7 @@ does ISimpleTypeSpecifier
 
     method gist(:$treemark=False) {
         my $builder = "";
-        $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $builder = $builder.&maybe-extend(:$treemark,$.simple-type-signedness-modifier, padr => True);
         $builder ~ "char16"
     }
 }
@@ -81,7 +81,7 @@ does ISimpleTypeSpecifier
 
     method gist(:$treemark=False) {
         my $builder = "";
-        $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $builder = $builder.&maybe-extend(:$treemark,$.simple-type-signedness-modifier, padr => True);
         $builder ~ "char32"
     }
 }
@@ -99,7 +99,7 @@ does ISimpleTypeSpecifier
 
     method gist(:$treemark=False) {
         my $builder = "";
-        $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $builder = $builder.&maybe-extend(:$treemark,$.simple-type-signedness-modifier, padr => True);
         $builder ~ "wchar"
     }
 }
@@ -117,7 +117,7 @@ does ISimpleTypeSpecifier
 
     method gist(:$treemark=False) {
         my $builder = "";
-        $builder = $builder.&maybe-extend($.simple-type-signedness-modifier, padr => True);
+        $builder = $builder.&maybe-extend(:$treemark,$.simple-type-signedness-modifier, padr => True);
         $builder ~ "double"
     }
 }
@@ -178,7 +178,7 @@ our class SimpleTypeSpecifier::SignednessModLength does ISimpleTypeSpecifier {
     method gist(:$treemark=False) {
         my $builder = "";
 
-        $builder = $builder.&maybe-extend($.simple-type-signedness-modifier);
+        $builder = $builder.&maybe-extend(:$treemark,$.simple-type-signedness-modifier);
 
         for @.simple-type-length-modifier {
             $builder ~= $_.gist(:$treemark);
@@ -238,7 +238,11 @@ our class SimpleTypeSpecifier::Bool does ISimpleTypeSpecifier {
     has $.text;
 
     method gist(:$treemark=False) {
-        "bool"
+        if $treemark {
+            "T"
+        } else {
+            "bool"
+        }
     }
 }
 
@@ -248,7 +252,11 @@ our class SimpleTypeSpecifier::Float does ISimpleTypeSpecifier {
     has $.text;
 
     method gist(:$treemark=False) {
-        "float"
+        if $treemark {
+            "T"
+        } else {
+            "float"
+        }
     }
 }
 
@@ -269,7 +277,11 @@ our class SimpleTypeSpecifier::Void does ISimpleTypeSpecifier {
     has $.text;
 
     method gist(:$treemark=False) {
-        "void"
+        if $treemark {
+            "T"
+        } else {
+            "void"
+        }
     }
 }
 
@@ -279,7 +291,11 @@ our class SimpleTypeSpecifier::Auto does ISimpleTypeSpecifier {
     has $.text;
 
     method gist(:$treemark=False) {
-        "auto"
+        if $treemark {
+            "T"
+        } else {
+            "void"
+        }
     }
 }
 

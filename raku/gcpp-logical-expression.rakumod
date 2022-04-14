@@ -12,7 +12,7 @@ our class LogicalAndExpression does ILogicalAndExpression {
     has $.text;
 
     method gist(:$treemark=False) {
-        @.inclusive-or-expressions>>.gist(:$treemark).join("&&")
+        @.inclusive-or-expressions>>.gist(:$treemark).join(" && ")
     }
 }
 
@@ -26,7 +26,7 @@ our class LogicalOrExpression does ILogicalOrExpression {
     has $.text;
 
     method gist(:$treemark=False) {
-        @.logical-and-expressions>>.gist(:$treemark).join("||")
+        @.logical-and-expressions>>.gist(:$treemark).join(" || ")
     }
 }
 

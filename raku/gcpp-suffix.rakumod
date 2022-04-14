@@ -14,7 +14,7 @@ does IIntegersuffix {
     has $.text;
 
     method gist(:$treemark=False) {
-        $.unsignedsuffix.gist(:$treemark).&maybe-extend($.longsuffix)
+        $.unsignedsuffix.gist(:$treemark).&maybe-extend(:$treemark,$.longsuffix)
     }
 }
 
@@ -27,7 +27,7 @@ does IIntegersuffix {
     has $.text;
 
     method gist(:$treemark=False) {
-        $.unsignedsuffix.gist(:$treemark).&maybe-extend($.longlongsuffix)
+        $.unsignedsuffix.gist(:$treemark).&maybe-extend(:$treemark,$.longlongsuffix)
     }
 }
 
@@ -40,7 +40,7 @@ does IIntegersuffix {
     has $.text;
 
     method gist(:$treemark=False) {
-        $.longsuffix.gist(:$treemark).&maybe-extend($.unsignedsuffix)
+        $.longsuffix.gist(:$treemark).&maybe-extend(:$treemark,$.unsignedsuffix)
     }
 }
 
@@ -53,7 +53,7 @@ does IIntegersuffix {
     has $.text;
 
     method gist(:$treemark=False) {
-        $.longsuffix.gist(:$treemark).&maybe-extend($.unsignedsuffix)
+        $.longsuffix.gist(:$treemark).&maybe-extend(:$treemark,$.unsignedsuffix)
     }
 }
 

@@ -15,7 +15,7 @@ our class AugmentedPointerOperator does IAugmentedPointerOperator {
     has $.text;
 
     method gist(:$treemark=False) {
-        $.pointer-operator.gist(:$treemark).&maybe-extend($.const)
+        $.pointer-operator.gist(:$treemark).&maybe-extend(:$treemark,$.const)
     }
 }
 
@@ -31,7 +31,7 @@ does IPointerOperator {
     has $.text;
 
     method gist(:$treemark=False) {
-        "&".&maybe-extend($.attribute-specifier-seq)
+        "&".&maybe-extend(:$treemark,$.attribute-specifier-seq)
     }
 }
 
@@ -46,7 +46,7 @@ our class PointerOperator::RefRef does IPointerOperator {
     has $.text;
 
     method gist(:$treemark=False) {
-        "&&".&maybe-extend($.attribute-specifier-seq)
+        "&&".&maybe-extend(:$treemark,$.attribute-specifier-seq)
     }
 }
 
@@ -66,12 +66,12 @@ our class PointerOperator::Star does IPointerOperator {
     method gist(:$treemark=False) {
         my $builder = "";
 
-        $builder = $builder.&maybe-extend($.nested-name-specifier);
+        $builder = $builder.&maybe-extend(:$treemark,$.nested-name-specifier);
 
         $builder ~= "*";
 
-        $builder = $builder.&maybe-extend($.attribute-specifier-seq);
-        $builder = $builder.&maybe-extend($.cvqualifierseq);
+        $builder = $builder.&maybe-extend(:$treemark,$.attribute-specifier-seq);
+        $builder = $builder.&maybe-extend(:$treemark,$.cvqualifierseq);
 
         $builder
     }
