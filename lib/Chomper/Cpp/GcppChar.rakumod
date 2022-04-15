@@ -5,7 +5,7 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppHex;
 
-our class Universalcharactername {
+class Universalcharactername is export {
     has Hexquad $.first is required;
     has Hexquad $.second;
 
@@ -20,7 +20,7 @@ our class Universalcharactername {
     }
 }
 
-our class Cchar::Basic does ICchar {
+class Cchar::Basic does ICchar is export {
     has Str $.value is required;
 
     has $.text;
@@ -30,7 +30,7 @@ our class Cchar::Basic does ICchar {
     }
 }
 
-our class Cchar::Escape does ICchar {
+class Cchar::Escape does ICchar is export {
     has IEscapesequence $.escapesequence is required;
 
     has $.text;
@@ -40,7 +40,7 @@ our class Cchar::Escape does ICchar {
     }
 }
 
-our class Cchar::Universal does ICchar {
+class Cchar::Universal does ICchar is export {
     has Universalcharactername $.universalcharactername is required;
 
     has $.text;
@@ -50,7 +50,7 @@ our class Cchar::Universal does ICchar {
     }
 }
 
-our class Schar::Basic does ISchar {
+class Schar::Basic does ISchar is export {
     has Str $.value is required;
 
     has $.text;
@@ -60,7 +60,7 @@ our class Schar::Basic does ISchar {
     }
 }
 
-our class Schar::Escape does ISchar {
+class Schar::Escape does ISchar is export {
     has IEscapesequence $.escapesequence is required;
 
     has $.text;
@@ -70,7 +70,7 @@ our class Schar::Escape does ISchar {
     }
 }
 
-our class Schar::Ucn does ISchar {
+class Schar::Ucn does ISchar is export {
     has Universalcharactername $.universalcharactername is required;
 
     has $.text;
@@ -80,7 +80,7 @@ our class Schar::Ucn does ISchar {
     }
 }
 
-our class CharacterLiteralPrefix::U    does ICharacterLiteralPrefix { 
+class CharacterLiteralPrefix::U    does ICharacterLiteralPrefix is export { 
 
     has $.text;
 
@@ -89,7 +89,7 @@ our class CharacterLiteralPrefix::U    does ICharacterLiteralPrefix {
     }
 }
 
-our class CharacterLiteralPrefix::BigU does ICharacterLiteralPrefix { 
+class CharacterLiteralPrefix::BigU does ICharacterLiteralPrefix is export { 
 
     has $.text;
 
@@ -98,7 +98,7 @@ our class CharacterLiteralPrefix::BigU does ICharacterLiteralPrefix {
     }
 }
 
-our class CharacterLiteralPrefix::L    does ICharacterLiteralPrefix { 
+class CharacterLiteralPrefix::L    does ICharacterLiteralPrefix is export { 
 
     has $.text;
 
@@ -109,9 +109,9 @@ our class CharacterLiteralPrefix::L    does ICharacterLiteralPrefix {
 
 #-------------------------------
 # token literal:sym<char> { <character-literal> }
-our class CharacterLiteral 
+class CharacterLiteral 
 does ILiteral
-does IInitializerClause {
+does IInitializerClause is export {
     has ICharacterLiteralPrefix $.character-literal-prefix;
     has ICchar                  @.cchar;
 
@@ -135,107 +135,109 @@ does IInitializerClause {
     }
 }
 
-#-------------------------------
-our role CharacterLiteral::Actions {
+package CharacterLiteralGrammar is export {
 
-    # token character-literal-prefix:sym<u> { 'u' }
-    method character-literal-prefix:sym<u>($/) {
-        make 'u'
+    our role Actions {
+
+        # token character-literal-prefix:sym<u> { 'u' }
+        method character-literal-prefix:sym<u>($/) {
+            make 'u'
+        }
+
+        # token character-literal-prefix:sym<U> { 'U' }
+        method character-literal-prefix:sym<U>($/) {
+            make 'U'
+        }
+
+        # token character-literal-prefix:sym<L> { 'L' }
+        method character-literal-prefix:sym<L>($/) {
+            make 'L'
+        }
+
+        # token character-literal { <character-literal-prefix>? '\'' <cchar>+ '\'' } 
+        method character-literal($/) {
+            make CharacterLiteral.new(
+                character-literal-prefix => $<character-literal-prefix>.made,
+                cchar                    => $<cchar>>>.made,
+                text                     => ~$/,
+            )
+        }
+
+        # token universalcharactername:sym<one> { '\\u' <hexquad> }
+        method universalcharactername:sym<one>($/) {
+            make Universalcharactername.new(
+                first => $<first>.made,
+                text  => ~$/,
+            )
+        }
+
+        # token universalcharactername:sym<two> { '\\U' <hexquad> <hexquad> } 
+        method universalcharactername:sym<two>($/) {
+            make Universalcharactername.new(
+                first  => $<first>.made,
+                second => $<second>.made,
+                text   => ~$/,
+            )
+        }
+
+        # token cchar:sym<basic> { <-[ \' \\ \r \n ]> }
+        method cchar:sym<basic>($/) {
+            make Cchar::Basic.new(
+                value => ~$/,
+            )
+        }
+
+        # token cchar:sym<escape> { <escapesequence> }
+        method cchar:sym<escape>($/) {
+            make $<escapesequence>.made
+        }
+
+        # token cchar:sym<universal> { <universalcharactername> } 
+        method cchar:sym<universal>($/) {
+            make $<universalcharactername>.made
+        }
+
+        # token schar:sym<basic> { <-[ " \\ \r \n ]> }
+        method schar:sym<basic>($/) {
+            make Schar::Basic.new(
+                value => ~$/,
+            )
+        }
+
+        # token schar:sym<escape> { <escapesequence> }
+        method schar:sym<escape>($/) {
+            make $<escapesequence>.made
+        }
+
+        # token schar:sym<ucn> { <universalcharactername> }
+        method schar:sym<ucn>($/) {
+            make $<universalcharactername>.made
+        }
     }
 
-    # token character-literal-prefix:sym<U> { 'U' }
-    method character-literal-prefix:sym<U>($/) {
-        make 'U'
+    our role Rules {
+
+        proto token character-literal-prefix { * }
+        token character-literal-prefix:sym<u> { 'u' }
+        token character-literal-prefix:sym<U> { 'U' }
+        token character-literal-prefix:sym<L> { 'L' }
+
+        token character-literal {
+            <character-literal-prefix>? '\'' <cchar>+ '\''
+        }
+
+        proto token cchar { * }
+        token cchar:sym<basic>     { <-[ \' \\ \r \n ]> }
+        token cchar:sym<escape>    { <escapesequence> }
+        token cchar:sym<universal> { <universalcharactername> }
+
+        proto token universalcharactername { * }
+        token universalcharactername:sym<one> { '\\u' <hexquad> }
+        token universalcharactername:sym<two> { '\\U' <hexquad> <hexquad> }
+
+        proto token schar { * }
+        token schar:sym<basic>  { <-[ " \\ \r \n ]> }
+        token schar:sym<escape> { <escapesequence> }
+        token schar:sym<ucn>    { <universalcharactername> }
     }
-
-    # token character-literal-prefix:sym<L> { 'L' }
-    method character-literal-prefix:sym<L>($/) {
-        make 'L'
-    }
-
-    # token character-literal { <character-literal-prefix>? '\'' <cchar>+ '\'' } 
-    method character-literal($/) {
-        make CharacterLiteral.new(
-            character-literal-prefix => $<character-literal-prefix>.made,
-            cchar                    => $<cchar>>>.made,
-            text                     => ~$/,
-        )
-    }
-
-    # token universalcharactername:sym<one> { '\\u' <hexquad> }
-    method universalcharactername:sym<one>($/) {
-        make Universalcharactername.new(
-            first => $<first>.made,
-            text  => ~$/,
-        )
-    }
-
-    # token universalcharactername:sym<two> { '\\U' <hexquad> <hexquad> } 
-    method universalcharactername:sym<two>($/) {
-        make Universalcharactername.new(
-            first  => $<first>.made,
-            second => $<second>.made,
-            text   => ~$/,
-        )
-    }
-
-    # token cchar:sym<basic> { <-[ \' \\ \r \n ]> }
-    method cchar:sym<basic>($/) {
-        make Cchar::Basic.new(
-            value => ~$/,
-        )
-    }
-
-    # token cchar:sym<escape> { <escapesequence> }
-    method cchar:sym<escape>($/) {
-        make $<escapesequence>.made
-    }
-
-    # token cchar:sym<universal> { <universalcharactername> } 
-    method cchar:sym<universal>($/) {
-        make $<universalcharactername>.made
-    }
-
-    # token schar:sym<basic> { <-[ " \\ \r \n ]> }
-    method schar:sym<basic>($/) {
-        make Schar::Basic.new(
-            value => ~$/,
-        )
-    }
-
-    # token schar:sym<escape> { <escapesequence> }
-    method schar:sym<escape>($/) {
-        make $<escapesequence>.made
-    }
-
-    # token schar:sym<ucn> { <universalcharactername> }
-    method schar:sym<ucn>($/) {
-        make $<universalcharactername>.made
-    }
-}
-
-our role CharacterLiteral::Rules {
-
-    proto token character-literal-prefix { * }
-    token character-literal-prefix:sym<u> { 'u' }
-    token character-literal-prefix:sym<U> { 'U' }
-    token character-literal-prefix:sym<L> { 'L' }
-
-    token character-literal {
-        <character-literal-prefix>? '\'' <cchar>+ '\''
-    }
-
-    proto token cchar { * }
-    token cchar:sym<basic>     { <-[ \' \\ \r \n ]> }
-    token cchar:sym<escape>    { <escapesequence> }
-    token cchar:sym<universal> { <universalcharactername> }
-
-    proto token universalcharactername { * }
-    token universalcharactername:sym<one> { '\\u' <hexquad> }
-    token universalcharactername:sym<two> { '\\U' <hexquad> <hexquad> }
-
-    proto token schar { * }
-    token schar:sym<basic>  { <-[ " \\ \r \n ]> }
-    token schar:sym<escape> { <escapesequence> }
-    token schar:sym<ucn>    { <universalcharactername> }
 }

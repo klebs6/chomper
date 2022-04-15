@@ -10,7 +10,7 @@ use Chomper::Cpp::GcppRoles;
 #   <colon> 
 #   <assignment-expression> 
 # }
-our class ConditionalExpressionTail {
+class ConditionalExpressionTail is export {
     has IExpression           $.question-expression   is required;
     has IAssignmentExpression $.assignment-expression is required;
 
@@ -25,7 +25,7 @@ our class ConditionalExpressionTail {
 #   <logical-or-expression> 
 #   <conditional-expression-tail>? 
 # }
-our class ConditionalExpression does IMultiplicativeExpression does IConditionalExpression {
+class ConditionalExpression does IMultiplicativeExpression does IConditionalExpression is export {
     has ILogicalOrExpression      $.logical-or-expression is required;
     has ConditionalExpressionTail $.conditional-expression-tail;
 
@@ -46,49 +46,52 @@ our class ConditionalExpression does IMultiplicativeExpression does IConditional
     }
 }
 
-our role ConditionalExpression::Actions {
+package ConditionalExpressionGrammar is export {
 
-    # rule conditional-expression-tail { <question> <expression> <colon> <assignment-expression> }
-    method conditional-expression-tail($/) {
-        make ConditionalExpressionTail.new(
-            question-expression   => $<expression>.made,
-            assignment-expression => $<assignment-expression>.made,
-            text                  => ~$/,
-        )
-    }
+    our role Actions {
 
-    # rule conditional-expression { <logical-or-expression> <conditional-expression-tail>? } 
-    method conditional-expression($/) {
-
-        my $base = $<logical-or-expression>.made;
-        my $tail = $<conditional-expression-tail>.made;
-
-        if $tail {
-
-            make ConditionalExpression.new(
-                logical-or-expression       => $base,
-                conditional-expression-tail => $tail,
-                text                        => ~$/,
+        # rule conditional-expression-tail { <question> <expression> <colon> <assignment-expression> }
+        method conditional-expression-tail($/) {
+            make ConditionalExpressionTail.new(
+                question-expression   => $<expression>.made,
+                assignment-expression => $<assignment-expression>.made,
+                text                  => ~$/,
             )
+        }
 
-        } else {
+        # rule conditional-expression { <logical-or-expression> <conditional-expression-tail>? } 
+        method conditional-expression($/) {
 
-            make $base
+            my $base = $<logical-or-expression>.made;
+            my $tail = $<conditional-expression-tail>.made;
+
+            if $tail {
+
+                make ConditionalExpression.new(
+                    logical-or-expression       => $base,
+                    conditional-expression-tail => $tail,
+                    text                        => ~$/,
+                )
+
+            } else {
+
+                make $base
+            }
         }
     }
-}
 
-our role ConditionalExpression::Rules {
+    our role Rules {
 
-    rule conditional-expression-tail {
-        <question> 
-        <expression> 
-        <colon> 
-        <assignment-expression> 
-    }
+        rule conditional-expression-tail {
+            <question> 
+            <expression> 
+            <colon> 
+            <assignment-expression> 
+        }
 
-    rule conditional-expression {
-        <logical-or-expression>
-        <conditional-expression-tail>?
+        rule conditional-expression {
+            <logical-or-expression>
+            <conditional-expression-tail>?
+        }
     }
 }

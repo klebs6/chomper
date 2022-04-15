@@ -11,7 +11,7 @@ use Chomper::TreeMark;
 # rule condition:sym<expr> { 
 #   <expression> 
 # }
-our class Condition::Expr does ICondition {
+class Condition::Expr does ICondition is export {
     has IExpression $.expression is required;
 
     has $.text;
@@ -25,7 +25,7 @@ our class Condition::Expr does ICondition {
 #   <assign> 
 #   <initializer-clause> 
 # }
-our class ConditionDeclTail::AssignInit does IConditionDeclTail {
+class ConditionDeclTail::AssignInit does IConditionDeclTail is export {
     has IInitializerClause $.initializer-clause is required;
 
     has $.text;
@@ -38,7 +38,7 @@ our class ConditionDeclTail::AssignInit does IConditionDeclTail {
 # rule condition-decl-tail:sym<braced-init> { 
 #   <braced-init-list> 
 # }
-our class ConditionDeclTail::BracedInit does IConditionDeclTail {
+class ConditionDeclTail::BracedInit does IConditionDeclTail is export {
     has BracedInitList $.braced-init-list is required;
 
     has $.text;
@@ -54,7 +54,7 @@ our class ConditionDeclTail::BracedInit does IConditionDeclTail {
 #   <declarator> 
 #   <condition-decl-tail> 
 # }
-our class Condition::Decl does ICondition {
+class Condition::Decl does ICondition is export {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
     has IDeclSpecifierSeq      $.decl-specifier-seq  is required;
     has IDeclarator            $.declarator          is required;
@@ -80,61 +80,64 @@ our class Condition::Decl does ICondition {
     }
 }
 
-our role Condition::Actions {
+package ConditionGrammar is export {
 
-    # rule condition:sym<expr> { <expression> } 
-    method condition:sym<expr>($/) {
-        make $<expression>.made
+    our role Actions {
+
+        # rule condition:sym<expr> { <expression> } 
+        method condition:sym<expr>($/) {
+            make $<expression>.made
+        }
+
+        # rule condition-decl-tail:sym<assign-init> { <assign> <initializer-clause> }
+        method condition-decl-tail:sym<assign-init>($/) {
+            make ConditionDeclTail::AssignInit.new(
+                initializer-clause => $<initializer-clause>.made,
+                text               => ~$/,
+            )
+        }
+
+        # rule condition-decl-tail:sym<braced-init> { <braced-init-list> } 
+        method condition-decl-tail:sym<braced-init>($/) {
+            make $<braced-init-list>.made
+        }
+
+        # rule condition:sym<decl> { 
+        #   <attribute-specifier-seq>? 
+        #   <decl-specifier-seq> 
+        #   <declarator> 
+        #   <condition-decl-tail> 
+        # }
+        method condition:sym<decl>($/) {
+            make Condition::Decl.new(
+                attribute-specifier-seq => $<attribute-specifier-seq>.made,
+                decl-specifier-seq      => $<decl-specifier-seq>.made,
+                declarator              => $<declarator>.made,
+                condition-decl-tail     => $<condition-decl-tail>.made,
+                text                    => ~$/,
+            )
+        }
     }
 
-    # rule condition-decl-tail:sym<assign-init> { <assign> <initializer-clause> }
-    method condition-decl-tail:sym<assign-init>($/) {
-        make ConditionDeclTail::AssignInit.new(
-            initializer-clause => $<initializer-clause>.made,
-            text               => ~$/,
-        )
-    }
+    our role Rules {
 
-    # rule condition-decl-tail:sym<braced-init> { <braced-init-list> } 
-    method condition-decl-tail:sym<braced-init>($/) {
-        make $<braced-init-list>.made
-    }
+        proto rule condition { * }
 
-    # rule condition:sym<decl> { 
-    #   <attribute-specifier-seq>? 
-    #   <decl-specifier-seq> 
-    #   <declarator> 
-    #   <condition-decl-tail> 
-    # }
-    method condition:sym<decl>($/) {
-        make Condition::Decl.new(
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            decl-specifier-seq      => $<decl-specifier-seq>.made,
-            declarator              => $<declarator>.made,
-            condition-decl-tail     => $<condition-decl-tail>.made,
-            text                    => ~$/,
-        )
-    }
-}
+        rule condition:sym<expr> {
+            <expression>
+        }
 
-our role Condition::Rules {
+        #-----------------------------
+        proto rule condition-decl-tail { * }
+        rule condition-decl-tail:sym<assign-init> { <assign> <initializer-clause> }
+        rule condition-decl-tail:sym<braced-init> { <braced-init-list> }
 
-    proto rule condition { * }
-
-    rule condition:sym<expr> {
-        <expression>
-    }
-
-    #-----------------------------
-    proto rule condition-decl-tail { * }
-    rule condition-decl-tail:sym<assign-init> { <assign> <initializer-clause> }
-    rule condition-decl-tail:sym<braced-init> { <braced-init-list> }
-
-    #-----------------------------
-    rule condition:sym<decl> {
-        <attribute-specifier-seq>?
-        <decl-specifier-seq> 
-        <declarator>
-        <condition-decl-tail>
+        #-----------------------------
+        rule condition:sym<decl> {
+            <attribute-specifier-seq>?
+            <decl-specifier-seq> 
+            <declarator>
+            <condition-decl-tail>
+        }
     }
 }

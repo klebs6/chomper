@@ -4,11 +4,11 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-our role IAlignmentSpecifier {  }
+our role IAlignmentSpecifier is export {  }
 
 # rule alignmentspecifierbody:sym<type-id> { <the-type-id> }
-our class Alignmentspecifierbody::TypeId 
-does IAlignmentspecifierbody {
+class Alignmentspecifierbody::TypeId 
+does IAlignmentspecifierbody is export {
 
     has ITheTypeId $.the-type-id is required;
 
@@ -18,8 +18,8 @@ does IAlignmentspecifierbody {
 }
 
 # rule alignmentspecifierbody:sym<const-expr> { <constant-expression> }
-our class Alignmentspecifierbody::ConstExpr 
-does IAlignmentspecifierbody {
+class Alignmentspecifierbody::ConstExpr 
+does IAlignmentspecifierbody is export {
 
     has IConstantExpression $.constant-expression is required;
 
@@ -35,8 +35,8 @@ does IAlignmentspecifierbody {
 #   <ellipsis>? 
 #   <.right-paren> 
 # }
-our class Alignmentspecifier 
-does IAttributeSpecifier {
+class Alignmentspecifier 
+does IAttributeSpecifier is export {
 
     has IAlignmentspecifierbody $.alignmentspecifierbody is required;
     has Bool                    $.has-ellipsis is required;
@@ -53,40 +53,43 @@ does IAttributeSpecifier {
     }
 }
 
-our role Align::Actions {
+package AlignGrammar is export {
 
-    # rule alignmentspecifierbody:sym<type-id> { <the-type-id> }
-    method alignmentspecifierbody:sym<type-id>($/) {
-        make $<the-type-id>.made
+    our role Actions {
+
+        # rule alignmentspecifierbody:sym<type-id> { <the-type-id> }
+        method alignmentspecifierbody:sym<type-id>($/) {
+            make $<the-type-id>.made
+        }
+
+        # rule alignmentspecifierbody:sym<const-expr> { <constant-expression> } 
+        method alignmentspecifierbody:sym<const-expr>($/) {
+            make $<constant-expression>.made
+        }
+
+        # rule alignmentspecifier { <alignas> <.left-paren> <alignmentspecifierbody> <ellipsis>? <.right-paren> }
+        method alignmentspecifier($/) {
+            make Alignmentspecifier.new(
+                alignmentspecifierbody => $<alignmentspecifierbody>.made,
+                has-ellipsis           => $<has-ellipsis>.made,
+                text                   => ~$/,
+            )
+        }
     }
 
-    # rule alignmentspecifierbody:sym<const-expr> { <constant-expression> } 
-    method alignmentspecifierbody:sym<const-expr>($/) {
-        make $<constant-expression>.made
-    }
+    our role Rules {
 
-    # rule alignmentspecifier { <alignas> <.left-paren> <alignmentspecifierbody> <ellipsis>? <.right-paren> }
-    method alignmentspecifier($/) {
-        make Alignmentspecifier.new(
-            alignmentspecifierbody => $<alignmentspecifierbody>.made,
-            has-ellipsis           => $<has-ellipsis>.made,
-            text                   => ~$/,
-        )
-    }
-}
+        proto rule alignmentspecifierbody { * }
+        rule alignmentspecifierbody:sym<type-id>    { <the-type-id> }
+        rule alignmentspecifierbody:sym<const-expr> { <constant-expression> }
 
-our role Align::Rules {
-
-    proto rule alignmentspecifierbody { * }
-    rule alignmentspecifierbody:sym<type-id>    { <the-type-id> }
-    rule alignmentspecifierbody:sym<const-expr> { <constant-expression> }
-
-    #--------------------
-    rule alignmentspecifier {
-        <alignas>
-        <left-paren>
-        <alignmentspecifierbody>
-        <ellipsis>?
-        <right-paren>
+        #--------------------
+        rule alignmentspecifier {
+            <alignas>
+            <left-paren>
+            <alignmentspecifierbody>
+            <ellipsis>?
+            <right-paren>
+        }
     }
 }

@@ -5,7 +5,7 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 
 # rule cvqualifierseq { <cv-qualifier>+ }
-our class Cvqualifierseq { 
+class Cvqualifierseq is export { 
     has ICvQualifier @.cv-qualifiers;
 
     has $.text;
@@ -16,7 +16,7 @@ our class Cvqualifierseq {
 }
 
 # rule cv-qualifier:sym<const> { <const> }
-our class CvQualifier::Const does ICvQualifier {
+class CvQualifier::Const does ICvQualifier is export {
 
     has $.text;
 
@@ -26,7 +26,7 @@ our class CvQualifier::Const does ICvQualifier {
 }
 
 # rule cv-qualifier:sym<volatile> { <volatile> }
-our class CvQualifier::Volatile does ICvQualifier {
+class CvQualifier::Volatile does ICvQualifier is export {
 
     has $.text;
 
@@ -35,34 +35,37 @@ our class CvQualifier::Volatile does ICvQualifier {
     }
 }
 
-our role CV::Actions {
+package CVGrammar is export {
 
-    # rule cvqualifierseq { <cv-qualifier>+ } 
-    method cvqualifierseq($/) {
-        make Cvqualifierseq.new(
-            cv-qualifiers => $<cv-qualifier>>>.made,
-            text          => ~$/,
-        )
+    our role Actions {
+
+        # rule cvqualifierseq { <cv-qualifier>+ } 
+        method cvqualifierseq($/) {
+            make Cvqualifierseq.new(
+                cv-qualifiers => $<cv-qualifier>>>.made,
+                text          => ~$/,
+            )
+        }
+
+        # rule cv-qualifier:sym<const> { <const> }
+        method cv-qualifier:sym<const>($/) {
+            make CvQualifier::Const.new
+        }
+
+        # rule cv-qualifier:sym<volatile> { <volatile> } 
+        method cv-qualifier:sym<volatile>($/) {
+            make CvQualifier::Volatile.new
+        }
     }
 
-    # rule cv-qualifier:sym<const> { <const> }
-    method cv-qualifier:sym<const>($/) {
-        make CvQualifier::Const.new
+    our role Rules {
+
+        rule cvqualifierseq {
+            <cv-qualifier>+
+        }
+
+        proto rule cv-qualifier { * }
+        rule cv-qualifier:sym<const>    { <const> }
+        rule cv-qualifier:sym<volatile> { <volatile> }
     }
-
-    # rule cv-qualifier:sym<volatile> { <volatile> } 
-    method cv-qualifier:sym<volatile>($/) {
-        make CvQualifier::Volatile.new
-    }
-}
-
-our role CV::Rules {
-
-    rule cvqualifierseq {
-        <cv-qualifier>+
-    }
-
-    proto rule cv-qualifier { * }
-    rule cv-qualifier:sym<const>    { <const> }
-    rule cv-qualifier:sym<volatile> { <volatile> }
 }

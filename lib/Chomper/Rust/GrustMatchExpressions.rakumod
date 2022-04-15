@@ -2,7 +2,7 @@ unit module Chomper::Rust::GrustMatchExpressions;
 
 use Data::Dump::Tree;
 
-our class MatchExpression {
+class MatchExpression is export {
     has $.scrutinee;
     has @.inner-attributes;
     has $.maybe-match-arms;
@@ -29,7 +29,7 @@ our class MatchExpression {
     }
 }
 
-our class Scrutinee {
+class Scrutinee is export {
     has $.expression-nostruct;
 
     has $.text;
@@ -39,7 +39,7 @@ our class Scrutinee {
     }
 }
 
-our class MatchArms {
+class MatchArms is export {
     has @.items;
     has $.maybe-comment;
 
@@ -57,7 +57,7 @@ our class MatchArms {
     }
 }
 
-our class MatchArmsInnerItemWithBlock {
+class MatchArmsInnerItemWithBlock is export {
     has $.maybe-comment;
     has $.match-arm;
     has $.expression-with-block;
@@ -79,7 +79,7 @@ our class MatchArmsInnerItemWithBlock {
     }
 }
 
-our class MatchArmsInnerItemWithoutBlock {
+class MatchArmsInnerItemWithoutBlock is export {
     has $.maybe-comment;
     has $.match-arm;
     has $.expression-noblock;
@@ -100,7 +100,7 @@ our class MatchArmsInnerItemWithoutBlock {
     }
 }
 
-our class MatchArmsOuterItem {
+class MatchArmsOuterItem is export {
     has $.maybe-comment;
     has $.match-arm;
     has $.expression;
@@ -122,7 +122,7 @@ our class MatchArmsOuterItem {
     }
 }
 
-our class MatchArm {
+class MatchArm is export {
     has @.outer-attributes;
     has $.pattern;
     has $.maybe-match-arm-guard;
@@ -147,7 +147,7 @@ our class MatchArm {
     }
 }
 
-our class MatchArmGuard {
+class MatchArmGuard is export {
     has $.expression;
 
     has $.text;
@@ -157,151 +157,154 @@ our class MatchArmGuard {
     }
 }
 
-our role MatchExpression::Rules {
+package MatchExpresisonGrammar is export {
 
-    rule match-expression {
-        <kw-match> 
-        <scrutinee> 
-        <tok-lbrace>
-        <inner-attribute>*
-        <match-arms>?
-        <tok-rbrace>
+    our role Rules {
+
+        rule match-expression {
+            <kw-match> 
+            <scrutinee> 
+            <tok-lbrace>
+            <inner-attribute>*
+            <match-arms>?
+            <tok-rbrace>
+        }
+
+        rule scrutinee {
+            <expression-nostruct>
+        }
+
+        rule scrutinee-except-lazy-boolean-operator-expression {
+            <scrutinee> <?{$0 !~~ <binary-oror-expression>}>
+        }
+
+        #------------------
+        rule match-arms {
+            <match-arms-inner-item>*
+            <match-arms-outer-item>
+            <comment>?
+        }
+
+        proto rule match-arms-inner-item { * }
+
+        rule match-arms-inner-item:sym<with-block> {  
+            <comment>?
+            <match-arm>
+            <tok-fat-rarrow>
+            <expression-with-block>
+            <tok-comma>?
+        }
+
+        rule match-arms-inner-item:sym<without-block> {  
+            <comment>?
+            <match-arm> 
+            <tok-fat-rarrow> 
+            <expression-noblock> 
+            <tok-comma>
+        }
+
+        proto rule expression-variant { * }
+        rule expression-variant:sym<with>    { <expression-with-block> }
+        rule expression-variant:sym<without> { <expression-noblock> }
+
+        rule match-arms-outer-item {
+            <comment>?
+            <match-arm> 
+            <tok-fat-rarrow> 
+            <expression-variant>
+            <tok-comma>?
+        }
+
+        rule match-arm {
+            <outer-attribute>*
+            <pattern>
+            <match-arm-guard>?
+        }
+
+        rule match-arm-guard {
+            <kw-if> <expression>
+        }
     }
 
-    rule scrutinee {
-        <expression-nostruct>
-    }
+    our role Actions {
 
-    rule scrutinee-except-lazy-boolean-operator-expression {
-        <scrutinee> <?{$0 !~~ <binary-oror-expression>}>
-    }
+        method match-expression($/) {
+            make MatchExpression.new(
+                scrutinee        => $<scrutinee>.made,
+                inner-attributes => $<inner-attribute>>>.made,
+                maybe-match-arms => $<match-arms>.made,
+                text             => $/.Str,
+            )
+        }
 
-    #------------------
-    rule match-arms {
-        <match-arms-inner-item>*
-        <match-arms-outer-item>
-        <comment>?
-    }
+        method scrutinee($/) {
+            make Scrutinee.new(
+                expression-nostruct => $<expression-nostruct>.made,
+                text                => $/.Str,
+            )
+        }
 
-    proto rule match-arms-inner-item { * }
+        method scrutinee-except-lazy-boolean-operator-expression($/) {
+            make $<scrutinee>.made
+        }
 
-    rule match-arms-inner-item:sym<with-block> {  
-        <comment>?
-        <match-arm>
-        <tok-fat-rarrow>
-        <expression-with-block>
-        <tok-comma>?
-    }
+        #------------------
+        method match-arms($/) {
+            my @items = [
+                |$<match-arms-inner-item>>>.made, 
+                $<match-arms-outer-item>.made
+            ];
+            make MatchArms.new(
+                items => @items,
+                maybe-comment => $<comment>.made,
+                text       => $/.Str,
+            )
+        }
 
-    rule match-arms-inner-item:sym<without-block> {  
-        <comment>?
-        <match-arm> 
-        <tok-fat-rarrow> 
-        <expression-noblock> 
-        <tok-comma>
-    }
+        method match-arms-inner-item:sym<with-block>($/) {  
+            make MatchArmsInnerItemWithBlock.new(
+                maybe-comment         => $<comment>.made,
+                match-arm             => $<match-arm>.made,
+                expression-with-block => $<expression-with-block>.made,
+                text                  => $/.Str,
+            )
+        }
 
-    proto rule expression-variant { * }
-    rule expression-variant:sym<with>    { <expression-with-block> }
-    rule expression-variant:sym<without> { <expression-noblock> }
+        method match-arms-inner-item:sym<without-block>($/) {  
+            make MatchArmsInnerItemWithoutBlock.new(
+                maybe-comment      => $<comment>.made,
+                match-arm          => $<match-arm>.made,
+                expression-noblock => $<expression-noblock>.made,
+                text               => $/.Str,
+            )
+        }
 
-    rule match-arms-outer-item {
-        <comment>?
-        <match-arm> 
-        <tok-fat-rarrow> 
-        <expression-variant>
-        <tok-comma>?
-    }
+        method expression-variant:sym<with>($/)    { make $<expression-with-block>.made }
+        method expression-variant:sym<without>($/) { make $<expression-noblock>.made }
 
-    rule match-arm {
-        <outer-attribute>*
-        <pattern>
-        <match-arm-guard>?
-    }
+        method match-arms-outer-item($/) {
+            make MatchArmsOuterItem.new(
+                maybe-comment => $<comment>.made,
+                match-arm     => $<match-arm>.made,
+                expression    => $<expression-variant>.made,
+                text          => $/.Str,
+            )
+        }
 
-    rule match-arm-guard {
-        <kw-if> <expression>
-    }
-}
+        method match-arm($/) {
+            make MatchArm.new(
+                outer-attributes      => $<outer-attribute>>>.made,
+                pattern               => $<pattern>.made,
+                maybe-match-arm-guard => $<match-arm-guard>.made,
+                text                  => $/.Str,
+            )
+        }
 
-our role MatchExpression::Actions {
-
-    method match-expression($/) {
-        make MatchExpression.new(
-            scrutinee        => $<scrutinee>.made,
-            inner-attributes => $<inner-attribute>>>.made,
-            maybe-match-arms => $<match-arms>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method scrutinee($/) {
-        make Scrutinee.new(
-            expression-nostruct => $<expression-nostruct>.made,
-            text                => $/.Str,
-        )
-    }
-
-    method scrutinee-except-lazy-boolean-operator-expression($/) {
-        make $<scrutinee>.made
-    }
-
-    #------------------
-    method match-arms($/) {
-        my @items = [
-            |$<match-arms-inner-item>>>.made, 
-            $<match-arms-outer-item>.made
-        ];
-        make MatchArms.new(
-            items => @items,
-            maybe-comment => $<comment>.made,
-            text       => $/.Str,
-        )
-    }
-
-    method match-arms-inner-item:sym<with-block>($/) {  
-        make MatchArmsInnerItemWithBlock.new(
-            maybe-comment         => $<comment>.made,
-            match-arm             => $<match-arm>.made,
-            expression-with-block => $<expression-with-block>.made,
-            text                  => $/.Str,
-        )
-    }
-
-    method match-arms-inner-item:sym<without-block>($/) {  
-        make MatchArmsInnerItemWithoutBlock.new(
-            maybe-comment      => $<comment>.made,
-            match-arm          => $<match-arm>.made,
-            expression-noblock => $<expression-noblock>.made,
-            text               => $/.Str,
-        )
-    }
-
-    method expression-variant:sym<with>($/)    { make $<expression-with-block>.made }
-    method expression-variant:sym<without>($/) { make $<expression-noblock>.made }
-
-    method match-arms-outer-item($/) {
-        make MatchArmsOuterItem.new(
-            maybe-comment => $<comment>.made,
-            match-arm     => $<match-arm>.made,
-            expression    => $<expression-variant>.made,
-            text          => $/.Str,
-        )
-    }
-
-    method match-arm($/) {
-        make MatchArm.new(
-            outer-attributes      => $<outer-attribute>>>.made,
-            pattern               => $<pattern>.made,
-            maybe-match-arm-guard => $<match-arm-guard>.made,
-            text                  => $/.Str,
-        )
-    }
-
-    method match-arm-guard($/) {
-        make MatchArmGuard.new(
-            expression => $<expression>.made,
-            text       => $/.Str,
-        )
+        method match-arm-guard($/) {
+            make MatchArmGuard.new(
+                expression => $<expression>.made,
+                text       => $/.Str,
+            )
+        }
     }
 }

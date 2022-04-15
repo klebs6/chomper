@@ -8,7 +8,7 @@ use Chomper::Cpp::GcppRoles;
 #   <equality-expression> 
 #   [ <and_> <equality-expression> ]* 
 # }
-our class AndExpression does IAndExpression {
+class AndExpression does IAndExpression is export {
     has IEqualityExpression @.equality-expressions is required;
 
     has $.text;
@@ -18,28 +18,31 @@ our class AndExpression does IAndExpression {
     }
 }
 
-our role AndExpression::Actions {
+package AndExpressionGrammar is export {
 
-    # rule and-expression { <equality-expression> [ <and_> <equality-expression> ]* }
-    method and-expression($/) {
+    our role Actions {
 
-        my @equality-expressions = $<equality-expression>>>.made.List;
+        # rule and-expression { <equality-expression> [ <and_> <equality-expression> ]* }
+        method and-expression($/) {
 
-        if @equality-expressions.elems gt 1 {
-            make AndExpression.new(
-                equality-expressions => @equality-expressions,
-                text                 => ~$/,
-            )
+            my @equality-expressions = $<equality-expression>>>.made.List;
 
-        } else {
-            make @equality-expressions[0]
+            if @equality-expressions.elems gt 1 {
+                make AndExpression.new(
+                    equality-expressions => @equality-expressions,
+                    text                 => ~$/,
+                )
+
+            } else {
+                make @equality-expressions[0]
+            }
         }
     }
-}
 
-our role AndExpression::Rules {
+    our role Rules {
 
-    rule and-expression {
-        <equality-expression> [ <and_> <equality-expression> ]*
+        rule and-expression {
+            <equality-expression> [ <and_> <equality-expression> ]*
+        }
     }
 }

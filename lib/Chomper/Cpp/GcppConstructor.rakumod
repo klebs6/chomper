@@ -9,7 +9,7 @@ use Chomper::Cpp::GcppMemInitializer;
 #   <colon> 
 #   <mem-initializer-list> 
 # }
-our class ConstructorInitializer { 
+class ConstructorInitializer is export { 
     has MemInitializerList $.mem-initializer-list is required;
     has $.text;
 
@@ -18,20 +18,23 @@ our class ConstructorInitializer {
     }
 }
 
-our role Constructor::Actions {
+package ConstructorGrammar is export {
 
-    # rule constructor-initializer { <colon> <mem-initializer-list> }
-    method constructor-initializer($/) {
-        make ConstructorInitializer.new(
-            mem-initializer-list => $<mem-initializer-list>.made,
-            text                 => ~$/,
-        )
+    our role Actions {
+
+        # rule constructor-initializer { <colon> <mem-initializer-list> }
+        method constructor-initializer($/) {
+            make ConstructorInitializer.new(
+                mem-initializer-list => $<mem-initializer-list>.made,
+                text                 => ~$/,
+            )
+        }
     }
-}
 
-our role Constructor::Rules {
+    our role Rules {
 
-    rule constructor-initializer {
-        <colon> <mem-initializer-list>
+        rule constructor-initializer {
+            <colon> <mem-initializer-list>
+        }
     }
 }

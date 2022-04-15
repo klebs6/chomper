@@ -2,218 +2,221 @@ unit module Chomper::Rust::GrustPunctuation;
 
 use Data::Dump::Tree;
 
-our role Punctuation::Rules {
+package PunctuationGrammar is export {
 
-    #`(Addition, Trait Bounds, Macro Kleene
-    Matcher)
-    token tok-plus         { '+' <!before '='>  } 
+    our role Rules {
 
-    #`(Subtraction, Negation)
-    token tok-minus        { '-' <!before '='> } 
+        #`(Addition, Trait Bounds, Macro Kleene
+        Matcher)
+        token tok-plus         { '+' <!before '='>  } 
 
-    #`(Multiplication, Dereference, Raw Pointers,
-    Macro Kleene Matcher, Use wildcards)
-    token tok-star         { '*' <!before '='>   } 
+        #`(Subtraction, Negation)
+        token tok-minus        { '-' <!before '='> } 
 
-    token tok-tilde        { '~' }
+        #`(Multiplication, Dereference, Raw Pointers,
+        Macro Kleene Matcher, Use wildcards)
+        token tok-star         { '*' <!before '='>   } 
 
-    #`(Division)
-    token tok-slash        { '/' <!before '='> } 
-    token tok-backslash    { \\ } 
+        token tok-tilde        { '~' }
 
-    #`(Remainder)
-    token tok-percent      { '%' <!before '='>  } 
+        #`(Division)
+        token tok-slash        { '/' <!before '='> } 
+        token tok-backslash    { \\ } 
 
-    #`(Bitwise and Logical XOR)
-    token tok-caret        { '^' <!before '='>  } 
+        #`(Remainder)
+        token tok-percent      { '%' <!before '='>  } 
 
-    #`(Bitwise and Logical NOT, Macro Calls, Inner
-    Attributes, Never Type, Negative impls)
-    token tok-not          { '!' <!before '='>  } 
+        #`(Bitwise and Logical XOR)
+        token tok-caret        { '^' <!before '='>  } 
 
-    token tok-bang         { '!' <!before '='>  } 
+        #`(Bitwise and Logical NOT, Macro Calls, Inner
+        Attributes, Never Type, Negative impls)
+        token tok-not          { '!' <!before '='>  } 
 
-    #`(Bitwise and Logical AND, Borrow,
-    #References, Reference patterns)
-    token tok-and          { '&' <!before '&'>   } 
+        token tok-bang         { '!' <!before '='>  } 
 
-    #`(Bitwise and Logical OR, Closures, Patterns
-    #in match, if let, and while let)
-    token tok-or           { '|' <!before '|'>  } 
+        #`(Bitwise and Logical AND, Borrow,
+        #References, Reference patterns)
+        token tok-and          { '&' <!before '&'>   } 
 
-    #`(Lazy AND, Borrow, References, Reference
-    #patterns)
-    token tok-andand       { '&&' <!before '='> } 
+        #`(Bitwise and Logical OR, Closures, Patterns
+        #in match, if let, and while let)
+        token tok-or           { '|' <!before '|'>  } 
 
-    #`(Lazy OR, Closures)
-    token tok-oror         { '||' <!before '='>  } 
+        #`(Lazy AND, Borrow, References, Reference
+        #patterns)
+        token tok-andand       { '&&' <!before '='> } 
 
-    #`(Shift Left, Nested Generics)
-    token tok-shl          { '<<' <!before '='>  } 
+        #`(Lazy OR, Closures)
+        token tok-oror         { '||' <!before '='>  } 
 
-    #`(Shift Right, Nested Generics)
-    token tok-shr          { '>>' <!before '='>  } 
+        #`(Shift Left, Nested Generics)
+        token tok-shl          { '<<' <!before '='>  } 
 
-    #`(Addition assignment)
-    token tok-pluseq       { '+='  } 
+        #`(Shift Right, Nested Generics)
+        token tok-shr          { '>>' <!before '='>  } 
 
-    #`(Subtraction assignment)
-    token tok-minuseq      { '-='  } 
+        #`(Addition assignment)
+        token tok-pluseq       { '+='  } 
 
-    #`(Multiplication assignment)
-    token tok-stareq       { '*='  } 
+        #`(Subtraction assignment)
+        token tok-minuseq      { '-='  } 
 
-    #`(Division assignment)
-    token tok-slasheq      { '/='  } 
+        #`(Multiplication assignment)
+        token tok-stareq       { '*='  } 
 
-    #`(Remainder assignment)
-    token tok-percenteq    { '%='  } 
+        #`(Division assignment)
+        token tok-slasheq      { '/='  } 
 
-    #`(Bitwise XOR assignment)
-    token tok-careteq      { '^='  } 
+        #`(Remainder assignment)
+        token tok-percenteq    { '%='  } 
 
-    #`(Bitwise And assignment)
-    token tok-andeq        { '&='  } 
+        #`(Bitwise XOR assignment)
+        token tok-careteq      { '^='  } 
 
-    #`(Bitwise Or assignment)
-    token tok-oreq         { '|='  } 
+        #`(Bitwise And assignment)
+        token tok-andeq        { '&='  } 
 
-    #`(Shift Left assignment)
-    token tok-shleq        { '<<=' } 
+        #`(Bitwise Or assignment)
+        token tok-oreq         { '|='  } 
 
-    #`(Shift Right assignment, Nested Generics)
-    token tok-shreq        { '>>=' } 
+        #`(Shift Left assignment)
+        token tok-shleq        { '<<=' } 
 
-    #`(Assignment, Attributes, Various type
-    #definitions)
-    token tok-eq           { '=' <!before <[\= \>]>>   } 
+        #`(Shift Right assignment, Nested Generics)
+        token tok-shreq        { '>>=' } 
 
-    #`(Equal)
-    token tok-eqeq         { '=='  } 
+        #`(Assignment, Attributes, Various type
+        #definitions)
+        token tok-eq           { '=' <!before <[\= \>]>>   } 
 
-    #`(Not Equal)
-    token tok-ne           { '!='  } 
+        #`(Equal)
+        token tok-eqeq         { '=='  } 
 
-    #`(Greater than, Generics, Paths)
-    token tok-gt           { '>'  <!before '='> } 
+        #`(Not Equal)
+        token tok-ne           { '!='  } 
 
-    #`(Less than, Generics, Paths)
-    token tok-lt           { '<'  <!before '='> } 
+        #`(Greater than, Generics, Paths)
+        token tok-gt           { '>'  <!before '='> } 
 
-    #`(Greater than or equal to, Generics)
-    token tok-ge           { '>='  } 
+        #`(Less than, Generics, Paths)
+        token tok-lt           { '<'  <!before '='> } 
 
-    #`(Less than or equal to)
-    token tok-le           { '<='  } 
+        #`(Greater than or equal to, Generics)
+        token tok-ge           { '>='  } 
 
-    #`(Subpattern binding)
-    token tok-at           { '@'   } 
+        #`(Less than or equal to)
+        token tok-le           { '<='  } 
 
-    #`(Wildcard patterns, Inferred types, Unnamed
-    items in constants, extern crates, and use
-    declarations)
-    token tok-underscore   { '_'   } 
+        #`(Subpattern binding)
+        token tok-at           { '@'   } 
 
-    #`(Field access, Tuple index)
-    token tok-dot          { '.'   } 
+        #`(Wildcard patterns, Inferred types, Unnamed
+        items in constants, extern crates, and use
+        declarations)
+        token tok-underscore   { '_'   } 
 
-    #`(Range, Struct expressions, Patterns, Range
-    Patterns)
-    token tok-dotdot       { '..'  } 
+        #`(Field access, Tuple index)
+        token tok-dot          { '.'   } 
 
-    #`(Variadic functions, Range patterns)
-    token tok-dotdotdot    { '...' } 
+        #`(Range, Struct expressions, Patterns, Range
+        Patterns)
+        token tok-dotdot       { '..'  } 
 
-    #`(Inclusive Range, Range patterns)
-    token tok-dotdoteq     { '..=' } 
+        #`(Variadic functions, Range patterns)
+        token tok-dotdotdot    { '...' } 
 
-    #`(Various separators)
-    token tok-comma        { ','   } 
+        #`(Inclusive Range, Range patterns)
+        token tok-dotdoteq     { '..=' } 
 
-    #`(Terminator for various items and
-    #statements, Array types)
-    token tok-semi         { ';'   } 
+        #`(Various separators)
+        token tok-comma        { ','   } 
 
-    #`(Various separators)
-    token tok-colon        { ':'   } 
+        #`(Terminator for various items and
+        #statements, Array types)
+        token tok-semi         { ';'   } 
 
-    #`(Path separator)
-    token tok-path-sep     { '::'  } 
+        #`(Various separators)
+        token tok-colon        { ':'   } 
 
-    #`(Function return type, Closure return type,
-    #Function pointer type)
-    token tok-rarrow       { '->'  } 
+        #`(Path separator)
+        token tok-path-sep     { '::'  } 
 
-    #`(Match arms, Macros)
-    token tok-fat-rarrow   { '=>'  } 
+        #`(Function return type, Closure return type,
+        #Function pointer type)
+        token tok-rarrow       { '->'  } 
 
-    #`(Attributes)
-    token tok-pound        { '#'  } 
+        #`(Match arms, Macros)
+        token tok-fat-rarrow   { '=>'  } 
 
-    #`(Macros)
-    token tok-dollar       { '$'  } 
+        #`(Attributes)
+        token tok-pound        { '#'  } 
 
-    #`(Question mark operator, Questionably sized,
-    #Macro Kleene Matcher)
-    token tok-qmark        { '?'   } 
+        #`(Macros)
+        token tok-dollar       { '$'  } 
 
-    token tok-qmark-qmark  { <tok-qmark> ** 2 }
-    token tok-single-quote { \' }
-    token tok-double-quote { \" }
+        #`(Question mark operator, Questionably sized,
+        #Macro Kleene Matcher)
+        token tok-qmark        { '?'   } 
 
-    #-------------------------
-    proto token punctuation { * }
-    token punctuation:sym<tok-plus>         { <tok-plus> } 
-    token punctuation:sym<tok-minus>        { <tok-minus> } 
-    token punctuation:sym<tok-star>         { <tok-star> } 
-    token punctuation:sym<tok-tilde>        { <tok-tilde> } 
-    token punctuation:sym<tok-slash>        { <tok-slash> } 
-    token punctuation:sym<tok-backslash>    { <tok-backslash> } 
-    token punctuation:sym<tok-percent>      { <tok-percent> } 
-    token punctuation:sym<tok-caret>        { <tok-caret> } 
-    token punctuation:sym<tok-not>          { <tok-not> } 
-    token punctuation:sym<tok-bang>         { <tok-bang> } 
-    token punctuation:sym<tok-and>          { <tok-and> } 
-    token punctuation:sym<tok-or>           { <tok-or> } 
-    token punctuation:sym<tok-andand>       { <tok-andand> } 
-    token punctuation:sym<tok-oror>         { <tok-oror> } 
-    token punctuation:sym<tok-shl>          { <tok-shl> } 
-    token punctuation:sym<tok-shr>          { <tok-shr> } 
-    token punctuation:sym<tok-pluseq>       { <tok-pluseq> } 
-    token punctuation:sym<tok-minuseq>      { <tok-minuseq> } 
-    token punctuation:sym<tok-stareq>       { <tok-stareq> } 
-    token punctuation:sym<tok-slasheq>      { <tok-slasheq> } 
-    token punctuation:sym<tok-percenteq>    { <tok-percenteq> } 
-    token punctuation:sym<tok-careteq>      { <tok-careteq> } 
-    token punctuation:sym<tok-andeq>        { <tok-andeq> } 
-    token punctuation:sym<tok-oreq>         { <tok-oreq> } 
-    token punctuation:sym<tok-shleq>        { <tok-shleq> } 
-    token punctuation:sym<tok-shreq>        { <tok-shreq> } 
-    token punctuation:sym<tok-eq>           { <tok-eq> } 
-    token punctuation:sym<tok-eqeq>         { <tok-eqeq> } 
-    token punctuation:sym<tok-ne>           { <tok-ne> } 
-    token punctuation:sym<tok-gt>           { <tok-gt> } 
-    token punctuation:sym<tok-lt>           { <tok-lt> } 
-    token punctuation:sym<tok-ge>           { <tok-ge> } 
-    token punctuation:sym<tok-le>           { <tok-le> } 
-    token punctuation:sym<tok-at>           { <tok-at> } 
-    token punctuation:sym<tok-underscore>   { <tok-underscore> } 
-    token punctuation:sym<tok-dot>          { <tok-dot> } 
-    token punctuation:sym<tok-dotdot>       { <tok-dotdot> } 
-    token punctuation:sym<tok-dotdotdot>    { <tok-dotdotdot> } 
-    token punctuation:sym<tok-dotdoteq>     { <tok-dotdoteq> } 
-    token punctuation:sym<tok-comma>        { <tok-comma> } 
-    token punctuation:sym<tok-semi>         { <tok-semi> } 
-    token punctuation:sym<tok-colon>        { <tok-colon> } 
-    token punctuation:sym<tok-path-sep>     { <tok-path-sep> } 
-    token punctuation:sym<tok-rarrow>       { <tok-rarrow> } 
-    token punctuation:sym<tok-fat-rarrow>   { <tok-fat-rarrow> } 
-    token punctuation:sym<tok-pound>        { <tok-pound> } 
-    token punctuation:sym<tok-dollar>       { <tok-dollar> } 
-    token punctuation:sym<tok-qmark>        { <tok-qmark> } 
-    token punctuation:sym<tok-qmark-qmark>  { <tok-qmark-qmark> }
-    token punctuation:sym<tok-single-quote> { <tok-single-quote> }
-    token punctuation:sym<tok-double-quote> { <tok-double-quote> }
+        token tok-qmark-qmark  { <tok-qmark> ** 2 }
+        token tok-single-quote { \' }
+        token tok-double-quote { \" }
+
+        #-------------------------
+        proto token punctuation { * }
+        token punctuation:sym<tok-plus>         { <tok-plus> } 
+        token punctuation:sym<tok-minus>        { <tok-minus> } 
+        token punctuation:sym<tok-star>         { <tok-star> } 
+        token punctuation:sym<tok-tilde>        { <tok-tilde> } 
+        token punctuation:sym<tok-slash>        { <tok-slash> } 
+        token punctuation:sym<tok-backslash>    { <tok-backslash> } 
+        token punctuation:sym<tok-percent>      { <tok-percent> } 
+        token punctuation:sym<tok-caret>        { <tok-caret> } 
+        token punctuation:sym<tok-not>          { <tok-not> } 
+        token punctuation:sym<tok-bang>         { <tok-bang> } 
+        token punctuation:sym<tok-and>          { <tok-and> } 
+        token punctuation:sym<tok-or>           { <tok-or> } 
+        token punctuation:sym<tok-andand>       { <tok-andand> } 
+        token punctuation:sym<tok-oror>         { <tok-oror> } 
+        token punctuation:sym<tok-shl>          { <tok-shl> } 
+        token punctuation:sym<tok-shr>          { <tok-shr> } 
+        token punctuation:sym<tok-pluseq>       { <tok-pluseq> } 
+        token punctuation:sym<tok-minuseq>      { <tok-minuseq> } 
+        token punctuation:sym<tok-stareq>       { <tok-stareq> } 
+        token punctuation:sym<tok-slasheq>      { <tok-slasheq> } 
+        token punctuation:sym<tok-percenteq>    { <tok-percenteq> } 
+        token punctuation:sym<tok-careteq>      { <tok-careteq> } 
+        token punctuation:sym<tok-andeq>        { <tok-andeq> } 
+        token punctuation:sym<tok-oreq>         { <tok-oreq> } 
+        token punctuation:sym<tok-shleq>        { <tok-shleq> } 
+        token punctuation:sym<tok-shreq>        { <tok-shreq> } 
+        token punctuation:sym<tok-eq>           { <tok-eq> } 
+        token punctuation:sym<tok-eqeq>         { <tok-eqeq> } 
+        token punctuation:sym<tok-ne>           { <tok-ne> } 
+        token punctuation:sym<tok-gt>           { <tok-gt> } 
+        token punctuation:sym<tok-lt>           { <tok-lt> } 
+        token punctuation:sym<tok-ge>           { <tok-ge> } 
+        token punctuation:sym<tok-le>           { <tok-le> } 
+        token punctuation:sym<tok-at>           { <tok-at> } 
+        token punctuation:sym<tok-underscore>   { <tok-underscore> } 
+        token punctuation:sym<tok-dot>          { <tok-dot> } 
+        token punctuation:sym<tok-dotdot>       { <tok-dotdot> } 
+        token punctuation:sym<tok-dotdotdot>    { <tok-dotdotdot> } 
+        token punctuation:sym<tok-dotdoteq>     { <tok-dotdoteq> } 
+        token punctuation:sym<tok-comma>        { <tok-comma> } 
+        token punctuation:sym<tok-semi>         { <tok-semi> } 
+        token punctuation:sym<tok-colon>        { <tok-colon> } 
+        token punctuation:sym<tok-path-sep>     { <tok-path-sep> } 
+        token punctuation:sym<tok-rarrow>       { <tok-rarrow> } 
+        token punctuation:sym<tok-fat-rarrow>   { <tok-fat-rarrow> } 
+        token punctuation:sym<tok-pound>        { <tok-pound> } 
+        token punctuation:sym<tok-dollar>       { <tok-dollar> } 
+        token punctuation:sym<tok-qmark>        { <tok-qmark> } 
+        token punctuation:sym<tok-qmark-qmark>  { <tok-qmark-qmark> }
+        token punctuation:sym<tok-single-quote> { <tok-single-quote> }
+        token punctuation:sym<tok-double-quote> { <tok-double-quote> }
+    }
+
+    our role Actions {}
 }
-
-our role Punctuation::Actions {}

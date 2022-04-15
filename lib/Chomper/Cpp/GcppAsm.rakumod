@@ -12,7 +12,7 @@ use Chomper::Cpp::GcppStr;
 #   <.right-paren> 
 #   <.semi> 
 # } #--------------------
-our class AsmDefinition { 
+class AsmDefinition is export { 
     has IComment      $.comment;
     has StringLiteral $.string-literal is required;
 
@@ -23,25 +23,28 @@ our class AsmDefinition {
     }
 }
 
-our role Asm::Actions {
+package AsmGrammar is export {
 
-    # rule asm-definition { <asm> <.left-paren> <string-literal> <.right-paren> <.semi> } 
-    method asm-definition($/) {
-        make AsmDefinition.new(
-            comment        => $<semi>.made,
-            string-literal => $<string-literal>.made,
-            text           => ~$/,
-        )
+    our role Actions {
+
+        # rule asm-definition { <asm> <.left-paren> <string-literal> <.right-paren> <.semi> } 
+        method asm-definition($/) {
+            make AsmDefinition.new(
+                comment        => $<semi>.made,
+                string-literal => $<string-literal>.made,
+                text           => ~$/,
+            )
+        }
     }
-}
 
-our role Asm::Rules {
+    our role Rules {
 
-    rule asm-definition {
-        <asm>
-        <left-paren>
-        <string-literal>
-        <right-paren>
-        <semi>
+        rule asm-definition {
+            <asm>
+            <left-paren>
+            <string-literal>
+            <right-paren>
+            <semi>
+        }
     }
 }

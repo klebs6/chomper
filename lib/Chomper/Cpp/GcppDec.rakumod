@@ -4,7 +4,7 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-our class DecimalLiteral { 
+class DecimalLiteral is export { 
     has Str $.value is required; 
 
     has $.text;
@@ -19,9 +19,9 @@ our class DecimalLiteral {
     }
 }
 
-our class IntegerLiteral::Dec 
+class IntegerLiteral::Dec 
 does IConstantExpression
-does IIntegerLiteral {
+does IIntegerLiteral is export {
 
     has DecimalLiteral $.decimal-literal is required;
     has IIntegersuffix $.integersuffix;
@@ -42,30 +42,33 @@ does IIntegerLiteral {
     }
 }
 
-our role Dec::Actions {
+package DecGrammar is export {
 
-    # token integer-literal:sym<dec> { <decimal-literal> <integersuffix>? }
-    method integer-literal:sym<dec>($/) {
-        make IntegerLiteral::Dec.new(
-            decimal-literal => $<decimal-literal>.made,
-            integersuffix   => $<integersuffix>.made,
-            text            => ~$/,
-        )
+    our role Actions {
+
+        # token integer-literal:sym<dec> { <decimal-literal> <integersuffix>? }
+        method integer-literal:sym<dec>($/) {
+            make IntegerLiteral::Dec.new(
+                decimal-literal => $<decimal-literal>.made,
+                integersuffix   => $<integersuffix>.made,
+                text            => ~$/,
+            )
+        }
+
+        # token decimal-literal { <nonzerodigit> [ '\''? <digit>]* }
+        method decimal-literal($/) {
+            make DecimalLiteral.new(
+                value => ~$/,
+            )
+        }
     }
 
-    # token decimal-literal { <nonzerodigit> [ '\''? <digit>]* }
-    method decimal-literal($/) {
-        make DecimalLiteral.new(
-            value => ~$/,
-        )
-    }
-}
+    our role Rules {
 
-our role Dec::Rules {
+        token integer-literal:sym<dec> { <decimal-literal>     <integersuffix>? }
 
-    token integer-literal:sym<dec> { <decimal-literal>     <integersuffix>? }
-
-    token decimal-literal {
-        <nonzerodigit> [ '\''?  <digit>]*
+        token decimal-literal {
+            <nonzerodigit> [ '\''?  <digit>]*
+        }
     }
 }

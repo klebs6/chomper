@@ -12,7 +12,7 @@ our role IDeclarationseq { }
 # rule declarationseq { 
 #   <declaration>+ 
 # }
-our class Declarationseq { 
+class Declarationseq is export { 
     has IDeclaration @.declarations is required;
 
     has $.text;
@@ -30,7 +30,7 @@ our class Declarationseq {
 #   <the-type-id> 
 #   <.semi> 
 # } #---------------------------
-our class AliasDeclaration { 
+class AliasDeclaration is export { 
     has IComment               $.comment;
     has Identifier             $.identifier is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
@@ -63,9 +63,9 @@ our class AliasDeclaration {
 #   <init-declarator-list>? 
 #   <.semi> 
 # }
-our class SimpleDeclaration::Basic 
+class SimpleDeclaration::Basic 
 does IDeclarationStatement 
-does ISimpleDeclaration {
+does ISimpleDeclaration is export {
 
     has IComment           $.comment;
     has IDeclSpecifierSeq  $.decl-specifier-seq;
@@ -101,8 +101,8 @@ does ISimpleDeclaration {
 #   <init-declarator-list> 
 #   <.semi> 
 # }
-our class SimpleDeclaration::InitList 
-does ISimpleDeclaration {
+class SimpleDeclaration::InitList 
+does ISimpleDeclaration is export {
 
     has IComment            $.comment;
     has IAttributeSpecifier @.attribute-specifiers is required;
@@ -144,7 +144,7 @@ does ISimpleDeclaration {
 #   <.right-paren> 
 #   <.semi> 
 # }
-our class StaticAssertDeclaration { 
+class StaticAssertDeclaration is export { 
     has IComment            $.comment;
     has IConstantExpression $.constant-expression is required;
     has StringLiteral       $.string-literal is required;
@@ -168,7 +168,7 @@ our class StaticAssertDeclaration {
 }
 
 # rule empty-declaration { <.semi> }
-our class EmptyDeclaration { 
+class EmptyDeclaration is export { 
     has IComment           $.comment;
 
     has $.text;
@@ -182,7 +182,7 @@ our class EmptyDeclaration {
 #   <attribute-specifier-seq> 
 #   <.semi> 
 # }
-our class AttributeDeclaration { 
+class AttributeDeclaration is export { 
     has IComment               $.comment;
     has IAttributeSpecifierSeq $.attribute-specifier-seq is required;
 
@@ -202,258 +202,261 @@ our class AttributeDeclaration {
     }
 }
 
-our role Declaration::Actions {
+package DeclarationGrammar is export {
 
-    # rule declarationseq { <declaration>+ } 
-    method declarationseq($/) {
+    our role Actions {
 
-        my @decls = $<declaration>>>.made;
+        # rule declarationseq { <declaration>+ } 
+        method declarationseq($/) {
 
-        if @decls.elems gt 1 {
+            my @decls = $<declaration>>>.made;
 
-            make Declarationseq.new(
-                declarations => @decls,
-            )
+            if @decls.elems gt 1 {
 
-        } else {
+                make Declarationseq.new(
+                    declarations => @decls,
+                )
 
-            make @decls[0]
+            } else {
+
+                make @decls[0]
+            }
         }
-    }
 
-    # rule declaration:sym<block-declaration> { <block-declaration> }
-    method declaration:sym<block-declaration>($/) {
-        make $<block-declaration>.made
-    }
-
-    # rule declaration:sym<function-definition> { <function-definition> }
-    method declaration:sym<function-definition>($/) {
-        make $<function-definition>.made
-    }
-
-    # rule declaration:sym<template-declaration> { <template-declaration> }
-    method declaration:sym<template-declaration>($/) {
-        make $<template-declaration>.made
-    }
-
-    # rule declaration:sym<explicit-instantiation> { <explicit-instantiation> }
-    method declaration:sym<explicit-instantiation>($/) {
-        make $<explicit-instantiation>.made
-    }
-
-    # rule declaration:sym<explicit-specialization> { <explicit-specialization> }
-    method declaration:sym<explicit-specialization>($/) {
-        make $<explicit-specialization>.made
-    }
-
-    # rule declaration:sym<linkage-specification> { <linkage-specification> }
-    method declaration:sym<linkage-specification>($/) {
-        make $<linkage-specification>.made
-    }
-
-    # rule declaration:sym<namespace-definition> { <namespace-definition> }
-    method declaration:sym<namespace-definition>($/) {
-        make $<namespace-definition>.made
-    }
-
-    # rule declaration:sym<empty-declaration> { <empty-declaration> }
-    method declaration:sym<empty-declaration>($/) {
-        make $<empty-declaration>.made
-    }
-
-    # rule declaration:sym<attribute-declaration> { <attribute-declaration> }
-    method declaration:sym<attribute-declaration>($/) {
-        make $<attribute-declaration>.made
-    }
-
-    # rule block-declaration:sym<simple> { <simple-declaration> }
-    method block-declaration:sym<simple>($/) {
-        make $<simple-declaration>.made
-    }
-
-    # rule block-declaration:sym<asm> { <asm-definition> }
-    method block-declaration:sym<asm>($/) {
-        make $<asm-definition>.made
-    }
-
-    # rule block-declaration:sym<namespace-alias> { <namespace-alias-definition> }
-    method block-declaration:sym<namespace-alias>($/) {
-        make $<namespace-alias-definition>.made
-    }
-
-    # rule block-declaration:sym<using-decl> { <using-declaration> }
-    method block-declaration:sym<using-decl>($/) {
-        make $<using-declaration>.made
-    }
-
-    # rule block-declaration:sym<using-directive> { <using-directive> }
-    method block-declaration:sym<using-directive>($/) {
-        make $<using-directive>.made
-    }
-
-    # rule block-declaration:sym<static-assert> { <static-assert-declaration> }
-    method block-declaration:sym<static-assert>($/) {
-        make $<static-assert-declaration>.made
-    }
-
-    # rule block-declaration:sym<alias> { <alias-declaration> }
-    method block-declaration:sym<alias>($/) {
-        make $<alias-declaration>.made
-    }
-
-    # rule block-declaration:sym<opaque-enum-decl> { <opaque-enum-declaration> }
-    method block-declaration:sym<opaque-enum-decl>($/) {
-        make $<opaque-enum-declaration>.made
-    }
-
-    # rule alias-declaration { <.using> <identifier> <attribute-specifier-seq>? <.assign> <the-type-id> <.semi> } 
-    method alias-declaration($/) {
-        make AliasDeclaration.new(
-            comment                 => $<semi>.made,
-            identifier              => $<identifier>.made,
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            the-type-id             => $<the-type-id>.made,
-            text                    => ~$/,
-        )
-    }
-
-    # rule simple-declaration:sym<basic> { <decl-specifier-seq>? <init-declarator-list>? <.semi> }
-    method simple-declaration:sym<basic>($/) {
-        make SimpleDeclaration::Basic.new(
-            comment              => $<semi>.made,
-            decl-specifier-seq   => $<decl-specifier-seq>.made,
-            init-declarator-list => $<init-declarator-list>.made,
-            text                 => ~$/,
-        )
-    }
-
-    # rule simple-declaration:sym<init-list> { <attribute-specifier-seq> <decl-specifier-seq>? <init-declarator-list> <.semi> }
-    method simple-declaration:sym<init-list>($/) {
-        make SimpleDeclaration::InitList.new(
-            comment              => $<semi>.made,
-            attribute-specifiers => $<attribute-specifier-seq>.made,
-            decl-specifier-seq   => $<decl-specifier-seq>.made,
-            init-declarator-list => $<init-declarator-list>.made,
-            text                 => ~$/,
-        )
-    }
-
-    # rule static-assert-declaration { 
-    #   <static_assert> 
-    #   <.left-paren> 
-    #   <constant-expression> 
-    #   <.comma> 
-    #   <string-literal> 
-    #   <.right-paren> 
-    #   <.semi> 
-    # }
-    method static-assert-declaration($/) {
-        make StaticAssertDeclaration.new(
-            constant-expression => $<constant-expression>.made,
-            string-literal      => $<string-literal>.made,
-            text                => ~$/,
-        )
-    }
-
-    # rule empty-declaration { <.semi> }
-    method empty-declaration($/) {
-
-        my $comment = $<semi>.made;
-
-        if $comment {
-            make EmptyDeclaration.new(
-                comment => $comment,
-                text    => ~$/,
-            )
+        # rule declaration:sym<block-declaration> { <block-declaration> }
+        method declaration:sym<block-declaration>($/) {
+            make $<block-declaration>.made
         }
-    }
 
-    # rule attribute-declaration { <attribute-specifier-seq> <.semi> } 
-    method attribute-declaration($/) {
+        # rule declaration:sym<function-definition> { <function-definition> }
+        method declaration:sym<function-definition>($/) {
+            make $<function-definition>.made
+        }
 
-        my $comment = $<semi>.made;
-        my $body    = $<attribute-specifier-seq>.made;
+        # rule declaration:sym<template-declaration> { <template-declaration> }
+        method declaration:sym<template-declaration>($/) {
+            make $<template-declaration>.made
+        }
 
-        if $comment {
-            make AttributeDeclaration.new(
-                comment                 => $comment,
-                attribute-specifier-seq => $body,
+        # rule declaration:sym<explicit-instantiation> { <explicit-instantiation> }
+        method declaration:sym<explicit-instantiation>($/) {
+            make $<explicit-instantiation>.made
+        }
+
+        # rule declaration:sym<explicit-specialization> { <explicit-specialization> }
+        method declaration:sym<explicit-specialization>($/) {
+            make $<explicit-specialization>.made
+        }
+
+        # rule declaration:sym<linkage-specification> { <linkage-specification> }
+        method declaration:sym<linkage-specification>($/) {
+            make $<linkage-specification>.made
+        }
+
+        # rule declaration:sym<namespace-definition> { <namespace-definition> }
+        method declaration:sym<namespace-definition>($/) {
+            make $<namespace-definition>.made
+        }
+
+        # rule declaration:sym<empty-declaration> { <empty-declaration> }
+        method declaration:sym<empty-declaration>($/) {
+            make $<empty-declaration>.made
+        }
+
+        # rule declaration:sym<attribute-declaration> { <attribute-declaration> }
+        method declaration:sym<attribute-declaration>($/) {
+            make $<attribute-declaration>.made
+        }
+
+        # rule block-declaration:sym<simple> { <simple-declaration> }
+        method block-declaration:sym<simple>($/) {
+            make $<simple-declaration>.made
+        }
+
+        # rule block-declaration:sym<asm> { <asm-definition> }
+        method block-declaration:sym<asm>($/) {
+            make $<asm-definition>.made
+        }
+
+        # rule block-declaration:sym<namespace-alias> { <namespace-alias-definition> }
+        method block-declaration:sym<namespace-alias>($/) {
+            make $<namespace-alias-definition>.made
+        }
+
+        # rule block-declaration:sym<using-decl> { <using-declaration> }
+        method block-declaration:sym<using-decl>($/) {
+            make $<using-declaration>.made
+        }
+
+        # rule block-declaration:sym<using-directive> { <using-directive> }
+        method block-declaration:sym<using-directive>($/) {
+            make $<using-directive>.made
+        }
+
+        # rule block-declaration:sym<static-assert> { <static-assert-declaration> }
+        method block-declaration:sym<static-assert>($/) {
+            make $<static-assert-declaration>.made
+        }
+
+        # rule block-declaration:sym<alias> { <alias-declaration> }
+        method block-declaration:sym<alias>($/) {
+            make $<alias-declaration>.made
+        }
+
+        # rule block-declaration:sym<opaque-enum-decl> { <opaque-enum-declaration> }
+        method block-declaration:sym<opaque-enum-decl>($/) {
+            make $<opaque-enum-declaration>.made
+        }
+
+        # rule alias-declaration { <.using> <identifier> <attribute-specifier-seq>? <.assign> <the-type-id> <.semi> } 
+        method alias-declaration($/) {
+            make AliasDeclaration.new(
+                comment                 => $<semi>.made,
+                identifier              => $<identifier>.made,
+                attribute-specifier-seq => $<attribute-specifier-seq>.made,
+                the-type-id             => $<the-type-id>.made,
                 text                    => ~$/,
             )
-        } else {
-            make $body
+        }
+
+        # rule simple-declaration:sym<basic> { <decl-specifier-seq>? <init-declarator-list>? <.semi> }
+        method simple-declaration:sym<basic>($/) {
+            make SimpleDeclaration::Basic.new(
+                comment              => $<semi>.made,
+                decl-specifier-seq   => $<decl-specifier-seq>.made,
+                init-declarator-list => $<init-declarator-list>.made,
+                text                 => ~$/,
+            )
+        }
+
+        # rule simple-declaration:sym<init-list> { <attribute-specifier-seq> <decl-specifier-seq>? <init-declarator-list> <.semi> }
+        method simple-declaration:sym<init-list>($/) {
+            make SimpleDeclaration::InitList.new(
+                comment              => $<semi>.made,
+                attribute-specifiers => $<attribute-specifier-seq>.made,
+                decl-specifier-seq   => $<decl-specifier-seq>.made,
+                init-declarator-list => $<init-declarator-list>.made,
+                text                 => ~$/,
+            )
+        }
+
+        # rule static-assert-declaration { 
+        #   <static_assert> 
+        #   <.left-paren> 
+        #   <constant-expression> 
+        #   <.comma> 
+        #   <string-literal> 
+        #   <.right-paren> 
+        #   <.semi> 
+        # }
+        method static-assert-declaration($/) {
+            make StaticAssertDeclaration.new(
+                constant-expression => $<constant-expression>.made,
+                string-literal      => $<string-literal>.made,
+                text                => ~$/,
+            )
+        }
+
+        # rule empty-declaration { <.semi> }
+        method empty-declaration($/) {
+
+            my $comment = $<semi>.made;
+
+            if $comment {
+                make EmptyDeclaration.new(
+                    comment => $comment,
+                    text    => ~$/,
+                )
+            }
+        }
+
+        # rule attribute-declaration { <attribute-specifier-seq> <.semi> } 
+        method attribute-declaration($/) {
+
+            my $comment = $<semi>.made;
+            my $body    = $<attribute-specifier-seq>.made;
+
+            if $comment {
+                make AttributeDeclaration.new(
+                    comment                 => $comment,
+                    attribute-specifier-seq => $body,
+                    text                    => ~$/,
+                )
+            } else {
+                make $body
+            }
         }
     }
-}
 
-our role Declaration::Rules {
+    our role Rules {
 
-    rule declarationseq { <declaration>+ }
+        rule declarationseq { <declaration>+ }
 
-    #-------------------------------
-    proto rule declaration { * }
-    rule declaration:sym<block-declaration>       { <block-declaration>         } 
-    rule declaration:sym<function-definition>     { <function-definition>       } 
-    rule declaration:sym<template-declaration>    { <template-declaration>      } 
-    rule declaration:sym<explicit-instantiation>  { <explicit-instantiation>    } 
-    rule declaration:sym<explicit-specialization> { <explicit-specialization>   } 
-    rule declaration:sym<linkage-specification>   { <linkage-specification>     } 
-    rule declaration:sym<namespace-definition>    { <namespace-definition>      } 
-    rule declaration:sym<empty-declaration>       { <empty-declaration>         } 
-    rule declaration:sym<attribute-declaration>   { <attribute-declaration>     } 
+        #-------------------------------
+        proto rule declaration { * }
+        rule declaration:sym<block-declaration>       { <block-declaration>         } 
+        rule declaration:sym<function-definition>     { <function-definition>       } 
+        rule declaration:sym<template-declaration>    { <template-declaration>      } 
+        rule declaration:sym<explicit-instantiation>  { <explicit-instantiation>    } 
+        rule declaration:sym<explicit-specialization> { <explicit-specialization>   } 
+        rule declaration:sym<linkage-specification>   { <linkage-specification>     } 
+        rule declaration:sym<namespace-definition>    { <namespace-definition>      } 
+        rule declaration:sym<empty-declaration>       { <empty-declaration>         } 
+        rule declaration:sym<attribute-declaration>   { <attribute-declaration>     } 
 
-    proto rule block-declaration { * }
-    rule block-declaration:sym<simple>            { <simple-declaration>        } 
-    rule block-declaration:sym<asm>               { <asm-definition>            } 
-    rule block-declaration:sym<namespace-alias>   { <namespace-alias-definition> } 
-    rule block-declaration:sym<using-decl>        { <using-declaration>         } 
-    rule block-declaration:sym<using-directive>   { <using-directive>           } 
-    rule block-declaration:sym<static-assert>     { <static-assert-declaration>  } 
-    rule block-declaration:sym<alias>             { <alias-declaration>         } 
-    rule block-declaration:sym<opaque-enum-decl>  { <opaque-enum-declaration>    } 
+        proto rule block-declaration { * }
+        rule block-declaration:sym<simple>            { <simple-declaration>        } 
+        rule block-declaration:sym<asm>               { <asm-definition>            } 
+        rule block-declaration:sym<namespace-alias>   { <namespace-alias-definition> } 
+        rule block-declaration:sym<using-decl>        { <using-declaration>         } 
+        rule block-declaration:sym<using-directive>   { <using-directive>           } 
+        rule block-declaration:sym<static-assert>     { <static-assert-declaration>  } 
+        rule block-declaration:sym<alias>             { <alias-declaration>         } 
+        rule block-declaration:sym<opaque-enum-decl>  { <opaque-enum-declaration>    } 
 
-    rule alias-declaration {
-        <using>
-        <identifier>
-        <attribute-specifier-seq>?
-        <assign>
-        <the-type-id>
-        <semi>
+        rule alias-declaration {
+            <using>
+            <identifier>
+            <attribute-specifier-seq>?
+            <assign>
+            <the-type-id>
+            <semi>
+        }
+
+        #---------------------------
+        proto rule simple-declaration { * }
+
+        rule simple-declaration:sym<basic> { 
+            <decl-specifier-seq>? 
+            <init-declarator-list>? 
+            <semi> 
+        }
+
+        rule simple-declaration:sym<init-list> { 
+            <attribute-specifier-seq> 
+            <decl-specifier-seq>? 
+            <init-declarator-list> 
+            <semi> 
+        }
+
+        rule static-assert-declaration {
+            <static_assert>
+            <left-paren>
+            <constant-expression>
+            <comma>
+            <string-literal>
+            <right-paren>
+            <semi>
+        }
+
+        rule empty-declaration {
+            <semi>
+        }
+
+        rule attribute-declaration {
+            <attribute-specifier-seq> <semi>
+        }
+
+        rule declaration-statement { <block-declaration> }
     }
-
-    #---------------------------
-    proto rule simple-declaration { * }
-
-    rule simple-declaration:sym<basic> { 
-        <decl-specifier-seq>? 
-        <init-declarator-list>? 
-        <semi> 
-    }
-
-    rule simple-declaration:sym<init-list> { 
-        <attribute-specifier-seq> 
-        <decl-specifier-seq>? 
-        <init-declarator-list> 
-        <semi> 
-    }
-
-    rule static-assert-declaration {
-        <static_assert>
-        <left-paren>
-        <constant-expression>
-        <comma>
-        <string-literal>
-        <right-paren>
-        <semi>
-    }
-
-    rule empty-declaration {
-        <semi>
-    }
-
-    rule attribute-declaration {
-        <attribute-specifier-seq> <semi>
-    }
-
-    rule declaration-statement { <block-declaration> }
 }

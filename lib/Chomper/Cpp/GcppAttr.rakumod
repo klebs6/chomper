@@ -12,7 +12,7 @@ our class AttributeList { ... }
 our role IAttributeSpecifierSeq {  }
 
 # rule attribute-specifier-seq { <attribute-specifier>+ }
-our class AttributeSpecifierSeq { 
+class AttributeSpecifierSeq is export { 
     has IAttributeSpecifier @.attribute-specifier is required;
 
     has $.text;
@@ -29,7 +29,7 @@ our class AttributeSpecifierSeq {
 #   <.right-bracket> 
 #   <.right-bracket> 
 # }
-our class AttributeSpecifier::DoubleBraced does IAttributeSpecifier {
+class AttributeSpecifier::DoubleBraced does IAttributeSpecifier is export {
     has AttributeList $.attribute-list;
 
     has $.text;
@@ -49,7 +49,7 @@ our class AttributeSpecifier::DoubleBraced does IAttributeSpecifier {
 # rule attribute-specifier:sym<alignment> { 
 #   <alignmentspecifier> 
 # }
-our class AttributeSpecifier::Alignment does IAttributeSpecifier {
+class AttributeSpecifier::Alignment does IAttributeSpecifier is export {
     has IAlignmentSpecifier $.alignmentspecifier is required;
 
     has $.text;
@@ -64,7 +64,7 @@ our class AttributeSpecifier::Alignment does IAttributeSpecifier {
 #   [ <.comma> <attribute> ]* 
 #   <ellipsis>? 
 # }
-our class AttributeList { 
+class AttributeList is export { 
     has Attribute @.attributes is required;
     has Bool      $.has-ellipsis is required;
 
@@ -83,7 +83,7 @@ our class AttributeList {
 }
 
 # rule attribute-namespace { <identifier> }
-our class AttributeNamespace { 
+class AttributeNamespace is export { 
     has Identifier $.identifier is required;
 
     has $.text;
@@ -98,7 +98,7 @@ our class AttributeNamespace {
 #   <balanced-token-seq>? 
 #   <.right-paren> 
 # }
-our class AttributeArgumentClause { 
+class AttributeArgumentClause is export { 
     has BalancedTokenSeq $.balanced-token-seq;
 
     has $.text;
@@ -120,7 +120,7 @@ our class AttributeArgumentClause {
 #   <identifier> 
 #   <attribute-argument-clause>? 
 # }
-our class Attribute { 
+class Attribute is export { 
     has AttributeNamespace      $.attribute-namespace;
     has Identifier              $.identifier is required;
     has AttributeArgumentClause $.attribute-argument-clause;
@@ -145,101 +145,104 @@ our class Attribute {
     }
 }
 
-our role AttributeSpecifierSeq::Actions {
+package AttributeSpecifierSeqGrammar is export {
 
-    # rule attribute-specifier-seq { <attribute-specifier>+ } 
-    method attribute-specifier-seq($/) {
-        make $<attribute-specifier>>>.made
-    }
+    our role Actions {
 
-    # rule attribute-specifier:sym<double-braced> { <.left-bracket> <.left-bracket> <attribute-list>? <.right-bracket> <.right-bracket> }
-    method attribute-specifier:sym<double-braced>($/) {
-        make $<attribute-list>.made
-    }
+        # rule attribute-specifier-seq { <attribute-specifier>+ } 
+        method attribute-specifier-seq($/) {
+            make $<attribute-specifier>>>.made
+        }
 
-    # rule attribute-specifier:sym<alignment> { <alignmentspecifier> } 
-    method attribute-specifier:sym<alignment>($/) {
-        make $<alignmentspecifier>.made
-    }
+        # rule attribute-specifier:sym<double-braced> { <.left-bracket> <.left-bracket> <attribute-list>? <.right-bracket> <.right-bracket> }
+        method attribute-specifier:sym<double-braced>($/) {
+            make $<attribute-list>.made
+        }
 
-    # rule attribute-list { <attribute> [ <.comma> <attribute> ]* <ellipsis>? }
-    method attribute-list($/) {
+        # rule attribute-specifier:sym<alignment> { <alignmentspecifier> } 
+        method attribute-specifier:sym<alignment>($/) {
+            make $<alignmentspecifier>.made
+        }
 
-        my $has-ellipsis = so $/<ellipsis>:exists;
-        my @attribs      = $<attribute>>>.made;
+        # rule attribute-list { <attribute> [ <.comma> <attribute> ]* <ellipsis>? }
+        method attribute-list($/) {
 
-        if $has-ellipsis {
+            my $has-ellipsis = so $/<ellipsis>:exists;
+            my @attribs      = $<attribute>>>.made;
 
-            make AttributeList.new(
-                attributes   => @attribs,
-                has-ellipsis => $has-ellipsis,
-                text         => ~$/,
+            if $has-ellipsis {
+
+                make AttributeList.new(
+                    attributes   => @attribs,
+                    has-ellipsis => $has-ellipsis,
+                    text         => ~$/,
+                )
+
+            } else {
+                make @attribs[0]
+            }
+        }
+
+        # rule attribute { [ <attribute-namespace> <doublecolon> ]? <identifier> <attribute-argument-clause>? }
+        method attribute($/) {
+            make Attribute.new(
+                attribute-namespace       => $<attribute-namespace>.made,
+                identifier                => $<identifier>.made,
+                attribute-argument-clause => $<attribute-argument-clause>.made,
+                text                      => ~$/,
             )
+        }
 
-        } else {
-            make @attribs[0]
+        # rule attribute-namespace { <identifier> }
+        method attribute-namespace($/) {
+            make $<identifier>.made
+        }
+
+        # rule attribute-argument-clause { <.left-paren> <balanced-token-seq>? <.right-paren> }
+        method attribute-argument-clause($/) {
+            make $<balanced-token-seq>.made
         }
     }
 
-    # rule attribute { [ <attribute-namespace> <doublecolon> ]? <identifier> <attribute-argument-clause>? }
-    method attribute($/) {
-        make Attribute.new(
-            attribute-namespace       => $<attribute-namespace>.made,
-            identifier                => $<identifier>.made,
-            attribute-argument-clause => $<attribute-argument-clause>.made,
-            text                      => ~$/,
-        )
-    }
+    our role Rules {
 
-    # rule attribute-namespace { <identifier> }
-    method attribute-namespace($/) {
-        make $<identifier>.made
-    }
+        rule attribute-list {
+            <attribute>
+            [ <comma> <attribute> ]*
+            <ellipsis>?
+        }
 
-    # rule attribute-argument-clause { <.left-paren> <balanced-token-seq>? <.right-paren> }
-    method attribute-argument-clause($/) {
-        make $<balanced-token-seq>.made
-    }
-}
+        rule attribute {
+            [ <attribute-namespace> <doublecolon> ]?
+            <identifier>
+            <attribute-argument-clause>?
+        }
 
-our role AttributeSpecifierSeq::Rules {
+        rule attribute-namespace {
+            <identifier>
+        }
 
-    rule attribute-list {
-        <attribute>
-        [ <comma> <attribute> ]*
-        <ellipsis>?
-    }
+        rule attribute-argument-clause {
+            <left-paren> <balanced-token-seq>?  <right-paren>
+        }
 
-    rule attribute {
-        [ <attribute-namespace> <doublecolon> ]?
-        <identifier>
-        <attribute-argument-clause>?
-    }
+        rule attribute-specifier-seq {
+            <attribute-specifier>+
+        }
 
-    rule attribute-namespace {
-        <identifier>
-    }
+        #--------------------
+        proto rule attribute-specifier { * }
 
-    rule attribute-argument-clause {
-        <left-paren> <balanced-token-seq>?  <right-paren>
-    }
+        rule attribute-specifier:sym<double-braced> {
+            <left-bracket>
+            <left-bracket>
+            <attribute-list>?
+            <right-bracket>
+            <right-bracket>
+        }
 
-    rule attribute-specifier-seq {
-        <attribute-specifier>+
-    }
-
-    #--------------------
-    proto rule attribute-specifier { * }
-
-    rule attribute-specifier:sym<double-braced> {
-        <left-bracket>
-        <left-bracket>
-        <attribute-list>?
-        <right-bracket>
-        <right-bracket>
-    }
-
-    rule attribute-specifier:sym<alignment> {
-        <alignmentspecifier>
+        rule attribute-specifier:sym<alignment> {
+            <alignmentspecifier>
+        }
     }
 }

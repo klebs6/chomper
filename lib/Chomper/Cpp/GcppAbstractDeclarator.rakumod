@@ -15,7 +15,7 @@ our class NoPointerAbstractPackDeclarator          { ... }
 # rule abstract-declarator:sym<base> { 
 #   <pointer-abstract-declarator> 
 # }
-our class AbstractDeclarator::Base does IAbstractDeclarator {
+class AbstractDeclarator::Base does IAbstractDeclarator is export {
     has IPointerAbstractDeclarator $.pointer-abstract-declarator is required;
 
     has $.text;
@@ -30,7 +30,7 @@ our class AbstractDeclarator::Base does IAbstractDeclarator {
 #   <parameters-and-qualifiers> 
 #   <trailing-return-type> 
 # }
-our class AbstractDeclarator::Aug does IAbstractDeclarator {
+class AbstractDeclarator::Aug does IAbstractDeclarator is export {
     has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator;
     has ParametersAndQualifiers     $.parameters-and-qualifiers is required;
     has TrailingReturnType          $.trailing-return-type is required;
@@ -55,7 +55,7 @@ our class AbstractDeclarator::Aug does IAbstractDeclarator {
 # rule abstract-declarator:sym<abstract-pack> { 
 #   <abstract-pack-declarator> 
 # }
-our class AbstractDeclarator::AbstractPack does IAbstractDeclarator {
+class AbstractDeclarator::AbstractPack does IAbstractDeclarator is export {
     has AbstractPackDeclarator $.abstract-pack-declarator is required;
 
     has $.text;
@@ -68,7 +68,7 @@ our class AbstractDeclarator::AbstractPack does IAbstractDeclarator {
 # rule pointer-abstract-declarator:sym<no-ptr> { 
 #   <no-pointer-abstract-declarator> 
 # }
-our class PointerAbstractDeclarator::NoPtr does IPointerAbstractDeclarator {
+class PointerAbstractDeclarator::NoPtr does IPointerAbstractDeclarator is export {
     has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator is required;
 
     has $.text;
@@ -82,7 +82,7 @@ our class PointerAbstractDeclarator::NoPtr does IPointerAbstractDeclarator {
 #   <pointer-operator>+ 
 #   <no-pointer-abstract-declarator>? 
 # }
-our class PointerAbstractDeclarator::Ptr does IPointerAbstractDeclarator {
+class PointerAbstractDeclarator::Ptr does IPointerAbstractDeclarator is export {
     has IPointerOperator            @.pointer-operators is required;
     has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator;
 
@@ -103,8 +103,7 @@ our class PointerAbstractDeclarator::Ptr does IPointerAbstractDeclarator {
 # rule no-pointer-abstract-declarator-body:sym<base> { 
 #   <parameters-and-qualifiers> 
 # }
-our class NoPointerAbstractDeclaratorBody::Base 
-does INoPointerAbstractDeclaratorBody {
+class NoPointerAbstractDeclaratorBody::Base does INoPointerAbstractDeclaratorBody is export {
 
     has ParametersAndQualifiers $.parameters-and-qualifiers is required;
 
@@ -119,8 +118,7 @@ does INoPointerAbstractDeclaratorBody {
 #   <no-pointer-abstract-declarator> 
 #   <no-pointer-abstract-declarator-bracketed-base> 
 # }
-our class NoPointerAbstractDeclaratorBody::Brack 
-does INoPointerAbstractDeclaratorBody {
+class NoPointerAbstractDeclaratorBody::Brack does INoPointerAbstractDeclaratorBody is export {
 
     has NoPointerAbstractDeclarator              $.no-pointer-abstract-declarator is required;
     has NoPointerAbstractDeclaratorBracketedBase $.no-pointer-abstract-declarator-bracketed-base is required;
@@ -138,7 +136,7 @@ does INoPointerAbstractDeclaratorBody {
 #   <no-pointer-abstract-declarator-base> 
 #   <no-pointer-abstract-declarator-body>* 
 # } #-----------------------------
-our class NoPointerAbstractDeclarator { 
+class NoPointerAbstractDeclarator is export { 
     has INoPointerAbstractDeclaratorBase $.no-pointer-abstract-declarator-base is required;
     has INoPointerAbstractDeclaratorBody @.no-pointer-abstract-declarator-body is required;
 
@@ -154,8 +152,7 @@ our class NoPointerAbstractDeclarator {
 # rule no-pointer-abstract-declarator-base:sym<basic> { 
 #   <parameters-and-qualifiers> 
 # }
-our class NoPointerAbstractDeclaratorBase::Basic 
-does INoPointerAbstractDeclaratorBase {
+class NoPointerAbstractDeclaratorBase::Basic does INoPointerAbstractDeclaratorBase is export {
 
     has ParametersAndQualifiers $.parameters-and-qualifiers is required;
 
@@ -169,8 +166,7 @@ does INoPointerAbstractDeclaratorBase {
 # rule no-pointer-abstract-declarator-base:sym<bracketed> { 
 #   <no-pointer-abstract-declarator-bracketed-base> 
 # }
-our class NoPointerAbstractDeclaratorBase::Bracketed 
-does INoPointerAbstractDeclaratorBase {
+class NoPointerAbstractDeclaratorBase::Bracketed does INoPointerAbstractDeclaratorBase is export {
 
     has NoPointerAbstractDeclaratorBracketedBase $.no-pointer-abstract-declarator-bracketed-base is required;
 
@@ -186,8 +182,7 @@ does INoPointerAbstractDeclaratorBase {
 #   <pointer-abstract-declarator> 
 #   <.right-paren> 
 # }
-our class NoPointerAbstractDeclaratorBase::Parenthesized 
-does INoPointerAbstractDeclaratorBase {
+class NoPointerAbstractDeclaratorBase::Parenthesized does INoPointerAbstractDeclaratorBase is export {
 
     has IPointerAbstractDeclarator $.pointer-abstract-declarator is required;
 
@@ -204,10 +199,10 @@ does INoPointerAbstractDeclaratorBase {
 #   <.right-bracket> 
 #   <attribute-specifier-seq>? 
 # }
-our class NoPointerAbstractDeclaratorBracketedBase 
-does IParameterDeclarationBody
-does IAbstractDeclarator
-{ 
+class NoPointerAbstractDeclaratorBracketedBase 
+does IParameterDeclarationBody 
+does IAbstractDeclarator is export { 
+
     has IConstantExpression    $.constant-expression;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
 
@@ -236,7 +231,7 @@ does IAbstractDeclarator
 #   <pointer-operator>* 
 #   <no-pointer-abstract-pack-declarator> 
 # }
-our class AbstractPackDeclarator { 
+class AbstractPackDeclarator is export { 
     has IPointerOperator                @.pointer-operators is required;
     has NoPointerAbstractPackDeclarator $.no-pointer-abstract-pack-declarator is required;
 
@@ -250,7 +245,7 @@ our class AbstractPackDeclarator {
 # rule no-pointer-abstract-pack-declarator-basic { 
 #   <parameters-and-qualifiers> 
 # }
-our class NoPointerAbstractPackDeclaratorBasic { 
+class NoPointerAbstractPackDeclaratorBasic is export { 
     has ParametersAndQualifiers $.parameters-and-qualifiers is required;
 
     has $.text;
@@ -266,7 +261,7 @@ our class NoPointerAbstractPackDeclaratorBasic {
 #   <.right-bracket> 
 #   <attribute-specifier-seq>? 
 # }
-our class NoPointerAbstractPackDeclaratorBrackets { 
+class NoPointerAbstractPackDeclaratorBrackets is export { 
     has IConstantExpression    $.constant-expression;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
 
@@ -293,7 +288,7 @@ our class NoPointerAbstractPackDeclaratorBrackets {
 # rule no-pointer-abstract-pack-declarator-body:sym<basic> { 
 #   <no-pointer-abstract-pack-declarator-basic> 
 # }
-our class NoPointerAbstractPackDeclaratorBody::Basic does INoPointerAbstractPackDeclaratorBody {
+class NoPointerAbstractPackDeclaratorBody::Basic does INoPointerAbstractPackDeclaratorBody is export {
     has NoPointerAbstractPackDeclaratorBasic $.no-pointer-abstract-pack-declarator-basic is required;
 
     has $.text;
@@ -306,7 +301,7 @@ our class NoPointerAbstractPackDeclaratorBody::Basic does INoPointerAbstractPack
 # rule no-pointer-abstract-pack-declarator-body:sym<brack> { 
 #   <no-pointer-abstract-pack-declarator-brackets> 
 # }
-our class NoPointerAbstractPackDeclaratorBody::Brack does INoPointerAbstractPackDeclaratorBody {
+class NoPointerAbstractPackDeclaratorBody::Brack does INoPointerAbstractPackDeclaratorBody is export {
     has NoPointerAbstractPackDeclaratorBrackets $.no-pointer-abstract-pack-declarator-brackets is required;
 
     has $.text;
@@ -320,7 +315,7 @@ our class NoPointerAbstractPackDeclaratorBody::Brack does INoPointerAbstractPack
 #   <ellipsis> 
 #   <no-pointer-abstract-pack-declarator-body>* 
 # }
-our class NoPointerAbstractPackDeclarator { 
+class NoPointerAbstractPackDeclarator is export { 
     has INoPointerAbstractPackDeclaratorBody @.no-pointer-abstract-pack-declarator-bodies is required;
 
     has $.text;
@@ -330,236 +325,239 @@ our class NoPointerAbstractPackDeclarator {
     }
 }
 
-our role AbstractDeclarator::Actions {
+package AbstractDeclaratorGrammar is export {
 
-    # rule abstract-declarator:sym<base> { <pointer-abstract-declarator> }
-    method abstract-declarator:sym<base>($/) {
-        make $<pointer-abstract-declarator>.made
-    }
+    our role Actions {
 
-    # rule abstract-declarator:sym<aug> { <no-pointer-abstract-declarator>? <parameters-and-qualifiers> <trailing-return-type> }
-    method abstract-declarator:sym<aug>($/) {
-        make AbstractDeclarator::Aug.new(
-            no-pointer-abstract-declarator => $<no-pointer-abstract-declarator>.made,
-            parameters-and-qualifiers      => $<parameters-and-qualifiers>.made,
-            trailing-return-type           => $<trailing-return-type>.made,
-            text                           => ~$/,
-        )
-    }
+        # rule abstract-declarator:sym<base> { <pointer-abstract-declarator> }
+        method abstract-declarator:sym<base>($/) {
+            make $<pointer-abstract-declarator>.made
+        }
 
-    # rule abstract-declarator:sym<abstract-pack> { <abstract-pack-declarator> } 
-    method abstract-declarator:sym<abstract-pack>($/) {
-        make $<abstract-pack-declarator>.made
-    }
-
-    # rule pointer-abstract-declarator:sym<no-ptr> { <no-pointer-abstract-declarator> }
-    method pointer-abstract-declarator:sym<no-ptr>($/) {
-        make $<no-pointer-abstract-declarator>.made
-    }
-
-    # rule pointer-abstract-declarator:sym<ptr> { <pointer-operator>+ <no-pointer-abstract-declarator>? } 
-    method pointer-abstract-declarator:sym<ptr>($/) {
-        my @ops  = $<pointer-operator>>>.made;
-        my $tail = $<no-pointer-abstract-declarator>.made;
-
-        if $tail or @ops.elems gt 1 {
-            make PointerAbstractDeclarator::Ptr.new(
-                pointer-operators              => @ops,
-                no-pointer-abstract-declarator => $tail,
+        # rule abstract-declarator:sym<aug> { <no-pointer-abstract-declarator>? <parameters-and-qualifiers> <trailing-return-type> }
+        method abstract-declarator:sym<aug>($/) {
+            make AbstractDeclarator::Aug.new(
+                no-pointer-abstract-declarator => $<no-pointer-abstract-declarator>.made,
+                parameters-and-qualifiers      => $<parameters-and-qualifiers>.made,
+                trailing-return-type           => $<trailing-return-type>.made,
+                text                           => ~$/,
             )
-        } else {
-            make @ops[0]
+        }
+
+        # rule abstract-declarator:sym<abstract-pack> { <abstract-pack-declarator> } 
+        method abstract-declarator:sym<abstract-pack>($/) {
+            make $<abstract-pack-declarator>.made
+        }
+
+        # rule pointer-abstract-declarator:sym<no-ptr> { <no-pointer-abstract-declarator> }
+        method pointer-abstract-declarator:sym<no-ptr>($/) {
+            make $<no-pointer-abstract-declarator>.made
+        }
+
+        # rule pointer-abstract-declarator:sym<ptr> { <pointer-operator>+ <no-pointer-abstract-declarator>? } 
+        method pointer-abstract-declarator:sym<ptr>($/) {
+            my @ops  = $<pointer-operator>>>.made;
+            my $tail = $<no-pointer-abstract-declarator>.made;
+
+            if $tail or @ops.elems gt 1 {
+                make PointerAbstractDeclarator::Ptr.new(
+                    pointer-operators              => @ops,
+                    no-pointer-abstract-declarator => $tail,
+                )
+            } else {
+                make @ops[0]
+            }
+        }
+
+        # rule no-pointer-abstract-declarator-body:sym<base> { <parameters-and-qualifiers> }
+        method no-pointer-abstract-declarator-body:sym<base>($/) {
+            make $<parameters-and-qualifiers>.made
+        }
+
+        # rule no-pointer-abstract-declarator-body:sym<brack> { <no-pointer-abstract-declarator> <no-pointer-abstract-declarator-bracketed-base> }
+        method no-pointer-abstract-declarator-body:sym<brack>($/) {
+            make NoPointerAbstractDeclaratorBody::Brack.new(
+                no-pointer-abstract-declarator                => $<no-pointer-abstract-declarator>.made,
+                no-pointer-abstract-declarator-bracketed-base => $<no-pointer-abstract-declarator-bracketed-base>.made,
+            )
+        }
+
+        # rule no-pointer-abstract-declarator { <no-pointer-abstract-declarator-base> <no-pointer-abstract-declarator-body>* } 
+        method no-pointer-abstract-declarator($/) {
+
+            my $base = $<no-pointer-abstract-declarator-base>.made;
+            my @body = $<no-pointer-abstract-declarator-body>>>.made;
+
+            if @body.elems gt 0 {
+                make NoPointerAbstractDeclarator.new(
+                    no-pointer-abstract-declarator-base => $base,
+                    no-pointer-abstract-declarator-body => @body,
+                )
+            } else {
+                make $base
+            }
+        }
+
+        # rule no-pointer-abstract-declarator-base:sym<basic> { <parameters-and-qualifiers> }
+        method no-pointer-abstract-declarator-base:sym<basic>($/) {
+            make $<parameters-and-qualifiers>.made
+        }
+
+        # rule no-pointer-abstract-declarator-base:sym<bracketed> { <no-pointer-abstract-declarator-bracketed-base> }
+        method no-pointer-abstract-declarator-base:sym<bracketed>($/) {
+            make $<no-pointer-abstract-declarator-bracketed-base>.made
+        }
+
+        # rule no-pointer-abstract-declarator-base:sym<parenthesized> { <.left-paren> <pointer-abstract-declarator> <.right-paren> }
+        method no-pointer-abstract-declarator-base:sym<parenthesized>($/) {
+            make $<pointer-abstract-declarator>.made
+        }
+
+        # rule no-pointer-abstract-declarator-bracketed-base { 
+        #   <.left-bracket> 
+        #   <constant-expression>? 
+        #   <.right-bracket> 
+        #   <attribute-specifier-seq>? 
+        # }
+        method no-pointer-abstract-declarator-bracketed-base($/) {
+            make NoPointerAbstractDeclaratorBracketedBase.new(
+                constant-expression     => $<constant-expression>.made,
+                attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            )
+        }
+
+        # rule abstract-pack-declarator { <pointer-operator>* <no-pointer-abstract-pack-declarator> } 
+        method abstract-pack-declarator($/) {
+
+            my @ops  = $<pointer-operator>>>.made;
+            my $body = $<no-pointer-abstract-pack-declarator>.made;
+
+            if @ops.elems gt 0 {
+                make AbstractPackDeclarator.new(
+                    pointer-operators                   => @ops,
+                    no-pointer-abstract-pack-declarator => $body,
+                )
+
+            } else {
+
+                make $body
+            }
+        }
+
+        # rule no-pointer-abstract-pack-declarator-basic { <parameters-and-qualifiers> }
+        method no-pointer-abstract-pack-declarator-basic($/) {
+            make $<parameters-and-qualifiers>.made
+        }
+
+        # rule no-pointer-abstract-pack-declarator-brackets { 
+        #   <.left-bracket> 
+        #   <constant-expression>? 
+        #   <.right-bracket> 
+        #   <attribute-specifier-seq>? 
+        # } 
+        method no-pointer-abstract-pack-declarator-brackets($/) {
+            make NoPointerAbstractPackDeclaratorBrackets.new(
+                constant-expression     => $<constant-expression>.made,
+                attribute-specifier-seq => $<attribute-specifier-seq>.made,
+            )
+        }
+
+        # rule no-pointer-abstract-pack-declarator-body:sym<basic> { <no-pointer-abstract-pack-declarator-basic> }
+        method no-pointer-abstract-pack-declarator-body:sym<basic>($/) {
+            make $<no-pointer-abstract-pack-declarator-basic>.made
+        }
+
+        # rule no-pointer-abstract-pack-declarator-body:sym<brack> { <no-pointer-abstract-pack-declarator-brackets> } 
+        method no-pointer-abstract-pack-declarator-body:sym<brack>($/) {
+            make $<no-pointer-abstract-pack-declarator-brackets>.made
+        }
+
+        # rule no-pointer-abstract-pack-declarator { <ellipsis> <no-pointer-abstract-pack-declarator-body>* }
+        method no-pointer-abstract-pack-declarator($/) {
+            make $<no-pointer-abstract-pack-declarator-body>>>.made
         }
     }
 
-    # rule no-pointer-abstract-declarator-body:sym<base> { <parameters-and-qualifiers> }
-    method no-pointer-abstract-declarator-body:sym<base>($/) {
-        make $<parameters-and-qualifiers>.made
-    }
+    our role Rules {
 
-    # rule no-pointer-abstract-declarator-body:sym<brack> { <no-pointer-abstract-declarator> <no-pointer-abstract-declarator-bracketed-base> }
-    method no-pointer-abstract-declarator-body:sym<brack>($/) {
-        make NoPointerAbstractDeclaratorBody::Brack.new(
-            no-pointer-abstract-declarator                => $<no-pointer-abstract-declarator>.made,
-            no-pointer-abstract-declarator-bracketed-base => $<no-pointer-abstract-declarator-bracketed-base>.made,
-        )
-    }
+        proto rule abstract-declarator { * }
 
-    # rule no-pointer-abstract-declarator { <no-pointer-abstract-declarator-base> <no-pointer-abstract-declarator-body>* } 
-    method no-pointer-abstract-declarator($/) {
-
-        my $base = $<no-pointer-abstract-declarator-base>.made;
-        my @body = $<no-pointer-abstract-declarator-body>>>.made;
-
-        if @body.elems gt 0 {
-            make NoPointerAbstractDeclarator.new(
-                no-pointer-abstract-declarator-base => $base,
-                no-pointer-abstract-declarator-body => @body,
-            )
-        } else {
-            make $base
+        rule abstract-declarator:sym<base> {
+            <pointer-abstract-declarator>
         }
-    }
 
-    # rule no-pointer-abstract-declarator-base:sym<basic> { <parameters-and-qualifiers> }
-    method no-pointer-abstract-declarator-base:sym<basic>($/) {
-        make $<parameters-and-qualifiers>.made
-    }
-
-    # rule no-pointer-abstract-declarator-base:sym<bracketed> { <no-pointer-abstract-declarator-bracketed-base> }
-    method no-pointer-abstract-declarator-base:sym<bracketed>($/) {
-        make $<no-pointer-abstract-declarator-bracketed-base>.made
-    }
-
-    # rule no-pointer-abstract-declarator-base:sym<parenthesized> { <.left-paren> <pointer-abstract-declarator> <.right-paren> }
-    method no-pointer-abstract-declarator-base:sym<parenthesized>($/) {
-        make $<pointer-abstract-declarator>.made
-    }
-
-    # rule no-pointer-abstract-declarator-bracketed-base { 
-    #   <.left-bracket> 
-    #   <constant-expression>? 
-    #   <.right-bracket> 
-    #   <attribute-specifier-seq>? 
-    # }
-    method no-pointer-abstract-declarator-bracketed-base($/) {
-        make NoPointerAbstractDeclaratorBracketedBase.new(
-            constant-expression     => $<constant-expression>.made,
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
-        )
-    }
-
-    # rule abstract-pack-declarator { <pointer-operator>* <no-pointer-abstract-pack-declarator> } 
-    method abstract-pack-declarator($/) {
-
-        my @ops  = $<pointer-operator>>>.made;
-        my $body = $<no-pointer-abstract-pack-declarator>.made;
-
-        if @ops.elems gt 0 {
-            make AbstractPackDeclarator.new(
-                pointer-operators                   => @ops,
-                no-pointer-abstract-pack-declarator => $body,
-            )
-
-        } else {
-
-            make $body
+        rule abstract-declarator:sym<aug> {
+            <no-pointer-abstract-declarator>? <parameters-and-qualifiers> <trailing-return-type>
         }
-    }
 
-    # rule no-pointer-abstract-pack-declarator-basic { <parameters-and-qualifiers> }
-    method no-pointer-abstract-pack-declarator-basic($/) {
-        make $<parameters-and-qualifiers>.made
-    }
+        rule abstract-declarator:sym<abstract-pack> {
+            <abstract-pack-declarator>
+        }
 
-    # rule no-pointer-abstract-pack-declarator-brackets { 
-    #   <.left-bracket> 
-    #   <constant-expression>? 
-    #   <.right-bracket> 
-    #   <attribute-specifier-seq>? 
-    # } 
-    method no-pointer-abstract-pack-declarator-brackets($/) {
-        make NoPointerAbstractPackDeclaratorBrackets.new(
-            constant-expression     => $<constant-expression>.made,
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
-        )
-    }
+        #-----------------------------
+        proto rule pointer-abstract-declarator { * }
+        rule pointer-abstract-declarator:sym<no-ptr> { <no-pointer-abstract-declarator> }
+        rule pointer-abstract-declarator:sym<ptr>    { <pointer-operator>+ <no-pointer-abstract-declarator>? }
 
-    # rule no-pointer-abstract-pack-declarator-body:sym<basic> { <no-pointer-abstract-pack-declarator-basic> }
-    method no-pointer-abstract-pack-declarator-body:sym<basic>($/) {
-        make $<no-pointer-abstract-pack-declarator-basic>.made
-    }
+        #-----------------------------
+        proto rule no-pointer-abstract-declarator-body { * }
 
-    # rule no-pointer-abstract-pack-declarator-body:sym<brack> { <no-pointer-abstract-pack-declarator-brackets> } 
-    method no-pointer-abstract-pack-declarator-body:sym<brack>($/) {
-        make $<no-pointer-abstract-pack-declarator-brackets>.made
-    }
+        rule no-pointer-abstract-declarator-body:sym<base> {
+            <parameters-and-qualifiers>
+        }
 
-    # rule no-pointer-abstract-pack-declarator { <ellipsis> <no-pointer-abstract-pack-declarator-body>* }
-    method no-pointer-abstract-pack-declarator($/) {
-        make $<no-pointer-abstract-pack-declarator-body>>>.made
-    }
-}
+        rule no-pointer-abstract-declarator-body:sym<brack> {
+            <no-pointer-abstract-declarator> <no-pointer-abstract-declarator-bracketed-base>
+        }
 
-our role AbstractDeclarator::Rules {
+        rule no-pointer-abstract-declarator {
+            <no-pointer-abstract-declarator-base>
+            <no-pointer-abstract-declarator-body>*
+        }
 
-    proto rule abstract-declarator { * }
+        #-----------------------------
+        proto rule no-pointer-abstract-declarator-base { * }
+        rule no-pointer-abstract-declarator-base:sym<basic>         { <parameters-and-qualifiers> }
+        rule no-pointer-abstract-declarator-base:sym<bracketed>     { <no-pointer-abstract-declarator-bracketed-base> }
+        rule no-pointer-abstract-declarator-base:sym<parenthesized> { 
+            <left-paren> 
+            <pointer-abstract-declarator> 
+            <right-paren> 
+        }
 
-    rule abstract-declarator:sym<base> {
-        <pointer-abstract-declarator>
-    }
+        rule no-pointer-abstract-declarator-bracketed-base {
+            <left-bracket> 
+            <constant-expression>?  
+            <right-bracket> 
+            <attribute-specifier-seq>?
+        }
 
-    rule abstract-declarator:sym<aug> {
-        <no-pointer-abstract-declarator>? <parameters-and-qualifiers> <trailing-return-type>
-    }
+        rule abstract-pack-declarator {
+            <pointer-operator>* 
+            <no-pointer-abstract-pack-declarator>
+        }
 
-    rule abstract-declarator:sym<abstract-pack> {
-        <abstract-pack-declarator>
-    }
+        #-----------------------------
+        rule no-pointer-abstract-pack-declarator-basic {
+            <parameters-and-qualifiers>
+        }
 
-    #-----------------------------
-    proto rule pointer-abstract-declarator { * }
-    rule pointer-abstract-declarator:sym<no-ptr> { <no-pointer-abstract-declarator> }
-    rule pointer-abstract-declarator:sym<ptr>    { <pointer-operator>+ <no-pointer-abstract-declarator>? }
+        rule no-pointer-abstract-pack-declarator-brackets {
+            <left-bracket> 
+            <constant-expression>?  
+            <right-bracket> 
+            <attribute-specifier-seq>?
+        }
 
-    #-----------------------------
-    proto rule no-pointer-abstract-declarator-body { * }
+        #-----------------------------
+        proto rule no-pointer-abstract-pack-declarator-body { * }
+        rule no-pointer-abstract-pack-declarator-body:sym<basic> { <no-pointer-abstract-pack-declarator-basic> }
+        rule no-pointer-abstract-pack-declarator-body:sym<brack> { <no-pointer-abstract-pack-declarator-brackets> }
 
-    rule no-pointer-abstract-declarator-body:sym<base> {
-        <parameters-and-qualifiers>
-    }
-
-    rule no-pointer-abstract-declarator-body:sym<brack> {
-        <no-pointer-abstract-declarator> <no-pointer-abstract-declarator-bracketed-base>
-    }
-
-    rule no-pointer-abstract-declarator {
-        <no-pointer-abstract-declarator-base>
-        <no-pointer-abstract-declarator-body>*
-    }
-
-    #-----------------------------
-    proto rule no-pointer-abstract-declarator-base { * }
-    rule no-pointer-abstract-declarator-base:sym<basic>         { <parameters-and-qualifiers> }
-    rule no-pointer-abstract-declarator-base:sym<bracketed>     { <no-pointer-abstract-declarator-bracketed-base> }
-    rule no-pointer-abstract-declarator-base:sym<parenthesized> { 
-        <left-paren> 
-        <pointer-abstract-declarator> 
-        <right-paren> 
-    }
-
-    rule no-pointer-abstract-declarator-bracketed-base {
-        <left-bracket> 
-        <constant-expression>?  
-        <right-bracket> 
-        <attribute-specifier-seq>?
-    }
-
-    rule abstract-pack-declarator {
-        <pointer-operator>* 
-        <no-pointer-abstract-pack-declarator>
-    }
-
-    #-----------------------------
-    rule no-pointer-abstract-pack-declarator-basic {
-        <parameters-and-qualifiers>
-    }
-
-    rule no-pointer-abstract-pack-declarator-brackets {
-        <left-bracket> 
-        <constant-expression>?  
-        <right-bracket> 
-        <attribute-specifier-seq>?
-    }
-
-    #-----------------------------
-    proto rule no-pointer-abstract-pack-declarator-body { * }
-    rule no-pointer-abstract-pack-declarator-body:sym<basic> { <no-pointer-abstract-pack-declarator-basic> }
-    rule no-pointer-abstract-pack-declarator-body:sym<brack> { <no-pointer-abstract-pack-declarator-brackets> }
-
-    #-----------------------------
-    rule no-pointer-abstract-pack-declarator {
-        <ellipsis>
-        <no-pointer-abstract-pack-declarator-body>*
+        #-----------------------------
+        rule no-pointer-abstract-pack-declarator {
+            <ellipsis>
+            <no-pointer-abstract-pack-declarator-body>*
+        }
     }
 }

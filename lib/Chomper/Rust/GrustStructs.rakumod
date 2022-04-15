@@ -3,7 +3,7 @@ unit module Chomper::Rust::GrustStructs;
 use Data::Dump::Tree;
 use Chomper::Rust::GrustComment;
 
-our class Struct {
+class Struct is export {
     has $.identifier;
     has $.maybe-generic-params;
     has $.maybe-where-clause;
@@ -51,7 +51,7 @@ our class Struct {
     }
 }
 
-our class TupleStruct {
+class TupleStruct is export {
     has $.identifier;
     has $.maybe-generic-params;
     has @.maybe-tuple-fields;
@@ -91,7 +91,7 @@ our class TupleStruct {
     }
 }
 
-our class StructField {
+class StructField is export {
     has $.maybe-comment;
     has @.outer-attributes;
     has $.maybe-visibility;
@@ -124,7 +124,7 @@ our class StructField {
     }
 }
 
-our class StructFieldItem {
+class StructFieldItem is export {
     has StructField $.struct-field       is required;
     has Bool        $.has-trailing-comma is required;
     has             $.maybe-trailing-comment;
@@ -147,7 +147,7 @@ our class StructFieldItem {
     }
 }
 
-our class TupleField {
+class TupleField is export {
     has $.maybe-comment;
     has @.outer-attributes;
     has $.maybe-visibility;
@@ -175,145 +175,148 @@ our class TupleField {
     }
 }
 
-our role Struct::Rules {
+package StructGrammar is export {
 
-    proto rule struct { * }
-    rule struct:sym<struct> { <struct-struct> }
-    rule struct:sym<tuple>  { <tuple-struct> }
+    our role Rules {
 
-    rule struct-struct {
-        <kw-struct> 
-        <identifier> 
-        <generic-params>?
-        <where-clause>?
-        [
-            | <tok-semi>
-            | <tok-lbrace> <struct-fields>? <comment>* <tok-rbrace>
-        ]
+        proto rule struct { * }
+        rule struct:sym<struct> { <struct-struct> }
+        rule struct:sym<tuple>  { <tuple-struct> }
+
+        rule struct-struct {
+            <kw-struct> 
+            <identifier> 
+            <generic-params>?
+            <where-clause>?
+            [
+                | <tok-semi>
+                | <tok-lbrace> <struct-fields>? <comment>* <tok-rbrace>
+            ]
+        }
+
+        rule tuple-struct {
+            <kw-struct>
+            <identifier>
+            <generic-params>?
+            <tok-lparen>
+            <tuple-fields>?
+            <tok-rparen>
+            <where-clause>?
+            <tok-semi>
+        }
+
+        regex struct-fields {
+            [<inner-struct-field-item>* % <.ws>]
+            <.ws>
+            <outer-struct-field-item>
+        }
+
+        regex inner-struct-field-item {
+            <struct-field> \h* <tok-comma>  \h* <line-comment>?
+        }
+
+        regex outer-struct-field-item {
+            <struct-field> \h* <tok-comma>? \h* <line-comment>?
+        }
+
+        rule struct-field {
+            <comment>?
+            <outer-attribute>*
+            <visibility>?
+            <identifier>
+            <tok-colon>
+            <type>
+        }
+
+        rule tuple-fields {
+            <tuple-field>+ %% <tok-comma>
+        }
+
+        rule tuple-field {
+            <comment>?
+            <outer-attribute>*
+            <visibility>?
+            <type>
+        }
     }
 
-    rule tuple-struct {
-        <kw-struct>
-        <identifier>
-        <generic-params>?
-        <tok-lparen>
-        <tuple-fields>?
-        <tok-rparen>
-        <where-clause>?
-        <tok-semi>
-    }
+    our role Actions {
 
-    regex struct-fields {
-        [<inner-struct-field-item>* % <.ws>]
-        <.ws>
-        <outer-struct-field-item>
-    }
+        method struct:sym<struct>($/) { make $<struct-struct>.made }
+        method struct:sym<tuple>($/)  { make $<tuple-struct>.made }
 
-    regex inner-struct-field-item {
-        <struct-field> \h* <tok-comma>  \h* <line-comment>?
-    }
+        method struct-struct($/) {
+            make Struct.new(
+                identifier                   => $<identifier>.made,
+                maybe-generic-params         => $<generic-params>.made,
+                maybe-where-clause           => $<where-clause>.made,
+                maybe-struct-fields          => $<struct-fields>.made,
+                maybe-inner-trailing-comments => $<comment>>>.made,
+                text                         => $/.Str,
+            )
+        }
 
-    regex outer-struct-field-item {
-        <struct-field> \h* <tok-comma>? \h* <line-comment>?
-    }
+        method tuple-struct($/) {
+            make TupleStruct.new(
+                identifier           => $<identifier>.made,
+                maybe-generic-params => $<generic-params>.made,
+                maybe-tuple-fields   => $<tuple-fields>.made,
+                maybe-where-clause   => $<where-clause>.made,
+                text                 => $/.Str,
+            )
+        }
 
-    rule struct-field {
-        <comment>?
-        <outer-attribute>*
-        <visibility>?
-        <identifier>
-        <tok-colon>
-        <type>
-    }
+        method inner-struct-field-item($/) {
+            make StructFieldItem.new(
+                struct-field           => $<struct-field>.made,
+                has-trailing-comma     => $/<comma>:exists,
+                maybe-trailing-comment => Comment.new(
+                    text => $<line-comment>.made,
+                    line => True,
+                ),
+            )
+        }
 
-    rule tuple-fields {
-        <tuple-field>+ %% <tok-comma>
-    }
+        method outer-struct-field-item($/) {
+            make StructFieldItem.new(
+                struct-field           => $<struct-field>.made,
+                has-trailing-comma     => $/<comma>:exists,
+                maybe-trailing-comment => Comment.new(
+                    text => $<line-comment>.made,
+                    line => True,
+                ),
+            )
+        }
 
-    rule tuple-field {
-        <comment>?
-        <outer-attribute>*
-        <visibility>?
-        <type>
-    }
-}
+        method struct-fields($/) {
+            my @inner = $<inner-struct-field-item>>>.made;
+            my $outer = $<outer-struct-field-item>.made;
+            make [|@inner, $outer]
+        }
 
-our role Struct::Actions {
+        method struct-field($/) {
+            make StructField.new(
+                maybe-comment    => $<comment>.made,
+                outer-attributes => $<outer-attribute>>>.made,
+                maybe-visibility => $<visibility>.made,
+                identifier       => $<identifier>.made,
+                type             => $<type>.made,
+                text             => $/.Str,
+            )
+        }
 
-    method struct:sym<struct>($/) { make $<struct-struct>.made }
-    method struct:sym<tuple>($/)  { make $<tuple-struct>.made }
+        method tuple-fields($/) {
+            make $<tuple-field>>>.made
+        }
 
-    method struct-struct($/) {
-        make Struct.new(
-            identifier                   => $<identifier>.made,
-            maybe-generic-params         => $<generic-params>.made,
-            maybe-where-clause           => $<where-clause>.made,
-            maybe-struct-fields          => $<struct-fields>.made,
-            maybe-inner-trailing-comments => $<comment>>>.made,
-            text                         => $/.Str,
-        )
-    }
-
-    method tuple-struct($/) {
-        make TupleStruct.new(
-            identifier           => $<identifier>.made,
-            maybe-generic-params => $<generic-params>.made,
-            maybe-tuple-fields   => $<tuple-fields>.made,
-            maybe-where-clause   => $<where-clause>.made,
-            text                 => $/.Str,
-        )
-    }
-
-    method inner-struct-field-item($/) {
-        make StructFieldItem.new(
-            struct-field           => $<struct-field>.made,
-            has-trailing-comma     => $/<comma>:exists,
-            maybe-trailing-comment => Comment.new(
-                text => $<line-comment>.made,
-                line => True,
-            ),
-        )
-    }
-
-    method outer-struct-field-item($/) {
-        make StructFieldItem.new(
-            struct-field           => $<struct-field>.made,
-            has-trailing-comma     => $/<comma>:exists,
-            maybe-trailing-comment => Comment.new(
-                text => $<line-comment>.made,
-                line => True,
-            ),
-        )
-    }
-
-    method struct-fields($/) {
-        my @inner = $<inner-struct-field-item>>>.made;
-        my $outer = $<outer-struct-field-item>.made;
-        make [|@inner, $outer]
-    }
-
-    method struct-field($/) {
-        make StructField.new(
-            maybe-comment    => $<comment>.made,
-            outer-attributes => $<outer-attribute>>>.made,
-            maybe-visibility => $<visibility>.made,
-            identifier       => $<identifier>.made,
-            type             => $<type>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method tuple-fields($/) {
-        make $<tuple-field>>>.made
-    }
-
-    method tuple-field($/) {
-        make TupleField.new(
-            maybe-comment    => $<comment>.made,
-            outer-attributes => $<outer-attribute>>>.made,
-            maybe-visibility => $<visibility>.made,
-            type             => $<type>.made,
-            text             => $/.Str,
-        )
+        method tuple-field($/) {
+            make TupleField.new(
+                maybe-comment    => $<comment>.made,
+                outer-attributes => $<outer-attribute>>>.made,
+                maybe-visibility => $<visibility>.made,
+                type             => $<type>.made,
+                text             => $/.Str,
+            )
+        }
     }
 }

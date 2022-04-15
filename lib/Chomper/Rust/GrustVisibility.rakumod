@@ -2,23 +2,23 @@ unit module Chomper::Rust::GrustVisibility;
 
 use Data::Dump::Tree;
 
-our class VisibilityPublic {
+class VisibilityPublic is export {
     method gist { "pub" }
 }
 
-our class VisibilityCrate {
+class VisibilityCrate is export {
     method gist { "pub(crate)" }
 }
 
-our class VisibilitySelf {
+class VisibilitySelf is export {
     method gist { "pub(self)" }
 }
 
-our class VisibilitySuper {
+class VisibilitySuper is export {
     method gist { "pub(super)" }
 }
 
-our class VisibilityInPath {
+class VisibilityInPath is export {
     has $.simple-path;
 
     has $.text;
@@ -28,38 +28,41 @@ our class VisibilityInPath {
     }
 }
 
-our role Visibility::Rules {
-    proto rule visibility { * }
+package VisibilityGrammar is export {
 
-    rule visibility:sym<basic>   { <kw-pub> }
-    rule visibility:sym<crate>   { <kw-pub> <tok-lparen> <kw-crate> <tok-rparen> }
-    rule visibility:sym<self>    { <kw-pub> <tok-lparen> <kw-selfvalue>  <tok-rparen> }
-    rule visibility:sym<super>   { <kw-pub> <tok-lparen> <kw-super> <tok-rparen> }
-    rule visibility:sym<in-path> { <kw-pub> <tok-lparen> <kw-in> <simple-path> <tok-rparen> }
-}
+    our role Rules {
+        proto rule visibility { * }
 
-our role Visibility::Actions {
-
-    method visibility:sym<basic>($/)   { 
-        make VisibilityPublic.new
+        rule visibility:sym<basic>   { <kw-pub> }
+        rule visibility:sym<crate>   { <kw-pub> <tok-lparen> <kw-crate> <tok-rparen> }
+        rule visibility:sym<self>    { <kw-pub> <tok-lparen> <kw-selfvalue>  <tok-rparen> }
+        rule visibility:sym<super>   { <kw-pub> <tok-lparen> <kw-super> <tok-rparen> }
+        rule visibility:sym<in-path> { <kw-pub> <tok-lparen> <kw-in> <simple-path> <tok-rparen> }
     }
 
-    method visibility:sym<crate>($/)   { 
-        make VisibilityCrate.new
-    }
+    our role Actions {
 
-    method visibility:sym<self>($/)    { 
-        make VisibilitySelf.new
-    }
+        method visibility:sym<basic>($/)   { 
+            make VisibilityPublic.new
+        }
 
-    method visibility:sym<super>($/)   { 
-        make VisibilitySuper.new
-    }
+        method visibility:sym<crate>($/)   { 
+            make VisibilityCrate.new
+        }
 
-    method visibility:sym<in-path>($/) { 
-        make VisibilityInPath.new(
-            simple-path => $<simple-path>.made,
-            text        => $/.Str,
-        )
+        method visibility:sym<self>($/)    { 
+            make VisibilitySelf.new
+        }
+
+        method visibility:sym<super>($/)   { 
+            make VisibilitySuper.new
+        }
+
+        method visibility:sym<in-path>($/) { 
+            make VisibilityInPath.new(
+                simple-path => $<simple-path>.made,
+                text        => $/.Str,
+            )
+        }
     }
 }

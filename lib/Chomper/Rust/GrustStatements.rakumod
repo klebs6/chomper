@@ -2,7 +2,7 @@ unit module Chomper::Rust::GrustStatements;
 
 use Data::Dump::Tree;
 
-our class Statements {
+class Statements is export {
     has @.statements;
     has $.maybe-expression-noblock;
 
@@ -20,7 +20,7 @@ our class Statements {
     }
 }
 
-our class LetStatement {
+class LetStatement is export {
     has $.maybe-comment;
     has @.outer-attributes;
     has $.pattern-no-top-alt;
@@ -63,7 +63,7 @@ our class LetStatement {
     }
 }
 
-our class ExpressionStatementNoBlock {
+class ExpressionStatementNoBlock is export {
     has $.maybe-comment;
     has $.expression-noblock;
 
@@ -83,7 +83,7 @@ our class ExpressionStatementNoBlock {
     }
 }
 
-our class ExpressionStatementBlock {
+class ExpressionStatementBlock is export {
     has $.maybe-comment;
     has $.expression-with-block;
 
@@ -103,98 +103,101 @@ our class ExpressionStatementBlock {
     }
 }
 
-our role Statement::Rules {
+package StatementGrammar is export {
 
-    rule statements {  
-        <statement>*
-        <expression-noblock>?
-    }
+    our role Rules {
 
-    proto rule statement { * }
+        rule statements {  
+            <statement>*
+            <expression-noblock>?
+        }
 
-    rule statement:sym<semi>  { <tok-semi> }
-    rule statement:sym<let>   { <let-statement> }
-    rule statement:sym<expr>  { <expression-statement> }
-    rule statement:sym<macro> { <macro-invocation> }
-    rule statement:sym<item>  { <crate-item> }
+        proto rule statement { * }
 
-    regex let-statement {
-        <comment>?
-        <.ws>
-        <outer-attribute>*
-        <.ws>
-        <kw-let>
-        <.ws>
-        <pattern-no-top-alt>
-        <.ws>
-        [
-            <tok-colon>
+        rule statement:sym<semi>  { <tok-semi> }
+        rule statement:sym<let>   { <let-statement> }
+        rule statement:sym<expr>  { <expression-statement> }
+        rule statement:sym<macro> { <macro-invocation> }
+        rule statement:sym<item>  { <crate-item> }
+
+        regex let-statement {
+            <comment>?
             <.ws>
-            <type>
-        ]?
-        <.ws>
-        [
-            <tok-eq>
+            <outer-attribute>*
             <.ws>
-            <expression>
-        ]?
-        <.ws>
-        <tok-semi>
-        <.ws>
-        <line-comment>? 
+            <kw-let>
+            <.ws>
+            <pattern-no-top-alt>
+            <.ws>
+            [
+                <tok-colon>
+                <.ws>
+                <type>
+            ]?
+            <.ws>
+            [
+                <tok-eq>
+                <.ws>
+                <expression>
+            ]?
+            <.ws>
+            <tok-semi>
+            <.ws>
+            <line-comment>? 
+        }
+
+        proto rule expression-statement { * }
+
+        rule expression-statement:sym<noblock> { <comment>? <expression-noblock> <tok-semi> }
+        rule expression-statement:sym<block>   { <comment>? <expression-with-block> <tok-semi>? }
     }
 
-    proto rule expression-statement { * }
+    our role Actions {
 
-    rule expression-statement:sym<noblock> { <comment>? <expression-noblock> <tok-semi> }
-    rule expression-statement:sym<block>   { <comment>? <expression-with-block> <tok-semi>? }
-}
+        method statements($/) {  
 
-our role Statement::Actions {
+            my @statements = $<statement>>>.made;
+            my $expr       = $<expression-noblock>.made;
 
-    method statements($/) {  
+            make Statements.new(
+                statements               => @statements,
+                maybe-expression-noblock => $expr,
+                text                     => $/.Str,
+            )
+        }
 
-        my @statements = $<statement>>>.made;
-        my $expr       = $<expression-noblock>.made;
+        method statement:sym<let>($/)   { make $<let-statement>.made }
+        method statement:sym<expr>($/)  { make $<expression-statement>.made }
+        method statement:sym<macro>($/) { make $<macro-invocation>.made }
+        method statement:sym<item>($/)  { make $<crate-item>.made }
 
-        make Statements.new(
-            statements               => @statements,
-            maybe-expression-noblock => $expr,
-            text                     => $/.Str,
-        )
-    }
+        method let-statement($/) {
+            make LetStatement.new(
+                maybe-comment      => $<comment>.made,
+                outer-attributes   => $<outer-attribute>>>.made,
+                pattern-no-top-alt => $<pattern-no-top-alt>.made,
+                maybe-type         => $<type>.made,
+                maybe-expression   => $<expression>.made,
+                maybe-line-comment => $<line-comment>.made,
+                text               => $/.Str,
+            )
+        }
 
-    method statement:sym<let>($/)   { make $<let-statement>.made }
-    method statement:sym<expr>($/)  { make $<expression-statement>.made }
-    method statement:sym<macro>($/) { make $<macro-invocation>.made }
-    method statement:sym<item>($/)  { make $<crate-item>.made }
+        method expression-statement:sym<noblock>($/) { 
 
-    method let-statement($/) {
-        make LetStatement.new(
-            maybe-comment      => $<comment>.made,
-            outer-attributes   => $<outer-attribute>>>.made,
-            pattern-no-top-alt => $<pattern-no-top-alt>.made,
-            maybe-type         => $<type>.made,
-            maybe-expression   => $<expression>.made,
-            maybe-line-comment => $<line-comment>.made,
-            text               => $/.Str,
-        )
-    }
+            make ExpressionStatementNoBlock.new(
+                maybe-comment      => $<comment>.made,
+                expression-noblock => $<expression-noblock>.made,
+                text               => $/.Str,
+            )
+        }
 
-    method expression-statement:sym<noblock>($/) { 
-
-        make ExpressionStatementNoBlock.new(
-            maybe-comment      => $<comment>.made,
-            expression-noblock => $<expression-noblock>.made,
-            text               => $/.Str,
-        )
-    }
-
-    method expression-statement:sym<block>($/) { 
-        make ExpressionStatementBlock.new(
-            maybe-comment         => $<comment>.made,
-            expression-with-block => $<expression-with-block>.made,
-            text                  => $/.Str,
-        )
+        method expression-statement:sym<block>($/) { 
+            make ExpressionStatementBlock.new(
+                maybe-comment         => $<comment>.made,
+                expression-with-block => $<expression-with-block>.made,
+                text                  => $/.Str,
+            )
+        }
     }
 }

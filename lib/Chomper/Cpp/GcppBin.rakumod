@@ -4,7 +4,7 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-our class BinaryLiteral { 
+class BinaryLiteral is export { 
     has Str $.value is required; 
 
     has $.text;
@@ -14,7 +14,7 @@ our class BinaryLiteral {
     }
 }
 
-our class Binarydigit { 
+class Binarydigit is export { 
     has Str $.value is required; 
 
     has $.text;
@@ -25,7 +25,7 @@ our class Binarydigit {
 }
 
 our class IntegerLiteral::Bin 
-does IIntegerLiteral {
+does IIntegerLiteral is export {
 
     has BinaryLiteral  $.binary-literal is required;
     has IIntegersuffix $.integersuffix;
@@ -48,41 +48,44 @@ does IIntegerLiteral {
     }
 }
 
-our role Bin::Actions {
+package BinGrammar is export {
 
-    # token integer-literal:sym<bin> { <binary-literal> <integersuffix>? } 
-    method integer-literal:sym<bin>($/) {
-        make IntegerLiteral::Bin.new(
-            binary-literal => $<binary-literal>.made,
-            integersuffix  => $<integersuffix>.made,
-            text           => ~$/,
-        )
+    our role Actions {
+
+        # token integer-literal:sym<bin> { <binary-literal> <integersuffix>? } 
+        method integer-literal:sym<bin>($/) {
+            make IntegerLiteral::Bin.new(
+                binary-literal => $<binary-literal>.made,
+                integersuffix  => $<integersuffix>.made,
+                text           => ~$/,
+            )
+        }
+
+        # token binary-literal { [ '0b' || '0B' ] <binarydigit> [ '\''? <binarydigit> ]* }
+        method binary-literal($/) {
+            make BinaryLiteral.new(
+                value => ~$/,
+            )
+        }
+
+        # token binarydigit { <[ 0 1 ]> } 
+        method binarydigit($/) {
+            make Binarydigit.new(
+                value => ~$/,
+            )
+        }
     }
 
-    # token binary-literal { [ '0b' || '0B' ] <binarydigit> [ '\''? <binarydigit> ]* }
-    method binary-literal($/) {
-        make BinaryLiteral.new(
-            value => ~$/,
-        )
-    }
+    our role Rules {
 
-    # token binarydigit { <[ 0 1 ]> } 
-    method binarydigit($/) {
-        make Binarydigit.new(
-            value => ~$/,
-        )
-    }
-}
+        token integer-literal:sym<bin> { <binary-literal>      <integersuffix>? }
 
-our role Bin::Rules {
+        token binary-literal {
+            [ '0b' || '0B' ] <binarydigit> [ '\''?  <binarydigit> ]*
+        }
 
-    token integer-literal:sym<bin> { <binary-literal>      <integersuffix>? }
-
-    token binary-literal {
-        [ '0b' || '0B' ] <binarydigit> [ '\''?  <binarydigit> ]*
-    }
-
-    token binarydigit {
-        <[ 0 1 ]>
+        token binarydigit {
+            <[ 0 1 ]>
+        }
     }
 }

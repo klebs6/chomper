@@ -8,7 +8,7 @@ use Chomper::Cpp::GcppRoles;
 #   <pointer-operator> 
 #   <conversion-declarator>? 
 # }
-our class ConversionDeclarator { 
+class ConversionDeclarator is export { 
     has IPointerOperator      $.pointer-operator is required;
     has ConversionDeclarator $.conversion-declarator;
 
@@ -32,7 +32,7 @@ our class ConversionDeclarator {
 #   <type-specifier-seq> 
 #   <conversion-declarator>? 
 # }
-our class ConversionTypeId { 
+class ConversionTypeId is export { 
     has ITypeSpecifierSeq    $.type-specifier-seq is required;
     has ConversionDeclarator $.conversion-declarator;
 
@@ -56,7 +56,7 @@ our class ConversionTypeId {
 #   <operator> 
 #   <conversion-type-id> 
 # }
-our class ConversionFunctionId { 
+class ConversionFunctionId is export { 
     has ConversionTypeId $.conversion-type-id is required;
 
     has $.text;
@@ -66,60 +66,63 @@ our class ConversionFunctionId {
     }
 }
 
-our role Conversion::Actions {
+package ConversionGrammar is export {
 
-    # rule conversion-function-id { <operator> <conversion-type-id> }
-    method conversion-function-id($/) {
-        make ConversionFunctionId.new(
-            conversion-type-id => $<conversion-type-id>.made,
-            text               => ~$/,
-        )
-    }
+    our role Actions {
 
-    # rule conversion-type-id { <type-specifier-seq> <conversion-declarator>? }
-    method conversion-type-id($/) {
-        my $base = $<type-specifier-seq>.made;
-        my $tail = $<conversion-declarator>.made;
-
-        if $tail {
-            make ConversionTypeId.new(
-                type-specifier-seq    => $base,
-                conversion-declarator => $tail,
-                text                  => ~$/,
+        # rule conversion-function-id { <operator> <conversion-type-id> }
+        method conversion-function-id($/) {
+            make ConversionFunctionId.new(
+                conversion-type-id => $<conversion-type-id>.made,
+                text               => ~$/,
             )
-        } else {
-            make $base
+        }
+
+        # rule conversion-type-id { <type-specifier-seq> <conversion-declarator>? }
+        method conversion-type-id($/) {
+            my $base = $<type-specifier-seq>.made;
+            my $tail = $<conversion-declarator>.made;
+
+            if $tail {
+                make ConversionTypeId.new(
+                    type-specifier-seq    => $base,
+                    conversion-declarator => $tail,
+                    text                  => ~$/,
+                )
+            } else {
+                make $base
+            }
+        }
+
+        # rule conversion-declarator { <pointer-operator> <conversion-declarator>? }
+        method conversion-declarator($/) {
+            my $base = $<pointer-operator>.made;
+            my $tail = $<conversion-declarator>.made;
+
+            if $tail {
+                make ConversionDeclarator.new(
+                    pointer-operator      => $base,
+                    conversion-declarator => $tail,
+                    text                  => ~$/,
+                )
+            } else {
+                make $base
+            }
         }
     }
 
-    # rule conversion-declarator { <pointer-operator> <conversion-declarator>? }
-    method conversion-declarator($/) {
-        my $base = $<pointer-operator>.made;
-        my $tail = $<conversion-declarator>.made;
+    our role Rules {
 
-        if $tail {
-            make ConversionDeclarator.new(
-                pointer-operator      => $base,
-                conversion-declarator => $tail,
-                text                  => ~$/,
-            )
-        } else {
-            make $base
+        rule conversion-function-id {
+            <operator> <conversion-type-id>
         }
-    }
-}
 
-our role Conversion::Rules {
+        rule conversion-type-id {
+            <type-specifier-seq> <conversion-declarator>?
+        }
 
-    rule conversion-function-id {
-        <operator> <conversion-type-id>
-    }
-
-    rule conversion-type-id {
-        <type-specifier-seq> <conversion-declarator>?
-    }
-
-    rule conversion-declarator {
-        <pointer-operator> <conversion-declarator>?
+        rule conversion-declarator {
+            <pointer-operator> <conversion-declarator>?
+        }
     }
 }

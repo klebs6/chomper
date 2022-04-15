@@ -2,7 +2,7 @@ unit module Chomper::Rust::GrustTraitObjects;
 
 use Data::Dump::Tree;
 
-our class TraitObjectType {
+class TraitObjectType is export {
     has Bool $.dyn;
     has $.type-param-bounds;
 
@@ -20,7 +20,7 @@ our class TraitObjectType {
     }
 }
 
-our class TraitObjectTypeOneBound {
+class TraitObjectTypeOneBound is export {
     has Bool $.dyn;
     has $.trait-bound;
 
@@ -37,34 +37,37 @@ our class TraitObjectTypeOneBound {
     }
 }
 
-our role TraitObjectType::Rules {
+package TraitObjectTypeGrammar is export {
 
-    rule trait-object-type {
-        <kw-dyn>? 
-        <type-param-bounds>
+    our role Rules {
+
+        rule trait-object-type {
+            <kw-dyn>? 
+            <type-param-bounds>
+        }
+
+        rule trait-object-type-one-bound {
+            <kw-dyn>?
+            <trait-bound>
+        }
     }
 
-    rule trait-object-type-one-bound {
-        <kw-dyn>?
-        <trait-bound>
-    }
-}
+    our role Actions {
 
-our role TraitObjectType::Actions {
+        method trait-object-type($/) {
+            make TraitObjectType.new(
+                dyn               => so $/<kw-dyn>:exists,
+                type-param-bounds => $<type-param-bounds>.made,
+                text              => $/.Str,
+            )
+        }
 
-    method trait-object-type($/) {
-        make TraitObjectType.new(
-            dyn               => so $/<kw-dyn>:exists,
-            type-param-bounds => $<type-param-bounds>.made,
-            text              => $/.Str,
-        )
-    }
-
-    method trait-object-type-one-bound($/) {
-        make TraitObjectTypeOneBound.new(
-            dyn         => so $/<kw-dyn>:exists,
-            trait-bound => $<trait-bound>.made,
-            text        => $/.Str,
-        )
+        method trait-object-type-one-bound($/) {
+            make TraitObjectTypeOneBound.new(
+                dyn         => so $/<kw-dyn>:exists,
+                trait-bound => $<trait-bound>.made,
+                text        => $/.Str,
+            )
+        }
     }
 }

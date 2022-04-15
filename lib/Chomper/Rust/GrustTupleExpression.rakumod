@@ -2,7 +2,7 @@ unit module Chomper::Rust::GrustTupleExpression;
 
 use Data::Dump::Tree;
 
-our class TupleExpression {
+class TupleExpression is export {
     has $.maybe-tuple-elements;
 
     has $.text;
@@ -16,7 +16,7 @@ our class TupleExpression {
     }
 }
 
-our class TupleElements {
+class TupleElements is export {
     has @.expressions;
 
     has $.text;
@@ -26,43 +26,46 @@ our class TupleElements {
     }
 }
 
-our class TupleIndex {
+class TupleIndex is export {
     has $.value;
 
     method gist {
         $.value
     }
 }
+package TupleExpressionGrammar is export {
 
-our role TupleExpression::Rules {
+    our role Rules {
 
-    rule tuple-elements {
-        <expression>* %% <tok-comma>
+        rule tuple-elements {
+            <expression>* %% <tok-comma>
+        }
+
+        rule tuple-expression {
+            <tok-lparen> <tuple-elements>? <tok-rparen> 
+        }
+
+        token tuple-index { <integer-literal> }
     }
 
-    rule tuple-expression {
-        <tok-lparen> <tuple-elements>? <tok-rparen> 
-    }
+    our role Actions {
 
-    token tuple-index { <integer-literal> }
-}
+        method tuple-elements($/) {
+            make TupleElements.new(
+                expressions => $<expression>>>.made,
+                text        => $/.Str,
+            )
+        }
 
-our role TupleExpression::Actions {
-    method tuple-elements($/) {
-        make TupleElements.new(
-            expressions => $<expression>>>.made,
-            text        => $/.Str,
-        )
-    }
+        method tuple-expression($/) {
+            make TupleExpression.new(
+                maybe-tuple-elements => $<tuple-elements>.made,
+                text                 => $/.Str,
+            )
+        }
 
-    method tuple-expression($/) {
-        make TupleExpression.new(
-            maybe-tuple-elements => $<tuple-elements>.made,
-            text                 => $/.Str,
-        )
-    }
-
-    method tuple-index($/) {
-        make TupleIndex.new(value => ~$/ )
+        method tuple-index($/) {
+            make TupleIndex.new(value => ~$/ )
+        }
     }
 }

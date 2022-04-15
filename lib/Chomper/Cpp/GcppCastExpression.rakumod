@@ -8,7 +8,7 @@ use Chomper::Cpp::GcppRoles;
 #   [ <.left-paren> <the-type-id> <.right-paren> ]* 
 #   <unary-expression> 
 # }
-our class CastExpression does ICastExpression { 
+class CastExpression does ICastExpression is export { 
     has ITheTypeId       @.the-type-ids     is required;
     has IUnaryExpression $.unary-expression is required;
 
@@ -27,7 +27,7 @@ our class CastExpression does ICastExpression {
 }
 
 # token cast-token:sym<dyn> { <dynamic_cast> }
-our class CastToken::Dyn does ICastToken { 
+class CastToken::Dyn does ICastToken is export { 
 
     has $.text;
 
@@ -37,7 +37,7 @@ our class CastToken::Dyn does ICastToken {
 }
 
 # token cast-token:sym<static> { <static_cast> }
-our class CastToken::Static does ICastToken { 
+class CastToken::Static does ICastToken is export { 
 
     has $.text;
 
@@ -47,7 +47,7 @@ our class CastToken::Static does ICastToken {
 }
 
 # token cast-token:sym<reinterpret> { <reinterpret_cast> }
-our class CastToken::Reinterpret does ICastToken { 
+class CastToken::Reinterpret does ICastToken is export { 
 
     has $.text;
 
@@ -57,7 +57,7 @@ our class CastToken::Reinterpret does ICastToken {
 }
 
 # token cast-token:sym<const> { <const_cast> }
-our class CastToken::Const does ICastToken { 
+class CastToken::Const does ICastToken is export { 
 
     has $.text;
 
@@ -66,58 +66,61 @@ our class CastToken::Const does ICastToken {
     }
 }
 
-our role CastExpression::Actions {
+package CastExpressionGrammar is export {
 
-    # token cast-token:sym<dyn> { <dynamic_cast> }
-    method cast-token:sym<dyn>($/) {
-        make CastToken::Dyn.new
-    }
+    our role Actions {
 
-    # token cast-token:sym<static> { <static_cast> }
-    method cast-token:sym<static>($/) {
-        make CastToken::Static.new
-    }
+        # token cast-token:sym<dyn> { <dynamic_cast> }
+        method cast-token:sym<dyn>($/) {
+            make CastToken::Dyn.new
+        }
 
-    # token cast-token:sym<reinterpret> { <reinterpret_cast> }
-    method cast-token:sym<reinterpret>($/) {
-        make CastToken::Reinterpret.new
-    }
+        # token cast-token:sym<static> { <static_cast> }
+        method cast-token:sym<static>($/) {
+            make CastToken::Static.new
+        }
 
-    # token cast-token:sym<const> { <const_cast> }
-    method cast-token:sym<const>($/) {
-        make CastToken::Const.new
-    }
+        # token cast-token:sym<reinterpret> { <reinterpret_cast> }
+        method cast-token:sym<reinterpret>($/) {
+            make CastToken::Reinterpret.new
+        }
 
-    # rule cast-expression { [ <.left-paren> <the-type-id> <.right-paren> ]* <unary-expression> }
-    method cast-expression($/) {
+        # token cast-token:sym<const> { <const_cast> }
+        method cast-token:sym<const>($/) {
+            make CastToken::Const.new
+        }
 
-        my $base     = $<unary-expression>.made;
-        my @type-ids = $<the-type-id>>>.made.List;
+        # rule cast-expression { [ <.left-paren> <the-type-id> <.right-paren> ]* <unary-expression> }
+        method cast-expression($/) {
 
-        if @type-ids.elems gt 0 {
+            my $base     = $<unary-expression>.made;
+            my @type-ids = $<the-type-id>>>.made.List;
 
-            make CastExpression.new(
-                unary-expression => $base,
-                the-type-ids     => @type-ids,
-                text             => ~$/,
-            )
+            if @type-ids.elems gt 0 {
 
-        } else {
+                make CastExpression.new(
+                    unary-expression => $base,
+                    the-type-ids     => @type-ids,
+                    text             => ~$/,
+                )
 
-            make $base
+            } else {
+
+                make $base
+            }
         }
     }
-}
 
-our role CastExpression::Rules {
+    our role Rules {
 
-    proto token cast-token { * }
-    token cast-token:sym<dyn>         { <dynamic_cast> }
-    token cast-token:sym<static>      { <static_cast> }
-    token cast-token:sym<reinterpret> { <reinterpret_cast> }
-    token cast-token:sym<const>       { <const_cast> }
+        proto token cast-token { * }
+        token cast-token:sym<dyn>         { <dynamic_cast> }
+        token cast-token:sym<static>      { <static_cast> }
+        token cast-token:sym<reinterpret> { <reinterpret_cast> }
+        token cast-token:sym<const>       { <const_cast> }
 
-    rule cast-expression {
-        [ <left-paren> <the-type-id> <right-paren> ]* <unary-expression>
+        rule cast-expression {
+            [ <left-paren> <the-type-id> <right-paren> ]* <unary-expression>
+        }
     }
 }

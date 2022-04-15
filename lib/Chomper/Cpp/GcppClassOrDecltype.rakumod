@@ -9,7 +9,7 @@ use Chomper::Cpp::GcppDecltype;
 #   <nested-name-specifier>? 
 #   <class-name> 
 # }
-our class ClassOrDeclType::Class does IClassOrDeclType {
+class ClassOrDeclType::Class does IClassOrDeclType is export {
     has INestedNameSpecifier $.nested-name-specifier;
     has IClassName           $.class-name is required;
     has $.text;
@@ -29,7 +29,7 @@ our class ClassOrDeclType::Class does IClassOrDeclType {
 # rule class-or-decl-type:sym<decltype> { 
 #   <decltype-specifier> 
 # }
-our class ClassOrDeclType::Decltype does IClassOrDeclType {
+class ClassOrDeclType::Decltype does IClassOrDeclType is export {
     has DecltypeSpecifier $.decltype-specifier is required;
     has $.text;
 
@@ -38,35 +38,38 @@ our class ClassOrDeclType::Decltype does IClassOrDeclType {
     }
 }
 
-our role ClassOrDeclType::Actions {
+package ClassOrDeclTypeGrammar is export {
 
-    # rule class-or-decl-type:sym<class> { <nested-name-specifier>? <class-name> }
-    method class-or-decl-type:sym<class>($/) {
+    our role Actions {
 
-        my $prefix = $<nested-name-specifier>.made;
-        my $base   = $<class-name>.made;
+        # rule class-or-decl-type:sym<class> { <nested-name-specifier>? <class-name> }
+        method class-or-decl-type:sym<class>($/) {
 
-        if $prefix {
-            make ClassOrDeclType::Class.new(
-                nested-name-specifier => $prefix,
-                class-name            => $base,
-            )
+            my $prefix = $<nested-name-specifier>.made;
+            my $base   = $<class-name>.made;
 
-        } else {
+            if $prefix {
+                make ClassOrDeclType::Class.new(
+                    nested-name-specifier => $prefix,
+                    class-name            => $base,
+                )
 
-            make $base
+            } else {
+
+                make $base
+            }
+        }
+
+        # rule class-or-decl-type:sym<decltype> { <decltype-specifier> } 
+        method class-or-decl-type:sym<decltype>($/) {
+            make $<decltype-specifier>.made
         }
     }
 
-    # rule class-or-decl-type:sym<decltype> { <decltype-specifier> } 
-    method class-or-decl-type:sym<decltype>($/) {
-        make $<decltype-specifier>.made
+    our role Rules {
+
+        proto rule class-or-decl-type { * }
+        rule class-or-decl-type:sym<class>    { <nested-name-specifier>?  <class-name> }
+        rule class-or-decl-type:sym<decltype> { <decltype-specifier> }
     }
-}
-
-our role ClassOrDeclType::Rules {
-
-    proto rule class-or-decl-type { * }
-    rule class-or-decl-type:sym<class>    { <nested-name-specifier>?  <class-name> }
-    rule class-or-decl-type:sym<decltype> { <decltype-specifier> }
 }

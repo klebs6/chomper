@@ -12,7 +12,7 @@ use Chomper::Cpp::GcppPtrDeclarator;
 #   <declarator> 
 #   <initializer>? 
 # }
-our class InitDeclarator does IInitDeclarator { 
+class InitDeclarator does IInitDeclarator is export { 
     has IDeclarator  $.declarator is required;
     has IInitializer $.initializer;
 
@@ -32,7 +32,7 @@ our class InitDeclarator does IInitDeclarator {
 
 
 # rule declarator:sym<ptr> { <pointer-declarator> }
-our class Declarator::Ptr does IDeclarator {
+class Declarator::Ptr does IDeclarator is export {
     has PointerDeclarator $.pointer-declarator is required;
 
     has $.text;
@@ -47,7 +47,7 @@ our class Declarator::Ptr does IDeclarator {
 #   <parameters-and-qualifiers> 
 #   <trailing-return-type> 
 # }
-our class Declarator::NoPtr does IDeclarator {
+class Declarator::NoPtr does IDeclarator is export {
     has INoPointerDeclarator    $.no-pointer-declarator     is required;
     has ParametersAndQualifiers $.parameters-and-qualifiers is required;
     has TrailingReturnType      $.trailing-return-type      is required;
@@ -67,8 +67,8 @@ our class Declarator::NoPtr does IDeclarator {
 #   <ellipsis>? 
 #   <id-expression> 
 # }
-our class Declaratorid 
-does INoPointerDeclaratorBase { 
+class Declaratorid 
+does INoPointerDeclaratorBase is export { 
 
     has Bool          $.has-ellipsis  is required;
     has IIdExpression $.id-expression is required;
@@ -86,7 +86,7 @@ does INoPointerDeclaratorBase {
 # rule some-declarator:sym<basic> { 
 #   <declarator> 
 # }
-our class SomeDeclarator::Basic does ISomeDeclarator {
+class SomeDeclarator::Basic does ISomeDeclarator is export {
     has IDeclarator $.declarator is required;
 
     has $.text;
@@ -99,7 +99,7 @@ our class SomeDeclarator::Basic does ISomeDeclarator {
 # rule some-declarator:sym<abstract> { 
 #   <abstract-declarator> 
 # }
-our class SomeDeclarator::Abstract does ISomeDeclarator {
+class SomeDeclarator::Abstract does ISomeDeclarator is export {
     has IAbstractDeclarator $.abstract-declarator is required;
 
     has $.text;
@@ -109,83 +109,86 @@ our class SomeDeclarator::Abstract does ISomeDeclarator {
     }
 }
 
-our role Declarator::Actions {
+package DeclaratorGrammar is export {
 
-    # rule init-declarator-list { <init-declarator> [ <.comma> <init-declarator> ]* }
-    method init-declarator-list($/) {
-        make $<init-declarator>>>.made
-    }
+    our role Actions {
 
-    # rule init-declarator { <declarator> <initializer>? } 
-    method init-declarator($/) {
+        # rule init-declarator-list { <init-declarator> [ <.comma> <init-declarator> ]* }
+        method init-declarator-list($/) {
+            make $<init-declarator>>>.made
+        }
 
-        my $initializer = $<initializer>.made;
-        my $body        = $<declarator>.made;
+        # rule init-declarator { <declarator> <initializer>? } 
+        method init-declarator($/) {
 
-        if $initializer {
+            my $initializer = $<initializer>.made;
+            my $body        = $<declarator>.made;
 
-            make InitDeclarator.new(
-                declarator  => $body,
-                initializer => $initializer,
-                text        => ~$/,
+            if $initializer {
+
+                make InitDeclarator.new(
+                    declarator  => $body,
+                    initializer => $initializer,
+                    text        => ~$/,
+                )
+
+            } else {
+
+                make $body
+            }
+        }
+
+        # rule declarator:sym<ptr> { <pointer-declarator> }
+        method declarator:sym<ptr>($/) {
+            make $<pointer-declarator>.made
+        }
+
+        # rule declarator:sym<no-ptr> { <no-pointer-declarator> <parameters-and-qualifiers> <trailing-return-type> }
+        method declarator:sym<no-ptr>($/) {
+            make Declarator::NoPtr.new(
+                no-pointer-declarator     => $<no-pointer-declarator>.made,
+                parameters-and-qualifiers => $<parameters-and-qualifiers>.made,
+                trailing-return-type      => $<trailing-return-type>.made,
+                text                      => ~$/,
             )
+        }
 
-        } else {
+        # rule declaratorid { <ellipsis>? <id-expression> }
+        method declaratorid($/) {
 
-            make $body
+            my $has-ellipsis = so $/<ellipsis>:exists;
+            my $body         = $<id-expression>.made;
+
+            if $has-ellipsis {
+                make Declaratorid.new(
+                    has-ellipsis  => $has-ellipsis,
+                    id-expression => $body,
+                    text          => ~$/,
+                )
+            } else {
+                make $body
+            }
+        }
+
+        # rule some-declarator:sym<basic> { <declarator> }
+        method some-declarator:sym<basic>($/) {
+            make $<declarator>.made
+        }
+
+        # rule some-declarator:sym<abstract> { <abstract-declarator> } 
+        method some-declarator:sym<abstract>($/) {
+            make $<abstract-declarator>.made
         }
     }
 
-    # rule declarator:sym<ptr> { <pointer-declarator> }
-    method declarator:sym<ptr>($/) {
-        make $<pointer-declarator>.made
-    }
+    our role Rules {
 
-    # rule declarator:sym<no-ptr> { <no-pointer-declarator> <parameters-and-qualifiers> <trailing-return-type> }
-    method declarator:sym<no-ptr>($/) {
-        make Declarator::NoPtr.new(
-            no-pointer-declarator     => $<no-pointer-declarator>.made,
-            parameters-and-qualifiers => $<parameters-and-qualifiers>.made,
-            trailing-return-type      => $<trailing-return-type>.made,
-            text                      => ~$/,
-        )
-    }
+        proto rule some-declarator { * }
+        rule some-declarator:sym<basic>    { <declarator> }
+        rule some-declarator:sym<abstract> { <abstract-declarator> }
 
-    # rule declaratorid { <ellipsis>? <id-expression> }
-    method declaratorid($/) {
-
-        my $has-ellipsis = so $/<ellipsis>:exists;
-        my $body         = $<id-expression>.made;
-
-        if $has-ellipsis {
-            make Declaratorid.new(
-                has-ellipsis  => $has-ellipsis,
-                id-expression => $body,
-                text          => ~$/,
-            )
-        } else {
-            make $body
+        rule declaratorid {
+            <ellipsis>?  <id-expression>
         }
-    }
-
-    # rule some-declarator:sym<basic> { <declarator> }
-    method some-declarator:sym<basic>($/) {
-        make $<declarator>.made
-    }
-
-    # rule some-declarator:sym<abstract> { <abstract-declarator> } 
-    method some-declarator:sym<abstract>($/) {
-        make $<abstract-declarator>.made
-    }
-}
-
-our role Declarator::Rules {
-
-    proto rule some-declarator { * }
-    rule some-declarator:sym<basic>    { <declarator> }
-    rule some-declarator:sym<abstract> { <abstract-declarator> }
-
-    rule declaratorid {
-        <ellipsis>?  <id-expression>
     }
 }

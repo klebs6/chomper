@@ -2,7 +2,7 @@ unit module Chomper::Rust::GrustTraits;
 
 use Data::Dump::Tree;
 
-our class Trait {
+class Trait is export {
     has Bool $.unsafe;
     has $.identifier;
     has $.maybe-generic-params;
@@ -64,7 +64,7 @@ our class Trait {
     }
 }
 
-our class InherentImpl {
+class InherentImpl is export {
     has $.maybe-generic-params;
     has $.type;
     has $.maybe-where-clause;
@@ -111,7 +111,7 @@ our class InherentImpl {
     }
 }
 
-our class TraitImpl {
+class TraitImpl is export {
     has Bool $.default is required;
     has Bool $.unsafe;
     has $.maybe-generic-params;
@@ -178,7 +178,7 @@ our class TraitImpl {
     }
 }
 
-our class TraitAlias {
+class TraitAlias is export {
     has @.outer-attributes;
     has $.maybe-visibility;
     has $.identifier;
@@ -224,126 +224,129 @@ our class TraitAlias {
     }
 }
 
-our role Trait::Rules {
+package TraitGrammar is export {
 
-    rule trait {
-        <kw-unsafe>?
-        <kw-trait>
-        <identifier>
-        <generic-params>?
-        [ <tok-colon> <type-param-bounds>? ]?
-        <where-clause>?
-        <tok-lbrace>
-        <inner-attribute>*
-        <associated-item>*
-        <comment>?
-        <tok-rbrace>
+    our role Rules {
+
+        rule trait {
+            <kw-unsafe>?
+            <kw-trait>
+            <identifier>
+            <generic-params>?
+            [ <tok-colon> <type-param-bounds>? ]?
+            <where-clause>?
+            <tok-lbrace>
+            <inner-attribute>*
+            <associated-item>*
+            <comment>?
+            <tok-rbrace>
+        }
+
+        proto rule implementation { * }
+        rule implementation:sym<inherent> { <inherent-impl> }
+        rule implementation:sym<trait>    { <trait-impl> }
+
+        rule inherent-impl {
+            <kw-impl>
+            <generic-params>?
+            <type>
+            <where-clause>?
+            <tok-lbrace>
+            <inner-attribute>*
+            <associated-item>*
+            <comment>?
+            <tok-rbrace>
+        }
+
+        rule trait-impl {
+            <kw-default>?
+            <kw-unsafe>?
+            <kw-impl>
+            <generic-params>?
+            <tok-bang>?
+            <type-path>
+            <kw-for>
+            <type>
+            <where-clause>?
+            <tok-lbrace>
+            <inner-attribute>*
+            <associated-item>*
+            <comment>?
+            <tok-rbrace>
+        }
+
+        rule trait-alias {
+            <outer-attribute>* 
+            <visibility>? 
+            <kw-trait> 
+            <identifier>
+            <generic-params>? 
+            <tok-eq>
+            <type-param-bounds> 
+            <where-clause>?
+            <tok-semi>
+        }
     }
 
-    proto rule implementation { * }
-    rule implementation:sym<inherent> { <inherent-impl> }
-    rule implementation:sym<trait>    { <trait-impl> }
+    our role Actions {
 
-    rule inherent-impl {
-        <kw-impl>
-        <generic-params>?
-        <type>
-        <where-clause>?
-        <tok-lbrace>
-        <inner-attribute>*
-        <associated-item>*
-        <comment>?
-        <tok-rbrace>
-    }
+        method trait($/) {
+            my @bounds = $/<type-param-bounds>:exists ?? $<type-param-bounds>>>.made !! [];
 
-    rule trait-impl {
-        <kw-default>?
-        <kw-unsafe>?
-        <kw-impl>
-        <generic-params>?
-        <tok-bang>?
-        <type-path>
-        <kw-for>
-        <type>
-        <where-clause>?
-        <tok-lbrace>
-        <inner-attribute>*
-        <associated-item>*
-        <comment>?
-        <tok-rbrace>
-    }
+            make Trait.new(
+                unsafe                  => so $<kw-unsafe>:exists,
+                identifier              => $<identifier>.made,
+                maybe-generic-params    => $<generic-params>.made,
+                maybe-type-param-bounds => @bounds,
+                maybe-where-clause      => $<where-clause>.made,
+                inner-attributes        => $<inner-attribute>>>.made,
+                associated-items        => $<associated-item>>>.made,
+                maybe-comment           => $<comment>.made,
+                text                    => $/.Str,
+            )
+        }
 
-    rule trait-alias {
-        <outer-attribute>* 
-        <visibility>? 
-        <kw-trait> 
-        <identifier>
-        <generic-params>? 
-        <tok-eq>
-        <type-param-bounds> 
-        <where-clause>?
-        <tok-semi>
-    }
-}
+        method implementation:sym<inherent>($/) { make $<inherent-impl>.made }
+        method implementation:sym<trait>($/)    { make $<trait-impl>.made }
 
-our role Trait::Actions {
+        method inherent-impl($/) {
+            make InherentImpl.new(
+                maybe-generic-params => $<generic-params>.made,
+                type                 => $<type>.made,
+                maybe-where-clause   => $<where-clause>.made,
+                inner-attributes     => $<inner-attribute>>>.made,
+                associated-items     => $<associated-item>>>.made,
+                maybe-comment        => $<comment>.made,
+                text                 => $/.Str,
+            )
+        }
 
-    method trait($/) {
-        my @bounds = $/<type-param-bounds>:exists ?? $<type-param-bounds>>>.made !! [];
+        method trait-impl($/) {
+            make TraitImpl.new(
+                default              => $/<kw-default>:exists,
+                unsafe               => $/<kw-unsafe>:exists,
+                maybe-generic-params => $<generic-params>.made,
+                bang                 => so $/<tok-bang>:exists,
+                type-path            => $<type-path>.made,
+                for-type             => $<type>.made,
+                maybe-where-clause   => $<where-clause>.made,
+                inner-attributes     => $<inner-attribute>>>.made,
+                associated-items     => $<associated-item>>>.made,
+                maybe-comment        => $<comment>.made,
+                text                 => $/.Str,
+            )
+        }
 
-        make Trait.new(
-            unsafe                  => so $<kw-unsafe>:exists,
-            identifier              => $<identifier>.made,
-            maybe-generic-params    => $<generic-params>.made,
-            maybe-type-param-bounds => @bounds,
-            maybe-where-clause      => $<where-clause>.made,
-            inner-attributes        => $<inner-attribute>>>.made,
-            associated-items        => $<associated-item>>>.made,
-            maybe-comment           => $<comment>.made,
-            text                    => $/.Str,
-        )
-    }
-
-    method implementation:sym<inherent>($/) { make $<inherent-impl>.made }
-    method implementation:sym<trait>($/)    { make $<trait-impl>.made }
-
-    method inherent-impl($/) {
-        make InherentImpl.new(
-            maybe-generic-params => $<generic-params>.made,
-            type                 => $<type>.made,
-            maybe-where-clause   => $<where-clause>.made,
-            inner-attributes     => $<inner-attribute>>>.made,
-            associated-items     => $<associated-item>>>.made,
-            maybe-comment        => $<comment>.made,
-            text                 => $/.Str,
-        )
-    }
-
-    method trait-impl($/) {
-        make TraitImpl.new(
-            default              => $/<kw-default>:exists,
-            unsafe               => $/<kw-unsafe>:exists,
-            maybe-generic-params => $<generic-params>.made,
-            bang                 => so $/<tok-bang>:exists,
-            type-path            => $<type-path>.made,
-            for-type             => $<type>.made,
-            maybe-where-clause   => $<where-clause>.made,
-            inner-attributes     => $<inner-attribute>>>.made,
-            associated-items     => $<associated-item>>>.made,
-            maybe-comment        => $<comment>.made,
-            text                 => $/.Str,
-        )
-    }
-
-    method trait-alias($/) {
-        make TraitAlias.new(
-            outer-attributes     => $<outer-attribute>>>.made,
-            maybe-visibility     => $<visibility>.made,
-            identifier           => $<identifier>.made,
-            maybe-generic-params => $<generic-params>.made,
-            type-param-bounds    => $<type-param-bounds>.made,
-            maybe-where-clause   => $<where-clause>.made,
-            text                 => $/.Str,
-        )
+        method trait-alias($/) {
+            make TraitAlias.new(
+                outer-attributes     => $<outer-attribute>>>.made,
+                maybe-visibility     => $<visibility>.made,
+                identifier           => $<identifier>.made,
+                maybe-generic-params => $<generic-params>.made,
+                type-param-bounds    => $<type-param-bounds>.made,
+                maybe-where-clause   => $<where-clause>.made,
+                text                 => $/.Str,
+            )
+        }
     }
 }

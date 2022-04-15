@@ -12,7 +12,7 @@ use Chomper::Cpp::GcppAttr;
 #   <attribute-specifier-seq>? 
 #   <attributed-statement-body> 
 # }
-our class Statement::Attributed does IStatement {
+class Statement::Attributed does IStatement is export {
     has IComment  $.comment is rw;
     has           @.attribute-specifier-seq is rw;
     has           $.attributed-statement-body is required is rw;
@@ -40,8 +40,8 @@ our class Statement::Attributed does IStatement {
 # rule attributed-statement-body:sym<expression> { 
 #   <expression-statement> 
 # }
-our class AttributedStatementBody::Expression 
-does IAttributedStatementBody {
+class AttributedStatementBody::Expression 
+does IAttributedStatementBody is export {
 
     has ExpressionStatement $.expression-statement is required;
 
@@ -55,8 +55,8 @@ does IAttributedStatementBody {
 # rule attributed-statement-body:sym<compound> { 
 #   <compound-statement> 
 # }
-our class AttributedStatementBody::Compound 
-does IAttributedStatementBody {
+class AttributedStatementBody::Compound 
+does IAttributedStatementBody is export {
 
     has CompoundStatement $.compound-statement is required;
 
@@ -70,8 +70,8 @@ does IAttributedStatementBody {
 # rule attributed-statement-body:sym<selection> { 
 #   <selection-statement> 
 # }
-our class AttributedStatementBody::Selection 
-does IAttributedStatementBody {
+class AttributedStatementBody::Selection 
+does IAttributedStatementBody is export {
 
     has ISelectionStatement $.selection-statement is required;
 
@@ -85,8 +85,8 @@ does IAttributedStatementBody {
 # rule attributed-statement-body:sym<iteration> { 
 #   <iteration-statement> 
 # }
-our class AttributedStatementBody::Iteration 
-does IAttributedStatementBody {
+class AttributedStatementBody::Iteration 
+does IAttributedStatementBody is export {
 
     has IIterationStatement $.iteration-statement is required;
 
@@ -100,8 +100,8 @@ does IAttributedStatementBody {
 # rule attributed-statement-body:sym<jump> { 
 #   <jump-statement> 
 # }
-our class AttributedStatementBody::Jump 
-does IAttributedStatementBody {
+class AttributedStatementBody::Jump 
+does IAttributedStatementBody is export {
 
     has IJumpStatement $.jump-statement is required;
 
@@ -115,8 +115,8 @@ does IAttributedStatementBody {
 # rule attributed-statement-body:sym<try> { 
 #   <try-block> 
 # }
-our class AttributedStatementBody::Try 
-does IAttributedStatementBody {
+class AttributedStatementBody::Try 
+does IAttributedStatementBody is export {
 
     has TryBlock $.try-block is required;
 
@@ -127,81 +127,84 @@ does IAttributedStatementBody {
     }
 }
 
-our role AttributedStatement::Actions {
+package AttributedStatementGrammar is export {
 
-    # token statement:sym<attributed> { <comment>? <attribute-specifier-seq>? <attributed-statement-body> }
-    method statement:sym<attributed>($/) {
+    our role Actions {
 
-        my $comment = $<comment>.made;
-        my $attribs = $<attribute-specifier-seq>.made;
-        my $body    = $<attributed-statement-body>.made;
+        # token statement:sym<attributed> { <comment>? <attribute-specifier-seq>? <attributed-statement-body> }
+        method statement:sym<attributed>($/) {
 
-        if not $comment and not $attribs {
+            my $comment = $<comment>.made;
+            my $attribs = $<attribute-specifier-seq>.made;
+            my $body    = $<attributed-statement-body>.made;
 
-            make $body
+            if not $comment and not $attribs {
 
-        } else {
+                make $body
 
-            my $res = Statement::Attributed.new(
-                attributed-statement-body => $body,
-            );
+            } else {
 
-            if $comment {
-                $res.comment = $comment;
+                my $res = Statement::Attributed.new(
+                    attributed-statement-body => $body,
+                );
+
+                if $comment {
+                    $res.comment = $comment;
+                }
+
+                if $attribs {
+                    $res.attribute-specifier-seq = $attribs;
+                }
+
+                make $res
             }
+        }
 
-            if $attribs {
-                $res.attribute-specifier-seq = $attribs;
-            }
+        # rule attributed-statement-body:sym<expression> { <expression-statement> }
+        method attributed-statement-body:sym<expression>($/) {
+            make $<expression-statement>.made;
+        }
 
-            make $res
+        # rule attributed-statement-body:sym<compound> { <compound-statement> }
+        method attributed-statement-body:sym<compound>($/) {
+            make $<compound-statement>.made;
+        }
+
+        # rule attributed-statement-body:sym<selection> { <selection-statement> }
+        method attributed-statement-body:sym<selection>($/) {
+            make $<selection-statement>.made
+        }
+
+        # rule attributed-statement-body:sym<iteration> { <iteration-statement> }
+        method attributed-statement-body:sym<iteration>($/) {
+            make $<iteration-statement>.made
+        }
+
+        # rule attributed-statement-body:sym<jump> { <jump-statement> }
+        method attributed-statement-body:sym<jump>($/) {
+            make $<jump-statement>.made
+        }
+
+        # rule attributed-statement-body:sym<try> { <try-block> } 
+        method attributed-statement-body:sym<try>($/) {
+            make $<try-block>.made
         }
     }
 
-    # rule attributed-statement-body:sym<expression> { <expression-statement> }
-    method attributed-statement-body:sym<expression>($/) {
-        make $<expression-statement>.made;
+    our role Rules {
+
+        token statement:sym<attributed> { 
+            <comment>?
+            <attribute-specifier-seq>?
+            <attributed-statement-body>
+        }
+
+        proto rule attributed-statement-body { * }
+        rule attributed-statement-body:sym<expression> { <expression-statement> }
+        rule attributed-statement-body:sym<compound>   { <compound-statement>   }
+        rule attributed-statement-body:sym<selection>  { <selection-statement>  }
+        rule attributed-statement-body:sym<iteration>  { <iteration-statement>  }
+        rule attributed-statement-body:sym<jump>       { <jump-statement>       }
+        rule attributed-statement-body:sym<try>        { <try-block>            }
     }
-
-    # rule attributed-statement-body:sym<compound> { <compound-statement> }
-    method attributed-statement-body:sym<compound>($/) {
-        make $<compound-statement>.made;
-    }
-
-    # rule attributed-statement-body:sym<selection> { <selection-statement> }
-    method attributed-statement-body:sym<selection>($/) {
-        make $<selection-statement>.made
-    }
-
-    # rule attributed-statement-body:sym<iteration> { <iteration-statement> }
-    method attributed-statement-body:sym<iteration>($/) {
-        make $<iteration-statement>.made
-    }
-
-    # rule attributed-statement-body:sym<jump> { <jump-statement> }
-    method attributed-statement-body:sym<jump>($/) {
-        make $<jump-statement>.made
-    }
-
-    # rule attributed-statement-body:sym<try> { <try-block> } 
-    method attributed-statement-body:sym<try>($/) {
-        make $<try-block>.made
-    }
-}
-
-our role AttributedStatement::Rules {
-
-    token statement:sym<attributed> { 
-        <comment>?
-        <attribute-specifier-seq>?
-        <attributed-statement-body>
-    }
-
-    proto rule attributed-statement-body { * }
-    rule attributed-statement-body:sym<expression> { <expression-statement> }
-    rule attributed-statement-body:sym<compound>   { <compound-statement>   }
-    rule attributed-statement-body:sym<selection>  { <selection-statement>  }
-    rule attributed-statement-body:sym<iteration>  { <iteration-statement>  }
-    rule attributed-statement-body:sym<jump>       { <jump-statement>       }
-    rule attributed-statement-body:sym<try>        { <try-block>            }
 }

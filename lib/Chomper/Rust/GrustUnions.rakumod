@@ -2,7 +2,7 @@ unit module Chomper::Rust::GrustUnions;
 
 use Data::Dump::Tree;
 
-our class Union {
+class Union is export {
     has $.identifier;
     has $.maybe-generic-params;
     has $.maybe-where-clause;
@@ -40,28 +40,31 @@ our class Union {
     }
 }
 
-our role Union::Rules {
+package UnionGrammar is export {
 
-    rule union {
-        <kw-union>
-        <identifier>
-        <generic-params>?
-        <where-clause>?
-        <tok-lbrace>
-        <struct-fields>
-        <tok-rbrace>
+    our role Rules {
+
+        rule union {
+            <kw-union>
+            <identifier>
+            <generic-params>?
+            <where-clause>?
+            <tok-lbrace>
+            <struct-fields>
+            <tok-rbrace>
+        }
     }
-}
 
-our role Union::Actions {
+    our role Actions {
 
-    method union($/) {
-        make Union.new(
-            identifier           => $<identifier>.made,
-            maybe-generic-params => $<generic-params>.made,
-            maybe-where-clause   => $<where-clause>.made,
-            struct-fields        => $<struct-fields>.made,
-            text                 => $/.Str,
-        )
+        method union($/) {
+            make Union.new(
+                identifier           => $<identifier>.made,
+                maybe-generic-params => $<generic-params>.made,
+                maybe-where-clause   => $<where-clause>.made,
+                struct-fields        => $<struct-fields>.made,
+                text                 => $/.Str,
+            )
+        }
     }
 }

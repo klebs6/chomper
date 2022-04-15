@@ -5,7 +5,7 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 
 # rule balanced-token-seq { <balancedrule>+ }
-our class BalancedTokenSeq { 
+class BalancedTokenSeq is export { 
     has IBalancedrule @.balancedrules is required;
 
     has $.text;
@@ -21,7 +21,7 @@ our class BalancedTokenSeq {
 #   <balanced-token-seq> 
 #   <.right-paren> 
 # }
-our class Balancedrule::Parens does IBalancedrule {
+class Balancedrule::Parens does IBalancedrule is export {
     has BalancedTokenSeq $.balanced-token-seq is required;
 
     has $.text;
@@ -36,7 +36,7 @@ our class Balancedrule::Parens does IBalancedrule {
 #   <balanced-token-seq> 
 #   <.right-bracket> 
 # }
-our class Balancedrule::Brackets does IBalancedrule {
+class Balancedrule::Brackets does IBalancedrule is export {
     has BalancedTokenSeq $.balanced-token-seq is required;
 
     has $.text;
@@ -51,7 +51,7 @@ our class Balancedrule::Brackets does IBalancedrule {
 #   <balanced-token-seq> 
 #   <.right-brace> 
 # } 
-our class Balancedrule::Braces does IBalancedrule {
+class Balancedrule::Braces does IBalancedrule is export {
     has BalancedTokenSeq $.balanced-token-seq is required;
 
     has $.text;
@@ -61,37 +61,40 @@ our class Balancedrule::Braces does IBalancedrule {
     }
 }
 
-our role Balanced::Actions {
+package BalancedGrammar is export {
 
-    # rule balanced-token-seq { <balancedrule>+ } 
-    method balanced-token-seq($/) {
-        make $<balancedrule>>>.made
+    our role Actions {
+
+        # rule balanced-token-seq { <balancedrule>+ } 
+        method balanced-token-seq($/) {
+            make $<balancedrule>>>.made
+        }
+
+        # rule balancedrule:sym<parens> { <.left-paren> <balanced-token-seq> <.right-paren> }
+        method balancedrule:sym<parens>($/) {
+            make $<balanced-token-seq>.made
+        }
+
+        # rule balancedrule:sym<brackets> { <.left-bracket> <balanced-token-seq> <.right-bracket> }
+        method balancedrule:sym<brackets>($/) {
+            make $<balanced-token-seq>.made
+        }
+
+        # rule balancedrule:sym<braces> { <.left-brace> <balanced-token-seq> <.right-brace> } 
+        method balancedrule:sym<braces>($/) {
+            make $<balanced-token-seq>.made
+        }
     }
 
-    # rule balancedrule:sym<parens> { <.left-paren> <balanced-token-seq> <.right-paren> }
-    method balancedrule:sym<parens>($/) {
-        make $<balanced-token-seq>.made
+    our role Rules {
+
+        rule balanced-token-seq {
+            <balancedrule>+
+        }
+
+        proto rule balancedrule { * }
+        rule balancedrule:sym<parens>   { <left-paren> <balanced-token-seq> <right-paren> }
+        rule balancedrule:sym<brackets> { <left-bracket> <balanced-token-seq> <right-bracket> }
+        rule balancedrule:sym<braces>   { <left-brace> <balanced-token-seq> <right-brace> }
     }
-
-    # rule balancedrule:sym<brackets> { <.left-bracket> <balanced-token-seq> <.right-bracket> }
-    method balancedrule:sym<brackets>($/) {
-        make $<balanced-token-seq>.made
-    }
-
-    # rule balancedrule:sym<braces> { <.left-brace> <balanced-token-seq> <.right-brace> } 
-    method balancedrule:sym<braces>($/) {
-        make $<balanced-token-seq>.made
-    }
-}
-
-our role Balanced::Rules {
-
-    rule balanced-token-seq {
-        <balancedrule>+
-    }
-
-    proto rule balancedrule { * }
-    rule balancedrule:sym<parens>   { <left-paren> <balanced-token-seq> <right-paren> }
-    rule balancedrule:sym<brackets> { <left-bracket> <balanced-token-seq> <right-bracket> }
-    rule balancedrule:sym<braces>   { <left-brace> <balanced-token-seq> <right-brace> }
 }

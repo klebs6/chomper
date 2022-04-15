@@ -5,7 +5,7 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 
 # token additive-operator:sym<plus> { <plus> }
-our class AdditiveOperator::Plus does IAdditiveOperator {
+class AdditiveOperator::Plus does IAdditiveOperator is export {
 
     has $.text;
 
@@ -15,7 +15,7 @@ our class AdditiveOperator::Plus does IAdditiveOperator {
 }
 
 # token additive-operator:sym<minus> { <minus> }
-our class AdditiveOperator::Minus does IAdditiveOperator {
+class AdditiveOperator::Minus does IAdditiveOperator is export {
 
     has $.text;
 
@@ -28,7 +28,7 @@ our class AdditiveOperator::Minus does IAdditiveOperator {
 #   <additive-operator> 
 #   <multiplicative-expression> 
 # }
-our class AdditiveExpressionTail {
+class AdditiveExpressionTail is export {
     has IAdditiveOperator         $.additive-operator         is required;
     has IMultiplicativeExpression $.multiplicative-expression is required;
 
@@ -41,9 +41,9 @@ our class AdditiveExpressionTail {
 #   <multiplicative-expression> 
 #   <additive-expression-tail>* 
 # }
-our class AdditiveExpression 
+class AdditiveExpression 
 does IConstantExpression
-does IAdditiveExpression {
+does IAdditiveExpression is export {
     has IMultiplicativeExpression $.multiplicative-expression is required;
     has AdditiveExpressionTail    @.additive-expression-tail;
 
@@ -54,59 +54,62 @@ does IAdditiveExpression {
     }
 }
 
-our role AdditiveExpression::Actions {
+package AdditiveExpressionGrammar is export {
 
-    # token additive-operator:sym<plus> { <plus> }
-    method additive-operator:sym<plus>($/) {
-        make AdditiveOperator::Plus.new
-    }
+    our role Actions {
 
-    # token additive-operator:sym<minus> { <minus> } 
-    method additive-operator:sym<minus>($/) {
-        make AdditiveOperator::Minus.new
-    }
+        # token additive-operator:sym<plus> { <plus> }
+        method additive-operator:sym<plus>($/) {
+            make AdditiveOperator::Plus.new
+        }
 
-    # rule additive-expression-tail { <additive-operator> <multiplicative-expression> }
-    method additive-expression-tail($/) {
-        make AdditiveExpressionTail.new(
-            additive-operator         => $<additive-operator>.made,
-            multiplicative-expression => $<multiplicative-expression>.made,
-            text                      => ~$/,
-        )
-    }
+        # token additive-operator:sym<minus> { <minus> } 
+        method additive-operator:sym<minus>($/) {
+            make AdditiveOperator::Minus.new
+        }
 
-    # rule additive-expression { <multiplicative-expression> <additive-expression-tail>* }
-    method additive-expression($/) {
-        my $base = $<multiplicative-expression>.made;
-        my @tail = $<additive-expression-tail>>>.made.List;
-
-        if @tail.elems gt 0 {
-            make AdditiveExpression.new(
-                multiplicative-expression => $base,
-                additive-expression-tail  => @tail,
-                text => ~$/,
+        # rule additive-expression-tail { <additive-operator> <multiplicative-expression> }
+        method additive-expression-tail($/) {
+            make AdditiveExpressionTail.new(
+                additive-operator         => $<additive-operator>.made,
+                multiplicative-expression => $<multiplicative-expression>.made,
+                text                      => ~$/,
             )
+        }
 
-        } else {
-            make $base
+        # rule additive-expression { <multiplicative-expression> <additive-expression-tail>* }
+        method additive-expression($/) {
+            my $base = $<multiplicative-expression>.made;
+            my @tail = $<additive-expression-tail>>>.made.List;
+
+            if @tail.elems gt 0 {
+                make AdditiveExpression.new(
+                    multiplicative-expression => $base,
+                    additive-expression-tail  => @tail,
+                    text => ~$/,
+                )
+
+            } else {
+                make $base
+            }
         }
     }
-}
 
-our role AdditiveExpression::Rules {
+    our role Rules {
 
-    proto token additive-operator { * }
-    token additive-operator:sym<plus>  {  <plus> }
-    token additive-operator:sym<minus> {  <minus> }
+        proto token additive-operator { * }
+        token additive-operator:sym<plus>  {  <plus> }
+        token additive-operator:sym<minus> {  <minus> }
 
-    #-----------------
-    rule additive-expression-tail {
-        <additive-operator> 
-        <multiplicative-expression>
-    }
+        #-----------------
+        rule additive-expression-tail {
+            <additive-operator> 
+            <multiplicative-expression>
+        }
 
-    rule additive-expression {
-        <multiplicative-expression>
-        <additive-expression-tail>*
+        rule additive-expression {
+            <multiplicative-expression>
+            <additive-expression-tail>*
+        }
     }
 }

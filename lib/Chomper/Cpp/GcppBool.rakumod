@@ -4,7 +4,7 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-our class BooleanLiteral::F does IBooleanLiteral { 
+class BooleanLiteral::F does IBooleanLiteral is export { 
 
     has $.text;
 
@@ -13,7 +13,7 @@ our class BooleanLiteral::F does IBooleanLiteral {
     }
 }
 
-our class BooleanLiteral::T does IBooleanLiteral { 
+class BooleanLiteral::T does IBooleanLiteral is export { 
 
     has $.text;
 
@@ -22,22 +22,25 @@ our class BooleanLiteral::T does IBooleanLiteral {
     }
 }
 
-our role BooleanLiteral::Actions {
+package BooleanLiteralGrammar is export {
 
-    # token boolean-literal:sym<f> { <false_> }
-    method boolean-literal:sym<f>($/) {
-        make BooleanLiteral::F.new
+    our role Actions {
+
+        # token boolean-literal:sym<f> { <false_> }
+        method boolean-literal:sym<f>($/) {
+            make BooleanLiteral::F.new
+        }
+
+        # token boolean-literal:sym<t> { <true_> }
+        method boolean-literal:sym<t>($/) {
+            make BooleanLiteral::T.new
+        }
     }
 
-    # token boolean-literal:sym<t> { <true_> }
-    method boolean-literal:sym<t>($/) {
-        make BooleanLiteral::T.new
+    our role Rules {
+
+        proto token boolean-literal { * }
+        token boolean-literal:sym<f> { <false_> }
+        token boolean-literal:sym<t> { <true_> }
     }
-}
-
-our role BooleanLiteral::Rules {
-
-    proto token boolean-literal { * }
-    token boolean-literal:sym<f> { <false_> }
-    token boolean-literal:sym<t> { <true_> }
 }

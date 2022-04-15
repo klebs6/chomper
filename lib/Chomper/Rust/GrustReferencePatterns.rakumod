@@ -2,7 +2,7 @@ unit module Chomper::Rust::GrustReferencePatterns;
 
 use Data::Dump::Tree;
 
-our class ReferencePatternRef {
+class ReferencePatternRef is export {
     has Bool $.mutable;
     has $.pattern-without-range;
 
@@ -17,7 +17,7 @@ our class ReferencePatternRef {
     }
 }
 
-our class ReferencePatternRefRef {
+class ReferencePatternRefRef is export {
     has Bool $.mutable;
     has $.pattern-without-range;
 
@@ -32,38 +32,41 @@ our class ReferencePatternRefRef {
     }
 }
 
-our role ReferencePattern::Rules {
+package ReferencePatternGrammar is export {
 
-    proto rule reference-pattern { * }
+    our role Rules {
 
-    rule reference-pattern:sym<ref> {
-        <tok-and>
-        <kw-mut>?
-        <pattern-without-range>
+        proto rule reference-pattern { * }
+
+        rule reference-pattern:sym<ref> {
+            <tok-and>
+            <kw-mut>?
+            <pattern-without-range>
+        }
+
+        rule reference-pattern:sym<refref> {
+            <tok-andand>
+            <kw-mut>?
+            <pattern-without-range>
+        }
     }
 
-    rule reference-pattern:sym<refref> {
-        <tok-andand>
-        <kw-mut>?
-        <pattern-without-range>
-    }
-}
+    our role Actions {
 
-our role ReferencePattern::Actions {
+        method reference-pattern:sym<ref>($/)    { 
+            make ReferencePatternRef.new(
+                mutable               => so $/<kw-mut>:exists,
+                pattern-without-range => $<pattern-without-range>.made,
+                text                  => $/.Str,
+            )
+        }
 
-    method reference-pattern:sym<ref>($/)    { 
-        make ReferencePatternRef.new(
-            mutable               => so $/<kw-mut>:exists,
-            pattern-without-range => $<pattern-without-range>.made,
-            text                  => $/.Str,
-        )
-    }
-
-    method reference-pattern:sym<refref>($/) { 
-        make ReferencePatternRefRef.new(
-            mutable               => so $/<kw-mut>:exists,
-            pattern-without-range => $<pattern-without-range>.made,
-            text                  => $/.Str,
-        )
+        method reference-pattern:sym<refref>($/) { 
+            make ReferencePatternRefRef.new(
+                mutable               => so $/<kw-mut>:exists,
+                pattern-without-range => $<pattern-without-range>.made,
+                text                  => $/.Str,
+            )
+        }
     }
 }

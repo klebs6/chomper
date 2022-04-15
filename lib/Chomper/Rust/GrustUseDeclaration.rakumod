@@ -2,7 +2,7 @@ unit module Chomper::Rust::GrustUseDeclaration;
 
 use Data::Dump::Tree;
 
-our class UseDeclaration {
+class UseDeclaration is export {
     has $.use-tree;
 
     has $.text;
@@ -22,7 +22,7 @@ our class UseDeclaration {
     }
 }
 
-our class UseTreeBasic {
+class UseTreeBasic is export {
     has $.maybe-simple-path;
 
     has $.text;
@@ -44,7 +44,7 @@ our class UseTreeBasic {
     }
 }
 
-our class UseTreeComplex {
+class UseTreeComplex is export {
     has $.maybe-simple-path;
     has @.use-trees;
 
@@ -72,7 +72,7 @@ our class UseTreeComplex {
     }
 }
 
-our class UseTreeAs {
+class UseTreeAs is export {
     has $.simple-path;
     has $.as-identifier-or-underscore;
 
@@ -94,71 +94,74 @@ our class UseTreeAs {
     }
 }
 
-our role UseDeclaration::Rules {
+package UseDeclarationGrammar is export {
 
-    rule use-declaration {
-        <kw-use> 
-        <use-tree> 
-        <tok-semi>
+    our role Rules {
+
+        rule use-declaration {
+            <kw-use> 
+            <use-tree> 
+            <tok-semi>
+        }
+
+        proto rule use-tree { * }
+
+        rule use-tree:sym<basic> {
+            [
+                <simple-path>? 
+                <tok-path-sep>
+            ]? 
+            <tok-star>
+        }
+
+        rule use-tree:sym<complex> {
+           [ <simple-path>? <tok-path-sep> ]? 
+           <tok-lbrace>
+           [
+               <use-tree>+ %% <tok-comma>
+           ]? 
+           <tok-rbrace>
+        }
+
+        rule use-tree:sym<as> {
+            <simple-path>
+           [ 
+               <kw-as> 
+               <identifier-or-underscore>
+           ]?
+        }
     }
 
-    proto rule use-tree { * }
+    our role Actions {
 
-    rule use-tree:sym<basic> {
-        [
-            <simple-path>? 
-            <tok-path-sep>
-        ]? 
-        <tok-star>
-    }
+        method use-declaration($/) {
+            make UseDeclaration.new(
+                use-tree => $<use-tree>.made,
+                text     => $/.Str,
+            )
+        }
 
-    rule use-tree:sym<complex> {
-       [ <simple-path>? <tok-path-sep> ]? 
-       <tok-lbrace>
-       [
-           <use-tree>+ %% <tok-comma>
-       ]? 
-       <tok-rbrace>
-    }
+        method use-tree:sym<basic>($/) {
+            make UseTreeBasic.new(
+                maybe-simple-path => $<simple-path>.made,
+                text              => $/.Str,
+            )
+        }
 
-    rule use-tree:sym<as> {
-        <simple-path>
-       [ 
-           <kw-as> 
-           <identifier-or-underscore>
-       ]?
-    }
-}
+        method use-tree:sym<complex>($/) {
+            make UseTreeComplex.new(
+                maybe-simple-path => $<simple-path>.made,
+                use-trees         => $<use-tree>>>.made,
+                text              => $/.Str,
+            )
+        }
 
-our role UseDeclaration::Actions {
-
-    method use-declaration($/) {
-        make UseDeclaration.new(
-            use-tree => $<use-tree>.made,
-            text     => $/.Str,
-        )
-    }
-
-    method use-tree:sym<basic>($/) {
-        make UseTreeBasic.new(
-            maybe-simple-path => $<simple-path>.made,
-            text              => $/.Str,
-        )
-    }
-
-    method use-tree:sym<complex>($/) {
-        make UseTreeComplex.new(
-            maybe-simple-path => $<simple-path>.made,
-            use-trees         => $<use-tree>>>.made,
-            text              => $/.Str,
-        )
-    }
-
-    method use-tree:sym<as>($/) {
-        make UseTreeAs.new(
-            simple-path                 => $<simple-path>.made,
-            as-identifier-or-underscore => $<identifier-or-underscore>.made,
-            text                        => $/.Str,
-        )
+        method use-tree:sym<as>($/) {
+            make UseTreeAs.new(
+                simple-path                 => $<simple-path>.made,
+                as-identifier-or-underscore => $<identifier-or-underscore>.made,
+                text                        => $/.Str,
+            )
+        }
     }
 }

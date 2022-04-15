@@ -2,7 +2,7 @@ unit module Chomper::Rust::GrustWhereClause;
 
 use Data::Dump::Tree;
 
-our class WhereClause {
+class WhereClause is export {
     has @.where-clause-items;
 
     has $.text;
@@ -19,7 +19,7 @@ our class WhereClause {
     }
 }
 
-our class WhereClauseItemLifetime {
+class WhereClauseItemLifetime is export {
     has $.lifetime;
     has $.lifetime-bounds;
 
@@ -30,7 +30,7 @@ our class WhereClauseItemLifetime {
     }
 }
 
-our class WhereClauseItemTypeBound {
+class WhereClauseItemTypeBound is export {
     has $.maybe-for-lifetimes;
     has $.type;
     has $.maybe-type-param-bounds;
@@ -54,52 +54,56 @@ our class WhereClauseItemTypeBound {
         $builder
     }
 }
-our role WhereClause::Rules {
 
-    rule where-clause {
-        <kw-where>
-        [<where-clause-item>* %% <tok-comma>]
+package WhereClauseGrammar is export {
+
+    our role Rules {
+
+        rule where-clause {
+            <kw-where>
+            [<where-clause-item>* %% <tok-comma>]
+        }
+
+        proto rule where-clause-item { * }
+
+        rule where-clause-item:sym<lt> {
+            <lifetime> 
+            <tok-colon> 
+            <lifetime-bounds>
+        }
+
+        rule where-clause-item:sym<type-bound> {
+            <for-lifetimes>? 
+            <type> 
+            <tok-colon> 
+            <type-param-bounds>?
+        }
     }
 
-    proto rule where-clause-item { * }
+    our role Actions {
 
-    rule where-clause-item:sym<lt> {
-        <lifetime> 
-        <tok-colon> 
-        <lifetime-bounds>
-    }
+        method where-clause($/) {
+            make WhereClause.new(
+                where-clause-items => $<where-clause-item>>>.made,
+                text               => $/.Str,
+            )
+        }
 
-    rule where-clause-item:sym<type-bound> {
-        <for-lifetimes>? 
-        <type> 
-        <tok-colon> 
-        <type-param-bounds>?
-    }
-}
+        method where-clause-item:sym<lt>($/) {
+            make WhereClauseItemLifetime.new(
+                lifetime        => $<lifetime>.made,
+                lifetime-bounds => $<lifetime-bounds>.made,
+                text            => $/.Str,
+            )
+        }
 
-our role WhereClause::Actions {
-
-    method where-clause($/) {
-        make WhereClause.new(
-            where-clause-items => $<where-clause-item>>>.made,
-            text               => $/.Str,
-        )
-    }
-
-    method where-clause-item:sym<lt>($/) {
-        make WhereClauseItemLifetime.new(
-            lifetime        => $<lifetime>.made,
-            lifetime-bounds => $<lifetime-bounds>.made,
-            text            => $/.Str,
-        )
-    }
-
-    method where-clause-item:sym<type-bound>($/) {
-        make WhereClauseItemTypeBound.new(
-            maybe-for-lifetimes     => $<for-lifetimes>.made,
-            type                    => $<type>.made,
-            maybe-type-param-bounds => $<type-param-bounds>.made,
-            text                    => $/.Str,
-        )
+        method where-clause-item:sym<type-bound>($/) {
+            make WhereClauseItemTypeBound.new(
+                maybe-for-lifetimes     => $<for-lifetimes>.made,
+                type                    => $<type>.made,
+                maybe-type-param-bounds => $<type-param-bounds>.made,
+                text                    => $/.Str,
+            )
+        }
     }
 }
