@@ -1,5 +1,5 @@
-use python3-stmt;
-use python3-prelude;
+use Chomper::Py3::Python3Stmt;
+use Chomper::Py3::Python3Prelude;
 
 our role Python3::Suite { }
 

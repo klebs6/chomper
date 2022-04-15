@@ -1,10 +1,12 @@
+unit module Chomper::Cpp::GcppCondition;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-attr;
-use gcpp-expression;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppAttr;
+use Chomper::Cpp::GcppExpression;
 
-use tree-mark;
+use Chomper::TreeMark;
 
 # rule condition:sym<expr> { 
 #   <expression> 

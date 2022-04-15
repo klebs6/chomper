@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustStructPatterns;
+
 use Data::Dump::Tree;
 
 our class StructPattern {

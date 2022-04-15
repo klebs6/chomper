@@ -1,0 +1,4 @@
+#!/usr/bin/env raku
+use Chomper::Rust;
+say Rust::ArrayExpression.^name;
+#say PROCESS::.keys;

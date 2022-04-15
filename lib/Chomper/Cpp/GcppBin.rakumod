@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppBin;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 our class BinaryLiteral { 
     has Str $.value is required; 

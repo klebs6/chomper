@@ -1,7 +1,9 @@
+unit module Chomper::Cpp::GcppAsm;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-str;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppStr;
 
 # rule asm-definition { 
 #   <asm> 

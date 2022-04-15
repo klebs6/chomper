@@ -1,8 +1,8 @@
 #!/usr/bin/env raku
 use MONKEY-SEE-NO-EVAL;
 
-use generate-cpp-model;
-use cpp-model;
+use Chomper::Cpp::GenerateCppModel;
+use Chomper::Cpp::CppModel;
 
 my $marker = Nil;
 

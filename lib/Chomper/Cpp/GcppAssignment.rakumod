@@ -1,7 +1,9 @@
+unit module Chomper::Cpp::GcppAssignment;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-exception;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppException;
 
 # rule assignment-expression:sym<throw> { <throw-expression> }
 our class AssignmentExpression::Throw 

@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppDec;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 our class DecimalLiteral { 
     has Str $.value is required; 

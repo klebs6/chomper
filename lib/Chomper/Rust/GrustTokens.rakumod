@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustTokens;
+
 use Data::Dump::Tree;
 
 our class RustToken {

@@ -1,8 +1,10 @@
+unit module Chomper::Cpp::GcppEscape;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-hex;
-use gcpp-oct;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppHex;
+use Chomper::Cpp::GcppOct;
 
 our class Escapesequence::Simple does IEscapesequence {
     has ISimpleescapesequence $.simpleescapesequence is required;

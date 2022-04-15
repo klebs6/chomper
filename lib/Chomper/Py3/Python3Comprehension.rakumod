@@ -1,5 +1,5 @@
-use python3-prelude;
-use python3-expr;
+use Chomper::Py3::Python3Prelude;
+use Chomper::Py3::Python3Expr;
 
 our role Python3::CompIter        
 { }

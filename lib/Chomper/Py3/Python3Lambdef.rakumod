@@ -1,5 +1,5 @@
-use python3-prelude;
-use python3-varargs;
+use Chomper::Py3::Python3Prelude;
+use Chomper::Py3::Python3Varargs;
 
 our class Python3::Lambdef does Python3::ITest  {
     has Python3::ITest       $.test       is required;

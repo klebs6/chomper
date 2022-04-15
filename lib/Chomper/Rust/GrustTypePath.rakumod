@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustTypePath;
+
 use Data::Dump::Tree;
 
 our class TypePath {

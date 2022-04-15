@@ -1,7 +1,7 @@
-use python3-func;
-use python3-suite;
-use python3-comment;
-use wrap-body-todo;
+use Chomper::Py3::Python3Func;
+use Chomper::Py3::Python3Suite;
+use Chomper::Py3::Python3Comment;
+use Chomper::WrapBodyTodo;
 
 #same members as FuncDef
 our role Python3::IDunderFunc 

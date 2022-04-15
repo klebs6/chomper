@@ -1,5 +1,5 @@
 #!/usr/bin/env raku
-use feedback;
+use Chomper::Core::Feedback;
 
 sub MAIN(:$file, :$start, :$end) {
     pop-first-from-todo(:$file, :$start, :$end);

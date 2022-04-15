@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustPunctuation;
+
 use Data::Dump::Tree;
 
 our role Punctuation::Rules {

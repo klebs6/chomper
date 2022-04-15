@@ -1,8 +1,8 @@
 #!/usr/bin/env raku
-use cpp-actions;
-use gcpp;
-use translate-ir;
-use translate-io;
+use Chomper::Cpp::CppActions;
+use Chomper::Cpp::Gcpp;
+use Chomper::Translate::TranslateIr;
+use Chomper::Translate::TranslateIo;
 use Data::Dump::Tree;
 
 grammar G does Cpp::Parser {}

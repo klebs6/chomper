@@ -1,99 +1,103 @@
-enum BlockCommentState <
-blockcomment
-initial
->;
+unit module Chomper::Rust::GrustBlockComment;
 
-my BlockCommentState @block-comment-states;
+package BlockCommentGrammar is export {
 
-our role BlockComment::Rules {
+    my enum BlockCommentState <
+    blockcomment
+    initial
+    >;
 
-    method push-state($state) {
-        @block-comment-states.push: $state;
-    }
+    my BlockCommentState @block-comment-states;
 
-    method pop-state {
-        try @block-comment-states.pop
-    }
+    our role Rules {
 
-    method peek-state {
-        @block-comment-states[*-1]
-    }
+        method push-state($state) {
+            @block-comment-states.push: $state;
+        }
 
-    token block-comment-begin {
+        method pop-state {
+            try @block-comment-states.pop
+        }
 
-        \/\* 
+        method peek-state {
+            @block-comment-states[*-1]
+        }
 
-        #this is a hack because i havn't debugged
-        #"doc-comment" yet and we get these on
-        #structs
-        \*? 
+        token block-comment-begin {
 
-        { 
-            self.push-state(BlockCommentState::<initial>);
-            self.push-state(BlockCommentState::<blockcomment>);
+            \/\* 
+
+            #this is a hack because i havn't debugged
+            #"doc-comment" yet and we get these on
+            #structs
+            \*? 
+
+            { 
+                self.push-state(BlockCommentState::<initial>);
+                self.push-state(BlockCommentState::<blockcomment>);
+            }
+        }
+
+        token block-comment-continue {
+            || <block-comment-push>
+            || <block-comment-pop>
+            || <block-comment-inner>
+        }
+
+        token block-comment-push {
+            <?{self.peek-state().Str eq "blockcomment" }>
+            \/\* 
+
+            #see above
+            \*?
+
+            { 
+                self.push-state(BlockCommentState::<blockcomment>) 
+            }
+        }
+
+        token block-comment-pop {
+            <?{self.peek-state().Str eq "blockcomment" }>
+            \*\/
+            { 
+                self.pop-state();
+            }
+        }
+
+        token block-comment-inner {
+            <?{self.peek-state().Str eq "blockcomment" }>
+            [
+                || .
+                || \n
+            ]
+        }
+
+        token block-comment-end {
+            <?{self.peek-state().Str eq "initial" }>
+            {
+                self.pop-state();
+            }
+        }
+
+        token block-comment {
+            <block-comment-begin> 
+            <block-comment-continue>* 
+            <block-comment-end>
         }
     }
 
-    token block-comment-continue {
-        || <block-comment-push>
-        || <block-comment-pop>
-        || <block-comment-inner>
-    }
+    our role Actions {
 
-    token block-comment-push {
-        <?{self.peek-state().Str eq "blockcomment" }>
-        \/\* 
-
-        #see above
-        \*?
-
-        { 
-            self.push-state(BlockCommentState::<blockcomment>) 
+        method block-comment($/) {
+            make $<block-comment-continue>>>.made.join("")
         }
-    }
 
-    token block-comment-pop {
-        <?{self.peek-state().Str eq "blockcomment" }>
-        \*\/
-        { 
-            self.pop-state();
+        method block-comment-continue($/) {
+            if ~$/.keys[0] eq "block-comment-inner" {
+                make ~$/
+            } else {
+                make ""
+            }
         }
-    }
-
-    token block-comment-inner {
-        <?{self.peek-state().Str eq "blockcomment" }>
-        [
-            || .
-            || \n
-        ]
-    }
-
-    token block-comment-end {
-        <?{self.peek-state().Str eq "initial" }>
-        {
-            self.pop-state();
-        }
-    }
-
-    token block-comment {
-        <block-comment-begin> 
-        <block-comment-continue>* 
-        <block-comment-end>
     }
 }
-
-our role BlockComment::Actions {
-
-    method block-comment($/) {
-        make $<block-comment-continue>>>.made.join("")
-    }
-
-    method block-comment-continue($/) {
-        if ~$/.keys[0] eq "block-comment-inner" {
-            make ~$/
-        } else {
-            make ""
-        }
-    }
-}
-

@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustUnions;
+
 use Data::Dump::Tree;
 
 our class Union {

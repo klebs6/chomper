@@ -1,6 +1,8 @@
+unit module Chomper::Rust::GrustCfgAttr;
+
 use Data::Dump::Tree;
 
-our class CfgAttribute {
+class CfgAttribute is export {
     has $.configuration-predicate;
 
     has $.text;
@@ -10,7 +12,7 @@ our class CfgAttribute {
     }
 }
 
-our class CfgAttrAttribute {
+class CfgAttrAttribute is export {
     has $.configuration-predicate;
     has $.maybe-cfg-attrs;
 
@@ -31,7 +33,7 @@ our class CfgAttrAttribute {
     }
 }
 
-our class CfgAttrs {
+class CfgAttrs is export {
     has @.attrs;
 
     has $.text;
@@ -41,7 +43,7 @@ our class CfgAttrs {
     }
 }
 
-our class InnerAttribute {
+class InnerAttribute is export {
     has $.attr;
 
     has $.text;
@@ -51,7 +53,7 @@ our class InnerAttribute {
     }
 }
 
-our class OuterAttribute {
+class OuterAttribute is export {
     has $.attr;
     has $.maybe-comment;
 
@@ -68,7 +70,7 @@ our class OuterAttribute {
     }
 }
 
-our class Attr {
+class Attr is export {
     has $.simple-path;
     has $.maybe-attr-input;
 
@@ -83,7 +85,7 @@ our class Attr {
     }
 }
 
-our class AttrInputEqExpr {
+class AttrInputEqExpr is export {
     has $.expression;
 
     has $.text;
@@ -93,124 +95,127 @@ our class AttrInputEqExpr {
     }
 }
 
-our role CfgAttr::Rules {
+package CfgAttrGrammar is export {
 
-    token kw-cfg      { cfg }
-    token kw-cfg-attr { cfg_attr }
+    our role Rules {
 
-    proto rule cfg-attr-attribute { * }
+        token kw-cfg      { cfg }
+        token kw-cfg-attr { cfg_attr }
 
-    rule cfg-attr-attribute:sym<cfg> {
-        <kw-cfg> 
-        <tok-lparen> 
-        <configuration-predicate>
-        <tok-rparen> 
+        proto rule cfg-attr-attribute { * }
+
+        rule cfg-attr-attribute:sym<cfg> {
+            <kw-cfg> 
+            <tok-lparen> 
+            <configuration-predicate>
+            <tok-rparen> 
+        }
+
+        rule cfg-attr-attribute:sym<cfg-attr> {
+            <kw-cfg-attr> 
+            <tok-lparen> 
+            <configuration-predicate>
+            <tok-comma>
+            <cfg-attrs>?
+            <tok-rparen> 
+        }
+
+        rule cfg-attrs {
+            <attr>+ %% <tok-comma>
+        }
+
+        token tok-shebang {
+            <tok-pound>
+            <tok-bang>
+        }
+
+        rule inner-attribute {
+            <tok-shebang>
+            <tok-lbrack>
+            <attr>
+            <tok-rbrack>
+        }
+
+        rule outer-attribute {
+            <tok-pound>
+            <tok-lbrack>
+            <attr>
+            <tok-rbrack>
+            <line-comment>?
+        }
+
+        rule attr {
+            <simple-path>
+            <attr-input>?
+        }
+
+        #-------------------
+        proto rule attr-input { * }
+
+        rule attr-input:sym<token-tree> {
+            <delim-token-tree>
+        }
+
+        rule attr-input:sym<eq-expr> {
+            <tok-eq>
+            <expression>
+        }
     }
 
-    rule cfg-attr-attribute:sym<cfg-attr> {
-        <kw-cfg-attr> 
-        <tok-lparen> 
-        <configuration-predicate>
-        <tok-comma>
-        <cfg-attrs>?
-        <tok-rparen> 
-    }
+    our role Actions {
 
-    rule cfg-attrs {
-        <attr>+ %% <tok-comma>
-    }
+        method cfg-attr-attribute:sym<cfg>($/) {
+            make CfgAttribute.new(
+                configuration-predicate => $<configuration-predicate>.made,
+                text                    => $/.Str,
+            )
+        }
 
-    token tok-shebang {
-        <tok-pound>
-        <tok-bang>
-    }
+        method cfg-attr-attribute:sym<cfg-attr>($/) {
+            make CfgAttrAttribute.new(
+                configuration-predicate => $<configuration-predicate>.made,
+                maybe-cfg-attrs         => $<cfg-attrs>.made,
+                text                    => $/.Str,
+            )
+        }
 
-    rule inner-attribute {
-        <tok-shebang>
-        <tok-lbrack>
-        <attr>
-        <tok-rbrack>
-    }
+        method cfg-attrs($/) {
+            make $<attr>>>.made
+        }
 
-    rule outer-attribute {
-        <tok-pound>
-        <tok-lbrack>
-        <attr>
-        <tok-rbrack>
-        <line-comment>?
-    }
+        method inner-attribute($/) {
+            make InnerAttribute.new(
+                attr => $<attr>.made,
+                text => $/.Str,
+            )
+        }
 
-    rule attr {
-        <simple-path>
-        <attr-input>?
-    }
+        method outer-attribute($/) {
+            make OuterAttribute.new(
+                attr          => $<attr>.made,
+                maybe-comment => $<line-comment>.made,
+                text          => $/.Str,
+            )
+        }
 
-    #-------------------
-    proto rule attr-input { * }
+        method attr($/) {
+            make Attr.new(
+                simple-path       => $<simple-path>.made,
+                maybe-attr-input  => $<attr-input>.made,
+                text              => $/.Str,
+            )
+        }
 
-    rule attr-input:sym<token-tree> {
-        <delim-token-tree>
-    }
+        #-------------------
+        method attr-input:sym<token-tree>($/) {
+            make $<delim-token-tree>.made
+        }
 
-    rule attr-input:sym<eq-expr> {
-        <tok-eq>
-        <expression>
-    }
-}
-
-our role CfgAttr::Actions {
-
-    method cfg-attr-attribute:sym<cfg>($/) {
-        make CfgAttribute.new(
-            configuration-predicate => $<configuration-predicate>.made,
-            text                    => $/.Str,
-        )
-    }
-
-    method cfg-attr-attribute:sym<cfg-attr>($/) {
-        make CfgAttrAttribute.new(
-            configuration-predicate => $<configuration-predicate>.made,
-            maybe-cfg-attrs         => $<cfg-attrs>.made,
-            text                    => $/.Str,
-        )
-    }
-
-    method cfg-attrs($/) {
-        make $<attr>>>.made
-    }
-
-    method inner-attribute($/) {
-        make InnerAttribute.new(
-            attr => $<attr>.made,
-            text => $/.Str,
-        )
-    }
-
-    method outer-attribute($/) {
-        make OuterAttribute.new(
-            attr          => $<attr>.made,
-            maybe-comment => $<line-comment>.made,
-            text          => $/.Str,
-        )
-    }
-
-    method attr($/) {
-        make Attr.new(
-            simple-path       => $<simple-path>.made,
-            maybe-attr-input  => $<attr-input>.made,
-            text              => $/.Str,
-        )
-    }
-
-    #-------------------
-    method attr-input:sym<token-tree>($/) {
-        make $<delim-token-tree>.made
-    }
-
-    method attr-input:sym<eq-expr>($/) {
-        make AttrInputEqExpr.new(
-            expression => $<expression>.made,
-            text       => $/.Str,
-        )
+        method attr-input:sym<eq-expr>($/) {
+            make AttrInputEqExpr.new(
+                expression => $<expression>.made,
+                text       => $/.Str,
+            )
+        }
     }
 }

@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustTraits;
+
 use Data::Dump::Tree;
 
 our class Trait {

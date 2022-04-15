@@ -1,7 +1,9 @@
-use gcpp-roles;
-use gcpp-param;
-use gcpp-function;
-use gcpp-attr;
+unit module Chomper::Cpp::GcppAbstractDeclarator;
+
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppParam;
+use Chomper::Cpp::GcppFunction;
+use Chomper::Cpp::GcppAttr;
 
 use Data::Dump::Tree;
 

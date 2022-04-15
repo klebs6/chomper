@@ -1,7 +1,9 @@
+unit module Chomper::Cpp::GcppChar;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-hex;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppHex;
 
 our class Universalcharactername {
     has Hexquad $.first is required;

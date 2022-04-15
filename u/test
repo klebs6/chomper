@@ -1,7 +1,7 @@
 #!/usr/bin/env raku
 
-use rust-grammar;
-use grust-keyword;
+use Chomper::Rust::RustGrammar;
+use Chomper::Rust::GrustKeyword;
 use Data::Dump::Tree;
 
 use Grammar::Tracer;

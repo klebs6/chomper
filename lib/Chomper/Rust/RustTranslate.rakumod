@@ -1,4 +1,4 @@
-use grust-from-antlr;
+use Chomper::Rust;
 
 our sub rust-translate($in) {
 

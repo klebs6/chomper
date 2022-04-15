@@ -1,5 +1,5 @@
-use python3-prelude;
-use python3-args;
+use Chomper::Py3::Python3Prelude;
+use Chomper::Py3::Python3Args;
 
 our class Python3::Decorator {
     has Python3::DottedName $.name is required;

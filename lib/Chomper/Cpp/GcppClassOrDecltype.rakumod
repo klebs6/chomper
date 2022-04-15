@@ -1,7 +1,9 @@
+unit module Chomper::Cpp::GcppClassOrDecltype;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-decltype;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppDecltype;
 
 # rule class-or-decl-type:sym<class> { 
 #   <nested-name-specifier>? 

@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppComment;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # token block-comment { '/*' .*?  '*/' }
 our class BlockComment does IComment {

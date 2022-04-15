@@ -1,6 +1,6 @@
-use python3-stmt;
-use python3-suite;
-use python3-args;
+use Chomper::Py3::Python3Stmt;
+use Chomper::Py3::Python3Suite;
+use Chomper::Py3::Python3Args;
 
 our role Python3::ICompoundStmt
 does Python3::IStmt { }

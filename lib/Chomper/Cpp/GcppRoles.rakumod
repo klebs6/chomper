@@ -1,3 +1,5 @@
+unit module Chomper::Cpp::GcppRoles;
+
 our role ILiteral             { ... }
 our role INestedNameSpecifier { ... }
 our role IReturnStatementBody { ... }

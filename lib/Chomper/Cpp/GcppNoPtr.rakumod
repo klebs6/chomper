@@ -1,10 +1,12 @@
+unit module Chomper::Cpp::GcppNoPtr;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-attr;
-use gcpp-declarator;
-use gcpp-param;
-use gcpp-ptr-declarator;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppAttr;
+use Chomper::Cpp::GcppDeclarator;
+use Chomper::Cpp::GcppParam;
+use Chomper::Cpp::GcppPtrDeclarator;
 
 # rule no-pointer-declarator-base:sym<base> { 
 #   <declaratorid> 

@@ -1,11 +1,11 @@
-use wrap-body-todo;
-use remove-double-newlines;
-use indent-rust-named-type-list;
-use snake-case;
-use python3-suite;
-use python3-prelude;
-use python3-lambdef;
-use python3-expr;
+use Chomper::WrapBodyTodo;
+use Chomper::RemoveDoubleNewlines;
+use Chomper::Rust::IndentRustNamedTypeList;
+use Chomper::SnakeCase;
+use Chomper::Py3::Python3Suite;
+use Chomper::Py3::Python3Prelude;
+use Chomper::Py3::Python3Lambdef;
+use Chomper::Py3::Python3Expr;
 
 our sub format-type-list(@list) {
     if @list.elems gt 0 {

@@ -1,10 +1,12 @@
+unit module Chomper::Cpp::GcppDeclarator;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-param;
-use gcpp-function;
-use gcpp-expression;
-use gcpp-ptr-declarator;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppParam;
+use Chomper::Cpp::GcppFunction;
+use Chomper::Cpp::GcppExpression;
+use Chomper::Cpp::GcppPtrDeclarator;
 
 # rule init-declarator { 
 #   <declarator> 

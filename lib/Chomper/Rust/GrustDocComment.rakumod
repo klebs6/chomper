@@ -1,85 +1,90 @@
-our role DocComment::Rules {
+unit module Chomper::Rust::GrustDocComment;
 
-    proto token outer-doc-comment { * }
+package DocCommentGrammar is export {
 
-    token OUTER-DOC-COMMENT:sym<a> {
-        '///' '/'* <non-slash-or-ws> <-[ \n ]>*
+    our role Rules {
+
+        proto token outer-doc-comment { * }
+
+        token OUTER-DOC-COMMENT:sym<a> {
+            '///' '/'* <non-slash-or-ws> <-[ \n ]>*
+        }
+
+        token OUTER-DOC-COMMENT:sym<b> {
+            '///' '/'* <[   \r \t ]> <-[   \r \t ]> <-[ \n ]>*
+        }
+
+        token OUTER-DOC-COMMENT:sym<c> {
+            '///' <[   \t ]>*
+        }
+
+        token OUTER-DOC-COMMENT:sym<d> {
+            '/**'
+            (    ||    <-[ * ]>
+                 ||    ( '*'+ <-[ * / ]>)
+            )
+            <-[ * ]>
+            (   ||    <-[ * ]>
+                ||    ( '*'+ <-[ * / ]>)
+            )
+            '*'+
+            '/'
+        }
+
+        token inner-doc-comment { || '//!' <-[ \n ]>*
+            || 
+            '/*!' 
+            [ 
+                <-[ * ]> 
+                [ '*'+ <-[ * / ]> ] 
+            ]* 
+            '*'+ 
+            \/
+        }
+
+        token other-line-comment { 
+            '//' <-[ \n ]>*
+        }
+
+        token other-block-comment { 
+            '/*'
+            [    
+                || <-[ * ]>
+                || [ '*'+ <-[ * / ]> ]
+            ]
+            '*'+
+            '/'
+        }
     }
 
-    token OUTER-DOC-COMMENT:sym<b> {
-        '///' '/'* <[   \r \t ]> <-[   \r \t ]> <-[ \n ]>*
-    }
+    our role Actions {
 
-    token OUTER-DOC-COMMENT:sym<c> {
-        '///' <[   \t ]>*
-    }
+        method OUTER-DOC-COMMENT:sym<a>($/) {
+            make $/.Str
+        }
 
-    token OUTER-DOC-COMMENT:sym<d> {
-        '/**'
-        (    ||    <-[ * ]>
-             ||    ( '*'+ <-[ * / ]>)
-        )
-        <-[ * ]>
-        (   ||    <-[ * ]>
-            ||    ( '*'+ <-[ * / ]>)
-        )
-        '*'+
-        '/'
-    }
+        method OUTER-DOC-COMMENT:sym<b> {
+            make $/.Str
+        }
 
-    token inner-doc-comment { || '//!' <-[ \n ]>*
-        || 
-        '/*!' 
-        [ 
-            <-[ * ]> 
-            [ '*'+ <-[ * / ]> ] 
-        ]* 
-        '*'+ 
-        \/
-    }
+        method OUTER-DOC-COMMENT:sym<c>($/) {
+            make $/.Str
+        }
 
-    token other-line-comment { 
-        '//' <-[ \n ]>*
-    }
+        method OUTER-DOC-COMMENT:sym<d>($/) {
+            make $/.Str
+        }
 
-    token other-block-comment { 
-        '/*'
-        [    
-            || <-[ * ]>
-            || [ '*'+ <-[ * / ]> ]
-        ]
-        '*'+
-        '/'
-    }
-}
+        method inner-doc-comment($/) { 
+            make $/.Str
+        }
 
-our role DocComment::Actions {
+        method other-line-comment($/) { 
+            make $/.Str
+        }
 
-    method OUTER-DOC-COMMENT:sym<a>($/) {
-        make $/.Str
-    }
-
-    method OUTER-DOC-COMMENT:sym<b> {
-        make $/.Str
-    }
-
-    method OUTER-DOC-COMMENT:sym<c>($/) {
-        make $/.Str
-    }
-
-    method OUTER-DOC-COMMENT:sym<d>($/) {
-        make $/.Str
-    }
-
-    method inner-doc-comment($/) { 
-        make $/.Str
-    }
-
-    method other-line-comment($/) { 
-        make $/.Str
-    }
-
-    method other-block-comment($/) { 
-        make $/.Str
+        method other-block-comment($/) { 
+            make $/.Str
+        }
     }
 }

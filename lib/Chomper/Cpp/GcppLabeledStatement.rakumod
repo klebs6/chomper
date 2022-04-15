@@ -1,8 +1,10 @@
+unit module Chomper::Cpp::GcppLabeledStatement;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-ident;
-use gcpp-attr;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppIdent;
+use Chomper::Cpp::GcppAttr;
 
 # rule labeled-statement-label-body:sym<id> { 
 #   <identifier> 

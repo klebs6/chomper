@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustUseDeclaration;
+
 use Data::Dump::Tree;
 
 our class UseDeclaration {

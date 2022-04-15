@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppVirtual;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # rule virtual-specifier-seq { 
 #   <virtual-specifier>+ 

@@ -1,7 +1,9 @@
+unit module Chomper::Cpp::GcppPrimaryExpression;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-lambda;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppLambda;
 
 # token primary-expression:sym<literal> { <literal>+ }
 our class PrimaryExpression::Literal does IPrimaryExpression {

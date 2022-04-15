@@ -1,6 +1,8 @@
+unit module Chomper::Rust::GrustAssocItems;
+
 use Data::Dump::Tree;
 
-our class AssociatedItem {
+class AssociatedItem is export {
     has $.maybe-comment;
     has @.outer-attributes;
     has $.variant;
@@ -23,7 +25,7 @@ our class AssociatedItem {
     }
 }
 
-our class AssociatedItemMacro {
+class AssociatedMacro is export {
     has $.macro-invocation;
 
     has $.text;
@@ -33,7 +35,7 @@ our class AssociatedItemMacro {
     }
 }
 
-our class AssociatedItemTypeAlias {
+class AssociatedTypeAlias is export {
     has $.maybe-visibility;
     has $.type-alias;
 
@@ -48,7 +50,7 @@ our class AssociatedItemTypeAlias {
     }
 }
 
-our class AssociatedItemConstantItem {
+class AssociatedConstantItem is export {
     has $.maybe-visibility;
     has $.constant-item;
 
@@ -63,7 +65,7 @@ our class AssociatedItemConstantItem {
     }
 }
 
-our class AssociatedItemFunction {
+class AssociatedFunction is export {
     has $.maybe-visibility;
     has $.function;
 
@@ -78,76 +80,79 @@ our class AssociatedItemFunction {
     }
 }
 
-our role AssociatedItem::Rules {
+package AssociatedItemGrammar is export {
 
-    proto rule associated-item { * }
+    our role Rules {
 
-    rule associated-item:sym<basic> {
-        <comment>?
-        <outer-attribute>*
-        <associated-item-variant>
+        proto rule associated-item { * }
+
+        rule associated-item:sym<basic> {
+            <comment>?
+            <outer-attribute>*
+            <associated-item-variant>
+        }
+
+        rule associated-item:sym<block-comment> {
+            <block-comment>
+        }
+
+        #---------------------
+        proto rule associated-item-variant { * }
+
+        rule associated-item-variant:sym<macro> {
+            <macro-invocation>
+        }
+
+        rule associated-item-variant:sym<type-alias>    { <visibility>? <type-alias> }
+        rule associated-item-variant:sym<constant-item> { <visibility>? <constant-item> }
+        rule associated-item-variant:sym<fn>            { <visibility>? <function> }
     }
 
-    rule associated-item:sym<block-comment> {
-        <block-comment>
-    }
+    our role Actions {
 
-    #---------------------
-    proto rule associated-item-variant { * }
+        method associated-item:sym<basic>($/) {
+            make AssociatedItem.new(
+                maybe-comment    => $<comment>.made,
+                outer-attributes => $<outer-attribute>>>.made,
+                variant          => $<associated-item-variant>.made,
+                text             => $/.Str,
+            )
+        }
 
-    rule associated-item-variant:sym<macro> {
-        <macro-invocation>
-    }
+        method associated-item:sym<block-comment>($/) {
+            make $<block-comment>.made
+        }
 
-    rule associated-item-variant:sym<type-alias>    { <visibility>? <type-alias> }
-    rule associated-item-variant:sym<constant-item> { <visibility>? <constant-item> }
-    rule associated-item-variant:sym<fn>            { <visibility>? <function> }
-}
+        #---------------------
+        method associated-item-variant:sym<macro>($/) {
+            make AssociatedMacro.new(
+                macro-invocation => $<macro-invocation>.made,
+                text             => $/.Str,
+            )
+        }
 
-our role AssociatedItem::Actions {
+        method associated-item-variant:sym<type-alias>($/) { 
+            make AssociatedTypeAlias.new(
+                maybe-visibility => $<visibility>.made,
+                type-alias       => $<type-alias>.made,
+                text             => $/.Str,
+            )
+        }
 
-    method associated-item:sym<basic>($/) {
-        make AssociatedItem.new(
-            maybe-comment    => $<comment>.made,
-            outer-attributes => $<outer-attribute>>>.made,
-            variant          => $<associated-item-variant>.made,
-            text             => $/.Str,
-        )
-    }
+        method associated-item-variant:sym<constant-item>($/) { 
+            make AssociatedConstantItem.new(
+                maybe-visibility => $<visibility>.made,
+                constant-item    => $<constant-item>.made,
+                text             => $/.Str,
+            )
+        }
 
-    method associated-item:sym<block-comment>($/) {
-        make $<block-comment>.made
-    }
-
-    #---------------------
-    method associated-item-variant:sym<macro>($/) {
-        make AssociatedItemMacro.new(
-            macro-invocation => $<macro-invocation>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method associated-item-variant:sym<type-alias>($/) { 
-        make AssociatedItemTypeAlias.new(
-            maybe-visibility => $<visibility>.made,
-            type-alias       => $<type-alias>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method associated-item-variant:sym<constant-item>($/) { 
-        make AssociatedItemConstantItem.new(
-            maybe-visibility => $<visibility>.made,
-            constant-item    => $<constant-item>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method associated-item-variant:sym<fn>($/) { 
-        make AssociatedItemFunction.new(
-            maybe-visibility => $<visibility>.made,
-            function         => $<function>.made,
-            text             => $/.Str,
-        )
+        method associated-item-variant:sym<fn>($/) { 
+            make AssociatedFunction.new(
+                maybe-visibility => $<visibility>.made,
+                function         => $<function>.made,
+                text             => $/.Str,
+            )
+        }
     }
 }

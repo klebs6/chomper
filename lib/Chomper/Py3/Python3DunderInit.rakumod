@@ -1,7 +1,7 @@
-use python3-dunder;
-use python3-suite;
-use python3-comment;
-use wrap-body-todo;
+use Chomper::Py3::Python3Dunder;
+use Chomper::Py3::Python3Suite;
+use Chomper::Py3::Python3Comment;
+use Chomper::WrapBodyTodo;
 
 our class Python3::DunderFunc::Init does Python3::IDunderFunc {
 

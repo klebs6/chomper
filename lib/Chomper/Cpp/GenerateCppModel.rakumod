@@ -1,5 +1,5 @@
-use gcpp;
-use case;
+use Chomper::Cpp::Gcpp;
+use Chomper::Case;
 
 our sub cpp-grammar-methods($marker = Nil) {
 

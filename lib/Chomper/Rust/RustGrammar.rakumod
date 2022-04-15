@@ -1,137 +1,137 @@
-use grust-array-expression;
-use grust-ascii;
-use grust-assoc-items;
-use grust-comment;
-use grust-line-comment;
-use grust-block-comment;
-use grust-doc-comment;
-use grust-block-expressions;
-use grust-boolean-literal;
-use grust-byte-literal;
-use grust-byte-string-literal;
-use grust-cfg-attr;
-use grust-char-literal;
-use grust-closure-expressions;
-use grust-configuration;
-use grust-crate;
-use grust-delimiters;
-use grust-enumerations;
-use grust-expressions;
-use grust-external-blocks;
-use grust-float-literal;
-use grust-function-pointer-types;
-use grust-functions;
-use grust-generic-args;
-use grust-generic-parameters;
-use grust-identifiers;
-use grust-if-expressions;
-use grust-impl-trait;
-use grust-int-literal;
-use grust-item;
-use grust-jump-expressions;
-use grust-lifetimes;
-use grust-literal-pattern;
-use grust-literal;
-use grust-loop-expression;
-use grust-macros;
-use grust-match-expressions;
-use grust-meta-item;
-use grust-path-expressions;
-use grust-paths;
-use grust-pattern-expressions;
-use grust-punctuation;
-use grust-range-patterns;
-use grust-reference-patterns;
-use grust-reserved-keywords;
-use grust-statements;
-use grust-strict-keywords;
-use grust-string-literal;
-use grust-struct-expressions;
-use grust-struct-patterns;
-use grust-structs;
-use grust-tokens;
-use grust-trait-objects;
-use grust-traits;
-use grust-tuple-struct-patterns;
-use grust-tuple-expression;
-use grust-type-alias;
-use grust-type-path;
-use grust-types;
-use grust-unions;
-use grust-use-declaration;
-use grust-visibility;
-use grust-weak-keywords;
-use grust-where-clause;
-use grust-whitespace;
-use grust-xid;
+use Chomper::Rust::GrustArrayExpression;
+use Chomper::Rust::GrustAscii;
+use Chomper::Rust::GrustAssocItems;
+use Chomper::Rust::GrustComment;
+use Chomper::Rust::GrustLineComment;
+use Chomper::Rust::GrustBlockComment;
+use Chomper::Rust::GrustDocComment;
+use Chomper::Rust::GrustBlockExpressions;
+use Chomper::Rust::GrustBooleanLiteral;
+use Chomper::Rust::GrustByteLiteral;
+use Chomper::Rust::GrustByteStringLiteral;
+use Chomper::Rust::GrustCfgAttr;
+use Chomper::Rust::GrustCharLiteral;
+use Chomper::Rust::GrustClosureExpressions;
+use Chomper::Rust::GrustConfiguration;
+use Chomper::Rust::GrustCrate;
+use Chomper::Rust::GrustDelimiters;
+use Chomper::Rust::GrustEnumerations;
+use Chomper::Rust::GrustExpressions;
+use Chomper::Rust::GrustExternalBlocks;
+use Chomper::Rust::GrustFloatLiteral;
+use Chomper::Rust::GrustFunctionPointerTypes;
+use Chomper::Rust::GrustFunctions;
+use Chomper::Rust::GrustGenericArgs;
+use Chomper::Rust::GrustGenericParameters;
+use Chomper::Rust::GrustIdentifiers;
+use Chomper::Rust::GrustIfExpressions;
+use Chomper::Rust::GrustImplTrait;
+use Chomper::Rust::GrustIntLiteral;
+use Chomper::Rust::GrustItem;
+use Chomper::Rust::GrustJumpExpressions;
+use Chomper::Rust::GrustLifetimes;
+use Chomper::Rust::GrustLiteralPattern;
+use Chomper::Rust::GrustLiteral;
+use Chomper::Rust::GrustLoopExpression;
+use Chomper::Rust::GrustMacros;
+use Chomper::Rust::GrustMatchExpressions;
+use Chomper::Rust::GrustMetaItem;
+use Chomper::Rust::GrustPathExpressions;
+use Chomper::Rust::GrustPaths;
+use Chomper::Rust::GrustPatternExpressions;
+use Chomper::Rust::GrustPunctuation;
+use Chomper::Rust::GrustRangePatterns;
+use Chomper::Rust::GrustReferencePatterns;
+use Chomper::Rust::GrustReservedKeywords;
+use Chomper::Rust::GrustStatements;
+use Chomper::Rust::GrustStrictKeywords;
+use Chomper::Rust::GrustStringLiteral;
+use Chomper::Rust::GrustStructExpressions;
+use Chomper::Rust::GrustStructPatterns;
+use Chomper::Rust::GrustStructs;
+use Chomper::Rust::GrustTokens;
+use Chomper::Rust::GrustTraitObjects;
+use Chomper::Rust::GrustTraits;
+use Chomper::Rust::GrustTupleStructPatterns;
+use Chomper::Rust::GrustTupleExpression;
+use Chomper::Rust::GrustTypeAlias;
+use Chomper::Rust::GrustTypePath;
+use Chomper::Rust::GrustTypes;
+use Chomper::Rust::GrustUnions;
+use Chomper::Rust::GrustUseDeclaration;
+use Chomper::Rust::GrustVisibility;
+use Chomper::Rust::GrustWeakKeywords;
+use Chomper::Rust::GrustWhereClause;
+use Chomper::Rust::GrustWhitespace;
+use Chomper::Rust::GrustXid;
 
 our role Rust::Grammar::Role
-does ArrayExpression::Rules 
-does AssociatedItem::Rules 
-does BareFunctionType::Rules 
-does Comment::Rules 
-does LineComment::Rules 
-does BlockComment::Rules 
-does DocComment::Rules 
-does BlockExpression::Rules 
-does CfgAttr::Rules 
-does ClosureExpression::Rules 
-does ConfigurationPredicate::Rules 
-does Crate::Rules 
-does Enumeration::Rules 
-does Expression::Rules 
-does ExternBlock::Rules 
-does Function::Rules 
-does GenericArgs::Rules 
-does GenericParams::Rules 
-does Identifiers::Rules 
-does IfExpressions::Rules 
-does ImplTraitType::Rules 
-does Item::Rules 
-does JumpExpression::Rules 
-does Lifetimes::Rules 
-does LiteralExpression::Rules 
-does LiteralPattern::Rules 
-does LoopExpression::Rules 
-does MacroInvocation::Rules 
-does MatchExpression::Rules 
-does MetaItem::Rules 
-does PathExpression::Rules 
-does Pattern::Rules 
-does Punctuation::Rules 
-does RangePattern::Rules 
-does ReferencePattern::Rules 
-does ReservedKeywords::Rules 
-does SimplePath::Rules 
-does Statement::Rules 
-does StrictKeywords::Rules 
-does Struct::Rules 
-does StructExpression::Rules 
-does StructPattern::Rules 
-does Tokens::Rules 
-does Trait::Rules 
-does TraitObjectType::Rules 
-does TupleExpression::Rules 
-does TupleStructPattern::Rules 
-does Type::Rules 
-does TypeAlias::Rules 
-does TypePath::Rules 
-does Union::Rules 
-does UseDeclaration::Rules 
-does Visibility::Rules 
-does WeakKeywords::Rules 
-does WhereClause::Rules 
-does Whitespace::Rules 
-does Xid::Rules 
-does Ascii::Rules
-does BooleanLiteral::Rules
-does ByteLiteral::Rules
-does ByteStringLiteral::Rules
-does CharLiteral::Rules
-does Delimiters::Rules
-does FloatLiteral::Rules
-does IntLiteral::Rules
-does StringLiteral::Rules
+does ArrayExpressionGrammar::Rules 
+does AssociatedItemGrammar::Rules 
+does BareFunctionTypeGrammar::Rules 
+does CommentGrammar::Rules 
+does LineCommentGrammar::Rules 
+does BlockCommentGrammar::Rules 
+does DocCommentGrammar::Rules 
+does BlockExpressionGrammar::Rules 
+does CfgAttrGrammar::Rules 
+does ClosureExpressionGrammar::Rules 
+does ConfigurationPredicateGrammar::Rules 
+does CrateGrammar::Rules 
+does EnumerationGrammar::Rules 
+does ExpressionGrammar::Rules 
+does ExternBlockGrammar::Rules 
+does FunctionGrammar::Rules 
+does GenericArgsGrammar::Rules 
+does GenericParamsGrammar::Rules 
+does IdentifiersGrammar::Rules 
+does IfExpressionsGrammar::Rules 
+does ImplTraitTypeGrammar::Rules 
+does ItemGrammar::Rules 
+does JumpExpressionGrammar::Rules 
+does LifetimesGrammar::Rules 
+does LiteralExpressionGrammar::Rules 
+does LiteralPatternGrammar::Rules 
+does LoopExpressionGrammar::Rules 
+does MacroInvocationGrammar::Rules 
+does MatchExpressionGrammar::Rules 
+does MetaItemGrammar::Rules 
+does PathExpressionGrammar::Rules 
+does PatternGrammar::Rules 
+does PunctuationGrammar::Rules 
+does RangePatternGrammar::Rules 
+does ReferencePatternGrammar::Rules 
+does ReservedKeywordsGrammar::Rules 
+does SimplePathGrammar::Rules 
+does StatementGrammar::Rules 
+does StrictKeywordsGrammar::Rules 
+does StructGrammar::Rules 
+does StructExpressionGrammar::Rules 
+does StructPatternGrammar::Rules 
+does TokensGrammar::Rules 
+does TraitGrammar::Rules 
+does TraitObjectTypeGrammar::Rules 
+does TupleExpressionGrammar::Rules 
+does TupleStructPatternGrammar::Rules 
+does TypeGrammar::Rules 
+does TypeAliasGrammar::Rules 
+does TypePathGrammar::Rules 
+does UnionGrammar::Rules 
+does UseDeclarationGrammar::Rules 
+does VisibilityGrammar::Rules 
+does WeakKeywordsGrammar::Rules 
+does WhereClauseGrammar::Rules 
+does WhitespaceGrammar::Rules 
+does XidGrammar::Rules 
+does AsciiGrammar::Rules
+does BooleanLiteralGrammar::Rules
+does ByteLiteralGrammar::Rules
+does ByteStringLiteralGrammar::Rules
+does CharLiteralGrammar::Rules
+does DelimitersGrammar::Rules
+does FloatLiteralGrammar::Rules
+does IntLiteralGrammar::Rules
+does StringLiteralGrammar::Rules
 {
     rule TOP {
         <.ws> 
@@ -140,61 +140,61 @@ does StringLiteral::Rules
 }
 
 our role Rust::Actions::Role
-    does ArrayExpression::Actions 
-    does AssociatedItem::Actions 
-    does BareFunctionType::Actions 
-    does BlockComment::Actions 
-    does BlockExpression::Actions 
-    does BooleanLiteral::Actions
-    does CfgAttr::Actions 
-    does ClosureExpression::Actions 
-    does Comment::Actions 
-    does ConfigurationPredicate::Actions 
-    does Crate::Actions 
-    does Enumeration::Actions 
-    does Expression::Actions 
-    does ExternBlock::Actions 
-    does Function::Actions 
-    does GenericArgs::Actions 
-    does GenericParams::Actions 
-    does Identifiers::Actions 
-    does IfExpressions::Actions 
-    does ImplTraitType::Actions 
-    does Item::Actions 
-    does JumpExpression::Actions 
-    does Lifetimes::Actions 
-    does LineComment::Actions 
-    does LiteralExpression::Actions 
-    does LiteralPattern::Actions 
-    does LoopExpression::Actions 
-    does MacroInvocation::Actions 
-    does MatchExpression::Actions 
-    does MetaItem::Actions 
-    does PathExpression::Actions 
-    does Pattern::Actions 
-    does Punctuation::Actions 
-    does RangePattern::Actions 
-    does ReferencePattern::Actions 
-    does ReservedKeywords::Actions 
-    does SimplePath::Actions 
-    does Statement::Actions 
-    does StrictKeywords::Actions 
-    does Struct::Actions 
-    does StructExpression::Actions 
-    does StructPattern::Actions 
-    does Tokens::Actions 
-    does Trait::Actions 
-    does TraitObjectType::Actions 
-    does TupleExpression::Actions 
-    does TupleStructPattern::Actions 
-    does Type::Actions 
-    does TypeAlias::Actions 
-    does TypePath::Actions 
-    does Union::Actions 
-    does UseDeclaration::Actions 
-    does Visibility::Actions 
-    does WeakKeywords::Actions 
-    does WhereClause::Actions {}
+    does ArrayExpressionGrammar::Actions 
+    does AssociatedItemGrammar::Actions 
+    does BareFunctionTypeGrammar::Actions 
+    does BlockCommentGrammar::Actions 
+    does BlockExpressionGrammar::Actions 
+    does BooleanLiteralGrammar::Actions
+    does CfgAttrGrammar::Actions 
+    does ClosureExpressionGrammar::Actions 
+    does CommentGrammar::Actions 
+    does ConfigurationPredicateGrammar::Actions 
+    does CrateGrammar::Actions 
+    does EnumerationGrammar::Actions 
+    does ExpressionGrammar::Actions 
+    does ExternBlockGrammar::Actions 
+    does FunctionGrammar::Actions 
+    does GenericArgsGrammar::Actions 
+    does GenericParamsGrammar::Actions 
+    does IdentifiersGrammar::Actions 
+    does IfExpressionsGrammar::Actions 
+    does ImplTraitTypeGrammar::Actions 
+    does ItemGrammar::Actions 
+    does JumpExpressionGrammar::Actions 
+    does LifetimesGrammar::Actions 
+    does LineCommentGrammar::Actions 
+    does LiteralExpressionGrammar::Actions 
+    does LiteralPatternGrammar::Actions 
+    does LoopExpressionGrammar::Actions 
+    does MacroInvocationGrammar::Actions 
+    does MatchExpressionGrammar::Actions 
+    does MetaItemGrammar::Actions 
+    does PathExpressionGrammar::Actions 
+    does PatternGrammar::Actions 
+    does PunctuationGrammar::Actions 
+    does RangePatternGrammar::Actions 
+    does ReferencePatternGrammar::Actions 
+    does ReservedKeywordsGrammar::Actions 
+    does SimplePathGrammar::Actions 
+    does StatementGrammar::Actions 
+    does StrictKeywordsGrammar::Actions 
+    does StructGrammar::Actions 
+    does StructExpressionGrammar::Actions 
+    does StructPatternGrammar::Actions 
+    does TokensGrammar::Actions 
+    does TraitGrammar::Actions 
+    does TraitObjectTypeGrammar::Actions 
+    does TupleExpressionGrammar::Actions 
+    does TupleStructPatternGrammar::Actions 
+    does TypeGrammar::Actions 
+    does TypeAliasGrammar::Actions 
+    does TypePathGrammar::Actions 
+    does UnionGrammar::Actions 
+    does UseDeclarationGrammar::Actions 
+    does VisibilityGrammar::Actions 
+    does WeakKeywordsGrammar::Actions 
+    does WhereClauseGrammar::Actions {}
 
 our grammar Rust::Grammar 
 does Rust::Grammar::Role 

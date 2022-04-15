@@ -1,6 +1,8 @@
+unit module Chomper::Rust::GrustCharLiteral;
+
 use Data::Dump::Tree;
 
-our class CharLiteral {
+class CharLiteral is export {
     has $.value;
 
     method gist {
@@ -8,37 +10,40 @@ our class CharLiteral {
     }
 }
 
-our role CharLiteral::Rules {
+package CharLiteralGrammar is export {
 
-    proto token char-literal-body { * }
+    our role Rules {
 
-    token char-literal-body:sym<not-forbidden> { 
-        <-[\' \\ \n \r \t ]>
+        proto token char-literal-body { * }
+
+        token char-literal-body:sym<not-forbidden> { 
+            <-[\' \\ \n \r \t ]>
+        }
+
+        token char-literal-body:sym<quote-escape> { 
+            <quote-escape>
+        }
+
+        token char-literal-body:sym<ascii-escape> { 
+            <ascii-escape>
+        }
+
+        token char-literal-body:sym<unicode-escape> { 
+            <unicode-escape>
+        }
+
+        token char-literal {
+            <tok-single-quote>
+            <char-literal-body>
+            <tok-single-quote>
+        }
     }
 
-    token char-literal-body:sym<quote-escape> { 
-        <quote-escape>
-    }
-
-    token char-literal-body:sym<ascii-escape> { 
-        <ascii-escape>
-    }
-
-    token char-literal-body:sym<unicode-escape> { 
-        <unicode-escape>
-    }
-
-    token char-literal {
-        <tok-single-quote>
-        <char-literal-body>
-        <tok-single-quote>
-    }
-}
-
-our role CharLiteral::Actions {
-    method char-literal($/) {
-        make CharLiteral.new(
-            value => $/.Str,
-        )
+    our role Actions {
+        method char-literal($/) {
+            make CharLiteral.new(
+                value => $/.Str,
+            )
+        }
     }
 }

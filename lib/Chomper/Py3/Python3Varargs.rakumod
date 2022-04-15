@@ -1,4 +1,4 @@
-use python3-prelude;
+use Chomper::Py3::Python3Prelude;
 
 our class Python3::VfpDef  {
     has Python3::Name  $.name is required;

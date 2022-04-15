@@ -1,8 +1,8 @@
-use python3-prelude;
-use pyrust;
-use avoid-keywords;
-use python3-comprehension;
-use indent-rust-named-type-list;
+use Chomper::Py3::Python3Prelude;
+use Chomper::Py3::Pyrust;
+use Chomper::AvoidKeywords;
+use Chomper::Py3::Python3Comprehension;
+use Chomper::Rust::IndentRustNamedTypeList;
 
 our role Python3::IArgument {}
 

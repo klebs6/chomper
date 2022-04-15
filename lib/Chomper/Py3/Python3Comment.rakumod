@@ -1,7 +1,7 @@
-use formatting;
-use doxy-comment;
-use pyrust;
-use numeric-token;
+use Chomper::Formatting;
+use Chomper::DoxyComment;
+use Chomper::Py3::Pyrust;
+use Chomper::NumericToken;
 #use Grammar::Tracer;
 
 my $ex = qq:to/END/;

@@ -1,11 +1,11 @@
-use gpython3-keywords;
-use gpython3-name;
-use gpython3-indent;
-use gpython3-numeric;
-use gpython3-operators;
-use gpython3-strings;
-use gpython3-typedargs;
-use gpython3-varargs;
+use Chomper::Py3::Gpython3Keywords;
+use Chomper::Py3::Gpython3Name;
+use Chomper::Py3::Gpython3Indent;
+use Chomper::Py3::Gpython3Numeric;
+use Chomper::Py3::Gpython3Operators;
+use Chomper::Py3::Gpython3Strings;
+use Chomper::Py3::Gpython3Typedargs;
+use Chomper::Py3::Gpython3Varargs;
 
 our class NEW_INDENTATION { }
 

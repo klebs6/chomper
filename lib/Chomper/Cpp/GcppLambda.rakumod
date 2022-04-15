@@ -1,11 +1,13 @@
+unit module Chomper::Cpp::GcppLambda;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-statement;
-use gcpp-ident;
-use gcpp-param;
-use gcpp-attr;
-use gcpp-function;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppStatement;
+use Chomper::Cpp::GcppIdent;
+use Chomper::Cpp::GcppParam;
+use Chomper::Cpp::GcppAttr;
+use Chomper::Cpp::GcppFunction;
 
 our class LambdaDeclarator { ... }
 our class CaptureList { ... }

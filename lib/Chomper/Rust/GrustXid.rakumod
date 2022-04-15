@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustXid;
+
 use Data::Dump::Tree;
 
 our role Xid::Rules {

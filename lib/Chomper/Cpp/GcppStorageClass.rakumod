@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppStorageClass;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # rule storage-class-specifier:sym<extern> { <.extern> }
 our class StorageClassSpecifier::Extern does IStorageClassSpecifier { 

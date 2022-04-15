@@ -1,5 +1,5 @@
-use gcpp;
-use cpp-actions;
+use Chomper::Cpp::Gcpp;
+use Chomper::Cpp::CppActions;
 use Data::Dump::Tree;
 
 our sub cpp-translate($in) {

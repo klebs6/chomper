@@ -1,8 +1,10 @@
+unit module Chomper::Cpp::GcppNew;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-expression;
-use gcpp-attr;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppExpression;
+use Chomper::Cpp::GcppAttr;
 
 our class NewPlacement               { ... }
 our class NewTypeId                  { ... }

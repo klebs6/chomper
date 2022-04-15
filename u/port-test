@@ -1,9 +1,9 @@
 #!/usr/bin/env raku
 
-use util;
-use snake-case;
-use ident-token;
-use segment-remove-duplicates;
+use Chomper::Core::Util;
+use Chomper::Core::SnakeCase;
+use Chomper::Core::IdentToken;
+use Chomper::Core::SegmentRemoveDuplicates;
 
 my $input = $*IN.slurp;
 

@@ -1,28 +1,33 @@
-our role LineComment::Rules {
+unit module Chomper::Rust::GrustLineComment;
 
-    token line-comment-begin {
-        || \/\/\/
-        || \/\/
+package LineCommentGrammar is export {
+
+    our role Rules {
+
+        token line-comment-begin {
+            || \/\/\/
+            || \/\/
+        }
+
+        token line-comment-body {
+            <-[ \r \n ]>* 
+        }
+
+        token line-comment {
+            <.ws> 
+            <.line-comment-begin> 
+            <line-comment-body>
+        }
     }
 
-    token line-comment-body {
-        <-[ \r \n ]>* 
-    }
+    our role Actions {
 
-    token line-comment {
-        <.ws> 
-        <.line-comment-begin> 
-        <line-comment-body>
-    }
-}
+        method line-comment($/) {
+            make $<line-comment-body>.made
+        }
 
-our role LineComment::Actions {
-
-    method line-comment($/) {
-        make $<line-comment-body>.made
-    }
-
-    method line-comment-body($/) {
-        make ~$/
+        method line-comment-body($/) {
+            make ~$/
+        }
     }
 }

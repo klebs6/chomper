@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppRef;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # rule refqualifier:sym<and> { <and_> }
 our class Refqualifier::And does IRefqualifier {

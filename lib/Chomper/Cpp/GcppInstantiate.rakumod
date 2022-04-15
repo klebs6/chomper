@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppInstantiate;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # rule explicit-instantiation { 
 #   <extern>? 

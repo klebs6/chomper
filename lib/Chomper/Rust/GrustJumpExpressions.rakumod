@@ -1,6 +1,8 @@
+unit module Chomper::Rust::GrustJumpExpressions;
+
 use Data::Dump::Tree;
 
-our class ContinueExpression {
+class ContinueExpression is export {
     has $.maybe-lifetime-or-label;
 
     has $.text;
@@ -17,7 +19,7 @@ our class ContinueExpression {
     }
 }
 
-our class BreakExpression {
+class BreakExpression is export {
     has $.maybe-lifetime-or-label;
     has $.maybe-expression;
 
@@ -39,7 +41,7 @@ our class BreakExpression {
     }
 }
 
-our class ReturnExpression {
+class ReturnExpression is export {
     has $.maybe-expression;
 
     has $.text;
@@ -56,45 +58,48 @@ our class ReturnExpression {
     }
 }
 
-our role JumpExpression::Rules {
+package JumpExpressionGrammar is export {
 
-    rule continue-expression {
-        <kw-continue>
-        <lifetime-or-label>?
+    our role Rules {
+
+        rule continue-expression {
+            <kw-continue>
+            <lifetime-or-label>?
+        }
+
+        rule break-expression {
+            <kw-break> 
+            <lifetime-or-label>?
+            <expression>?
+        }
+
+        rule return-expression {
+            <kw-return> <expression>? 
+        }
     }
 
-    rule break-expression {
-        <kw-break> 
-        <lifetime-or-label>?
-        <expression>?
-    }
+    our role Actions {
 
-    rule return-expression {
-        <kw-return> <expression>? 
-    }
-}
+        method continue-expression($/) {
+            make ContinueExpression.new(
+                maybe-lifetime-or-label => $<lifetime-or-label>.made,
+                text                    => $/.Str,
+            )
+        }
 
-our role JumpExpression::Actions {
+        method break-expression($/) {
+            make BreakExpression.new(
+                maybe-lifetime-or-label => $<lifetime-or-label>.made,
+                maybe-expression        => $<expression>.made,
+                text                    => $/.Str,
+            )
+        }
 
-    method continue-expression($/) {
-        make ContinueExpression.new(
-            maybe-lifetime-or-label => $<lifetime-or-label>.made,
-            text                    => $/.Str,
-        )
-    }
-
-    method break-expression($/) {
-        make BreakExpression.new(
-            maybe-lifetime-or-label => $<lifetime-or-label>.made,
-            maybe-expression        => $<expression>.made,
-            text                    => $/.Str,
-        )
-    }
-
-    method return-expression($/) {
-        make ReturnExpression.new(
-            maybe-expression => $<expression>.made,
-            text             => $/.Str,
-        )
+        method return-expression($/) {
+            make ReturnExpression.new(
+                maybe-expression => $<expression>.made,
+                text             => $/.Str,
+            )
+        }
     }
 }

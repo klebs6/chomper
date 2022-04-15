@@ -1,6 +1,6 @@
 use NativeCall;
-use crates;
-use infer-rustdoc;
+use Chomper::Crates;
+use Chomper::Rust::InferRustdoc;
 
 our class LineRange is repr('CStruct') {
     has uint32 $.begin;

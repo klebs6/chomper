@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustVisibility;
+
 use Data::Dump::Tree;
 
 our class VisibilityPublic {

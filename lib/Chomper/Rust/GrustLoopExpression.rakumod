@@ -1,6 +1,8 @@
+unit module Chomper::Rust::GrustLoopExpression;
+
 use Data::Dump::Tree;
 
-our class LoopExpressionInfinite {
+class LoopExpressionInfinite is export {
     has $.maybe-loop-label;
     has $.block-expression;
 
@@ -20,7 +22,7 @@ our class LoopExpressionInfinite {
     }
 }
 
-our class LoopExpressionPredicate {
+class LoopExpressionPredicate is export {
     has $.maybe-loop-label;
     has $.expression-nostruct;
     has $.block-expression;
@@ -41,7 +43,7 @@ our class LoopExpressionPredicate {
     }
 }
 
-our class LoopExpressionPredicatePattern {
+class LoopExpressionPredicatePattern is export {
     has $.maybe-loop-label;
     has $.pattern;
     has $.scrutinee;
@@ -67,7 +69,7 @@ our class LoopExpressionPredicatePattern {
     }
 }
 
-our class LoopExpressionIterator {
+class LoopExpressionIterator is export {
     has $.maybe-loop-label;
     has $.pattern;
     has $.expression-nostruct;
@@ -91,7 +93,7 @@ our class LoopExpressionIterator {
     }
 }
 
-our class LoopLabel {
+class LoopLabel is export {
     has $.lifetime-or-label;
 
     has $.text;
@@ -101,88 +103,91 @@ our class LoopLabel {
     }
 }
 
-our role LoopExpression::Rules {
+package LoopExpressionGrammar is export {
 
-    proto rule loop-expression { * }
+    our role Rules {
 
-    rule loop-expression:sym<infinite-loop> {
-        <loop-label>?
-        <kw-loop> <block-expression>
+        proto rule loop-expression { * }
+
+        rule loop-expression:sym<infinite-loop> {
+            <loop-label>?
+            <kw-loop> <block-expression>
+        }
+
+        rule loop-expression:sym<predicate-loop> {
+            <loop-label>?
+            <kw-while> <expression-nostruct> <block-expression>
+        }
+
+        rule loop-expression:sym<predicate-pattern-loop> {
+            <loop-label>?
+            <kw-while>
+            <kw-let>
+            <pattern>
+            <tok-eq>
+            <scrutinee-except-lazy-boolean-operator-expression>
+            <block-expression>
+        }
+
+        rule loop-expression:sym<iterator-loop> {
+            <loop-label>?
+            <kw-for>
+            <pattern>
+            <kw-in>
+            <expression-nostruct>
+            <block-expression>
+        }
+
+        rule loop-label {
+            <lifetime-or-label> 
+            <tok-colon>
+        }
     }
 
-    rule loop-expression:sym<predicate-loop> {
-        <loop-label>?
-        <kw-while> <expression-nostruct> <block-expression>
-    }
+    our role Actions {
 
-    rule loop-expression:sym<predicate-pattern-loop> {
-        <loop-label>?
-        <kw-while>
-        <kw-let>
-        <pattern>
-        <tok-eq>
-        <scrutinee-except-lazy-boolean-operator-expression>
-        <block-expression>
-    }
+        method loop-expression:sym<infinite-loop>($/) {
+            make LoopExpressionInfinite.new(
+                loop-label       => $<loop-label>.made,
+                block-expression => $<block-expression>.made,
+                text             => $/.Str,
+            )
+        }
 
-    rule loop-expression:sym<iterator-loop> {
-        <loop-label>?
-        <kw-for>
-        <pattern>
-        <kw-in>
-        <expression-nostruct>
-        <block-expression>
-    }
+        method loop-expression:sym<predicate-loop>($/) {
+            make LoopExpressionPredicate.new(
+                maybe-loop-label    => $<loop-label>.made,
+                expression-nostruct => $<expression-nostruct>.made,
+                block-expression    => $<block-expression>.made,
+                text                => $/.Str,
+            )
+        }
 
-    rule loop-label {
-        <lifetime-or-label> 
-        <tok-colon>
-    }
-}
+        method loop-expression:sym<predicate-pattern-loop>($/) {
+            make LoopExpressionPredicatePattern.new(
+                maybe-loop-label => $<loop-label>.made,
+                pattern          => $<pattern>.made,
+                scrutinee        => $<scrutinee-except-lazy-boolean-operator-expression>.made,
+                block-expression => $<block-expression>.made,
+                text             => $/.Str,
+            )
+        }
 
-our role LoopExpression::Actions {
+        method loop-expression:sym<iterator-loop>($/) {
+            make LoopExpressionIterator.new(
+                maybe-loop-label    => $<loop-label>.made,
+                pattern             => $<pattern>.made,
+                expression-nostruct => $<expression-nostruct>.made,
+                block-expression    => $<block-expression>.made,
+                text                => $/.Str,
+            )
+        }
 
-    method loop-expression:sym<infinite-loop>($/) {
-        make LoopExpressionInfinite.new(
-            loop-label       => $<loop-label>.made,
-            block-expression => $<block-expression>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method loop-expression:sym<predicate-loop>($/) {
-        make LoopExpressionPredicate.new(
-            maybe-loop-label    => $<loop-label>.made,
-            expression-nostruct => $<expression-nostruct>.made,
-            block-expression    => $<block-expression>.made,
-            text                => $/.Str,
-        )
-    }
-
-    method loop-expression:sym<predicate-pattern-loop>($/) {
-        make LoopExpressionPredicatePattern.new(
-            maybe-loop-label => $<loop-label>.made,
-            pattern          => $<pattern>.made,
-            scrutinee        => $<scrutinee-except-lazy-boolean-operator-expression>.made,
-            block-expression => $<block-expression>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method loop-expression:sym<iterator-loop>($/) {
-        make LoopExpressionIterator.new(
-            maybe-loop-label    => $<loop-label>.made,
-            pattern             => $<pattern>.made,
-            expression-nostruct => $<expression-nostruct>.made,
-            block-expression    => $<block-expression>.made,
-            text                => $/.Str,
-        )
-    }
-
-    method loop-label($/) {
-        make LoopLabel.new(
-            lifetime-or-label => $<lifetime-or-label>.made,
-            text              => $/.Str,
-        )
+        method loop-label($/) {
+            make LoopLabel.new(
+                lifetime-or-label => $<lifetime-or-label>.made,
+                text              => $/.Str,
+            )
+        }
     }
 }

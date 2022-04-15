@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustStringLiteral;
+
 use Data::Dump::Tree;
 
 our class StringLiteral {

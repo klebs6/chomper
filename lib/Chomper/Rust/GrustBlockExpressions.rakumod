@@ -1,6 +1,8 @@
+unit module Chomper::Rust::GrustBlockExpressions;
+
 use Data::Dump::Tree;
 
-our class BlockExpression {
+class BlockExpression is export {
     has @.inner-attributes;
     has $.statements;
 
@@ -24,7 +26,7 @@ our class BlockExpression {
     }
 }
 
-our class AsyncBlockExpression {
+class AsyncBlockExpression is export {
 
     has Bool $.move;
     has $.block-expression;
@@ -45,7 +47,7 @@ our class AsyncBlockExpression {
     }
 }
 
-our class UnsafeBlockExpression {
+class UnsafeBlockExpression is export {
     has $.block-expression;
 
     has $.text;
@@ -59,49 +61,52 @@ our class UnsafeBlockExpression {
     }
 }
 
-our role BlockExpression::Rules {
+package BlockExpressionGrammar is export {
 
-    rule block-expression {
-        <tok-lbrace>
-        <inner-attribute>*
-        <statements>?
-        <tok-rbrace>
+    our role Rules {
+
+        rule block-expression {
+            <tok-lbrace>
+            <inner-attribute>*
+            <statements>?
+            <tok-rbrace>
+        }
+
+        rule async-block-expression {
+            <kw-async>
+            <kw-move>?
+            <block-expression>
+        }
+
+        rule unsafe-block-expression {
+            <kw-unsafe>
+            <block-expression>
+        }
     }
 
-    rule async-block-expression {
-        <kw-async>
-        <kw-move>?
-        <block-expression>
-    }
+    our role Actions {
 
-    rule unsafe-block-expression {
-        <kw-unsafe>
-        <block-expression>
-    }
-}
+        method block-expression($/) {
+            make BlockExpression.new(
+                inner-attributes => $<inner-attribute>>>.made,
+                statements       => $<statements>.made,
+                text             => $/.Str,
+            )
+        }
 
-our role BlockExpression::Actions {
+        method async-block-expression($/) {
+            make AsyncBlockExpression.new(
+                move             => so $/<kw-move>:exists,
+                block-expression => $<block-expression>.made,
+                text             => $/.Str,
+            )
+        }
 
-    method block-expression($/) {
-        make BlockExpression.new(
-            inner-attributes => $<inner-attribute>>>.made,
-            statements       => $<statements>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method async-block-expression($/) {
-        make AsyncBlockExpression.new(
-            move             => so $/<kw-move>:exists,
-            block-expression => $<block-expression>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method unsafe-block-expression($/) {
-        make UnsafeBlockExpression.new(
-            block-expression => $<block-expression>.made,
-            text             => $/.Str,
-        )
+        method unsafe-block-expression($/) {
+            make UnsafeBlockExpression.new(
+                block-expression => $<block-expression>.made,
+                text             => $/.Str,
+            )
+        }
     }
 }

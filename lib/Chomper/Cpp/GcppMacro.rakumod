@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppMacro;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 our class MultiLineMacro { 
     has Str $.content is required;

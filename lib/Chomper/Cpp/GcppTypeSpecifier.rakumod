@@ -1,9 +1,11 @@
+unit module Chomper::Cpp::GcppTypeSpecifier;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-attr;
-use gcpp-simple-type-specifier;
-use gcpp-attr;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppAttr;
+use Chomper::Cpp::GcppSimpleTypeSpecifier;
+use Chomper::Cpp::GcppAttr;
 
 # rule trailing-type-specifier:sym<cv-qualifier> { 
 #   <cv-qualifier> 

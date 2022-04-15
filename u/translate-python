@@ -1,11 +1,11 @@
 #!/usr/bin/env raku
-use gpython3;
-use python3-class;
-use python-to-rust-actions;
+use Chomper::Py3::Gpython3;
+use Chomper::Py3::Python3Class;
+use Chomper::Py3::PythonToRustActions;
 
 use Data::Dump::Tree;
-use formatting;
-use doxy-comment;
+use Chomper::Core::Formatting;
+use Chomper::Core::DoxyComment;
 use Data::Dump;
 use JSON::Class;
 

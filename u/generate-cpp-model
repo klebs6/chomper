@@ -1,8 +1,8 @@
 #!/usr/bin/env raku
 
-use gcpp;
+use Chomper::Cpp::Gcpp;
 use Data::Dump::Tree;
-use generate-cpp-model;
+use Chomper::Cpp::GenerateCppModel;
 
 my $marker          = Nil;#"pointer-declarator";
 my @grammar-methods = cpp-grammar-methods($marker);

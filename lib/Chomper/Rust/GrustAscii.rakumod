@@ -1,6 +1,8 @@
+unit module Chomper::Rust::GrustAscii;
+
 use Data::Dump::Tree;
 
-our class Ascii {
+class Ascii is export {
     has Str $.value;
 
     method gist {
@@ -8,38 +10,41 @@ our class Ascii {
     }
 }
 
-our role Ascii::Rules {
+package AsciiGrammar is export {
 
-    proto token ascii-escape { * }
+    our role Rules {
 
-    token ascii-escape:sym<x> { \\x <oct-digit> <hex-digit> }
-    token ascii-escape:sym<n> { \\n }
-    token ascii-escape:sym<r> { \\r }
-    token ascii-escape:sym<t> { \\t }
-    token ascii-escape:sym<s> { \\\\ }
-    token ascii-escape:sym<0> { \\0 }
+        proto token ascii-escape { * }
 
-    token ascii-for-char {
-        <any-ascii> <?{$/ !~~ /[\' | \\ | \n | \r | \t]/}>
+        token ascii-escape:sym<x> { \\x <oct-digit> <hex-digit> }
+        token ascii-escape:sym<n> { \\n }
+        token ascii-escape:sym<r> { \\r }
+        token ascii-escape:sym<t> { \\t }
+        token ascii-escape:sym<s> { \\\\ }
+        token ascii-escape:sym<0> { \\0 }
+
+        token ascii-for-char {
+            <any-ascii> <?{$/ !~~ /[\' | \\ | \n | \r | \t]/}>
+        }
+
+        token ascii-for-string {
+            <any-ascii> <?{$/ !~~ /[\" | \\ | $Tokens::Rules::isolated-cr]/}>
+        }
+
+        token any-ascii {
+            <:ASCII>
+        }
+
+        token ascii {
+            <any-ascii>
+        }
     }
 
-    token ascii-for-string {
-        <any-ascii> <?{$/ !~~ /[\" | \\ | $Tokens::Rules::isolated-cr]/}>
-    }
-
-    token any-ascii {
-        <:ASCII>
-    }
-
-    token ascii {
-        <any-ascii>
-    }
-}
-
-our role Ascii::Actions {
-    method ascii($/) {
-        make Ascii.new(
-            value => $/.Str
-        )
+    our role Actions {
+        method ascii($/) {
+            make Ascii.new(
+                value => $/.Str
+            )
+        }
     }
 }

@@ -1,7 +1,9 @@
+unit module Chomper::Cpp::GcppIntegerLiteral;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-digit;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppDigit;
 
 our role IntegerLiteral::Actions {
 

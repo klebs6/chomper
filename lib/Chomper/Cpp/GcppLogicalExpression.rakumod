@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppLogicalExpression;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # rule logical-and-expression { 
 #   <inclusive-or-expression> 

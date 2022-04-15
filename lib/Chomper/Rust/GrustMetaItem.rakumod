@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustMetaItem;
+
 use Data::Dump::Tree;
 
 our class MetaItemSimple {

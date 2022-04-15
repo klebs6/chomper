@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppPtrMember;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 our class PointerMemberExpression     { ... }
 our class PointerMemberExpressionTail { ... }

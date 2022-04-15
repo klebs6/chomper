@@ -1,9 +1,11 @@
+unit module Chomper::Cpp::GcppDeclaration;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-ident;
-use gcpp-attr;
-use gcpp-str;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppIdent;
+use Chomper::Cpp::GcppAttr;
+use Chomper::Cpp::GcppStr;
 
 our role IDeclarationseq { }
 

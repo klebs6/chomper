@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustPaths;
+
 use Data::Dump::Tree;
 
 our class SimplePath {

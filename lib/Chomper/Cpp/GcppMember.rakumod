@@ -1,14 +1,16 @@
+unit module Chomper::Cpp::GcppMember;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-attr;
-use gcpp-function;
-use gcpp-ident;
-use gcpp-declaration;
-use gcpp-template;
-use gcpp-virtual;
-use gcpp-pure;
-use gcpp-using-directive;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppAttr;
+use Chomper::Cpp::GcppFunction;
+use Chomper::Cpp::GcppIdent;
+use Chomper::Cpp::GcppDeclaration;
+use Chomper::Cpp::GcppTemplate;
+use Chomper::Cpp::GcppVirtual;
+use Chomper::Cpp::GcppPure;
+use Chomper::Cpp::GcppUsingDirective;
 
 # rule member-declarator-list { 
 #   <member-declarator> 

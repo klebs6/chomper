@@ -1,8 +1,10 @@
+unit module Chomper::Cpp::GcppStatement;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-attr;
-use gcpp-labeled-statement;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppAttr;
+use Chomper::Cpp::GcppLabeledStatement;
 
 # regex statement-seq { 
 #   <statement> 

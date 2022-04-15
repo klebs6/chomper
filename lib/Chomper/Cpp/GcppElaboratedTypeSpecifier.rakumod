@@ -1,9 +1,11 @@
+unit module Chomper::Cpp::GcppElaboratedTypeSpecifier;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-attr;
-use gcpp-ident;
-use gcpp-template;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppAttr;
+use Chomper::Cpp::GcppIdent;
+use Chomper::Cpp::GcppTemplate;
 
 our role IElaboratedTypeSpecifier                       
 does IDeclSpecifierSeq

@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustMacros;
+
 use Data::Dump::Tree;
 
 our class MacroExpression {

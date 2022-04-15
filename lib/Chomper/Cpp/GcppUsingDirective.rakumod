@@ -1,7 +1,9 @@
+unit module Chomper::Cpp::GcppUsingDirective;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-attr;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppAttr;
 
 # rule using-declaration-prefix:sym<nested> { 
 #   [ <typename_>? <nested-name-specifier> ] 

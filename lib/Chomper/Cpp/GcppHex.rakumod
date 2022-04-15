@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppHex;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 our class HexadecimalLiteral {
     has Str $.value is required; 

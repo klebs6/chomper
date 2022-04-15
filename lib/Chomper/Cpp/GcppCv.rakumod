@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppCv;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # rule cvqualifierseq { <cv-qualifier>+ }
 our class Cvqualifierseq { 

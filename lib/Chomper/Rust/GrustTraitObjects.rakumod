@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustTraitObjects;
+
 use Data::Dump::Tree;
 
 our class TraitObjectType {

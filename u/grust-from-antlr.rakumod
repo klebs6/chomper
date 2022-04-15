@@ -1,4 +1,4 @@
-use grust-model;
+use Chomper::Rust::GrustModel;
 
 =begin comment
 #|{ "action" : { "@lexer::members" : "{\n      static int dotChar = 46;\n\n      // is this character followed by an identifier or\n      // a dot? this is used in parsing numbers, to distinguish\n      // floating-point numbers from ranges and method calls.\n      public boolean followed_by_ident_or_dot() {\n        CharStream cs = getInputStream();\n        int nextChar = cs.LA(1);\n        // KNOWN POTENTIAL ISSUE : this fn needs to be\n        // aligned with the list appearing in xidstart....\n        return (java.lang.Character.isUnicodeIdentifierStart(nextChar)\n                || nextChar == dotChar);\n      }\n\n      // are we at the beginning of the file? This is needed in\n      // order to parse shebangs.\n      public boolean at_beginning_of_file() {\n        return (getInputStream().index() == 0);\n      }\n\n    }" } }

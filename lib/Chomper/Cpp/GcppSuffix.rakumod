@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppSuffix;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 our class Unsignedsuffix { ... }
 our class Longsuffix { ... }

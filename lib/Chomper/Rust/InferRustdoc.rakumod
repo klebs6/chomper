@@ -1,7 +1,7 @@
 use JSON::Fast;
 use Data::Dump::Tree;
 
-use crates;
+use Chomper::Crates;
 
 our sub get-field-bodies($index,%struct) {
     #only gets the ones rustdoc does not strip

@@ -1,7 +1,9 @@
+unit module Chomper::Cpp::GcppDeclSpecifier;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-attr;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppAttr;
 
 our class DeclSpecifier::Friend    does IDeclSpecifier { }
 our class DeclSpecifier::Typedef   does IDeclSpecifier { }

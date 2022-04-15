@@ -1,7 +1,9 @@
+unit module Chomper::Cpp::GcppPure;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-oct;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppOct;
 
 # rule pure-specifier { 
 #   <assign> 

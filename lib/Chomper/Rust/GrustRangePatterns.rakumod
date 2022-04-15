@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustRangePatterns;
+
 use Data::Dump::Tree;
 
 our class RangePatternInclusive {

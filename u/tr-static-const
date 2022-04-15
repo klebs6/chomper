@@ -1,6 +1,6 @@
 #!/usr/bin/env raku
 
-use grammar;
+use Chomper::Core::Grammar;
 #use Grammar::Tracer;
 
 grammar StaticConst does ParserRules {

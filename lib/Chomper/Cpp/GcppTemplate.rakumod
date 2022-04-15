@@ -1,13 +1,15 @@
+unit module Chomper::Cpp::GcppTemplate;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-ident;
-use gcpp-str;
-use gcpp-param;
-use gcpp-operator-id;
-use gcpp-type-param;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppIdent;
+use Chomper::Cpp::GcppStr;
+use Chomper::Cpp::GcppParam;
+use Chomper::Cpp::GcppOperatorId;
+use Chomper::Cpp::GcppTypeParam;
 
-use tree-mark;
+use Chomper::TreeMark;
 
 # rule template-parameter:sym<type> { <type-parameter> }
 our class TemplateParameter::Type does ITemplateParameter {

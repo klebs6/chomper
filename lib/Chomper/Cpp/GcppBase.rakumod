@@ -1,7 +1,9 @@
+unit module Chomper::Cpp::GcppBase;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-attr;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppAttr;
 
 # rule base-specifier-list { 
 #   <base-specifier> 

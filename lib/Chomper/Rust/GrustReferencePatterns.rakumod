@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustReferencePatterns;
+
 use Data::Dump::Tree;
 
 our class ReferencePatternRef {

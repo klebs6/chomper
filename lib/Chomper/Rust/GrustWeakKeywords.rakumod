@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustWeakKeywords;
+
 use Data::Dump::Tree;
 
 #`( These keywords have special meaning only in
@@ -13,4 +15,3 @@ our role WeakKeywords::Rules {
 }
 
 our role WeakKeywords::Actions {}
-

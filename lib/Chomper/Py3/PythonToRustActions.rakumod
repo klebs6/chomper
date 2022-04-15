@@ -1,17 +1,17 @@
-use python3-args;
-use python3-class;
-use python3-comment;
-use python3-compound;
-use python3-comprehension;
-use python3-dunder-init;
-use python3-dunder;
-use python3-expr;
-use python3-func;
-use python3-lambdef;
-use python3-prelude;
-use python3-stmt;
-use python3-suite;
-use python3-varargs;
+use Chomper::Py3::Python3Args;
+use Chomper::Py3::Python3Class;
+use Chomper::Py3::Python3Comment;
+use Chomper::Py3::Python3Compound;
+use Chomper::Py3::Python3Comprehension;
+use Chomper::Py3::Python3DunderInit;
+use Chomper::Py3::Python3Dunder;
+use Chomper::Py3::Python3Expr;
+use Chomper::Py3::Python3Func;
+use Chomper::Py3::Python3Lambdef;
+use Chomper::Py3::Python3Prelude;
+use Chomper::Py3::Python3Stmt;
+use Chomper::Py3::Python3Suite;
+use Chomper::Py3::Python3Varargs;
 
 our sub get-compound-comments($/) {
 

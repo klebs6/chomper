@@ -1,6 +1,8 @@
+unit module Chomper::Rust::GrustEnumerations;
+
 use Data::Dump::Tree;
 
-our class Enumeration {
+our class Enumeration is export {
     has $.identifier;
     has $.maybe-generic-params;
     has $.maybe-where-clause;
@@ -44,7 +46,7 @@ our class Enumeration {
     }
 }
 
-our class EnumItem {
+our class EnumItem is export {
     has @.outer-attributes;
     has $.maybe-visibility;
     has $.identifier;
@@ -77,7 +79,7 @@ our class EnumItem {
     }
 }
 
-our class EnumVariantTuple {
+our class EnumVariantTuple is export {
     has $.maybe-tuple-fields;
 
     has $.text;
@@ -97,7 +99,7 @@ our class EnumVariantTuple {
     }
 }
 
-our class EnumVariantStruct {
+our class EnumVariantStruct is export {
     has $.maybe-struct-fields;
 
     has $.text;
@@ -116,7 +118,7 @@ our class EnumVariantStruct {
     }
 }
 
-our class EnumVariantDiscriminant {
+our class EnumVariantDiscriminant is export {
     has $.eq-expression;
 
     has $.text;
@@ -126,98 +128,101 @@ our class EnumVariantDiscriminant {
     }
 }
 
-our role Enumeration::Rules {
+package EnumerationGrammar is export {
 
-    rule enumeration {
-        <kw-enum> 
-        <identifier> 
-        <generic-params>? 
-        <where-clause>? 
-        <tok-lbrace> 
-        <enum-items>? 
-        <comment>?
-        <tok-rbrace>
+    our role Rules {
+
+        rule enumeration {
+            <kw-enum> 
+            <identifier> 
+            <generic-params>? 
+            <where-clause>? 
+            <tok-lbrace> 
+            <enum-items>? 
+            <comment>?
+            <tok-rbrace>
+        }
+
+        rule enum-items {
+            <enum-item>+ %% <tok-comma>
+        }
+
+        rule enum-item {
+            <comment>?
+            <outer-attribute>*
+            <visibility>?
+            <identifier>
+            <enum-item-variant>?
+        }
+
+        #----------------
+        proto rule enum-item-variant { * }
+
+        rule enum-item-variant:sym<tuple> {
+            <tok-lparen>
+            <tuple-fields>?
+            <tok-rparen>
+        }
+
+        rule enum-item-variant:sym<struct> {
+            <tok-lbrace>
+            <struct-fields>?
+            <tok-rbrace>
+        }
+
+        rule enum-item-variant:sym<discriminant> {
+            <tok-eq> <expression>
+        }
     }
 
-    rule enum-items {
-        <enum-item>+ %% <tok-comma>
-    }
+    our role Actions {
 
-    rule enum-item {
-        <comment>?
-        <outer-attribute>*
-        <visibility>?
-        <identifier>
-        <enum-item-variant>?
-    }
+        method enumeration($/) {
+            make Enumeration.new(
+                identifier                  => $<identifier>.made,
+                maybe-generic-params        => $<generic-params>.made,
+                maybe-where-clause          => $<where-clause>.made,
+                maybe-enum-items            => $<enum-items>.made,
+                maybe-trailing-body-comment => $<comment>.made,
+                text                        => $/.Str,
+            )
+        }
 
-    #----------------
-    proto rule enum-item-variant { * }
+        method enum-items($/) {
+            make $<enum-item>>>.made
+        }
 
-    rule enum-item-variant:sym<tuple> {
-        <tok-lparen>
-        <tuple-fields>?
-        <tok-rparen>
-    }
+        method enum-item($/) {
+            make EnumItem.new(
+                outer-attributes        => $<outer-attribute>>>.made,
+                maybe-visibility        => $<visibility>.made,
+                maybe-comment           => $<comment>.made,
+                identifier              => $<identifier>.made,
+                maybe-enum-item-variant => $<enum-item-variant>.made,
+                text                    => $/.Str,
+            )
+        }
 
-    rule enum-item-variant:sym<struct> {
-        <tok-lbrace>
-        <struct-fields>?
-        <tok-rbrace>
-    }
+        #----------------
+        method enum-item-variant:sym<tuple>($/) {
+            make EnumVariantTuple.new(
+                maybe-tuple-fields => $<tuple-fields>.made,
+                text               => $/.Str,
+            )
+        }
 
-    rule enum-item-variant:sym<discriminant> {
-        <tok-eq> <expression>
-    }
-}
+        method enum-item-variant:sym<struct>($/) {
+            make EnumVariantStruct.new(
+                struct-fields => $<struct-fields>.made,
+                text          => $/.Str,
+            )
+        }
 
-our role Enumeration::Actions {
-
-    method enumeration($/) {
-        make Enumeration.new(
-            identifier                  => $<identifier>.made,
-            maybe-generic-params        => $<generic-params>.made,
-            maybe-where-clause          => $<where-clause>.made,
-            maybe-enum-items            => $<enum-items>.made,
-            maybe-trailing-body-comment => $<comment>.made,
-            text                        => $/.Str,
-        )
-    }
-
-    method enum-items($/) {
-        make $<enum-item>>>.made
-    }
-
-    method enum-item($/) {
-        make EnumItem.new(
-            outer-attributes        => $<outer-attribute>>>.made,
-            maybe-visibility        => $<visibility>.made,
-            maybe-comment           => $<comment>.made,
-            identifier              => $<identifier>.made,
-            maybe-enum-item-variant => $<enum-item-variant>.made,
-            text                    => $/.Str,
-        )
-    }
-
-    #----------------
-    method enum-item-variant:sym<tuple>($/) {
-        make EnumVariantTuple.new(
-            maybe-tuple-fields => $<tuple-fields>.made,
-            text               => $/.Str,
-        )
-    }
-
-    method enum-item-variant:sym<struct>($/) {
-        make EnumVariantStruct.new(
-            struct-fields => $<struct-fields>.made,
-            text          => $/.Str,
-        )
-    }
-
-    method enum-item-variant:sym<discriminant>($/) {
-        make EnumVariantDiscriminant.new(
-            eq-expression => $<expression>.made,
-            text          => $/.Str,
-        )
+        method enum-item-variant:sym<discriminant>($/) {
+            make EnumVariantDiscriminant.new(
+                eq-expression => $<expression>.made,
+                text          => $/.Str,
+            )
+        }
     }
 }

@@ -1,6 +1,8 @@
+unit module Chomper::Rust::GrustImplTrait;
+
 use Data::Dump::Tree;
 
-our class ImplTraitType {
+class ImplTraitType is export {
     has $.type-param-bounds;
 
     has $.text;
@@ -10,7 +12,7 @@ our class ImplTraitType {
     }
 }
 
-our class ImplTraitTypeOneBound {
+class ImplTraitTypeOneBound is export {
     has $.trait-bound;
 
     has $.text;
@@ -20,32 +22,35 @@ our class ImplTraitTypeOneBound {
     }
 }
 
-our role ImplTraitType::Rules {
+package ImplTraitTypeGrammar is export {
 
-    rule impl-trait-type {
-        <kw-impl>
-        <type-param-bounds>
+    our role Rules {
+
+        rule impl-trait-type {
+            <kw-impl>
+            <type-param-bounds>
+        }
+
+        rule impl-trait-type-one-bound {
+            <kw-impl>
+            <trait-bound>
+        }
     }
 
-    rule impl-trait-type-one-bound {
-        <kw-impl>
-        <trait-bound>
-    }
-}
+    our role Actions {
 
-our role ImplTraitType::Actions {
+        method impl-trait-type($/) {
+            make ImplTraitType.new(
+                type-param-bounds => $<type-param-bounds>.made,
+                text              => $/.Str,
+            )
+        }
 
-    method impl-trait-type($/) {
-        make ImplTraitType.new(
-            type-param-bounds => $<type-param-bounds>.made,
-            text              => $/.Str,
-        )
-    }
-
-    method impl-trait-type-one-bound($/) {
-        make ImplTraitTypeOneBound.new(
-            trait-bound => $<trait-bound>.made,
-            text        => $/.Str,
-        )
+        method impl-trait-type-one-bound($/) {
+            make ImplTraitTypeOneBound.new(
+                trait-bound => $<trait-bound>.made,
+                text        => $/.Str,
+            )
+        }
     }
 }

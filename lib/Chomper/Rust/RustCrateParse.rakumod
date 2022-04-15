@@ -1,7 +1,7 @@
-use grust-crate-grammar;
+use Chomper::Rust::GrustCrateGrammar;
 use Data::Dump::Tree;
 use Terminal::ANSIColor;
-use cargo-workspace;
+use Chomper::CargoWorkspace;
 
 my $empty-line = regex {
     ^^ \h* $$ \n

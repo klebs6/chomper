@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustTupleStructPatterns;
+
 use Data::Dump::Tree;
 
 our class TupleStructPattern {

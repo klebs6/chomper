@@ -1,17 +1,17 @@
-use snake-case;
-use avoid-keywords;
-use python3-comment;
-use doxy-comment;
-use pyrust;
-use formatting;
-use case;
-use wrap-body-todo;
-use indent-rust-named-type-list;
-use python3-suite;
-use python3-compound;
-use python3-func;
-use python3-lambdef;
-use python3-dunder;
+use Chomper::SnakeCase;
+use Chomper::AvoidKeywords;
+use Chomper::Py3::Python3Comment;
+use Chomper::DoxyComment;
+use Chomper::Py3::Pyrust;
+use Chomper::Formatting;
+use Chomper::Case;
+use Chomper::WrapBodyTodo;
+use Chomper::Rust::IndentRustNamedTypeList;
+use Chomper::Py3::Python3Suite;
+use Chomper::Py3::Python3Compound;
+use Chomper::Py3::Python3Func;
+use Chomper::Py3::Python3Lambdef;
+use Chomper::Py3::Python3Dunder;
 
 our class Python3::Classdef 
 does Python3::ICompoundStmt

@@ -1,12 +1,14 @@
+unit module Chomper::Cpp::GcppTypeName;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-template;
-use gcpp-type-id;
-use gcpp-enum;
-use gcpp-typedef;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppTemplate;
+use Chomper::Cpp::GcppTypeId;
+use Chomper::Cpp::GcppEnum;
+use Chomper::Cpp::GcppTypedef;
 
-use tree-mark;
+use Chomper::TreeMark;
 
 # rule the-type-name:sym<simple-template-id> { <simple-template-id> }
 our class TheTypeName::SimpleTemplateId does ITheTypeName {

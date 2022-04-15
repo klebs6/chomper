@@ -1,6 +1,8 @@
+unit module Chomper::Rust::GrustConfiguration;
+
 use Data::Dump::Tree;
 
-our class ConfigurationPredicateOption {
+class ConfigurationPredicateOption is export {
     has $.identifier;
     has $.maybe-str-literal;
 
@@ -19,7 +21,7 @@ our class ConfigurationPredicateOption {
     }
 }
 
-our class ConfigurationPredicateAll {
+class ConfigurationPredicateAll is export {
     has @.predicates;
 
     has $.text;
@@ -29,7 +31,7 @@ our class ConfigurationPredicateAll {
     }
 }
 
-our class ConfigurationPredicateAny {
+class ConfigurationPredicateAny is export {
     has @.predicates;
 
     has $.text;
@@ -39,7 +41,7 @@ our class ConfigurationPredicateAny {
     }
 }
 
-our class ConfigurationPredicateNot {
+class ConfigurationPredicateNot is export {
     has $.predicate;
 
     has $.text;
@@ -49,92 +51,95 @@ our class ConfigurationPredicateNot {
     }
 }
 
-our role ConfigurationPredicate::Rules {
+package ConfigurationPredicateGrammar is export {
 
-    proto rule configuration-predicate { * }
+    our role Rules {
 
-    rule configuration-predicate:sym<option> {
-        <identifier> [ <tok-eq> <any-str-literal> ]?
+        proto rule configuration-predicate { * }
+
+        rule configuration-predicate:sym<option> {
+            <identifier> [ <tok-eq> <any-str-literal> ]?
+        }
+
+        rule configuration-predicate:sym<all> {
+            <kw-all>
+            <tok-lparen>
+            <configuration-predicate-list>?
+            <tok-rparen>
+        }
+
+        rule configuration-predicate:sym<any> {
+            <kw-any>
+            <tok-lparen>
+            <configuration-predicate-list>?
+            <tok-rparen>
+        }
+
+        rule configuration-predicate:sym<not> {
+            <kw-not>
+            <tok-lparen>
+            <configuration-predicate>?
+            <tok-rparen>
+        }
+
+        #---------------------
+        proto token any-str-literal { * }
+
+        token any-str-literal:sym<basic> {
+            <string-literal>
+        }
+
+        token any-str-literal:sym<raw> {
+            <raw-string-literal>
+        }
+
+        rule configuration-predicate-list {
+            <configuration-predicate>+ %% <tok-comma>
+        }
     }
 
-    rule configuration-predicate:sym<all> {
-        <kw-all>
-        <tok-lparen>
-        <configuration-predicate-list>?
-        <tok-rparen>
-    }
+    our role Actions {
 
-    rule configuration-predicate:sym<any> {
-        <kw-any>
-        <tok-lparen>
-        <configuration-predicate-list>?
-        <tok-rparen>
-    }
+        method configuration-predicate:sym<option>($/) {
+            make ConfigurationPredicateOption.new(
+                identifier        => $<identifier>.made,
+                maybe-str-literal => $<any-str-literal>.made,
+                text => $/.Str,
+            )
+        }
 
-    rule configuration-predicate:sym<not> {
-        <kw-not>
-        <tok-lparen>
-        <configuration-predicate>?
-        <tok-rparen>
-    }
+        method configuration-predicate:sym<all>($/) {
+            make ConfigurationPredicateAll.new(
+                predicates => $<configuration-predicate-list>>>.made,
+                text => $/.Str,
+            )
+        }
 
-    #---------------------
-    proto token any-str-literal { * }
+        method configuration-predicate:sym<any>($/) {
+            make ConfigurationPredicateAny.new(
+                predicates => $<configuration-predicate-list>>>.made,
+                text => $/.Str,
+            )
+        }
 
-    token any-str-literal:sym<basic> {
-        <string-literal>
-    }
+        method configuration-predicate:sym<not>($/) {
+            make ConfigurationPredicateNot.new(
+                predicate => $<configuration-predicate-list>.made,
+                text => $/.Str,
+            )
+        }
 
-    token any-str-literal:sym<raw> {
-        <raw-string-literal>
-    }
+        #---------------------
+        method any-str-literal:sym<basic>($/) {
+            make $<string-literal>.made
+        }
 
-    rule configuration-predicate-list {
-        <configuration-predicate>+ %% <tok-comma>
-    }
-}
+        method any-str-literal:sym<raw>($/) {
+            make $<raw-string-literal>.made
+        }
 
-our role ConfigurationPredicate::Actions {
-
-    method configuration-predicate:sym<option>($/) {
-        make ConfigurationPredicateOption.new(
-            identifier        => $<identifier>.made,
-            maybe-str-literal => $<any-str-literal>.made,
-            text => $/.Str,
-        )
-    }
-
-    method configuration-predicate:sym<all>($/) {
-        make ConfigurationPredicateAll.new(
-            predicates => $<configuration-predicate-list>>>.made,
-            text => $/.Str,
-        )
-    }
-
-    method configuration-predicate:sym<any>($/) {
-        make ConfigurationPredicateAny.new(
-            predicates => $<configuration-predicate-list>>>.made,
-            text => $/.Str,
-        )
-    }
-
-    method configuration-predicate:sym<not>($/) {
-        make ConfigurationPredicateNot.new(
-            predicate => $<configuration-predicate-list>.made,
-            text => $/.Str,
-        )
-    }
-
-    #---------------------
-    method any-str-literal:sym<basic>($/) {
-        make $<string-literal>.made
-    }
-
-    method any-str-literal:sym<raw>($/) {
-        make $<raw-string-literal>.made
-    }
-
-    method configuration-predicate-list($/) {
-        make $<configuration-predicate>>>.made
+        method configuration-predicate-list($/) {
+            make $<configuration-predicate>>>.made
+        }
     }
 }

@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustStructExpressions;
+
 use Data::Dump::Tree;
 
 our class StructExpressionStruct {

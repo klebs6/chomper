@@ -1,6 +1,8 @@
+unit module Chomper::Rust::GrustCrate;
+
 use Data::Dump::Tree;
 
-our class Crate {
+class Crate is export {
     has Bool $.bom;
     has Bool $.shebang;
     has @.inner-attributes;
@@ -32,7 +34,7 @@ our class Crate {
     }
 }
 
-our class AsClause {
+class AsClause is export {
     has $.identifier-or-underscore;
 
     has $.text;
@@ -42,7 +44,7 @@ our class AsClause {
     }
 }
 
-our class ExternCrate {
+class ExternCrate is export {
     has $.crate-ref;
     has $.maybe-as-clause;
 
@@ -70,180 +72,72 @@ our class ExternCrate {
     }
 }
 
-our class ModuleSemi {
-    has Bool $.unsafe;
-    has $.identifier;
+package CrateGrammar is export {
 
-    has $.text;
+    our role Rules {
 
-    method gist {
-
-        my $builder = "";
-
-        if $.unsafe {
-            $builder ~= "unsafe ";
+        rule crate {
+            <utf8-bom>?
+            <shebang>?
+            <inner-attribute>*
+            <crate-item>*
         }
 
-        $builder ~= "mod " ~ $.identifier.gist ~ ";";
-
-        $builder
-    }
-
-    method name {
-        $.identifier.gist
-    }
-
-    method has-name {
-        True
-    }
-}
-
-our class ModuleBlock {
-    has Bool $.unsafe;
-    has $.identifier;
-    has @.inner-attributes;
-    has @.crate-items;
-
-    has $.text;
-
-    method gist {
-
-        my $builder = "";
-
-        if $.unsafe {
-            $builder ~= "unsafe ";
+        token utf8-bom {
+            \x[FEFF]
         }
 
-        $builder ~= "mod " ~ $.identifier.gist;
-
-        $builder ~= "\{\n";
-
-        for @.inner-attributes {
-            my $item = $_.gist ~ "\n";
-            $builder ~= $item.indent(4);
+        token shebang {
+            <tok-shebang> \N+
         }
 
-        for @.crate-items {
-            my $item = $_.gist ~ "\n";
-            $builder ~= $item.indent(4);
+        rule as-clause {
+            <kw-as>
+            <identifier-or-underscore>
         }
 
-        $builder ~= "\n\}";
+        rule extern-crate {
+            <kw-extern>
+            <kw-crate>
+            <crate-ref>
+            <as-clause>?
+            <tok-semi>
+        }
 
-        $builder
+        proto rule crate-ref { * }
+
+        rule crate-ref:sym<id>   { <identifier> }
+        rule crate-ref:sym<self> { <kw-selfvalue> }
     }
 
-    method name {
-        $.identifier.gist
-    }
+    our role Actions {
 
-    method has-name {
-        True
-    }
-}
+        method crate($/) {
+            make Crate.new(
+                bom              => so $/<utf8-bom>:exists,
+                shebang          => so $/<shebang>:exists,
+                inner-attributes => $<inner-attribute>>>.made,
+                crate-items      => $<crate-item>>>.made,
+                text             => $/.Str,
+            )
+        }
 
-our role Crate::Rules {
+        method as-clause($/) {
+            make AsClause.new(
+                identifier-or-underscore => $<identifier-or-underscore>.made,
+                text                     => $/.Str,
+            )
+        }
 
-    rule crate {
-        <utf8-bom>?
-        <shebang>?
-        <inner-attribute>*
-        <crate-item>*
-    }
+        method extern-crate($/) {
+            make ExternCrate.new(
+                crate-ref       => $<crate-ref>.made,
+                maybe-as-clause => $<as-clause>.made,
+                text            => $/.Str,
+            )
+        }
 
-    token utf8-bom {
-        \x[FEFF]
-    }
-
-    token shebang {
-        <tok-shebang> \N+
-    }
-
-    rule as-clause {
-        <kw-as>
-        <identifier-or-underscore>
-    }
-
-    rule extern-crate {
-        <kw-extern>
-        <kw-crate>
-        <crate-ref>
-        <as-clause>?
-        <tok-semi>
-    }
-
-    proto rule crate-ref { * }
-
-    rule crate-ref:sym<id>   { <identifier> }
-    rule crate-ref:sym<self> { <kw-selfvalue> }
-
-    #-------------------------
-    proto rule module { * }
-
-    rule module:sym<semi> {
-        <kw-unsafe>? 
-        <kw-mod> 
-        <identifier> 
-        <tok-semi>
-    }
-
-    rule module:sym<block> {
-        <kw-unsafe>?
-        <kw-mod>
-        <identifier>
-        <tok-lbrace>
-        <inner-attribute>*
-        <crate-item>*
-        <tok-rbrace>
-    }
-}
-
-our role Crate::Actions {
-
-    method crate($/) {
-        make Crate.new(
-            bom              => so $/<utf8-bom>:exists,
-            shebang          => so $/<shebang>:exists,
-            inner-attributes => $<inner-attribute>>>.made,
-            crate-items      => $<crate-item>>>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method as-clause($/) {
-        make AsClause.new(
-            identifier-or-underscore => $<identifier-or-underscore>.made,
-            text                     => $/.Str,
-        )
-    }
-
-    method extern-crate($/) {
-        make ExternCrate.new(
-            crate-ref       => $<crate-ref>.made,
-            maybe-as-clause => $<as-clause>.made,
-            text            => $/.Str,
-        )
-    }
-
-    method crate-ref:sym<id>($/)   { make $<identifier>.made }
-    method crate-ref:sym<self>($/) { make $<kw-selfvalue>.made }
-
-    #-------------------------
-    method module:sym<semi>($/) {
-        make ModuleSemi.new(
-            unsafe     => so $/<kw-unsafe>:exists,
-            identifier => $<identifier>.made,
-            text => $/.Str,
-        )
-    }
-
-    method module:sym<block>($/) {
-        make ModuleBlock.new(
-            unsafe           => so $/<kw-unsafe>:exists,
-            identifier       => $<identifier>.made,
-            inner-attributes => $<inner-attribute>>>.made,
-            crate-item       => $<crate-item>>>.made,
-            text => $/.Str,
-        )
+        method crate-ref:sym<id>($/)   { make $<identifier>.made }
+        method crate-ref:sym<self>($/) { make $<kw-selfvalue>.made }
     }
 }

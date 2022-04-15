@@ -1,6 +1,8 @@
+unit module Chomper::Rust::GrustExternalBlocks;
+
 use Data::Dump::Tree;
 
-our class ExternBlock {
+class ExternBlock is export {
     has Bool $.unsafe;
     has $.maybe-abi;
     has @.inner-attributes;
@@ -42,7 +44,7 @@ our class ExternBlock {
     }
 }
 
-our class ExternalItem {
+class ExternalItem is export {
     has @.outer-attributes;
     has $.external-item-variant;
 
@@ -62,7 +64,7 @@ our class ExternalItem {
     }
 }
 
-our class ExternalItemMacroInvocation {
+class ExternalItemMacroInvocation is export {
     has $.macro-invocation;
 
     has $.text;
@@ -72,7 +74,7 @@ our class ExternalItemMacroInvocation {
     }
 }
 
-our class ExternalItemFn {
+class ExternalItemFn is export {
     has $.maybe-visibility;
     has $.function;
 
@@ -92,7 +94,7 @@ our class ExternalItemFn {
     }
 }
 
-our class ExternalItemStatic {
+class ExternalItemStatic is export {
     has $.maybe-visibility;
     has $.static-item;
 
@@ -111,80 +113,83 @@ our class ExternalItemStatic {
     }
 }
 
-our role ExternBlock::Rules {
+package ExternBlockGrammar is export {
 
-    rule extern-block {
-        <kw-unsafe>?
-        <kw-extern>
-        <abi>?
-        <tok-lbrace>
-        <inner-attribute>*
-        <external-item>*
-        <tok-rbrace>
+    our role Rules {
+
+        rule extern-block {
+            <kw-unsafe>?
+            <kw-extern>
+            <abi>?
+            <tok-lbrace>
+            <inner-attribute>*
+            <external-item>*
+            <tok-rbrace>
+        }
+
+        rule external-item {
+            <outer-attribute>*
+            <external-item-variant>
+        }
+
+        proto rule external-item-variant { * }
+
+        rule external-item-variant:sym<macro> {
+            <macro-invocation>
+        }
+
+        rule external-item-variant:sym<fn> {
+            <visibility>?
+            <function>
+        }
+
+        rule external-item-variant:sym<static> {
+            <visibility>?
+            <static-item>
+        }
     }
 
-    rule external-item {
-        <outer-attribute>*
-        <external-item-variant>
-    }
+    our role Actions {
 
-    proto rule external-item-variant { * }
+        method extern-block($/) {
+            make ExternBlock.new(
+                unsafe           => so $/<kw-unsafe>:exists,
+                maybe-abi        => $<abi>.made,
+                inner-attributes => $<inner-attribute>>>.made,
+                external-items   => $<external-item>>>.made,
+                text             => $/.Str,
+            )
+        }
 
-    rule external-item-variant:sym<macro> {
-        <macro-invocation>
-    }
+        method external-item($/) {
+            make ExternalItem.new(
+                outer-attributes      => $<outer-attribute>>>.made,
+                external-item-variant => $<external-item-variant>.made,
+                text                  => $/.Str,
+            )
+        }
 
-    rule external-item-variant:sym<fn> {
-        <visibility>?
-        <function>
-    }
+        method external-item-variant:sym<macro>($/) {
+            make ExternalItemMacroInvocation.new(
+                macro-invocation => $<macro-invocation>.made,
+                text             => $/.Str,
+            )
+        }
 
-    rule external-item-variant:sym<static> {
-        <visibility>?
-        <static-item>
-    }
-}
+        method external-item-variant:sym<fn>($/) {
+            make ExternalItemFn.new(
+                maybe-visibility => $<visibility>.made,
+                function         => $<function>.made,
+                text             => $/.Str,
+            )
+        }
 
-our role ExternBlock::Actions {
-
-    method extern-block($/) {
-        make ExternBlock.new(
-            unsafe           => so $/<kw-unsafe>:exists,
-            maybe-abi        => $<abi>.made,
-            inner-attributes => $<inner-attribute>>>.made,
-            external-items   => $<external-item>>>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method external-item($/) {
-        make ExternalItem.new(
-            outer-attributes      => $<outer-attribute>>>.made,
-            external-item-variant => $<external-item-variant>.made,
-            text                  => $/.Str,
-        )
-    }
-
-    method external-item-variant:sym<macro>($/) {
-        make ExternalItemMacroInvocation.new(
-            macro-invocation => $<macro-invocation>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method external-item-variant:sym<fn>($/) {
-        make ExternalItemFn.new(
-            maybe-visibility => $<visibility>.made,
-            function         => $<function>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method external-item-variant:sym<static>($/) {
-        make ExternalItemStatic.new(
-            maybe-visibility => $<visibility>.made,
-            static-item      => $<static-item>.made,
-            text             => $/.Str,
-        )
+        method external-item-variant:sym<static>($/) {
+            make ExternalItemStatic.new(
+                maybe-visibility => $<visibility>.made,
+                static-item      => $<static-item>.made,
+                text             => $/.Str,
+            )
+        }
     }
 }

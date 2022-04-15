@@ -1,6 +1,6 @@
 #!/usr/bin/env raku
 
-use doxy-comment;
+use Chomper::Core::DoxyComment;
 
 sub MAIN(:$indent = False) {
 

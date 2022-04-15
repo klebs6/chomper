@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppDigit;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 our class Digit { 
     has Str $.value is required; 

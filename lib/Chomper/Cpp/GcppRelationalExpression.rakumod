@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppRelationalExpression;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # rule relational-operator:sym<less> { <.less> }
 our class RelationalOperator::Less does IRelationalOperator {

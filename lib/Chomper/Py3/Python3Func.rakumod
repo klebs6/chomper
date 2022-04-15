@@ -1,9 +1,9 @@
-use python3-comment;
-use python3-compound;
-use python3-decorator;
-use python3-suite;
-use pyrust;
-use snake-case;
+use Chomper::Py3::Python3Comment;
+use Chomper::Py3::Python3Compound;
+use Chomper::Py3::Python3Decorator;
+use Chomper::Py3::Python3Suite;
+use Chomper::Py3::Pyrust;
+use Chomper::SnakeCase;
 
 our role Python3::IFuncDef {     }
 our class Python3::FuncDef { ... } # fwd declare

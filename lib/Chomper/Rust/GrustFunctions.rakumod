@@ -1,6 +1,8 @@
+unit module Chomper::Rust::GrustFunctions;
+
 use Data::Dump::Tree;
 
-our class Function {
+class Function is export {
     has $.function-qualifiers;
     has $.identifier;
     has $.maybe-generic-params;
@@ -56,7 +58,7 @@ our class Function {
     }
 }
 
-our class FunctionQualifiers {
+class FunctionQualifiers is export {
     has Bool $.const;
     has Bool $.async;
     has Bool $.unsafe;
@@ -88,7 +90,7 @@ our class FunctionQualifiers {
     }
 }
 
-our class FunctionParameters {
+class FunctionParameters is export {
     has $.maybe-self-param;
     has @.function-params;
 
@@ -111,7 +113,7 @@ our class FunctionParameters {
     }
 }
 
-our class SelfParam {
+class SelfParam is export {
     has @.outer-attributes;
     has $.self-param-variant;
 
@@ -129,7 +131,7 @@ our class SelfParam {
     }
 }
 
-our class SelfBorrow {
+class SelfBorrow is export {
     has $.maybe-lifetime;
 
     has $.text;
@@ -146,7 +148,7 @@ our class SelfBorrow {
     }
 }
 
-our class SelfParamVariantShorthand {
+class SelfParamVariantShorthand is export {
     has $.maybe-self-borrow;
     has Bool $.mutable;
 
@@ -168,7 +170,7 @@ our class SelfParamVariantShorthand {
     }
 }
 
-our class SelfParamVariantTyped {
+class SelfParamVariantTyped is export {
     has Bool $.mutable;
     has $.type;
 
@@ -188,7 +190,7 @@ our class SelfParamVariantTyped {
     }
 }
 
-our class FunctionParam {
+class FunctionParam is export {
     has $.maybe-comment;
     has @.outer-attributes;
     has $.function-param-variant;
@@ -213,7 +215,7 @@ our class FunctionParam {
     }
 }
 
-our class FunctionParamVariantPatternType {
+class FunctionParamVariantPatternType is export {
     has $.pattern-no-top-alt;
     has $.type;
 
@@ -226,7 +228,7 @@ our class FunctionParamVariantPatternType {
     }
 }
 
-our class FunctionParamVariantPatternEllipsis {
+class FunctionParamVariantPatternEllipsis is export {
     has $.pattern-no-top-alt;
 
     has $.text;
@@ -238,7 +240,7 @@ our class FunctionParamVariantPatternEllipsis {
     }
 }
 
-our class FunctionParamVariantEllipsis { 
+class FunctionParamVariantEllipsis is export { 
 
     has $.text;
 
@@ -247,7 +249,7 @@ our class FunctionParamVariantEllipsis {
     }
 }
 
-our class FunctionReturnType {
+class FunctionReturnType is export {
     has $.type;
     has $.maybe-comment;
 
@@ -264,240 +266,243 @@ our class FunctionReturnType {
     }
 }
 
-our role Function::Rules {
+package FunctionGrammar is export {
 
-    rule function {
-        <function-qualifiers>
-        <kw-fn>
-        <identifier>
-        <generic-params>?
-        <tok-lparen>
-        <function-parameters>?
-        <tok-rparen>
-        <comment>?
-        <function-return-type>?
-        <where-clause>?
-        [
-            | <block-expression>
-            | <tok-semi>
-        ]
+    our role Rules {
+
+        rule function {
+            <function-qualifiers>
+            <kw-fn>
+            <identifier>
+            <generic-params>?
+            <tok-lparen>
+            <function-parameters>?
+            <tok-rparen>
+            <comment>?
+            <function-return-type>?
+            <where-clause>?
+            [
+                | <block-expression>
+                | <tok-semi>
+            ]
+        }
+
+        rule function-qualifiers {
+            <kw-const>?
+            <kw-async>?
+            <kw-unsafe>?
+            <function-extern-modifier>?
+        }
+
+        proto rule abi { * }
+
+        rule abi:sym<str>     { <string-literal> }
+
+        rule abi:sym<raw-str> { <raw-string-literal> }
+
+        #----------------------
+        proto rule function-parameters { * }
+
+        rule function-parameters:sym<self-and-just-params> {
+            <self-param> 
+            <tok-comma>
+            [ <function-param>+ %% <tok-comma> ]
+        }
+
+        rule function-parameters:sym<just-self> {
+            <self-param> <tok-comma>?
+        }
+
+        rule function-parameters:sym<just-params> {
+            <function-param>+ %% <tok-comma>
+        }
+
+
+        #----------------------
+        rule self-param {  
+            <outer-attribute>*
+            <self-param-variant>
+        }
+
+        rule self-borrow {
+            <tok-and> <lifetime>?
+        }
+
+        proto rule self-param-variant { * }
+
+        rule self-param-variant:sym<shorthand> { 
+            <self-borrow>?
+            <kw-mut>?
+            <kw-selfvalue>
+        }
+
+        rule self-param-variant:sym<typed> { 
+            <kw-mut>?
+            <kw-selfvalue>
+            <tok-colon>
+            <type>
+        }
+
+        #-------------------
+        rule function-param {
+            <comment>?
+            <outer-attribute>*
+            <function-param-variant>
+        }
+
+        proto rule function-param-variant { * }
+
+        rule function-param-variant:sym<pattern-type> {
+            <pattern-no-top-alt> 
+            <tok-colon>
+            <type> 
+        }
+
+        rule function-param-variant:sym<pattern-ellipsis> {
+            <pattern-no-top-alt> 
+            <tok-colon>
+            <tok-dotdotdot>
+        }
+
+        rule function-param-variant:sym<ellipsis> {
+            <tok-dotdotdot>
+        }
+
+        rule function-param-variant:sym<type> {
+            <type>
+        }
+
+        #-------------------
+        rule function-return-type {
+            <tok-rarrow>
+            <type>
+            <comment>?
+        }
     }
 
-    rule function-qualifiers {
-        <kw-const>?
-        <kw-async>?
-        <kw-unsafe>?
-        <function-extern-modifier>?
-    }
+    our role Actions {
 
-    proto rule abi { * }
+        method function($/) {
+            make Function.new(
+                function-qualifiers        => $<function-qualifiers>.made,
+                identifier                 => $<identifier>.made,
+                maybe-generic-params       => $<generic-params>.made,
+                maybe-function-parameters  => $<function-parameters>.made,
+                maybe-function-return-type => $<function-return-type>.made,
+                maybe-where-clause         => $<where-clause>.made,
+                maybe-block-expression     => $<block-expression>.made,
+                text                       => $/.Str,
+            )
+        }
 
-    rule abi:sym<str>     { <string-literal> }
+        method function-qualifiers($/) {
+            make FunctionQualifiers.new(
+                const                          => so $/<kw-const>:exists,
+                async                          => so $/<kw-async>:exists,
+                unsafe                         => so $/<kw-unsafe>:exists,
+                maybe-function-extern-modifier => $<function-extern-modifier>.made,
+                text                           => $/.Str,
+            )
+        }
 
-    rule abi:sym<raw-str> { <raw-string-literal> }
+        method abi:sym<str>($/)     { make $<string-literal>.made }
+        method abi:sym<raw-str>($/) { make $<raw-string-literal>.made }
 
-    #----------------------
-    proto rule function-parameters { * }
+        #----------------------
+        method function-parameters:sym<self-and-just-params>($/) {
+            make FunctionParameters.new(
+                maybe-self-param => $<self-param>.made,
+                function-params  => $<function-param>>>.made,
+                text             => $/.Str,
+            )
+        }
 
-    rule function-parameters:sym<self-and-just-params> {
-        <self-param> 
-        <tok-comma>
-        [ <function-param>+ %% <tok-comma> ]
-    }
+        method function-parameters:sym<just-self>($/) {
+            make FunctionParameters.new(
+                maybe-self-param => $<self-param>.made,
+                text             => $/.Str,
+            )
+        }
 
-    rule function-parameters:sym<just-self> {
-        <self-param> <tok-comma>?
-    }
+        method function-parameters:sym<just-params>($/) {
+            make FunctionParameters.new(
+                function-params => $<function-param>>>.made,
+                text            => $/.Str,
+            )
+        }
 
-    rule function-parameters:sym<just-params> {
-        <function-param>+ %% <tok-comma>
-    }
+        #----------------------
+        method self-param($/) {  
+            make SelfParam.new(
+                outer-attributes   => $<outer-attribute>>>.made,
+                self-param-variant => $<self-param-variant>.made,
+                text               => $/.Str,
+            )
+        }
 
+        method self-borrow($/) {
+            make SelfBorrow.new(
+                maybe-lifetime => $<lifetime>.made,
+                text           => $/.Str,
+            )
+        }
 
-    #----------------------
-    rule self-param {  
-        <outer-attribute>*
-        <self-param-variant>
-    }
+        method self-param-variant:sym<shorthand>($/) { 
+            make SelfParamVariantShorthand.new(
+                maybe-self-borrow => $<self-borrow>.made,
+                mutable           => so $/<kw-mut>:exists,
+                text              => $/.Str,
+            )
+        }
 
-    rule self-borrow {
-        <tok-and> <lifetime>?
-    }
+        method self-param-variant:sym<typed>($/) { 
+            make SelfParamVariantTyped.new(
+                mutable => so $/<kw-mut>:exists,
+                type    => $<type>.made,
+                text    => $/.Str,
+            )
+        }
 
-    proto rule self-param-variant { * }
+        #-------------------
+        method function-param($/) {
+            make FunctionParam.new(
+                maybe-comment          => $<comment>.made,
+                outer-attributes       => $<outer-attribute>>>.made,
+                function-param-variant => $<function-param-variant>.made,
+                text                   => $/.Str,
+            )
+        }
 
-    rule self-param-variant:sym<shorthand> { 
-        <self-borrow>?
-        <kw-mut>?
-        <kw-selfvalue>
-    }
+        method function-param-variant:sym<pattern-type>($/) {
+            make FunctionParamVariantPatternType.new(
+                pattern-no-top-alt => $<pattern-no-top-alt>.made,
+                type               => $<type>.made,
+                text               => $/.Str,
+            )
+        }
 
-    rule self-param-variant:sym<typed> { 
-        <kw-mut>?
-        <kw-selfvalue>
-        <tok-colon>
-        <type>
-    }
+        method function-param-variant:sym<pattern-ellipsis>($/) {
+            make FunctionParamVariantPatternEllipsis.new(
+                pattern-no-top-alt => $<pattern-no-top-alt>.made,
+                text               => $/.Str,
+            )
+        }
 
-    #-------------------
-    rule function-param {
-        <comment>?
-        <outer-attribute>*
-        <function-param-variant>
-    }
+        method function-param-variant:sym<ellipsis>($/) {
+            make FunctionParamVariantEllipsis.new
+        }
 
-    proto rule function-param-variant { * }
+        method function-param-variant:sym<type>($/) {
+            make $<type>.made
+        }
 
-    rule function-param-variant:sym<pattern-type> {
-        <pattern-no-top-alt> 
-        <tok-colon>
-        <type> 
-    }
-
-    rule function-param-variant:sym<pattern-ellipsis> {
-        <pattern-no-top-alt> 
-        <tok-colon>
-        <tok-dotdotdot>
-    }
-
-    rule function-param-variant:sym<ellipsis> {
-        <tok-dotdotdot>
-    }
-
-    rule function-param-variant:sym<type> {
-        <type>
-    }
-
-    #-------------------
-    rule function-return-type {
-        <tok-rarrow>
-        <type>
-        <comment>?
-    }
-}
-
-our role Function::Actions {
-
-    method function($/) {
-        make Function.new(
-            function-qualifiers        => $<function-qualifiers>.made,
-            identifier                 => $<identifier>.made,
-            maybe-generic-params       => $<generic-params>.made,
-            maybe-function-parameters  => $<function-parameters>.made,
-            maybe-function-return-type => $<function-return-type>.made,
-            maybe-where-clause         => $<where-clause>.made,
-            maybe-block-expression     => $<block-expression>.made,
-            text                       => $/.Str,
-        )
-    }
-
-    method function-qualifiers($/) {
-        make FunctionQualifiers.new(
-            const                          => so $/<kw-const>:exists,
-            async                          => so $/<kw-async>:exists,
-            unsafe                         => so $/<kw-unsafe>:exists,
-            maybe-function-extern-modifier => $<function-extern-modifier>.made,
-            text                           => $/.Str,
-        )
-    }
-
-    method abi:sym<str>($/)     { make $<string-literal>.made }
-    method abi:sym<raw-str>($/) { make $<raw-string-literal>.made }
-
-    #----------------------
-    method function-parameters:sym<self-and-just-params>($/) {
-        make FunctionParameters.new(
-            maybe-self-param => $<self-param>.made,
-            function-params  => $<function-param>>>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method function-parameters:sym<just-self>($/) {
-        make FunctionParameters.new(
-            maybe-self-param => $<self-param>.made,
-            text             => $/.Str,
-        )
-    }
-
-    method function-parameters:sym<just-params>($/) {
-        make FunctionParameters.new(
-            function-params => $<function-param>>>.made,
-            text            => $/.Str,
-        )
-    }
-
-    #----------------------
-    method self-param($/) {  
-        make SelfParam.new(
-            outer-attributes   => $<outer-attribute>>>.made,
-            self-param-variant => $<self-param-variant>.made,
-            text               => $/.Str,
-        )
-    }
-
-    method self-borrow($/) {
-        make SelfBorrow.new(
-            maybe-lifetime => $<lifetime>.made,
-            text           => $/.Str,
-        )
-    }
-
-    method self-param-variant:sym<shorthand>($/) { 
-        make SelfParamVariantShorthand.new(
-            maybe-self-borrow => $<self-borrow>.made,
-            mutable           => so $/<kw-mut>:exists,
-            text              => $/.Str,
-        )
-    }
-
-    method self-param-variant:sym<typed>($/) { 
-        make SelfParamVariantTyped.new(
-            mutable => so $/<kw-mut>:exists,
-            type    => $<type>.made,
-            text    => $/.Str,
-        )
-    }
-
-    #-------------------
-    method function-param($/) {
-        make FunctionParam.new(
-            maybe-comment          => $<comment>.made,
-            outer-attributes       => $<outer-attribute>>>.made,
-            function-param-variant => $<function-param-variant>.made,
-            text                   => $/.Str,
-        )
-    }
-
-    method function-param-variant:sym<pattern-type>($/) {
-        make FunctionParamVariantPatternType.new(
-            pattern-no-top-alt => $<pattern-no-top-alt>.made,
-            type               => $<type>.made,
-            text               => $/.Str,
-        )
-    }
-
-    method function-param-variant:sym<pattern-ellipsis>($/) {
-        make FunctionParamVariantPatternEllipsis.new(
-            pattern-no-top-alt => $<pattern-no-top-alt>.made,
-            text               => $/.Str,
-        )
-    }
-
-    method function-param-variant:sym<ellipsis>($/) {
-        make FunctionParamVariantEllipsis.new
-    }
-
-    method function-param-variant:sym<type>($/) {
-        make $<type>.made
-    }
-
-    #-------------------
-    method function-return-type($/) {
-        make FunctionReturnType.new(
-            type          => $<type>.made,
-            maybe-comment => $<comment>.made,
-            text          => $/.Str,
-        )
+        #-------------------
+        method function-return-type($/) {
+            make FunctionReturnType.new(
+                type          => $<type>.made,
+                maybe-comment => $<comment>.made,
+                text          => $/.Str,
+            )
+        }
     }
 }

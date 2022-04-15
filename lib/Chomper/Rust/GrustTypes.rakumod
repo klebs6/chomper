@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustTypes;
+
 use Data::Dump::Tree;
 
 our class ParenthesizedType {

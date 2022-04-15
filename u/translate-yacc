@@ -2,11 +2,11 @@
 
 use Data::Dump::Tree;
 
-use gyacc;
-use yacc-actions;
-use case;
-use align;
-use dequote;
+use Chomper::Core::Gyacc;
+use Chomper::Core::YaccActions;
+use Chomper::Core::Case;
+use Chomper::Core::Align;
+use Chomper::Core::Dequote;
 
 =begin comment
 The hunger for wealth, which reduces the planet to

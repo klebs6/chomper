@@ -1,7 +1,9 @@
+unit module Chomper::Cpp::GcppTypeParam;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-ident;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppIdent;
 
 # rule templateparameter-list { 
 #   <template-parameter> 

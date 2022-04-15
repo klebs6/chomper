@@ -1,9 +1,11 @@
+unit module Chomper::Cpp::GcppSimpleTypeSpecifier;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-type-name;
-use gcpp-template;
-use gcpp-decltype;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppTypeName;
+use Chomper::Cpp::GcppTemplate;
+use Chomper::Cpp::GcppDecltype;
 
 # rule simple-int-type-specifier { 
 #   <simple-type-signedness-modifier>? 

@@ -1,8 +1,10 @@
+unit module Chomper::Rust::GrustComment;
+
 use Data::Dump::Tree;
 
-use doxy-comment;
+use Chomper::DoxyComment;
 
-our class Comment {
+class Comment is export {
     has Str  $.text;
     has Bool $.line;
 
@@ -32,27 +34,30 @@ our class Comment {
     }
 }
 
-our role Comment::Rules 
-{
-    proto rule comment { * }
+package CommentGrammar is export {
 
-    rule comment:sym<line>  {  <line-comment>+ }
-    rule comment:sym<block> {  <block-comment> }
-}
+    our role Rules 
+    {
+        proto rule comment { * }
 
-our role Comment::Actions {
-
-    method comment:sym<line>($/)  { 
-        make Comment.new(
-            text => $<line-comment>>>.made.join("\n"),
-            line => True,
-        )
+        rule comment:sym<line>  {  <line-comment>+ }
+        rule comment:sym<block> {  <block-comment> }
     }
 
-    method comment:sym<block>($/) { 
-        make Comment.new(
-            text => $<block-comment>.made,
-            line => False,
-        )
+    our role Actions {
+
+        method comment:sym<line>($/)  { 
+            make Comment.new(
+                text => $<line-comment>>>.made.join("\n"),
+                line => True,
+            )
+        }
+
+        method comment:sym<block>($/) { 
+            make Comment.new(
+                text => $<block-comment>.made,
+                line => False,
+            )
+        }
     }
 }

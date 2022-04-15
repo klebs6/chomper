@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppEqExpression;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # token equality-operator:sym<eq> { <equal> }
 our class EqualityOperator::Eq does IEqualityOperator {

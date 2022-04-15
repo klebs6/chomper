@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppBalanced;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # rule balanced-token-seq { <balancedrule>+ }
 our class BalancedTokenSeq { 

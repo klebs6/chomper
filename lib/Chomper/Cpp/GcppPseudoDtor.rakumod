@@ -1,8 +1,10 @@
+unit module Chomper::Cpp::GcppPseudoDtor;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-template;
-use gcpp-decltype;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppTemplate;
+use Chomper::Cpp::GcppDecltype;
 
 # rule pseudo-destructor-name:sym<basic> { 
 #   <nested-name-specifier>? 

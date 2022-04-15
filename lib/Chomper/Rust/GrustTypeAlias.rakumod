@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustTypeAlias;
+
 use Data::Dump::Tree;
 
 our class TypeAlias {

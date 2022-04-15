@@ -60,7 +60,7 @@ tilde
 underscore       
 >;
 
-use global-subparse;
+use Chomper::Core::GlobalSubparse;
 
 my $bad-rules = SetHash.new;
 

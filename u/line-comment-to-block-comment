@@ -1,5 +1,5 @@
 #!/usr/bin/env raku
-use line-comment-to-block-comment;
+use Chomper::Core::LineCommentToBlockComment;
 
 sub MAIN(:$indent = False) {
     say line-comment-to-block-comment(

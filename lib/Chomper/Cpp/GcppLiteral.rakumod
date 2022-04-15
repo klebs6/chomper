@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppLiteral;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 our role Literal::Actions {
 

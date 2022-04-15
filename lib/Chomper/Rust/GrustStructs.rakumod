@@ -1,5 +1,7 @@
+unit module Chomper::Rust::GrustStructs;
+
 use Data::Dump::Tree;
-use grust-comment;
+use Chomper::Rust::GrustComment;
 
 our class Struct {
     has $.identifier;

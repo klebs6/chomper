@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppPtrDeclarator;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # rule pointer-declarator { 
 #   <augmented-pointer-operator>* 

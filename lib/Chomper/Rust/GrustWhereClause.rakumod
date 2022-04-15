@@ -1,3 +1,5 @@
+unit module Chomper::Rust::GrustWhereClause;
+
 use Data::Dump::Tree;
 
 our class WhereClause {

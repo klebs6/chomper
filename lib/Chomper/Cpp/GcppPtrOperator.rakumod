@@ -1,8 +1,10 @@
+unit module Chomper::Cpp::GcppPtrOperator;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-attr;
-use gcpp-cv;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppAttr;
+use Chomper::Cpp::GcppCv;
 
 # rule augmented-pointer-operator { 
 #   <pointer-operator> 

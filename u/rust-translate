@@ -1,6 +1,6 @@
 #!/usr/bin/env raku
 
-use rust-grammar;
+use Chomper::Rust::RustGrammar;
 use Data::Dump::Tree;
 
 my $do-made       = True;

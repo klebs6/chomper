@@ -1,5 +1,7 @@
-use rust-grammar;
-use global-subparse;
+unit module Chomper::Rust::GrustUseDeclarationGrammar;
+
+use Chomper::Rust::RustGrammar;
+use Chomper::GlobalSubparse;
 
 #[this is sometimes useful in scripts]
 our grammar UseDeclaration::Grammar 

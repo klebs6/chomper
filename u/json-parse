@@ -1,5 +1,5 @@
 #!/usr/bin/env raku
-use gjson;
+use Chomper::Core::Gjson;
 
 grammar G does JSON::Grammar {
     rule TOP { <.ws> <json> }

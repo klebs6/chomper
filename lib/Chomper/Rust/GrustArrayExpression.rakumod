@@ -1,6 +1,9 @@
+unit module Chomper::Rust::GrustArrayExpression;
+
 use Data::Dump::Tree;
 
-our class ArrayExpression {
+class ArrayExpression is export {
+
     has $.maybe-array-elements;
 
     has $.text;
@@ -15,65 +18,71 @@ our class ArrayExpression {
     }
 }
 
-our class ArrayElementsItemQuantity {
-    has $.expression;
-    has $.quantifier;
+package ArrayElements is export {
 
-    has $.text;
+    our class ItemWithQuantity {
+        has $.expression;
+        has $.quantifier;
 
-    method gist {
-        $.expression.gist ~ "; " ~ $.quantifier.gist
+        has $.text;
+
+        method gist {
+            $.expression.gist ~ "; " ~ $.quantifier.gist
+        }
+    }
+
+    our class CommaSeparatedList {
+        has @.expressions;
+
+        has $.text;
+
+        method gist {
+            @.expressions>>.gist.join(", ")
+        }
     }
 }
 
-our class ArrayElementsList {
-    has @.expressions;
+package ArrayExpressionGrammar is export {
 
-    has $.text;
+    our role Rules {
 
-    method gist {
-        @.expressions>>.gist.join(", ")
-    }
-}
+        proto rule array-elements { * }
 
-our role ArrayExpression::Rules {
+        rule array-elements:sym<semi> {
+            <maybe-commented-expression> <tok-semi> <maybe-commented-expression>
+        }
 
-    proto rule array-elements { * }
+        rule array-elements:sym<commas> {
+            <maybe-commented-expression>+ %% <tok-comma>
+        }
 
-    rule array-elements:sym<semi> {
-        <maybe-commented-expression> <tok-semi> <maybe-commented-expression>
-    }
-
-    rule array-elements:sym<commas> {
-        <maybe-commented-expression>+ %% <tok-comma>
+        rule array-expression {
+            <tok-lbrack> <array-elements>? <tok-rbrack> 
+        }
     }
 
-    rule array-expression {
-        <tok-lbrack> <array-elements>? <tok-rbrack> 
-    }
-}
+    our role Actions is export { 
 
-our role ArrayExpression::Actions { 
+        method array-elements:sym<semi>($/) {
+            make ArrayElements::ItemWithQuantity.new(
+                expression => $<maybe-commented-expression>>>.made[0],
+                quantifier => $<maybe-commented-expression>>>.made[1],
+                text       => $/.Str,
+            )
+        }
 
-    method array-elements:sym<semi>($/) {
-        make ArrayElementsItemQuantity.new(
-            expression => $<maybe-commented-expression>>>.made[0],
-            quantifier => $<maybe-commented-expression>>>.made[1],
-            text       => $/.Str,
-        )
-    }
+        method array-elements:sym<commas>($/) {
+            make ArrayElements::CommaSeparatedList.new(
+                expressions => $<maybe-commented-expression>>>.made,
+                text        => $/.Str,
+            )
+        }
 
-    method array-elements:sym<commas>($/) {
-        make ArrayElementsList.new(
-            expressions => $<maybe-commented-expression>>>.made,
-            text        => $/.Str,
-        )
-    }
-
-    method array-expression($/) {
-        make ArrayExpression.new(
-            maybe-array-elements => $<array-elements>.made,
-            text                 => $/.Str,
-        )
+        method array-expression($/) {
+            make ArrayExpression.new(
+                maybe-array-elements => $<array-elements>.made,
+                text                 => $/.Str,
+            )
+        }
     }
 }

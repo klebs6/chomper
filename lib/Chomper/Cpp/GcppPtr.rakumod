@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppPtr;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # token literal:sym<ptr> { <pointer-literal> }
 our class PointerLiteral does ILiteral {

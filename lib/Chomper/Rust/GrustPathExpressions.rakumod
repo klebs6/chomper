@@ -1,4 +1,4 @@
-unit module Rust;
+unit module Chomper::Rust::GrustPathExpressions;
 
 use Data::Dump::Tree;
 

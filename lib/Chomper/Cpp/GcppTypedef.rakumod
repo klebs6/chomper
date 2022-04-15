@@ -1,7 +1,9 @@
+unit module Chomper::Cpp::GcppTypedef;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-ident;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppIdent;
 
 our class TypedefName { 
     has Identifier $.identifier is required;

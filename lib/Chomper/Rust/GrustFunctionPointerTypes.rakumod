@@ -1,6 +1,8 @@
+unit module Chomper::Rust::GrustFunctionPointerTypes;
+
 use Data::Dump::Tree;
 
-our class BareFunctionType {
+class BareFunctionType is export {
     has $.maybe-for-lifetimes;
     has $.function-type-qualifiers;
     has $.maybe-function-parameters;
@@ -32,7 +34,7 @@ our class BareFunctionType {
     }
 }
 
-our class FunctionExternModifier {
+class FunctionExternModifier is export {
     has $.maybe-abi;
 
     has $.text;
@@ -46,7 +48,7 @@ our class FunctionExternModifier {
     }
 }
 
-our class FunctionTypeQualifiers {
+class FunctionTypeQualifiers is export {
     has Bool $.unsafe;
     has $.maybe-function-extern-modifier;
 
@@ -68,7 +70,7 @@ our class FunctionTypeQualifiers {
     }
 }
 
-our class BareFunctionReturnType {
+class BareFunctionReturnType is export {
     has $.type-no-bounds;
 
     has $.text;
@@ -78,7 +80,7 @@ our class BareFunctionReturnType {
     }
 }
 
-our class FunctionParametersBasic {
+class FunctionParametersBasic is export {
     has @.maybe-named-params;
 
     has $.text;
@@ -88,7 +90,7 @@ our class FunctionParametersBasic {
     }
 }
 
-our class FunctionParametersVariadic {
+class FunctionParametersVariadic is export {
     has @.maybe-named-params;
     has @.outer-attributes;
 
@@ -108,7 +110,7 @@ our class FunctionParametersVariadic {
     }
 }
 
-our class MaybeNamedParam {
+class MaybeNamedParam is export {
     has @.outer-attributes;
     has $.maybe-identifier-or-underscore;
     has $.type;
@@ -133,122 +135,125 @@ our class MaybeNamedParam {
     }
 }
 
-our role BareFunctionType::Rules {
+package BareFunctionTypeGrammar is export {
 
-    regex bare-function-type {
+    our role Rules {
 
-        #this needs to be uncommented but for
-        #some reason it breaks function args that
-        #begin with "for"
-        #<for-lifetimes>? 
+        regex bare-function-type {
 
-        <.ws>
-        <function-type-qualifiers>
-        <.ws>
-        <kw-fn>
-        <tok-lparen>
-        <.ws>
-        <bare-function-parameters>?
-        <.ws>
-        <tok-rparen>
-        <.ws>
-        <bare-function-return-type>?
+            #this needs to be uncommented but for
+            #some reason it breaks function args that
+            #begin with "for"
+            #<for-lifetimes>? 
+
+            <.ws>
+            <function-type-qualifiers>
+            <.ws>
+            <kw-fn>
+            <tok-lparen>
+            <.ws>
+            <bare-function-parameters>?
+            <.ws>
+            <tok-rparen>
+            <.ws>
+            <bare-function-return-type>?
+        }
+
+        rule function-extern-modifier {
+            <kw-extern>
+            <abi>?
+        }
+
+        rule function-type-qualifiers {
+            <kw-unsafe>?
+            <function-extern-modifier>?
+        }
+
+        rule bare-function-return-type {
+            <tok-rarrow>
+            <type-no-bounds>
+        }
+
+        #-------------------
+        proto rule bare-function-parameters { * }
+
+        rule bare-function-parameters:sym<basic> {  
+            <maybe-named-param>+ %% <tok-comma>
+        }
+
+        rule bare-function-parameters:sym<variadic> {  
+            [<maybe-named-param>+ % <tok-comma>]
+            <outer-attribute>*
+            <tok-dotdotdot>
+        }
+
+        rule maybe-named-param {
+            <outer-attribute>*
+            [
+                <identifier-or-underscore>
+                <tok-colon>
+            ]?
+            <type>
+        }
     }
 
-    rule function-extern-modifier {
-        <kw-extern>
-        <abi>?
-    }
+    our role Actions {
 
-    rule function-type-qualifiers {
-        <kw-unsafe>?
-        <function-extern-modifier>?
-    }
+        method bare-function-type($/) {
+            make BareFunctionType.new(
+                maybe-for-lifetimes        => $<for-lifetimes>.made,
+                function-type-qualifiers   => $<function-type-qualifiers>.made,
+                maybe-function-parameters  => $<bare-function-parameters>.made,
+                maybe-function-return-type => $<bare-function-return-type>.made,
+                text                       => $/.Str,
+            )
+        }
 
-    rule bare-function-return-type {
-        <tok-rarrow>
-        <type-no-bounds>
-    }
+        method function-extern-modifier($/) {
+            make FunctionExternModifier.new(
+                maybe-abi => $<abi>.made,
+                text      => $/.Str,
+            )
+        }
 
-    #-------------------
-    proto rule bare-function-parameters { * }
+        method function-type-qualifiers($/) {
+            make FunctionTypeQualifiers.new(
+                unsafe                         => so $/<kw-unsafe>:exists,
+                maybe-function-extern-modifier => $<function-extern-modifier>.made,
+                text                           => $/.Str,
+            )
+        }
 
-    rule bare-function-parameters:sym<basic> {  
-        <maybe-named-param>+ %% <tok-comma>
-    }
+        method bare-function-return-type($/) {
+            make BareFunctionReturnType.new(
+                type-no-bounds => $<type-no-bounds>.made,
+                text           => $/.Str,
+            )
+        }
 
-    rule bare-function-parameters:sym<variadic> {  
-        [<maybe-named-param>+ % <tok-comma>]
-        <outer-attribute>*
-        <tok-dotdotdot>
-    }
+        #-------------------
+        method function-parameters:sym<basic>($/) {  
+            make FunctionParametersBasic.new(
+                maybe-named-params => $<maybe-named-param>>>.made,
+                text               => $/.Str,
+            )
+        }
 
-    rule maybe-named-param {
-        <outer-attribute>*
-        [
-            <identifier-or-underscore>
-            <tok-colon>
-        ]?
-        <type>
-    }
-}
+        method function-parameters:sym<variadic>($/) {  
+            make FunctionParametersVariadic.new(
+                maybe-named-params => $<maybe-named-param>>>.made,
+                outer-attributes   => $<outer-attribute>>>.made,
+                text               => $/.Str,
+            )
+        }
 
-our role BareFunctionType::Actions {
-
-    method bare-function-type($/) {
-        make BareFunctionType.new(
-            maybe-for-lifetimes        => $<for-lifetimes>.made,
-            function-type-qualifiers   => $<function-type-qualifiers>.made,
-            maybe-function-parameters  => $<bare-function-parameters>.made,
-            maybe-function-return-type => $<bare-function-return-type>.made,
-            text                       => $/.Str,
-        )
-    }
-
-    method function-extern-modifier($/) {
-        make FunctionExternModifier.new(
-            maybe-abi => $<abi>.made,
-            text      => $/.Str,
-        )
-    }
-
-    method function-type-qualifiers($/) {
-        make FunctionTypeQualifiers.new(
-            unsafe                         => so $/<kw-unsafe>:exists,
-            maybe-function-extern-modifier => $<function-extern-modifier>.made,
-            text                           => $/.Str,
-        )
-    }
-
-    method bare-function-return-type($/) {
-        make BareFunctionReturnType.new(
-            type-no-bounds => $<type-no-bounds>.made,
-            text           => $/.Str,
-        )
-    }
-
-    #-------------------
-    method function-parameters:sym<basic>($/) {  
-        make FunctionParametersBasic.new(
-            maybe-named-params => $<maybe-named-param>>>.made,
-            text               => $/.Str,
-        )
-    }
-
-    method function-parameters:sym<variadic>($/) {  
-        make FunctionParametersVariadic.new(
-            maybe-named-params => $<maybe-named-param>>>.made,
-            outer-attributes   => $<outer-attribute>>>.made,
-            text               => $/.Str,
-        )
-    }
-
-    method maybe-named-param($/) {
-        make MaybeNamedParam.new(
-            outer-attributes               => $<outer-attribute>>>.made,
-            maybe-identifier-or-underscore => $<identifier-or-underscore>.made,
-            type                           => $<type>.made,
-            text                           => $/.Str,
-        )
+        method maybe-named-param($/) {
+            make MaybeNamedParam.new(
+                outer-attributes               => $<outer-attribute>>>.made,
+                maybe-identifier-or-underscore => $<identifier-or-underscore>.made,
+                type                           => $<type>.made,
+                text                           => $/.Str,
+            )
+        }
     }
 }

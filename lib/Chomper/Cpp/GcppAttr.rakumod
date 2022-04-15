@@ -1,9 +1,11 @@
+unit module Chomper::Cpp::GcppAttr;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-align;
-use gcpp-ident;
-use gcpp-balanced;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppAlign;
+use Chomper::Cpp::GcppIdent;
+use Chomper::Cpp::GcppBalanced;
 
 our class AttributeList { ... }
 

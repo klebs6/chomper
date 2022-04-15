@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppAccess;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # rule access-specifier:sym<private> { 
 #   <private> 

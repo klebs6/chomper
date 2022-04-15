@@ -1,11 +1,13 @@
+unit module Chomper::Cpp::GcppClass;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-ident;
-use gcpp-template;
-use gcpp-member;
-use gcpp-attr;
-use gcpp-base;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppIdent;
+use Chomper::Cpp::GcppTemplate;
+use Chomper::Cpp::GcppMember;
+use Chomper::Cpp::GcppAttr;
+use Chomper::Cpp::GcppBase;
 
 
 # rule class-virt-specifier { 

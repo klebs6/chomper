@@ -1,4 +1,6 @@
 raku/.precomp/*
+lib/.precomp/*
+**/.precomp/*
 
 
 # Added by cargo

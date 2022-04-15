@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppDecltype;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # rule decltype-specifier-body:sym<expr> { 
 #   <expression> 

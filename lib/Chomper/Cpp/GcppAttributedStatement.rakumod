@@ -1,9 +1,11 @@
+unit module Chomper::Cpp::GcppAttributedStatement;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
-use gcpp-statement;
-use gcpp-try;
-use gcpp-attr;
+use Chomper::Cpp::GcppRoles;
+use Chomper::Cpp::GcppStatement;
+use Chomper::Cpp::GcppTry;
+use Chomper::Cpp::GcppAttr;
 
 # token statement:sym<attributed> { 
 #   <comment>? 

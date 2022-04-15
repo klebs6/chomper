@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppBool;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 our class BooleanLiteral::F does IBooleanLiteral { 
 

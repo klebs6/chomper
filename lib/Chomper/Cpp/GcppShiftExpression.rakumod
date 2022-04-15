@@ -1,6 +1,8 @@
+unit module Chomper::Cpp::GcppShiftExpression;
+
 use Data::Dump::Tree;
 
-use gcpp-roles;
+use Chomper::Cpp::GcppRoles;
 
 # rule shift-expression-tail { <shift-operator> <additive-expression> }
 our class ShiftExpressionTail {
