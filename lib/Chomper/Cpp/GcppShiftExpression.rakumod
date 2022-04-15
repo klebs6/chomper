@@ -5,7 +5,7 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 
 # rule shift-expression-tail { <shift-operator> <additive-expression> }
-our class ShiftExpressionTail {
+class ShiftExpressionTail is export {
     has IShiftOperator      $.shift-operator      is required;
     has IAdditiveExpression $.additive-expression is required;
 
@@ -17,7 +17,7 @@ our class ShiftExpressionTail {
 }
 
 # rule shift-expression { <additive-expression> <shift-expression-tail>* } #-----------------------
-our class ShiftExpression does IShiftExpression {
+class ShiftExpression does IShiftExpression is export {
     has IAdditiveExpression  $.additive-expression is required;
     has ShiftExpressionTail @.shift-expression-tail is required;
 
@@ -29,7 +29,7 @@ our class ShiftExpression does IShiftExpression {
 }
 
 # rule shift-operator:sym<right> { <.greater> <.greater> }
-our class ShiftOperator::Right does IShiftOperator {
+class ShiftOperator::Right does IShiftOperator is export {
 
     has $.text;
 
@@ -39,7 +39,7 @@ our class ShiftOperator::Right does IShiftOperator {
 }
 
 # rule shift-operator:sym<left> { <.less> <.less> } #-----------------------
-our class ShiftOperator::Left does IShiftOperator {
+class ShiftOperator::Left does IShiftOperator is export {
 
     has $.text;
 
@@ -48,62 +48,65 @@ our class ShiftOperator::Left does IShiftOperator {
     }
 }
 
-our role ShiftExpression::Actions {
+package ShiftExpressionGrammar is export {
 
-    # rule shift-expression-tail { <shift-operator> <additive-expression> }
-    method shift-expression-tail($/) {
-        make ShiftExpressionTail.new(
-            shift-operator      => $<shift-operator>.made,
-            additive-expression => $<additive-expression>.made,
-            text                => ~$/,
-        )
-    }
+    our role Actions {
 
-    # rule shift-expression { <additive-expression> <shift-expression-tail>* } 
-    method shift-expression($/) {
-
-        my $base = $<additive-expression>.made;
-        my @tail = $<shift-expression-tail>>>.made.List;
-
-        if @tail.elems gt 0 {
-
-            make ShiftExpression.new(
-                additive-expression   => $base,
-                shift-expression-tail => @tail,
-                text                  => ~$/,
+        # rule shift-expression-tail { <shift-operator> <additive-expression> }
+        method shift-expression-tail($/) {
+            make ShiftExpressionTail.new(
+                shift-operator      => $<shift-operator>.made,
+                additive-expression => $<additive-expression>.made,
+                text                => ~$/,
             )
+        }
 
-        } else {
+        # rule shift-expression { <additive-expression> <shift-expression-tail>* } 
+        method shift-expression($/) {
 
-            make $base
+            my $base = $<additive-expression>.made;
+            my @tail = $<shift-expression-tail>>>.made.List;
+
+            if @tail.elems gt 0 {
+
+                make ShiftExpression.new(
+                    additive-expression   => $base,
+                    shift-expression-tail => @tail,
+                    text                  => ~$/,
+                )
+
+            } else {
+
+                make $base
+            }
+        }
+
+        # rule shift-operator:sym<right> { <.greater> <.greater> }
+        method shift-operator:sym<right>($/) {
+            make ShiftOperator::Right.new
+        }
+
+        # rule shift-operator:sym<left> { <.less> <.less> } 
+        method shift-operator:sym<left>($/) {
+            make ShiftOperator::Left.new
         }
     }
 
-    # rule shift-operator:sym<right> { <.greater> <.greater> }
-    method shift-operator:sym<right>($/) {
-        make ShiftOperator::Right.new
+    our role Rules {
+
+        rule shift-expression-tail {
+            <shift-operator>
+            <additive-expression>
+        }
+
+        rule shift-expression {
+            <additive-expression>
+            <shift-expression-tail>*
+        }
+
+        #-----------------------
+        proto rule shift-operator { * }
+        rule shift-operator:sym<right> { <greater> <greater> }
+        rule shift-operator:sym<left>  { <less> <less> }
     }
-
-    # rule shift-operator:sym<left> { <.less> <.less> } 
-    method shift-operator:sym<left>($/) {
-        make ShiftOperator::Left.new
-    }
-}
-
-our role ShiftExpression::Rules {
-
-    rule shift-expression-tail {
-        <shift-operator>
-        <additive-expression>
-    }
-
-    rule shift-expression {
-        <additive-expression>
-        <shift-expression-tail>*
-    }
-
-    #-----------------------
-    proto rule shift-operator { * }
-    rule shift-operator:sym<right> { <greater> <greater> }
-    rule shift-operator:sym<left>  { <less> <less> }
 }

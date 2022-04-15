@@ -8,12 +8,12 @@ use Chomper::Cpp::GcppRoles;
 #   <augmented-pointer-operator>* 
 #   <no-pointer-declarator> 
 # }
-our class PointerDeclarator 
+class PointerDeclarator 
 does ISomeDeclarator
 does IPointerDeclarator
 does IInitDeclarator
 does IParameterDeclarationBody
-does IDeclarator { 
+does IDeclarator is export { 
     has IAugmentedPointerOperator @.augmented-pointer-operators;
     has INoPointerDeclarator      $.no-pointer-declarator is required;
 
@@ -25,45 +25,48 @@ does IDeclarator {
     }
 }
 
-our role PointerDeclarator::Actions {
+package PointerDeclaratorGrammar is export {
 
-    # rule pointer-declarator { <augmented-pointer-operator>* <no-pointer-declarator> }
-    method pointer-declarator($/) {
+    our role Actions {
 
-        my $base      = $<no-pointer-declarator>.made;
-        my @augmented = $<augmented-pointer-operator>>>.made.List;
+        # rule pointer-declarator { <augmented-pointer-operator>* <no-pointer-declarator> }
+        method pointer-declarator($/) {
 
-        if @augmented.elems gt 0 {
+            my $base      = $<no-pointer-declarator>.made;
+            my @augmented = $<augmented-pointer-operator>>>.made.List;
 
-            make PointerDeclarator.new(
-                augmented-pointer-operators => @augmented,
-                no-pointer-declarator       => $base,
-                text                        => ~$/,
-            )
+            if @augmented.elems gt 0 {
 
-        } else {
+                make PointerDeclarator.new(
+                    augmented-pointer-operators => @augmented,
+                    no-pointer-declarator       => $base,
+                    text                        => ~$/,
+                )
 
-            make $base
+            } else {
+
+                make $base
+            }
         }
     }
-}
 
-our role PointerDeclarator::Rules {
+    our role Rules {
 
-    rule init-declarator-list {
-        <init-declarator> [ <comma> <init-declarator> ]*
-    }
+        rule init-declarator-list {
+            <init-declarator> [ <comma> <init-declarator> ]*
+        }
 
-    rule init-declarator {
-        <declarator> <initializer>?
-    }
+        rule init-declarator {
+            <declarator> <initializer>?
+        }
 
-    #--------------------------
-    proto rule declarator { * }
-    rule declarator:sym<ptr>    { <pointer-declarator> }
-    rule declarator:sym<no-ptr> { <no-pointer-declarator> <parameters-and-qualifiers> <trailing-return-type> }
+        #--------------------------
+        proto rule declarator { * }
+        rule declarator:sym<ptr>    { <pointer-declarator> }
+        rule declarator:sym<no-ptr> { <no-pointer-declarator> <parameters-and-qualifiers> <trailing-return-type> }
 
-    rule pointer-declarator {
-        <augmented-pointer-operator>* <no-pointer-declarator>
+        rule pointer-declarator {
+            <augmented-pointer-operator>* <no-pointer-declarator>
+        }
     }
 }

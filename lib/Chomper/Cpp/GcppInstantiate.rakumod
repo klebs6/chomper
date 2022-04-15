@@ -9,7 +9,7 @@ use Chomper::Cpp::GcppRoles;
 #   <template> 
 #   <declaration> 
 # }
-our class ExplicitInstantiation { 
+class ExplicitInstantiation is export { 
     has Bool        $.extern      is required;
     has IDeclaration $.declaration is required; 
 
@@ -27,22 +27,25 @@ our class ExplicitInstantiation {
     }
 }
 
-our role Instantiation::Actions {
+package InstantiationGrammar is export {
 
-    # rule explicit-instantiation { <extern>? <template> <declaration> }
-    method explicit-instantiation($/) {
-        make ExplicitInstantiation.new(
-            declaration => $<declaration>.made,
-            text        => ~$/,
-        )
+    our role Actions {
+
+        # rule explicit-instantiation { <extern>? <template> <declaration> }
+        method explicit-instantiation($/) {
+            make ExplicitInstantiation.new(
+                declaration => $<declaration>.made,
+                text        => ~$/,
+            )
+        }
     }
-}
 
-our role Instantiation::Rules {
+    our role Rules {
 
-    rule explicit-instantiation {
-        <extern>?
-        <template>
-        <declaration>
+        rule explicit-instantiation {
+            <extern>?
+            <template>
+            <declaration>
+        }
     }
 }

@@ -8,7 +8,7 @@ use Chomper::Cpp::GcppRoles;
 #   <and-expression> 
 #   [ <caret> <and-expression> ]* 
 # }
-our class ExclusiveOrExpression does IExclusiveOrExpression {
+class ExclusiveOrExpression does IExclusiveOrExpression is export {
     has IAndExpression @.and-expressions is required;
 
     has $.text;
@@ -22,7 +22,7 @@ our class ExclusiveOrExpression does IExclusiveOrExpression {
 #   <exclusive-or-expression> 
 #   [ <or_> <exclusive-or-expression> ]* 
 # }
-our class InclusiveOrExpression does IInclusiveOrExpression {
+class InclusiveOrExpression does IInclusiveOrExpression is export {
     has IExclusiveOrExpression @.exclusive-or-expressions is required;
 
     has $.text;
@@ -32,53 +32,55 @@ our class InclusiveOrExpression does IInclusiveOrExpression {
     }
 }
 
+package OrExpressionGrammar is export {
 
-our role OrExpression::Actions {
+    our role Actions {
 
-    # rule exclusive-or-expression { 
-    #   <and-expression> 
-    #   [ <caret> <and-expression> ]* 
-    # }
-    method exclusive-or-expression($/) {
-        my @and-expressions = $<and-expression>>>.made;
+        # rule exclusive-or-expression { 
+        #   <and-expression> 
+        #   [ <caret> <and-expression> ]* 
+        # }
+        method exclusive-or-expression($/) {
+            my @and-expressions = $<and-expression>>>.made;
 
-        if @and-expressions.elems gt 1 {
-            make ExclusiveOrExpression.new(
-                and-expressions => @and-expressions,
-                text            => ~$/,
-            )
-        } else {
-            make @and-expressions[0]
+            if @and-expressions.elems gt 1 {
+                make ExclusiveOrExpression.new(
+                    and-expressions => @and-expressions,
+                    text            => ~$/,
+                )
+            } else {
+                make @and-expressions[0]
+            }
+        }
+
+        # rule inclusive-or-expression { 
+        #   <exclusive-or-expression> 
+        #   [ <or_> <exclusive-or-expression> ]* 
+        # }
+        method inclusive-or-expression($/) {
+
+            my @exclusive-or-expressions = $<exclusive-or-expression>>>.made;
+
+            if @exclusive-or-expressions.elems gt 1 {
+                make InclusiveOrExpression.new(
+                    exclusive-or-expressions => @exclusive-or-expressions,
+                    text                     => ~$/,
+                )
+
+            } else {
+                make @exclusive-or-expressions[0]
+            }
         }
     }
 
-    # rule inclusive-or-expression { 
-    #   <exclusive-or-expression> 
-    #   [ <or_> <exclusive-or-expression> ]* 
-    # }
-    method inclusive-or-expression($/) {
+    our role Rules {
 
-        my @exclusive-or-expressions = $<exclusive-or-expression>>>.made;
-
-        if @exclusive-or-expressions.elems gt 1 {
-            make InclusiveOrExpression.new(
-                exclusive-or-expressions => @exclusive-or-expressions,
-                text                     => ~$/,
-            )
-
-        } else {
-            make @exclusive-or-expressions[0]
+        rule exclusive-or-expression {
+            <and-expression> [ <caret> <and-expression> ]*
         }
-    }
-}
 
-our role OrExpression::Rules {
-
-    rule exclusive-or-expression {
-        <and-expression> [ <caret> <and-expression> ]*
-    }
-
-    rule inclusive-or-expression {
-        <exclusive-or-expression> [ <or_> <exclusive-or-expression> ]*
+        rule inclusive-or-expression {
+            <exclusive-or-expression> [ <or_> <exclusive-or-expression> ]*
+        }
     }
 }

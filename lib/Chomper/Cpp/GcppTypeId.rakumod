@@ -10,9 +10,9 @@ use Chomper::Cpp::GcppTemplate;
 #   <type-specifier-seq> 
 #   <abstract-declarator>? 
 # }
-our class TheTypeId 
+class TheTypeId 
 does ITheTypeId 
-does ITemplateArgument { 
+does ITemplateArgument is export { 
 
     has $.type-specifier-seq is required;
     has IAbstractDeclarator $.abstract-declarator;
@@ -36,7 +36,7 @@ does ITemplateArgument {
 #   <ellipsis>? 
 #   [ <.comma> <the-type-id> <ellipsis>? ]* 
 # }
-our class TypeIdList { 
+class TypeIdList is export { 
     has ITheTypeId @.the-type-ids is required;
 
     has $.text;
@@ -46,55 +46,58 @@ our class TypeIdList {
     }
 }
 
-# rule type-name-specifier:sym<ident> { 
-#   <typename_> 
-#   <nested-name-specifier> 
-#   <identifier> 
-# }
-our class TypeNameSpecifier::Ident 
-does IDeclSpecifierSeq
-does ITypeNameSpecifier {
-    has INestedNameSpecifier $.nested-name-specifier is required;
-    has Identifier $.identifier is required;
-    has $.text;
+package TypeNameSpecifier is export {
 
-    method gist(:$treemark=False) {
-        "typename " 
-        ~ $.nested-name-specifier.gist(:$treemark) 
-        ~ " " 
-        ~ $.identifier.gist(:$treemark)
-    }
-}
+    # rule type-name-specifier:sym<ident> { 
+    #   <typename_> 
+    #   <nested-name-specifier> 
+    #   <identifier> 
+    # }
+    our class Ident 
+    does IDeclSpecifierSeq
+    does ITypeNameSpecifier {
+        has INestedNameSpecifier $.nested-name-specifier is required;
+        has Identifier $.identifier is required;
+        has $.text;
 
-# rule type-name-specifier:sym<template> { 
-#   <typename_> 
-#   <nested-name-specifier> 
-#   <template>? 
-#   <simple-template-id> 
-# }
-our class TypeNameSpecifier::Template does ITypeNameSpecifier {
-    has INestedNameSpecifier $.nested-name-specifier is required;
-    has Bool                $.has-template          is required;
-    has SimpleTemplateId    $.simple-template-id    is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-
-        my $builder = "typename "
-        ~ $.nested-name-specifier.gist(:$treemark)
-        ~ " ";
-
-        if $.has-template {
-            $builder ~= "template ";
+        method gist(:$treemark=False) {
+            "typename " 
+            ~ $.nested-name-specifier.gist(:$treemark) 
+            ~ " " 
+            ~ $.identifier.gist(:$treemark)
         }
+    }
 
-        $builder ~ $.simple-template-id.gist(:$treemark)
+    # rule type-name-specifier:sym<template> { 
+    #   <typename_> 
+    #   <nested-name-specifier> 
+    #   <template>? 
+    #   <simple-template-id> 
+    # }
+    our class Template does ITypeNameSpecifier {
+        has INestedNameSpecifier $.nested-name-specifier is required;
+        has Bool                $.has-template          is required;
+        has SimpleTemplateId    $.simple-template-id    is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+
+            my $builder = "typename "
+            ~ $.nested-name-specifier.gist(:$treemark)
+            ~ " ";
+
+            if $.has-template {
+                $builder ~= "template ";
+            }
+
+            $builder ~ $.simple-template-id.gist(:$treemark)
+        }
     }
 }
 
 # rule type-id-of-the-type-id { <typeid_> }
-our class TypeIdOfTheTypeId {
+class TypeIdOfTheTypeId is export {
     has $.typeid is required;
     has $.text;
 
@@ -103,47 +106,50 @@ our class TypeIdOfTheTypeId {
     }
 }
 
-our role TypeId::Actions {
+package TypeIdGrammar is export {
 
-    # rule type-id-of-the-type-id { <typeid_> }
-    method type-id-of-the-type-id($/) {
-        make $<typeid>.made
-    }
+    our role Actions {
 
-    # rule the-type-id { <type-specifier-seq> <abstract-declarator>? } 
-    method the-type-id($/) {
+        # rule type-id-of-the-type-id { <typeid_> }
+        method type-id-of-the-type-id($/) {
+            make $<typeid>.made
+        }
 
-        my $tail = $<abstract-declarator>.made;
-        my $body = $<type-specifier-seq>.made;
+        # rule the-type-id { <type-specifier-seq> <abstract-declarator>? } 
+        method the-type-id($/) {
 
-        if $tail {
-            make TheTypeId.new(
-                type-specifier-seq  => $body,
-                abstract-declarator => $tail,
-                text                => ~$/,
-            )
-        } else {
-            make $body
+            my $tail = $<abstract-declarator>.made;
+            my $body = $<type-specifier-seq>.made;
+
+            if $tail {
+                make TheTypeId.new(
+                    type-specifier-seq  => $body,
+                    abstract-declarator => $tail,
+                    text                => ~$/,
+                )
+            } else {
+                make $body
+            }
+        }
+
+        # rule type-id-list { <the-type-id> <ellipsis>? [ <.comma> <the-type-id> <ellipsis>? ]* } 
+        method type-id-list($/) {
+            make $<the-type-id>>>.made
         }
     }
 
-    # rule type-id-list { <the-type-id> <ellipsis>? [ <.comma> <the-type-id> <ellipsis>? ]* } 
-    method type-id-list($/) {
-        make $<the-type-id>>>.made
-    }
-}
+    our role Rules {
 
-our role TypeId::Rules {
+        rule type-id-of-the-type-id {
+            <typeid_>
+        }
 
-    rule type-id-of-the-type-id {
-        <typeid_>
-    }
+        rule type-id-list {
+             <the-type-id> <ellipsis>? [ <comma> <the-type-id> <ellipsis>? ]*
+        }
 
-    rule type-id-list {
-         <the-type-id> <ellipsis>? [ <comma> <the-type-id> <ellipsis>? ]*
-    }
-
-    rule the-type-id {
-        <type-specifier-seq> <abstract-declarator>?
+        rule the-type-id {
+            <type-specifier-seq> <abstract-declarator>?
+        }
     }
 }

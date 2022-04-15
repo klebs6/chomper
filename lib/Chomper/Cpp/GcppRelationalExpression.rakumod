@@ -5,7 +5,7 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 
 # rule relational-operator:sym<less> { <.less> }
-our class RelationalOperator::Less does IRelationalOperator {
+class RelationalOperator::Less does IRelationalOperator is export {
 
     has $.text;
 
@@ -15,7 +15,7 @@ our class RelationalOperator::Less does IRelationalOperator {
 }
 
 # rule relational-operator:sym<greater> { <.greater> }
-our class RelationalOperator::Greater does IRelationalOperator {
+class RelationalOperator::Greater does IRelationalOperator is export {
 
     has $.text;
 
@@ -25,7 +25,7 @@ our class RelationalOperator::Greater does IRelationalOperator {
 }
 
 # rule relational-operator:sym<less-eq> { <.less-equal> }
-our class RelationalOperator::LessEq does IRelationalOperator {
+class RelationalOperator::LessEq does IRelationalOperator is export {
 
     has $.text;
 
@@ -35,7 +35,7 @@ our class RelationalOperator::LessEq does IRelationalOperator {
 }
 
 # rule relational-operator:sym<greater-eq> { <.greater-equal> }
-our class RelationalOperator::GreaterEq does IRelationalOperator {
+class RelationalOperator::GreaterEq does IRelationalOperator is export {
 
     has $.text;
 
@@ -50,7 +50,7 @@ our class RelationalOperator::GreaterEq does IRelationalOperator {
 #   <.ws> 
 #   <shift-expression> 
 # }
-our class RelationalExpressionTail {
+class RelationalExpressionTail is export {
     has IRelationalOperator  $.relational-operator is required;
     has IShiftExpression     $.shift-expression    is required;
 
@@ -68,7 +68,7 @@ our class RelationalExpressionTail {
 #   <shift-expression> 
 #   <relational-expression-tail>* 
 # }
-our class RelationalExpression does IRelationalExpression {
+class RelationalExpression does IRelationalExpression is export {
     has IShiftExpression         $.shift-expression is required;
     has RelationalExpressionTail @.relational-expression-tail;
 
@@ -81,72 +81,75 @@ our class RelationalExpression does IRelationalExpression {
     }
 }
 
-our role RelationalExpression::Actions {
+package RelationalExpressionGrammar is export {
 
-    # rule relational-operator:sym<less> { <.less> }
-    method relational-operator:sym<less>($/) {
-        make RelationalOperator::Less.new
-    }
+    our role Actions {
 
-    # rule relational-operator:sym<greater> { <.greater> }
-    method relational-operator:sym<greater>($/) {
-        make RelationalOperator::Greater.new
-    }
+        # rule relational-operator:sym<less> { <.less> }
+        method relational-operator:sym<less>($/) {
+            make RelationalOperator::Less.new
+        }
 
-    # rule relational-operator:sym<less-eq> { <.less-equal> }
-    method relational-operator:sym<less-eq>($/) {
-        make RelationalOperator::LessEq.new
-    }
+        # rule relational-operator:sym<greater> { <.greater> }
+        method relational-operator:sym<greater>($/) {
+            make RelationalOperator::Greater.new
+        }
 
-    # rule relational-operator:sym<greater-eq> { <.greater-equal> } 
-    method relational-operator:sym<greater-eq>($/) {
-        make RelationalOperator::GreaterEq.new
-    }
+        # rule relational-operator:sym<less-eq> { <.less-equal> }
+        method relational-operator:sym<less-eq>($/) {
+            make RelationalOperator::LessEq.new
+        }
 
-    # regex relational-expression-tail { <.ws> <relational-operator> <.ws> <shift-expression> }
-    method relational-expression-tail($/) {
-        make RelationalExpressionTail.new(
-            relational-operator => $<relational-operator>.made,
-            shift-expression    => $<shift-expression>.made,
-            text                => ~$/,
-        )
-    }
+        # rule relational-operator:sym<greater-eq> { <.greater-equal> } 
+        method relational-operator:sym<greater-eq>($/) {
+            make RelationalOperator::GreaterEq.new
+        }
 
-    # regex relational-expression { <shift-expression> <relational-expression-tail>* } 
-    method relational-expression($/) {
-        my $base = $<shift-expression>.made;
-        my @tail = $<relational-expression-tail>>>.made.List;
-
-        if @tail.elems gt 0 {
-            make RelationalExpression.new(
-                shift-expression           => $base,
-                relational-expression-tail => @tail,
-                text                       => ~$/,
+        # regex relational-expression-tail { <.ws> <relational-operator> <.ws> <shift-expression> }
+        method relational-expression-tail($/) {
+            make RelationalExpressionTail.new(
+                relational-operator => $<relational-operator>.made,
+                shift-expression    => $<shift-expression>.made,
+                text                => ~$/,
             )
-        } else {
-            make $base
+        }
+
+        # regex relational-expression { <shift-expression> <relational-expression-tail>* } 
+        method relational-expression($/) {
+            my $base = $<shift-expression>.made;
+            my @tail = $<relational-expression-tail>>>.made.List;
+
+            if @tail.elems gt 0 {
+                make RelationalExpression.new(
+                    shift-expression           => $base,
+                    relational-expression-tail => @tail,
+                    text                       => ~$/,
+                )
+            } else {
+                make $base
+            }
         }
     }
-}
 
-our role RelationalExpression::Rules {
+    our role Rules {
 
-    proto rule relational-operator { * }
-    rule relational-operator:sym<less>       { <less> }
-    rule relational-operator:sym<greater>    { <greater> }
-    rule relational-operator:sym<less-eq>    { <less-equal> }
-    rule relational-operator:sym<greater-eq> { <greater-equal> }
+        proto rule relational-operator { * }
+        rule relational-operator:sym<less>       { <less> }
+        rule relational-operator:sym<greater>    { <greater> }
+        rule relational-operator:sym<less-eq>    { <less-equal> }
+        rule relational-operator:sym<greater-eq> { <greater-equal> }
 
-    #-----------------------
-    regex relational-expression-tail {
-        <ws>
-        <relational-operator>
-        <ws>
-        <shift-expression>
-    }
+        #-----------------------
+        regex relational-expression-tail {
+            <ws>
+            <relational-operator>
+            <ws>
+            <shift-expression>
+        }
 
-    regex relational-expression {
-        <shift-expression>
-        <relational-expression-tail>*
+        regex relational-expression {
+            <shift-expression>
+            <relational-expression-tail>*
+        }
     }
 }

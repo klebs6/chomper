@@ -10,7 +10,7 @@ use Chomper::Cpp::GcppRoles;
 #   <greater> 
 #   <declaration> 
 # }
-our class ExplicitSpecialization { 
+class ExplicitSpecialization is export { 
     has IDeclaration $.declaration is required;
 
     has $.text;
@@ -20,23 +20,26 @@ our class ExplicitSpecialization {
     }
 }
 
-our role Specialize::Actions {
+package SpecializeGrammar is export {
 
-    # rule explicit-specialization { <template> <less> <greater> <declaration> }
-    method explicit-specialization($/) {
-        make ExplicitSpecialization.new(
-            declaration => $<declaration>.made,
-            text        => ~$/,
-        )
+    our role Actions {
+
+        # rule explicit-specialization { <template> <less> <greater> <declaration> }
+        method explicit-specialization($/) {
+            make ExplicitSpecialization.new(
+                declaration => $<declaration>.made,
+                text        => ~$/,
+            )
+        }
     }
-}
 
-our role Specialize::Rules {
+    our role Rules {
 
-    rule explicit-specialization {
-        <template>
-        <less>
-        <greater>
-        <declaration>
+        rule explicit-specialization {
+            <template>
+            <less>
+            <greater>
+            <declaration>
+        }
     }
 }

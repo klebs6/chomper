@@ -4,7 +4,7 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-our class MultiLineMacro { 
+class MultiLineMacro is export { 
     has Str $.content is required;
 
     has $.text;
@@ -14,7 +14,7 @@ our class MultiLineMacro {
     }
 }
 
-our class Directive { 
+class Directive is export { 
     has Str $.content is required;
 
     has $.text;
@@ -24,28 +24,31 @@ our class Directive {
     }
 }
 
-our role MultiLineMacro::Actions {
+package MultiLineMacroGrammar is export {
 
-    # token multi-line-macro { '
-    method multi-line-macro($/) {
-        make ~$/
+    our role Actions {
+
+        # token multi-line-macro { '
+        method multi-line-macro($/) {
+            make ~$/
+        }
+
+        # token directive { '
+        method directive($/) {
+            make ~$/
+        }
     }
 
-    # token directive { '
-    method directive($/) {
-        make ~$/
-    }
-}
+    our role Rules {
 
-our role MultiLineMacro::Rules {
+        token multi-line-macro {
+            '#'
+            [ <-[ \n ]>*? '\\' '\r'? '\n' ]
+            <-[ \n ]>+
+        }
 
-    token multi-line-macro {
-        '#'
-        [ <-[ \n ]>*? '\\' '\r'? '\n' ]
-        <-[ \n ]>+
-    }
-
-    token directive {
-        '#' <-[ \n ]>*
+        token directive {
+            '#' <-[ \n ]>*
+        }
     }
 }

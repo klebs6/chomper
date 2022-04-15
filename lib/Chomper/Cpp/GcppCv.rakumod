@@ -15,23 +15,26 @@ class Cvqualifierseq is export {
     }
 }
 
-# rule cv-qualifier:sym<const> { <const> }
-class CvQualifier::Const does ICvQualifier is export {
+package CvQualifier is export {
 
-    has $.text;
+    # rule cv-qualifier:sym<const> { <const> }
+    our class Const_ does ICvQualifier {
 
-    method gist(:$treemark=False) {
-        "const"
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "const"
+        }
     }
-}
 
-# rule cv-qualifier:sym<volatile> { <volatile> }
-class CvQualifier::Volatile does ICvQualifier is export {
+    # rule cv-qualifier:sym<volatile> { <volatile> }
+    our class Volatile_ does ICvQualifier {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "volatile"
+        method gist(:$treemark=False) {
+            "volatile"
+        }
     }
 }
 
@@ -49,12 +52,12 @@ package CVGrammar is export {
 
         # rule cv-qualifier:sym<const> { <const> }
         method cv-qualifier:sym<const>($/) {
-            make CvQualifier::Const.new
+            make CvQualifier::Const_.new
         }
 
         # rule cv-qualifier:sym<volatile> { <volatile> } 
         method cv-qualifier:sym<volatile>($/) {
-            make CvQualifier::Volatile.new
+            make CvQualifier::Volatile_.new
         }
     }
 

@@ -11,7 +11,7 @@ use Chomper::Cpp::GcppUserDefinedLiteral;
 #   <operator> 
 #   <the-operator> 
 # }
-our class OperatorFunctionId { 
+class OperatorFunctionId is export { 
     has ITheOperator $.the-operator is required;
     has $.text;
 
@@ -22,7 +22,7 @@ our class OperatorFunctionId {
 
 
 # rule literal-operator-id:sym<string-lit> { <operator> <string-literal> <identifier> }
-our class LiteralOperatorId::StringLit does ILiteralOperatorId {
+class LiteralOperatorId::StringLit does ILiteralOperatorId is export {
     has StringLiteral $.string-literal is required;
     has Identifier    $.identifier     is required;
     has $.text;
@@ -36,7 +36,7 @@ our class LiteralOperatorId::StringLit does ILiteralOperatorId {
 #   <operator> 
 #   <user-defined-string-literal> 
 # }
-our class LiteralOperatorId::UserDefined does ILiteralOperatorId {
+class LiteralOperatorId::UserDefined does ILiteralOperatorId is export {
     has UserDefinedStringLiteral $.user-defined-string-literal is required;
     has $.text;
 
@@ -45,50 +45,53 @@ our class LiteralOperatorId::UserDefined does ILiteralOperatorId {
     }
 }
 
-our role OperatorId::Actions {
+package OperatorIdGrammar is export {
 
-    # rule operator-function-id { <operator> <the-operator> } 
-    method operator-function-id($/) {
-        make OperatorFunctionId.new(
-            the-operator => $<the-operator>.made,
-            text         => ~$/,
-        )
+    our role Actions {
+
+        # rule operator-function-id { <operator> <the-operator> } 
+        method operator-function-id($/) {
+            make OperatorFunctionId.new(
+                the-operator => $<the-operator>.made,
+                text         => ~$/,
+            )
+        }
+
+        # rule literal-operator-id:sym<string-lit> { <operator> <string-literal> <identifier> }
+        method literal-operator-id:sym<string-lit>($/) {
+            make LiteralOperatorId::StringLit.new(
+                string-literal => $<string-literal>.made,
+                identifier     => $<identifier>.made,
+                text           => ~$/,
+            )
+        }
+
+        # rule literal-operator-id:sym<user-defined> { <operator> <user-defined-string-literal> } 
+        method literal-operator-id:sym<user-defined>($/) {
+            make LiteralOperatorId::UserDefined.new(
+                user-defined-string-literal => $<user-defined-string-literal>.made,
+                text                        => ~$/,
+            )
+        }
     }
 
-    # rule literal-operator-id:sym<string-lit> { <operator> <string-literal> <identifier> }
-    method literal-operator-id:sym<string-lit>($/) {
-        make LiteralOperatorId::StringLit.new(
-            string-literal => $<string-literal>.made,
-            identifier     => $<identifier>.made,
-            text           => ~$/,
-        )
-    }
+    our role Rules {
 
-    # rule literal-operator-id:sym<user-defined> { <operator> <user-defined-string-literal> } 
-    method literal-operator-id:sym<user-defined>($/) {
-        make LiteralOperatorId::UserDefined.new(
-            user-defined-string-literal => $<user-defined-string-literal>.made,
-            text                        => ~$/,
-        )
-    }
-}
+        rule operator-function-id {
+            <operator> <the-operator>
+        }
 
-our role OperatorId::Rules {
+        proto rule literal-operator-id { * }
 
-    rule operator-function-id {
-        <operator> <the-operator>
-    }
+        rule literal-operator-id:sym<string-lit> {
+            <operator>
+            <string-literal> 
+            <identifier>
+        }
 
-    proto rule literal-operator-id { * }
-
-    rule literal-operator-id:sym<string-lit> {
-        <operator>
-        <string-literal> 
-        <identifier>
-    }
-
-    rule literal-operator-id:sym<user-defined> {
-        <operator>
-        <user-defined-string-literal>
+        rule literal-operator-id:sym<user-defined> {
+            <operator>
+            <user-defined-string-literal>
+        }
     }
 }

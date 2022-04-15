@@ -4,42 +4,48 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-# rule refqualifier:sym<and> { <and_> }
-our class Refqualifier::And does IRefqualifier {
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        "&"
-    }
-}
-
-# rule refqualifier:sym<and-and> { <and-and> }
-our class Refqualifier::AndAnd does IRefqualifier {
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        "&&"
-    }
-}
-
-our role Ref::Actions {
+package RefQualifier is export {
 
     # rule refqualifier:sym<and> { <and_> }
-    method refqualifier:sym<and>($/) {
-        make Refqualifier::And.new
+    our class And does IRefQualifier {
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "&"
+        }
     }
 
-    # rule refqualifier:sym<and-and> { <and-and> } 
-    method refqualifier:sym<and-and>($/) {
-        make Refqualifier::AndAnd.new
+    # rule refqualifier:sym<and-and> { <and-and> }
+    our class AndAnd does IRefQualifier {
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "&&"
+        }
     }
 }
 
-our role Ref::Rules {
+package RefGrammar is export {
 
-    proto rule refqualifier { * }
-    rule refqualifier:sym<and>     { <and_> }
-    rule refqualifier:sym<and-and> { <and-and> }
+    our role Actions {
+
+        # rule refqualifier:sym<and> { <and_> }
+        method refqualifier:sym<and>($/) {
+            make RefQualifier::And.new
+        }
+
+        # rule refqualifier:sym<and-and> { <and-and> } 
+        method refqualifier:sym<and-and>($/) {
+            make RefQualifier::AndAnd.new
+        }
+    }
+
+    our role Rules {
+
+        proto rule refqualifier { * }
+        rule refqualifier:sym<and>     { <and_> }
+        rule refqualifier:sym<and-and> { <and-and> }
+    }
 }

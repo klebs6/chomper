@@ -44,23 +44,26 @@ class ClassHeadName is export {
     }
 }
 
-# rule class-name:sym<id> { <identifier> }
-class ClassName::Id does IClassName is export {
-    has Identifier $.identifier is required;
-    has $.text;
+package ClassName is export {
 
-    method gist(:$treemark=False) {
-        $.identifier.gist(:$treemark)
+    # rule class-name:sym<id> { <identifier> }
+    our class Id does IClassName {
+        has Identifier $.identifier is required;
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.identifier.gist(:$treemark)
+        }
     }
-}
 
-# rule class-name:sym<template-id> { <simple-template-id> }
-class ClassName::TemplateId does IClassName is export {
-    has SimpleTemplateId $.simple-template-id is required;
-    has $.text;
+    # rule class-name:sym<template-id> { <simple-template-id> }
+    our class TemplateId does IClassName {
+        has SimpleTemplateId $.simple-template-id is required;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.simple-template-id.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.simple-template-id.gist(:$treemark)
+        }
     }
 }
 
@@ -88,100 +91,107 @@ class ClassSpecifier is export {
 }
 
 
-# rule class-head:sym<class> { 
-#   <.class-key> 
-#   <attribute-specifier-seq>? 
-#   [ <class-head-name> <class-virt-specifier>? ]? 
-#   <base-clause>? 
-# }
-class ClassHead::Class does IClassHead is export {
-    has IClassKey              $.class-key is required;
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has ClassHeadName          $.class-head-name;
-    has ClassVirtSpecifier     $.class-virt-specifier;
-    has BaseClause             $.base-clause;
+package ClassHead is export {
 
-    has $.text;
+    # rule class-head:sym<class> { 
+    #   <.class-key> 
+    #   <attribute-specifier-seq>? 
+    #   [ <class-head-name> <class-virt-specifier>? ]? 
+    #   <base-clause>? 
+    # }
+    our class Class_ does IClassHead {
+        has IClassKey              $.class-key is required;
+        has IAttributeSpecifierSeq $.attribute-specifier-seq;
+        has ClassHeadName          $.class-head-name;
+        has ClassVirtSpecifier     $.class-virt-specifier;
+        has BaseClause             $.base-clause;
 
-    method gist(:$treemark=False) {
+        has $.text;
 
-        my $builder = $.class-key.gist(:$treemark) ~ " ";
+        method gist(:$treemark=False) {
 
-        if $.attribute-specifier-seq {
-            $builder ~= $.attribute-specifier-seq.gist(:$treemark) ~ " ";
-        }
+            my $builder = $.class-key.gist(:$treemark) ~ " ";
 
-        if $.class-head-name {
-            $builder ~= $.class-head-name.gist(:$treemark) ~ " ";
-
-            if $.class-virt-specifier {
-                $builder ~= $.class-virt-specifier.gist(:$treemark) ~ " ";
+            if $.attribute-specifier-seq {
+                $builder ~= $.attribute-specifier-seq.gist(:$treemark) ~ " ";
             }
-        }
 
-        if $.base-clause {
-            $builder ~= $.base-clause.gist(:$treemark);
-        }
+            if $.class-head-name {
+                $builder ~= $.class-head-name.gist(:$treemark) ~ " ";
 
-        $builder
-    }
-}
-
-# rule class-head:sym<union> { 
-#   <union> 
-#   <attribute-specifier-seq>? 
-#   [ <class-head-name> <class-virt-specifier>? ]? 
-# }
-class ClassHead::Union does IClassHead is export {
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has ClassHeadName         $.class-head-name;
-    has ClassVirtSpecifier    $.class-virt-specifier;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-
-        my $builder = "union ";
-
-        if $.attribute-specifier-seq {
-            $builder ~= $.attribute-specifier-seq.gist(:$treemark);
-        }
-
-        if $.class-head-name {
-
-            $builder ~= $.class-head-name.gist(:$treemark) ~ " ";
-
-            if $.class-virt-specifier {
-                $builder ~= $.class-virt-specifier.gist(:$treemark) ~ " ";
+                if $.class-virt-specifier {
+                    $builder ~= $.class-virt-specifier.gist(:$treemark) ~ " ";
+                }
             }
+
+            if $.base-clause {
+                $builder ~= $.base-clause.gist(:$treemark);
+            }
+
+            $builder
         }
+    }
 
-        $builder
+    # rule class-head:sym<union> { 
+    #   <union> 
+    #   <attribute-specifier-seq>? 
+    #   [ <class-head-name> <class-virt-specifier>? ]? 
+    # }
+    our class Union_ does IClassHead {
+
+        has IAttributeSpecifierSeq $.attribute-specifier-seq;
+        has ClassHeadName         $.class-head-name;
+        has ClassVirtSpecifier    $.class-virt-specifier;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+
+            my $builder = "union ";
+
+            if $.attribute-specifier-seq {
+                $builder ~= $.attribute-specifier-seq.gist(:$treemark);
+            }
+
+            if $.class-head-name {
+
+                $builder ~= $.class-head-name.gist(:$treemark) ~ " ";
+
+                if $.class-virt-specifier {
+                    $builder ~= $.class-virt-specifier.gist(:$treemark) ~ " ";
+                }
+            }
+
+            $builder
+        }
     }
 }
 
 
-# rule class-key:sym<class> { 
-#   <.class_> 
-# }
-class ClassKey::Class does IClassKey is export {
+package ClassKey is export {
 
-    has $.text;
+    # rule class-key:sym<class> { 
+    #   <.class_> 
+    # }
+    our class Class_ does IClassKey {
 
-    method gist(:$treemark=False) {
-        "class"
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "class"
+        }
     }
-}
 
-# rule class-key:sym<struct> { 
-#   <.struct> 
-# }
-class ClassKey::Struct does IClassKey is export { 
+    # rule class-key:sym<struct> { 
+    #   <.struct> 
+    # }
+    our class Struct_ does IClassKey { 
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "struct"
+        method gist(:$treemark=False) {
+            "struct"
+        }
     }
 }
 
@@ -214,7 +224,7 @@ package ClassGrammar is export {
         #   <base-clause>? 
         # }
         method class-head:sym<class>($/) {
-            make ClassHead::Class.new(
+            make ClassHead::Class_.new(
                 attribute-specifier-seq => $<attribute-specifier-seq>.made,
                 class-head-name         => $<class-head-name>.made,
                 class-virt-specifier    => $<class-virt-specifier>.made,
@@ -228,7 +238,7 @@ package ClassGrammar is export {
         #   [ <class-head-name> <class-virt-specifier>? ]? 
         # } 
         method class-head:sym<union>($/) {
-            make ClassHead::Union.new(
+            make ClassHead::Union_.new(
                 attribute-specifier-seq => $<attribute-specifier-seq>.made,
                 class-head-name         => $<class-head-name>.made,
                 class-virt-specifier    => $<class-virt-specifier>.made,
@@ -258,12 +268,12 @@ package ClassGrammar is export {
 
         # rule class-key:sym<class> { <.class_> }
         method class-key:sym<class>($/) {
-            make ClassKey::Class.new
+            make ClassKey::Class_.new
         }
 
         # rule class-key:sym<struct> { <.struct> } 
         method class-key:sym<struct>($/) {
-            make ClassKey::Struct.new
+            make ClassKey::Struct_.new
         }
     }
 

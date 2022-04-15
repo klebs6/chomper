@@ -26,43 +26,46 @@ class CastExpression does ICastExpression is export {
     }
 }
 
-# token cast-token:sym<dyn> { <dynamic_cast> }
-class CastToken::Dyn does ICastToken is export { 
+package CastToken is export {
 
-    has $.text;
+    # token cast-token:sym<dyn> { <dynamic_cast> }
+    our class Dyn does ICastToken { 
 
-    method gist(:$treemark=False) {
-        "dynamic_cast"
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "dynamic_cast"
+        }
     }
-}
 
-# token cast-token:sym<static> { <static_cast> }
-class CastToken::Static does ICastToken is export { 
+    # token cast-token:sym<static> { <static_cast> }
+    our class Static does ICastToken { 
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "static_cast"
+        method gist(:$treemark=False) {
+            "static_cast"
+        }
     }
-}
 
-# token cast-token:sym<reinterpret> { <reinterpret_cast> }
-class CastToken::Reinterpret does ICastToken is export { 
+    # token cast-token:sym<reinterpret> { <reinterpret_cast> }
+    our class Reinterpret does ICastToken { 
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "reinterpret_cast"
+        method gist(:$treemark=False) {
+            "reinterpret_cast"
+        }
     }
-}
 
-# token cast-token:sym<const> { <const_cast> }
-class CastToken::Const does ICastToken is export { 
+    # token cast-token:sym<const> { <const_cast> }
+    our class Const does ICastToken { 
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "const_cast"
+        method gist(:$treemark=False) {
+            "const_cast"
+        }
     }
 }
 

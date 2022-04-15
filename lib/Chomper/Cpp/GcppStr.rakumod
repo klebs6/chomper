@@ -6,7 +6,7 @@ use Chomper::Cpp::GcppRoles;
 use Chomper::TreeMark;
 
 # token literal:sym<str> { <string-literal> }
-our class StringLiteral does ILiteral { 
+class StringLiteral does ILiteral is export { 
     has Str $.value;
 
     has $.text;
@@ -20,7 +20,7 @@ our class StringLiteral does ILiteral {
     }
 }
 
-our class Rawstring { 
+class Rawstring is export { 
     has Str $.value is required;
 
     has $.text;
@@ -30,66 +30,69 @@ our class Rawstring {
     }
 }
 
-our role StringLiteral::Actions {
+package StringLiteralGrammar is export {
 
-    # token string-literal-item { 
-    #   <encodingprefix>? 
-    #   [ || <rawstring> || '"' <schar>* '"' ] 
-    # }
-    method string-literal-item($/) {
-        make ~$/;
+    our role Actions {
+
+        # token string-literal-item { 
+        #   <encodingprefix>? 
+        #   [ || <rawstring> || '"' <schar>* '"' ] 
+        # }
+        method string-literal-item($/) {
+            make ~$/;
+        }
+
+        # token string-literal { 
+        #   <string-literal-item> 
+        #   [<.ws> <string-literal-item>]* 
+        # }
+        method string-literal($/) {
+            my @items = $<string-literal-item>>>.made;
+
+            make StringLiteral.new(
+                value => @items.join("\n"),
+            )
+        }
+
+        # token rawstring { || 'R"' [ || [ || '\\' <[ " ( ) ]> ] || <-[ \r \n ( ]> ] '(' <-[ ) ]>*? ')' [ || [ || '\\' <[ " ( ) ]> ] || <-[ \r \n " ]> ] '"' }
+        method rawstring($/) {
+            make Rawstring.new(
+                value => ~$/,
+            )
+        }
     }
 
-    # token string-literal { 
-    #   <string-literal-item> 
-    #   [<.ws> <string-literal-item>]* 
-    # }
-    method string-literal($/) {
-        my @items = $<string-literal-item>>>.made;
+    our role Rules {
 
-        make StringLiteral.new(
-            value => @items.join("\n"),
-        )
-    }
-
-    # token rawstring { || 'R"' [ || [ || '\\' <[ " ( ) ]> ] || <-[ \r \n ( ]> ] '(' <-[ ) ]>*? ')' [ || [ || '\\' <[ " ( ) ]> ] || <-[ \r \n " ]> ] '"' }
-    method rawstring($/) {
-        make Rawstring.new(
-            value => ~$/,
-        )
-    }
-}
-
-our role StringLiteral::Rules {
-
-    token string-literal-item {
-        <encodingprefix>?
-        [   
-           || <rawstring>
-           || '"' <schar>* '"'
-        ]
-    }
-
-    token string-literal {
-        <string-literal-item> 
-        [<ws> <string-literal-item>]*
-    }
-
-    token rawstring {
-        ||  'R"'
-            [   ||  [   ||  '\\'
-                            <[ " ( ) ]>
-                    ]
-                ||  <-[ \r \n   ( ]>
+        token string-literal-item {
+            <encodingprefix>?
+            [   
+               || <rawstring>
+               || '"' <schar>* '"'
             ]
-            '('
-            <-[ ) ]>*?
-            ')'
-            [   ||  [   ||  '\\'
-                            <[ " ( ) ]>
-                    ]
-                ||  <-[ \r \n   " ]>
-            ]
-            '"'
+        }
+
+        token string-literal {
+            <string-literal-item> 
+            [<ws> <string-literal-item>]*
+        }
+
+        token rawstring {
+            ||  'R"'
+                [   ||  [   ||  '\\'
+                                <[ " ( ) ]>
+                        ]
+                    ||  <-[ \r \n   ( ]>
+                ]
+                '('
+                <-[ ) ]>*?
+                ')'
+                [   ||  [   ||  '\\'
+                                <[ " ( ) ]>
+                        ]
+                    ||  <-[ \r \n   " ]>
+                ]
+                '"'
+        }
     }
 }

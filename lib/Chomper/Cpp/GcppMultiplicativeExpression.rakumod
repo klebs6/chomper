@@ -6,33 +6,36 @@ use Chomper::Cpp::GcppRoles;
 
 our class MultiplicativeExpressionTail { ... }
 
-# token multiplicative-operator:sym<*> { <star> }
-our class MultiplicativeOperator::Star does IMultiplicativeOperator {
+package MultiplicativeOperator is export {
 
-    has $.text;
+    # token multiplicative-operator:sym<*> { <star> }
+    our class Star does IMultiplicativeOperator {
 
-    method gist(:$treemark=False) {
-        "*"
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "*"
+        }
     }
-}
 
-# token multiplicative-operator:sym</> { <div_> }
-our class MultiplicativeOperator::Slash does IMultiplicativeOperator {
+    # token multiplicative-operator:sym</> { <div_> }
+    our class Slash does IMultiplicativeOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "/"
+        method gist(:$treemark=False) {
+            "/"
+        }
     }
-}
 
-# token multiplicative-operator:sym<%> { <mod_> }
-our class MultiplicativeOperator::Mod does IMultiplicativeOperator {
+    # token multiplicative-operator:sym<%> { <mod_> }
+    our class Mod does IMultiplicativeOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "%"
+        method gist(:$treemark=False) {
+            "%"
+        }
     }
 }
 
@@ -40,7 +43,7 @@ our class MultiplicativeOperator::Mod does IMultiplicativeOperator {
 #   <pointer-member-expression> 
 #   <multiplicative-expression-tail>* 
 # }
-our class MultiplicativeExpression does IMultiplicativeExpression {
+class MultiplicativeExpression does IMultiplicativeExpression is export {
     has IPointerMemberExpression     $.pointer-member-expression is required;
     has MultiplicativeExpressionTail @.multiplicative-expression-tail is required;
 
@@ -64,7 +67,7 @@ our class MultiplicativeExpression does IMultiplicativeExpression {
 #   <multiplicative-operator> 
 #   <pointer-member-expression> 
 # }
-our class MultiplicativeExpressionTail {
+class MultiplicativeExpressionTail is export {
     has IMultiplicativeOperator  $.multiplicative-operator is required;
     has IPointerMemberExpression $.pointer-member-expression is required;
 
@@ -77,63 +80,66 @@ our class MultiplicativeExpressionTail {
     }
 }
 
-our role MultiplicativeExpression::Actions {
+package MultiplicativeExpressionGrammar is export {
 
-    # token multiplicative-operator:sym<*> { <star> }
-    method multiplicative-operator:sym<*>($/) {
-        make MultiplicativeOperator::Star.new
-    }
+    our role Actions {
 
-    # token multiplicative-operator:sym</> { <div_> }
-    method multiplicative-operator:sym</>($/) {
-        make MultiplicativeOperator::Slash.new
-    }
+        # token multiplicative-operator:sym<*> { <star> }
+        method multiplicative-operator:sym<*>($/) {
+            make MultiplicativeOperator::Star.new
+        }
 
-    # token multiplicative-operator:sym<%> { <mod_> }
-    method multiplicative-operator:sym<%>($/) {
-        make MultiplicativeOperator::Mod.new
-    }
+        # token multiplicative-operator:sym</> { <div_> }
+        method multiplicative-operator:sym</>($/) {
+            make MultiplicativeOperator::Slash.new
+        }
 
-    # rule multiplicative-expression { <pointer-member-expression> <multiplicative-expression-tail>* }
-    method multiplicative-expression($/) {
-        my $base = $<pointer-member-expression>.made;
-        my @tail = $<multiplicative-expression-tail>>>.made.List;
+        # token multiplicative-operator:sym<%> { <mod_> }
+        method multiplicative-operator:sym<%>($/) {
+            make MultiplicativeOperator::Mod.new
+        }
 
-        if @tail.elems gt 0 {
-            make MultiplicativeExpression.new(
-                pointer-member-expression      => $base,
-                multiplicative-expression-tail => @tail,
-                text                           => ~$/,
+        # rule multiplicative-expression { <pointer-member-expression> <multiplicative-expression-tail>* }
+        method multiplicative-expression($/) {
+            my $base = $<pointer-member-expression>.made;
+            my @tail = $<multiplicative-expression-tail>>>.made.List;
+
+            if @tail.elems gt 0 {
+                make MultiplicativeExpression.new(
+                    pointer-member-expression      => $base,
+                    multiplicative-expression-tail => @tail,
+                    text                           => ~$/,
+                )
+            } else {
+                make $base
+            }
+        }
+
+        # rule multiplicative-expression-tail { <multiplicative-operator> <pointer-member-expression> } 
+        method multiplicative-expression-tail($/) {
+            make MultiplicativeExpressionTail.new(
+                multiplicative-operator   => $<multiplicative-operator>.made,
+                pointer-member-expression => $<pointer-member-expression>.made,
+                text                      => ~$/,
             )
-        } else {
-            make $base
         }
     }
 
-    # rule multiplicative-expression-tail { <multiplicative-operator> <pointer-member-expression> } 
-    method multiplicative-expression-tail($/) {
-        make MultiplicativeExpressionTail.new(
-            multiplicative-operator   => $<multiplicative-operator>.made,
-            pointer-member-expression => $<pointer-member-expression>.made,
-            text                      => ~$/,
-        )
-    }
-}
+    our role Rules {
 
-our role MultiplicativeExpression::Rules {
+        proto token multiplicative-operator { * }
+        token multiplicative-operator:sym<*> { <star> }
+        token multiplicative-operator:sym</> { <div_> }
+        token multiplicative-operator:sym<%> { <mod_> }
 
-    proto token multiplicative-operator { * }
-    token multiplicative-operator:sym<*> { <star> }
-    token multiplicative-operator:sym</> { <div_> }
-    token multiplicative-operator:sym<%> { <mod_> }
+        rule multiplicative-expression {
+            <pointer-member-expression>
+            <multiplicative-expression-tail>*
+        }
 
-    rule multiplicative-expression {
-        <pointer-member-expression>
-        <multiplicative-expression-tail>*
-    }
-
-    rule multiplicative-expression-tail {
-        <multiplicative-operator> 
-        <pointer-member-expression>
+        rule multiplicative-expression-tail {
+            <multiplicative-operator> 
+            <pointer-member-expression>
+        }
     }
 }

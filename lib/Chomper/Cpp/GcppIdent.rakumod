@@ -8,67 +8,68 @@ use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppChar;
 use Chomper::Cpp::GcppDigit;
 
-our class IdentifierStart::Nondigit 
-does IIdentifierStart {
+package IdentifierStart is export {
 
-    has Nondigit $.nondigit is required;
+    our class Nondigit does IIdentifierStart {
 
-    has $.text;
+        has Nondigit $.nondigit is required;
 
-    method gist(:$treemark=False) {
-        $.nondigit.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.nondigit.gist(:$treemark)
+        }
+    }
+
+    our class Ucn does IIdentifierStart {
+
+        has Universalcharactername $.universalcharactername is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.universalcharactername.gist(:$treemark)
+        }
     }
 }
 
-our class IdentifierStart::Ucn 
-does IIdentifierStart {
+package IdentifierContinue is export {
 
-    has Universalcharactername $.universalcharactername is required;
+    our class Digit does IIdentifierContinue {
 
-    has $.text;
+        has Digit $.digit is required;
 
-    method gist(:$treemark=False) {
-        $.universalcharactername.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.digit.gist(:$treemark)
+        }
+    }
+
+    our class Nondigit does IIdentifierContinue {
+
+        has Nondigit $.nondigit is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.nondigit.gist(:$treemark)
+        }
+    }
+
+    our class Ucn does IIdentifierContinue {
+
+        has Universalcharactername $.universalcharactername is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.universalcharactername.gist(:$treemark)
+        }
     }
 }
 
-our class IdentifierContinue::Digit 
-does IIdentifierContinue {
-
-    has Digit $.digit is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        $.digit.gist(:$treemark)
-    }
-}
-
-our class IdentifierContinue::Nondigit 
-does IIdentifierContinue {
-
-    has Nondigit $.nondigit is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        $.nondigit.gist(:$treemark)
-    }
-}
-
-our class IdentifierContinue::Ucn 
-does IIdentifierContinue {
-
-    has Universalcharactername $.universalcharactername is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        $.universalcharactername.gist(:$treemark)
-    }
-}
-
-our class Identifier 
+class Identifier 
 does INewTypeId
 does ITheTypeId
 does ITemplateArgument
@@ -90,7 +91,7 @@ does IDeclarator
 does IDeclSpecifierSeq
 does INoPointerDeclaratorBase
 does IPointerDeclarator
-does ITheTypeName { 
+does ITheTypeName is export { 
     has Str $.value is required; 
 
     method gist(:$treemark=False) {
@@ -103,76 +104,79 @@ does ITheTypeName {
     }
 }
 
-our role Identifier::Actions {
+package IdentifierGrammar is export {
 
-    # token identifier-start:sym<nondigit> { <nondigit> }
-    method identifier-start:sym<nondigit>($/) {
-        make $<nondigit>.made
+    our role Actions {
+
+        # token identifier-start:sym<nondigit> { <nondigit> }
+        method identifier-start:sym<nondigit>($/) {
+            make $<nondigit>.made
+        }
+
+        # token identifier-start:sym<ucn> { <universalcharactername> } 
+        method identifier-start:sym<ucn>($/) {
+            make $<universalcharactername>.made
+        }
+
+        # token identifier-continue:sym<digit> { <digit> }
+        method identifier-continue:sym<digit>($/) {
+            make $<digit>.made
+        }
+
+        # token identifier-continue:sym<nondigit> { <nondigit> }
+        method identifier-continue:sym<nondigit>($/) {
+            make $<nondigit>.made
+        }
+
+        # token identifier-continue:sym<ucn> { <universalcharactername> }
+        method identifier-continue:sym<ucn>($/) {
+            make $<universalcharactername>.made
+        }
+
+        # token identifier { <identifier-start> <identifier-continue>* }
+        method identifier($/) {
+            make Identifier.new(
+                value => ~$/,
+            )
+        }
+
+        # token nondigit { <[ a .. z A .. Z _]> }
+        method nondigit($/) {
+            make Nondigit.new(
+                value => ~$/,
+            )
+        }
+
+        # token digit { <[ 0 .. 9 ]> }
+        method digit($/) {
+            make Digit.new(
+                value => ~$/,
+            )
+        }
     }
 
-    # token identifier-start:sym<ucn> { <universalcharactername> } 
-    method identifier-start:sym<ucn>($/) {
-        make $<universalcharactername>.made
-    }
+    our role Rules {
 
-    # token identifier-continue:sym<digit> { <digit> }
-    method identifier-continue:sym<digit>($/) {
-        make $<digit>.made
-    }
+        proto token identifier-start { * }
+        token identifier-start:sym<nondigit> { <nondigit> }
+        token identifier-start:sym<ucn>      { <universalcharactername> }
 
-    # token identifier-continue:sym<nondigit> { <nondigit> }
-    method identifier-continue:sym<nondigit>($/) {
-        make $<nondigit>.made
-    }
+        proto token identifier-continue { * }
+        token identifier-continue:sym<digit>    { <digit> }
+        token identifier-continue:sym<nondigit> { <nondigit> }
+        token identifier-continue:sym<ucn>      { <universalcharactername> }
 
-    # token identifier-continue:sym<ucn> { <universalcharactername> }
-    method identifier-continue:sym<ucn>($/) {
-        make $<universalcharactername>.made
-    }
+        token identifier {
+            <.identifier-start>
+            <.identifier-continue>*
+        }
 
-    # token identifier { <identifier-start> <identifier-continue>* }
-    method identifier($/) {
-        make Identifier.new(
-            value => ~$/,
-        )
-    }
+        token nondigit {
+            <[ a .. z A .. Z _]>
+        }
 
-    # token nondigit { <[ a .. z A .. Z _]> }
-    method nondigit($/) {
-        make Nondigit.new(
-            value => ~$/,
-        )
-    }
-
-    # token digit { <[ 0 .. 9 ]> }
-    method digit($/) {
-        make Digit.new(
-            value => ~$/,
-        )
-    }
-}
-
-our role Identifier::Rules {
-
-    proto token identifier-start { * }
-    token identifier-start:sym<nondigit> { <nondigit> }
-    token identifier-start:sym<ucn>      { <universalcharactername> }
-
-    proto token identifier-continue { * }
-    token identifier-continue:sym<digit>    { <digit> }
-    token identifier-continue:sym<nondigit> { <nondigit> }
-    token identifier-continue:sym<ucn>      { <universalcharactername> }
-
-    token identifier {
-        <.identifier-start>
-        <.identifier-continue>*
-    }
-
-    token nondigit {
-        <[ a .. z A .. Z _]>
-    }
-
-    token digit {
-        <[ 0 .. 9 ]>
+        token digit {
+            <[ 0 .. 9 ]>
+        }
     }
 }

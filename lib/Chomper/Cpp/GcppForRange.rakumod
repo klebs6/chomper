@@ -12,7 +12,7 @@ use Chomper::Cpp::GcppAttr;
 #   <decl-specifier-seq> 
 #   <declarator> 
 # }
-our class ForRangeDeclaration {
+class ForRangeDeclaration is export {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
     has IDeclSpecifierSeq      $.decl-specifier-seq is required;
     has IDeclarator            $.declarator is required;
@@ -34,67 +34,75 @@ our class ForRangeDeclaration {
     }
 }
 
-# rule for-range-initializer:sym<expression> { 
-#   <expression> 
-# }
-our class ForRangeInitializer::Expression does IForRangeInitializer {
-    has IExpression $.expression is required;
+package ForRangeInitializer is export {
 
-    has $.text;
+    # rule for-range-initializer:sym<expression> { 
+    #   <expression> 
+    # }
+    our class Expression does IForRangeInitializer {
 
-    method gist(:$treemark=False) {
-        $.expression.gist(:$treemark)
+        has IExpression $.expression is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.expression.gist(:$treemark)
+        }
+    }
+
+    # rule for-range-initializer:sym<braced-init-list> { 
+    #   <braced-init-list> 
+    # }
+    our class BracedInitList does IForRangeInitializer {
+
+        has BracedInitList $.braced-init-list is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.braced-init-list.gist(:$treemark)
+        }
     }
 }
 
-# rule for-range-initializer:sym<braced-init-list> { 
-#   <braced-init-list> 
-# }
-our class ForRangeInitializer::BracedInitList does IForRangeInitializer {
-    has BracedInitList $.braced-init-list is required;
+package ForRangeGrammar is export {
 
-    has $.text;
+    our role Actions {
 
-    method gist(:$treemark=False) {
-        $.braced-init-list.gist(:$treemark)
-    }
-}
+        # rule for-range-declaration { <attribute-specifier-seq>? <decl-specifier-seq> <declarator> }
+        method for-range-declaration($/) {
+            make ForRangeDeclaration.new(
+                attribute-specifier-seq => $<attribute-specifier-seq>.made,
+                decl-specifier-seq      => $<decl-specifier-seq>.made,
+                declarator              => $<declarator>.made,
+                text                    => ~$/,
+            )
+        }
 
-our role ForRange::Actions {
+        # rule for-range-initializer:sym<expression> { <expression> }
+        method for-range-initializer:sym<expression>($/) {
+            make ForRangeInitializer::Expression.new(
+                expression => $<expression>.made,
+                text       => ~$/,
+            )
+        }
 
-    # rule for-range-declaration { <attribute-specifier-seq>? <decl-specifier-seq> <declarator> }
-    method for-range-declaration($/) {
-        make ForRangeDeclaration.new(
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            decl-specifier-seq      => $<decl-specifier-seq>.made,
-            declarator              => $<declarator>.made,
-            text                    => ~$/,
-        )
-    }
-
-    # rule for-range-initializer:sym<expression> { <expression> }
-    method for-range-initializer:sym<expression>($/) {
-        make ForRangeInitializer::Expression.new(
-            expression => $<expression>.made,
-            text       => ~$/,
-        )
+        # rule for-range-initializer:sym<braced-init-list> { <braced-init-list> } 
+        method for-range-initializer:sym<braced-init-list>($/) {
+            make $<braced-init-list>.made
+        }
     }
 
-    # rule for-range-initializer:sym<braced-init-list> { <braced-init-list> } 
-    method for-range-initializer:sym<braced-init-list>($/) {
-        make $<braced-init-list>.made
+    our role Rules {
+
+        rule for-range-declaration {
+            <attribute-specifier-seq>?
+            <decl-specifier-seq>
+            <declarator>
+        }
+
+        proto rule for-range-initializer { * }
+        rule for-range-initializer:sym<expression>     { <expression> }
+        rule for-range-initializer:sym<braced-init-list> { <braced-init-list> }
     }
-}
-
-our role ForRange::Rules {
-
-    rule for-range-declaration {
-        <attribute-specifier-seq>?
-        <decl-specifier-seq>
-        <declarator>
-    }
-
-    proto rule for-range-initializer { * }
-    rule for-range-initializer:sym<expression>     { <expression> }
-    rule for-range-initializer:sym<braced-init-list> { <braced-init-list> }
 }

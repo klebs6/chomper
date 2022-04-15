@@ -8,7 +8,7 @@ use Chomper::Cpp::GcppRoles;
 #   <inclusive-or-expression> 
 #   [ <and-and> <inclusive-or-expression>]* 
 # }
-our class LogicalAndExpression does ILogicalAndExpression {
+class LogicalAndExpression does ILogicalAndExpression is export {
     has IInclusiveOrExpression @.inclusive-or-expressions is required;
 
     has $.text;
@@ -22,7 +22,7 @@ our class LogicalAndExpression does ILogicalAndExpression {
 #   <logical-and-expression> 
 #   [ <or-or> <logical-and-expression> ]* 
 # }
-our class LogicalOrExpression does ILogicalOrExpression {
+class LogicalOrExpression does ILogicalOrExpression is export {
     has ILogicalAndExpression @.logical-and-expressions is required;
 
     has $.text;
@@ -32,46 +32,49 @@ our class LogicalOrExpression does ILogicalOrExpression {
     }
 }
 
-our role LogicalExpression::Actions {
+package LogicalExpressionGrammar is export {
 
-    # rule logical-and-expression { <inclusive-or-expression> [ <and-and> <inclusive-or-expression>]* }
-    method logical-and-expression($/) {
+    our role Actions {
 
-        my @inclusive-or-expressions = $<inclusive-or-expression>>>.made;
+        # rule logical-and-expression { <inclusive-or-expression> [ <and-and> <inclusive-or-expression>]* }
+        method logical-and-expression($/) {
 
-        if @inclusive-or-expressions.elems gt 1 {
-            make LogicalAndExpression.new(
-                inclusive-or-expressions => @inclusive-or-expressions,
-                text                     => ~$/,
-            )
-        } else {
-            make @inclusive-or-expressions[0]
+            my @inclusive-or-expressions = $<inclusive-or-expression>>>.made;
+
+            if @inclusive-or-expressions.elems gt 1 {
+                make LogicalAndExpression.new(
+                    inclusive-or-expressions => @inclusive-or-expressions,
+                    text                     => ~$/,
+                )
+            } else {
+                make @inclusive-or-expressions[0]
+            }
+        }
+
+        # rule logical-or-expression { <logical-and-expression> [ <or-or> <logical-and-expression> ]* }
+        method logical-or-expression($/) {
+
+            my @exprs = $<logical-and-expression>>>.made;
+
+            if @exprs.elems gt 1 {
+                make LogicalOrExpression.new(
+                    logical-and-expressions => @exprs,
+                    text                    => ~$/,
+                )
+            } else {
+                make @exprs[0]
+            }
         }
     }
 
-    # rule logical-or-expression { <logical-and-expression> [ <or-or> <logical-and-expression> ]* }
-    method logical-or-expression($/) {
+    our role Rules {
 
-        my @exprs = $<logical-and-expression>>>.made;
-
-        if @exprs.elems gt 1 {
-            make LogicalOrExpression.new(
-                logical-and-expressions => @exprs,
-                text                    => ~$/,
-            )
-        } else {
-            make @exprs[0]
+        rule logical-and-expression {
+            <inclusive-or-expression> [ <and-and> <inclusive-or-expression>]*
         }
-    }
-}
 
-our role LogicalExpression::Rules {
-
-    rule logical-and-expression {
-        <inclusive-or-expression> [ <and-and> <inclusive-or-expression>]*
-    }
-
-    rule logical-or-expression {
-        <logical-and-expression> [ <or-or> <logical-and-expression> ]*
+        rule logical-or-expression {
+            <logical-and-expression> [ <or-or> <logical-and-expression> ]*
+        }
     }
 }

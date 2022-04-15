@@ -20,7 +20,7 @@ class Universalcharactername is export {
     }
 }
 
-class Cchar::Basic does ICchar is export {
+class BasicCchar does ICchar is export {
     has Str $.value is required;
 
     has $.text;
@@ -30,8 +30,8 @@ class Cchar::Basic does ICchar is export {
     }
 }
 
-class Cchar::Escape does ICchar is export {
-    has IEscapesequence $.escapesequence is required;
+class EscapeCchar does ICchar is export {
+    has IEscapeSequence $.escapesequence is required;
 
     has $.text;
 
@@ -40,7 +40,7 @@ class Cchar::Escape does ICchar is export {
     }
 }
 
-class Cchar::Universal does ICchar is export {
+class UniversalCchar does ICchar is export {
     has Universalcharactername $.universalcharactername is required;
 
     has $.text;
@@ -50,7 +50,7 @@ class Cchar::Universal does ICchar is export {
     }
 }
 
-class Schar::Basic does ISchar is export {
+class BasicSchar does ISchar is export {
     has Str $.value is required;
 
     has $.text;
@@ -60,8 +60,8 @@ class Schar::Basic does ISchar is export {
     }
 }
 
-class Schar::Escape does ISchar is export {
-    has IEscapesequence $.escapesequence is required;
+class EscpaeSchar does ISchar is export {
+    has IEscapeSequence $.escapesequence is required;
 
     has $.text;
 
@@ -70,7 +70,7 @@ class Schar::Escape does ISchar is export {
     }
 }
 
-class Schar::Ucn does ISchar is export {
+class UcnSchar does ISchar is export {
     has Universalcharactername $.universalcharactername is required;
 
     has $.text;
@@ -80,7 +80,7 @@ class Schar::Ucn does ISchar is export {
     }
 }
 
-class CharacterLiteralPrefix::U    does ICharacterLiteralPrefix is export { 
+class CharacterLiteralPrefixU    does ICharacterLiteralPrefix is export { 
 
     has $.text;
 
@@ -89,7 +89,7 @@ class CharacterLiteralPrefix::U    does ICharacterLiteralPrefix is export {
     }
 }
 
-class CharacterLiteralPrefix::BigU does ICharacterLiteralPrefix is export { 
+class CharacterLiteralPrefixBigU does ICharacterLiteralPrefix is export { 
 
     has $.text;
 
@@ -98,7 +98,7 @@ class CharacterLiteralPrefix::BigU does ICharacterLiteralPrefix is export {
     }
 }
 
-class CharacterLiteralPrefix::L    does ICharacterLiteralPrefix is export { 
+class CharacterLiteralPrefixL    does ICharacterLiteralPrefix is export { 
 
     has $.text;
 
@@ -182,7 +182,7 @@ package CharacterLiteralGrammar is export {
 
         # token cchar:sym<basic> { <-[ \' \\ \r \n ]> }
         method cchar:sym<basic>($/) {
-            make Cchar::Basic.new(
+            make BasicCchar.new(
                 value => ~$/,
             )
         }
@@ -199,7 +199,7 @@ package CharacterLiteralGrammar is export {
 
         # token schar:sym<basic> { <-[ " \\ \r \n ]> }
         method schar:sym<basic>($/) {
-            make Schar::Basic.new(
+            make BasicSchar.new(
                 value => ~$/,
             )
         }

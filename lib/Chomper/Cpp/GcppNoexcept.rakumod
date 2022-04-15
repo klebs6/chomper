@@ -10,8 +10,8 @@ use Chomper::Cpp::GcppRoles;
 #   <constant-expression> 
 #   <.right-paren> 
 # }
-our class NoeExceptSpecification::Full 
-does INoeExceptSpecification {
+class NoeExceptSpecification::Full 
+does INoeExceptSpecification is export {
     has IConstantExpression $.constant-expression is required;
 
     has $.text;
@@ -24,8 +24,8 @@ does INoeExceptSpecification {
 # token noe-except-specification:sym<keyword-only> { 
 #   <noexcept> 
 # }
-our class NoeExceptSpecification::KeywordOnly 
-does INoeExceptSpecification { 
+class NoeExceptSpecification::KeywordOnly 
+does INoeExceptSpecification is export { 
 
     has $.text;
 
@@ -40,7 +40,7 @@ does INoeExceptSpecification {
 #   <expression> 
 #   <.right-paren> 
 # }
-our class NoExceptExpression { 
+class NoExceptExpression is export { 
     has IExpression $.expression is required;
 
     has $.text;
@@ -50,61 +50,64 @@ our class NoExceptExpression {
     }
 }
 
-our role NoExceptExpression::Actions {
+package NoExceptExpressionGrammar is export {
 
-    # rule no-except-expression { 
-    #   <noexcept> 
-    #   <.left-paren> 
-    #   <expression> 
-    #   <.right-paren> 
-    # }
-    method no-except-expression($/) {
-        make NoExceptExpression.new(
-            expression => $<expression>.made,
-            text       => ~$/,
-        )
+    our role Actions {
+
+        # rule no-except-expression { 
+        #   <noexcept> 
+        #   <.left-paren> 
+        #   <expression> 
+        #   <.right-paren> 
+        # }
+        method no-except-expression($/) {
+            make NoExceptExpression.new(
+                expression => $<expression>.made,
+                text       => ~$/,
+            )
+        }
+
+        # token noe-except-specification:sym<full> { 
+        #   <noexcept> 
+        #   <.left-paren> 
+        #   <constant-expression> 
+        #   <.right-paren> 
+        # }
+        method noe-except-specification:sym<full>($/) {
+            make NoeExceptSpecification::Full.new(
+                constant-expression => $<constant-expression>.made,
+                text                => ~$/,
+            )
+        }
+
+        # token noe-except-specification:sym<keyword-only> { 
+        #   <noexcept> 
+        # }
+        method noe-except-specification:sym<keyword-only>($/) {
+            make NoeExceptSpecification::KeywordOnly.new
+        }
     }
 
-    # token noe-except-specification:sym<full> { 
-    #   <noexcept> 
-    #   <.left-paren> 
-    #   <constant-expression> 
-    #   <.right-paren> 
-    # }
-    method noe-except-specification:sym<full>($/) {
-        make NoeExceptSpecification::Full.new(
-            constant-expression => $<constant-expression>.made,
-            text                => ~$/,
-        )
-    }
+    our role Rules {
 
-    # token noe-except-specification:sym<keyword-only> { 
-    #   <noexcept> 
-    # }
-    method noe-except-specification:sym<keyword-only>($/) {
-        make NoeExceptSpecification::KeywordOnly.new
-    }
-}
+        rule no-except-expression {
+            <noexcept>
+            <left-paren>
+            <expression>
+            <right-paren>
+        }
 
-our role NoExceptExpression::Rules {
+        proto token noe-except-specification { * }
 
-    rule no-except-expression {
-        <noexcept>
-        <left-paren>
-        <expression>
-        <right-paren>
-    }
+        token noe-except-specification:sym<full> { 
+            <noexcept> 
+            <left-paren> 
+            <constant-expression> 
+            <right-paren> 
+        }
 
-    proto token noe-except-specification { * }
-
-    token noe-except-specification:sym<full> { 
-        <noexcept> 
-        <left-paren> 
-        <constant-expression> 
-        <right-paren> 
-    }
-
-    token noe-except-specification:sym<keyword-only> { 
-        <noexcept> 
+        token noe-except-specification:sym<keyword-only> { 
+            <noexcept> 
+        }
     }
 }

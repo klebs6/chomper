@@ -8,7 +8,7 @@ use Chomper::Cpp::GcppAttr;
 # rule using-declaration-prefix:sym<nested> { 
 #   [ <typename_>? <nested-name-specifier> ] 
 # }
-our class UsingDeclarationPrefix::Nested does IUsingDeclarationPrefix {
+class UsingDeclarationPrefix::Nested does IUsingDeclarationPrefix is export {
     has Bool $.has-typename is required;
     has INestedNameSpecifier $.nested-name-specifier is required;
 
@@ -26,7 +26,7 @@ our class UsingDeclarationPrefix::Nested does IUsingDeclarationPrefix {
 # rule using-declaration-prefix:sym<base> { 
 #   <doublecolon> 
 # }
-our class UsingDeclarationPrefix::Base does IUsingDeclarationPrefix {
+class UsingDeclarationPrefix::Base does IUsingDeclarationPrefix is export {
 
     has $.text;
 
@@ -41,7 +41,7 @@ our class UsingDeclarationPrefix::Base does IUsingDeclarationPrefix {
 #   <unqualified-id> 
 #   <semi> 
 # }
-our class UsingDeclaration { 
+class UsingDeclaration is export { 
     has IComment                $.comment;
     has IUsingDeclarationPrefix $.using-declaration-prefix is required;
     has IUnqualifiedId          $.unqualified-id is required;
@@ -73,7 +73,7 @@ our class UsingDeclaration {
 #   <namespace-name> 
 #   <semi> 
 # }
-our class UsingDirective { 
+class UsingDirective is export { 
     has IComment                $.comment;
     has IAttributeSpecifierSeq  $.attribute-specifier-seq;
     has INestedNameSpecifier    $.nested-name-specifier;
@@ -103,62 +103,65 @@ our class UsingDirective {
     }
 }
 
-our role UsingDirective::Actions {
+package UsingDirectiveGrammar is export {
 
-    # rule using-declaration-prefix:sym<nested> { [ <typename_>? <nested-name-specifier> ] }
-    method using-declaration-prefix:sym<nested>($/) {
-        make UsingDeclarationPrefix::Nested.new(
-            nested-name-specifier => $<nested-name-specifier>.made,
-            text                  => ~$/,
-        )
+    our role Actions {
+
+        # rule using-declaration-prefix:sym<nested> { [ <typename_>? <nested-name-specifier> ] }
+        method using-declaration-prefix:sym<nested>($/) {
+            make UsingDeclarationPrefix::Nested.new(
+                nested-name-specifier => $<nested-name-specifier>.made,
+                text                  => ~$/,
+            )
+        }
+
+        # rule using-declaration-prefix:sym<base> { <doublecolon> } 
+        method using-declaration-prefix:sym<base>($/) {
+            make UsingDeclarationPrefix::Base.new
+        }
+
+        # rule using-declaration { <using> <using-declaration-prefix> <unqualified-id> <semi> }
+        method using-declaration($/) {
+            make UsingDeclaration.new(
+                comment                  => $<semi>.made,
+                using-declaration-prefix => $<using-declaration-prefix>.made,
+                unqualified-id           => $<unqualified-id>.made,
+                text                     => ~$/,
+            )
+        }
+
+        # rule using-directive { <attribute-specifier-seq>? <using> <namespace> <nested-name-specifier>? <namespace-name> <semi> }
+        method using-directive($/) {
+            make UsingDirective.new(
+                comment                 => $<semi>.made,
+                attribute-specifier-seq => $<attribute-specifier-seq>.made,
+                nested-name-specifier   => $<nested-name-specifier>.made,
+                namespace-name          => $<namespace-name>.made,
+                text                    => ~$/,
+            )
+        }
     }
 
-    # rule using-declaration-prefix:sym<base> { <doublecolon> } 
-    method using-declaration-prefix:sym<base>($/) {
-        make UsingDeclarationPrefix::Base.new
-    }
+    our role Rules {
 
-    # rule using-declaration { <using> <using-declaration-prefix> <unqualified-id> <semi> }
-    method using-declaration($/) {
-        make UsingDeclaration.new(
-            comment                  => $<semi>.made,
-            using-declaration-prefix => $<using-declaration-prefix>.made,
-            unqualified-id           => $<unqualified-id>.made,
-            text                     => ~$/,
-        )
-    }
+        proto rule using-declaration-prefix { * }
+        rule using-declaration-prefix:sym<nested> { [ <typename_>? <nested-name-specifier> ] }
+        rule using-declaration-prefix:sym<base>   { <doublecolon> }
 
-    # rule using-directive { <attribute-specifier-seq>? <using> <namespace> <nested-name-specifier>? <namespace-name> <semi> }
-    method using-directive($/) {
-        make UsingDirective.new(
-            comment                 => $<semi>.made,
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            nested-name-specifier   => $<nested-name-specifier>.made,
-            namespace-name          => $<namespace-name>.made,
-            text                    => ~$/,
-        )
-    }
-}
+        rule using-declaration {
+            <using>
+            <using-declaration-prefix>
+            <unqualified-id>
+            <semi>
+        }
 
-our role UsingDirective::Rules {
-
-    proto rule using-declaration-prefix { * }
-    rule using-declaration-prefix:sym<nested> { [ <typename_>? <nested-name-specifier> ] }
-    rule using-declaration-prefix:sym<base>   { <doublecolon> }
-
-    rule using-declaration {
-        <using>
-        <using-declaration-prefix>
-        <unqualified-id>
-        <semi>
-    }
-
-    rule using-directive {
-        <attribute-specifier-seq>?
-        <using>
-        <namespace>
-        <nested-name-specifier>?
-        <namespace-name>
-        <semi>
+        rule using-directive {
+            <attribute-specifier-seq>?
+            <using>
+            <namespace>
+            <nested-name-specifier>?
+            <namespace-name>
+            <semi>
+        }
     }
 }

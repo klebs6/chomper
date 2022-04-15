@@ -5,7 +5,7 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppIdent;
 
-our class TypedefName { 
+class TypedefName is export { 
     has Identifier $.identifier is required;
 
     has $.text;
@@ -15,15 +15,18 @@ our class TypedefName {
     }
 }
 
-our role Typedef::Actions {
+package TypedefGrammar is export {
 
-    method typedef-name($/) {
-        make $<identifier>.made
+    our role Actions {
+
+        method typedef-name($/) {
+            make $<identifier>.made
+        }
     }
-}
 
-our role Typedef::Rules {
-    rule typedef-name { 
-        <identifier> 
+    our role Rules {
+        rule typedef-name { 
+            <identifier> 
+        }
     }
 }

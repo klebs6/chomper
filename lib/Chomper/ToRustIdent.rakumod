@@ -1,13 +1,16 @@
 #use Chomper::Cpp::GcppIdent;
-use Chomper::TranslateIo;
+#use Chomper::TranslateIo;
 use Chomper::Rust;
 use Chomper::Cpp;
 use Data::Dump::Tree;
 
+say Rust::Identifier.^name;
+say Cpp::Identifier.^name;
+
 proto sub to-rust-ident($x) is export { * }
 
 multi sub to-rust-ident(Cpp::Identifier $x) returns Rust::Identifier {  
-    debug "to-rust-ident for Identifier";
+    say "to-rust-ident for Identifier";
     ddt $x;
     "dummyident"
 }

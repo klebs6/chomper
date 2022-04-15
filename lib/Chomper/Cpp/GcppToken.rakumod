@@ -4,70 +4,82 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-our class Not::Bang does INot { 
+package Not is export {
 
-    has $.text;
+    our class Bang does INot { 
 
-    method gist(:$treemark=False) { 
-        "!"
+        has $.text;
+
+        method gist(:$treemark=False) { 
+            "!"
+        }
+    }
+
+    our class Not does INot { 
+
+        has $.text;
+
+        method gist(:$treemark=False) { 
+            "!"
+        }
     }
 }
 
-our class Not::Not does INot { 
+package AndAnd is export {
 
-    has $.text;
+    our class AndAnd does IAndAnd { 
 
-    method gist(:$treemark=False) { 
-        "!"
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "&&"
+        }
+    }
+
+    our class And does IAndAnd { 
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "&"
+        }
     }
 }
 
-our class AndAnd::AndAnd does IAndAnd { 
+package OrOr is export {
 
-    has $.text;
+    our class PipePipe does IOrOr { 
 
-    method gist(:$treemark=False) {
-        "&&"
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "||"
+        }
+    }
+
+    our class Or does IOrOr { 
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "|"
+        }
     }
 }
 
-our class AndAnd::And does IAndAnd { 
+package TokenGrammar is export {
 
-    has $.text;
+    our role Rules {
 
-    method gist(:$treemark=False) {
-        "&"
-    }
-}
+        token whitespace {
+            <[   \t ]>+
+        }
 
-our class OrOr::PipePipe does IOrOr { 
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        "||"
-    }
-}
-
-our class OrOr::Or does IOrOr { 
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        "|"
-    }
-}
-
-our role Token::Rules {
-
-    token whitespace {
-        <[   \t ]>+
-    }
-
-    token newline_ {
-        [   
-            ||  '\r' '\n'?
-            ||  '\n'
-        ]
+        token newline_ {
+            [   
+                ||  '\r' '\n'?
+                ||  '\n'
+            ]
+        }
     }
 }

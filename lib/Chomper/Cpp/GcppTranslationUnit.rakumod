@@ -6,7 +6,7 @@ use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppDeclaration;
 
 # token translation-unit { <declarationseq>? $ }
-our class TranslationUnit { 
+class TranslationUnit is export { 
     has IDeclarationseq $.declarationseq;
 
     has $.text;
@@ -16,16 +16,19 @@ our class TranslationUnit {
     }
 }
 
-our role TranslationUnit::Actions {
+package TranslationUnitGrammar is export {
 
-    # token translation-unit { <declarationseq>? $ }
-    method translation-unit($/) {
-        make $<declarationseq>.made
+    our role Actions {
+
+        # token translation-unit { <declarationseq>? $ }
+        method translation-unit($/) {
+            make $<declarationseq>.made
+        }
     }
-}
 
-our role TranslationUnit::Rules {
-    token translation-unit {
-        <declarationseq>?  $
+    our role Rules {
+        token translation-unit {
+            <declarationseq>?  $
+        }
     }
 }

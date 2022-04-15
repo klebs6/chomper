@@ -1,20 +1,9 @@
 use Chomper::TranslateIo;
-use Chomper::Rust::ToRustType;
-use Chomper::Rust::ToRustIdent;
-use Chomper::Rust::ToRustParams;
+use Chomper::ToRustType;
+use Chomper::ToRustIdent;
+use Chomper::ToRustParams;
 use Chomper::TranslatePostfixExpressionList;
-use Chomper::Cpp::GcppRoles;
-use Chomper::Cpp::GcppTry;
-use Chomper::Cpp::GcppPrimaryExpression;
-use Chomper::Cpp::GcppStatement;
-use Chomper::Cpp::GcppEqExpression;
-use Chomper::Cpp::GcppLogicalExpression;
-use Chomper::Cpp::GcppDeclaration;
-use Chomper::Cpp::GcppSelection;
-use Chomper::Cpp::GcppIteration;
-use Chomper::Cpp::GcppJumpStatement;
-use Chomper::Cpp::GcppBool;
-use Chomper::Cpp::GcppPostfixExpression;
+use Chomper::Cpp;
 use Data::Dump::Tree;
 
 proto sub to-rust($x) is export { * };

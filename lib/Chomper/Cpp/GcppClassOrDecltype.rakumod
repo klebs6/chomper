@@ -5,36 +5,39 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppDecltype;
 
-# rule class-or-decl-type:sym<class> { 
-#   <nested-name-specifier>? 
-#   <class-name> 
-# }
-class ClassOrDeclType::Class does IClassOrDeclType is export {
-    has INestedNameSpecifier $.nested-name-specifier;
-    has IClassName           $.class-name is required;
-    has $.text;
+package ClassOrDeclType is export {
 
-    method gist(:$treemark=False) {
+    # rule class-or-decl-type:sym<class> { 
+    #   <nested-name-specifier>? 
+    #   <class-name> 
+    # }
+    our class Class_ does IClassOrDeclType {
+        has INestedNameSpecifier $.nested-name-specifier;
+        has IClassName           $.class-name is required;
+        has $.text;
 
-        my $builder = "";
+        method gist(:$treemark=False) {
 
-        if $.nested-name-specifier {
-            $builder ~= $.nested-name-specifier.gist(:$treemark);
+            my $builder = "";
+
+            if $.nested-name-specifier {
+                $builder ~= $.nested-name-specifier.gist(:$treemark);
+            }
+
+            $builder ~ $.class-name.gist(:$treemark)
         }
-
-        $builder ~ $.class-name.gist(:$treemark)
     }
-}
 
-# rule class-or-decl-type:sym<decltype> { 
-#   <decltype-specifier> 
-# }
-class ClassOrDeclType::Decltype does IClassOrDeclType is export {
-    has DecltypeSpecifier $.decltype-specifier is required;
-    has $.text;
+    # rule class-or-decl-type:sym<decltype> { 
+    #   <decltype-specifier> 
+    # }
+    our class Decltype does IClassOrDeclType {
+        has DecltypeSpecifier $.decltype-specifier is required;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.decltype-specifier.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.decltype-specifier.gist(:$treemark)
+        }
     }
 }
 
@@ -49,7 +52,7 @@ package ClassOrDeclTypeGrammar is export {
             my $base   = $<class-name>.made;
 
             if $prefix {
-                make ClassOrDeclType::Class.new(
+                make ClassOrDeclType::Class_.new(
                     nested-name-specifier => $prefix,
                     class-name            => $base,
                 )

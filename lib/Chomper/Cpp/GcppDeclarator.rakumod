@@ -83,29 +83,32 @@ does INoPointerDeclaratorBase is export {
     }
 }
 
-# rule some-declarator:sym<basic> { 
-#   <declarator> 
-# }
-class SomeDeclarator::Basic does ISomeDeclarator is export {
-    has IDeclarator $.declarator is required;
+package SomeDeclarator is export {
 
-    has $.text;
+    # rule some-declarator:sym<basic> { 
+    #   <declarator> 
+    # }
+    our class Basic does ISomeDeclarator {
+        has IDeclarator $.declarator is required;
 
-    method gist(:$treemark=False) {
-        $.declarator.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.declarator.gist(:$treemark)
+        }
     }
-}
 
-# rule some-declarator:sym<abstract> { 
-#   <abstract-declarator> 
-# }
-class SomeDeclarator::Abstract does ISomeDeclarator is export {
-    has IAbstractDeclarator $.abstract-declarator is required;
+    # rule some-declarator:sym<abstract> { 
+    #   <abstract-declarator> 
+    # }
+    our class Abstract does ISomeDeclarator {
+        has IAbstractDeclarator $.abstract-declarator is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.abstract-declarator.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.abstract-declarator.gist(:$treemark)
+        }
     }
 }
 

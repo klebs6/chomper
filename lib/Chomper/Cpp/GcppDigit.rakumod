@@ -4,7 +4,7 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-our class Digit { 
+class Digit is export { 
     has Str $.value is required; 
 
     has $.text;
@@ -14,7 +14,7 @@ our class Digit {
     }
 }
 
-our class Nonzerodigit { 
+class Nonzerodigit is export { 
     has Str $.value is required; 
 
     has $.text;
@@ -24,7 +24,7 @@ our class Nonzerodigit {
     }
 }
 
-our class Nondigit {
+class Nondigit is export {
     has Str $.value is required; 
 
     has $.text;
@@ -34,7 +34,7 @@ our class Nondigit {
     }
 }
 
-our class Digitsequence { 
+class Digitsequence is export { 
     has Digit @.digits is required;
 
     has $.text;

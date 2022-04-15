@@ -7,7 +7,7 @@ use Chomper::Cpp::GcppIdent;
 use Chomper::Cpp::GcppAttr;
 use Chomper::Cpp::GcppStr;
 
-our role IDeclarationseq { }
+our role IDeclarationseq is export { }
 
 # rule declarationseq { 
 #   <declaration>+ 
@@ -58,80 +58,82 @@ class AliasDeclaration is export {
     }
 }
 
-# rule simple-declaration:sym<basic> { 
-#   <decl-specifier-seq>? 
-#   <init-declarator-list>? 
-#   <.semi> 
-# }
-class SimpleDeclaration::Basic 
-does IDeclarationStatement 
-does ISimpleDeclaration is export {
+package SimpleDeclaration is export {
 
-    has IComment           $.comment;
-    has IDeclSpecifierSeq  $.decl-specifier-seq;
-    has IInitDeclarator    @.init-declarator-list;
+    # rule simple-declaration:sym<basic> { 
+    #   <decl-specifier-seq>? 
+    #   <init-declarator-list>? 
+    #   <.semi> 
+    # }
+    our class Basic 
+    does IDeclarationStatement 
+    does ISimpleDeclaration {
 
-    has $.text;
+        has IComment           $.comment;
+        has IDeclSpecifierSeq  $.decl-specifier-seq;
+        has IInitDeclarator    @.init-declarator-list;
 
-    method gist(:$treemark=False) {
+        has $.text;
 
-        my $builder = "";
+        method gist(:$treemark=False) {
 
-        if $.comment {
-            $builder ~= $.comment.gist(:$treemark) ~ "\n";
+            my $builder = "";
+
+            if $.comment {
+                $builder ~= $.comment.gist(:$treemark) ~ "\n";
+            }
+
+            if $.decl-specifier-seq {
+                $builder ~= $.decl-specifier-seq.gist(:$treemark) ~ " ";
+            }
+
+            my $declarator-list = @.init-declarator-list>>.gist(:$treemark).join(", ");
+
+            if $declarator-list {
+                $builder ~= $declarator-list.chomp;
+            }
+
+            $builder ~ ";"
         }
-
-        if $.decl-specifier-seq {
-            $builder ~= $.decl-specifier-seq.gist(:$treemark) ~ " ";
-        }
-
-        my $declarator-list = @.init-declarator-list>>.gist(:$treemark).join(", ");
-
-        if $declarator-list {
-            $builder ~= $declarator-list.chomp;
-        }
-
-        $builder ~ ";"
     }
-}
 
-# rule simple-declaration:sym<init-list> { 
-#   <attribute-specifier-seq> 
-#   <decl-specifier-seq>? 
-#   <init-declarator-list> 
-#   <.semi> 
-# }
-class SimpleDeclaration::InitList 
-does ISimpleDeclaration is export {
+    # rule simple-declaration:sym<init-list> { 
+    #   <attribute-specifier-seq> 
+    #   <decl-specifier-seq>? 
+    #   <init-declarator-list> 
+    #   <.semi> 
+    # }
+    our class InitList does ISimpleDeclaration {
 
-    has IComment            $.comment;
-    has IAttributeSpecifier @.attribute-specifiers is required;
-    has IDeclSpecifierSeq   $.decl-specifier-seq;
-    has IInitDeclarator     @.init-declarator-list;
+        has IComment            $.comment;
+        has IAttributeSpecifier @.attribute-specifiers is required;
+        has IDeclSpecifierSeq   $.decl-specifier-seq;
+        has IInitDeclarator     @.init-declarator-list;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
+        method gist(:$treemark=False) {
 
-        my $builder = "";
+            my $builder = "";
 
-        if $.comment {
-            $builder ~= $.comment.gist(:$treemark) ~ "\n";
+            if $.comment {
+                $builder ~= $.comment.gist(:$treemark) ~ "\n";
+            }
+
+            for @.attribute-specifiers {
+                $builder ~= $_.gist(:$treemark) ~ " ";
+            }
+
+            if $.decl-specifier-seq {
+                $builder ~= $.decl-specifier-seq.gist(:$treemark) ~ " ";
+            }
+
+            for @.init-declarator-list {
+                $builder ~= $_.gist(:$treemark) ~ " ";
+            }
+
+            $builder ~ ";"
         }
-
-        for @.attribute-specifiers {
-            $builder ~= $_.gist(:$treemark) ~ " ";
-        }
-
-        if $.decl-specifier-seq {
-            $builder ~= $.decl-specifier-seq.gist(:$treemark) ~ " ";
-        }
-
-        for @.init-declarator-list {
-            $builder ~= $_.gist(:$treemark) ~ " ";
-        }
-
-        $builder ~ ";"
     }
 }
 

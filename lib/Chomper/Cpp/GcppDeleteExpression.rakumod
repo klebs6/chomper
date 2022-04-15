@@ -10,7 +10,7 @@ use Chomper::Cpp::GcppRoles;
 #   [ <.left-bracket> <.right-bracket> ]? 
 #   <cast-expression> 
 # }
-our class DeleteExpression { 
+class DeleteExpression is export { 
     has Bool            $.has-doublecolon is required;
     has Bool            $.has-array       is required;
     has ICastExpression $.cast-expression is required;
@@ -34,23 +34,26 @@ our class DeleteExpression {
     }
 }
 
-our role DeleteExpression::Actions {
+package DeleteExpressionGrammar is export {
 
-    # rule delete-expression { <doublecolon>? <delete> [ <.left-bracket> <.right-bracket> ]? <cast-expression> }
-    method delete-expression($/) {
-        make DeleteExpression.new(
-            cast-expression => $<cast-expression>.made,
-            text            => ~$/,
-        )
+    our role Actions {
+
+        # rule delete-expression { <doublecolon>? <delete> [ <.left-bracket> <.right-bracket> ]? <cast-expression> }
+        method delete-expression($/) {
+            make DeleteExpression.new(
+                cast-expression => $<cast-expression>.made,
+                text            => ~$/,
+            )
+        }
     }
-}
 
-our role DeleteExpression::Rules {
+    our role Rules {
 
-    rule delete-expression {
-        <doublecolon>?
-        <delete>
-        [ <left-bracket> <right-bracket> ]?
-        <cast-expression>
+        rule delete-expression {
+            <doublecolon>?
+            <delete>
+            [ <left-bracket> <right-bracket> ]?
+            <cast-expression>
+        }
     }
 }

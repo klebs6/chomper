@@ -7,8 +7,8 @@ use Chomper::Cpp::GcppIdent;
 use Chomper::Cpp::GcppAttr;
 use Chomper::Cpp::GcppCv;
 
-our class ParameterDeclarationClause { ... }
-our class ParameterDeclaration { ... }
+class ParameterDeclarationClause { ... }
+class ParameterDeclaration       { ... }
 
 # rule parameters-and-qualifiers { 
 #   <.left-paren> 
@@ -19,14 +19,14 @@ our class ParameterDeclaration { ... }
 #   <exception-specification>? 
 #   <attribute-specifier-seq>? 
 # }
-our class ParametersAndQualifiers 
+class ParametersAndQualifiers 
 does IAbstractDeclarator
 does IParameterDeclarationBody
-does INoPointerDeclaratorTail {
+does INoPointerDeclaratorTail is export {
 
     has ParameterDeclarationClause $.parameter-declaration-clause;
     has Cvqualifierseq             $.cvqualifierseq;
-    has IRefqualifier               $.refqualifier;
+    has IRefQualifier               $.refqualifier;
     has IExceptionSpecification     $.exception-specification;
     has IAttributeSpecifierSeq      $.attribute-specifier-seq;
 
@@ -57,7 +57,7 @@ does INoPointerDeclaratorTail {
 #   <parameter-declaration> 
 #   [ <.comma> <parameter-declaration> ]* 
 # } #-----------------------------
-our class ParameterDeclarationClause { 
+class ParameterDeclarationClause is export { 
     has ParameterDeclaration @.parameter-declaration-list is required;
     has Bool                 $.has-ellipsis is required;
 
@@ -75,28 +75,31 @@ our class ParameterDeclarationClause {
     }
 }
 
-# rule parameter-declaration-body:sym<decl> { <declarator> }
-our class ParameterDeclarationBody::Decl does IParameterDeclarationBody {
-    has IDeclarator $.declarator is required;
+package ParameterDeclarationBody is export {
 
-    has $.text;
+    # rule parameter-declaration-body:sym<decl> { <declarator> }
+    our class Decl does IParameterDeclarationBody {
+        has IDeclarator $.declarator is required;
 
-    method gist(:$treemark=False) {
-        $.declarator.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.declarator.gist(:$treemark)
+        }
     }
-}
 
-# rule parameter-declaration-body:sym<abst> { <abstract-declarator>? }
-our class ParameterDeclarationBody::Abst does IParameterDeclarationBody {
-    has IAbstractDeclarator $.abstract-declarator;
+    # rule parameter-declaration-body:sym<abst> { <abstract-declarator>? }
+    our class Abst does IParameterDeclarationBody {
+        has IAbstractDeclarator $.abstract-declarator;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        if $.abstract-declarator {
-            $.abstract-declarator.gist(:$treemark)
-        } else {
-            ""
+        method gist(:$treemark=False) {
+            if $.abstract-declarator {
+                $.abstract-declarator.gist(:$treemark)
+            } else {
+                ""
+            }
         }
     }
 }
@@ -107,7 +110,7 @@ our class ParameterDeclarationBody::Abst does IParameterDeclarationBody {
 #   <parameter-declaration-body> 
 #   [ <assign> <initializer-clause> ]? 
 # }
-our class ParameterDeclaration { 
+class ParameterDeclaration is export { 
     has IAttributeSpecifierSeq    $.attribute-specifier-seq;
     has IDeclSpecifierSeq         $.decl-specifier-seq is required;
     has IParameterDeclarationBody $.parameter-declaration-body is required;
@@ -136,98 +139,101 @@ our class ParameterDeclaration {
     }
 }
 
-our role Parameters::Actions {
+package ParametersGrammar is export {
 
-    # rule parameters-and-qualifiers { 
-    #   <.left-paren> 
-    #   <parameter-declaration-clause>? 
-    #   <.right-paren> 
-    #   <cvqualifierseq>? 
-    #   <refqualifier>? 
-    #   <exception-specification>? 
-    #   <attribute-specifier-seq>? 
-    # j}
-    method parameters-and-qualifiers($/) {
-        make ParametersAndQualifiers.new(
-            parameter-declaration-clause => $<parameter-declaration-clause>.made,
-            cvqualifierseq               => $<cvqualifierseq>.made,
-            refqualifier                 => $<refqualifier>.made,
-            exception-specification      => $<exception-specification>.made,
-            attribute-specifier-seq      => $<attribute-specifier-seq>.made,
-            text                         => ~$/,
-        )
+    our role Actions {
+
+        # rule parameters-and-qualifiers { 
+        #   <.left-paren> 
+        #   <parameter-declaration-clause>? 
+        #   <.right-paren> 
+        #   <cvqualifierseq>? 
+        #   <refqualifier>? 
+        #   <exception-specification>? 
+        #   <attribute-specifier-seq>? 
+        # j}
+        method parameters-and-qualifiers($/) {
+            make ParametersAndQualifiers.new(
+                parameter-declaration-clause => $<parameter-declaration-clause>.made,
+                cvqualifierseq               => $<cvqualifierseq>.made,
+                refqualifier                 => $<refqualifier>.made,
+                exception-specification      => $<exception-specification>.made,
+                attribute-specifier-seq      => $<attribute-specifier-seq>.made,
+                text                         => ~$/,
+            )
+        }
+
+        # rule parameter-declaration-clause { <parameter-declaration-list> [ <.comma>? <ellipsis> ]? }
+        method parameter-declaration-clause($/) {
+            make ParameterDeclarationClause.new(
+                parameter-declaration-list => $<parameter-declaration-list>.made,
+                has-ellipsis               => $<has-ellipsis>.made,
+                text                       => ~$/,
+            )
+        }
+
+        # rule parameter-declaration-list { <parameter-declaration> [ <.comma> <parameter-declaration> ]* } 
+        method parameter-declaration-list($/) {
+            make $<parameter-declaration>>>.made
+        }
+
+        # rule parameter-declaration-body:sym<decl> { <declarator> }
+        method parameter-declaration-body:sym<decl>($/) {
+            make $<declarator>.made
+        }
+
+        # rule parameter-declaration-body:sym<abst> { <abstract-declarator>? }
+        method parameter-declaration-body:sym<abst>($/) {
+            make $<abstract-declarator>.made
+        }
+
+        # rule parameter-declaration { 
+        #   <attribute-specifier-seq>? 
+        #   <decl-specifier-seq> 
+        #   <parameter-declaration-body> 
+        #   [ <assign> <initializer-clause> ]? 
+        # }
+        method parameter-declaration($/) {
+            make ParameterDeclaration.new(
+                attribute-specifier-seq    => $<attribute-specifier-seq>.made,
+                decl-specifier-seq         => $<decl-specifier-seq>.made,
+                parameter-declaration-body => $<parameter-declaration-body>.made,
+                initializer-clause         => $<initializer-clause>.made,
+                text                       => ~$/,
+            )
+        }
     }
 
-    # rule parameter-declaration-clause { <parameter-declaration-list> [ <.comma>? <ellipsis> ]? }
-    method parameter-declaration-clause($/) {
-        make ParameterDeclarationClause.new(
-            parameter-declaration-list => $<parameter-declaration-list>.made,
-            has-ellipsis               => $<has-ellipsis>.made,
-            text                       => ~$/,
-        )
-    }
+    our role Rules {
 
-    # rule parameter-declaration-list { <parameter-declaration> [ <.comma> <parameter-declaration> ]* } 
-    method parameter-declaration-list($/) {
-        make $<parameter-declaration>>>.made
-    }
+        rule parameter-declaration-clause {
+            <parameter-declaration-list> [ <comma>? <ellipsis> ]?
+        }
 
-    # rule parameter-declaration-body:sym<decl> { <declarator> }
-    method parameter-declaration-body:sym<decl>($/) {
-        make $<declarator>.made
-    }
+        rule parameter-declaration-list {
+            <parameter-declaration> [ <comma> <parameter-declaration> ]*
+        }
 
-    # rule parameter-declaration-body:sym<abst> { <abstract-declarator>? }
-    method parameter-declaration-body:sym<abst>($/) {
-        make $<abstract-declarator>.made
-    }
+        #-----------------------------
+        proto rule parameter-declaration-body { * }
+        rule parameter-declaration-body:sym<decl> { <declarator> }
+        rule parameter-declaration-body:sym<abst> { <abstract-declarator>? }
 
-    # rule parameter-declaration { 
-    #   <attribute-specifier-seq>? 
-    #   <decl-specifier-seq> 
-    #   <parameter-declaration-body> 
-    #   [ <assign> <initializer-clause> ]? 
-    # }
-    method parameter-declaration($/) {
-        make ParameterDeclaration.new(
-            attribute-specifier-seq    => $<attribute-specifier-seq>.made,
-            decl-specifier-seq         => $<decl-specifier-seq>.made,
-            parameter-declaration-body => $<parameter-declaration-body>.made,
-            initializer-clause         => $<initializer-clause>.made,
-            text                       => ~$/,
-        )
-    }
-}
+        rule parameter-declaration {
+            <attribute-specifier-seq>?
+            <decl-specifier-seq>
+            <parameter-declaration-body>
+            [ <assign> <initializer-clause> ]?
+        }
 
-our role Parameters::Rules {
-
-    rule parameter-declaration-clause {
-        <parameter-declaration-list> [ <comma>? <ellipsis> ]?
-    }
-
-    rule parameter-declaration-list {
-        <parameter-declaration> [ <comma> <parameter-declaration> ]*
-    }
-
-    #-----------------------------
-    proto rule parameter-declaration-body { * }
-    rule parameter-declaration-body:sym<decl> { <declarator> }
-    rule parameter-declaration-body:sym<abst> { <abstract-declarator>? }
-
-    rule parameter-declaration {
-        <attribute-specifier-seq>?
-        <decl-specifier-seq>
-        <parameter-declaration-body>
-        [ <assign> <initializer-clause> ]?
-    }
-
-    rule parameters-and-qualifiers {
-        <left-paren>
-        <parameter-declaration-clause>?
-        <right-paren>
-        <cvqualifierseq>?
-        <refqualifier>?
-        <exception-specification>?
-        <attribute-specifier-seq>?
+        rule parameters-and-qualifiers {
+            <left-paren>
+            <parameter-declaration-clause>?
+            <right-paren>
+            <cvqualifierseq>?
+            <refqualifier>?
+            <exception-specification>?
+            <attribute-specifier-seq>?
+        }
     }
 }

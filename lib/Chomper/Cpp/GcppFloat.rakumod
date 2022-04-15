@@ -5,31 +5,32 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppDigit;
 
-our class Fractionalconstant::WithTail 
-does IFractionalconstant {
+package FractionalConstant is export {
 
-    has Str $.value is required;
+    our class WithTail does IFractionalConstant {
 
-    has $.text;
+        has Str $.value is required;
 
-    method gist(:$treemark=False) {
-        $.value
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.value
+        }
+    }
+
+    our class NoTail does IFractionalConstant {
+
+        has Str $.value is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.value
+        }
     }
 }
 
-our class Fractionalconstant::NoTail 
-does IFractionalconstant {
-
-    has Str $.value is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        $.value
-    }
-}
-
-our class ExponentpartPrefix { 
+class ExponentpartPrefix is export { 
 
     has $.text;
 
@@ -38,7 +39,7 @@ our class ExponentpartPrefix {
     }
 }
 
-our class Exponentpart { 
+class Exponentpart is export { 
     has Str $.value is required;
 
     has $.text;
@@ -48,25 +49,28 @@ our class Exponentpart {
     }
 }
 
-our class Sign::Plus { 
+package Sign is export {
 
-    has $.text;
+    our class Plus { 
 
-    method gist(:$treemark=False) {
-        "+"
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "+"
+        }
+    }
+
+    our class Minus { 
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "-"
+        }
     }
 }
 
-our class Sign::Minus { 
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        "-"
-    }
-}
-
-our class Floatingsuffix { 
+class Floatingsuffix is export { 
 
     has $.text;
 
@@ -75,156 +79,162 @@ our class Floatingsuffix {
     }
 }
 
-our class FloatingLiteral::Frac does IFloatingLiteral {
-    has IFractionalconstant $.fractionalconstant is required;
-    has Exponentpart        $.exponentpart;
-    has Floatingsuffix      $.floatingsuffix;
+package FloatingLiteral is export {
 
-    has $.text;
+    our class Frac does IFloatingLiteral {
+        has IFractionalConstant $.fractionalconstant is required;
+        has Exponentpart        $.exponentpart;
+        has Floatingsuffix      $.floatingsuffix;
 
-    method gist(:$treemark=False) {
-        my $builder = $.fractionalconstant.gist;
+        has $.text;
 
-        if $.exponentpart {
-            $builder ~= $.exponentpart.gist;
+        method gist(:$treemark=False) {
+            my $builder = $.fractionalconstant.gist;
+
+            if $.exponentpart {
+                $builder ~= $.exponentpart.gist;
+            }
+
+            if $.floatingsuffix {
+                $builder ~= $.floatingsuffix.gist;
+            }
+
+            $builder
         }
+    }
 
-        if $.floatingsuffix {
-            $builder ~= $.floatingsuffix.gist;
+    our class Digit does IFloatingLiteral {
+        has Digitsequence  $.digitsequence is required;
+        has Exponentpart   $.exponentpart  is required;
+        has Floatingsuffix $.floatingsuffix;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+
+            my $builder = $.digitsequence.gist ~ $.exponentpart.gist;
+
+            if $.floatingsuffix {
+                $builder ~= $.floatingsuffix.gist;
+            }
+
+            $builder
         }
-
-        $builder
     }
 }
 
-our class FloatingLiteral::Digit does IFloatingLiteral {
-    has Digitsequence  $.digitsequence is required;
-    has Exponentpart   $.exponentpart  is required;
-    has Floatingsuffix $.floatingsuffix;
+package FloatingLiteralGrammar is export {
 
-    has $.text;
+    our role Actions {
 
-    method gist(:$treemark=False) {
-
-        my $builder = $.digitsequence.gist ~ $.exponentpart.gist;
-
-        if $.floatingsuffix {
-            $builder ~= $.floatingsuffix.gist;
+        # token floating-literal:sym<frac> { <fractionalconstant> <exponentpart>? <floatingsuffix>? }
+        method floating-literal:sym<frac>($/) {
+            make FloatingLiteral::Frac.new(
+                fractionalconstant => $<fractionalconstant>.made,
+                exponentpart       => $<exponentpart>.made,
+                floatingsuffix     => $<floatingsuffix>.made,
+                text               => ~$/,
+            )
         }
 
-        $builder
-    }
-}
+        # token floating-literal:sym<digit> { <digitsequence> <exponentpart> <floatingsuffix>? } 
+        method floating-literal:sym<digit>($/) {
+            make FloatingLiteral::Digit.new(
+                digitsequence  => $<digitsequence>.made,
+                exponentpart   => $<exponentpart>.made,
+                floatingsuffix => $<floatingsuffix>.made,
+                text           => ~$/,
+            )
+        }
 
-our role FloatingLiteral::Actions {
+        # token fractionalconstant:sym<with-tail> { <digitsequence>? '.' <digitsequence> }
+        method fractionalconstant:sym<with-tail>($/) {
+            make FractionalConstant::WithTail.new(
+                value => ~$/,
+            )
+        }
 
-    # token floating-literal:sym<frac> { <fractionalconstant> <exponentpart>? <floatingsuffix>? }
-    method floating-literal:sym<frac>($/) {
-        make FloatingLiteral::Frac.new(
-            fractionalconstant => $<fractionalconstant>.made,
-            exponentpart       => $<exponentpart>.made,
-            floatingsuffix     => $<floatingsuffix>.made,
-            text               => ~$/,
-        )
-    }
+        # token fractionalconstant:sym<no-tail> { <digitsequence> '.' }
+        method fractionalconstant:sym<no-tail>($/) {
+            make FractionalConstant::NoTail.new(
+                value => ~$/,
+            )
+        }
 
-    # token floating-literal:sym<digit> { <digitsequence> <exponentpart> <floatingsuffix>? } 
-    method floating-literal:sym<digit>($/) {
-        make FloatingLiteral::Digit.new(
-            digitsequence  => $<digitsequence>.made,
-            exponentpart   => $<exponentpart>.made,
-            floatingsuffix => $<floatingsuffix>.made,
-            text           => ~$/,
-        )
-    }
+        # token exponentpart-prefix { 'e' || 'E' }
+        method exponentpart-prefix($/) {
+            make ExponentpartPrefix.new
+        }
 
-    # token fractionalconstant:sym<with-tail> { <digitsequence>? '.' <digitsequence> }
-    method fractionalconstant:sym<with-tail>($/) {
-        make Fractionalconstant::WithTail.new(
-            value => ~$/,
-        )
-    }
+        # token exponentpart { <exponentpart-prefix> <sign>? <digitsequence> }
+        method exponentpart($/) {
+            make Exponentpart.new(
+                value => ~$/,
+            )
+        }
 
-    # token fractionalconstant:sym<no-tail> { <digitsequence> '.' }
-    method fractionalconstant:sym<no-tail>($/) {
-        make Fractionalconstant::NoTail.new(
-            value => ~$/,
-        )
-    }
+        # token sign { <[ + - ]> }
+        method sign:sym<+>($/) {
+            make Sign::Plus.new
+        }
 
-    # token exponentpart-prefix { 'e' || 'E' }
-    method exponentpart-prefix($/) {
-        make ExponentpartPrefix.new
-    }
+        # token sign { <[ + - ]> }
+        method sign:sym<->($/) {
+            make Sign::Minus.new
+        }
 
-    # token exponentpart { <exponentpart-prefix> <sign>? <digitsequence> }
-    method exponentpart($/) {
-        make Exponentpart.new(
-            value => ~$/,
-        )
-    }
+        # token digitsequence { <digit> [ '\''? <digit>]* }
+        method digitsequence($/) {
+            make Digitsequence.new(
+                digits => $<digit>>>.made,
+                text   => ~$/,
+            )
+        }
 
-    # token sign { <[ + - ]> }
-    method sign:sym<+>($/) {
-        make Sign::Plus.new
-    }
-
-    # token sign { <[ + - ]> }
-    method sign:sym<->($/) {
-        make Sign::Minus.new
+        # token floatingsuffix { <[ f l F L ]> } 
+        method floatingsuffix($/) {
+            make Floatingsuffix.new
+        }
     }
 
-    # token digitsequence { <digit> [ '\''? <digit>]* }
-    method digitsequence($/) {
-        make Digitsequence.new(
-            digits => $<digit>>>.made,
-            text   => ~$/,
-        )
-    }
+    our role Rules {
 
-    # token floatingsuffix { <[ f l F L ]> } 
-    method floatingsuffix($/) {
-        make Floatingsuffix.new
-    }
-}
+        proto token floating-literal { * }
 
-our role FloatingLiteral::Rules {
+        token floating-literal:sym<frac> {
+            <fractionalconstant>
+            <exponentpart>?
+            <floatingsuffix>?
+        }
 
-    proto token floating-literal { * }
+        token floating-literal:sym<digit> {
+            <digitsequence>
+            <exponentpart>
+            <floatingsuffix>?
+        }
 
-    token floating-literal:sym<frac> {
-        <fractionalconstant>
-        <exponentpart>?
-        <floatingsuffix>?
-    }
+        proto token fractionalconstant { * }
+        token fractionalconstant:sym<with-tail> { <digitsequence>?  '.' <digitsequence> }
+        token fractionalconstant:sym<no-tail>   { <digitsequence> '.' }
 
-    token floating-literal:sym<digit> {
-        <digitsequence>
-        <exponentpart>
-        <floatingsuffix>?
-    }
+        token exponentpart-prefix {
+            'e' || 'E'
+        }
 
-    proto token fractionalconstant { * }
-    token fractionalconstant:sym<with-tail> { <digitsequence>?  '.' <digitsequence> }
-    token fractionalconstant:sym<no-tail>   { <digitsequence> '.' }
+        token exponentpart {
+            <exponentpart-prefix> <sign>?  <digitsequence>
+        }
 
-    token exponentpart-prefix {
-        'e' || 'E'
-    }
+        token sign {
+            <[ + - ]>
+        }
 
-    token exponentpart {
-        <exponentpart-prefix> <sign>?  <digitsequence>
-    }
+        token digitsequence {
+            <digit> [  '\''?  <digit>]*
+        }
 
-    token sign {
-        <[ + - ]>
-    }
-
-    token digitsequence {
-        <digit> [  '\''?  <digit>]*
-    }
-
-    token floatingsuffix {
-        <[ f l F L ]>
+        token floatingsuffix {
+            <[ f l F L ]>
+        }
     }
 }

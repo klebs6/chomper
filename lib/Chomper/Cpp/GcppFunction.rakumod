@@ -15,7 +15,7 @@ use Chomper::Cpp::GcppTypeSpecifier;
 #   <trailing-type-specifier-seq> 
 #   <abstract-declarator>? 
 # }
-our class TrailingReturnType { 
+class TrailingReturnType is export { 
     has TrailingTypeSpecifierSeq $.trailing-type-specifier-seq is required;
     has IAbstractDeclarator      $.abstract-declarator;
 
@@ -39,7 +39,7 @@ our class TrailingReturnType {
 #   <virtual-specifier-seq>? 
 #   <function-body> 
 # } #-----------------------------
-our class FunctionDefinition { 
+class FunctionDefinition is export { 
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
     has IDeclSpecifierSeq      $.decl-specifier-seq;
     has IDeclarator            $.declarator is required;
@@ -77,7 +77,7 @@ our class FunctionDefinition {
 #   <constructor-initializer>? 
 #   <compound-statement> 
 # }
-our class FunctionBody::Compound does IFunctionBody {
+class FunctionBody::Compound does IFunctionBody is export {
     has ConstructorInitializer $.constructor-initializer;
     has CompoundStatement      $.compound-statement is required;
 
@@ -98,7 +98,7 @@ our class FunctionBody::Compound does IFunctionBody {
 }
 
 # rule function-body:sym<try> { <function-try-block> }
-our class FunctionBody::Try does IFunctionBody {
+class FunctionBody::Try does IFunctionBody is export {
     has FunctionTryBlock $.function-try-block is required;
 
     has $.text;
@@ -113,7 +113,7 @@ our class FunctionBody::Try does IFunctionBody {
 #   <default_> 
 #   <semi> 
 # }
-our class FunctionBody::AssignDefault does IFunctionBody { 
+class FunctionBody::AssignDefault does IFunctionBody is export { 
     has IComment $.comment;
 
     has $.text;
@@ -128,7 +128,7 @@ our class FunctionBody::AssignDefault does IFunctionBody {
 #   <delete> 
 #   <semi> 
 # }
-our class FunctionBody::AssignDelete does IFunctionBody { 
+class FunctionBody::AssignDelete does IFunctionBody is export { 
     has IComment $.comment;
 
     has $.text;
@@ -139,7 +139,7 @@ our class FunctionBody::AssignDelete does IFunctionBody {
 }
 
 # rule function-specifier:sym<inline> { <.inline> }
-our class FunctionSpecifier::Inline does IFunctionSpecifier { 
+class FunctionSpecifier::Inline does IFunctionSpecifier is export { 
 
     has $.text;
 
@@ -149,7 +149,7 @@ our class FunctionSpecifier::Inline does IFunctionSpecifier {
 }
 
 # rule function-specifier:sym<virtual> { <.virtual> }
-our class FunctionSpecifier::Virtual does IFunctionSpecifier { 
+class FunctionSpecifier::Virtual does IFunctionSpecifier is export { 
 
     has $.text;
 
@@ -159,7 +159,7 @@ our class FunctionSpecifier::Virtual does IFunctionSpecifier {
 }
 
 # rule function-specifier:sym<explicit> { <.explicit> }
-our class FunctionSpecifier::Explicit does IFunctionSpecifier { 
+class FunctionSpecifier::Explicit does IFunctionSpecifier is export { 
 
     has $.text;
 
@@ -168,120 +168,123 @@ our class FunctionSpecifier::Explicit does IFunctionSpecifier {
     }
 }
 
-our role Function::Actions {
+package FunctionGrammar is export {
 
-    # rule function-specifier:sym<inline> { <.inline> }
-    method function-specifier:sym<inline>($/) {
-        make FunctionSpecifier::Inline.new
-    }
+    our role Actions {
 
-    # rule function-specifier:sym<virtual> { <.virtual> }
-    method function-specifier:sym<virtual>($/) {
-        make FunctionSpecifier::Virtual.new
-    }
+        # rule function-specifier:sym<inline> { <.inline> }
+        method function-specifier:sym<inline>($/) {
+            make FunctionSpecifier::Inline.new
+        }
 
-    # rule function-specifier:sym<explicit> { <.explicit> }
-    method function-specifier:sym<explicit>($/) {
-        make FunctionSpecifier::Explicit.new
-    }
+        # rule function-specifier:sym<virtual> { <.virtual> }
+        method function-specifier:sym<virtual>($/) {
+            make FunctionSpecifier::Virtual.new
+        }
 
-    # rule trailing-return-type { <arrow> <trailing-type-specifier-seq> <abstract-declarator>? } 
-    method trailing-return-type($/) {
-        make TrailingReturnType.new(
-            trailing-type-specifier-seq => $<trailing-type-specifier-seq>.made,
-            abstract-declarator         => $<abstract-declarator>.made,
-            text                        => ~$/,
-        )
-    }
+        # rule function-specifier:sym<explicit> { <.explicit> }
+        method function-specifier:sym<explicit>($/) {
+            make FunctionSpecifier::Explicit.new
+        }
 
-    # rule function-definition { <attribute-specifier-seq>? <decl-specifier-seq>? <declarator> <virtual-specifier-seq>? <function-body> } 
-    method function-definition($/) {
-        make FunctionDefinition.new(
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            decl-specifier-seq      => $<decl-specifier-seq>.made,
-            declarator              => $<declarator>.made,
-            virtual-specifier-seq   => $<virtual-specifier-seq>.made,
-            function-body           => $<function-body>.made,
-            text                    => ~$/,
-        )
-    }
+        # rule trailing-return-type { <arrow> <trailing-type-specifier-seq> <abstract-declarator>? } 
+        method trailing-return-type($/) {
+            make TrailingReturnType.new(
+                trailing-type-specifier-seq => $<trailing-type-specifier-seq>.made,
+                abstract-declarator         => $<abstract-declarator>.made,
+                text                        => ~$/,
+            )
+        }
 
-    # rule function-body:sym<compound> { <constructor-initializer>? <compound-statement> }
-    method function-body:sym<compound>($/) {
-
-        my $prefix = $<constructor-initializer>.made;
-        my $body   = $<compound-statement>.made;
-
-        if $prefix {
-            make FunctionBody::Compound.new(
-                constructor-initializer => $prefix,
-                compound-statement      => $body,
+        # rule function-definition { <attribute-specifier-seq>? <decl-specifier-seq>? <declarator> <virtual-specifier-seq>? <function-body> } 
+        method function-definition($/) {
+            make FunctionDefinition.new(
+                attribute-specifier-seq => $<attribute-specifier-seq>.made,
+                decl-specifier-seq      => $<decl-specifier-seq>.made,
+                declarator              => $<declarator>.made,
+                virtual-specifier-seq   => $<virtual-specifier-seq>.made,
+                function-body           => $<function-body>.made,
                 text                    => ~$/,
             )
-        } else {
-            make $body
+        }
+
+        # rule function-body:sym<compound> { <constructor-initializer>? <compound-statement> }
+        method function-body:sym<compound>($/) {
+
+            my $prefix = $<constructor-initializer>.made;
+            my $body   = $<compound-statement>.made;
+
+            if $prefix {
+                make FunctionBody::Compound.new(
+                    constructor-initializer => $prefix,
+                    compound-statement      => $body,
+                    text                    => ~$/,
+                )
+            } else {
+                make $body
+            }
+        }
+
+        # rule function-body:sym<try> { <function-try-block> }
+        method function-body:sym<try>($/) {
+            make $<function-try-block>.made
+        }
+
+        # rule function-body:sym<assign-default> { <assign> <default_> <semi> }
+        method function-body:sym<assign-default>($/) {
+            make FunctionBody::AssignDefault.new(
+                comment        => $<semi>.made,
+                text           => ~$/,
+            )
+        }
+
+        # rule function-body:sym<assign-delete> { <assign> <delete> <semi> } 
+        method function-body:sym<assign-delete>($/) {
+            make FunctionBody::AssignDelete.new(
+                comment        => $<semi>.made,
+                text           => ~$/,
+            )
         }
     }
 
-    # rule function-body:sym<try> { <function-try-block> }
-    method function-body:sym<try>($/) {
-        make $<function-try-block>.made
+    our role Rules {
+
+        rule function-definition {
+            <attribute-specifier-seq>?
+            <decl-specifier-seq>?
+            <declarator>
+            <virtual-specifier-seq>?
+            <function-body>
+        }
+
+        #-----------------------------
+        proto rule function-body { * }
+
+        rule function-body:sym<compound> {
+            <constructor-initializer>?  <compound-statement>
+        }
+
+        rule function-body:sym<try> {
+            <function-try-block>
+        }
+
+        rule function-body:sym<assign-default> {
+            <assign> <default_> <semi>
+        }
+
+        rule function-body:sym<assign-delete> {
+            <assign> <delete> <semi>
+        }
+
+        rule trailing-return-type {
+            <arrow>
+            <trailing-type-specifier-seq>
+            <abstract-declarator>?
+        }
+
+        proto rule function-specifier { * }
+        rule function-specifier:sym<inline>   { <inline> }
+        rule function-specifier:sym<virtual>  { <virtual> }
+        rule function-specifier:sym<explicit> { <explicit> }
     }
-
-    # rule function-body:sym<assign-default> { <assign> <default_> <semi> }
-    method function-body:sym<assign-default>($/) {
-        make FunctionBody::AssignDefault.new(
-            comment        => $<semi>.made,
-            text           => ~$/,
-        )
-    }
-
-    # rule function-body:sym<assign-delete> { <assign> <delete> <semi> } 
-    method function-body:sym<assign-delete>($/) {
-        make FunctionBody::AssignDelete.new(
-            comment        => $<semi>.made,
-            text           => ~$/,
-        )
-    }
-}
-
-our role Function::Rules {
-
-    rule function-definition {
-        <attribute-specifier-seq>?
-        <decl-specifier-seq>?
-        <declarator>
-        <virtual-specifier-seq>?
-        <function-body>
-    }
-
-    #-----------------------------
-    proto rule function-body { * }
-
-    rule function-body:sym<compound> {
-        <constructor-initializer>?  <compound-statement>
-    }
-
-    rule function-body:sym<try> {
-        <function-try-block>
-    }
-
-    rule function-body:sym<assign-default> {
-        <assign> <default_> <semi>
-    }
-
-    rule function-body:sym<assign-delete> {
-        <assign> <delete> <semi>
-    }
-
-    rule trailing-return-type {
-        <arrow>
-        <trailing-type-specifier-seq>
-        <abstract-declarator>?
-    }
-
-    proto rule function-specifier { * }
-    rule function-specifier:sym<inline>   { <inline> }
-    rule function-specifier:sym<virtual>  { <virtual> }
-    rule function-specifier:sym<explicit> { <explicit> }
 }

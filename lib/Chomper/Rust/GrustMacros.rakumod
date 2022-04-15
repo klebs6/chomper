@@ -13,7 +13,7 @@ our class MacroExpression is export {
     }
 }
 
-our enum DelimKind<Brack Brace Paren> is export;
+our enum DelimKind<Brack Brace Paren>;
 
 our class DelimTokenTree is export {
     has @.token-trees;
@@ -242,20 +242,22 @@ our class MacroTranscriber is export {
     }
 }
 
-our class MacroFragSpec::Block    is export { method gist { "block"     } } 
-our class MacroFragSpec::Expr     is export { method gist { "expr"      } } 
-our class MacroFragSpec::Ident    is export { method gist { "ident"     } } 
-our class MacroFragSpec::Item     is export { method gist { "item"      } } 
-our class MacroFragSpec::Lifetime is export { method gist { "lifetime"  } } 
-our class MacroFragSpec::Literal  is export { method gist { "literal"   } } 
-our class MacroFragSpec::Meta     is export { method gist { "meta"      } } 
-our class MacroFragSpec::Pat      is export { method gist { "pat"       } } 
-our class MacroFragSpec::PatParam is export { method gist { "pat_param" } } 
-our class MacroFragSpec::Path     is export { method gist { "path"      } } 
-our class MacroFragSpec::Stmt     is export { method gist { "stmt"      } } 
-our class MacroFragSpec::Tt       is export { method gist { "tt"        } } 
-our class MacroFragSpec::Ty       is export { method gist { "ty"        } } 
-our class MacroFragSpec::Vis      is export { method gist { "vis"       } } 
+package MacroFragSpec is export {
+    our class Block    { method gist { "block"     } } 
+    our class Expr     { method gist { "expr"      } } 
+    our class Ident    { method gist { "ident"     } } 
+    our class Item     { method gist { "item"      } } 
+    our class Lifetime { method gist { "lifetime"  } } 
+    our class Literal  { method gist { "literal"   } } 
+    our class Meta     { method gist { "meta"      } } 
+    our class Pat      { method gist { "pat"       } } 
+    our class PatParam { method gist { "pat_param" } } 
+    our class Path     { method gist { "path"      } } 
+    our class Stmt     { method gist { "stmt"      } } 
+    our class Tt       { method gist { "tt"        } } 
+    our class Ty       { method gist { "ty"        } } 
+    our class Vis      { method gist { "vis"       } } 
+}
 
 package MacroInvocationGrammar is export {
 

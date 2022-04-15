@@ -15,9 +15,9 @@ use Chomper::TreeMark;
 #   <template>? 
 #   <unqualified-id> 
 # }
-our class QualifiedId 
+class QualifiedId 
 does INoPointerDeclaratorBase
-does IIdExpression { 
+does IIdExpression is export { 
     has INestedNameSpecifier $.nested-name-specifier is required;
     has Bool                $.template              is required;
     has IUnqualifiedId      $.unqualified-id        is required;
@@ -40,207 +40,216 @@ does IIdExpression {
     }
 }
 
-# regex id-expression:sym<qualified> { 
-#   <qualified-id> 
-# }
-our class IdExpression::Qualified does IIdExpression {
-    has QualifiedId $.qualified-id is required;
+package IdExpression is export {
 
-    has $.text;
+    # regex id-expression:sym<qualified> { 
+    #   <qualified-id> 
+    # }
+    our class Qualified does IIdExpression {
+        has QualifiedId $.qualified-id is required;
 
-    method gist(:$treemark=False) {
-        $.qualified-id.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.qualified-id.gist(:$treemark)
+        }
     }
-}
 
-# regex id-expression:sym<unqualified> { <unqualified-id> }     
-our class IdExpression::Unqualified does IIdExpression {
-    has IUnqualifiedId $.unqualified-id is required;
+    # regex id-expression:sym<unqualified> { <unqualified-id> }     
+    our class Unqualified does IIdExpression {
+        has IUnqualifiedId $.unqualified-id is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.unqualified-id.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.unqualified-id.gist(:$treemark)
+        }
     }
 }
 
 #------------------------------
 
-# regex unqualified-id:sym<ident> { 
-#   <identifier> 
-# }
-our class UnqualifiedId::Ident does IUnqualifiedId {
-    has Identifier $.identifier is required;
+package UnqualifiedId is export {
 
-    has $.text;
+    # regex unqualified-id:sym<ident> { 
+    #   <identifier> 
+    # }
+    our class Ident does IUnqualifiedId {
+        has Identifier $.identifier is required;
 
-    method gist(:$treemark=False) {
-        $.identifier.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.identifier.gist(:$treemark)
+        }
+    }
+
+    # regex unqualified-id:sym<op-func-id> { 
+    #   <operator-function-id> 
+    # }
+    our class OpFuncId does IUnqualifiedId {
+        has OperatorFunctionId $.operator-function-id is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.operator-function-id.gist(:$treemark)
+        }
+    }
+
+    # regex unqualified-id:sym<conversion-func-id>  { 
+    #   <conversion-function-id> 
+    # }
+    our class ConversionFuncId does IUnqualifiedId {
+        has ConversionFunctionId $.conversion-function-id is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.conversion-function-id.gist(:$treemark)
+        }
+    }
+
+    # regex unqualified-id:sym<literal-operator-id> { 
+    #   <literal-operator-id> 
+    # }
+    our class LiteralOperatorId does IUnqualifiedId {
+        has ILiteralOperatorId $.literal-operator-id is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.literal-operator-id.gist(:$treemark)
+        }
+    }
+
+    # regex unqualified-id:sym<tilde-classname> { 
+    #   <tilde> 
+    #   <class-name> 
+    # }
+    our class TildeClassname does IUnqualifiedId {
+        has IClassName $.class-name is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "~" ~ $.class-name.gist(:$treemark)
+        }
+    }
+
+    # regex unqualified-id:sym<tilde-decltype> { 
+    #   <tilde> 
+    #   <decltype-specifier> 
+    # }
+    our class TildeDecltype does IUnqualifiedId {
+        has DecltypeSpecifier $.decltype-specifier is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "~" ~ $.decltype-specifier.gist(:$treemark)
+        }
+    }
+
+    # regex unqualified-id:sym<template-id>  { 
+    #   <template-id> 
+    # }
+    our class TemplateId does IUnqualifiedId {
+        has ITemplateId $.template-id is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.template-id.gist(:$treemark)
+        }
     }
 }
 
-# regex unqualified-id:sym<op-func-id> { 
-#   <operator-function-id> 
-# }
-our class UnqualifiedId::OpFuncId does IUnqualifiedId {
-    has OperatorFunctionId $.operator-function-id is required;
+package IdExpressionGrammar is export {
 
-    has $.text;
+    our role Actions {
 
-    method gist(:$treemark=False) {
-        $.operator-function-id.gist(:$treemark)
-    }
-}
+        # regex id-expression:sym<qualified> { <qualified-id> }
+        method id-expression:sym<qualified>($/) {
+            make $<qualified-id>.made
+        }
 
-# regex unqualified-id:sym<conversion-func-id>  { 
-#   <conversion-function-id> 
-# }
-our class UnqualifiedId::ConversionFuncId does IUnqualifiedId {
-    has ConversionFunctionId $.conversion-function-id is required;
+        # regex id-expression:sym<unqualified> { <unqualified-id> } 
+        method id-expression:sym<unqualified>($/) {
+            make $<unqualified-id>.made
+        }
 
-    has $.text;
+        # regex unqualified-id:sym<ident> { <identifier> }
+        method unqualified-id:sym<ident>($/) {
+            make $<identifier>.made
+        }
 
-    method gist(:$treemark=False) {
-        $.conversion-function-id.gist(:$treemark)
-    }
-}
+        # regex unqualified-id:sym<op-func-id> { <operator-function-id> }
+        method unqualified-id:sym<op-func-id>($/) {
+            make $<operator-function-id>.made
+        }
 
-# regex unqualified-id:sym<literal-operator-id> { 
-#   <literal-operator-id> 
-# }
-our class UnqualifiedId::LiteralOperatorId does IUnqualifiedId {
-    has ILiteralOperatorId $.literal-operator-id is required;
+        # regex unqualified-id:sym<conversion-func-id> { <conversion-function-id> }
+        method unqualified-id:sym<conversion-func-id>($/) {
+            make $<conversion-function-id>.made
+        }
 
-    has $.text;
+        # regex unqualified-id:sym<literal-operator-id> { <literal-operator-id> }
+        method unqualified-id:sym<literal-operator-id>($/) {
+            make $<literal-operator-id>.made
+        }
 
-    method gist(:$treemark=False) {
-        $.literal-operator-id.gist(:$treemark)
-    }
-}
+        # regex unqualified-id:sym<tilde-classname> { <tilde> <class-name> }
+        method unqualified-id:sym<tilde-classname>($/) {
+            make UnqualifiedId::TildeClassname.new(
+                class-name => $<class-name>.made,
+                text       => ~$/,
+            )
+        }
 
-# regex unqualified-id:sym<tilde-classname> { 
-#   <tilde> 
-#   <class-name> 
-# }
-our class UnqualifiedId::TildeClassname does IUnqualifiedId {
-    has IClassName $.class-name is required;
+        # regex unqualified-id:sym<tilde-decltype> { <tilde> <decltype-specifier> }
+        method unqualified-id:sym<tilde-decltype>($/) {
+            make UnqualifiedId::TildeDecltype.new(
+                decltype-specifier => $<decltype-specifier>.made,
+                text               => ~$/,
+            )
+        }
 
-    has $.text;
+        # regex unqualified-id:sym<template-id> { <template-id> } 
+        method unqualified-id:sym<template-id>($/) {
+            make $<template-id>.made
+        }
 
-    method gist(:$treemark=False) {
-        "~" ~ $.class-name.gist(:$treemark)
-    }
-}
-
-# regex unqualified-id:sym<tilde-decltype> { 
-#   <tilde> 
-#   <decltype-specifier> 
-# }
-our class UnqualifiedId::TildeDecltype does IUnqualifiedId {
-    has DecltypeSpecifier $.decltype-specifier is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        "~" ~ $.decltype-specifier.gist(:$treemark)
-    }
-}
-
-# regex unqualified-id:sym<template-id>  { 
-#   <template-id> 
-# }
-our class UnqualifiedId::TemplateId does IUnqualifiedId {
-    has ITemplateId $.template-id is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        $.template-id.gist(:$treemark)
-    }
-}
-
-our role IdExpression::Actions {
-
-    # regex id-expression:sym<qualified> { <qualified-id> }
-    method id-expression:sym<qualified>($/) {
-        make $<qualified-id>.made
+        # regex qualified-id { <nested-name-specifier> <template>? <unqualified-id> } 
+        method qualified-id($/) {
+            make QualifiedId.new(
+                nested-name-specifier => $<nested-name-specifier>.made,
+                template              => $<template>.made,
+                unqualified-id        => $<unqualified-id>.made,
+                text                  => ~$/,
+            )
+        }
     }
 
-    # regex id-expression:sym<unqualified> { <unqualified-id> } 
-    method id-expression:sym<unqualified>($/) {
-        make $<unqualified-id>.made
-    }
+    our role Rules {
 
-    # regex unqualified-id:sym<ident> { <identifier> }
-    method unqualified-id:sym<ident>($/) {
-        make $<identifier>.made
-    }
+        proto regex id-expression { * }
+        regex id-expression:sym<qualified>   { <qualified-id> }
+        regex id-expression:sym<unqualified> { <unqualified-id> }
 
-    # regex unqualified-id:sym<op-func-id> { <operator-function-id> }
-    method unqualified-id:sym<op-func-id>($/) {
-        make $<operator-function-id>.made
-    }
+        proto regex unqualified-id { * }
+        regex unqualified-id:sym<op-func-id>          { <operator-function-id> }
+        regex unqualified-id:sym<conversion-func-id>  { <conversion-function-id> }
+        regex unqualified-id:sym<literal-operator-id> { <literal-operator-id> }
+        regex unqualified-id:sym<tilde-classname>     { <tilde> <class-name> }
+        regex unqualified-id:sym<tilde-decltype>      { <tilde> <decltype-specifier> }
+        regex unqualified-id:sym<template-id>         { <template-id> }
+        regex unqualified-id:sym<ident>               { <identifier> }
 
-    # regex unqualified-id:sym<conversion-func-id> { <conversion-function-id> }
-    method unqualified-id:sym<conversion-func-id>($/) {
-        make $<conversion-function-id>.made
-    }
-
-    # regex unqualified-id:sym<literal-operator-id> { <literal-operator-id> }
-    method unqualified-id:sym<literal-operator-id>($/) {
-        make $<literal-operator-id>.made
-    }
-
-    # regex unqualified-id:sym<tilde-classname> { <tilde> <class-name> }
-    method unqualified-id:sym<tilde-classname>($/) {
-        make UnqualifiedId::TildeClassname.new(
-            class-name => $<class-name>.made,
-            text       => ~$/,
-        )
-    }
-
-    # regex unqualified-id:sym<tilde-decltype> { <tilde> <decltype-specifier> }
-    method unqualified-id:sym<tilde-decltype>($/) {
-        make UnqualifiedId::TildeDecltype.new(
-            decltype-specifier => $<decltype-specifier>.made,
-            text               => ~$/,
-        )
-    }
-
-    # regex unqualified-id:sym<template-id> { <template-id> } 
-    method unqualified-id:sym<template-id>($/) {
-        make $<template-id>.made
-    }
-
-    # regex qualified-id { <nested-name-specifier> <template>? <unqualified-id> } 
-    method qualified-id($/) {
-        make QualifiedId.new(
-            nested-name-specifier => $<nested-name-specifier>.made,
-            template              => $<template>.made,
-            unqualified-id        => $<unqualified-id>.made,
-            text                  => ~$/,
-        )
-    }
-}
-
-our role IdExpression::Rules {
-
-    proto regex id-expression { * }
-    regex id-expression:sym<qualified>   { <qualified-id> }
-    regex id-expression:sym<unqualified> { <unqualified-id> }
-
-    proto regex unqualified-id { * }
-    regex unqualified-id:sym<op-func-id>          { <operator-function-id> }
-    regex unqualified-id:sym<conversion-func-id>  { <conversion-function-id> }
-    regex unqualified-id:sym<literal-operator-id> { <literal-operator-id> }
-    regex unqualified-id:sym<tilde-classname>     { <tilde> <class-name> }
-    regex unqualified-id:sym<tilde-decltype>      { <tilde> <decltype-specifier> }
-    regex unqualified-id:sym<template-id>         { <template-id> }
-    regex unqualified-id:sym<ident>               { <identifier> }
-
-    regex qualified-id {
-        <nested-name-specifier> 
-        <template>?  
-        <unqualified-id>
+        regex qualified-id {
+            <nested-name-specifier> 
+            <template>?  
+            <unqualified-id>
+        }
     }
 }

@@ -14,9 +14,9 @@ use Chomper::TreeMark;
 #   <statement> 
 #   [ <comment>? <else_> <statement> ]? 
 # }
-our class SelectionStatement::If 
+class SelectionStatement::If 
 does IAttributedStatementBody 
-does ISelectionStatement {
+does ISelectionStatement is export {
     has ICondition  $.condition is required;
     has IStatement  @.statements is required;
     has IComment    $.else-statement-comment;
@@ -71,7 +71,7 @@ does ISelectionStatement {
 #   <.right-paren> 
 #   <statement> 
 # } #-----------------------------
-our class SelectionStatement::Switch does ISelectionStatement {
+class SelectionStatement::Switch does ISelectionStatement is export {
     has ICondition  $.condition is required;
     has IStatement $.statement is required;
 
@@ -82,71 +82,74 @@ our class SelectionStatement::Switch does ISelectionStatement {
     }
 }
 
-our role SelectionStatement::Actions {
+package SelectionStatementGrammar is export {
 
-    # rule selection-statement:sym<if> { 
-    #   <if_> 
-    #   <.left-paren> 
-    #   <condition> 
-    #   <.right-paren> 
-    #   <statement> 
-    #   [ <comment>? <else_> <statement> ]? 
-    # }
-    method selection-statement:sym<if>($/) {
+    our role Actions {
 
-        my @statements = $<statement>>>.made;
+        # rule selection-statement:sym<if> { 
+        #   <if_> 
+        #   <.left-paren> 
+        #   <condition> 
+        #   <.right-paren> 
+        #   <statement> 
+        #   [ <comment>? <else_> <statement> ]? 
+        # }
+        method selection-statement:sym<if>($/) {
 
-        if @statements[1] {
-            make SelectionStatement::If.new(
-                condition              => $<condition>.made,
-                statements             => @statements[0].List,
-                else-statement-comment => $<comment>.made // Nil,
-                else-statements        => @statements[1].List,
-                text                   => ~$/,
-            )
-        } else {
-            make SelectionStatement::If.new(
-                condition              => $<condition>.made,
-                statements             => @statements[0].List,
-                text                   => ~$/,
+            my @statements = $<statement>>>.made;
+
+            if @statements[1] {
+                make SelectionStatement::If.new(
+                    condition              => $<condition>.made,
+                    statements             => @statements[0].List,
+                    else-statement-comment => $<comment>.made // Nil,
+                    else-statements        => @statements[1].List,
+                    text                   => ~$/,
+                )
+            } else {
+                make SelectionStatement::If.new(
+                    condition              => $<condition>.made,
+                    statements             => @statements[0].List,
+                    text                   => ~$/,
+                )
+            }
+        }
+
+        # rule selection-statement:sym<switch> { 
+        #   <switch> 
+        #   <.left-paren> 
+        #   <condition> 
+        #   <.right-paren> 
+        #   <statement> 
+        # }
+        method selection-statement:sym<switch>($/) {
+            make SelectionStatement::Switch.new(
+                condition => $<condition>.made,
+                statement => $<statement>.made,
+                text      => ~$/,
             )
         }
     }
 
-    # rule selection-statement:sym<switch> { 
-    #   <switch> 
-    #   <.left-paren> 
-    #   <condition> 
-    #   <.right-paren> 
-    #   <statement> 
-    # }
-    method selection-statement:sym<switch>($/) {
-        make SelectionStatement::Switch.new(
-            condition => $<condition>.made,
-            statement => $<statement>.made,
-            text      => ~$/,
-        )
-    }
-}
+    our role Rules {
 
-our role SelectionStatement::Rules {
+        proto rule selection-statement { * }
 
-    proto rule selection-statement { * }
+        rule selection-statement:sym<if> {  
+            <if_>
+            <left-paren>
+            <condition>
+            <right-paren>
+            <statement>
+            [ <comment>? <else_> <statement> ]?
+        }
 
-    rule selection-statement:sym<if> {  
-        <if_>
-        <left-paren>
-        <condition>
-        <right-paren>
-        <statement>
-        [ <comment>? <else_> <statement> ]?
-    }
-
-    rule selection-statement:sym<switch> {  
-        <switch> 
-        <left-paren> 
-        <condition> 
-        <right-paren> 
-        <statement>
+        rule selection-statement:sym<switch> {  
+            <switch> 
+            <left-paren> 
+            <condition> 
+            <right-paren> 
+            <statement>
+        }
     }
 }

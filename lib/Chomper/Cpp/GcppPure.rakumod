@@ -10,7 +10,7 @@ use Chomper::Cpp::GcppOct;
 #   <val=octal-literal> 
 #   #|{if($val.text.compareTo("0")!=0) throw new InputMismatchException(this); } 
 # }
-our class PureSpecifier { 
+class PureSpecifier is export { 
     has OctalLiteral $.val is required;
 
     has $.text;
@@ -20,22 +20,25 @@ our class PureSpecifier {
     }
 }
 
-our role Pure::Actions {
+package PureGrammar is export {
 
-    # rule pure-specifier { <assign> <val=octal-literal> 
-    method pure-specifier($/) {
-        make PureSpecifier.new(
-            val  => $<val>.made,
-            text => ~$/,
-        )
+    our role Actions {
+
+        # rule pure-specifier { <assign> <val=octal-literal> 
+        method pure-specifier($/) {
+            make PureSpecifier.new(
+                val  => $<val>.made,
+                text => ~$/,
+            )
+        }
     }
-}
 
-our role Pure::Rules {
+    our role Rules {
 
-    rule pure-specifier {
-        <assign>
-        <val=octal-literal>
-        #|{if($val.text.compareTo("0")!=0) throw new InputMismatchException(this); }
+        rule pure-specifier {
+            <assign>
+            <val=octal-literal>
+            #|{if($val.text.compareTo("0")!=0) throw new InputMismatchException(this); }
+        }
     }
 }

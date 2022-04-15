@@ -9,7 +9,7 @@ use Chomper::Cpp::GcppIdent;
 #   <break_> 
 #   <semi> 
 # }
-our class JumpStatement::Break does IJumpStatement { 
+class JumpStatement::Break does IJumpStatement is export { 
     has IComment $.comment;
 
     has $.text;
@@ -30,7 +30,7 @@ our class JumpStatement::Break does IJumpStatement {
 #   <continue_> 
 #   <semi> 
 # }
-our class JumpStatement::Continue does IJumpStatement {
+class JumpStatement::Continue does IJumpStatement is export {
     has IComment $.comment;
 
     has $.text;
@@ -51,9 +51,9 @@ our class JumpStatement::Continue does IJumpStatement {
 #   <return-statement-body>? 
 #   <semi> 
 # }
-our class JumpStatement::Return 
+class JumpStatement::Return 
 does IAttributedStatementBody 
-does IJumpStatement {
+does IJumpStatement is export {
 
     has IComment             $.comment;
     has IReturnStatementBody $.return-statement-body;
@@ -83,7 +83,7 @@ does IJumpStatement {
 #   <identifier> 
 #   <semi> 
 # }
-our class JumpStatement::Goto does IJumpStatement {
+class JumpStatement::Goto does IJumpStatement is export {
     has IComment   $.comment;
     has Identifier $.identifier is required;
 
@@ -101,48 +101,51 @@ our class JumpStatement::Goto does IJumpStatement {
     }
 }
 
-our role JumpStatement::Actions {
+package JumpStatementGrammar is export {
 
-    # rule jump-statement:sym<break> { <break_> <semi> }
-    method jump-statement:sym<break>($/) {
-        make JumpStatement::Break.new(
-            comment => $<semi>.made,
-            text    => ~$/,
-        )
+    our role Actions {
+
+        # rule jump-statement:sym<break> { <break_> <semi> }
+        method jump-statement:sym<break>($/) {
+            make JumpStatement::Break.new(
+                comment => $<semi>.made,
+                text    => ~$/,
+            )
+        }
+
+        # rule jump-statement:sym<continue> { <continue_> <semi> }
+        method jump-statement:sym<continue>($/) {
+            make JumpStatement::Continue.new(
+                comment => $<semi>.made,
+                text    => ~$/,
+            )
+        }
+
+        # rule jump-statement:sym<return> { <return_> <return-statement-body>? <semi> }
+        method jump-statement:sym<return>($/) {
+            make JumpStatement::Return.new(
+                comment               => $<semi>.made,
+                return-statement-body => $<return-statement-body>.made,
+                text                  => ~$/,
+            )
+        }
+
+        # rule jump-statement:sym<goto> { <goto_> <identifier> <semi> }
+        method jump-statement:sym<goto>($/) {
+            make JumpStatement::Goto.new(
+                comment    => $<semi>.made,
+                identifier => $<identifier>.made,
+                text       => ~$/,
+            )
+        }
     }
 
-    # rule jump-statement:sym<continue> { <continue_> <semi> }
-    method jump-statement:sym<continue>($/) {
-        make JumpStatement::Continue.new(
-            comment => $<semi>.made,
-            text    => ~$/,
-        )
+    our role Rules {
+
+        proto rule jump-statement { * }
+        rule jump-statement:sym<break>    { <break_>                                        <semi> } 
+        rule jump-statement:sym<continue> { <continue_>                                     <semi> } 
+        rule jump-statement:sym<return>   { <return_> <return-statement-body>? <semi> } 
+        rule jump-statement:sym<goto>     { <goto_> <identifier>                            <semi> } 
     }
-
-    # rule jump-statement:sym<return> { <return_> <return-statement-body>? <semi> }
-    method jump-statement:sym<return>($/) {
-        make JumpStatement::Return.new(
-            comment               => $<semi>.made,
-            return-statement-body => $<return-statement-body>.made,
-            text                  => ~$/,
-        )
-    }
-
-    # rule jump-statement:sym<goto> { <goto_> <identifier> <semi> }
-    method jump-statement:sym<goto>($/) {
-        make JumpStatement::Goto.new(
-            comment    => $<semi>.made,
-            identifier => $<identifier>.made,
-            text       => ~$/,
-        )
-    }
-}
-
-our role JumpStatement::Rules {
-
-    proto rule jump-statement { * }
-    rule jump-statement:sym<break>    { <break_>                                        <semi> } 
-    rule jump-statement:sym<continue> { <continue_>                                     <semi> } 
-    rule jump-statement:sym<return>   { <return_> <return-statement-body>? <semi> } 
-    rule jump-statement:sym<goto>     { <goto_> <identifier>                            <semi> } 
 }

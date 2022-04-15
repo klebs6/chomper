@@ -4,23 +4,26 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-# token equality-operator:sym<eq> { <equal> }
-our class EqualityOperator::Eq does IEqualityOperator {
+package EqualityOperator is export {
 
-    has $.text;
+    # token equality-operator:sym<eq> { <equal> }
+    our class Eq does IEqualityOperator {
 
-    method gist(:$treemark=False) {
-        "=="
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "=="
+        }
     }
-}
 
-# token equality-operator:sym<neq> { <not-equal> }
-our class EqualityOperator::Neq does IEqualityOperator {
+    # token equality-operator:sym<neq> { <not-equal> }
+    our class Neq does IEqualityOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "!="
+        method gist(:$treemark=False) {
+            "!="
+        }
     }
 }
 
@@ -63,57 +66,60 @@ our class EqualityExpression does IEqualityExpression {
     }
 }
 
-our role EqualityExpression::Actions {
+package EqualityExpressionGrammar is export {
 
-    # token equality-operator:sym<eq> { <equal> }
-    method equality-operator:sym<eq>($/) {
-        make EqualityOperator::Eq.new
-    }
+    our role Actions {
 
-    # token equality-operator:sym<neq> { <not-equal> } 
-    method equality-operator:sym<neq>($/) {
-        make EqualityOperator::Neq.new
-    }
+        # token equality-operator:sym<eq> { <equal> }
+        method equality-operator:sym<eq>($/) {
+            make EqualityOperator::Eq.new
+        }
 
-    # rule equality-expression-tail { <equality-operator> <relational-expression> }
-    method equality-expression-tail($/) {
-        make EqualityExpressionTail.new(
-            equality-operator     => $<equality-operator>.made,
-            relational-expression => $<relational-expression>.made,
-            text                  => ~$/,
-        )
-    }
+        # token equality-operator:sym<neq> { <not-equal> } 
+        method equality-operator:sym<neq>($/) {
+            make EqualityOperator::Neq.new
+        }
 
-    # rule equality-expression { <relational-expression> <equality-expression-tail>* }
-    method equality-expression($/) {
-        my $base = $<relational-expression>.made;
-        my @tail = $<equality-expression-tail>>>.made.List;
-
-        if @tail.elems gt 0 {
-            make EqualityExpression.new(
-                relational-expression    => $base,
-                equality-expression-tail => @tail,
-                text                     => ~$/,
+        # rule equality-expression-tail { <equality-operator> <relational-expression> }
+        method equality-expression-tail($/) {
+            make EqualityExpressionTail.new(
+                equality-operator     => $<equality-operator>.made,
+                relational-expression => $<relational-expression>.made,
+                text                  => ~$/,
             )
-        } else {
-            make $base
+        }
+
+        # rule equality-expression { <relational-expression> <equality-expression-tail>* }
+        method equality-expression($/) {
+            my $base = $<relational-expression>.made;
+            my @tail = $<equality-expression-tail>>>.made.List;
+
+            if @tail.elems gt 0 {
+                make EqualityExpression.new(
+                    relational-expression    => $base,
+                    equality-expression-tail => @tail,
+                    text                     => ~$/,
+                )
+            } else {
+                make $base
+            }
         }
     }
-}
 
-our role EqualityExpression::Rules {
+    our role Rules {
 
-    proto token equality-operator { * }
-    token equality-operator:sym<eq>  { <equal> }
-    token equality-operator:sym<neq> { <not-equal> }
+        proto token equality-operator { * }
+        token equality-operator:sym<eq>  { <equal> }
+        token equality-operator:sym<neq> { <not-equal> }
 
-    rule equality-expression-tail {
-        <equality-operator> 
-        <relational-expression>
-    }
+        rule equality-expression-tail {
+            <equality-operator> 
+            <relational-expression>
+        }
 
-    rule equality-expression {
-        <relational-expression>
-        <equality-expression-tail>*
+        rule equality-expression {
+            <relational-expression>
+            <equality-expression-tail>*
+        }
     }
 }

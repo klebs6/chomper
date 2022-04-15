@@ -5,174 +5,166 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppException;
 
-# rule assignment-expression:sym<throw> { <throw-expression> }
-class AssignmentExpression::Throw 
-does IAssignmentExpression is export {
+package AssignmentExpression is export {
 
-    has ThrowExpression $.throw-expression is required;
-    has $.text;
+    # rule assignment-expression:sym<throw> { <throw-expression> }
+    our class Throw does IAssignmentExpression {
 
-    method gist(:$treemark=False) {
-        $.throw-expression.gist(:$treemark)
+        has ThrowExpression $.throw-expression is required;
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.throw-expression.gist(:$treemark)
+        }
+    }
+
+    # rule assignment-expression:sym<basic> { 
+    #   <logical-or-expression> 
+    #   <assignment-operator> 
+    #   <initializer-clause> 
+    # }
+    our class Basic does IAssignmentExpression {
+
+        has ILogicalOrExpression $.logical-or-expression is required;
+        has IAssignmentOperator  $.assignment-operator   is required;
+        has IInitializerClause   $.initializer-clause    is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.logical-or-expression.gist(:$treemark) 
+            ~ " " 
+            ~ $.assignment-operator.gist(:$treemark) 
+            ~ " " 
+            ~ $.initializer-clause.gist(:$treemark)
+        }
+    }
+
+    # rule assignment-expression:sym<conditional> { 
+    #   <conditional-expression> 
+    # }
+    our class Conditional does IAssignmentExpression {
+
+        has IConditionalExpression $.conditional-expression is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.conditional-expression.gist(:$treemark)
+        }
     }
 }
 
-# rule assignment-expression:sym<basic> { 
-#   <logical-or-expression> 
-#   <assignment-operator> 
-#   <initializer-clause> 
-# }
-class AssignmentExpression::Basic 
-does IAssignmentExpression is export {
+package AssignmentOperator is export {
 
-    has ILogicalOrExpression $.logical-or-expression is required;
-    has IAssignmentOperator  $.assignment-operator   is required;
-    has IInitializerClause   $.initializer-clause    is required;
+    # token assignment-operator:sym<assign> { <.assign> }
+    our class Assign does IAssignmentOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.logical-or-expression.gist(:$treemark) 
-        ~ " " 
-        ~ $.assignment-operator.gist(:$treemark) 
-        ~ " " 
-        ~ $.initializer-clause.gist(:$treemark)
+        method gist(:$treemark=False) {
+            "="
+        }
     }
-}
 
-# rule assignment-expression:sym<conditional> { 
-#   <conditional-expression> 
-# }
-class AssignmentExpression::Conditional 
-does IAssignmentExpression is export {
+    # token assignment-operator:sym<star-assign> { <.star-assign> }
+    our class StarAssign does IAssignmentOperator {
 
-    has IConditionalExpression $.conditional-expression is required;
+        has $.text;
 
-    has $.text;
-
-    method gist(:$treemark=False) {
-        $.conditional-expression.gist(:$treemark)
+        method gist(:$treemark=False) {
+            "*="
+        }
     }
-}
 
-# token assignment-operator:sym<assign> { <.assign> }
-class AssignmentOperator::Assign 
-does IAssignmentOperator is export {
+    # token assignment-operator:sym<div-assign> { <.div-assign> }
+    our class DivAssign does IAssignmentOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "="
+        method gist(:$treemark=False) {
+            "/="
+        }
     }
-}
 
-# token assignment-operator:sym<star-assign> { <.star-assign> }
-class AssignmentOperator::StarAssign 
-does IAssignmentOperator is export {
+    # token assignment-operator:sym<mod-assign> { <.mod-assign> }
+    our class ModAssign does IAssignmentOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "*="
+        method gist(:$treemark=False) {
+            "%="
+        }
     }
-}
 
-# token assignment-operator:sym<div-assign> { <.div-assign> }
-class AssignmentOperator::DivAssign 
-does IAssignmentOperator is export {
+    # token assignment-operator:sym<plus-assign> { <.plus-assign> }
+    our class PlusAssign does IAssignmentOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "/="
+        method gist(:$treemark=False) {
+            "+="
+        }
     }
-}
 
-# token assignment-operator:sym<mod-assign> { <.mod-assign> }
-class AssignmentOperator::ModAssign 
-does IAssignmentOperator is export {
+    # token assignment-operator:sym<minus-assign> { <.minus-assign> }
+    our class MinusAssign does IAssignmentOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "%="
+        method gist(:$treemark=False) {
+            "-="
+        }
     }
-}
 
-# token assignment-operator:sym<plus-assign> { <.plus-assign> }
-class AssignmentOperator::PlusAssign 
-does IAssignmentOperator is export {
+    # token assignment-operator:sym<rshift-assign> { <.right-shift-assign> }
+    our class RshiftAssign does IAssignmentOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "+="
+        method gist(:$treemark=False) {
+            ">>="
+        }
     }
-}
 
-# token assignment-operator:sym<minus-assign> { <.minus-assign> }
-class AssignmentOperator::MinusAssign 
-does IAssignmentOperator is export {
+    # token assignment-operator:sym<lshift-assign> { <.left-shift-assign> }
+    our class LshiftAssign does IAssignmentOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "-="
+        method gist(:$treemark=False) {
+            "<<="
+        }
     }
-}
 
-# token assignment-operator:sym<rshift-assign> { <.right-shift-assign> }
-class AssignmentOperator::RshiftAssign 
-does IAssignmentOperator is export {
+    # token assignment-operator:sym<and-assign> { <.and-assign> }
+    our class AndAssign does IAssignmentOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        ">>="
+        method gist(:$treemark=False) {
+            "&="
+        }
     }
-}
 
-# token assignment-operator:sym<lshift-assign> { <.left-shift-assign> }
-class AssignmentOperator::LshiftAssign 
-does IAssignmentOperator is export {
+    # token assignment-operator:sym<xor-assign> { <.xor-assign> }
+    our class XorAssign does IAssignmentOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "<<="
+        method gist(:$treemark=False) {
+            "^="
+        }
     }
-}
 
-# token assignment-operator:sym<and-assign> { <.and-assign> }
-class AssignmentOperator::AndAssign 
-does IAssignmentOperator is export {
+    # token assignment-operator:sym<or-assign> { <.or-assign> }
+    our class OrAssign does IAssignmentOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "&="
-    }
-}
-
-# token assignment-operator:sym<xor-assign> { <.xor-assign> }
-class AssignmentOperator::XorAssign 
-does IAssignmentOperator is export {
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        "^="
-    }
-}
-
-# token assignment-operator:sym<or-assign> { <.or-assign> }
-class AssignmentOperator::OrAssign 
-does IAssignmentOperator is export {
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        "|="
+        method gist(:$treemark=False) {
+            "|="
+        }
     }
 }
 

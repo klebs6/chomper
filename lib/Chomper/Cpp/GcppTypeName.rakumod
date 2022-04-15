@@ -10,48 +10,51 @@ use Chomper::Cpp::GcppTypedef;
 
 use Chomper::TreeMark;
 
-# rule the-type-name:sym<simple-template-id> { <simple-template-id> }
-our class TheTypeName::SimpleTemplateId does ITheTypeName {
-    has SimpleTemplateId $.simple-template-id is required;
-    has $.text;
+package TheTypeName is export {
 
-    method gist(:$treemark=False) {
-        $.simple-template-id.gist(:$treemark)
+    # rule the-type-name:sym<simple-template-id> { <simple-template-id> }
+    our class SimpleTemplateId does ITheTypeName {
+        has SimpleTemplateId $.simple-template-id is required;
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.simple-template-id.gist(:$treemark)
+        }
     }
-}
 
-# rule the-type-name:sym<class> { <class-name> }
-our class TheTypeName::Class does ITheTypeName {
-    has IClassName $.class-name is required;
+    # rule the-type-name:sym<class> { <class-name> }
+    our class Class does ITheTypeName {
+        has IClassName $.class-name is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.class-name.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.class-name.gist(:$treemark)
+        }
     }
-}
 
-# rule the-type-name:sym<enum> { <enum-name> }
-our class TheTypeName::Enum does ITheTypeName {
-    has EnumName $.enum-name is required;
+    # rule the-type-name:sym<enum> { <enum-name> }
+    our class Enum does ITheTypeName {
+        has EnumName $.enum-name is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.enum-name.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.enum-name.gist(:$treemark)
+        }
     }
-}
 
-# rule the-type-name:sym<typedef> { 
-#   <typedef-name> 
-# }
-our class TheTypeName::Typedef does ITheTypeName {
-    has TypedefName $.typedef-name is required;
+    # rule the-type-name:sym<typedef> { 
+    #   <typedef-name> 
+    # }
+    our class Typedef does ITheTypeName {
+        has TypedefName $.typedef-name is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.typedef-name.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.typedef-name.gist(:$treemark)
+        }
     }
 }
 
@@ -59,11 +62,11 @@ our class TheTypeName::Typedef does ITheTypeName {
 #   <nested-name-specifier>? 
 #   <the-type-name> 
 # }
-our class FullTypeName 
+class FullTypeName 
 does IPostListHead 
 does IDeclSpecifier 
 does ISimpleTypeSpecifier
-{
+is export {
     has INestedNameSpecifier $.nested-name-specifier;
     has ITheTypeName         $.the-type-name is required;
 
@@ -83,94 +86,97 @@ does ISimpleTypeSpecifier
     }
 }
 
-our role TypeName::Actions {
+package TypeNameGrammar is export {
 
-    # rule full-type-name { <nested-name-specifier>? <the-type-name> }
-    method full-type-name($/) {
+    our role Actions {
 
-        my $prefix = $<nested-name-specifier>.made;
-        my $body   = $<the-type-name>.made;
+        # rule full-type-name { <nested-name-specifier>? <the-type-name> }
+        method full-type-name($/) {
 
-        if $prefix {
+            my $prefix = $<nested-name-specifier>.made;
+            my $body   = $<the-type-name>.made;
 
-            make FullTypeName.new(
-                nested-name-specifier => $prefix,
-                the-type-name         => $body,
+            if $prefix {
+
+                make FullTypeName.new(
+                    nested-name-specifier => $prefix,
+                    the-type-name         => $body,
+                    text                  => ~$/,
+                )
+
+            } else {
+
+                make $body
+            }
+        }
+
+        # rule the-type-name:sym<simple-template-id> { <simple-template-id> }
+        method the-type-name:sym<simple-template-id>($/) {
+            make $<simple-template-id>.made
+        }
+
+        # rule the-type-name:sym<class> { <class-name> }
+        method the-type-name:sym<class>($/) {
+            make $<class-name>.made
+        }
+
+        # rule the-type-name:sym<enum> { <enum-name> }
+        method the-type-name:sym<enum>($/) {
+            make $<enum-name>.made
+        }
+
+        # rule the-type-name:sym<typedef> { <typedef-name> } 
+        method the-type-name:sym<typedef>($/) {
+            make $<typedef-name>.made
+        }
+
+        # rule type-name-specifier:sym<ident> { <typename_> <nested-name-specifier> <identifier> }
+        method type-name-specifier:sym<ident>($/) {
+            make TypeNameSpecifier::Ident.new(
+                nested-name-specifier => $<nested-name-specifier>.made,
+                identifier            => $<identifier>.made,
                 text                  => ~$/,
             )
+        }
 
-        } else {
-
-            make $body
+        # rule type-name-specifier:sym<template> { <typename_> <nested-name-specifier> <template>? <simple-template-id> } 
+        method type-name-specifier:sym<template>($/) {
+            make TypeNameSpecifier::Template.new(
+                nested-name-specifier => $<nested-name-specifier>.made,
+                has-template          => $<has-template>.made,
+                simple-template-id    => $<simple-template-id>.made,
+                text                  => ~$/,
+            )
         }
     }
 
-    # rule the-type-name:sym<simple-template-id> { <simple-template-id> }
-    method the-type-name:sym<simple-template-id>($/) {
-        make $<simple-template-id>.made
-    }
+    our role Rules {
 
-    # rule the-type-name:sym<class> { <class-name> }
-    method the-type-name:sym<class>($/) {
-        make $<class-name>.made
-    }
+        proto rule type-name-specifier { * }
 
-    # rule the-type-name:sym<enum> { <enum-name> }
-    method the-type-name:sym<enum>($/) {
-        make $<enum-name>.made
-    }
+        #TODO: should this be first or second?
+        rule type-name-specifier:sym<template> {
+            <typename_>
+            <nested-name-specifier>
+            <template>?  
+            <simple-template-id>
+        }
 
-    # rule the-type-name:sym<typedef> { <typedef-name> } 
-    method the-type-name:sym<typedef>($/) {
-        make $<typedef-name>.made
-    }
+        rule type-name-specifier:sym<ident> {
+            <typename_>
+            <nested-name-specifier>
+            <identifier>
+        }
 
-    # rule type-name-specifier:sym<ident> { <typename_> <nested-name-specifier> <identifier> }
-    method type-name-specifier:sym<ident>($/) {
-        make TypeNameSpecifier::Ident.new(
-            nested-name-specifier => $<nested-name-specifier>.made,
-            identifier            => $<identifier>.made,
-            text                  => ~$/,
-        )
-    }
+        proto rule the-type-name                   { * }
+        rule the-type-name:sym<simple-template-id> { <simple-template-id> }
+        rule the-type-name:sym<class>              { <class-name> }
+        rule the-type-name:sym<enum>               { <enum-name> }
+        rule the-type-name:sym<typedef>            { <typedef-name> }
 
-    # rule type-name-specifier:sym<template> { <typename_> <nested-name-specifier> <template>? <simple-template-id> } 
-    method type-name-specifier:sym<template>($/) {
-        make TypeNameSpecifier::Template.new(
-            nested-name-specifier => $<nested-name-specifier>.made,
-            has-template          => $<has-template>.made,
-            simple-template-id    => $<simple-template-id>.made,
-            text                  => ~$/,
-        )
-    }
-}
-
-our role TypeName::Rules {
-
-    proto rule type-name-specifier { * }
-
-    #TODO: should this be first or second?
-    rule type-name-specifier:sym<template> {
-        <typename_>
-        <nested-name-specifier>
-        <template>?  
-        <simple-template-id>
-    }
-
-    rule type-name-specifier:sym<ident> {
-        <typename_>
-        <nested-name-specifier>
-        <identifier>
-    }
-
-    proto rule the-type-name                   { * }
-    rule the-type-name:sym<simple-template-id> { <simple-template-id> }
-    rule the-type-name:sym<class>              { <class-name> }
-    rule the-type-name:sym<enum>               { <enum-name> }
-    rule the-type-name:sym<typedef>            { <typedef-name> }
-
-    rule full-type-name {
-        <nested-name-specifier>? 
-        <the-type-name>
+        rule full-type-name {
+            <nested-name-specifier>? 
+            <the-type-name>
+        }
     }
 }

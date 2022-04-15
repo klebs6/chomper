@@ -8,75 +8,81 @@ use Chomper::Cpp::GcppExpression;
 
 use Chomper::TreeMark;
 
-# rule condition:sym<expr> { 
-#   <expression> 
-# }
-class Condition::Expr does ICondition is export {
-    has IExpression $.expression is required;
+package Condition is export {
 
-    has $.text;
+    # rule condition:sym<expr> { 
+    #   <expression> 
+    # }
+    class Expr does ICondition is export {
+        has IExpression $.expression is required;
 
-    method gist(:$treemark=False) {
-        $.expression.gist(:$treemark)
-    }
-}
+        has $.text;
 
-# rule condition-decl-tail:sym<assign-init> { 
-#   <assign> 
-#   <initializer-clause> 
-# }
-class ConditionDeclTail::AssignInit does IConditionDeclTail is export {
-    has IInitializerClause $.initializer-clause is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        " = " ~ $.initializer-clause.gist(:$treemark)
-    }
-}
-
-# rule condition-decl-tail:sym<braced-init> { 
-#   <braced-init-list> 
-# }
-class ConditionDeclTail::BracedInit does IConditionDeclTail is export {
-    has BracedInitList $.braced-init-list is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        $.braced-init-list.gist(:$treemark)
-    }
-}
-
-# rule condition:sym<decl> { 
-#   <attribute-specifier-seq>? 
-#   <decl-specifier-seq> 
-#   <declarator> 
-#   <condition-decl-tail> 
-# }
-class Condition::Decl does ICondition is export {
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has IDeclSpecifierSeq      $.decl-specifier-seq  is required;
-    has IDeclarator            $.declarator          is required;
-    has IConditionDeclTail    $.condition-decl-tail is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-
-        if $treemark {
-            return sigil(TreeMark::<_Condition>);
+        method gist(:$treemark=False) {
+            $.expression.gist(:$treemark)
         }
+    }
 
-        my $builder = "";
+    # rule condition:sym<decl> { 
+    #   <attribute-specifier-seq>? 
+    #   <decl-specifier-seq> 
+    #   <declarator> 
+    #   <condition-decl-tail> 
+    # }
+    class Decl does ICondition is export {
+        has IAttributeSpecifierSeq $.attribute-specifier-seq;
+        has IDeclSpecifierSeq      $.decl-specifier-seq  is required;
+        has IDeclarator            $.declarator          is required;
+        has IConditionDeclTail    $.condition-decl-tail is required;
 
-        if $.attribute-specifier-seq {
-            $builder ~= $.attribute-specifier-seq.gist(:$treemark) ~ " ";
+        has $.text;
+
+        method gist(:$treemark=False) {
+
+            if $treemark {
+                return sigil(TreeMark::<_Condition>);
+            }
+
+            my $builder = "";
+
+            if $.attribute-specifier-seq {
+                $builder ~= $.attribute-specifier-seq.gist(:$treemark) ~ " ";
+            }
+
+            $builder ~= $.decl-specifier-seq.gist(:$treemark) ~ " ";
+            $builder ~= $.declarator.gist(:$treemark) ~ " ";
+            $builder ~ $.condition-decl-tail.gist(:$treemark)
         }
+    }
+}
 
-        $builder ~= $.decl-specifier-seq.gist(:$treemark) ~ " ";
-        $builder ~= $.declarator.gist(:$treemark) ~ " ";
-        $builder ~ $.condition-decl-tail.gist(:$treemark)
+package ConditionDeclTail is export {
+
+    # rule condition-decl-tail:sym<assign-init> { 
+    #   <assign> 
+    #   <initializer-clause> 
+    # }
+    our class AssignInit does IConditionDeclTail {
+        has IInitializerClause $.initializer-clause is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            " = " ~ $.initializer-clause.gist(:$treemark)
+        }
+    }
+
+    # rule condition-decl-tail:sym<braced-init> { 
+    #   <braced-init-list> 
+    # }
+    our class BracedInit does IConditionDeclTail {
+        has BracedInitList $.braced-init-list is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.braced-init-list.gist(:$treemark)
+        }
     }
 }
 

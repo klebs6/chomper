@@ -45,87 +45,91 @@ class BaseTypeSpecifier is export {
     }
 }
 
-# rule base-specifier:sym<base-type> { 
-#   <attribute-specifier-seq>? 
-#   <base-type-specifier> 
-# }
-class BaseSpecifier::BaseType does IBaseSpecifier is export {
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has BaseTypeSpecifier $.base-type-specifier is required;
+package BaseSpecifier is export {
 
-    has $.text;
+    # rule base-specifier:sym<base-type> { 
+    #   <attribute-specifier-seq>? 
+    #   <base-type-specifier> 
+    # }
+    our class BaseType does IBaseSpecifier {
+        has IAttributeSpecifierSeq $.attribute-specifier-seq;
+        has BaseTypeSpecifier $.base-type-specifier is required;
 
-    method gist(:$treemark=False) {
+        has $.text;
 
-        if $.attribute-specifier-seq {
-            $.attribute-specifier-seq.gist(:$treemark) ~ " " ~ $.base-type-specifier.gist(:$treemark)
+        method gist(:$treemark=False) {
 
-        } else {
-            $.base-type-specifier.gist(:$treemark)
+            if $.attribute-specifier-seq {
+                $.attribute-specifier-seq.gist(:$treemark) ~ " " ~ $.base-type-specifier.gist(:$treemark)
+
+            } else {
+                $.base-type-specifier.gist(:$treemark)
+            }
         }
     }
-}
 
-# rule base-specifier:sym<virtual> { 
-#   <attribute-specifier-seq>? 
-#   <virtual> 
-#   <access-specifier>? 
-#   <base-type-specifier> 
-# }
-class BaseSpecifier::Virtual does IBaseSpecifier is export {
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has IAccessSpecifier $.access-specifier;
-    has BaseTypeSpecifier $.base-type-specifier is required;
+    # rule base-specifier:sym<virtual> { 
+    #   <attribute-specifier-seq>? 
+    #   <virtual> 
+    #   <access-specifier>? 
+    #   <base-type-specifier> 
+    # }
+    our class Virtual does IBaseSpecifier {
+        has IAttributeSpecifierSeq $.attribute-specifier-seq;
+        has IAccessSpecifier $.access-specifier;
+        has BaseTypeSpecifier $.base-type-specifier is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
+        method gist(:$treemark=False) {
 
-        my $builder = "";
+            my $builder = "";
 
-        if $.attribute-specifier-seq {
-            $builder ~= $.attribute-specifier-seq.gist(:$treemark) ~ " ";
+            if $.attribute-specifier-seq {
+                $builder ~= $.attribute-specifier-seq.gist(:$treemark) ~ " ";
+            }
+
+            $builder ~= " virtual ";
+
+            if $.access-specifier {
+                $builder ~= $.access-specifier.gist(:$treemark);
+            }
+
+            $builder ~ $.base-type-specifier.gist(:$treemark)
         }
-
-        $builder ~= " virtual ";
-
-        if $.access-specifier {
-            $builder ~= $.access-specifier.gist(:$treemark);
-        }
-
-        $builder ~ $.base-type-specifier.gist(:$treemark)
     }
-}
 
-# rule base-specifier:sym<access> { 
-#   <attribute-specifier-seq>? 
-#   <access-specifier> 
-#   <virtual>? 
-#   <base-type-specifier> 
-# }
-class BaseSpecifier::Access does IBaseSpecifier is export {
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has IAccessSpecifier       $.access-specifier    is required;
-    has Bool                   $.is-virtual          is required;
-    has BaseTypeSpecifier      $.base-type-specifier is required;
+    # rule base-specifier:sym<access> { 
+    #   <attribute-specifier-seq>? 
+    #   <access-specifier> 
+    #   <virtual>? 
+    #   <base-type-specifier> 
+    # }
+    our class Access does IBaseSpecifier {
 
-    has $.text;
+        has IAttributeSpecifierSeq $.attribute-specifier-seq;
+        has IAccessSpecifier       $.access-specifier    is required;
+        has Bool                   $.is-virtual          is required;
+        has BaseTypeSpecifier      $.base-type-specifier is required;
 
-    method gist(:$treemark=False) {
+        has $.text;
 
-        my $builder = "";
+        method gist(:$treemark=False) {
 
-        if $.attribute-specifier-seq {
-            $builder ~= $.attribute-specifier-seq.gist(:$treemark) ~ " ";
+            my $builder = "";
+
+            if $.attribute-specifier-seq {
+                $builder ~= $.attribute-specifier-seq.gist(:$treemark) ~ " ";
+            }
+
+            $builder ~= $.access-specifier.gist(:$treemark) ~ " ";
+
+            if $.is-virtual {
+                $builder ~= "virtual ";
+            }
+
+            $builder ~ $.base-type-specifier.gist(:$treemark)
         }
-
-        $builder ~= $.access-specifier.gist(:$treemark) ~ " ";
-
-        if $.is-virtual {
-            $builder ~= "virtual ";
-        }
-
-        $builder ~ $.base-type-specifier.gist(:$treemark)
     }
 }
 

@@ -12,7 +12,7 @@ use Chomper::Cpp::GcppAttr;
 #   <attribute-specifier-seq>? 
 #   <attributed-statement-body> 
 # }
-class Statement::Attributed does IStatement is export {
+class AttributedStatement does IStatement is export {
     has IComment  $.comment is rw;
     has           @.attribute-specifier-seq is rw;
     has           $.attributed-statement-body is required is rw;
@@ -37,93 +37,90 @@ class Statement::Attributed does IStatement is export {
     }
 }
 
-# rule attributed-statement-body:sym<expression> { 
-#   <expression-statement> 
-# }
-class AttributedStatementBody::Expression 
-does IAttributedStatementBody is export {
+package AttributedStatementBody is export {
 
-    has ExpressionStatement $.expression-statement is required;
+    # rule attributed-statement-body:sym<expression> { 
+    #   <expression-statement> 
+    # }
+    our class Expression does IAttributedStatementBody {
 
-    has $.text;
+        has ExpressionStatement $.expression-statement is required;
 
-    method gist(:$treemark=False) {
-        $.expression-statement.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.expression-statement.gist(:$treemark)
+        }
     }
-}
 
-# rule attributed-statement-body:sym<compound> { 
-#   <compound-statement> 
-# }
-class AttributedStatementBody::Compound 
-does IAttributedStatementBody is export {
+    # rule attributed-statement-body:sym<compound> { 
+    #   <compound-statement> 
+    # }
+    our class Compound does IAttributedStatementBody {
 
-    has CompoundStatement $.compound-statement is required;
+        has CompoundStatement $.compound-statement is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.compound-statement.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.compound-statement.gist(:$treemark)
+        }
     }
-}
 
-# rule attributed-statement-body:sym<selection> { 
-#   <selection-statement> 
-# }
-class AttributedStatementBody::Selection 
-does IAttributedStatementBody is export {
+    # rule attributed-statement-body:sym<selection> { 
+    #   <selection-statement> 
+    # }
+    our class Selection does IAttributedStatementBody {
 
-    has ISelectionStatement $.selection-statement is required;
+        has ISelectionStatement $.selection-statement is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.selection-statement.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.selection-statement.gist(:$treemark)
+        }
     }
-}
 
-# rule attributed-statement-body:sym<iteration> { 
-#   <iteration-statement> 
-# }
-class AttributedStatementBody::Iteration 
-does IAttributedStatementBody is export {
+    # rule attributed-statement-body:sym<iteration> { 
+    #   <iteration-statement> 
+    # }
+    our class Iteration does IAttributedStatementBody {
 
-    has IIterationStatement $.iteration-statement is required;
+        has IIterationStatement $.iteration-statement is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.iteration-statement.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.iteration-statement.gist(:$treemark)
+        }
     }
-}
 
-# rule attributed-statement-body:sym<jump> { 
-#   <jump-statement> 
-# }
-class AttributedStatementBody::Jump 
-does IAttributedStatementBody is export {
+    # rule attributed-statement-body:sym<jump> { 
+    #   <jump-statement> 
+    # }
+    our class Jump does IAttributedStatementBody {
 
-    has IJumpStatement $.jump-statement is required;
+        has IJumpStatement $.jump-statement is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.jump-statement.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.jump-statement.gist(:$treemark)
+        }
     }
-}
 
-# rule attributed-statement-body:sym<try> { 
-#   <try-block> 
-# }
-class AttributedStatementBody::Try 
-does IAttributedStatementBody is export {
+    # rule attributed-statement-body:sym<try> { 
+    #   <try-block> 
+    # }
+    our class Try does IAttributedStatementBody {
 
-    has TryBlock $.try-block is required;
+        has TryBlock $.try-block is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.try-block.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.try-block.gist(:$treemark)
+        }
     }
 }
 
@@ -144,7 +141,7 @@ package AttributedStatementGrammar is export {
 
             } else {
 
-                my $res = Statement::Attributed.new(
+                my $res = AttributedStatement.new(
                     attributed-statement-body => $body,
                 );
 

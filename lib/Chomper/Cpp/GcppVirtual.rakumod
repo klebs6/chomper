@@ -7,7 +7,7 @@ use Chomper::Cpp::GcppRoles;
 # rule virtual-specifier-seq { 
 #   <virtual-specifier>+ 
 # }
-our class VirtualSpecifierSeq { 
+class VirtualSpecifierSeq is export { 
     has IVirtualSpecifier @.virtual-specifiers is required;
 
     has $.text;
@@ -20,7 +20,7 @@ our class VirtualSpecifierSeq {
 # rule virtual-specifier:sym<override> { 
 #   <override> 
 # }
-our class VirtualSpecifier::Override does IVirtualSpecifier { 
+class VirtualSpecifier::Override does IVirtualSpecifier is export { 
 
     has $.text;
 
@@ -30,7 +30,7 @@ our class VirtualSpecifier::Override does IVirtualSpecifier {
 }
 
 # rule virtual-specifier:sym<final> { <final> }
-our class VirtualSpecifier::Final does IVirtualSpecifier {
+class VirtualSpecifier::Final does IVirtualSpecifier is export {
 
     has $.text;
 
@@ -39,31 +39,34 @@ our class VirtualSpecifier::Final does IVirtualSpecifier {
     }
 }
 
-our role Virtual::Actions {
+package VirtualGrammar is export {
 
-    # rule virtual-specifier-seq { <virtual-specifier>+ } 
-    method virtual-specifier-seq($/) {
-        make $<virtual-specifier>>>.made
+    our role Actions {
+
+        # rule virtual-specifier-seq { <virtual-specifier>+ } 
+        method virtual-specifier-seq($/) {
+            make $<virtual-specifier>>>.made
+        }
+
+        # rule virtual-specifier:sym<override> { <override> }
+        method virtual-specifier:sym<override>($/) {
+            make VirtualSpecifier::Override.new
+        }
+
+        # rule virtual-specifier:sym<final> { <final> } 
+        method virtual-specifier:sym<final>($/) {
+            make VirtualSpecifier::Final.new
+        }
     }
 
-    # rule virtual-specifier:sym<override> { <override> }
-    method virtual-specifier:sym<override>($/) {
-        make VirtualSpecifier::Override.new
+    our role Rules {
+
+        rule virtual-specifier-seq {
+            <virtual-specifier>+
+        }
+
+        proto rule virtual-specifier { * }
+        rule virtual-specifier:sym<override> { <override> }
+        rule virtual-specifier:sym<final>    { <final> }
     }
-
-    # rule virtual-specifier:sym<final> { <final> } 
-    method virtual-specifier:sym<final>($/) {
-        make VirtualSpecifier::Final.new
-    }
-}
-
-our role Virtual::Rules {
-
-    rule virtual-specifier-seq {
-        <virtual-specifier>+
-    }
-
-    proto rule virtual-specifier { * }
-    rule virtual-specifier:sym<override> { <override> }
-    rule virtual-specifier:sym<final>    { <final> }
 }

@@ -16,7 +16,6 @@ my package EXPORT::DEFAULT {
         use Chomper::Rust::GrustComment;
         use Chomper::Rust::GrustConfiguration;
         use Chomper::Rust::GrustCrate;
-        use Chomper::Rust::GrustCrateGrammar;
         use Chomper::Rust::GrustDelimiters;
         use Chomper::Rust::GrustDocComment;
         use Chomper::Rust::GrustEnumerations;
@@ -64,7 +63,6 @@ my package EXPORT::DEFAULT {
         use Chomper::Rust::GrustTypes;
         use Chomper::Rust::GrustUnions;
         use Chomper::Rust::GrustUseDeclaration;
-        use Chomper::Rust::GrustUseDeclarationGrammar;
         use Chomper::Rust::GrustVisibility;
         use Chomper::Rust::GrustWeakKeywords;
         use Chomper::Rust::GrustWhereClause;
@@ -86,7 +84,6 @@ my package EXPORT::DEFAULT {
             %(Chomper::Rust::GrustComment::EXPORT::DEFAULT::),
             %(Chomper::Rust::GrustConfiguration::EXPORT::DEFAULT::),
             %(Chomper::Rust::GrustCrate::EXPORT::DEFAULT::),
-            %(Chomper::Rust::GrustCrateGrammar::EXPORT::DEFAULT::),
             %(Chomper::Rust::GrustDelimiters::EXPORT::DEFAULT::),
             %(Chomper::Rust::GrustDocComment::EXPORT::DEFAULT::),
             %(Chomper::Rust::GrustEnumerations::EXPORT::DEFAULT::),
@@ -134,18 +131,11 @@ my package EXPORT::DEFAULT {
             %(Chomper::Rust::GrustTypes::EXPORT::DEFAULT::),
             %(Chomper::Rust::GrustUnions::EXPORT::DEFAULT::),
             %(Chomper::Rust::GrustUseDeclaration::EXPORT::DEFAULT::),
-            %(Chomper::Rust::GrustUseDeclarationGrammar::EXPORT::DEFAULT::),
             %(Chomper::Rust::GrustVisibility::EXPORT::DEFAULT::),
             %(Chomper::Rust::GrustWeakKeywords::EXPORT::DEFAULT::),
             %(Chomper::Rust::GrustWhereClause::EXPORT::DEFAULT::),
             %(Chomper::Rust::GrustWhitespace::EXPORT::DEFAULT::),
             %(Chomper::Rust::GrustXid::EXPORT::DEFAULT::),
-            %(Chomper::Rust::IndentRustNamedTypeList::EXPORT::DEFAULT::),
-            %(Chomper::Rust::InferRustdoc::EXPORT::DEFAULT::),
-            %(Chomper::Rust::RustCrateParse::EXPORT::DEFAULT::),
-            %(Chomper::Rust::RustFfi::EXPORT::DEFAULT::),
-            %(Chomper::Rust::RustGrammar::EXPORT::DEFAULT::),
-            %(Chomper::Rust::RustTranslate::EXPORT::DEFAULT::),
         );
 
         for %symbols.keys -> $key {

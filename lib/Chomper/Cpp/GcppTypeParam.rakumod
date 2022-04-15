@@ -9,7 +9,7 @@ use Chomper::Cpp::GcppIdent;
 #   <template-parameter> 
 #   [ <.comma> <template-parameter> ]* 
 # }
-our class TemplateParameterList { 
+class TemplateParameterList is export { 
     has ITemplateParameter @.template-parameters is required;
     has $.text;
 
@@ -22,7 +22,7 @@ our class TemplateParameterList {
 #   [ <template> <less> <templateparameter-list> <greater> ]? 
 #   <class_> 
 # }
-our class TypeParameterBase::Basic does ITypeParameterBase {
+class TypeParameterBase::Basic does ITypeParameterBase is export {
     has TemplateParameterList $.templateparameter-list;
     has $.text;
 
@@ -39,7 +39,7 @@ our class TypeParameterBase::Basic does ITypeParameterBase {
 # rule type-parameter-base:sym<typename> { 
 #   <typename_> 
 # }
-our class TypeParameterBase::Typename does ITypeParameterBase {
+class TypeParameterBase::Typename does ITypeParameterBase is export {
 
     has $.text;
 
@@ -52,7 +52,7 @@ our class TypeParameterBase::Typename does ITypeParameterBase {
 #   <ellipsis>? 
 #   <identifier>? 
 # }
-our class TypeParameterSuffix::MaybeIdent does ITypeParameterSuffix {
+class TypeParameterSuffix::MaybeIdent does ITypeParameterSuffix is export {
     has Bool       $.has-ellipsis;
     has Identifier $.identifier;
 
@@ -79,7 +79,7 @@ our class TypeParameterSuffix::MaybeIdent does ITypeParameterSuffix {
 #   <assign> 
 #   <the-type-id>  
 # }
-our class TypeParameterSuffix::AssignTypeId does ITypeParameterSuffix {
+class TypeParameterSuffix::AssignTypeId does ITypeParameterSuffix is export {
     has Identifier $.identifier;
     has ITheTypeId $.the-type-id is required;
 
@@ -100,7 +100,7 @@ our class TypeParameterSuffix::AssignTypeId does ITypeParameterSuffix {
 #   <type-parameter-base> 
 #   <type-parameter-suffix> 
 # }
-our class TypeParameter { 
+class TypeParameter is export { 
     has ITypeParameterBase   $.type-parameter-base   is required;
     has ITypeParameterSuffix $.type-parameter-suffix is required;
 
@@ -111,76 +111,79 @@ our class TypeParameter {
     }
 }
 
-our role TypeParameter::Actions {
+package TypeParameterGrammar is export {
 
-    # rule type-parameter-base:sym<basic> { [ <template> <less> <templateparameter-list> <greater> ]? <class_> }
-    method type-parameter-base:sym<basic>($/) {
-        make TypeParameterBase::Basic.new(
-            templateparameter-list => $<templateparameter-list>.made,
-            text                   => ~$/,
-        )
-    }
+    our role Actions {
 
-    # rule type-parameter-base:sym<typename> { <typename_> } 
-    method type-parameter-base:sym<typename>($/) {
-        make TypeParameterBase::Typename.new
-    }
-
-    # rule type-parameter-suffix:sym<maybe-ident> { <ellipsis>? <identifier>? }
-    method type-parameter-suffix:sym<maybe-ident>($/) {
-
-        my $base         = $<identifier>.made;
-        my $has-ellipsis = $<has-ellipsis>.made;
-
-        if $has-ellipsis {
-            make TypeParameterSuffix::MaybeIdent.new(
-                has-ellipsis => $has-ellipsis,
-                identifier   => $base,
-                text         => ~$/,
+        # rule type-parameter-base:sym<basic> { [ <template> <less> <templateparameter-list> <greater> ]? <class_> }
+        method type-parameter-base:sym<basic>($/) {
+            make TypeParameterBase::Basic.new(
+                templateparameter-list => $<templateparameter-list>.made,
+                text                   => ~$/,
             )
-        } else {
-            make $base
+        }
+
+        # rule type-parameter-base:sym<typename> { <typename_> } 
+        method type-parameter-base:sym<typename>($/) {
+            make TypeParameterBase::Typename.new
+        }
+
+        # rule type-parameter-suffix:sym<maybe-ident> { <ellipsis>? <identifier>? }
+        method type-parameter-suffix:sym<maybe-ident>($/) {
+
+            my $base         = $<identifier>.made;
+            my $has-ellipsis = $<has-ellipsis>.made;
+
+            if $has-ellipsis {
+                make TypeParameterSuffix::MaybeIdent.new(
+                    has-ellipsis => $has-ellipsis,
+                    identifier   => $base,
+                    text         => ~$/,
+                )
+            } else {
+                make $base
+            }
+        }
+
+        # rule type-parameter-suffix:sym<assign-type-id> { <identifier>? <assign> <the-type-id> } 
+        method type-parameter-suffix:sym<assign-type-id>($/) {
+            make TypeParameterSuffix::AssignTypeId.new(
+                identifier  => $<identifier>.made,
+                the-type-id => $<the-type-id>.made,
+                text        => ~$/,
+            )
+        }
+
+        # rule type-parameter { <type-parameter-base> <type-parameter-suffix> }
+        method type-parameter($/) {
+            make TypeParameter.new(
+                type-parameter-base   => $<type-parameter-base>.made,
+                type-parameter-suffix => $<type-parameter-suffix>.made,
+                text                  => ~$/,
+            )
         }
     }
 
-    # rule type-parameter-suffix:sym<assign-type-id> { <identifier>? <assign> <the-type-id> } 
-    method type-parameter-suffix:sym<assign-type-id>($/) {
-        make TypeParameterSuffix::AssignTypeId.new(
-            identifier  => $<identifier>.made,
-            the-type-id => $<the-type-id>.made,
-            text        => ~$/,
-        )
-    }
+    our role Rules {
 
-    # rule type-parameter { <type-parameter-base> <type-parameter-suffix> }
-    method type-parameter($/) {
-        make TypeParameter.new(
-            type-parameter-base   => $<type-parameter-base>.made,
-            type-parameter-suffix => $<type-parameter-suffix>.made,
-            text                  => ~$/,
-        )
-    }
-}
+        proto rule type-parameter-base { * }
 
-our role TypeParameter::Rules {
+        rule type-parameter-base:sym<basic> {
+           [ <template> <less> <templateparameter-list> <greater> ]? 
+           <class_>
+        }
 
-    proto rule type-parameter-base { * }
+        rule type-parameter-base:sym<typename> {
+           <typename_>
+        }
 
-    rule type-parameter-base:sym<basic> {
-       [ <template> <less> <templateparameter-list> <greater> ]? 
-       <class_>
-    }
+        proto rule type-parameter-suffix { * }
+        rule type-parameter-suffix:sym<maybe-ident>    { <ellipsis>? <identifier>? }
+        rule type-parameter-suffix:sym<assign-type-id> { <identifier>? <assign> <the-type-id> }
 
-    rule type-parameter-base:sym<typename> {
-       <typename_>
-    }
-
-    proto rule type-parameter-suffix { * }
-    rule type-parameter-suffix:sym<maybe-ident>    { <ellipsis>? <identifier>? }
-    rule type-parameter-suffix:sym<assign-type-id> { <identifier>? <assign> <the-type-id> }
-
-    rule type-parameter {
-        <type-parameter-base>
-        <type-parameter-suffix>
+        rule type-parameter {
+            <type-parameter-base>
+            <type-parameter-suffix>
+        }
     }
 }

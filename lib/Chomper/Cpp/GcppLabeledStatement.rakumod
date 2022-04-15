@@ -6,47 +6,49 @@ use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppIdent;
 use Chomper::Cpp::GcppAttr;
 
-# rule labeled-statement-label-body:sym<id> { 
-#   <identifier> 
-# }
-our class LabeledStatementLabelBody::Id 
-does ILabeledStatementLabelBody {
+package LabeledStatementLabelBody is export {
 
-    has Identifier $.identifier is required;
+    # rule labeled-statement-label-body:sym<id> { 
+    #   <identifier> 
+    # }
+    our class Id 
+    does ILabeledStatementLabelBody {
 
-    has $.text;
+        has Identifier $.identifier is required;
 
-    method gist(:$treemark=False) {
-        $.identifier.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.identifier.gist(:$treemark)
+        }
     }
-}
 
-# rule labeled-statement-label-body:sym<case-expr> { 
-#   <case> 
-#   <constant-expression> 
-# }
-our class LabeledStatementLabelBody::CaseExpr 
-does ILabeledStatementLabelBody {
+    # rule labeled-statement-label-body:sym<case-expr> { 
+    #   <case> 
+    #   <constant-expression> 
+    # }
+    our class CaseExpr 
+    does ILabeledStatementLabelBody {
 
-    has IConstantExpression $.constant-expression is required;
+        has IConstantExpression $.constant-expression is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "case " ~ $.constant-expression.gist(:$treemark)
+        method gist(:$treemark=False) {
+            "case " ~ $.constant-expression.gist(:$treemark)
+        }
     }
-}
 
-# rule labeled-statement-label-body:sym<default> { 
-#   <default_> 
-# }
-our class LabeledStatementLabelBody::Default 
-does ILabeledStatementLabelBody {
+    # rule labeled-statement-label-body:sym<default> { 
+    #   <default_> 
+    # }
+    our class Default_ does ILabeledStatementLabelBody {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "default"
+        method gist(:$treemark=False) {
+            "default"
+        }
     }
 }
 
@@ -55,7 +57,7 @@ does ILabeledStatementLabelBody {
 #   <labeled-statement-label-body> 
 #   <colon> 
 # }
-our class LabeledStatementLabel {
+class LabeledStatementLabel is export {
     has IAttributeSpecifierSeq     $.attribute-specifier-seq;
     has ILabeledStatementLabelBody $.labeled-statement-label-body is required;
 
@@ -81,7 +83,7 @@ our class LabeledStatementLabel {
 #   <labeled-statement-label> 
 #   <statement> 
 # }
-our class LabeledStatement does IStatement {
+class LabeledStatement does IStatement is export {
     has LabeledStatementLabel $.labeled-statement-label is required;
     has IStatement            $.statement is required;
 
@@ -92,84 +94,87 @@ our class LabeledStatement does IStatement {
     }
 }
 
-our role LabeledStatement::Actions {
+package LabeledStatementGrammar is export {
 
-    # token statement:sym<labeled> { 
-    #   <comment>? 
-    #   <labeled-statement> 
-    # }
-    method statement:sym<labeled>($/) {
+    our role Actions {
 
-        my $comment = $<comment>.made;
-        my $body    = $<labeled-statement>.made;
+        # token statement:sym<labeled> { 
+        #   <comment>? 
+        #   <labeled-statement> 
+        # }
+        method statement:sym<labeled>($/) {
 
-        if not $comment {
+            my $comment = $<comment>.made;
+            my $body    = $<labeled-statement>.made;
 
-            make $body
+            if not $comment {
 
-        } else {
+                make $body
 
-            make Statement::Labeled.new(
-                comment           => $comment,
-                labeled-statement => $body,
-                text              => ~$/,
+            } else {
+
+                make Statement::Labeled.new(
+                    comment           => $comment,
+                    labeled-statement => $body,
+                    text              => ~$/,
+                )
+            }
+        }
+
+        # rule labeled-statement-label-body:sym<id> { <identifier> }
+        method labeled-statement-label-body:sym<id>($/) {
+            make $<identifier>.made
+        }
+
+        # rule labeled-statement-label-body:sym<case-expr> { <case> <constant-expression> }
+        method labeled-statement-label-body:sym<case-expr>($/) {
+            make LabeledStatementLabelBody::CaseExpr.new(
+                constant-expression => $<constant-expression>.made,
+                text                => ~$/,
+            )
+        }
+
+        # rule labeled-statement-label-body:sym<default> { <default_> } 
+        method labeled-statement-label-body:sym<default>($/) {
+            make LabeledStatementLabelBody::Default_.new
+        }
+
+        # rule labeled-statement-label { <attribute-specifier-seq>? <labeled-statement-label-body> <colon> }
+        method labeled-statement-label($/) {
+            make LabeledStatementLabel.new(
+                attribute-specifier-seq      => $<attribute-specifier-seq>.made,
+                labeled-statement-label-body => $<labeled-statement-label-body>.made,
+                text                         => ~$/,
+            )
+        }
+
+        # rule labeled-statement { <labeled-statement-label> <statement> }
+        method labeled-statement($/) {
+            make LabeledStatement.new(
+                labeled-statement-label => $<labeled-statement-label>.made,
+                statement               => $<statement>.made,
+                text                    => ~$/,
             )
         }
     }
 
-    # rule labeled-statement-label-body:sym<id> { <identifier> }
-    method labeled-statement-label-body:sym<id>($/) {
-        make $<identifier>.made
-    }
+    our role Rules {
 
-    # rule labeled-statement-label-body:sym<case-expr> { <case> <constant-expression> }
-    method labeled-statement-label-body:sym<case-expr>($/) {
-        make LabeledStatementLabelBody::CaseExpr.new(
-            constant-expression => $<constant-expression>.made,
-            text                => ~$/,
-        )
-    }
+        proto rule labeled-statement-label-body { * }
+        rule labeled-statement-label-body:sym<id>        { <identifier>                }
+        rule labeled-statement-label-body:sym<case-expr> { <case> <constant-expression> }
+        rule labeled-statement-label-body:sym<default>   { <default_>                   }
 
-    # rule labeled-statement-label-body:sym<default> { <default_> } 
-    method labeled-statement-label-body:sym<default>($/) {
-        make LabeledStatementLabelBody::Default.new
-    }
+        #-----------------------------
+        rule labeled-statement-label {
+            <attribute-specifier-seq>?
+            <labeled-statement-label-body>
+            <colon>
+        }
 
-    # rule labeled-statement-label { <attribute-specifier-seq>? <labeled-statement-label-body> <colon> }
-    method labeled-statement-label($/) {
-        make LabeledStatementLabel.new(
-            attribute-specifier-seq      => $<attribute-specifier-seq>.made,
-            labeled-statement-label-body => $<labeled-statement-label-body>.made,
-            text                         => ~$/,
-        )
-    }
-
-    # rule labeled-statement { <labeled-statement-label> <statement> }
-    method labeled-statement($/) {
-        make LabeledStatement.new(
-            labeled-statement-label => $<labeled-statement-label>.made,
-            statement               => $<statement>.made,
-            text                    => ~$/,
-        )
-    }
-}
-
-our role LabeledStatement::Rules {
-
-    proto rule labeled-statement-label-body { * }
-    rule labeled-statement-label-body:sym<id>        { <identifier>                }
-    rule labeled-statement-label-body:sym<case-expr> { <case> <constant-expression> }
-    rule labeled-statement-label-body:sym<default>   { <default_>                   }
-
-    #-----------------------------
-    rule labeled-statement-label {
-        <attribute-specifier-seq>?
-        <labeled-statement-label-body>
-        <colon>
-    }
-
-    rule labeled-statement {
-        <labeled-statement-label>
-        <statement>
+        rule labeled-statement {
+            <labeled-statement-label>
+            <statement>
+        }
     }
 }

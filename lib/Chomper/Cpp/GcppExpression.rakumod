@@ -6,11 +6,11 @@ use Chomper::Cpp::GcppRoles;
 
 use Chomper::TreeMark;
 
-our class EmptyInitializerList 
+class EmptyInitializerList 
 does IInitializerList
 does IInitializerClause 
 does IReturnStatementBody
-does IPostfixExpressionTail {
+does IPostfixExpressionTail is export {
     method gist(:$treemark=False) {
         ""
     }
@@ -21,11 +21,11 @@ does IPostfixExpressionTail {
 #   <ellipsis>? 
 #   [ <.comma> <initializer-clause> <ellipsis>? ]* 
 # }
-our class InitializerList 
+class InitializerList 
 does IInitializerList
 does IInitializerClause 
 does IReturnStatementBody
-does IPostfixExpressionTail {
+does IPostfixExpressionTail is export {
 
     has IInitializerClause @.clauses is required;
 
@@ -41,10 +41,10 @@ does IPostfixExpressionTail {
 #   [ <initializer-list> <.comma>? ]? 
 #   <.right-brace> 
 # } #-----------------------------
-our class BracedInitList 
+class BracedInitList 
 does IBraceOrEqualInitializer
 does IReturnStatementBody 
-does IInitializerClause {
+does IInitializerClause is export {
 
     has IInitializerList $.initializer-list;
 
@@ -62,9 +62,9 @@ does IInitializerClause {
     }
 }
 
-our class AssignInit 
+class AssignInit 
 does IBraceOrEqualInitializer
-does IInitializerClause {
+does IInitializerClause is export {
 
     has IInitializer $.initializer-clause;
 
@@ -76,10 +76,10 @@ does IInitializerClause {
 }
 
 # rule expression { <assignment-expression>+ %% <.comma> }
-our class Expression 
+class Expression 
 does IExpression 
 does IForRangeInitializer 
-does ICondition { 
+does ICondition is export { 
 
     has IAssignmentExpression @.assignment-expressions is required;
 
@@ -96,7 +96,7 @@ does ICondition {
 }
 
 # rule constant-expression { <conditional-expression> }
-our class ConstantExpression does IConstantExpression {
+class ConstantExpression does IConstantExpression is export {
     has IConditionalExpression $.conditional-expression is required;
 
     has $.text;
@@ -108,10 +108,10 @@ our class ConstantExpression does IConstantExpression {
 }
 
 # rule expression-list { <initializer-list> }
-our class ExpressionList 
+class ExpressionList 
 does IInitializer
 does INewInitializer
-does IPostfixExpressionTail { 
+does IPostfixExpressionTail is export { 
     has InitializerList $.initializer-list is required;
 
     has $.text;
@@ -126,304 +126,313 @@ does IPostfixExpressionTail {
     }
 }
 
-# rule initializer:sym<paren-expr-list> { 
-#   <.left-paren> 
-#   <expression-list> 
-#   <.right-paren> 
-# }
-our class Initializer::ParenExprList does IInitializer {
-    has ExpressionList $.expression-list is required;
+package Initializer is export {
 
-    has $.text;
+    # rule initializer:sym<paren-expr-list> { 
+    #   <.left-paren> 
+    #   <expression-list> 
+    #   <.right-paren> 
+    # }
+    our class ParenExprList does IInitializer {
+        has ExpressionList $.expression-list is required;
 
-    method gist(:$treemark=False) {
+        has $.text;
 
-        "(" ~ $.expression-list.gist(:$treemark) ~ ")"
+        method gist(:$treemark=False) {
+
+            "(" ~ $.expression-list.gist(:$treemark) ~ ")"
+        }
     }
+
+    # rule initializer:sym<brace-or-eq> { 
+    #   <brace-or-equal-initializer> 
+    # }
+    our class BraceOrEq does IInitializer {
+        has IBraceOrEqualInitializer $.brace-or-equal-initializer is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.brace-or-equal-initializer.gist(:$treemark)
+        }
+    }
+
+    =begin comment
+    our class Initializer does IInitializer {
+        has $.value is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.value.gist(:$treemark)
+        }
+    }
+    =end comment
 }
 
-# rule initializer:sym<brace-or-eq> { 
-#   <brace-or-equal-initializer> 
-# }
-our class Initializer::BraceOrEq does IInitializer {
-    has IBraceOrEqualInitializer $.brace-or-equal-initializer is required;
+package BraceOrEqualInitializer is export {
 
-    has $.text;
+    # rule brace-or-equal-initializer:sym<assign-init> { 
+    #   <assign> 
+    #   <initializer-clause> 
+    # }
+    our class AssignInit does IBraceOrEqualInitializer {
+        has IInitializerClause $.initializer-clause is required;
 
-    method gist(:$treemark=False) {
-        $.brace-or-equal-initializer.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            " = " ~ $.initializer-clause.gist(:$treemark)
+        }
     }
-}
 
-=begin comment
-our class Initializer does IInitializer {
-    has $.value is required;
+    # rule brace-or-equal-initializer:sym<braced-init-list> { 
+    #   <braced-init-list> 
+    # }
+    our class BracedInitList does IBraceOrEqualInitializer {
 
-    has $.text;
+        has BracedInitList $.braced-init-list is required;
 
-    method gist(:$treemark=False) {
-        $.value.gist(:$treemark)
-    }
-}
-=end comment
+        has $.text;
 
-# rule brace-or-equal-initializer:sym<assign-init> { 
-#   <assign> 
-#   <initializer-clause> 
-# }
-our class BraceOrEqualInitializer::AssignInit does IBraceOrEqualInitializer {
-    has IInitializerClause $.initializer-clause is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        " = " ~ $.initializer-clause.gist(:$treemark)
-    }
-}
-
-# rule brace-or-equal-initializer:sym<braced-init-list> { 
-#   <braced-init-list> 
-# }
-our class BraceOrEqualInitializer::BracedInitList 
-does IBraceOrEqualInitializer {
-
-    has BracedInitList $.braced-init-list is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        $.braced-init-list.gist(:$treemark)
-    }
-}
-
-# rule initializer-clause:sym<assignment> { 
-#   <comment>? 
-#   <assignment-expression> 
-# }
-our class InitializerClause::Assignment 
-does IInitializerClause {
-
-    has IComment              $.comment;
-    has IAssignmentExpression $.assignment-expression is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-
-        my $c = $.comment;
-        my $x = $.assignment-expression;
-
-        if $c {
-
-            $c.gist(:$treemark) ~ "\n" ~ $x.gist(:$treemark)
-
-        } else {
-
-            $x.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.braced-init-list.gist(:$treemark)
         }
     }
 }
 
-# rule initializer-clause:sym<braced> { 
-#   <comment>? 
-#   <braced-init-list> 
-# }
-our class InitializerClause::Braced 
-does IInitializerClause {
+package InitializerClause is export {
 
-    has IComment       $.comment;
-    has BracedInitList $.braced-init-list is required;
+    # rule initializer-clause:sym<assignment> { 
+    #   <comment>? 
+    #   <assignment-expression> 
+    # }
+    our class Assignment does IInitializerClause {
 
-    has $.text;
+        has IComment              $.comment;
+        has IAssignmentExpression $.assignment-expression is required;
 
-    method gist(:$treemark=False) {
-        my $c = $.comment;
-        my $x = $.braced-init-list;
+        has $.text;
 
-        if $c {
+        method gist(:$treemark=False) {
 
-            $c.gist(:$treemark) ~ "\n" ~ $.x.gist(:$treemark)
+            my $c = $.comment;
+            my $x = $.assignment-expression;
 
-        } else {
+            if $c {
 
-            $x.gist(:$treemark)
+                $c.gist(:$treemark) ~ "\n" ~ $x.gist(:$treemark)
+
+            } else {
+
+                $x.gist(:$treemark)
+            }
+        }
+    }
+
+    # rule initializer-clause:sym<braced> { 
+    #   <comment>? 
+    #   <braced-init-list> 
+    # }
+    our class Braced does IInitializerClause {
+
+        has IComment       $.comment;
+        has BracedInitList $.braced-init-list is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            my $c = $.comment;
+            my $x = $.braced-init-list;
+
+            if $c {
+
+                $c.gist(:$treemark) ~ "\n" ~ $.x.gist(:$treemark)
+
+            } else {
+
+                $x.gist(:$treemark)
+            }
         }
     }
 }
 
-our role Expression::Actions {
+package ExpressionGrammar is export {
 
-    # rule expression-list { <initializer-list> } 
-    method expression-list($/) {
-        make ExpressionList.new(
-            initializer-list => $<initializer-list>.made,
-            text             => ~$/,
-        )
-    }
+    our role Actions {
 
-    # rule expression { <assignment-expression>+ %% <.comma> }
-    method expression($/) {
-        my @exprs = $<assignment-expression>>>.made;
-
-        if @exprs.elems gt 1 {
-            make Expression.new(
-                assignment-expressions => @exprs,
-                text                   => ~$/,
-            )
-        } else {
-            make @exprs[0]
-        }
-    }
-
-    # rule constant-expression { <conditional-expression> }
-    method constant-expression($/) {
-        make ConstantExpression.new(
-            conditional-expression => $<conditional-expression>.made,
-            text                   => ~$/,
-        )
-    }
-
-    # rule initializer:sym<brace-or-eq> { <brace-or-equal-initializer> }
-    method initializer:sym<brace-or-eq>($/) {
-        make Initializer::BraceOrEq.new(
-            brace-or-equal-initializer => $<brace-or-equal-initializer>.made
-        )
-    }
-
-    # rule initializer:sym<paren-expr-list> { <.left-paren> <expression-list> <.right-paren> } 
-    method initializer:sym<paren-expr-list>($/) {
-        make Initializer::ParenExprList.new(
-            expression-list => $<expression-list>.made
-        )
-    }
-
-    # rule brace-or-equal-initializer:sym<assign-init> { <assign> <initializer-clause> }
-    method brace-or-equal-initializer:sym<assign-init>($/) {
-        make AssignInit.new(
-            initializer-clause => $<initializer-clause>.made
-        )
-    }
-
-    # rule brace-or-equal-initializer:sym<braced-init-list> { <braced-init-list> } 
-    method brace-or-equal-initializer:sym<braced-init-list>($/) {
-        make BracedInitList.new(
-            initializer-list => $<braced-init-list>.made
-        )
-    }
-
-    # rule initializer-clause:sym<assignment> { <comment>? <assignment-expression> }
-    method initializer-clause:sym<assignment>($/) {
-
-        my $comment = $<comment>.made;
-        my $base    = $<assignment-expression>.made;
-
-        if $comment {
-            make InitializerClause::Assignment.new(
-                comment               => $comment,
-                assignment-expression => $base,
-                text                  => ~$/,
-            )
-        } else {
-            make $base
-        }
-    }
-
-    # rule initializer-clause:sym<braced> { <comment>? <braced-init-list> } 
-    method initializer-clause:sym<braced>($/) {
-
-        my $comment = $<comment>.made;
-        my $base    = $<braced-init-list>.made;
-
-        if $comment {
-            make InitializerClause::Braced.new(
-                comment          => $comment,
-                braced-init-list => $base,
+        # rule expression-list { <initializer-list> } 
+        method expression-list($/) {
+            make ExpressionList.new(
+                initializer-list => $<initializer-list>.made,
                 text             => ~$/,
             )
-        } else {
-            make $base
+        }
+
+        # rule expression { <assignment-expression>+ %% <.comma> }
+        method expression($/) {
+            my @exprs = $<assignment-expression>>>.made;
+
+            if @exprs.elems gt 1 {
+                make Expression.new(
+                    assignment-expressions => @exprs,
+                    text                   => ~$/,
+                )
+            } else {
+                make @exprs[0]
+            }
+        }
+
+        # rule constant-expression { <conditional-expression> }
+        method constant-expression($/) {
+            make ConstantExpression.new(
+                conditional-expression => $<conditional-expression>.made,
+                text                   => ~$/,
+            )
+        }
+
+        # rule initializer:sym<brace-or-eq> { <brace-or-equal-initializer> }
+        method initializer:sym<brace-or-eq>($/) {
+            make Initializer::BraceOrEq.new(
+                brace-or-equal-initializer => $<brace-or-equal-initializer>.made
+            )
+        }
+
+        # rule initializer:sym<paren-expr-list> { <.left-paren> <expression-list> <.right-paren> } 
+        method initializer:sym<paren-expr-list>($/) {
+            make Initializer::ParenExprList.new(
+                expression-list => $<expression-list>.made
+            )
+        }
+
+        # rule brace-or-equal-initializer:sym<assign-init> { <assign> <initializer-clause> }
+        method brace-or-equal-initializer:sym<assign-init>($/) {
+            make AssignInit.new(
+                initializer-clause => $<initializer-clause>.made
+            )
+        }
+
+        # rule brace-or-equal-initializer:sym<braced-init-list> { <braced-init-list> } 
+        method brace-or-equal-initializer:sym<braced-init-list>($/) {
+            make BracedInitList.new(
+                initializer-list => $<braced-init-list>.made
+            )
+        }
+
+        # rule initializer-clause:sym<assignment> { <comment>? <assignment-expression> }
+        method initializer-clause:sym<assignment>($/) {
+
+            my $comment = $<comment>.made;
+            my $base    = $<assignment-expression>.made;
+
+            if $comment {
+                make InitializerClause::Assignment.new(
+                    comment               => $comment,
+                    assignment-expression => $base,
+                    text                  => ~$/,
+                )
+            } else {
+                make $base
+            }
+        }
+
+        # rule initializer-clause:sym<braced> { <comment>? <braced-init-list> } 
+        method initializer-clause:sym<braced>($/) {
+
+            my $comment = $<comment>.made;
+            my $base    = $<braced-init-list>.made;
+
+            if $comment {
+                make InitializerClause::Braced.new(
+                    comment          => $comment,
+                    braced-init-list => $base,
+                    text             => ~$/,
+                )
+            } else {
+                make $base
+            }
+        }
+
+        # rule initializer-list { <initializer-clause> <ellipsis>? [ <.comma> <initializer-clause> <ellipsis>? ]* }
+        method initializer-list($/) {
+
+            my @clauses = $<initializer-clause>>>.made;
+
+            if @clauses {
+                make InitializerList.new(
+                    clauses => @clauses,
+                    text    => ~$/,
+                )
+            } else {
+                make EmptyInitializerList.new(
+                    text    => ~$/,
+                )
+            }
+        }
+
+        # rule braced-init-list { <.left-brace> [ <initializer-list> <.comma>? ]? <.right-brace> } 
+        method braced-init-list($/) {
+            make BracedInitList.new(
+                initializer-list => $<initializer-list>.made
+            )
         }
     }
 
-    # rule initializer-list { <initializer-clause> <ellipsis>? [ <.comma> <initializer-clause> <ellipsis>? ]* }
-    method initializer-list($/) {
+    our role Rules {
 
-        my @clauses = $<initializer-clause>>>.made;
-
-        if @clauses {
-            make InitializerList.new(
-                clauses => @clauses,
-                text    => ~$/,
-            )
-        } else {
-            make EmptyInitializerList.new(
-                text    => ~$/,
-            )
+        rule expression-list {
+            <initializer-list>
         }
-    }
 
-    # rule braced-init-list { <.left-brace> [ <initializer-list> <.comma>? ]? <.right-brace> } 
-    method braced-init-list($/) {
-        make BracedInitList.new(
-            initializer-list => $<initializer-list>.made
-        )
-    }
-}
+        rule expression {
+            <assignment-expression>+ %% <comma>
+        }
 
-our role Expression::Rules {
+        rule constant-expression { 
+            <conditional-expression> 
+        }
 
-    rule expression-list {
-        <initializer-list>
-    }
+        rule expression-statement {
+            <expression>? <semi>
+        }
 
-    rule expression {
-        <assignment-expression>+ %% <comma>
-    }
+        proto rule initializer { * }
 
-    rule constant-expression { 
-        <conditional-expression> 
-    }
+        rule initializer:sym<brace-or-eq> {
+            <brace-or-equal-initializer>
+        }
 
-    rule expression-statement {
-        <expression>? <semi>
-    }
+        rule initializer:sym<paren-expr-list> {
+            <left-paren> <expression-list> <right-paren>
+        }
 
-    proto rule initializer { * }
+        #-----------------------------
+        proto rule brace-or-equal-initializer { * }
+        rule brace-or-equal-initializer:sym<assign-init>      { <assign> <initializer-clause> }
+        rule brace-or-equal-initializer:sym<braced-init-list> { <braced-init-list> }
 
-    rule initializer:sym<brace-or-eq> {
-        <brace-or-equal-initializer>
-    }
+        #-----------------------------
+        proto rule initializer-clause { * }
 
-    rule initializer:sym<paren-expr-list> {
-        <left-paren> <expression-list> <right-paren>
-    }
+        rule initializer-clause:sym<assignment> {
+            <comment>?
+            <assignment-expression>
+        }
 
-    #-----------------------------
-    proto rule brace-or-equal-initializer { * }
-    rule brace-or-equal-initializer:sym<assign-init>      { <assign> <initializer-clause> }
-    rule brace-or-equal-initializer:sym<braced-init-list> { <braced-init-list> }
+        rule initializer-clause:sym<braced> {
+            <comment>?
+            <braced-init-list>
+        }
 
-    #-----------------------------
-    proto rule initializer-clause { * }
+        #-----------------------------
+        rule initializer-list {
+            <initializer-clause>
+            <ellipsis>?
+            [ <comma> <initializer-clause> <ellipsis>? ]*
+        }
 
-    rule initializer-clause:sym<assignment> {
-        <comment>?
-        <assignment-expression>
-    }
-
-    rule initializer-clause:sym<braced> {
-        <comment>?
-        <braced-init-list>
-    }
-
-    #-----------------------------
-    rule initializer-list {
-        <initializer-clause>
-        <ellipsis>?
-        [ <comma> <initializer-clause> <ellipsis>? ]*
-    }
-
-    rule braced-init-list {
-        <left-brace> [ <initializer-list> <comma>? ]?  <right-brace>
+        rule braced-init-list {
+            <left-brace> [ <initializer-list> <comma>? ]?  <right-brace>
+        }
     }
 }

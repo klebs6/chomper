@@ -15,49 +15,51 @@ class BalancedTokenSeq is export {
     }
 }
 
+package Balancedrule is export {
 
-# rule balancedrule:sym<parens> { 
-#   <.left-paren> 
-#   <balanced-token-seq> 
-#   <.right-paren> 
-# }
-class Balancedrule::Parens does IBalancedrule is export {
-    has BalancedTokenSeq $.balanced-token-seq is required;
+    # rule balancedrule:sym<parens> { 
+    #   <.left-paren> 
+    #   <balanced-token-seq> 
+    #   <.right-paren> 
+    # }
+    our class Parens does IBalancedrule {
+        has BalancedTokenSeq $.balanced-token-seq is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "(" ~ $.balanced-token-seq.gist(:$treemark) ~ ")"
+        method gist(:$treemark=False) {
+            "(" ~ $.balanced-token-seq.gist(:$treemark) ~ ")"
+        }
     }
-}
 
-# rule balancedrule:sym<brackets> { 
-#   <.left-bracket> 
-#   <balanced-token-seq> 
-#   <.right-bracket> 
-# }
-class Balancedrule::Brackets does IBalancedrule is export {
-    has BalancedTokenSeq $.balanced-token-seq is required;
+    # rule balancedrule:sym<brackets> { 
+    #   <.left-bracket> 
+    #   <balanced-token-seq> 
+    #   <.right-bracket> 
+    # }
+    our class Brackets does IBalancedrule {
+        has BalancedTokenSeq $.balanced-token-seq is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "[" ~ $.balanced-token-seq ~ "]"
+        method gist(:$treemark=False) {
+            "[" ~ $.balanced-token-seq ~ "]"
+        }
     }
-}
 
-# rule balancedrule:sym<braces> { 
-#   <.left-brace> 
-#   <balanced-token-seq> 
-#   <.right-brace> 
-# } 
-class Balancedrule::Braces does IBalancedrule is export {
-    has BalancedTokenSeq $.balanced-token-seq is required;
+    # rule balancedrule:sym<braces> { 
+    #   <.left-brace> 
+    #   <balanced-token-seq> 
+    #   <.right-brace> 
+    # } 
+    our class Braces does IBalancedrule {
+        has BalancedTokenSeq $.balanced-token-seq is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "{" ~ $.balanced-token-seq ~ "}"
+        method gist(:$treemark=False) {
+            "{" ~ $.balanced-token-seq ~ "}"
+        }
     }
 }
 

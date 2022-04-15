@@ -4,28 +4,31 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-# rule decltype-specifier-body:sym<expr> { 
-#   <expression> 
-# }
-our class DecltypeSpecifierBody::Expr does IDecltypeSpecifierBody {
-    has IExpression $.expression is required;
+package DecltypeSpecifierBody is export {
 
-    has $.text;
+    # rule decltype-specifier-body:sym<expr> { 
+    #   <expression> 
+    # }
+    our class Expr does IDecltypeSpecifierBody {
+        has IExpression $.expression is required;
 
-    method gist(:$treemark=False) {
-        $.expression.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.expression.gist(:$treemark)
+        }
     }
-}
 
-# rule decltype-specifier-body:sym<auto> { 
-#   <auto> 
-# }
-our class DecltypeSpecifierBody::Auto does IDecltypeSpecifierBody {
+    # rule decltype-specifier-body:sym<auto> { 
+    #   <auto> 
+    # }
+    our class Auto does IDecltypeSpecifierBody {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "auto"
+        method gist(:$treemark=False) {
+            "auto"
+        }
     }
 }
 
@@ -35,7 +38,7 @@ our class DecltypeSpecifierBody::Auto does IDecltypeSpecifierBody {
 #   <decltype-specifier-body> 
 #   <.right-paren> 
 # }
-our class DecltypeSpecifier { 
+class DecltypeSpecifier is export { 
     has IDecltypeSpecifierBody $.decltype-specifier-body is required;
 
     has $.text;
@@ -45,23 +48,26 @@ our class DecltypeSpecifier {
     }
 }
 
-our role Decltype::Actions {
+package DecltypeGrammar is export {
 
-    # rule decltype-specifier-body:sym<expr> { <expression> }
-    method decltype-specifier-body:sym<expr>($/) {
-        make $<expression>.made
-    }
+    our role Actions {
 
-    # rule decltype-specifier-body:sym<auto> { <auto> }
-    method decltype-specifier-body:sym<auto>($/) {
-        make DecltypeSpecifierBody::Auto.new
-    }
+        # rule decltype-specifier-body:sym<expr> { <expression> }
+        method decltype-specifier-body:sym<expr>($/) {
+            make $<expression>.made
+        }
 
-    # rule decltype-specifier { <decltype> <.left-paren> <decltype-specifier-body> <.right-paren> } 
-    method decltype-specifier($/) {
-        make DecltypeSpecifier.new(
-            decltype-specifier-body => $<decltype-specifier-body>.made,
-            text                    => ~$/,
-        )
+        # rule decltype-specifier-body:sym<auto> { <auto> }
+        method decltype-specifier-body:sym<auto>($/) {
+            make DecltypeSpecifierBody::Auto.new
+        }
+
+        # rule decltype-specifier { <decltype> <.left-paren> <decltype-specifier-body> <.right-paren> } 
+        method decltype-specifier($/) {
+            make DecltypeSpecifier.new(
+                decltype-specifier-body => $<decltype-specifier-body>.made,
+                text                    => ~$/,
+            )
+        }
     }
 }

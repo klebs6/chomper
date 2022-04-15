@@ -12,70 +12,73 @@ our class NoPointerNewDeclarator     { ... }
 our class NoPointerNewDeclaratorTail { ... }
 our class NewDeclarator              { ... }
 
-# rule new-expression:sym<new-type-id> { 
-#   <doublecolon>? 
-#   <new_> 
-#   <new-placement>? 
-#   <new-type-id> 
-#   <new-initializer>? 
-# }
-our class NewExpression::NewTypeId 
-does INewExpression {
-    has NewPlacement    $.new-placement;
-    has INewTypeId      $.new-type-id is required;
-    has INewInitializer $.new-initializer;
+package NewExpression is export {
 
-    has $.text;
+    # rule new-expression:sym<new-type-id> { 
+    #   <doublecolon>? 
+    #   <new_> 
+    #   <new-placement>? 
+    #   <new-type-id> 
+    #   <new-initializer>? 
+    # }
+    our class NewTypeId 
+    does INewExpression {
+        has NewPlacement    $.new-placement;
+        has INewTypeId      $.new-type-id is required;
+        has INewInitializer $.new-initializer;
 
-    method gist(:$treemark=False) {
+        has $.text;
 
-        my $builder = "new ";
+        method gist(:$treemark=False) {
 
-        if $.new-placement {
-            $builder ~= $.new-placement.gist(:$treemark) ~ " ";
+            my $builder = "new ";
+
+            if $.new-placement {
+                $builder ~= $.new-placement.gist(:$treemark) ~ " ";
+            }
+
+            $builder ~= $.new-type-id.gist(:$treemark);
+
+            if $.new-initializer {
+                $builder ~= " (" ~ $.new-initializer.gist(:$treemark) ~ ")";
+            }
+
+            $builder
         }
-
-        $builder ~= $.new-type-id.gist(:$treemark);
-
-        if $.new-initializer {
-            $builder ~= " (" ~ $.new-initializer.gist(:$treemark) ~ ")";
-        }
-
-        $builder
     }
-}
 
-# rule new-expression:sym<the-type-id> { 
-#   <doublecolon>? 
-#   <new_> 
-#   <new-placement>? 
-#   <.left-paren> 
-#   <the-type-id> 
-#   <.right-paren> 
-#   <new-initializer>? 
-# }
-our class NewExpression::TheTypeId does INewExpression {
-    has NewPlacement    $.new-placement;
-    has ITheTypeId      $.the-type-id is required;
-    has INewInitializer $.new-initializer;
+    # rule new-expression:sym<the-type-id> { 
+    #   <doublecolon>? 
+    #   <new_> 
+    #   <new-placement>? 
+    #   <.left-paren> 
+    #   <the-type-id> 
+    #   <.right-paren> 
+    #   <new-initializer>? 
+    # }
+    our class TheTypeId does INewExpression {
+        has NewPlacement    $.new-placement;
+        has ITheTypeId      $.the-type-id is required;
+        has INewInitializer $.new-initializer;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
+        method gist(:$treemark=False) {
 
-        my $builder = "new ";
+            my $builder = "new ";
 
-        if $.new-placement {
-            $builder ~= $.new-placement.gist(:$treemark);
+            if $.new-placement {
+                $builder ~= $.new-placement.gist(:$treemark);
+            }
+
+            $builder ~= "(" ~ $.the-type-id.gist(:$treemark) ~ ")";
+
+            if $.new-initializer {
+                $builder ~= " " ~ $.new-initializer.gist(:$treemark);
+            }
+
+            $builder
         }
-
-        $builder ~= "(" ~ $.the-type-id.gist(:$treemark) ~ ")";
-
-        if $.new-initializer {
-            $builder ~= " " ~ $.new-initializer.gist(:$treemark);
-        }
-
-        $builder
     }
 }
 
@@ -84,7 +87,7 @@ our class NewExpression::TheTypeId does INewExpression {
 #   <expression-list> 
 #   <.right-paren> 
 # }
-our class NewPlacement { 
+class NewPlacement is export { 
     has ExpressionList $.expression-list is required;
 
     has $.text;
@@ -98,7 +101,7 @@ our class NewPlacement {
 #   <type-specifier-seq> 
 #   <new-declarator>? 
 # }
-our class NewTypeId does INewTypeId { 
+class NewTypeId does INewTypeId is export { 
     has ITypeSpecifierSeq $.type-specifier-seq is required;
     has NewDeclarator    $.new-declarator     is required;
 
@@ -119,7 +122,7 @@ our class NewTypeId does INewTypeId {
 #   <pointer-operator>* 
 #   <no-pointer-new-declarator>? 
 # }
-our class NewDeclarator { 
+class NewDeclarator is export { 
     has IPointerOperator @.pointer-operators;
     has NoPointerNewDeclarator $.no-pointer-new-declarator;
 
@@ -143,7 +146,7 @@ our class NewDeclarator {
 #   <attribute-specifier-seq>? 
 #   <no-pointer-new-declarator-tail>* 
 # }
-our class NoPointerNewDeclarator { 
+class NoPointerNewDeclarator is export { 
     has IExpression                $.expression is required;
     has IAttributeSpecifierSeq     $.attribute-specifier-seq;
     has NoPointerNewDeclaratorTail @.no-pointer-new-declarator-tail;
@@ -168,7 +171,7 @@ our class NoPointerNewDeclarator {
 #   <.right-bracket> 
 #   <attribute-specifier-seq>? 
 # }
-our class NoPointerNewDeclaratorTail {
+class NoPointerNewDeclaratorTail is export {
     has IConstantExpression    $.constant-expression is required;
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
 
@@ -185,197 +188,202 @@ our class NoPointerNewDeclaratorTail {
     }
 }
 
+package NewInitializer is export {
 
-# rule new-initializer:sym<expr-list> { 
-#   <.left-paren> 
-#   <expression-list>? 
-#   <.right-paren> 
-# }
-our class NewInitializer::ExprList does INewInitializer {
-    has ExpressionList $.expression-list;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-
-        my $builder = "(";
-
-        if $.expression-list {
-            $builder ~= $.expression-list.gist(:$treemark);
-        }
-
-        $builder ~= ")";
-
-        $builder
-    }
-}
-
-# rule new-initializer:sym<braced> { 
-#   <braced-init-list> 
-# }
-our class NewInitializer::Braced does INewInitializer {
-    has BracedInitList $.braced-init-list is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        $.braced-init-list.gist(:$treemark)
-    }
-}
-
-our role NewExpression::Actions {
-
-    # rule new-expression:sym<new-type-id> { 
-    #   <doublecolon>? 
-    #   <new_> 
-    #   <new-placement>? 
-    #   <new-type-id> 
-    #   <new-initializer>? 
-    # }
-    method new-expression:sym<new-type-id>($/) {
-        make NewExpression::NewTypeId.new(
-            new-placement   => $<new-placement>.made,
-            new-type-id     => $<new-type-id>.made,
-            new-initializer => $<new-initializer>.made,
-            text            => ~$/,
-        )
-    }
-
-    # rule new-expression:sym<the-type-id> { 
-    #   <doublecolon>? 
-    #   <new_> 
-    #   <new-placement>? 
+    # rule new-initializer:sym<expr-list> { 
     #   <.left-paren> 
-    #   <the-type-id> 
+    #   <expression-list>? 
     #   <.right-paren> 
-    #   <new-initializer>? 
     # }
-    method new-expression:sym<the-type-id>($/) {
-        make NewExpression::TheTypeId.new(
-            new-placement   => $<new-placement>.made,
-            the-type-id     => $<the-type-id>.made,
-            new-initializer => $<new-initializer>.made,
-            text            => ~$/,
-        )
-    }
+    our class ExprList does INewInitializer {
+        has ExpressionList $.expression-list;
 
-    # rule new-placement { <.left-paren> <expression-list> <.right-paren> }
-    method new-placement($/) {
-        make $<expression-list>.made
-    }
+        has $.text;
 
-    # rule new-type-id { <type-specifier-seq> <new-declarator>? }
-    method new-type-id($/) {
+        method gist(:$treemark=False) {
 
-        my $base           = $<type-specifier-seq>.made;
-        my $new-declarator = $<new-declarator>.made;
+            my $builder = "(";
 
-        if $new-declarator {
-            make NewTypeId.new(
-                type-specifier-seq => $base,
-                new-declarator     => $new-declarator,
-                text               => ~$/,
-            )
-        } else {
-            make $base
+            if $.expression-list {
+                $builder ~= $.expression-list.gist(:$treemark);
+            }
+
+            $builder ~= ")";
+
+            $builder
         }
     }
 
-    # rule new-declarator { 
-    #   <pointer-operator>* 
-    #   <no-pointer-new-declarator>? 
+    # rule new-initializer:sym<braced> { 
+    #   <braced-init-list> 
     # }
-    method new-declarator($/) {
-        my $base = $<no-pointer-new-declarator>.made;
-        my @ops  = $<pointer-operator>>>.made;
+    our class Braced does INewInitializer {
+        has BracedInitList $.braced-init-list is required;
 
-        if @ops.elems gt 0 {
-            make NewDeclarator.new(
-                pointer-operators         => @ops,
-                no-pointer-new-declarator => $base,
-                text                      => ~$/,
-            )
-        } else {
-            make $base
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.braced-init-list.gist(:$treemark)
         }
-    }
-
-    # rule no-pointer-new-declarator { <.left-bracket> <expression> <.right-bracket> <attribute-specifier-seq>? <no-pointer-new-declarator-tail>* }
-    method no-pointer-new-declarator($/) {
-        make NoPointerNewDeclarator.new(
-            expression                     => $<expression>.made,
-            attribute-specifier-seq        => $<attribute-specifier-seq>.made,
-            no-pointer-new-declarator-tail => $<no-pointer-new-declarator-tail>>>.made,
-            text                           => ~$/,
-        )
-    }
-
-    # rule no-pointer-new-declarator-tail { <.left-bracket> <constant-expression> <.right-bracket> <attribute-specifier-seq>? } 
-    method no-pointer-new-declarator-tail($/) {
-        make NoPointerNewDeclaratorTail.new(
-            constant-expression     => $<constant-expression>.made,
-            attribute-specifier-seq => $<attribute-specifier-seq>.made,
-            text                    => ~$/,
-        )
-    }
-
-    # rule new-initializer:sym<expr-list> { <.left-paren> <expression-list>? <.right-paren> }
-    method new-initializer:sym<expr-list>($/) {
-        make $<expression-list>.made;
-    }
-
-    # rule new-initializer:sym<braced> { <braced-init-list> } 
-    method new-initializer:sym<braced>($/) {
-        make $<braced-init-list>.made
     }
 }
 
-our role NewExpression::Rules {
+package NewExpressionGrammar is export {
 
-    proto rule new-expression { * }
+    our role Actions {
 
-    rule new-expression:sym<new-type-id> {
-        <doublecolon>?
-        <new_>
-        <new-placement>?
-        <new-type-id>
-        <new-initializer>?
+        # rule new-expression:sym<new-type-id> { 
+        #   <doublecolon>? 
+        #   <new_> 
+        #   <new-placement>? 
+        #   <new-type-id> 
+        #   <new-initializer>? 
+        # }
+        method new-expression:sym<new-type-id>($/) {
+            make NewExpression::NewTypeId.new(
+                new-placement   => $<new-placement>.made,
+                new-type-id     => $<new-type-id>.made,
+                new-initializer => $<new-initializer>.made,
+                text            => ~$/,
+            )
+        }
+
+        # rule new-expression:sym<the-type-id> { 
+        #   <doublecolon>? 
+        #   <new_> 
+        #   <new-placement>? 
+        #   <.left-paren> 
+        #   <the-type-id> 
+        #   <.right-paren> 
+        #   <new-initializer>? 
+        # }
+        method new-expression:sym<the-type-id>($/) {
+            make NewExpression::TheTypeId.new(
+                new-placement   => $<new-placement>.made,
+                the-type-id     => $<the-type-id>.made,
+                new-initializer => $<new-initializer>.made,
+                text            => ~$/,
+            )
+        }
+
+        # rule new-placement { <.left-paren> <expression-list> <.right-paren> }
+        method new-placement($/) {
+            make $<expression-list>.made
+        }
+
+        # rule new-type-id { <type-specifier-seq> <new-declarator>? }
+        method new-type-id($/) {
+
+            my $base           = $<type-specifier-seq>.made;
+            my $new-declarator = $<new-declarator>.made;
+
+            if $new-declarator {
+                make NewTypeId.new(
+                    type-specifier-seq => $base,
+                    new-declarator     => $new-declarator,
+                    text               => ~$/,
+                )
+            } else {
+                make $base
+            }
+        }
+
+        # rule new-declarator { 
+        #   <pointer-operator>* 
+        #   <no-pointer-new-declarator>? 
+        # }
+        method new-declarator($/) {
+            my $base = $<no-pointer-new-declarator>.made;
+            my @ops  = $<pointer-operator>>>.made;
+
+            if @ops.elems gt 0 {
+                make NewDeclarator.new(
+                    pointer-operators         => @ops,
+                    no-pointer-new-declarator => $base,
+                    text                      => ~$/,
+                )
+            } else {
+                make $base
+            }
+        }
+
+        # rule no-pointer-new-declarator { <.left-bracket> <expression> <.right-bracket> <attribute-specifier-seq>? <no-pointer-new-declarator-tail>* }
+        method no-pointer-new-declarator($/) {
+            make NoPointerNewDeclarator.new(
+                expression                     => $<expression>.made,
+                attribute-specifier-seq        => $<attribute-specifier-seq>.made,
+                no-pointer-new-declarator-tail => $<no-pointer-new-declarator-tail>>>.made,
+                text                           => ~$/,
+            )
+        }
+
+        # rule no-pointer-new-declarator-tail { <.left-bracket> <constant-expression> <.right-bracket> <attribute-specifier-seq>? } 
+        method no-pointer-new-declarator-tail($/) {
+            make NoPointerNewDeclaratorTail.new(
+                constant-expression     => $<constant-expression>.made,
+                attribute-specifier-seq => $<attribute-specifier-seq>.made,
+                text                    => ~$/,
+            )
+        }
+
+        # rule new-initializer:sym<expr-list> { <.left-paren> <expression-list>? <.right-paren> }
+        method new-initializer:sym<expr-list>($/) {
+            make $<expression-list>.made;
+        }
+
+        # rule new-initializer:sym<braced> { <braced-init-list> } 
+        method new-initializer:sym<braced>($/) {
+            make $<braced-init-list>.made
+        }
     }
 
-    rule new-expression:sym<the-type-id> {
-        <doublecolon>?
-        <new_>
-        <new-placement>?
-        <left-paren> 
-        <the-type-id> 
-        <right-paren>
-        <new-initializer>?
-    }
+    our role Rules {
 
-    rule new-placement {
-        <left-paren>
-        <expression-list>
-        <right-paren>
-    }
+        proto rule new-expression { * }
 
-    rule new-type-id {
-        <type-specifier-seq> <new-declarator>?
-    }
+        rule new-expression:sym<new-type-id> {
+            <doublecolon>?
+            <new_>
+            <new-placement>?
+            <new-type-id>
+            <new-initializer>?
+        }
 
-    rule new-declarator {
-        <pointer-operator>* 
-        <no-pointer-new-declarator>?
-    }
+        rule new-expression:sym<the-type-id> {
+            <doublecolon>?
+            <new_>
+            <new-placement>?
+            <left-paren> 
+            <the-type-id> 
+            <right-paren>
+            <new-initializer>?
+        }
 
-    proto rule new-initializer { * }
+        rule new-placement {
+            <left-paren>
+            <expression-list>
+            <right-paren>
+        }
 
-    rule new-initializer:sym<expr-list> { 
-        <left-paren> 
-        <expression-list>?  
-        <right-paren> 
-    }
+        rule new-type-id {
+            <type-specifier-seq> <new-declarator>?
+        }
 
-    rule new-initializer:sym<braced> { 
-        <braced-init-list> 
+        rule new-declarator {
+            <pointer-operator>* 
+            <no-pointer-new-declarator>?
+        }
+
+        proto rule new-initializer { * }
+
+        rule new-initializer:sym<expr-list> { 
+            <left-paren> 
+            <expression-list>?  
+            <right-paren> 
+        }
+
+        rule new-initializer:sym<braced> { 
+            <braced-init-list> 
+        }
     }
 }

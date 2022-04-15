@@ -8,8 +8,9 @@ use Chomper::Cpp::GcppIdent;
 use Chomper::Cpp::GcppBalanced;
 
 our class AttributeList { ... }
+our class Attrib     { ... }
 
-our role IAttributeSpecifierSeq {  }
+our role IAttributeSpecifierSeq is export {  }
 
 # rule attribute-specifier-seq { <attribute-specifier>+ }
 class AttributeSpecifierSeq is export { 
@@ -65,8 +66,8 @@ class AttributeSpecifier::Alignment does IAttributeSpecifier is export {
 #   <ellipsis>? 
 # }
 class AttributeList is export { 
-    has Attribute @.attributes is required;
-    has Bool      $.has-ellipsis is required;
+    has Attrib @.attributes is required;
+    has Bool   $.has-ellipsis is required;
 
     has $.text;
 
@@ -120,7 +121,7 @@ class AttributeArgumentClause is export {
 #   <identifier> 
 #   <attribute-argument-clause>? 
 # }
-class Attribute is export { 
+class Attrib is export { 
     has AttributeNamespace      $.attribute-namespace;
     has Identifier              $.identifier is required;
     has AttributeArgumentClause $.attribute-argument-clause;
@@ -185,7 +186,7 @@ package AttributeSpecifierSeqGrammar is export {
 
         # rule attribute { [ <attribute-namespace> <doublecolon> ]? <identifier> <attribute-argument-clause>? }
         method attribute($/) {
-            make Attribute.new(
+            make Attrib.new(
                 attribute-namespace       => $<attribute-namespace>.made,
                 identifier                => $<identifier>.made,
                 attribute-argument-clause => $<attribute-argument-clause>.made,

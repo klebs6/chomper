@@ -5,7 +5,7 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 
 # token literal:sym<ptr> { <pointer-literal> }
-our class PointerLiteral does ILiteral {
+class PointerLiteral does ILiteral is export {
 
     has $.text;
 
@@ -14,17 +14,20 @@ our class PointerLiteral does ILiteral {
     }
 }
 
-our role PointerLiteral::Actions {
+package PointerLiteralGrammar is export {
 
-    # token pointer-literal { <nullptr> } 
-    method pointer-literal($/) {
-        make PointerLiteral.new
+    our role Actions {
+
+        # token pointer-literal { <nullptr> } 
+        method pointer-literal($/) {
+            make PointerLiteral.new
+        }
     }
-}
 
-our role PointerLiteral::Rules {
+    our role Rules {
 
-    token pointer-literal {
-        <nullptr>
+        token pointer-literal {
+            <nullptr>
+        }
     }
 }

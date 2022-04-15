@@ -7,7 +7,7 @@ use Chomper::Cpp::GcppRoles;
 # rule simple-type-length-modifier:sym<short> { 
 #   <.short> 
 # }
-our class SimpleTypeLengthModifier::Short does ISimpleTypeLengthModifier { 
+class SimpleTypeLengthModifier::Short does ISimpleTypeLengthModifier is export { 
 
     has $.text;
 
@@ -19,7 +19,7 @@ our class SimpleTypeLengthModifier::Short does ISimpleTypeLengthModifier {
 # rule simple-type-length-modifier:sym<long_> { 
 #   <.long_> 
 # }
-our class SimpleTypeLengthModifier::Long does ISimpleTypeLengthModifier { 
+class SimpleTypeLengthModifier::Long does ISimpleTypeLengthModifier is export { 
 
     has $.text;
 
@@ -31,7 +31,7 @@ our class SimpleTypeLengthModifier::Long does ISimpleTypeLengthModifier {
 # rule simple-type-signedness-modifier:sym<unsigned> { 
 #   <.unsigned> 
 # }
-our class SimpleTypeSignednessModifier::Unsigned does ISimpleTypeSignednessModifier { 
+class SimpleTypeSignednessModifier::Unsigned does ISimpleTypeSignednessModifier is export { 
 
     has $.text;
 
@@ -43,7 +43,7 @@ our class SimpleTypeSignednessModifier::Unsigned does ISimpleTypeSignednessModif
 # rule simple-type-signedness-modifier:sym<signed> { 
 #   <.signed> 
 # }
-our class SimpleTypeSignednessModifier::Signed does ISimpleTypeSignednessModifier { 
+class SimpleTypeSignednessModifier::Signed does ISimpleTypeSignednessModifier is export { 
 
     has $.text;
 
@@ -52,36 +52,39 @@ our class SimpleTypeSignednessModifier::Signed does ISimpleTypeSignednessModifie
     }
 }
 
-our role TypeModifier::Actions {
+package TypeModifierGrammar is export {
 
-    # rule simple-type-length-modifier:sym<short> { <.short> }
-    method simple-type-length-modifier:sym<short>($/) {
-        make SimpleTypeLengthModifier::Short.new
+    our role Actions {
+
+        # rule simple-type-length-modifier:sym<short> { <.short> }
+        method simple-type-length-modifier:sym<short>($/) {
+            make SimpleTypeLengthModifier::Short.new
+        }
+
+        # rule simple-type-length-modifier:sym<long_> { <.long_> }
+        method simple-type-length-modifier:sym<long_>($/) {
+            make SimpleTypeLengthModifier::Long.new
+        }
+
+        # rule simple-type-signedness-modifier:sym<unsigned> { <.unsigned> }
+        method simple-type-signedness-modifier:sym<unsigned>($/) {
+            make SimpleTypeSignednessModifier::Unsigned.new
+        }
+
+        # rule simple-type-signedness-modifier:sym<signed> { <.signed> }
+        method simple-type-signedness-modifier:sym<signed>($/) {
+            make SimpleTypeSignednessModifier::Signed.new
+        }
     }
 
-    # rule simple-type-length-modifier:sym<long_> { <.long_> }
-    method simple-type-length-modifier:sym<long_>($/) {
-        make SimpleTypeLengthModifier::Long.new
+    our role Rules {
+
+        proto rule simple-type-length-modifier { * }
+        rule simple-type-length-modifier:sym<short>  { <short> }
+        rule simple-type-length-modifier:sym<long_>  { <long_>  }
+
+        proto rule simple-type-signedness-modifier         { * }
+        rule simple-type-signedness-modifier:sym<unsigned> { <unsigned> }
+        rule simple-type-signedness-modifier:sym<signed>   { <signed> }
     }
-
-    # rule simple-type-signedness-modifier:sym<unsigned> { <.unsigned> }
-    method simple-type-signedness-modifier:sym<unsigned>($/) {
-        make SimpleTypeSignednessModifier::Unsigned.new
-    }
-
-    # rule simple-type-signedness-modifier:sym<signed> { <.signed> }
-    method simple-type-signedness-modifier:sym<signed>($/) {
-        make SimpleTypeSignednessModifier::Signed.new
-    }
-}
-
-our role TypeModifier::Rules {
-
-    proto rule simple-type-length-modifier { * }
-    rule simple-type-length-modifier:sym<short>  { <short> }
-    rule simple-type-length-modifier:sym<long_>  { <long_>  }
-
-    proto rule simple-type-signedness-modifier         { * }
-    rule simple-type-signedness-modifier:sym<unsigned> { <unsigned> }
-    rule simple-type-signedness-modifier:sym<signed>   { <signed> }
 }

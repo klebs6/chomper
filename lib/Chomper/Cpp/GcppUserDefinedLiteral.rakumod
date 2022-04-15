@@ -16,8 +16,8 @@ use Chomper::Cpp::GcppIdent;
 #   <decimal-literal> 
 #   <udsuffix> 
 # }
-our class UserDefinedIntegerLiteral::Dec 
-does IUserDefinedIntegerLiteral {
+class UserDefinedIntegerLiteral::Dec 
+does IUserDefinedIntegerLiteral is export {
 
     has DecimalLiteral $.decimal-literal is required;
     has Identifier     $.suffix is required;
@@ -33,8 +33,8 @@ does IUserDefinedIntegerLiteral {
 #   <octal-literal> 
 #   <udsuffix> 
 # }
-our class UserDefinedIntegerLiteral::Oct 
-does IUserDefinedIntegerLiteral {
+class UserDefinedIntegerLiteral::Oct 
+does IUserDefinedIntegerLiteral is export {
 
     has OctalLiteral $.octal-literal is required;
     has Identifier   $.suffix is required;
@@ -50,8 +50,8 @@ does IUserDefinedIntegerLiteral {
 #   <hexadecimal-literal> 
 #   <udsuffix> 
 # }
-our class UserDefinedIntegerLiteral::Hex 
-does IUserDefinedIntegerLiteral {
+class UserDefinedIntegerLiteral::Hex 
+does IUserDefinedIntegerLiteral is export {
 
     has HexadecimalLiteral $.hexadecimal-literal is required;
     has Identifier         $.suffix is required;
@@ -67,8 +67,8 @@ does IUserDefinedIntegerLiteral {
 #   <binary-literal> 
 #   <udsuffix> 
 # }
-our class UserDefinedIntegerLiteral::Bin 
-does IUserDefinedIntegerLiteral {
+class UserDefinedIntegerLiteral::Bin 
+does IUserDefinedIntegerLiteral is export {
 
     has BinaryLiteral $.binary-literal is required;
     has Identifier         $.suffix is required;
@@ -85,10 +85,10 @@ does IUserDefinedIntegerLiteral {
 #   <exponentpart>?  
 #   <udsuffix> 
 # }
-our class UserDefinedFloatingLiteral::Frac
-does IUserDefinedFloatingLiteral {
+class UserDefinedFloatingLiteral::Frac
+does IUserDefinedFloatingLiteral is export {
 
-    has IFractionalconstant $.fractionalconstant is required;
+    has IFractionalConstant $.fractionalconstant is required;
     has Exponentpart        $.exponentpart;
     has Identifier          $.suffix is required;
 
@@ -104,8 +104,8 @@ does IUserDefinedFloatingLiteral {
 #   <exponentpart> 
 #   <udsuffix> 
 # }
-our class UserDefinedFloatingLiteral::Digi 
-does IUserDefinedFloatingLiteral {
+class UserDefinedFloatingLiteral::Digi 
+does IUserDefinedFloatingLiteral is export {
 
     has Str $.value is required;
 
@@ -118,7 +118,7 @@ does IUserDefinedFloatingLiteral {
 #   <string-literal> 
 #   <udsuffix> 
 # }
-our class UserDefinedStringLiteral {
+class UserDefinedStringLiteral is export {
 
     has Str $.value is required;
 
@@ -131,7 +131,7 @@ our class UserDefinedStringLiteral {
 #   <character-literal> 
 #   <udsuffix> 
 # }
-our class UserDefinedCharacterLiteral {
+class UserDefinedCharacterLiteral is export {
     has Str $.value is required;
 
     method gist(:$treemark=False) {
@@ -139,7 +139,7 @@ our class UserDefinedCharacterLiteral {
     }
 }
 
-our class UserDefinedLiteral::Int {
+class UserDefinedLiteral::Int is export {
     has IUserDefinedIntegerLiteral   $.user-defined-integer-literal is required;
 
     method gist(:$treemark=False) {
@@ -147,8 +147,8 @@ our class UserDefinedLiteral::Int {
     }
 }
 
-our class UserDefinedLiteral::Float 
-does IUserDefinedLiteral {
+class UserDefinedLiteral::Float 
+does IUserDefinedLiteral is export {
 
     has IUserDefinedFloatingLiteral  $.user-defined-floating-literal is required;
 
@@ -157,8 +157,8 @@ does IUserDefinedLiteral {
     }
 }
 
-our class UserDefinedLiteral::Str 
-does IUserDefinedLiteral {
+class UserDefinedLiteral::Str 
+does IUserDefinedLiteral is export {
 
     has UserDefinedStringLiteral    $.user-defined-string-literal is required;
 
@@ -169,8 +169,8 @@ does IUserDefinedLiteral {
     }
 }
 
-our class UserDefinedLiteral::Char 
-does IUserDefinedLiteral {
+class UserDefinedLiteral::Char 
+does IUserDefinedLiteral is export {
 
     has UserDefinedCharacterLiteral $.user-defined-character-literal is required;
 
@@ -181,122 +181,125 @@ does IUserDefinedLiteral {
     }
 }
 
-our role UserDefinedLiteral::Actions {
+package UserDefinedLiteralGrammar is export {
 
-    # token user-defined-literal:sym<int> { <user-defined-integer-literal> }
-    method user-defined-literal:sym<int>($/) {
-        make $<user-defined-integer-literal>.made
+    our role Actions {
+
+        # token user-defined-literal:sym<int> { <user-defined-integer-literal> }
+        method user-defined-literal:sym<int>($/) {
+            make $<user-defined-integer-literal>.made
+        }
+
+        # token user-defined-literal:sym<float> { <user-defined-floating-literal> }
+        method user-defined-literal:sym<float>($/) {
+            make $<user-defined-floating-literal>.made
+        }
+
+        # token user-defined-literal:sym<str> { <user-defined-string-literal> }
+        method user-defined-literal:sym<str>($/) {
+            make $<user-defined-string-literal>.made
+        }
+
+        # token user-defined-literal:sym<char> { <user-defined-character-literal> }
+        method user-defined-literal:sym<char>($/) {
+            make $<user-defined-character-literal>.made
+        }
+
+        # token user-defined-integer-literal:sym<dec> { <decimal-literal> <udsuffix> }
+        method user-defined-integer-literal:sym<dec>($/) {
+            make UserDefinedIntegerLiteral::Dec.new(
+                decimal-literal => $<decimal-literal>.made,
+                suffix          => $<udsuffix>.made,
+                text            => ~$/,
+            )
+        }
+
+        # token user-defined-integer-literal:sym<oct> { <octal-literal> <udsuffix> }
+        method user-defined-integer-literal:sym<oct>($/) {
+            make UserDefinedIntegerLiteral::Oct.new(
+                octal-literal => $<octal-literal>.made,
+                suffix        => $<udsuffix>.made,
+                text          => ~$/,
+            )
+        }
+
+        # token user-defined-integer-literal:sym<hex> { <hexadecimal-literal> <udsuffix> }
+        method user-defined-integer-literal:sym<hex>($/) {
+            make UserDefinedIntegerLiteral::Hex.new(
+                hexadecimal-literal => $<hexadecimal-literal>.made,
+                suffix              => $<udsuffix>.made,
+                text                => ~$/,
+            )
+        }
+
+        # token user-defined-integer-literal:sym<bin> { <binary-literal> <udsuffix> } 
+        method user-defined-integer-literal:sym<bin>($/) {
+            make UserDefinedIntegerLiteral::Bin.new(
+                binary-literal => $<binary-literal>.made,
+                suffix         => $<udsuffix>.made,
+                text           => ~$/,
+            )
+        }
+
+        # token user-defined-floating-literal:sym<frac> { <fractionalconstant> <exponentpart>? <udsuffix> }
+        method user-defined-floating-literal:sym<frac>($/) {
+            make UserDefinedFloatingLiteral::Frac.new(
+                fractionalconstant => $<fractionalconstant>.made,
+                exponentpart       => $<exponentpart>.made,
+                text               => ~$/,
+            )
+        }
+
+        # token user-defined-floating-literal:sym<digi> { <digitsequence> <exponentpart> <udsuffix> } 
+        method user-defined-floating-literal:sym<digi>($/) {
+            make UserDefinedFloatingLiteral::Digi.new(
+                value => ~$/,
+            )
+        }
+
+        # token user-defined-string-literal { <string-literal> <udsuffix> }
+        method user-defined-string-literal($/) {
+            make UserDefinedStringLiteral.new(
+                value => ~$/,
+            )
+        }
+
+        # token user-defined-character-literal { <character-literal> <udsuffix> }
+        method user-defined-character-literal($/) {
+            make UserDefinedCharacterLiteral.new(
+                value => ~$/,
+            )
+        }
+
+        # token udsuffix { <identifier> }
+        method udsuffix($/) {
+            make $<identifier>.made
+        }
     }
 
-    # token user-defined-literal:sym<float> { <user-defined-floating-literal> }
-    method user-defined-literal:sym<float>($/) {
-        make $<user-defined-floating-literal>.made
-    }
+    our role Rules {
 
-    # token user-defined-literal:sym<str> { <user-defined-string-literal> }
-    method user-defined-literal:sym<str>($/) {
-        make $<user-defined-string-literal>.made
-    }
+        proto token user-defined-literal { * }
+        token user-defined-literal:sym<int>   { <user-defined-integer-literal> }
+        token user-defined-literal:sym<float> { <user-defined-floating-literal> }
+        token user-defined-literal:sym<str>   { <user-defined-string-literal> }
+        token user-defined-literal:sym<char>  { <user-defined-character-literal> }
 
-    # token user-defined-literal:sym<char> { <user-defined-character-literal> }
-    method user-defined-literal:sym<char>($/) {
-        make $<user-defined-character-literal>.made
-    }
+        proto token user-defined-integer-literal { * }
+        token user-defined-integer-literal:sym<dec> { <decimal-literal> <udsuffix> }
+        token user-defined-integer-literal:sym<oct> { <octal-literal> <udsuffix> }
+        token user-defined-integer-literal:sym<hex> { <hexadecimal-literal> <udsuffix> }
+        token user-defined-integer-literal:sym<bin> { <binary-literal> <udsuffix> }
 
-    # token user-defined-integer-literal:sym<dec> { <decimal-literal> <udsuffix> }
-    method user-defined-integer-literal:sym<dec>($/) {
-        make UserDefinedIntegerLiteral::Dec.new(
-            decimal-literal => $<decimal-literal>.made,
-            suffix          => $<udsuffix>.made,
-            text            => ~$/,
-        )
-    }
+        proto token user-defined-floating-literal { * }
+        token user-defined-floating-literal:sym<frac> { <fractionalconstant> <exponentpart>?  <udsuffix> }
+        token user-defined-floating-literal:sym<digi> { <digitsequence> <exponentpart> <udsuffix> }
 
-    # token user-defined-integer-literal:sym<oct> { <octal-literal> <udsuffix> }
-    method user-defined-integer-literal:sym<oct>($/) {
-        make UserDefinedIntegerLiteral::Oct.new(
-            octal-literal => $<octal-literal>.made,
-            suffix        => $<udsuffix>.made,
-            text          => ~$/,
-        )
-    }
+        token user-defined-string-literal    { <string-literal> <udsuffix> }
+        token user-defined-character-literal { <character-literal> <udsuffix> }
 
-    # token user-defined-integer-literal:sym<hex> { <hexadecimal-literal> <udsuffix> }
-    method user-defined-integer-literal:sym<hex>($/) {
-        make UserDefinedIntegerLiteral::Hex.new(
-            hexadecimal-literal => $<hexadecimal-literal>.made,
-            suffix              => $<udsuffix>.made,
-            text                => ~$/,
-        )
-    }
-
-    # token user-defined-integer-literal:sym<bin> { <binary-literal> <udsuffix> } 
-    method user-defined-integer-literal:sym<bin>($/) {
-        make UserDefinedIntegerLiteral::Bin.new(
-            binary-literal => $<binary-literal>.made,
-            suffix         => $<udsuffix>.made,
-            text           => ~$/,
-        )
-    }
-
-    # token user-defined-floating-literal:sym<frac> { <fractionalconstant> <exponentpart>? <udsuffix> }
-    method user-defined-floating-literal:sym<frac>($/) {
-        make UserDefinedFloatingLiteral::Frac.new(
-            fractionalconstant => $<fractionalconstant>.made,
-            exponentpart       => $<exponentpart>.made,
-            text               => ~$/,
-        )
-    }
-
-    # token user-defined-floating-literal:sym<digi> { <digitsequence> <exponentpart> <udsuffix> } 
-    method user-defined-floating-literal:sym<digi>($/) {
-        make UserDefinedFloatingLiteral::Digi.new(
-            value => ~$/,
-        )
-    }
-
-    # token user-defined-string-literal { <string-literal> <udsuffix> }
-    method user-defined-string-literal($/) {
-        make UserDefinedStringLiteral.new(
-            value => ~$/,
-        )
-    }
-
-    # token user-defined-character-literal { <character-literal> <udsuffix> }
-    method user-defined-character-literal($/) {
-        make UserDefinedCharacterLiteral.new(
-            value => ~$/,
-        )
-    }
-
-    # token udsuffix { <identifier> }
-    method udsuffix($/) {
-        make $<identifier>.made
-    }
-}
-
-our role UserDefinedLiteral::Rules {
-
-    proto token user-defined-literal { * }
-    token user-defined-literal:sym<int>   { <user-defined-integer-literal> }
-    token user-defined-literal:sym<float> { <user-defined-floating-literal> }
-    token user-defined-literal:sym<str>   { <user-defined-string-literal> }
-    token user-defined-literal:sym<char>  { <user-defined-character-literal> }
-
-    proto token user-defined-integer-literal { * }
-    token user-defined-integer-literal:sym<dec> { <decimal-literal> <udsuffix> }
-    token user-defined-integer-literal:sym<oct> { <octal-literal> <udsuffix> }
-    token user-defined-integer-literal:sym<hex> { <hexadecimal-literal> <udsuffix> }
-    token user-defined-integer-literal:sym<bin> { <binary-literal> <udsuffix> }
-
-    proto token user-defined-floating-literal { * }
-    token user-defined-floating-literal:sym<frac> { <fractionalconstant> <exponentpart>?  <udsuffix> }
-    token user-defined-floating-literal:sym<digi> { <digitsequence> <exponentpart> <udsuffix> }
-
-    token user-defined-string-literal    { <string-literal> <udsuffix> }
-    token user-defined-character-literal { <character-literal> <udsuffix> }
-
-    token udsuffix {
-        <identifier>
+        token udsuffix {
+            <identifier>
+        }
     }
 }

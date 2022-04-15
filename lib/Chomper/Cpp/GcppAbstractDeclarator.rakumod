@@ -12,123 +12,132 @@ our class AbstractPackDeclarator                   { ... }
 our class NoPointerAbstractDeclaratorBracketedBase { ... }
 our class NoPointerAbstractPackDeclarator          { ... }
 
-# rule abstract-declarator:sym<base> { 
-#   <pointer-abstract-declarator> 
-# }
-class AbstractDeclarator::Base does IAbstractDeclarator is export {
-    has IPointerAbstractDeclarator $.pointer-abstract-declarator is required;
+package AbstractDeclarator is export {
 
-    has $.text;
+    # rule abstract-declarator:sym<base> { 
+    #   <pointer-abstract-declarator> 
+    # }
+    our class Base does IAbstractDeclarator {
+        has IPointerAbstractDeclarator $.pointer-abstract-declarator is required;
 
-    method gist(:$treemark=False) {
-        $.pointer-abstract-declarator.gist(:$treemark)
-    }
-}
+        has $.text;
 
-# rule abstract-declarator:sym<aug> { 
-#   <no-pointer-abstract-declarator>? 
-#   <parameters-and-qualifiers> 
-#   <trailing-return-type> 
-# }
-class AbstractDeclarator::Aug does IAbstractDeclarator is export {
-    has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator;
-    has ParametersAndQualifiers     $.parameters-and-qualifiers is required;
-    has TrailingReturnType          $.trailing-return-type is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-
-        my $builder = "";
-
-        if $.no-pointer-abstract-declarator {
-            $builder ~= $.no-pointer-abstract-declarator.gist(:$treemark) ~ " ";
+        method gist(:$treemark=False) {
+            $.pointer-abstract-declarator.gist(:$treemark)
         }
-
-        $builder ~= $.parameters-and-qualifiers.gist(:$treemark) ~ " ";
-        $builder ~= $.trailing-return-type.gist(:$treemark);
-
-        $builder
     }
-}
 
-# rule abstract-declarator:sym<abstract-pack> { 
-#   <abstract-pack-declarator> 
-# }
-class AbstractDeclarator::AbstractPack does IAbstractDeclarator is export {
-    has AbstractPackDeclarator $.abstract-pack-declarator is required;
+    # rule abstract-declarator:sym<aug> { 
+    #   <no-pointer-abstract-declarator>? 
+    #   <parameters-and-qualifiers> 
+    #   <trailing-return-type> 
+    # }
+    our class Aug does IAbstractDeclarator {
+        has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator;
+        has ParametersAndQualifiers     $.parameters-and-qualifiers is required;
+        has TrailingReturnType          $.trailing-return-type is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.abstract-pack-declarator.gist(:$treemark)
-    }
-}
+        method gist(:$treemark=False) {
 
-# rule pointer-abstract-declarator:sym<no-ptr> { 
-#   <no-pointer-abstract-declarator> 
-# }
-class PointerAbstractDeclarator::NoPtr does IPointerAbstractDeclarator is export {
-    has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator is required;
+            my $builder = "";
 
-    has $.text;
+            if $.no-pointer-abstract-declarator {
+                $builder ~= $.no-pointer-abstract-declarator.gist(:$treemark) ~ " ";
+            }
 
-    method gist(:$treemark=False) {
-        $.no-pointer-abstract-declarator.gist(:$treemark)
-    }
-}
+            $builder ~= $.parameters-and-qualifiers.gist(:$treemark) ~ " ";
+            $builder ~= $.trailing-return-type.gist(:$treemark);
 
-# rule pointer-abstract-declarator:sym<ptr> { 
-#   <pointer-operator>+ 
-#   <no-pointer-abstract-declarator>? 
-# }
-class PointerAbstractDeclarator::Ptr does IPointerAbstractDeclarator is export {
-    has IPointerOperator            @.pointer-operators is required;
-    has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-
-        my $builder = @.pointer-operators>>.gist(:$treemark).join(" ");
-
-        if $.no-pointer-abstract-declarator {
-            $builder ~= " " ~ $.no-pointer-abstract-declarator.gist(:$treemark)
+            $builder
         }
+    }
 
-        $builder
+    # rule abstract-declarator:sym<abstract-pack> { 
+    #   <abstract-pack-declarator> 
+    # }
+    our class AbstractPack does IAbstractDeclarator {
+        has AbstractPackDeclarator $.abstract-pack-declarator is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.abstract-pack-declarator.gist(:$treemark)
+        }
     }
 }
 
-# rule no-pointer-abstract-declarator-body:sym<base> { 
-#   <parameters-and-qualifiers> 
-# }
-class NoPointerAbstractDeclaratorBody::Base does INoPointerAbstractDeclaratorBody is export {
+package PointerAbstractDeclarator is export {
 
-    has ParametersAndQualifiers $.parameters-and-qualifiers is required;
+    # rule pointer-abstract-declarator:sym<no-ptr> { 
+    #   <no-pointer-abstract-declarator> 
+    # }
+    our class NoPtr does IPointerAbstractDeclarator {
+        has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.parameters-and-qualifiers.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.no-pointer-abstract-declarator.gist(:$treemark)
+        }
+    }
+
+    # rule pointer-abstract-declarator:sym<ptr> { 
+    #   <pointer-operator>+ 
+    #   <no-pointer-abstract-declarator>? 
+    # }
+    our class Ptr does IPointerAbstractDeclarator {
+        has IPointerOperator            @.pointer-operators is required;
+        has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+
+            my $builder = @.pointer-operators>>.gist(:$treemark).join(" ");
+
+            if $.no-pointer-abstract-declarator {
+                $builder ~= " " ~ $.no-pointer-abstract-declarator.gist(:$treemark)
+            }
+
+            $builder
+        }
     }
 }
 
-# rule no-pointer-abstract-declarator-body:sym<brack> { 
-#   <no-pointer-abstract-declarator> 
-#   <no-pointer-abstract-declarator-bracketed-base> 
-# }
-class NoPointerAbstractDeclaratorBody::Brack does INoPointerAbstractDeclaratorBody is export {
+package NoPointerAbstractDeclaratorBody is export {
 
-    has NoPointerAbstractDeclarator              $.no-pointer-abstract-declarator is required;
-    has NoPointerAbstractDeclaratorBracketedBase $.no-pointer-abstract-declarator-bracketed-base is required;
+    # rule no-pointer-abstract-declarator-body:sym<base> { 
+    #   <parameters-and-qualifiers> 
+    # }
+    our class Base does INoPointerAbstractDeclaratorBody {
 
-    has $.text;
+        has ParametersAndQualifiers $.parameters-and-qualifiers is required;
 
-    method gist(:$treemark=False) {
-        $.no-pointer-abstract-declarator.gist(:$treemark) 
-        ~ " " 
-        ~ $.no-pointer-abstract-declarator-bracketed-base.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.parameters-and-qualifiers.gist(:$treemark)
+        }
+    }
+
+    # rule no-pointer-abstract-declarator-body:sym<brack> { 
+    #   <no-pointer-abstract-declarator> 
+    #   <no-pointer-abstract-declarator-bracketed-base> 
+    # }
+    our class Brack does INoPointerAbstractDeclaratorBody {
+
+        has NoPointerAbstractDeclarator              $.no-pointer-abstract-declarator is required;
+        has NoPointerAbstractDeclaratorBracketedBase $.no-pointer-abstract-declarator-bracketed-base is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.no-pointer-abstract-declarator.gist(:$treemark) 
+            ~ " " 
+            ~ $.no-pointer-abstract-declarator-bracketed-base.gist(:$treemark)
+        }
     }
 }
 
@@ -149,47 +158,50 @@ class NoPointerAbstractDeclarator is export {
     }
 }
 
-# rule no-pointer-abstract-declarator-base:sym<basic> { 
-#   <parameters-and-qualifiers> 
-# }
-class NoPointerAbstractDeclaratorBase::Basic does INoPointerAbstractDeclaratorBase is export {
+package NoPointerAbstractDeclaratorBase is export {
 
-    has ParametersAndQualifiers $.parameters-and-qualifiers is required;
+    # rule no-pointer-abstract-declarator-base:sym<basic> { 
+    #   <parameters-and-qualifiers> 
+    # }
+    our class Basic does INoPointerAbstractDeclaratorBase {
 
-    has $.text;
+        has ParametersAndQualifiers $.parameters-and-qualifiers is required;
 
-    method gist(:$treemark=False) {
-        $.parameters-and-qualifiers.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.parameters-and-qualifiers.gist(:$treemark)
+        }
     }
-}
 
-# rule no-pointer-abstract-declarator-base:sym<bracketed> { 
-#   <no-pointer-abstract-declarator-bracketed-base> 
-# }
-class NoPointerAbstractDeclaratorBase::Bracketed does INoPointerAbstractDeclaratorBase is export {
+    # rule no-pointer-abstract-declarator-base:sym<bracketed> { 
+    #   <no-pointer-abstract-declarator-bracketed-base> 
+    # }
+    our class Bracketed does INoPointerAbstractDeclaratorBase {
 
-    has NoPointerAbstractDeclaratorBracketedBase $.no-pointer-abstract-declarator-bracketed-base is required;
+        has NoPointerAbstractDeclaratorBracketedBase $.no-pointer-abstract-declarator-bracketed-base is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.no-pointer-abstract-declarator-bracketed-base.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.no-pointer-abstract-declarator-bracketed-base.gist(:$treemark)
+        }
     }
-}
 
-# rule no-pointer-abstract-declarator-base:sym<parenthesized> { 
-#   <.left-paren> 
-#   <pointer-abstract-declarator> 
-#   <.right-paren> 
-# }
-class NoPointerAbstractDeclaratorBase::Parenthesized does INoPointerAbstractDeclaratorBase is export {
+    # rule no-pointer-abstract-declarator-base:sym<parenthesized> { 
+    #   <.left-paren> 
+    #   <pointer-abstract-declarator> 
+    #   <.right-paren> 
+    # }
+    our class Parenthesized does INoPointerAbstractDeclaratorBase {
 
-    has IPointerAbstractDeclarator $.pointer-abstract-declarator is required;
+        has IPointerAbstractDeclarator $.pointer-abstract-declarator is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "(" ~ $.pointer-abstract-declarator.gist(:$treemark) ~ ")"
+        method gist(:$treemark=False) {
+            "(" ~ $.pointer-abstract-declarator.gist(:$treemark) ~ ")"
+        }
     }
 }
 
@@ -285,29 +297,34 @@ class NoPointerAbstractPackDeclaratorBrackets is export {
     }
 }
 
-# rule no-pointer-abstract-pack-declarator-body:sym<basic> { 
-#   <no-pointer-abstract-pack-declarator-basic> 
-# }
-class NoPointerAbstractPackDeclaratorBody::Basic does INoPointerAbstractPackDeclaratorBody is export {
-    has NoPointerAbstractPackDeclaratorBasic $.no-pointer-abstract-pack-declarator-basic is required;
+package NoPointerAbstractPackDeclaratorBody is export {
 
-    has $.text;
+    # rule no-pointer-abstract-pack-declarator-body:sym<basic> { 
+    #   <no-pointer-abstract-pack-declarator-basic> 
+    # }
+    our class Basic does INoPointerAbstractPackDeclaratorBody {
 
-    method gist(:$treemark=False) {
-        $.no-pointer-abstract-pack-declarator-basic.gist(:$treemark)
+        has NoPointerAbstractPackDeclaratorBasic $.no-pointer-abstract-pack-declarator-basic is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.no-pointer-abstract-pack-declarator-basic.gist(:$treemark)
+        }
     }
-}
 
-# rule no-pointer-abstract-pack-declarator-body:sym<brack> { 
-#   <no-pointer-abstract-pack-declarator-brackets> 
-# }
-class NoPointerAbstractPackDeclaratorBody::Brack does INoPointerAbstractPackDeclaratorBody is export {
-    has NoPointerAbstractPackDeclaratorBrackets $.no-pointer-abstract-pack-declarator-brackets is required;
+    # rule no-pointer-abstract-pack-declarator-body:sym<brack> { 
+    #   <no-pointer-abstract-pack-declarator-brackets> 
+    # }
+    our class Brack does INoPointerAbstractPackDeclaratorBody {
 
-    has $.text;
+        has NoPointerAbstractPackDeclaratorBrackets $.no-pointer-abstract-pack-declarator-brackets is required;
 
-    method gist(:$treemark=False) {
-        $.no-pointer-abstract-pack-declarator-brackets.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.no-pointer-abstract-pack-declarator-brackets.gist(:$treemark)
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 use Data::Dump::Tree;
 
-our enum TranslationSource<Cpp Python>;
-our enum TranslationTarget<Rust>;
+our enum TranslationSource<LangCpp LangPython>;
+our enum TranslationTarget<LangRust>;
 
 my $DEBUG-TRANSLATE = True;
 

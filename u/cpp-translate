@@ -1,8 +1,8 @@
 #!/usr/bin/env raku
 use Chomper::Cpp::CppActions;
 use Chomper::Cpp::Gcpp;
-use Chomper::Translate::TranslateIr;
-use Chomper::Translate::TranslateIo;
+use Chomper::TranslateIr;
+use Chomper::TranslateIo;
 use Data::Dump::Tree;
 
 grammar G does Cpp::Parser {}
@@ -59,8 +59,8 @@ sub MAIN(:$stdin = Nil) {
 
         translate-ir(
             $made, 
-            TranslationSource::<Cpp>, 
-            TranslationTarget::<Rust>
+            TranslationSource::<LangCpp>, 
+            TranslationTarget::<LangRust>
         );
     }
 }

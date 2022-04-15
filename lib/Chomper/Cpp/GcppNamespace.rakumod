@@ -7,7 +7,7 @@ use Chomper::Cpp::GcppIdent;
 use Chomper::Cpp::GcppDeclaration;
 
 # rule namespace-alias { <identifier> }
-our class NamespaceAlias { 
+class NamespaceAlias is export { 
     has Identifier $.identifier is required;
 
     has $.text;
@@ -18,7 +18,7 @@ our class NamespaceAlias {
 }
 
 # rule original-namespace-name { <identifier> }
-our class OriginalNamespaceName { 
+class OriginalNamespaceName is export { 
     has Identifier $.identifier is required;
 
     has $.text;
@@ -28,47 +28,53 @@ our class OriginalNamespaceName {
     }
 }
 
-# rule namespace-name:sym<original> { <original-namespace-name> }
-our class NamespaceName::Original does INamespaceName {
-    has OriginalNamespaceName $.original-namespace-name is required;
+package NamespaceName is export {
 
-    has $.text;
+    # rule namespace-name:sym<original> { <original-namespace-name> }
+    our class Original does INamespaceName {
+        has OriginalNamespaceName $.original-namespace-name is required;
 
-    method gist(:$treemark=False) {
-        $.original-namespace-name.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.original-namespace-name.gist(:$treemark)
+        }
+    }
+
+    # rule namespace-name:sym<alias> { <namespace-alias> }
+    our class Alias does INamespaceName {
+        has NamespaceAlias $.namespace-alias is required;
+
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.namespace-alias.gist(:$treemark)
+        }
     }
 }
 
-# rule namespace-name:sym<alias> { <namespace-alias> }
-our class NamespaceName::Alias does INamespaceName {
-    has NamespaceAlias $.namespace-alias is required;
+package NamespaceTag is export {
 
-    has $.text;
+    # rule namespace-tag:sym<ident> { <identifier> }
+    our class Ident does INamespaceTag {
+        has Identifier $.identifier is required;
 
-    method gist(:$treemark=False) {
-        $.namespace-alias.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            $.identifier.gist(:$treemark)
+        }
     }
-}
 
-# rule namespace-tag:sym<ident> { <identifier> }
-our class NamespaceTag::Ident does INamespaceTag {
-    has Identifier $.identifier is required;
+    # rule namespace-tag:sym<ns-name> { <original-namespace-name> } 
+    our class NsName does INamespaceTag {
+        has OriginalNamespaceName $.original-namespace-name is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.identifier.gist(:$treemark)
-    }
-}
-
-# rule namespace-tag:sym<ns-name> { <original-namespace-name> } 
-our class NamespaceTag::NsName does INamespaceTag {
-    has OriginalNamespaceName $.original-namespace-name is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        $.original-namespace-name.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.original-namespace-name.gist(:$treemark)
+        }
     }
 }
 
@@ -80,7 +86,7 @@ our class NamespaceTag::NsName does INamespaceTag {
 #   <namespaceBody=declarationseq>? 
 #   <.right-brace> 
 # }
-our class NamespaceDefinition { 
+class NamespaceDefinition is export { 
     has Bool           $.inline is required;
     has INamespaceTag   $.namespace-tag;
     has IDeclarationseq $.namespace-body;
@@ -115,7 +121,7 @@ our class NamespaceDefinition {
 #   <nested-name-specifier>? 
 #   <namespace-name> 
 # } 
-our class Qualifiednamespacespecifier { 
+class Qualifiednamespacespecifier is export { 
     has INestedNameSpecifier $.nested-name-specifier;
     has INamespaceName       $.namespace-name is required;
 
@@ -141,7 +147,7 @@ our class Qualifiednamespacespecifier {
 #   <qualifiednamespacespecifier> 
 #   <semi> 
 # }
-our class NamespaceAliasDefinition { 
+class NamespaceAliasDefinition is export { 
     has IComment                    $.comment;
     has Identifier                  $.identifier is required;
     has Qualifiednamespacespecifier $.qualifiednamespacespecifier is required;
@@ -165,124 +171,127 @@ our class NamespaceAliasDefinition {
     }
 }
 
-our role Namespace::Actions {
+package NamespaceGrammar is export {
 
-    # rule namespace-name:sym<original> { <original-namespace-name> }
-    method namespace-name:sym<original>($/) {
-        make $<original-namespace-name>.made
-    }
+    our role Actions {
 
-    # rule namespace-name:sym<alias> { <namespace-alias> }
-    method namespace-name:sym<alias>($/) {
-        make $<namespace-alias>.made
-    }
+        # rule namespace-name:sym<original> { <original-namespace-name> }
+        method namespace-name:sym<original>($/) {
+            make $<original-namespace-name>.made
+        }
 
-    # rule original-namespace-name { <identifier> } 
-    method original-namespace-name($/) {
-        make $<identifier>.made
-    }
+        # rule namespace-name:sym<alias> { <namespace-alias> }
+        method namespace-name:sym<alias>($/) {
+            make $<namespace-alias>.made
+        }
 
-    # rule namespace-tag:sym<ident> { <identifier> }
-    method namespace-tag:sym<ident>($/) {
-        make $<identifier>.made
-    }
+        # rule original-namespace-name { <identifier> } 
+        method original-namespace-name($/) {
+            make $<identifier>.made
+        }
 
-    # rule namespace-tag:sym<ns-name> { 
-    #   <original-namespace-name> 
-    # }
-    method namespace-tag:sym<ns-name>($/) {
-        make $<original-namespace-name>.made
-    }
+        # rule namespace-tag:sym<ident> { <identifier> }
+        method namespace-tag:sym<ident>($/) {
+            make $<identifier>.made
+        }
 
-    # rule namespace-definition { 
-    #   <inline>? 
-    #   <namespace> 
-    #   <namespace-tag>? 
-    #   <.left-brace> 
-    #   <namespaceBody=declarationseq>? 
-    #   <.right-brace> 
-    # }
-    method namespace-definition($/) {
-        make NamespaceDefinition.new(
-            inline         => $<inline>.made,
-            namespace-tag  => $<namespace-tag>.made,
-            namespace-body => $<namespace-body>.made,
-            text           => ~$/,
-        )
-    }
+        # rule namespace-tag:sym<ns-name> { 
+        #   <original-namespace-name> 
+        # }
+        method namespace-tag:sym<ns-name>($/) {
+            make $<original-namespace-name>.made
+        }
 
-    # rule namespace-alias { <identifier> }
-    method namespace-alias($/) {
-        make $<identifier>.made
-    }
-
-    # rule namespace-alias-definition { <namespace> <identifier> <assign> <qualifiednamespacespecifier> <semi> }
-    method namespace-alias-definition($/) {
-        make NamespaceAliasDefinition.new(
-            comment                     => $<semi>.made,
-            identifier                  => $<identifier>.made,
-            qualifiednamespacespecifier => $<qualifiednamespacespecifier>.made,
-            text                        => ~$/,
-        )
-    }
-
-    # rule qualifiednamespacespecifier { <nested-name-specifier>? <namespace-name> } 
-    method qualifiednamespacespecifier($/) {
-
-        my $prefix = $<nested-name-specifier>.made;
-        my $body   = $<namespace-name>.made;
-
-        if $prefix {
-            make Qualifiednamespacespecifier.new(
-                nested-name-specifier => $prefix,
-                namespace-name        => $body,
-                text                  => ~$/,
+        # rule namespace-definition { 
+        #   <inline>? 
+        #   <namespace> 
+        #   <namespace-tag>? 
+        #   <.left-brace> 
+        #   <namespaceBody=declarationseq>? 
+        #   <.right-brace> 
+        # }
+        method namespace-definition($/) {
+            make NamespaceDefinition.new(
+                inline         => $<inline>.made,
+                namespace-tag  => $<namespace-tag>.made,
+                namespace-body => $<namespace-body>.made,
+                text           => ~$/,
             )
-        } else {
-            make $body
+        }
+
+        # rule namespace-alias { <identifier> }
+        method namespace-alias($/) {
+            make $<identifier>.made
+        }
+
+        # rule namespace-alias-definition { <namespace> <identifier> <assign> <qualifiednamespacespecifier> <semi> }
+        method namespace-alias-definition($/) {
+            make NamespaceAliasDefinition.new(
+                comment                     => $<semi>.made,
+                identifier                  => $<identifier>.made,
+                qualifiednamespacespecifier => $<qualifiednamespacespecifier>.made,
+                text                        => ~$/,
+            )
+        }
+
+        # rule qualifiednamespacespecifier { <nested-name-specifier>? <namespace-name> } 
+        method qualifiednamespacespecifier($/) {
+
+            my $prefix = $<nested-name-specifier>.made;
+            my $body   = $<namespace-name>.made;
+
+            if $prefix {
+                make Qualifiednamespacespecifier.new(
+                    nested-name-specifier => $prefix,
+                    namespace-name        => $body,
+                    text                  => ~$/,
+                )
+            } else {
+                make $body
+            }
         }
     }
-}
 
-our role Namespace::Rules {
+    our role Rules {
 
-    proto rule namespace-name { * }
-    rule namespace-name:sym<original> { <original-namespace-name> }
-    rule namespace-name:sym<alias>    { <namespace-alias> }
+        proto rule namespace-name { * }
+        rule namespace-name:sym<original> { <original-namespace-name> }
+        rule namespace-name:sym<alias>    { <namespace-alias> }
 
-    rule original-namespace-name {
-        <identifier>
-    }
+        rule original-namespace-name {
+            <identifier>
+        }
 
-    #--------------------
-    proto rule namespace-tag { * }
-    rule namespace-tag:sym<ident>   { <identifier> }
-    rule namespace-tag:sym<ns-name> { <original-namespace-name> }
+        #--------------------
+        proto rule namespace-tag { * }
+        rule namespace-tag:sym<ident>   { <identifier> }
+        rule namespace-tag:sym<ns-name> { <original-namespace-name> }
 
-    #--------------------
-    rule namespace-definition {
-        <inline>?
-        <namespace>
-        <namespace-tag>?
-        <left-brace>
-        <namespaceBody=declarationseq>?
-        <right-brace>
-    }
+        #--------------------
+        rule namespace-definition {
+            <inline>?
+            <namespace>
+            <namespace-tag>?
+            <left-brace>
+            <namespaceBody=declarationseq>?
+            <right-brace>
+        }
 
-    rule namespace-alias {
-        <identifier>
-    }
+        rule namespace-alias {
+            <identifier>
+        }
 
-    rule namespace-alias-definition {
-        <namespace>
-        <identifier>
-        <assign>
-        <qualifiednamespacespecifier>
-        <semi>
-    }
+        rule namespace-alias-definition {
+            <namespace>
+            <identifier>
+            <assign>
+            <qualifiednamespacespecifier>
+            <semi>
+        }
 
-    rule qualifiednamespacespecifier {
-        <nested-name-specifier>?
-        <namespace-name>
+        rule qualifiednamespacespecifier {
+            <nested-name-specifier>?
+            <namespace-name>
+        }
     }
 }
