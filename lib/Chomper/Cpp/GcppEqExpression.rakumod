@@ -31,7 +31,9 @@ package EqualityOperator is export {
 #   <equality-operator> 
 #   <relational-expression> 
 # }
-our class EqualityExpressionTail {
+our class EqualityExpressionTail 
+is export {
+
     has IEqualityOperator     $.equality-operator     is required;
     has IRelationalExpression $.relational-expression is required;
 
@@ -48,7 +50,10 @@ our class EqualityExpressionTail {
 #   <relational-expression> 
 #   <equality-expression-tail>* 
 # }
-our class EqualityExpression does IEqualityExpression {
+our class EqualityExpression 
+does IEqualityExpression 
+is export {
+
     has IRelationalExpression  $.relational-expression is required;
     has EqualityExpressionTail @.equality-expression-tail;
 

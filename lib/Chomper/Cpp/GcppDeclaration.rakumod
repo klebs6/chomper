@@ -58,82 +58,79 @@ class AliasDeclaration is export {
     }
 }
 
-package SimpleDeclaration is export {
+# rule simple-declaration:sym<basic> { 
+#   <decl-specifier-seq>? 
+#   <init-declarator-list>? 
+#   <.semi> 
+# }
+class BasicDeclaration 
+does IDeclarationStatement 
+does ISimpleDeclaration is export {
 
-    # rule simple-declaration:sym<basic> { 
-    #   <decl-specifier-seq>? 
-    #   <init-declarator-list>? 
-    #   <.semi> 
-    # }
-    our class Basic 
-    does IDeclarationStatement 
-    does ISimpleDeclaration {
+    has IComment           $.comment;
+    has IDeclSpecifierSeq  $.decl-specifier-seq;
+    has IInitDeclarator    @.init-declarator-list;
 
-        has IComment           $.comment;
-        has IDeclSpecifierSeq  $.decl-specifier-seq;
-        has IInitDeclarator    @.init-declarator-list;
+    has $.text;
 
-        has $.text;
+    method gist(:$treemark=False) {
 
-        method gist(:$treemark=False) {
+        my $builder = "";
 
-            my $builder = "";
-
-            if $.comment {
-                $builder ~= $.comment.gist(:$treemark) ~ "\n";
-            }
-
-            if $.decl-specifier-seq {
-                $builder ~= $.decl-specifier-seq.gist(:$treemark) ~ " ";
-            }
-
-            my $declarator-list = @.init-declarator-list>>.gist(:$treemark).join(", ");
-
-            if $declarator-list {
-                $builder ~= $declarator-list.chomp;
-            }
-
-            $builder ~ ";"
+        if $.comment {
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
+
+        if $.decl-specifier-seq {
+            $builder ~= $.decl-specifier-seq.gist(:$treemark) ~ " ";
+        }
+
+        my $declarator-list = @.init-declarator-list>>.gist(:$treemark).join(", ");
+
+        if $declarator-list {
+            $builder ~= $declarator-list.chomp;
+        }
+
+        $builder ~ ";"
     }
+}
 
-    # rule simple-declaration:sym<init-list> { 
-    #   <attribute-specifier-seq> 
-    #   <decl-specifier-seq>? 
-    #   <init-declarator-list> 
-    #   <.semi> 
-    # }
-    our class InitList does ISimpleDeclaration {
+# rule simple-declaration:sym<init-list> { 
+#   <attribute-specifier-seq> 
+#   <decl-specifier-seq>? 
+#   <init-declarator-list> 
+#   <.semi> 
+# }
+class InitListDeclaration does ISimpleDeclaration is export {
 
-        has IComment            $.comment;
-        has IAttributeSpecifier @.attribute-specifiers is required;
-        has IDeclSpecifierSeq   $.decl-specifier-seq;
-        has IInitDeclarator     @.init-declarator-list;
+    has IComment            $.comment;
+    has IAttributeSpecifier @.attribute-specifiers is required;
+    has IDeclSpecifierSeq   $.decl-specifier-seq;
+    has IInitDeclarator     @.init-declarator-list;
 
-        has $.text;
+    has $.text;
 
-        method gist(:$treemark=False) {
+    method gist(:$treemark=False) {
 
-            my $builder = "";
+        my $builder = "";
 
-            if $.comment {
-                $builder ~= $.comment.gist(:$treemark) ~ "\n";
-            }
-
-            for @.attribute-specifiers {
-                $builder ~= $_.gist(:$treemark) ~ " ";
-            }
-
-            if $.decl-specifier-seq {
-                $builder ~= $.decl-specifier-seq.gist(:$treemark) ~ " ";
-            }
-
-            for @.init-declarator-list {
-                $builder ~= $_.gist(:$treemark) ~ " ";
-            }
-
-            $builder ~ ";"
+        if $.comment {
+            $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
+
+        for @.attribute-specifiers {
+            $builder ~= $_.gist(:$treemark) ~ " ";
+        }
+
+        if $.decl-specifier-seq {
+            $builder ~= $.decl-specifier-seq.gist(:$treemark) ~ " ";
+        }
+
+        for @.init-declarator-list {
+            $builder ~= $_.gist(:$treemark) ~ " ";
+        }
+
+        $builder ~ ";"
     }
 }
 
@@ -323,7 +320,7 @@ package DeclarationGrammar is export {
 
         # rule simple-declaration:sym<basic> { <decl-specifier-seq>? <init-declarator-list>? <.semi> }
         method simple-declaration:sym<basic>($/) {
-            make SimpleDeclaration::Basic.new(
+            make BasicDeclaration.new(
                 comment              => $<semi>.made,
                 decl-specifier-seq   => $<decl-specifier-seq>.made,
                 init-declarator-list => $<init-declarator-list>.made,
@@ -333,7 +330,7 @@ package DeclarationGrammar is export {
 
         # rule simple-declaration:sym<init-list> { <attribute-specifier-seq> <decl-specifier-seq>? <init-declarator-list> <.semi> }
         method simple-declaration:sym<init-list>($/) {
-            make SimpleDeclaration::InitList.new(
+            make InitListDeclaration.new(
                 comment              => $<semi>.made,
                 attribute-specifiers => $<attribute-specifier-seq>.made,
                 decl-specifier-seq   => $<decl-specifier-seq>.made,

@@ -102,7 +102,7 @@ use Chomper::Cpp::GcppUserDefinedLiteral;
 use Chomper::Cpp::GcppUsingDirective;
 use Chomper::Cpp::GcppVirtual;
 
-our role Cpp::Parser 
+our role CppParser 
 does AbstractDeclaratorGrammar::Rules
 does TypedefGrammar::Rules
 does AccessGrammar::Rules
@@ -202,6 +202,7 @@ does UnaryExpressionGrammar::Rules
 does UserDefinedLiteralGrammar::Rules
 does UsingDirectiveGrammar::Rules
 does VirtualGrammar::Rules
+is export
 {
     rule TOP {
         <ws> 

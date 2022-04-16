@@ -157,7 +157,7 @@ class MatchArmGuard is export {
     }
 }
 
-package MatchExpresisonGrammar is export {
+package MatchExpressionGrammar is export {
 
     our role Rules {
 

@@ -1,3 +1,5 @@
+unit module Chomper::Cpp::CppActions;
+
 use Chomper::Cpp::GcppAbstractDeclarator;
 use Chomper::Cpp::GcppAccess;
 use Chomper::Cpp::GcppAdditiveExpression;
@@ -96,7 +98,7 @@ use Chomper::Cpp::GcppUserDefinedLiteral;
 use Chomper::Cpp::GcppUsingDirective;
 use Chomper::Cpp::GcppVirtual;
 
-our class Cpp::Actions
+our class CppActions
 does AbstractDeclaratorGrammar::Actions
 does AccessGrammar::Actions
 does AdditiveExpressionGrammar::Actions
@@ -195,6 +197,7 @@ does UnaryExpressionGrammar::Actions
 does UserDefinedLiteralGrammar::Actions
 does UsingDirectiveGrammar::Actions
 does VirtualGrammar::Actions
+is export
 {
     method semi($/) {
         make $<comment>.made

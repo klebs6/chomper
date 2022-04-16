@@ -36,6 +36,7 @@ use Chomper::Rust::GrustLoopExpression;
 use Chomper::Rust::GrustMacros;
 use Chomper::Rust::GrustMatchExpressions;
 use Chomper::Rust::GrustMetaItem;
+use Chomper::Rust::GrustModule;
 use Chomper::Rust::GrustPathExpressions;
 use Chomper::Rust::GrustPaths;
 use Chomper::Rust::GrustPatternExpressions;
@@ -95,6 +96,7 @@ does LiteralPatternGrammar::Rules
 does LoopExpressionGrammar::Rules 
 does MacroInvocationGrammar::Rules 
 does MatchExpressionGrammar::Rules 
+does ModuleGrammar::Rules 
 does MetaItemGrammar::Rules 
 does PathExpressionGrammar::Rules 
 does PatternGrammar::Rules 
@@ -169,6 +171,7 @@ our role Rust::Actions::Role
     does LoopExpressionGrammar::Actions 
     does MacroInvocationGrammar::Actions 
     does MatchExpressionGrammar::Actions 
+    does ModuleGrammar::Actions 
     does MetaItemGrammar::Actions 
     does PathExpressionGrammar::Actions 
     does PatternGrammar::Actions 

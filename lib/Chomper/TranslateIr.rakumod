@@ -16,19 +16,22 @@ our sub translate-ir(
 {
     debug "will translate from $src to $dst";
 
-    given ($src,$dst) {
+    my @rust-snippets = gather given ($src,$dst) {
         when (TranslationSource::<LangCpp>,TranslationTarget::<LangRust>) {
             for $ir.List {
-                say translate-cpp-ir-to-rust($_.WHAT.^name, $_);
+                take translate-cpp-ir-to-rust($_.WHAT.^name, $_);
             }
         }
         when (TranslationSource::<LangPython>,TranslationTarget::<LangRust>) {
             for $ir.List {
-                say translate-python-ir-to-rust($_.WHAT.^name, $_);
+                take translate-python-ir-to-rust($_.WHAT.^name, $_);
             }
         }
         default {
             die "unsupported translation pathway!"
         }
-    }
+    };
+
+    say "----------------[translation]";
+    .say for @rust-snippets;
 }

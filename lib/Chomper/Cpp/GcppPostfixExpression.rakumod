@@ -143,7 +143,10 @@ does IPostfixExpressionBody is export {
     has $.text;
 
     method token-types {
-        [$.post-list-head.WHAT.^name, $.post-list-tail.WHAT.^name]
+        [
+            $.post-list-head.WHAT.^name.split("::")[*-1], 
+            $.post-list-tail.WHAT.^name.split("::")[*-1]
+        ]
     }
 
     method gist(:$treemark=False) {

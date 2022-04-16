@@ -12,6 +12,9 @@ our sub snake-case($name, $remove-dup = False) {
     my $uc = token { <[A..Z]> };
     my $lc = token { <[a..z]> };
 
+    $result ~~ s:g/($lc) ($uc $uc $uc) ($lc)/$0_{$1.lc}_$2/;
+    $result ~~ s:g/($lc) ($uc $uc $uc) <wb>/$0_{$1.lc}/;
+
     $result ~~ s:g/($lc) ($uc $uc) ($lc)/$0_{$1.lc}$2/;
 
     #split long strings of uppercase characters

@@ -5,99 +5,102 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppIdent;
 
-# rule jump-statement:sym<break> { 
-#   <break_> 
-#   <semi> 
-# }
-class JumpStatement::Break does IJumpStatement is export { 
-    has IComment $.comment;
+package JumpStatement is export {
 
-    has $.text;
+    # rule jump-statement:sym<break> { 
+    #   <break_> 
+    #   <semi> 
+    # }
+    our class Break does IJumpStatement { 
+        has IComment $.comment;
 
-    method gist(:$treemark=False) {
+        has $.text;
 
-        my $builder = "";
+        method gist(:$treemark=False) {
 
-        if $.comment {
-            $builder ~= $.comment.gist(:$treemark);
+            my $builder = "";
+
+            if $.comment {
+                $builder ~= $.comment.gist(:$treemark);
+            }
+
+            $builder ~ "break;"
         }
-
-        $builder ~ "break;"
     }
-}
 
-# rule jump-statement:sym<continue> { 
-#   <continue_> 
-#   <semi> 
-# }
-class JumpStatement::Continue does IJumpStatement is export {
-    has IComment $.comment;
+    # rule jump-statement:sym<continue> { 
+    #   <continue_> 
+    #   <semi> 
+    # }
+    our class Continue does IJumpStatement {
+        has IComment $.comment;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        my $builder = "";
+        method gist(:$treemark=False) {
+            my $builder = "";
 
-        if $.comment {
-            $builder ~= $.comment.gist(:$treemark);
+            if $.comment {
+                $builder ~= $.comment.gist(:$treemark);
+            }
+
+            $builder ~ "continue;"
         }
-
-        $builder ~ "continue;"
     }
-}
 
-# rule jump-statement:sym<return> { 
-#   <return_> 
-#   <return-statement-body>? 
-#   <semi> 
-# }
-class JumpStatement::Return 
-does IAttributedStatementBody 
-does IJumpStatement is export {
+    # rule jump-statement:sym<return> { 
+    #   <return_> 
+    #   <return-statement-body>? 
+    #   <semi> 
+    # }
+    our class Return 
+    does IAttributedStatementBody 
+    does IJumpStatement {
 
-    has IComment             $.comment;
-    has IReturnStatementBody $.return-statement-body;
+        has IComment             $.comment;
+        has IReturnStatementBody $.return-statement-body;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
+        method gist(:$treemark=False) {
 
-        my $builder = "";
+            my $builder = "";
 
-        if $.comment {
-            $builder ~= $.comment.gist(:$treemark) ~ "\n";
+            if $.comment {
+                $builder ~= $.comment.gist(:$treemark) ~ "\n";
+            }
+
+            $builder ~= "return";
+
+            if $.return-statement-body {
+                $builder ~= " " ~ $.return-statement-body.gist(:$treemark);
+            }
+
+            $builder ~ ";"
         }
-
-        $builder ~= "return";
-
-        if $.return-statement-body {
-            $builder ~= " " ~ $.return-statement-body.gist(:$treemark);
-        }
-
-        $builder ~ ";"
     }
-}
 
-# rule jump-statement:sym<goto> { 
-#   <goto_> 
-#   <identifier> 
-#   <semi> 
-# }
-class JumpStatement::Goto does IJumpStatement is export {
-    has IComment   $.comment;
-    has Identifier $.identifier is required;
+    # rule jump-statement:sym<goto> { 
+    #   <goto_> 
+    #   <identifier> 
+    #   <semi> 
+    # }
+    our class Goto does IJumpStatement {
+        has IComment   $.comment;
+        has Identifier $.identifier is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
+        method gist(:$treemark=False) {
 
-        my $builder = "goto " ~ $.identifier ~ ";";
+            my $builder = "goto " ~ $.identifier ~ ";";
 
-        if $.comment {
-            $builder = $.comment.gist(:$treemark) ~ "\n" ~ $builder;
+            if $.comment {
+                $builder = $.comment.gist(:$treemark) ~ "\n" ~ $builder;
+            }
+
+            $builder
         }
-
-        $builder
     }
 }
 

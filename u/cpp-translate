@@ -5,10 +5,10 @@ use Chomper::TranslateIr;
 use Chomper::TranslateIo;
 use Data::Dump::Tree;
 
-grammar G does Cpp::Parser {}
+grammar G does CppParser {}
 
 use Grammar::Tracer;
-grammar GD does Cpp::Parser {}
+grammar GD does CppParser {}
 
 sub MAIN(:$stdin = Nil) {
 
@@ -21,7 +21,7 @@ sub MAIN(:$stdin = Nil) {
     my $rule = "statement-seq";
     #my $rule = "postfix-expression";
 
-    my $actions = Cpp::Actions.new;
+    my $actions = CppActions.new;
 
     my $parsed = 
     G.parse($in, :$rule, :$actions) 

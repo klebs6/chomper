@@ -1,21 +1,30 @@
-#use Chomper::Cpp::GcppIdent;
-#use Chomper::TranslateIo;
+use Chomper::TranslateIo;
 use Chomper::Rust;
 use Chomper::Cpp;
+use Chomper::SnakeCase;
 use Data::Dump::Tree;
 
-say Rust::Identifier.^name;
-say Cpp::Identifier.^name;
+proto sub to-rust-ident(
+    $x, 
+    Bool :$snake-case) is export { * }
 
-proto sub to-rust-ident($x) is export { * }
+multi sub to-rust-ident(
+    $x where Cpp::Identifier, 
+    Bool :$snake-case) 
+returns Rust::Identifier 
+{
+    my $value = $x.value;
 
-multi sub to-rust-ident(Cpp::Identifier $x) returns Rust::Identifier {  
-    say "to-rust-ident for Identifier";
-    ddt $x;
-    "dummyident"
+    if $snake-case {
+        $value = snake-case($value);
+    }
+
+    Rust::Identifier.new(
+        value => $value
+    )
 }
 
-multi sub to-rust-ident($x) {  
+multi sub to-rust-ident($x, Bool :$snake-case) {  
     ddt $x;
-    die "need to write method for type: " ~ $x.WHAT;
+    die "need to write method for type: " ~ $x.WHAT.^name;
 }

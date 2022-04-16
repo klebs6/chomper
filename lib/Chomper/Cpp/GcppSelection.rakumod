@@ -6,79 +6,86 @@ use Chomper::Cpp::GcppRoles;
 
 use Chomper::TreeMark;
 
-# rule selection-statement:sym<if> { 
-#   <.if_> 
-#   <.left-paren> 
-#   <condition> 
-#   <.right-paren> 
-#   <statement> 
-#   [ <comment>? <else_> <statement> ]? 
-# }
-class SelectionStatement::If 
-does IAttributedStatementBody 
-does ISelectionStatement is export {
-    has ICondition  $.condition is required;
-    has IStatement  @.statements is required;
-    has IComment    $.else-statement-comment;
-    has IStatement  @.else-statements;
+package SelectionStatement is export {
 
-    has $.text;
+    # rule selection-statement:sym<if> { 
+    #   <.if_> 
+    #   <.left-paren> 
+    #   <condition> 
+    #   <.right-paren> 
+    #   <statement> 
+    #   [ <comment>? <else_> <statement> ]? 
+    # }
+    our class If 
+    does IAttributedStatementBody 
+    does ISelectionStatement is export {
 
-    method gist(:$treemark=False) {
+        has ICondition  $.condition is required;
+        has IStatement  @.statements is required;
+        has IComment    $.else-statement-comment;
+        has IStatement  @.else-statements;
 
-        my $builder = "if (";
+        has $.text;
 
-        if $treemark {
-            $builder ~= sigil(TreeMark::<_Condition>);
+        method gist(:$treemark=False) {
 
-        } else {
-            $builder ~= $.condition.gist(:$treemark);
-        }
+            my $builder = "if (";
 
-        $builder ~= ") ";
-
-        if $treemark {
-
-            $builder ~= sigil(TreeMark::<_Statements>);
-
-        } else {
-            for @.statements {
-                $builder ~= $_.gist(:$treemark).indent(4) ~ "\n";
-            }
-        }
-
-        if $.else-statement-comment and not $treemark {
-            $builder ~= "\n" ~ $.else-statement-comment.gist(:$treemark);
-        }
-
-        for @.else-statements {
             if $treemark {
-                $builder ~= " else " ~ sigil(TreeMark::<_Statements>) ~ "\n";
+                $builder ~= sigil(TreeMark::<_Condition>);
 
             } else {
-                $builder ~= "else " ~ $_.gist(:$treemark) ~ "\n";
+                $builder ~= $.condition.gist(:$treemark);
             }
+
+            $builder ~= ") ";
+
+            if $treemark {
+
+                $builder ~= sigil(TreeMark::<_Statements>);
+
+            } else {
+                for @.statements {
+                    $builder ~= $_.gist(:$treemark).indent(4) ~ "\n";
+                }
+            }
+
+            if $.else-statement-comment and not $treemark {
+                $builder ~= "\n" ~ $.else-statement-comment.gist(:$treemark);
+            }
+
+            for @.else-statements {
+                if $treemark {
+                    $builder ~= " else " ~ sigil(TreeMark::<_Statements>) ~ "\n";
+
+                } else {
+                    $builder ~= "else " ~ $_.gist(:$treemark) ~ "\n";
+                }
+            }
+
+            $builder
         }
-
-        $builder
     }
-}
 
-# rule selection-statement:sym<switch> { 
-#   <switch> 
-#   <.left-paren> 
-#   <condition> 
-#   <.right-paren> 
-#   <statement> 
-# } #-----------------------------
-class SelectionStatement::Switch does ISelectionStatement is export {
-    has ICondition  $.condition is required;
-    has IStatement $.statement is required;
+    # rule selection-statement:sym<switch> { 
+    #   <switch> 
+    #   <.left-paren> 
+    #   <condition> 
+    #   <.right-paren> 
+    #   <statement> 
+    # } #-----------------------------
+    our class Switch 
+    does ISelectionStatement 
+    is export {
 
-    has $.text;
+        has ICondition  $.condition is required;
+        has IStatement $.statement is required;
 
-    method gist(:$treemark=False) {
-        "switch (" ~ $.condition.gist(:$treemark) ~ ") " ~ $.statement.gist(:$treemark)
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "switch (" ~ $.condition.gist(:$treemark) ~ ") " ~ $.statement.gist(:$treemark)
+        }
     }
 }
 

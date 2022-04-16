@@ -215,13 +215,13 @@ my @rust-uses = [
     "use Chomper::Rust::GrustWhereClause;",
     "use Chomper::Rust::GrustWhitespace;",
     "use Chomper::Rust::GrustXid;",
-    "use Chomper::Rust::IndentRustNamedTypeList;",
-    "use Chomper::Rust::InferRustdoc;",
-    "use Chomper::Rust::RustFfi;",
-    "use Chomper::Rust::RustGrammar;",
-    "use Chomper::Rust::ToRustIdent;",
-    "use Chomper::Rust::ToRustParams;",
-    "use Chomper::Rust::ToRustType;",
+    "use Chomper::IndentRustNamedTypeList;",
+    "use Chomper::InferRustdoc;",
+    "use Chomper::RustFfi;",
+    "use Chomper::RustGrammar;",
+    "use Chomper::ToRustIdent;",
+    "use Chomper::ToRustParams;",
+    "use Chomper::ToRustType;",
 ];
 
 my @translate-uses = [

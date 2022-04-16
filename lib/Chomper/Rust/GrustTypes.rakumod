@@ -114,9 +114,12 @@ package TypeGrammar is export {
         rule type-no-bounds:sym<raw-ptr>        { <raw-pointer-type> }
         rule type-no-bounds:sym<parens>         { <parenthesized-type> }
         rule type-no-bounds:sym<tuple>          { <tuple-type> }
+
+        #this used to be below trait-obj
+        rule type-no-bounds:sym<type-path>      { <type-path> }
         rule type-no-bounds:sym<impl-trait>     { <impl-trait-type-one-bound> }
         rule type-no-bounds:sym<trait-obj>      { <trait-object-type-one-bound> }
-        rule type-no-bounds:sym<type-path>      { <type-path> }
+
         rule type-no-bounds:sym<never>          { <never-type> }
         rule type-no-bounds:sym<ref>            { <reference-type> }
         rule type-no-bounds:sym<arr>            { <array-type> }

@@ -4,21 +4,24 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-class BooleanLiteral::F does IBooleanLiteral is export { 
+package BooleanLiteral is export {
 
-    has $.text;
+    our class F does IBooleanLiteral { 
 
-    method gist(:$treemark=False) {
-        "false"
+        has $.text;
+
+        method gist(:$treemark=False) {
+            "false"
+        }
     }
-}
 
-class BooleanLiteral::T does IBooleanLiteral is export { 
+    our class T does IBooleanLiteral { 
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "true"
+        method gist(:$treemark=False) {
+            "true"
+        }
     }
 }
 
