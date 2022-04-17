@@ -40,6 +40,7 @@ multi sub to-rust-type($x where Cpp::Identifier) {
     my %typemap = %(
         "vector" => "Vec",
         "int"    => "i32",
+        "Tensor" => "Tensor",
     );
 
     Rust::Identifier.new(

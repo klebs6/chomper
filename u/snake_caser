@@ -1,4 +1,4 @@
 #!/usr/bin/env raku
-use Chomper::Core::Util;
-use Chomper::Core::Case;
+use Chomper::Util;
+use Chomper::Case;
 say camel-to-kebab($*IN.slurp.trim);

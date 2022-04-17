@@ -1,9 +1,9 @@
 #!/usr/bin/env raku
 
-use Chomper::Core::SnakeCase;
-use Chomper::Core::ReformatBlockComment;
-use Chomper::Core::DoxyComment;
-use Chomper::Core::LineCommentToBlockComment;
+use Chomper::SnakeCase;
+use Chomper::ReformatBlockComment;
+use Chomper::DoxyComment;
+use Chomper::LineCommentToBlockComment;
 
 #use Grammar::Tracer;
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env raku
-use Chomper::Core::IxBang;
+use Chomper::IxBang;
 
 sub MAIN(Bool :$write) {
 

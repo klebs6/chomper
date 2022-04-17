@@ -1,6 +1,6 @@
 #!/usr/bin/env raku
 
-use Chomper::Core::CleanMacro;
+use Chomper::CleanMacro;
 
 my $macro = $*IN.slurp.chomp;
 

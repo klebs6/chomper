@@ -2,16 +2,16 @@
 
 #use Grammar::Tracer;
 
-use Chomper::Core::Util;
-use Chomper::Core::Comments;
-use Chomper::Core::DoxyComment;
-use Chomper::Core::ReformatBlockComment;
-use Chomper::Core::BlockComment;
-use Chomper::Core::LineCommentToBlockComment;
-use Chomper::Core::Typemap;
-use Chomper::Core::Locations;
+use Chomper::Util;
+use Chomper::Comments;
+use Chomper::DoxyComment;
+use Chomper::ReformatBlockComment;
+use Chomper::BlockComment;
+use Chomper::LineCommentToBlockComment;
+use Chomper::Typemap;
+use Chomper::Locations;
 use Chomper::Translate::Translator;
-use Chomper::Core::SnakeCase;
+use Chomper::SnakeCase;
 
 our sub get-hook($hookname) {
 
@@ -19,52 +19,52 @@ our sub get-hook($hookname) {
     #will return one of these values
     my %dispatch = %(
 
-        default-ctor                          => { use Chomper::Core::Constructor;        &translate-default-ctor },
+        default-ctor                          => { use Chomper::Constructor;        &translate-default-ctor },
         #python-function-header                => { use Chomper::Py3::PythonFunctionHeader; &translate-python-function-header },
-        simple-ifdef                          => { use Chomper::Core::SimpleIfdef;       &translate-simple-ifdef },
-        hashing-function                      => { use Chomper::Core::Hasher;             &translate-hasher },
-        op-add-eq-function-header             => { use Chomper::Core::OpAdd;             &translate-op-add-eq },
-        op-bitor-assign-function-header       => { use Chomper::Core::OpBitor;           &translate-op-bitor-assign },
-        op-bitand-assign-function-header      => { use Chomper::Core::OpBitand;          &translate-op-bitand-assign },
-        op-add-function-header                => { use Chomper::Core::OpAdd;             &translate-op-add },
-        function-declaration                  => { use Chomper::Core::Function;           &translate-function },
-        constructor-definition-header         => { use Chomper::Core::Constructor;        &translate-ctor },
-        op-div-function-header                => { use Chomper::Core::OpDiv;             &translate-op-div },
-        op-div-eq-function-header             => { use Chomper::Core::OpDivEq;          &translate-op-div-eq },
-        op-eq-function-header                 => { use Chomper::Core::OpEq;              &translate-op-eq },
-        op-lt-function-header                 => { use Chomper::Core::OpEq;              &translate-op-lt },
-        op-index-function-header              => { use Chomper::Core::OpIndex;           &translate-op-index },
-        op-xor-function-header                => { use Chomper::Core::OpXor;             &translate-op-xor },
-        op-bitand-function-header             => { use Chomper::Core::OpBitand;          &translate-op-bitand },
-        op-bitor-function-header              => { use Chomper::Core::OpBitor;           &translate-op-bitor },
-        op-mul-function-header                => { use Chomper::Core::OpMul;             &translate-op-mul },
-        op-mul-eq-function-header             => { use Chomper::Core::OpMulEq;          &translate-op-mul-eq },
-        op-negate-function-header             => { use Chomper::Core::OpNegate;          &translate-op-negate },
-        op-sub-function-header                => { use Chomper::Core::OpSub;             &translate-op-sub },
-        op-sub-eq-function-header             => { use Chomper::Core::OpSub;             &translate-op-sub-eq },
-        freestanding-template-function-header => { use Chomper::Core::Template;           &translate-freestanding-template-function },
-        op-ostream-function-header            => { use Chomper::Core::Ostream;            &translate-op-ostream },
-        op-convert-function-header            => { use Chomper::Core::OpConvert;         &translate-op-convert },
-        static-constants                      => { use Chomper::Core::StaticConst;       &translate-static-const },
-        function-local-declarations           => { use Chomper::Core::FunctionLocals;    &translate-function-locals },
-        struct-member-declarations            => { use Chomper::Core::StructMembers;     &translate-struct-member-declarations },
-        enum-member-declarations              => { use Chomper::Core::EnumMembers;       &translate-enum-member-declarations },
-        full-struct                           => { use Chomper::Core::FullStruct;        &translate-full-struct },
-        full-enum                             => { use Chomper::Core::FullEnum;          &translate-full-enum },
-        abstract-function-declarations        => { use Chomper::Core::AbstractFunctions; &translate-abstract-function-declarations },
-        destructor                            => { use Chomper::Core::Destructor;         &translate-destructor },
-        ctor-header                           => { use Chomper::Core::CtorHeader;        &translate-ctor-header },
-        using-declarations                    => { use Chomper::Core::UsingDeclarations; &translate-using-declarations },
-        typedef-fn-ptrs                       => { use Chomper::Core::TypedefFnPtr;     &translate-typedef-fn-ptrs },
-        pound-define                          => { use Chomper::Core::PoundDefine;       &translate-pound-define },
-        constexpr-global-block                => { use Chomper::Core::ConstexprGlobals;  &translate-constexpr-global-block },
-        operator-into-bool                    => { use Chomper::Core::OperatorIntoBool; &translate-operator-into-bool },
-        operator-indirect                     => { use Chomper::Core::OperatorIndirect;  &translate-operator-indirect },
-        operator-not                          => { use Chomper::Core::OperatorNot;       &translate-operator-not },
-        op-shl-function-header                => { use Chomper::Core::OpShift;           &translate-op-shl },
-        op-shl-assign-function-header         => { use Chomper::Core::OpShift;           &translate-op-shl-assign },
-        op-shr-function-header                => { use Chomper::Core::OpShift;           &translate-op-shr },
-        op-shr-assign-function-header         => { use Chomper::Core::OpShift;           &translate-op-shr-assign },
+        simple-ifdef                          => { use Chomper::SimpleIfdef;       &translate-simple-ifdef },
+        hashing-function                      => { use Chomper::Hasher;             &translate-hasher },
+        op-add-eq-function-header             => { use Chomper::OpAdd;             &translate-op-add-eq },
+        op-bitor-assign-function-header       => { use Chomper::OpBitor;           &translate-op-bitor-assign },
+        op-bitand-assign-function-header      => { use Chomper::OpBitand;          &translate-op-bitand-assign },
+        op-add-function-header                => { use Chomper::OpAdd;             &translate-op-add },
+        function-declaration                  => { use Chomper::Function;           &translate-function },
+        constructor-definition-header         => { use Chomper::Constructor;        &translate-ctor },
+        op-div-function-header                => { use Chomper::OpDiv;             &translate-op-div },
+        op-div-eq-function-header             => { use Chomper::OpDivEq;          &translate-op-div-eq },
+        op-eq-function-header                 => { use Chomper::OpEq;              &translate-op-eq },
+        op-lt-function-header                 => { use Chomper::OpEq;              &translate-op-lt },
+        op-index-function-header              => { use Chomper::OpIndex;           &translate-op-index },
+        op-xor-function-header                => { use Chomper::OpXor;             &translate-op-xor },
+        op-bitand-function-header             => { use Chomper::OpBitand;          &translate-op-bitand },
+        op-bitor-function-header              => { use Chomper::OpBitor;           &translate-op-bitor },
+        op-mul-function-header                => { use Chomper::OpMul;             &translate-op-mul },
+        op-mul-eq-function-header             => { use Chomper::OpMulEq;          &translate-op-mul-eq },
+        op-negate-function-header             => { use Chomper::OpNegate;          &translate-op-negate },
+        op-sub-function-header                => { use Chomper::OpSub;             &translate-op-sub },
+        op-sub-eq-function-header             => { use Chomper::OpSub;             &translate-op-sub-eq },
+        freestanding-template-function-header => { use Chomper::Template;           &translate-freestanding-template-function },
+        op-ostream-function-header            => { use Chomper::Ostream;            &translate-op-ostream },
+        op-convert-function-header            => { use Chomper::OpConvert;         &translate-op-convert },
+        static-constants                      => { use Chomper::StaticConst;       &translate-static-const },
+        function-local-declarations           => { use Chomper::FunctionLocals;    &translate-function-locals },
+        struct-member-declarations            => { use Chomper::StructMembers;     &translate-struct-member-declarations },
+        enum-member-declarations              => { use Chomper::EnumMembers;       &translate-enum-member-declarations },
+        full-struct                           => { use Chomper::FullStruct;        &translate-full-struct },
+        full-enum                             => { use Chomper::FullEnum;          &translate-full-enum },
+        abstract-function-declarations        => { use Chomper::AbstractFunctions; &translate-abstract-function-declarations },
+        destructor                            => { use Chomper::Destructor;         &translate-destructor },
+        ctor-header                           => { use Chomper::CtorHeader;        &translate-ctor-header },
+        using-declarations                    => { use Chomper::UsingDeclarations; &translate-using-declarations },
+        typedef-fn-ptrs                       => { use Chomper::TypedefFnPtr;     &translate-typedef-fn-ptrs },
+        pound-define                          => { use Chomper::PoundDefine;       &translate-pound-define },
+        constexpr-global-block                => { use Chomper::ConstexprGlobals;  &translate-constexpr-global-block },
+        operator-into-bool                    => { use Chomper::OperatorIntoBool; &translate-operator-into-bool },
+        operator-indirect                     => { use Chomper::OperatorIndirect;  &translate-operator-indirect },
+        operator-not                          => { use Chomper::OperatorNot;       &translate-operator-not },
+        op-shl-function-header                => { use Chomper::OpShift;           &translate-op-shl },
+        op-shl-assign-function-header         => { use Chomper::OpShift;           &translate-op-shl-assign },
+        op-shr-function-header                => { use Chomper::OpShift;           &translate-op-shr },
+        op-shr-assign-function-header         => { use Chomper::OpShift;           &translate-op-shr-assign },
     );
 
     %dispatch{$hookname}()

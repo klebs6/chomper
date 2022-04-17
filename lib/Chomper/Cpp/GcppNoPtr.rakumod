@@ -114,6 +114,17 @@ does IInitDeclarator does IDeclarator is export {
 
     has $.text;
 
+    method token-types {
+        my $first 
+        = $.no-pointer-declarator-base.WHAT.^name.split("::")[*-1];
+
+        my @tail = do for @.no-pointer-declarator-tail {
+            $_.WHAT.^name.split("::")[*-1]
+        };
+
+        [$first, |@tail]
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = $.no-pointer-declarator-base.gist(:$treemark);

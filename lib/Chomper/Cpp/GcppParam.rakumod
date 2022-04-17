@@ -38,9 +38,9 @@ does INoPointerDeclaratorTail is export {
 
         $builder = $builder.&maybe-extend(:$treemark,$.parameter-declaration-clause);
 
-        $builder ~= ") ";
+        $builder ~= ")";
 
-        $builder = $builder.&maybe-extend(:$treemark,$.cvqualifierseq,          padr => True);
+        $builder = $builder.&maybe-extend(:$treemark,$.cvqualifierseq,          padr => True, padl => True);
         $builder = $builder.&maybe-extend(:$treemark,$.refqualifier,            padr => True);
         $builder = $builder.&maybe-extend(:$treemark,$.exception-specification, padr => True);
         $builder = $builder.&maybe-extend(:$treemark,$.attribute-specifier-seq);

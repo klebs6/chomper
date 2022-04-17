@@ -1,6 +1,6 @@
 #!/usr/bin/env raku
-use Chomper::Core::Time;
-use Chomper::Core::Git;
+use Chomper::Time;
+use Chomper::Git;
 
 sub MAIN {
 

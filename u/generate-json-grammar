@@ -1,5 +1,5 @@
 #!/usr/bin/env raku
-use Chomper::Core::AntlrGrammar;
+use Chomper::AntlrGrammar;
 
 my $translator = %*ENV<WORK> ~ "/repo/translator";
 my $in         = $translator ~ "/u/json.g4";

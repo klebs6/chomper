@@ -1,5 +1,5 @@
 #!/usr/bin/env raku
 
-use Chomper::Core::Case;
+use Chomper::Case;
 
 say screaming-snake-case-to-camel-case($*IN.slurp);

@@ -1,6 +1,6 @@
 #!/usr/bin/env raku
 
-use Chomper::Core::GlobalSubparse;
+use Chomper::GlobalSubparse;
 
 grammar KebabSnake does GlobalSubparse {
     token TOP {

@@ -11,6 +11,12 @@ multi sub to-rust-param($x where Cpp::IntegerLiteral::Dec) {
     )
 }
 
+multi sub to-rust-param($x where Cpp::ParameterDeclaration) {  
+    Rust::IntegerLiteral.new(
+        value => $x.decimal-literal.value,
+    )
+}
+
 multi sub to-rust-param($x) {  
     ddt $x;
     die "need to write method for type: " ~ $x.WHAT;
@@ -25,7 +31,13 @@ multi sub to-rust-params($x where Cpp::Initializer::ParenExprList) {
     }.join(", ")
 }
 
+multi sub to-rust-params($x where Cpp::ParametersAndQualifiers) {  
+    do for $x.parameter-declaration-clause.parameter-declaration-list {
+        to-rust-param($_).gist
+    }.join(", ")
+}
+
 multi sub to-rust-params($x) {  
     ddt $x;
-    die "need to write method for type: " ~ $x.WHAT;
+    die "need to write method for type: " ~ $x.WHAT.^name;
 }

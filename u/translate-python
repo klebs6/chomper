@@ -4,8 +4,8 @@ use Chomper::Py3::Python3Class;
 use Chomper::Py3::PythonToRustActions;
 
 use Data::Dump::Tree;
-use Chomper::Core::Formatting;
-use Chomper::Core::DoxyComment;
+use Chomper::Formatting;
+use Chomper::DoxyComment;
 use Data::Dump;
 use JSON::Class;
 

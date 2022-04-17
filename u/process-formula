@@ -1,5 +1,5 @@
 #!/usr/bin/env raku
-use Chomper::Core::Formula;
+use Chomper::Formula;
 
 sub MAIN {
     my $in = $*IN.slurp;
