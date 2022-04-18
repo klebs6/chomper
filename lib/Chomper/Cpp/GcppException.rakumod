@@ -17,6 +17,10 @@ our class DynamicExceptionSpecification is export {
 
     has $.text;
 
+    method name {
+        'DynamicExceptionSpecification'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = "throw(";
@@ -40,6 +44,10 @@ our class BasicExceptionDeclaration does IExceptionDeclaration is export {
     has ISomeDeclarator        $.some-declarator;
 
     has $.text;
+
+    method name {
+        'BasicExceptionDeclaration'
+    }
 
     method gist(:$treemark=False) {
 
@@ -72,6 +80,10 @@ package ExceptionDeclaration is export {
 
         has $.text;
 
+        method name {
+            'ExceptionDeclaration::Ellipsis'
+        }
+
         method gist(:$treemark=False) {
             "..."
         }
@@ -86,6 +98,10 @@ our class ThrowExpression does IAssignmentExpression is export {
     has IAssignmentExpression $.assignment-expression;
 
     has $.text;
+
+    method name {
+        'ThrowExpression'
+    }
 
     method gist(:$treemark=False) {
 
@@ -109,21 +125,29 @@ package ExceptionSpecification is export {
 
         has $.text;
 
+        method name {
+            'ExceptionSpecification'
+        }
+
         method gist(:$treemark=False) {
             $.dynamic-exception-specification.gist(:$treemark)
         }
     }
 
     # token exception-specification:sym<noexcept> { 
-    #   <noe-except-specification> 
+    #   <no-except-specification> 
     # }
     our class Noexcept does IExceptionSpecification {
-        has INoeExceptSpecification $.noe-except-specification is required;
+        has INoExceptSpecification $.no-except-specification is required;
 
         has $.text;
 
+        method name {
+            'Noexcept'
+        }
+
         method gist(:$treemark=False) {
-            $.noe-except-specification.gist(:$treemark)
+            $.no-except-specification.gist(:$treemark)
         }
     }
 }
@@ -160,9 +184,9 @@ package ExceptionGrammar is export {
             make $<dynamic-exception-specification>.made
         }
 
-        # token exception-specification:sym<noexcept> { <noe-except-specification> } 
+        # token exception-specification:sym<noexcept> { <no-except-specification> } 
         method exception-specification:sym<noexcept>($/) {
-            make $<noe-except-specification>.made
+            make $<no-except-specification>.made
         }
 
         # rule dynamic-exception-specification { <throw> <.left-paren> <type-id-list>? <.right-paren> }
@@ -194,7 +218,7 @@ package ExceptionGrammar is export {
 
         proto token exception-specification { * }
         token exception-specification:sym<dynamic>  { <dynamic-exception-specification> }
-        token exception-specification:sym<noexcept> { <noe-except-specification> }
+        token exception-specification:sym<noexcept> { <no-except-specification> }
 
         rule dynamic-exception-specification {
             <throw> <left-paren> <type-id-list>?  <right-paren>

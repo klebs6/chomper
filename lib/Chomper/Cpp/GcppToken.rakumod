@@ -10,6 +10,10 @@ package Not is export {
 
         has $.text;
 
+        method name {
+            'Not::Bang'
+        }
+
         method gist(:$treemark=False) { 
             "!"
         }
@@ -18,6 +22,10 @@ package Not is export {
     our class Not does INot { 
 
         has $.text;
+
+        method name {
+            'Not::Not'
+        }
 
         method gist(:$treemark=False) { 
             "!"
@@ -31,6 +39,10 @@ package AndAnd is export {
 
         has $.text;
 
+        method name {
+            'AndAnd::AndAnd'
+        }
+
         method gist(:$treemark=False) {
             "&&"
         }
@@ -39,6 +51,10 @@ package AndAnd is export {
     our class And does IAndAnd { 
 
         has $.text;
+
+        method name {
+            'AndAnd::And'
+        }
 
         method gist(:$treemark=False) {
             "&"
@@ -52,6 +68,10 @@ package OrOr is export {
 
         has $.text;
 
+        method name {
+            'OrOr::PipePipe'
+        }
+
         method gist(:$treemark=False) {
             "||"
         }
@@ -60,6 +80,10 @@ package OrOr is export {
     our class Or does IOrOr { 
 
         has $.text;
+
+        method name {
+            'OrOr::Or'
+        }
 
         method gist(:$treemark=False) {
             "|"

@@ -16,6 +16,10 @@ package UnaryExpression is export {
 
         has $.text;
 
+        method name {
+            'UnaryExpression::New'
+        }
+
         method gist(:$treemark=False) {
             $.new-expression.gist(:$treemark)
         }
@@ -26,6 +30,10 @@ package UnaryExpression is export {
         has IUnaryExpressionCase $.case is required;
 
         has $.text;
+
+        method name {
+            'UnaryExpression::Case'
+        }
 
         method gist(:$treemark=False) {
             $.case.gist(:$treemark)
@@ -44,6 +52,10 @@ package UnaryExpressionCase is export {
 
         has $.text;
 
+        method name {
+            'UnaryExpressionCase::Postfix'
+        }
+
         method gist(:$treemark=False) {
             $.postfix-expression.gist(:$treemark)
         }
@@ -59,6 +71,10 @@ package UnaryExpressionCase is export {
 
         has $.text;
 
+        method name {
+            'UnaryExpressionCase::PlusPlus'
+        }
+
         method gist(:$treemark=False) {
             "++" ~ $.unary-expression.gist(:$treemark)
         }
@@ -72,6 +88,10 @@ package UnaryExpressionCase is export {
 
         has IUnaryExpression $.unary-expression is required;
         has $.text;
+
+        method name {
+            'UnaryExpressionCase::MinusMinus'
+        }
 
         method gist(:$treemark=False) {
             "--" ~ $.unary-expression.gist(:$treemark)
@@ -91,6 +111,10 @@ package UnaryExpressionCase is export {
 
         has $.text;
 
+        method name {
+            'UnaryExpressionCase::UnaryOp'
+        }
+
         method gist(:$treemark=False) {
             $.unary-operator.gist(:$treemark) ~ " " ~ $.unary-expression.gist(:$treemark)
         }
@@ -106,6 +130,10 @@ package UnaryExpressionCase is export {
         has IUnaryExpression $.unary-expression is required;
         has $.text;
 
+        method name {
+            'UnaryExpressionCase::Sizeof'
+        }
+
         method gist(:$treemark=False) {
             "sizeof " ~ $.unary-expression.gist(:$treemark)
         }
@@ -117,11 +145,15 @@ package UnaryExpressionCase is export {
     #   <the-type-id> 
     #   <.right-paren> 
     # }
-    our class SizeofTypeid 
+    our class SizeofTypeId 
     does IUnaryExpressionCase {
 
         has ITheTypeId $.the-type-id is required;
         has $.text;
+
+        method name {
+            'UnaryExpressionCase::SizeofTypeId'
+        }
 
         method gist(:$treemark=False) {
             "sizeof(" ~ $.the-type-id.gist(:$treemark) ~ ")"
@@ -141,6 +173,10 @@ package UnaryExpressionCase is export {
         has Identifier $.identifier is required;
         has $.text;
 
+        method name {
+            'UnaryExpressionCase::SizeofIds'
+        }
+
         method gist(:$treemark=False) {
             "sizeof ... (" ~ $.identifier.gist(:$treemark) ~ ")"
         }
@@ -158,6 +194,10 @@ package UnaryExpressionCase is export {
         has ITheTypeId $.the-type-id is required;
         has $.text;
 
+        method name {
+            'UnaryExpressionCase::Alignof'
+        }
+
         method gist(:$treemark=False) {
             "alignof(" ~ $.the-type-id.gist(:$treemark) ~ ")"
         }
@@ -172,6 +212,10 @@ package UnaryExpressionCase is export {
         has NoExceptExpression $.no-except-expression is required;
         has $.text;
 
+        method name {
+            'UnaryExpressionCase::Noexcept'
+        }
+
         method gist(:$treemark=False) {
             $.no-except-expression.gist(:$treemark)
         }
@@ -185,6 +229,10 @@ package UnaryExpressionCase is export {
 
         has DeleteExpression $.delete-expression is required;
         has $.text;
+
+        method name {
+            'UnaryExpressionCase::Delete'
+        }
 
         method gist(:$treemark=False) {
             $.delete-expression.gist(:$treemark)
@@ -201,6 +249,10 @@ package UnaryOperator is export {
 
         has $.text;
 
+        method name {
+            'UnaryOperator::Or'
+        }
+
         method gist(:$treemark=False) {
             '|'
         }
@@ -210,6 +262,10 @@ package UnaryOperator is export {
     our class Star does IUnaryOperator { 
 
         has $.text;
+
+        method name {
+            'UnaryOperator::Star'
+        }
 
         method gist(:$treemark=False) {
             '*'
@@ -221,6 +277,10 @@ package UnaryOperator is export {
 
         has $.text;
 
+        method name {
+            'UnaryOperator::And'
+        }
+
         method gist(:$treemark=False) {
             '&'
         }
@@ -231,6 +291,10 @@ package UnaryOperator is export {
 
         has $.text;
 
+        method name {
+            'UnaryOperator::Plus'
+        }
+
         method gist(:$treemark=False) {
             '+'
         }
@@ -240,6 +304,10 @@ package UnaryOperator is export {
     our class Tilde does IUnaryOperator { 
 
         has $.text;
+
+        method name {
+            'UnaryOperator::Tilde'
+        }
 
         method gist(:$treemark=False) {
             '~'
@@ -253,6 +321,10 @@ package UnaryOperator is export {
 
         has $.text;
 
+        method name {
+            'UnaryOperator::Minus'
+        }
+
         method gist(:$treemark=False) {
             '-'
         }
@@ -264,6 +336,10 @@ package UnaryOperator is export {
     our class Not does IUnaryOperator { 
 
         has $.text;
+
+        method name {
+            'UnaryOperator::Not'
+        }
 
         method gist(:$treemark=False) {
             '!'

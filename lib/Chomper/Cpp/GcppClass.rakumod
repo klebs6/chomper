@@ -17,6 +17,10 @@ class ClassVirtSpecifier is export {
 
     has $.text;
 
+    method name {
+        'ClassVirtSpecifier'
+    }
+
     method gist(:$treemark=False) {
         "final"
     }
@@ -31,6 +35,10 @@ class ClassHeadName is export {
     has IClassName           $.class-name is required;
 
     has $.text;
+
+    method name {
+        'ClassHeadName'
+    }
 
     method gist(:$treemark=False) {
 
@@ -51,6 +59,10 @@ package ClassName is export {
         has Identifier $.identifier is required;
         has $.text;
 
+        method name {
+            'ClassName::Id'
+        }
+
         method gist(:$treemark=False) {
             $.identifier.gist(:$treemark)
         }
@@ -60,6 +72,10 @@ package ClassName is export {
     our class TemplateId does IClassName {
         has SimpleTemplateId $.simple-template-id is required;
         has $.text;
+
+        method name {
+            'ClassName::TemplateId'
+        }
 
         method gist(:$treemark=False) {
             $.simple-template-id.gist(:$treemark)
@@ -77,6 +93,10 @@ class ClassSpecifier is export {
     has IClassHead $.class-head is required;
     has MemberSpecification $.member-specification;
     has $.text;
+
+    method name {
+        'ClassSpecifier'
+    }
 
     method gist(:$treemark=False) {
 
@@ -107,6 +127,10 @@ package ClassHead is export {
         has BaseClause             $.base-clause;
 
         has $.text;
+
+        method name {
+            'ClassHead::Class'
+        }
 
         method gist(:$treemark=False) {
 
@@ -145,6 +169,10 @@ package ClassHead is export {
 
         has $.text;
 
+        method name {
+            'ClassHead::Union'
+        }
+
         method gist(:$treemark=False) {
 
             my $builder = "union ";
@@ -177,6 +205,10 @@ package ClassKey is export {
 
         has $.text;
 
+        method name {
+            'ClassKey::Class'
+        }
+
         method gist(:$treemark=False) {
             "class"
         }
@@ -188,6 +220,10 @@ package ClassKey is export {
     our class Struct_ does IClassKey { 
 
         has $.text;
+
+        method name {
+            'ClassKey::Struct'
+        }
 
         method gist(:$treemark=False) {
             "struct"

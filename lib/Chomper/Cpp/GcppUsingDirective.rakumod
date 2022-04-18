@@ -5,33 +5,44 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppAttr;
 
-# rule using-declaration-prefix:sym<nested> { 
-#   [ <typename_>? <nested-name-specifier> ] 
-# }
-class UsingDeclarationPrefix::Nested does IUsingDeclarationPrefix is export {
-    has Bool $.has-typename is required;
-    has INestedNameSpecifier $.nested-name-specifier is required;
+package UsingDeclarationPrefix is export {
 
-    has $.text;
+    # rule using-declaration-prefix:sym<nested> { 
+    #   [ <typename_>? <nested-name-specifier> ] 
+    # }
+    class Nested does IUsingDeclarationPrefix {
+        has Bool $.has-typename is required;
+        has INestedNameSpecifier $.nested-name-specifier is required;
 
-    method gist(:$treemark=False) {
-        if $.has-typename {
-            $.nested-name-specifier.gist(:$treemark)
-        } else {
-            "typename " ~ $.nested-name-specifier.gist(:$treemark)
+        has $.text;
+
+        method name {
+            'UsingDeclarationPrefix::Nested'
+        }
+
+        method gist(:$treemark=False) {
+            if $.has-typename {
+                $.nested-name-specifier.gist(:$treemark)
+            } else {
+                "typename " ~ $.nested-name-specifier.gist(:$treemark)
+            }
         }
     }
-}
 
-# rule using-declaration-prefix:sym<base> { 
-#   <doublecolon> 
-# }
-class UsingDeclarationPrefix::Base does IUsingDeclarationPrefix is export {
+    # rule using-declaration-prefix:sym<base> { 
+    #   <doublecolon> 
+    # }
+    class Base does IUsingDeclarationPrefix {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "::"
+        method name {
+            'UsingDeclarationPrefix::Base'
+        }
+
+        method gist(:$treemark=False) {
+            "::"
+        }
     }
 }
 
@@ -47,6 +58,10 @@ class UsingDeclaration is export {
     has IUnqualifiedId          $.unqualified-id is required;
 
     has $.text;
+
+    method name {
+        'UsingDeclaration'
+    }
 
     method gist(:$treemark=False) {
 
@@ -80,6 +95,10 @@ class UsingDirective is export {
     has INamespaceName          $.namespace-name is required;
 
     has $.text;
+
+    method name {
+        'UsingDirective'
+    }
 
     method gist(:$treemark=False) {
 

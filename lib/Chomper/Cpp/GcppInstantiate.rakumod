@@ -15,6 +15,10 @@ class ExplicitInstantiation is export {
 
     has $.text;
 
+    method name {
+        'ExplicitInstantiation'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = "";

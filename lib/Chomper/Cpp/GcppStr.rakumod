@@ -11,6 +11,10 @@ class StringLiteral does ILiteral is export {
 
     has $.text;
 
+    method name {
+        'StringLiteral'
+    }
+
     method gist(:$treemark=False) {
         if $treemark {
             sigil(TreeMark::<_Literal>)
@@ -20,10 +24,14 @@ class StringLiteral does ILiteral is export {
     }
 }
 
-class Rawstring is export { 
+class RawString is export { 
     has Str $.value is required;
 
     has $.text;
+
+    method name {
+        'RawString'
+    }
 
     method gist(:$treemark=False) {
         $.value
@@ -56,7 +64,7 @@ package StringLiteralGrammar is export {
 
         # token rawstring { || 'R"' [ || [ || '\\' <[ " ( ) ]> ] || <-[ \r \n ( ]> ] '(' <-[ ) ]>*? ')' [ || [ || '\\' <[ " ( ) ]> ] || <-[ \r \n " ]> ] '"' }
         method rawstring($/) {
-            make Rawstring.new(
+            make RawString.new(
                 value => ~$/,
             )
         }

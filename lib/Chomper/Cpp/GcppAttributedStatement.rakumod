@@ -19,6 +19,10 @@ class AttributedStatement does IStatement is export {
 
     has $.text;
 
+    method name {
+        'AttributedStatement'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = "";
@@ -48,6 +52,10 @@ package AttributedStatementBody is export {
 
         has $.text;
 
+        method name {
+            'AttributedStatementBody::Expression'
+        }
+
         method gist(:$treemark=False) {
             $.expression-statement.gist(:$treemark)
         }
@@ -61,6 +69,10 @@ package AttributedStatementBody is export {
         has CompoundStatement $.compound-statement is required;
 
         has $.text;
+
+        method name {
+            'AttributedStatementBody::Compound'
+        }
 
         method gist(:$treemark=False) {
             $.compound-statement.gist(:$treemark)
@@ -76,6 +88,10 @@ package AttributedStatementBody is export {
 
         has $.text;
 
+        method name {
+            'AttributedStatementBody::Selection'
+        }
+
         method gist(:$treemark=False) {
             $.selection-statement.gist(:$treemark)
         }
@@ -89,6 +105,10 @@ package AttributedStatementBody is export {
         has IIterationStatement $.iteration-statement is required;
 
         has $.text;
+
+        method name {
+            'AttributedStatementBody::Iteration'
+        }
 
         method gist(:$treemark=False) {
             $.iteration-statement.gist(:$treemark)
@@ -104,6 +124,10 @@ package AttributedStatementBody is export {
 
         has $.text;
 
+        method name {
+            'AttributedStatementBody::Jump'
+        }
+
         method gist(:$treemark=False) {
             $.jump-statement.gist(:$treemark)
         }
@@ -117,6 +141,10 @@ package AttributedStatementBody is export {
         has TryBlock $.try-block is required;
 
         has $.text;
+
+        method name {
+            'AttributedStatementBody::Try'
+        }
 
         method gist(:$treemark=False) {
             $.try-block.gist(:$treemark)

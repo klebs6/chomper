@@ -10,6 +10,10 @@ class BlockComment does IComment is export {
 
     has $.text;
 
+    method name {
+        'BlockComment'
+    }
+
     method gist(:$treemark=False) {
         $.value
     }
@@ -20,6 +24,10 @@ class LineComment does IComment is export {
     has Str $.value is required;
 
     has $.text;
+
+    method name {
+        'LineComment'
+    }
 
     method gist(:$treemark=False) {
         $.value
@@ -33,6 +41,10 @@ class Comment::Line does IComment is export {
     has LineComment @.line-comments is required;
 
     has $.text;
+
+    method name {
+        'Comment::Line'
+    }
 
     method gist(:$treemark=False) {
         @.line-comments>>.gist(:$treemark).join("\n")

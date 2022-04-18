@@ -15,6 +15,10 @@ package TheOperator is export {
         has Bool $.has-brackets is required;
         has $.text;
 
+        method name {
+            'TheOperator::New'
+        }
+
         method gist(:$treemark=False) {
             if $.has-brackets {
                 "new[]"
@@ -34,6 +38,10 @@ package TheOperator is export {
 
         has $.text;
 
+        method name {
+            'TheOperator::Delete'
+        }
+
         method gist(:$treemark=False) {
             if $.has-brackets {
                 "delete[]" 
@@ -47,6 +55,10 @@ package TheOperator is export {
     our class Plus does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::Plus'
+        }
+
         method gist(:$treemark=False) {
             "+"
         }
@@ -55,6 +67,10 @@ package TheOperator is export {
     # token the-operator:sym<minus> { <minus> }
     our class Minus does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::Minus'
+        }
 
         method gist(:$treemark=False) {
             "-"
@@ -65,6 +81,10 @@ package TheOperator is export {
     our class Star does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::Star'
+        }
+
         method gist(:$treemark=False) {
             "*"
         }
@@ -73,6 +93,10 @@ package TheOperator is export {
     # token the-operator:sym<div_> { <div_> }
     our class Div does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::Div'
+        }
 
         method gist(:$treemark=False) {
             "/"
@@ -83,6 +107,10 @@ package TheOperator is export {
     our class Mod does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::Mod'
+        }
+
         method gist(:$treemark=False) {
             "%"
         }
@@ -91,6 +119,10 @@ package TheOperator is export {
     # token the-operator:sym<caret> { <caret> }
     our class Caret does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::Caret'
+        }
 
         method gist(:$treemark=False) {
             "^"
@@ -101,6 +133,10 @@ package TheOperator is export {
     our class And does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::And'
+        }
+
         method gist(:$treemark=False) {
             "&"
         }
@@ -109,6 +145,10 @@ package TheOperator is export {
     # token the-operator:sym<or_> { <or_> }
     our class Or does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::Or'
+        }
 
         method gist(:$treemark=False) {
             "|"
@@ -119,6 +159,10 @@ package TheOperator is export {
     our class Tilde does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::Tilde'
+        }
+
         method gist(:$treemark=False) {
             "~"
         }
@@ -127,6 +171,10 @@ package TheOperator is export {
     # token the-operator:sym<not> { <not_> }
     our class Not does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::Not'
+        }
 
         method gist(:$treemark=False) {
             "!"
@@ -137,6 +185,10 @@ package TheOperator is export {
     our class Assign does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::Assign'
+        }
+
         method gist(:$treemark=False) {
             "="
         }
@@ -145,6 +197,10 @@ package TheOperator is export {
     # token the-operator:sym<greater> { <greater> }
     our class Greater does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::Greater'
+        }
 
         method gist(:$treemark=False) {
             ">"
@@ -155,6 +211,10 @@ package TheOperator is export {
     our class Less does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::Less'
+        }
+
         method gist(:$treemark=False) {
             "<"
         }
@@ -163,6 +223,10 @@ package TheOperator is export {
     # token the-operator:sym<greater-equal> { <greater-equal> }
     our class GreaterEqual does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::GreaterEqual'
+        }
 
         method gist(:$treemark=False) {
             ">="
@@ -173,6 +237,10 @@ package TheOperator is export {
     our class PlusAssign does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::PlusEqual'
+        }
+
         method gist(:$treemark=False) {
             "+="
         }
@@ -181,6 +249,10 @@ package TheOperator is export {
     # token the-operator:sym<minus-assign> { <minus-assign> }
     our class MinusAssign does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::MinusAssign'
+        }
 
         method gist(:$treemark=False) {
             "-="
@@ -191,6 +263,10 @@ package TheOperator is export {
     our class StarAssign does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::StarAssign'
+        }
+
         method gist(:$treemark=False) {
             "*="
         }
@@ -199,6 +275,10 @@ package TheOperator is export {
     # token the-operator:sym<mod-assign> { <mod-assign> }
     our class ModAssign does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::ModAssign'
+        }
 
         method gist(:$treemark=False) {
             "%="
@@ -209,6 +289,10 @@ package TheOperator is export {
     our class XorAssign does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::XorAssign'
+        }
+
         method gist(:$treemark=False) {
             "^="
         }
@@ -217,6 +301,10 @@ package TheOperator is export {
     # token the-operator:sym<and-assign> { <and-assign> }
     our class AndAssign does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::AndAssign'
+        }
 
         method gist(:$treemark=False) {
             "&="
@@ -227,6 +315,10 @@ package TheOperator is export {
     our class OrAssign does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::OrAssign'
+        }
+
         method gist(:$treemark=False) {
             "|="
         }
@@ -235,6 +327,10 @@ package TheOperator is export {
     # token the-operator:sym<LessLess> { <less> <less> }
     our class LessLess does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::LessLess'
+        }
 
         method gist(:$treemark=False) {
             "<<"
@@ -245,6 +341,10 @@ package TheOperator is export {
     our class GreaterGreater does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::GreaterGreater'
+        }
+
         method gist(:$treemark=False) {
             ">>"
         }
@@ -253,6 +353,10 @@ package TheOperator is export {
     # token the-operator:sym<right-shift-assign> { <right-shift-assign> }
     our class RightShiftAssign does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::RightShiftAssign'
+        }
 
         method gist(:$treemark=False) {
             ">>="
@@ -263,6 +367,10 @@ package TheOperator is export {
     our class LeftShiftAssign does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::LeftShiftAssign'
+        }
+
         method gist(:$treemark=False) {
             "<<="
         }
@@ -271,6 +379,10 @@ package TheOperator is export {
     # token the-operator:sym<equal> { <equal> }
     our class Equal does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::Equal'
+        }
 
         method gist(:$treemark=False) {
             "=="
@@ -281,6 +393,10 @@ package TheOperator is export {
     our class NotEqual does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::NotEqual'
+        }
+
         method gist(:$treemark=False) {
             "!="
         }
@@ -289,6 +405,10 @@ package TheOperator is export {
     # token the-operator:sym<less-equal> { <less-equal> }
     our class LessEqual does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::LessEqual'
+        }
 
         method gist(:$treemark=False) {
             "<="
@@ -299,6 +419,10 @@ package TheOperator is export {
     our class AndAnd does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::AndAnd'
+        }
+
         method gist(:$treemark=False) {
             "&&"
         }
@@ -307,6 +431,10 @@ package TheOperator is export {
     # token the-operator:sym<or-or> { <or-or> }
     our class OrOr does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::OrOr'
+        }
 
         method gist(:$treemark=False) {
             "||"
@@ -317,6 +445,10 @@ package TheOperator is export {
     our class PlusPlus does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::PlusPlus'
+        }
+
         method gist(:$treemark=False) {
             "++"
         }
@@ -325,6 +457,10 @@ package TheOperator is export {
     # token the-operator:sym<minus-minus> { <minus-minus> }
     our class MinusMinus does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::MinusMinus'
+        }
 
         method gist(:$treemark=False) {
             "--"
@@ -335,6 +471,10 @@ package TheOperator is export {
     our class Comma does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::Comma'
+        }
+
         method gist(:$treemark=False) {
             ","
         }
@@ -343,6 +483,10 @@ package TheOperator is export {
     # token the-operator:sym<arrow-star> { <arrow-star> }
     our class ArrowStar does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::ArrowStar'
+        }
 
         method gist(:$treemark=False) {
             "->*"
@@ -353,6 +497,10 @@ package TheOperator is export {
     our class Arrow does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::Arrow'
+        }
+
         method gist(:$treemark=False) {
             "->"
         }
@@ -362,6 +510,10 @@ package TheOperator is export {
     our class Parens does ITheOperator { 
         has $.text;
 
+        method name {
+            'TheOperator::Parens'
+        }
+
         method gist(:$treemark=False) {
             "()"
         }
@@ -370,6 +522,10 @@ package TheOperator is export {
     # token the-operator:sym<Brak> { <.left-bracket> <.right-bracket> }
     our class Brak does ITheOperator { 
         has $.text;
+
+        method name {
+            'TheOperator::Brak'
+        }
 
         method gist(:$treemark=False) {
             "[]"

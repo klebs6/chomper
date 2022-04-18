@@ -9,6 +9,10 @@ class MultiLineMacro is export {
 
     has $.text;
 
+    method name {
+        'MultiLineMacro'
+    }
+
     method gist(:$treemark=False) {
         $.content
     }
@@ -18,6 +22,10 @@ class Directive is export {
     has Str $.content is required;
 
     has $.text;
+
+    method name {
+        'Directive'
+    }
 
     method gist(:$treemark=False) {
         $.content

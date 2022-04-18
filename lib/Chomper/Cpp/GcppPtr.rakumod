@@ -9,6 +9,10 @@ class PointerLiteral does ILiteral is export {
 
     has $.text;
 
+    method name {
+        'PointerLiteral'
+    }
+
     method gist(:$treemark=False) {
         "nullptr"
     }

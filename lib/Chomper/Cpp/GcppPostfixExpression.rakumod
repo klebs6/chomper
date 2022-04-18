@@ -28,6 +28,10 @@ does IPostfixExpressionBody is export {
 
     has $.text;
 
+    method name {
+        'PostfixExpressionCast'
+    }
+
     method gist(:$treemark=False) {
         $.cast-token.gist(:$treemark) 
         ~ "<" ~ $.the-type-id.gist(:$treemark) ~ ">" 
@@ -35,7 +39,7 @@ does IPostfixExpressionBody is export {
     }
 }
 
-package PostfixExpressionTypeid is export {
+package PostfixExpressionTypeId is export {
 
     # rule postfix-expression-typeid { 
     # <type-id-of-the-type-id> 
@@ -48,6 +52,10 @@ package PostfixExpressionTypeid is export {
         has IExpression       $.expression             is required;
 
         has $.text;
+
+        method name {
+            'PostfixExpressionTypeId::Expr'
+        }
 
         method gist(:$treemark=False) {
 
@@ -66,6 +74,10 @@ package PostfixExpressionTypeid is export {
         has ITheTypeId        $.the-type-id            is required;
 
         has $.text;
+
+        method name {
+            'PostfixExpressionTypeId::TypeId'
+        }
 
         method gist(:$treemark=False) {
             my $builder = $.type-id-of-the-type-id.gist(:$treemark);
@@ -87,6 +99,10 @@ package PostListHead is export {
 
         has $.text;
 
+        method name {
+            'PostListHead::Simple'
+        }
+
         method gist(:$treemark=False) {
             $.simple-type-specifier.gist(:$treemark)
         }
@@ -97,6 +113,10 @@ package PostListHead is export {
         has ITypeNameSpecifier $.type-name-specifier is required;
 
         has $.text;
+
+        method name {
+            'PostListHead::TypeName'
+        }
 
         method gist(:$treemark=False) {
             $.type-name-specifier.gist(:$treemark)
@@ -110,6 +130,10 @@ package PostListTail is export {
         has $.value is required;
         has $.text;
 
+        method name {
+            'PostListTail::Parens'
+        }
+
         method gist(:$treemark=False) {
             if $.value {
                 "(" ~ $.value.gist(:$treemark) ~ ")"
@@ -122,6 +146,10 @@ package PostListTail is export {
     our class Braces does IPostListTail {
         has $.value is required;
         has $.text;
+
+        method name {
+            'PostListTail::Braces'
+        }
 
         method gist(:$treemark=False) {
             "\{" ~ $.value.gist(:$treemark) ~ "}"
@@ -141,6 +169,10 @@ does IPostfixExpressionBody is export {
     has IPostListHead $.post-list-head is required;
     has IPostListTail $.post-list-tail is required;
     has $.text;
+
+    method name {
+        'PostfixExpressionList'
+    }
 
     method token-types {
         [
@@ -167,6 +199,10 @@ does IUnaryExpression is export {
     has @.postfix-expression-tail;
 
     has $.text;
+
+    method name {
+        'PostfixExpression'
+    }
 
     method gist(:$treemark=False) {
 
@@ -196,6 +232,10 @@ package BracketTail is export {
 
         has $.text;
 
+        method name {
+            'BracketTail::Expression'
+        }
+
         method gist(:$treemark=False) {
             "[" ~ $.expression.gist(:$treemark) ~ "]"
         }
@@ -208,6 +248,10 @@ package BracketTail is export {
         has IBracketTail $.bracket-tail is required;
 
         has $.text;
+
+        method name {
+            'BracketTail::BracedInitList'
+        }
 
         method gist(:$treemark=False) {
             $.bracket-tail.gist(:$treemark)
@@ -226,6 +270,10 @@ package PostfixExpressionTail is export {
 
         has $.text;
 
+        method name {
+            'PostfixExpressionTail::Bracket'
+        }
+
         method gist(:$treemark=False) {
             $.bracket-tail.gist(:$treemark)
         }
@@ -241,6 +289,10 @@ package PostfixExpressionTail is export {
         has ExpressionList $.expression-list;
 
         has $.text;
+
+        method name {
+            'PostfixExpressionTail::Parens'
+        }
 
         method gist(:$treemark=False) {
             my $builder = "(";
@@ -261,6 +313,10 @@ package PostfixExpressionTail is export {
         has IIdExpression $.id-expression is required;
 
         has $.text;
+
+        method name {
+            'PostfixExpressionTail::IndirectionId'
+        }
 
         method gist(:$treemark=False) {
 
@@ -291,6 +347,10 @@ package PostfixExpressionTail is export {
 
         has $.text;
 
+        method name {
+            'PostfixExpressionTail::IndirectionPseudoDtor'
+        }
+
         method gist(:$treemark=False) {
 
             my $builder = "";
@@ -312,6 +372,10 @@ package PostfixExpressionTail is export {
 
         has $.text;
 
+        method name {
+            'PostfixExpressionTail::PlusPlus'
+        }
+
         method gist(:$treemark=False) {
             "++"
         }
@@ -320,6 +384,10 @@ package PostfixExpressionTail is export {
     our class MinusMinus does IPostfixExpressionTail { 
 
         has $.text;
+
+        method name {
+            'PostfixExpressionTail::MinusMinus'
+        }
 
         method gist(:$treemark=False) {
             "--"

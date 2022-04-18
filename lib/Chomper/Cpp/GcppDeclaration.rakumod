@@ -7,15 +7,19 @@ use Chomper::Cpp::GcppIdent;
 use Chomper::Cpp::GcppAttr;
 use Chomper::Cpp::GcppStr;
 
-our role IDeclarationseq is export { }
+our role IDeclarationSeq is export { }
 
 # rule declarationseq { 
 #   <declaration>+ 
 # }
-class Declarationseq is export { 
+class DeclarationSeq is export { 
     has IDeclaration @.declarations is required;
 
     has $.text;
+
+    method name {
+        'DeclarationSeq'
+    }
 
     method gist(:$treemark=False) {
         @.declarations>>.gist(:$treemark).join(" ")
@@ -37,6 +41,10 @@ class AliasDeclaration is export {
     has ITheTypeId             $.the-type-id is required;
 
     has $.text;
+
+    method name {
+        'AliasDeclaration'
+    }
 
     method gist(:$treemark=False) {
 
@@ -72,6 +80,10 @@ does ISimpleDeclaration is export {
     has IInitDeclarator    @.init-declarator-list;
 
     has $.text;
+
+    method name {
+        'BasicDeclaration'
+    }
 
     method gist(:$treemark=False) {
 
@@ -109,6 +121,10 @@ class InitListDeclaration does ISimpleDeclaration is export {
     has IInitDeclarator     @.init-declarator-list;
 
     has $.text;
+
+    method name {
+        'InitListDeclaration'
+    }
 
     method gist(:$treemark=False) {
 
@@ -150,6 +166,10 @@ class StaticAssertDeclaration is export {
 
     has $.text;
 
+    method name {
+        'StaticAssertDeclaration'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = "";
@@ -172,6 +192,10 @@ class EmptyDeclaration is export {
 
     has $.text;
 
+    method name {
+        'EmptyDeclaration'
+    }
+
     method gist(:$treemark=False) {
         ";"
     }
@@ -186,6 +210,10 @@ class AttributeDeclaration is export {
     has IAttributeSpecifierSeq $.attribute-specifier-seq is required;
 
     has $.text;
+
+    method name {
+        'AttributeDeclaration'
+    }
 
     method gist(:$treemark=False) {
 
@@ -212,7 +240,7 @@ package DeclarationGrammar is export {
 
             if @decls.elems gt 1 {
 
-                make Declarationseq.new(
+                make DeclarationSeq.new(
                     declarations => @decls,
                 )
 

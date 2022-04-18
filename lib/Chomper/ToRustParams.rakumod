@@ -12,6 +12,8 @@ multi sub to-rust-param($x where Cpp::IntegerLiteral::Dec) {
 }
 
 multi sub to-rust-param($x where Cpp::ParameterDeclaration) {  
+    ddt $x;
+    exit;
     Rust::IntegerLiteral.new(
         value => $x.decimal-literal.value,
     )

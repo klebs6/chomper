@@ -18,10 +18,14 @@ package NoPointerDeclaratorBase is export {
     does IAbstractDeclarator
     does IInitDeclarator
     does INoPointerDeclaratorBase {
-        has Declaratorid           $.declaratorid is required;
+        has DeclaratorId           $.declaratorid is required;
         has IAttributeSpecifierSeq $.attribute-specifier-seq;
 
         has $.text;
+
+        method name {
+            'NoPointerDeclaratorBase::Base'
+        }
 
         method gist(:$treemark=False) {
 
@@ -51,6 +55,10 @@ package NoPointerDeclaratorBase is export {
 
         has $.text;
 
+        method name {
+            'NoPointerDeclaratorBase::Parens'
+        }
+
         method gist(:$treemark=False) {
             "(" ~ $.pointer-declarator.gist(:$treemark) ~ ")"
         }
@@ -66,6 +74,10 @@ package NoPointerDeclaratorTail is export {
         has ParametersAndQualifiers $.parameters-and-qualifiers is required;
 
         has $.text;
+
+        method name {
+            'NoPointerDeclaratorTail::Basic'
+        }
 
         method gist(:$treemark=False) {
             $.parameters-and-qualifiers.gist(:$treemark)
@@ -83,6 +95,10 @@ package NoPointerDeclaratorTail is export {
         has IAttributeSpecifierSeq $.attribute-specifier-seq;
 
         has $.text;
+
+        method name {
+            'NoPointerDeclaratorTail::Bracketed'
+        }
 
         method gist(:$treemark=False) {
 
@@ -113,6 +129,10 @@ does IInitDeclarator does IDeclarator is export {
     has INoPointerDeclaratorTail @.no-pointer-declarator-tail;
 
     has $.text;
+
+    method name {
+        'NoPointerDeclarator'
+    }
 
     method token-types {
         my $first 

@@ -20,6 +20,10 @@ package PseudoDestructorName is export {
         has ITheTypeName $.the-type-name is required;
         has $.text;
 
+        method name {
+            'PseudoDestructorName::Basic'
+        }
+
         method gist(:$treemark=False) {
 
             my $builder = "";
@@ -49,6 +53,10 @@ package PseudoDestructorName is export {
 
         has $.text;
 
+        method name {
+            'PseudoDestructorName::Template'
+        }
+
         method gist(:$treemark=False) {
             $.nested-name-specifier.gist(:$treemark) 
             ~ " template " 
@@ -63,6 +71,10 @@ package PseudoDestructorName is export {
     our class Decltype does IPseudoDestructorName {
         has DecltypeSpecifier $.decltype-specifier is required;
         has $.text;
+
+        method name {
+            'PseudoDestructorName::Decltype'
+        }
 
         method gist(:$treemark=False) {
             "~" ~ $.decltype-specifier.gist(:$treemark)

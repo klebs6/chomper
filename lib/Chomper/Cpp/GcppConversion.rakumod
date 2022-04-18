@@ -14,6 +14,10 @@ class ConversionDeclarator is export {
 
     has $.text;
 
+    method name {
+        'ConversionDeclarator'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = $.pointer-operator.gist(:$treemark);
@@ -38,6 +42,10 @@ class ConversionTypeId is export {
 
     has $.text;
 
+    method name {
+        'ConversionTypeId'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = "";
@@ -60,6 +68,10 @@ class ConversionFunctionId is export {
     has ConversionTypeId $.conversion-type-id is required;
 
     has $.text;
+
+    method name {
+        'ConversionFunctionId'
+    }
 
     method gist(:$treemark=False) {
         "operator " ~ $.conversion-type-id.gist(:$treemark)

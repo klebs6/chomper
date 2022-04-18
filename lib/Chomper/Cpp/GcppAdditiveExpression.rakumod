@@ -9,6 +9,10 @@ class AdditiveOperator::Plus does IAdditiveOperator is export {
 
     has $.text;
 
+    method name {
+        'AdditiveOperator::Plus'
+    }
+
     method gist(:$treemark=False) {
         "+"
     }
@@ -18,6 +22,10 @@ class AdditiveOperator::Plus does IAdditiveOperator is export {
 class AdditiveOperator::Minus does IAdditiveOperator is export {
 
     has $.text;
+
+    method name {
+        'AdditiveOperator::Minus'
+    }
 
     method gist(:$treemark=False) {
         "-"
@@ -31,6 +39,10 @@ class AdditiveOperator::Minus does IAdditiveOperator is export {
 class AdditiveExpressionTail is export {
     has IAdditiveOperator         $.additive-operator         is required;
     has IMultiplicativeExpression $.multiplicative-expression is required;
+
+    method name {
+        'AdditiveExpressionTail'
+    }
 
     method gist(:$treemark=False) {
         $.additive-operator.gist(:$treemark) ~ " " ~ $.multiplicative-expression.gist(:$treemark)
@@ -46,6 +58,10 @@ does IConstantExpression
 does IAdditiveExpression is export {
     has IMultiplicativeExpression $.multiplicative-expression is required;
     has AdditiveExpressionTail    @.additive-expression-tail;
+
+    method name {
+        'AdditiveExpression'
+    }
 
     method gist(:$treemark=False) {
         $.multiplicative-expression.gist(:$treemark) 

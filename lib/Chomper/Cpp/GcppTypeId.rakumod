@@ -19,6 +19,10 @@ does ITemplateArgument is export {
     
     has $.text;
 
+    method name {
+        'TheTypeId'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = $.type-specifier-seq>>.gist(:$treemark).join(" ");
@@ -41,6 +45,10 @@ class TypeIdList is export {
 
     has $.text;
 
+    method name {
+        'TypeIdList'
+    }
+
     method gist(:$treemark=False) {
         @.the-type-ids>>.gist(:$treemark).join(", ")
     }
@@ -59,6 +67,10 @@ package TypeNameSpecifier is export {
         has INestedNameSpecifier $.nested-name-specifier is required;
         has Identifier $.identifier is required;
         has $.text;
+
+        method name {
+            'TypeNameSpecifier::Ident'
+        }
 
         method gist(:$treemark=False) {
             "typename " 
@@ -81,6 +93,10 @@ package TypeNameSpecifier is export {
 
         has $.text;
 
+        method name {
+            'TypeNameSpecifier::Template'
+        }
+
         method gist(:$treemark=False) {
 
             my $builder = "typename "
@@ -100,6 +116,10 @@ package TypeNameSpecifier is export {
 class TypeIdOfTheTypeId is export {
     has $.typeid is required;
     has $.text;
+
+    method name {
+        'TypeIdOfTheTypeId'
+    }
 
     method gist(:$treemark=False) {
         $.typeid.gist(:$treemark)

@@ -11,6 +11,11 @@ does IInitializerList
 does IInitializerClause 
 does IReturnStatementBody
 does IPostfixExpressionTail is export {
+
+    method name {
+        'EmptyInitializerList'
+    }
+
     method gist(:$treemark=False) {
         ""
     }
@@ -31,6 +36,10 @@ does IPostfixExpressionTail is export {
 
     has $.text;
 
+    method name {
+        'InitializerList'
+    }
+
     method gist(:$treemark=False) {
         @.clauses>>.gist(:$treemark).join(", ")
     }
@@ -49,6 +58,10 @@ does IInitializerClause is export {
     has IInitializerList $.initializer-list;
 
     has $.text;
+
+    method name {
+        'BracedInitList'
+    }
 
     method gist(:$treemark=False) {
         if $.initializer-list {
@@ -70,6 +83,10 @@ does IInitializerClause is export {
 
     has $.text;
 
+    method name {
+        'AssignInit'
+    }
+
     method gist(:$treemark=False) {
         " = " ~ $.initializer-clause.gist(:$treemark)
     }
@@ -84,6 +101,10 @@ does ICondition is export {
     has IAssignmentExpression @.assignment-expressions is required;
 
     has $.text;
+
+    method name {
+        'Expression'
+    }
 
     method gist(:$treemark=False) {
 
@@ -101,6 +122,10 @@ class ConstantExpression does IConstantExpression is export {
 
     has $.text;
 
+    method name {
+        'ConstantExpression'
+    }
+
     method gist(:$treemark=False) {
 
         $.conditional-expression.gist(:$treemark)
@@ -115,6 +140,10 @@ does IPostfixExpressionTail is export {
     has InitializerList $.initializer-list is required;
 
     has $.text;
+
+    method name {
+        'ExpressionList'
+    }
 
     method gist(:$treemark=False) {
 
@@ -138,6 +167,10 @@ package Initializer is export {
 
         has $.text;
 
+        method name {
+            'Initializer::ParenExprList'
+        }
+
         method gist(:$treemark=False) {
 
             "(" ~ $.expression-list.gist(:$treemark) ~ ")"
@@ -152,22 +185,14 @@ package Initializer is export {
 
         has $.text;
 
+        method name {
+            'Initializer::BraceOrEq'
+        }
+
         method gist(:$treemark=False) {
             $.brace-or-equal-initializer.gist(:$treemark)
         }
     }
-
-    =begin comment
-    our class Initializer does IInitializer {
-        has $.value is required;
-
-        has $.text;
-
-        method gist(:$treemark=False) {
-            $.value.gist(:$treemark)
-        }
-    }
-    =end comment
 }
 
 package BraceOrEqualInitializer is export {
@@ -180,6 +205,10 @@ package BraceOrEqualInitializer is export {
         has IInitializerClause $.initializer-clause is required;
 
         has $.text;
+
+        method name {
+            'BraceOrEqualInitializer::AssignInit'
+        }
 
         method gist(:$treemark=False) {
             " = " ~ $.initializer-clause.gist(:$treemark)
@@ -194,6 +223,10 @@ package BraceOrEqualInitializer is export {
         has BracedInitList $.braced-init-list is required;
 
         has $.text;
+
+        method name {
+            'BraceOrEqualInitializer::BracedInitList'
+        }
 
         method gist(:$treemark=False) {
             $.braced-init-list.gist(:$treemark)
@@ -213,6 +246,10 @@ package InitializerClause is export {
         has IAssignmentExpression $.assignment-expression is required;
 
         has $.text;
+
+        method name {
+            'InitializerClause::Assignment'
+        }
 
         method gist(:$treemark=False) {
 
@@ -240,6 +277,10 @@ package InitializerClause is export {
         has BracedInitList $.braced-init-list is required;
 
         has $.text;
+
+        method name {
+            'InitializerClause::Braced'
+        }
 
         method gist(:$treemark=False) {
             my $c = $.comment;

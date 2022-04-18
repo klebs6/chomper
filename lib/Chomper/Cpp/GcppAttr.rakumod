@@ -18,6 +18,10 @@ class AttributeSpecifierSeq is export {
 
     has $.text;
 
+    method name {
+        'AttributeSpecifierSeq'
+    }
+
     method gist(:$treemark=False) {
         @.attribute-specifier>>.gist(:$treemark).join(" ")
     }
@@ -34,6 +38,10 @@ class AttributeSpecifier::DoubleBraced does IAttributeSpecifier is export {
     has AttributeList $.attribute-list;
 
     has $.text;
+
+    method name {
+        'AttributeSpecifier::DoubleBraced'
+    }
 
     method gist(:$treemark=False) {
 
@@ -55,6 +63,10 @@ class AttributeSpecifier::Alignment does IAttributeSpecifier is export {
 
     has $.text;
 
+    method name {
+        'AttributeSpecifier::Alignment'
+    }
+
     method gist(:$treemark=False) {
         $.alignmentspecifier.gist(:$treemark)
     }
@@ -70,6 +82,10 @@ class AttributeList is export {
     has Bool   $.has-ellipsis is required;
 
     has $.text;
+
+    method name {
+        'AttributeList'
+    }
 
     method gist(:$treemark=False) {
 
@@ -89,6 +105,10 @@ class AttributeNamespace is export {
 
     has $.text;
 
+    method name {
+        'AttributeNamespace'
+    }
+
     method gist(:$treemark=False) {
         $.identifier.gist(:$treemark)
     }
@@ -103,6 +123,10 @@ class AttributeArgumentClause is export {
     has BalancedTokenSeq $.balanced-token-seq;
 
     has $.text;
+
+    method name {
+        'AttributeArgumentClause'
+    }
 
     method gist(:$treemark=False) {
 
@@ -127,6 +151,10 @@ class Attrib is export {
     has AttributeArgumentClause $.attribute-argument-clause;
 
     has $.text;
+
+    method name {
+        'Attrib'
+    }
 
     method gist(:$treemark=False) {
 

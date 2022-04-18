@@ -14,9 +14,13 @@ package LinkageSpecificationBody is export {
     #   <.right-brace> 
     # }
     our class Seq does ILinkageSpecificationBody {
-        has IDeclarationseq $.declarationseq;
+        has IDeclarationSeq $.declarationseq;
 
         has $.text;
+
+        method name {
+            'LinkageSpecificationBody::Seq'
+        }
 
         method gist(:$treemark=False) {
 
@@ -36,6 +40,10 @@ package LinkageSpecificationBody is export {
 
         has $.text;
 
+        method name {
+            'LinkageSpecificationBody::Decl'
+        }
+
         method gist(:$treemark=False) {
             $.declaration.gist(:$treemark)
         }
@@ -52,6 +60,10 @@ class LinkageSpecification is export {
     has ILinkageSpecificationBody $.linkage-specification-body is required;
 
     has $.text;
+
+    method name {
+        'LinkageSpecificationBody'
+    }
 
     method gist(:$treemark=False) {
         "extern " 

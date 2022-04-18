@@ -7,19 +7,20 @@ use Data::Dump::Tree;
 
 our sub translate-cpp-ir-to-rust($typename, $item where Cpp::IStatement)
 {
-    given $typename.split("::")[*-1] {
-        when "TryBlock"            { to-rust($item) }
-        when "ExpressionStatement" { to-rust($item) }
-        when "CompoundStatement"   { to-rust($item) }
-        when "Return"              { to-rust($item) }
-        when "Continue"            { to-rust($item) }
-        when "ForRange"            { to-rust($item) }
-        when "While"               { to-rust($item) }
-        when "For"                 { to-rust($item) }
-        when "BasicDeclaration"    { to-rust($item) }
-        when "If"                  { to-rust($item) }
+    given $item.name {
+        when "TryBlock"                     { to-rust($item) }
+        when "ExpressionStatement"          { to-rust($item) }
+        when "CompoundStatement"            { to-rust($item) }
+        when "JumpStatement::Return"        { to-rust($item) }
+        when "JumpStatement::Continue"      { to-rust($item) }
+        when "IterationStatement::ForRange" { to-rust($item) }
+        when "IterationStatement::While"    { to-rust($item) }
+        when "IterationStatement::For"      { to-rust($item) }
+        when "IterationStatement::Do"       { to-rust($item) }
+        when "BasicDeclaration"             { to-rust($item) }
+        when "SelectionStatement::If"       { to-rust($item) }
         default {
-            die "need to add $typename to translate-cpp-ir-to-rust";
+            die "need to add {$item.name} to translate-cpp-ir-to-rust";
         }
     }
 }

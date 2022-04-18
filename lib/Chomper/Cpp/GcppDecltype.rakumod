@@ -14,6 +14,10 @@ package DecltypeSpecifierBody is export {
 
         has $.text;
 
+        method name {
+            'DecltypeSpecifierBody::Expr'
+        }
+
         method gist(:$treemark=False) {
             $.expression.gist(:$treemark)
         }
@@ -25,6 +29,10 @@ package DecltypeSpecifierBody is export {
     our class Auto does IDecltypeSpecifierBody {
 
         has $.text;
+
+        method name {
+            'DecltypeSpecifierBody::Auto'
+        }
 
         method gist(:$treemark=False) {
             "auto"
@@ -42,6 +50,10 @@ class DecltypeSpecifier is export {
     has IDecltypeSpecifierBody $.decltype-specifier-body is required;
 
     has $.text;
+
+    method name {
+        'DecltypeSpecifier'
+    }
 
     method gist(:$treemark=False) {
         "decltype(" ~ $.decltype-specifier-body.gist(:$treemark) ~ ")"

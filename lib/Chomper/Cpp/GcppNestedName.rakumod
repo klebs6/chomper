@@ -16,6 +16,10 @@ package NestedNameSpecifierPrefix is export {
 
         has $.text;
 
+        method name {
+            'NestedNameSpecifierPrefix::Null'
+        }
+
         method gist(:$treemark=False) {
             "::"
         }
@@ -29,6 +33,10 @@ package NestedNameSpecifierPrefix is export {
         has ITheTypeName $.the-type-name is required;
 
         has $.text;
+
+        method name {
+            'NestedNameSpecifierPrefix::Type'
+        }
 
         method gist(:$treemark=False) {
             $.the-type-name.gist(:$treemark) ~ "::"
@@ -44,6 +52,10 @@ package NestedNameSpecifierPrefix is export {
 
         has $.text;
 
+        method name {
+            'NestedNameSpecifierPrefix::Ns'
+        }
+
         method gist(:$treemark=False) {
             $.namespace-name.gist(:$treemark) ~ "::"
         }
@@ -57,6 +69,10 @@ package NestedNameSpecifierPrefix is export {
         has DecltypeSpecifier $.decltype-specifier is required;
 
         has $.text;
+
+        method name {
+            'NestedNameSpecifierPrefix::Decl'
+        }
 
         method gist(:$treemark=False) {
             $.decltype-specifier.gist(:$treemark) ~ "::"
@@ -75,6 +91,10 @@ package NestedNameSpecifierSuffix is export {
 
         has $.text;
 
+        method name {
+            'NestedNameSpecifierSuffix::Id'
+        }
+
         method gist(:$treemark=False) {
             $.identifier.gist(:$treemark) ~ "::"
         }
@@ -90,6 +110,10 @@ package NestedNameSpecifierSuffix is export {
         has SimpleTemplateId $.simple-template-id is required;
 
         has $.text;
+
+        method name {
+            'NestedNameSpecifierSuffix::Template'
+        }
 
         method gist(:$treemark=False) {
 
@@ -115,6 +139,10 @@ class NestedNameSpecifier does INestedNameSpecifier is export {
     has INestedNameSpecifierSuffix @.nested-name-specifier-suffixes;
 
     has $.text;
+
+    method name {
+        'NestedNameSpecifier'
+    }
 
     method gist(:$treemark=False) {
 

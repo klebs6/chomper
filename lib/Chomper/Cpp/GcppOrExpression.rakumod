@@ -13,6 +13,10 @@ class ExclusiveOrExpression does IExclusiveOrExpression is export {
 
     has $.text;
 
+    method name {
+        'ExclusiveOrExpression'
+    }
+
     method gist(:$treemark=False) {
         @.and-expressions>>.gist(:$treemark).join(" ^ ")
     }
@@ -26,6 +30,10 @@ class InclusiveOrExpression does IInclusiveOrExpression is export {
     has IExclusiveOrExpression @.exclusive-or-expressions is required;
 
     has $.text;
+
+    method name {
+        'InclusiveOrExpression'
+    }
 
     method gist(:$treemark=False) {
         @.exclusive-or-expressions>>.gist(:$treemark).join(" | ")

@@ -11,7 +11,7 @@ use Chomper::Cpp::GcppFunction;
 
 our class LambdaDeclarator { ... }
 our class CaptureList { ... }
-our class Initcapture { ... }
+our class InitCapture { ... }
 
 # rule lambda-introducer { 
 #   <.left-bracket> 
@@ -22,6 +22,10 @@ class LambdaIntroducer is export {
     has ILambdaCapture $.lambda-capture;
 
     has $.text;
+
+    method name {
+        'LambdaIntroducer'
+    }
 
     method gist(:$treemark=False) {
 
@@ -47,6 +51,10 @@ class LambdaExpression is export {
 
     has $.text;
 
+    method name {
+        'LambdaExpression'
+    }
+
     method gist(:$treemark=False) {
         my $builder = $.lambda-introducer.gist(:$treemark);
 
@@ -66,6 +74,10 @@ package LambdaCapture is export {
 
         has $.text;
 
+        method name {
+            'LambdaCapture::List'
+        }
+
         method gist(:$treemark=False) {
             $.capture-list.gist(:$treemark)
         }
@@ -80,6 +92,10 @@ package LambdaCapture is export {
         has ICaptureList    $.capture-list;
 
         has $.text;
+
+        method name {
+            'LambdaCapture::Def'
+        }
 
         method gist(:$treemark=False) {
 
@@ -105,6 +121,10 @@ package CaptureDefault is export {
 
         has $.text;
 
+        method name {
+            'CaptureDefault::And'
+        }
+
         method gist(:$treemark=False) {
             "&"
         }
@@ -116,6 +136,10 @@ package CaptureDefault is export {
     does ICaptureDefault { 
 
         has $.text;
+
+        method name {
+            'CaptureDefault::Assign'
+        }
 
         method gist(:$treemark=False) {
             "="
@@ -129,6 +153,10 @@ class CaptureList does ICaptureList is export {
     has Bool     $.trailing-ellipsis is required;
 
     has $.text;
+
+    method name {
+        'CaptureList'
+    }
 
     method gist(:$treemark=False) {
         my $builder = @.captures>>.gist(:$treemark).join(", ");
@@ -145,9 +173,13 @@ package Capture is export {
 
     # rule capture:sym<init> { <initcapture> } 
     our class Init does ICapture {
-        has Initcapture $.init-capture is required;
+        has InitCapture $.init-capture is required;
 
         has $.text;
+
+        method name {
+            'Capture::Init'
+        }
 
         method gist(:$treemark=False) {
             $.init-capture.gist(:$treemark)
@@ -160,6 +192,10 @@ package Capture is export {
 
         has $.text;
 
+        method name {
+            'Capture::Simple'
+        }
+
         method gist(:$treemark=False) {
             $.simple-capture.gist(:$treemark)
         }
@@ -171,6 +207,10 @@ package Capture is export {
         has Identifier $.identifier is required;
 
         has $.text;
+
+        method name {
+            'Capture::Id'
+        }
 
         method gist(:$treemark=False) {
             if $.has-and {
@@ -186,6 +226,10 @@ package Capture is export {
 
         has $.text;
 
+        method name {
+            'Capture::This'
+        }
+
         method gist(:$treemark=False) {
             "this"
         }
@@ -197,12 +241,17 @@ package Capture is export {
 #   <identifier> 
 #   <initializer> 
 # }
-class Initcapture is export { 
-    has Bool $.has-and;
-    has Identifier  $.identifier  is required;
+class InitCapture is export { 
+
+    has Bool         $.has-and;
+    has Identifier   $.identifier  is required;
     has IInitializer $.initializer is required;
 
     has $.text;
+
+    method name {
+        'InitCapture'
+    }
 
     method gist(:$treemark=False) {
 
@@ -235,6 +284,10 @@ class LambdaDeclarator is export {
     has TrailingReturnType         $.trailing-return-type;
 
     has $.text;
+
+    method name {
+        'LambdaDeclarator'
+    }
 
     method gist(:$treemark=False) {
         my $builder = "";
@@ -396,7 +449,7 @@ package LambdaExpressionGrammar is export {
 
         # rule initcapture { <and_>? <identifier> <initializer> } 
         method initcapture($/) {
-            make Initcapture.new(
+            make InitCapture.new(
                 has-and     => $<has-and>.made,
                 identifier  => $<identifier>.made,
                 initializer => $<initializer>.made,

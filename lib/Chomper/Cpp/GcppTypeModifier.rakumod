@@ -4,51 +4,73 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-# rule simple-type-length-modifier:sym<short> { 
-#   <.short> 
-# }
-class SimpleTypeLengthModifier::Short does ISimpleTypeLengthModifier is export { 
+package SimpleTypeLengthModifier is export {
 
-    has $.text;
+    # rule simple-type-length-modifier:sym<short> { 
+    #   <.short> 
+    # }
+    class Short does ISimpleTypeLengthModifier { 
 
-    method gist(:$treemark=False) {
-        "short"
+        has $.text;
+
+        method name {
+            'SimpleTypeLengthModifier::Short'
+        }
+
+        method gist(:$treemark=False) {
+            "short"
+        }
+    }
+
+    # rule simple-type-length-modifier:sym<long_> { 
+    #   <.long_> 
+    # }
+    class Long does ISimpleTypeLengthModifier { 
+
+        has $.text;
+
+        method name {
+            'SimpleTypeLengthModifier::Long'
+        }
+
+        method gist(:$treemark=False) {
+            "long"
+        }
     }
 }
 
-# rule simple-type-length-modifier:sym<long_> { 
-#   <.long_> 
-# }
-class SimpleTypeLengthModifier::Long does ISimpleTypeLengthModifier is export { 
+package SimpleTypeSignednessModifier is export {
 
-    has $.text;
+    # rule simple-type-signedness-modifier:sym<unsigned> { 
+    #   <.unsigned> 
+    # }
+    class Unsigned does ISimpleTypeSignednessModifier { 
 
-    method gist(:$treemark=False) {
-        "long"
+        has $.text;
+
+        method name {
+            'SimpleTypeSignednessModifier::Unsigned'
+        }
+
+        method gist(:$treemark=False) {
+            "unsigned"
+        }
     }
-}
 
-# rule simple-type-signedness-modifier:sym<unsigned> { 
-#   <.unsigned> 
-# }
-class SimpleTypeSignednessModifier::Unsigned does ISimpleTypeSignednessModifier is export { 
+    # rule simple-type-signedness-modifier:sym<signed> { 
+    #   <.signed> 
+    # }
+    class Signed does ISimpleTypeSignednessModifier { 
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "unsigned"
-    }
-}
+        method name {
+            'SimpleTypeSignednessModifier::Signed'
+        }
 
-# rule simple-type-signedness-modifier:sym<signed> { 
-#   <.signed> 
-# }
-class SimpleTypeSignednessModifier::Signed does ISimpleTypeSignednessModifier is export { 
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        "signed"
+        method gist(:$treemark=False) {
+            "signed"
+        }
     }
 }
 

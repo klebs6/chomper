@@ -13,6 +13,10 @@ package FractionalConstant is export {
 
         has $.text;
 
+        method name {
+            'FractionalConstant::WithTail'
+        }
+
         method gist(:$treemark=False) {
             $.value
         }
@@ -24,25 +28,38 @@ package FractionalConstant is export {
 
         has $.text;
 
+        method name {
+            'FractionalConstant::NoTail'
+        }
+
         method gist(:$treemark=False) {
             $.value
         }
     }
 }
 
-class ExponentpartPrefix is export { 
+class ExponentPartPrefix is export { 
 
     has $.text;
+
+    method name {
+        'ExponentPartPrefix'
+    }
 
     method gist(:$treemark=False) {
         'e'
     }
 }
 
-class Exponentpart is export { 
+class ExponentPart is export { 
+
     has Str $.value is required;
 
     has $.text;
+
+    method name {
+        'ExponentPart'
+    }
 
     method gist(:$treemark=False) {
         $.value
@@ -55,6 +72,10 @@ package Sign is export {
 
         has $.text;
 
+        method name {
+            'Sign::Plus'
+        }
+
         method gist(:$treemark=False) {
             "+"
         }
@@ -64,15 +85,23 @@ package Sign is export {
 
         has $.text;
 
+        method name {
+            'Sign::Minus'
+        }
+
         method gist(:$treemark=False) {
             "-"
         }
     }
 }
 
-class Floatingsuffix is export { 
+class FloatingSuffix is export { 
 
     has $.text;
+
+    method name {
+        'FloatingSuffix'
+    }
 
     method gist(:$treemark=False) {
         'f'
@@ -83,10 +112,14 @@ package FloatingLiteral is export {
 
     our class Frac does IFloatingLiteral {
         has IFractionalConstant $.fractionalconstant is required;
-        has Exponentpart        $.exponentpart;
-        has Floatingsuffix      $.floatingsuffix;
+        has ExponentPart        $.exponentpart;
+        has FloatingSuffix      $.floatingsuffix;
 
         has $.text;
+
+        method name {
+            'FloatingLiteral::Frac'
+        }
 
         method gist(:$treemark=False) {
             my $builder = $.fractionalconstant.gist;
@@ -104,11 +137,15 @@ package FloatingLiteral is export {
     }
 
     our class Digit does IFloatingLiteral {
-        has Digitsequence  $.digitsequence is required;
-        has Exponentpart   $.exponentpart  is required;
-        has Floatingsuffix $.floatingsuffix;
+        has DigitSequence  $.digitsequence is required;
+        has ExponentPart   $.exponentpart  is required;
+        has FloatingSuffix $.floatingsuffix;
 
         has $.text;
+
+        method name {
+            'FloatingLiteral::Digit'
+        }
 
         method gist(:$treemark=False) {
 
@@ -163,12 +200,12 @@ package FloatingLiteralGrammar is export {
 
         # token exponentpart-prefix { 'e' || 'E' }
         method exponentpart-prefix($/) {
-            make ExponentpartPrefix.new
+            make ExponentPartPrefix.new
         }
 
         # token exponentpart { <exponentpart-prefix> <sign>? <digitsequence> }
         method exponentpart($/) {
-            make Exponentpart.new(
+            make ExponentPart.new(
                 value => ~$/,
             )
         }
@@ -185,7 +222,7 @@ package FloatingLiteralGrammar is export {
 
         # token digitsequence { <digit> [ '\''? <digit>]* }
         method digitsequence($/) {
-            make Digitsequence.new(
+            make DigitSequence.new(
                 digits => $<digit>>>.made,
                 text   => ~$/,
             )
@@ -193,7 +230,7 @@ package FloatingLiteralGrammar is export {
 
         # token floatingsuffix { <[ f l F L ]> } 
         method floatingsuffix($/) {
-            make Floatingsuffix.new
+            make FloatingSuffix.new
         }
     }
 

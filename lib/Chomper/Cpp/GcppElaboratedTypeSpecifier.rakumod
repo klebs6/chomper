@@ -11,109 +11,128 @@ our role IElaboratedTypeSpecifier
 does IDeclSpecifierSeq
 is export { }
 
-# rule elaborated-type-specifier:sym<class-ident> { 
-#   <.class-key> 
-#   <attribute-specifier-seq>? 
-#   <nested-name-specifier>? 
-#   <identifier> 
-# }
-class ElaboratedTypeSpecifier::ClassIdent 
-does IElaboratedTypeSpecifier is export {
-    has IClassKey              $.class-key is required;
-    has IAttributeSpecifierSeq $.attribute-specifier-seq;
-    has INestedNameSpecifier   $.nested-name-specifier;
-    has Identifier             $.identifier is required;
+package ElaboratedTypeSpecifier is export {
 
-    has $.text;
+    # rule elaborated-type-specifier:sym<class-ident> { 
+    #   <.class-key> 
+    #   <attribute-specifier-seq>? 
+    #   <nested-name-specifier>? 
+    #   <identifier> 
+    # }
+    class ClassIdent does IElaboratedTypeSpecifier {
 
-    method gist(:$treemark=False) {
+        has IClassKey              $.class-key is required;
+        has IAttributeSpecifierSeq $.attribute-specifier-seq;
+        has INestedNameSpecifier   $.nested-name-specifier;
+        has Identifier             $.identifier is required;
 
-        my $builder = $.class-key.gist(:$treemark) ~ " ";
+        has $.text;
 
-        #--------------
-        my $a = $.attribute-specifier-seq;
-
-        if $a {
-            $builder ~= $a.gist(:$treemark) ~ " ";
+        method name {
+            'ElaboratedTypeSpecifier::ClassIdent'
         }
 
-        #--------------
-        my $n = $.nested-name-specifier;
+        method gist(:$treemark=False) {
 
-        if $n {
-            $builder ~= $n.gist(:$treemark) ~ " ";
+            my $builder = $.class-key.gist(:$treemark) ~ " ";
+
+            #--------------
+            my $a = $.attribute-specifier-seq;
+
+            if $a {
+                $builder ~= $a.gist(:$treemark) ~ " ";
+            }
+
+            #--------------
+            my $n = $.nested-name-specifier;
+
+            if $n {
+                $builder ~= $n.gist(:$treemark) ~ " ";
+            }
+
+            $builder ~ $.identifier.gist(:$treemark)
         }
-
-        $builder ~ $.identifier.gist(:$treemark)
     }
-}
 
-# rule elaborated-type-specifier:sym<class-template-id> { 
-#   <.class-key> 
-#   <simple-template-id> 
-# }
-class ElaboratedTypeSpecifier::ClassTemplateId 
-does IElaboratedTypeSpecifier is export {
-    has IClassKey        $.class-key is required;
-    has SimpleTemplateId $.simple-template-id is required;
+    # rule elaborated-type-specifier:sym<class-template-id> { 
+    #   <.class-key> 
+    #   <simple-template-id> 
+    # }
+    class ClassTemplateId does IElaboratedTypeSpecifier {
 
-    has $.text;
+        has IClassKey        $.class-key is required;
+        has SimpleTemplateId $.simple-template-id is required;
 
-    method gist(:$treemark=False) {
-        $.class-key.gist(:$treemark) ~ " " ~ $.simple-template-id.gist(:$treemark)
-    }
-}
+        has $.text;
 
-# rule elaborated-type-specifier:sym<class-nested-template-id> { 
-#   <.class-key> 
-#   <nested-name-specifier> 
-#   <template>? 
-#   <simple-template-id> 
-# }
-class ElaboratedTypeSpecifier::ClassNestedTemplateId 
-does IElaboratedTypeSpecifier is export {
-    has IClassKey            $.class-key is required;
-    has INestedNameSpecifier $.nested-name-specifier is required;
-    has Bool                 $.has-template-kw is required;
-    has SimpleTemplateId     $.simple-template-id is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-
-        my $builder = $.class-key.gist(:$treemark) ~ " " ~ $.nested-name-specifier.gist(:$treemark) ~ " ";
-
-        if $.has-template-kw {
-            $builder ~= "template ";
+        method name {
+            'ElaboratedTypeSpecifier::ClassTemplateId'
         }
 
-        $builder ~ $.simple-template-id.gist(:$treemark)
+        method gist(:$treemark=False) {
+            $.class-key.gist(:$treemark) ~ " " ~ $.simple-template-id.gist(:$treemark)
+        }
     }
-}
 
-# rule elaborated-type-specifier:sym<enum> { 
-#   <.enum_> 
-#   <nested-name-specifier>? 
-#   <identifier> 
-# }
-class ElaboratedTypeSpecifier::Enum 
-does IElaboratedTypeSpecifier is export {
-    has INestedNameSpecifier $.nested-name-specifier;
-    has Identifier           $.identifier is required;
+    # rule elaborated-type-specifier:sym<class-nested-template-id> { 
+    #   <.class-key> 
+    #   <nested-name-specifier> 
+    #   <template>? 
+    #   <simple-template-id> 
+    # }
+    class ClassNestedTemplateId does IElaboratedTypeSpecifier {
 
-    has $.text;
+        has IClassKey            $.class-key is required;
+        has INestedNameSpecifier $.nested-name-specifier is required;
+        has Bool                 $.has-template-kw is required;
+        has SimpleTemplateId     $.simple-template-id is required;
 
-    method gist(:$treemark=False) {
+        has $.text;
 
-        my $builder = "enum ";
-
-        my $n = $.nested-name-specifier;
-
-        if $n {
-            $builder ~= $.n.gist(:$treemark) ~ " ";
+        method name {
+            'ElaboratedTypeSpecifier::ClassNestedTemplateId'
         }
 
-        $builder ~ $.identifier
+        method gist(:$treemark=False) {
+
+            my $builder = $.class-key.gist(:$treemark) ~ " " ~ $.nested-name-specifier.gist(:$treemark) ~ " ";
+
+            if $.has-template-kw {
+                $builder ~= "template ";
+            }
+
+            $builder ~ $.simple-template-id.gist(:$treemark)
+        }
+    }
+
+    # rule elaborated-type-specifier:sym<enum> { 
+    #   <.enum_> 
+    #   <nested-name-specifier>? 
+    #   <identifier> 
+    # }
+    class Enum does IElaboratedTypeSpecifier {
+
+        has INestedNameSpecifier $.nested-name-specifier;
+        has Identifier           $.identifier is required;
+
+        has $.text;
+
+        method name {
+            'ElaboratedTypeSpecifier::Enum'
+        }
+
+        method gist(:$treemark=False) {
+
+            my $builder = "enum ";
+
+            my $n = $.nested-name-specifier;
+
+            if $n {
+                $builder ~= $.n.gist(:$treemark) ~ " ";
+            }
+
+            $builder ~ $.identifier
+        }
     }
 }
 

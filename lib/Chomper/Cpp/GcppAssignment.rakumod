@@ -13,6 +13,10 @@ package AssignmentExpression is export {
         has ThrowExpression $.throw-expression is required;
         has $.text;
 
+        method name {
+            'AssignmentExpression::Throw'
+        }
+
         method gist(:$treemark=False) {
             $.throw-expression.gist(:$treemark)
         }
@@ -30,6 +34,10 @@ package AssignmentExpression is export {
         has IInitializerClause   $.initializer-clause    is required;
 
         has $.text;
+
+        method name {
+            'AssignmentExpression::Basic'
+        }
 
         method gist(:$treemark=False) {
             $.logical-or-expression.gist(:$treemark) 
@@ -49,6 +57,10 @@ package AssignmentExpression is export {
 
         has $.text;
 
+        method name {
+            'AssignmentExpression::Conditional'
+        }
+
         method gist(:$treemark=False) {
             $.conditional-expression.gist(:$treemark)
         }
@@ -62,6 +74,10 @@ package AssignmentOperator is export {
 
         has $.text;
 
+        method name {
+            'AssignmentOperator::Assign'
+        }
+
         method gist(:$treemark=False) {
             "="
         }
@@ -71,6 +87,10 @@ package AssignmentOperator is export {
     our class StarAssign does IAssignmentOperator {
 
         has $.text;
+
+        method name {
+            'AssignmentOperator::StarAssign'
+        }
 
         method gist(:$treemark=False) {
             "*="
@@ -82,6 +102,10 @@ package AssignmentOperator is export {
 
         has $.text;
 
+        method name {
+            'AssignmentOperator::DivAssign'
+        }
+
         method gist(:$treemark=False) {
             "/="
         }
@@ -91,6 +115,10 @@ package AssignmentOperator is export {
     our class ModAssign does IAssignmentOperator {
 
         has $.text;
+
+        method name {
+            'AssignmentOperator::ModAssign'
+        }
 
         method gist(:$treemark=False) {
             "%="
@@ -102,6 +130,10 @@ package AssignmentOperator is export {
 
         has $.text;
 
+        method name {
+            'AssignmentOperator::PlusAssign'
+        }
+
         method gist(:$treemark=False) {
             "+="
         }
@@ -112,15 +144,23 @@ package AssignmentOperator is export {
 
         has $.text;
 
+        method name {
+            'AssignmentOperator::MinusAssign'
+        }
+
         method gist(:$treemark=False) {
             "-="
         }
     }
 
     # token assignment-operator:sym<rshift-assign> { <.right-shift-assign> }
-    our class RshiftAssign does IAssignmentOperator {
+    our class RShiftAssign does IAssignmentOperator {
 
         has $.text;
+
+        method name {
+            'AssignmentOperator::RShiftAssign'
+        }
 
         method gist(:$treemark=False) {
             ">>="
@@ -128,9 +168,13 @@ package AssignmentOperator is export {
     }
 
     # token assignment-operator:sym<lshift-assign> { <.left-shift-assign> }
-    our class LshiftAssign does IAssignmentOperator {
+    our class LShiftAssign does IAssignmentOperator {
 
         has $.text;
+
+        method name {
+            'AssignmentOperator::LShiftAssign'
+        }
 
         method gist(:$treemark=False) {
             "<<="
@@ -142,6 +186,10 @@ package AssignmentOperator is export {
 
         has $.text;
 
+        method name {
+            'AssignmentOperator::AndAssign'
+        }
+
         method gist(:$treemark=False) {
             "&="
         }
@@ -152,6 +200,10 @@ package AssignmentOperator is export {
 
         has $.text;
 
+        method name {
+            'AssignmentOperator::XorAssign'
+        }
+
         method gist(:$treemark=False) {
             "^="
         }
@@ -161,6 +213,10 @@ package AssignmentOperator is export {
     our class OrAssign does IAssignmentOperator {
 
         has $.text;
+
+        method name {
+            'AssignmentOperator::OrAssign'
+        }
 
         method gist(:$treemark=False) {
             "|="

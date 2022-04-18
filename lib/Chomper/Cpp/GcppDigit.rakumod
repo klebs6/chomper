@@ -9,15 +9,23 @@ class Digit is export {
 
     has $.text;
 
+    method name {
+        'Digit'
+    }
+
     method gist(:$treemark=False) {
         $.value
     }
 }
 
-class Nonzerodigit is export { 
+class NonzeroDigit is export { 
     has Str $.value is required; 
 
     has $.text;
+
+    method name {
+        'NonzeroDigit'
+    }
 
     method gist(:$treemark=False) {
         $.value
@@ -29,15 +37,23 @@ class Nondigit is export {
 
     has $.text;
 
+    method name {
+        'Nondigit'
+    }
+
     method gist(:$treemark=False) {
         $.value
     }
 }
 
-class Digitsequence is export { 
+class DigitSequence is export { 
     has Digit @.digits is required;
 
     has $.text;
+
+    method name {
+        'DigitSequence'
+    }
 
     method gist(:$treemark=False) {
         @.digits>>.gist(:$treemark).join("")

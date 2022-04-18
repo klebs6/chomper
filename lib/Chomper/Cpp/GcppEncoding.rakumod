@@ -4,39 +4,58 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-class Encodingprefix::U8 does IEncodingprefix is export { 
+package EncodingPrefix is export {
 
-    has $.text;
+    class U8 does IEncodingPrefix is export { 
 
-    method gist(:$treemark=False) {
-        'u8'
+        has $.text;
+
+        method name {
+            'EncodingPrefix::U8'
+        }
+
+        method gist(:$treemark=False) {
+            'u8'
+        }
     }
-}
 
-class Encodingprefix::u  does IEncodingprefix is export { 
+    class SmallU  does IEncodingPrefix is export { 
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        'u'
+        method name {
+            'EncodingPrefix::SmallU'
+        }
+
+        method gist(:$treemark=False) {
+            'u'
+        }
     }
-}
 
-class Encodingprefix::U  does IEncodingprefix is export { 
+    class BigU  does IEncodingPrefix is export { 
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        'U'
+        method name {
+            'EncodingPrefix::BigU'
+        }
+
+        method gist(:$treemark=False) {
+            'U'
+        }
     }
-}
 
-class Encodingprefix::L  does IEncodingprefix is export { 
+    class L  does IEncodingPrefix is export { 
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        'L'
+        method name {
+            'EncodingPrefix::L'
+        }
+
+        method gist(:$treemark=False) {
+            'L'
+        }
     }
 }
 
@@ -46,22 +65,22 @@ package EncodingGrammar is export {
 
         # token encodingprefix:sym<u8> { 'u8' }
         method encodingprefix:sym<u8>($/) {
-            make Encodingprefix::U8.new
+            make EncodingPrefix::U8.new
         }
 
         # token encodingprefix:sym<u> { 'u' }
         method encodingprefix:sym<u>($/) {
-            make Encodingprefix::U.new
+            make EncodingPrefix::U.new
         }
 
         # token encodingprefix:sym<U> { 'U' }
         method encodingprefix:sym<U>($/) {
-            make Encodingprefix::U.new
+            make EncodingPrefix::U.new
         }
 
         # token encodingprefix:sym<L> { 'L' } 
         method encodingprefix:sym<L>($/) {
-            make Encodingprefix::L.new
+            make EncodingPrefix::L.new
         }
     }
 

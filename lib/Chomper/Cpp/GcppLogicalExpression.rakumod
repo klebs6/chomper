@@ -13,6 +13,10 @@ class LogicalAndExpression does ILogicalAndExpression is export {
 
     has $.text;
 
+    method name {
+        'LogicalAndExpression'
+    }
+
     method gist(:$treemark=False) {
         @.inclusive-or-expressions>>.gist(:$treemark).join(" && ")
     }
@@ -26,6 +30,10 @@ class LogicalOrExpression does ILogicalOrExpression is export {
     has ILogicalAndExpression @.logical-and-expressions is required;
 
     has $.text;
+
+    method name {
+        'LogicalOrExpression'
+    }
 
     method gist(:$treemark=False) {
         @.logical-and-expressions>>.gist(:$treemark).join(" || ")

@@ -5,9 +5,26 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppAttr;
 
-class DeclSpecifier::Friend    does IDeclSpecifier is export { }
-class DeclSpecifier::Typedef   does IDeclSpecifier is export { }
-class DeclSpecifier::Constexpr does IDeclSpecifier is export { }
+class DeclSpecifier::Friend    does IDeclSpecifier is export { 
+
+    method name {
+        'DeclSpecifier::Friend'
+    }
+}
+
+class DeclSpecifier::Typedef   does IDeclSpecifier is export { 
+
+    method name {
+        'DeclSpecifier::Typedef'
+    }
+}
+
+class DeclSpecifier::Constexpr does IDeclSpecifier is export { 
+
+    method name {
+        'DeclSpecifier::Constexpr'
+    }
+}
 
 # regex decl-specifier-seq { 
 #   <decl-specifier> 
@@ -19,6 +36,10 @@ class DeclSpecifierSeq does IDeclSpecifierSeq is export {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
 
     has $.text;
+
+    method name {
+        'DeclSpecifierSeq'
+    }
 
     method gist(:$treemark=False) {
 

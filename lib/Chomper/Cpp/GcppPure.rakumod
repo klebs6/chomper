@@ -15,6 +15,10 @@ class PureSpecifier is export {
 
     has $.text;
 
+    method name {
+        'PureSpecifier'
+    }
+
     method gist(:$treemark=False) {
         " = " ~ $.val.gist(:$treemark)
     }

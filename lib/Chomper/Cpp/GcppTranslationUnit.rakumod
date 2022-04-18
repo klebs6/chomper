@@ -7,9 +7,13 @@ use Chomper::Cpp::GcppDeclaration;
 
 # token translation-unit { <declarationseq>? $ }
 class TranslationUnit is export { 
-    has IDeclarationseq $.declarationseq;
+    has IDeclarationSeq $.declarationseq;
 
     has $.text;
+
+    method name {
+        'TranslationUnit'
+    }
 
     method gist(:$treemark=False) {
         $.declarationseq.gist(:$treemark)

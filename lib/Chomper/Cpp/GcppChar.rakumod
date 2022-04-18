@@ -5,11 +5,15 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppHex;
 
-class Universalcharactername is export {
-    has Hexquad $.first is required;
-    has Hexquad $.second;
+class UniversalCharacterName is export {
+    has HexQuad $.first is required;
+    has HexQuad $.second;
 
     has $.text;
+
+    method name {
+        'UniversalCharacterName'
+    }
 
     method gist(:$treemark=False) {
         if $.second {
@@ -25,6 +29,10 @@ class BasicCchar does ICchar is export {
 
     has $.text;
 
+    method name {
+        'BasicCchar'
+    }
+
     method gist(:$treemark=False) {
         $.value
     }
@@ -35,15 +43,23 @@ class EscapeCchar does ICchar is export {
 
     has $.text;
 
+    method name {
+        'EscapeCchar'
+    }
+
     method gist(:$treemark=False) {
         $.escapesequence.gist(:$treemark)
     }
 }
 
 class UniversalCchar does ICchar is export {
-    has Universalcharactername $.universalcharactername is required;
+    has UniversalCharacterName $.universalcharactername is required;
 
     has $.text;
+
+    method name {
+        'UniversalCchar'
+    }
 
     method gist(:$treemark=False) {
         $.universalcharactername.gist(:$treemark)
@@ -55,15 +71,23 @@ class BasicSchar does ISchar is export {
 
     has $.text;
 
+    method name {
+        'BasicSchar'
+    }
+
     method gist(:$treemark=False) {
         $.value.gist(:$treemark)
     }
 }
 
-class EscpaeSchar does ISchar is export {
+class EscapeSchar does ISchar is export {
     has IEscapeSequence $.escapesequence is required;
 
     has $.text;
+
+    method name {
+        'EscapeSchar'
+    }
 
     method gist(:$treemark=False) {
         $.escapesequence.gist(:$treemark)
@@ -71,9 +95,13 @@ class EscpaeSchar does ISchar is export {
 }
 
 class UcnSchar does ISchar is export {
-    has Universalcharactername $.universalcharactername is required;
+    has UniversalCharacterName $.universalcharactername is required;
 
     has $.text;
+
+    method name {
+        'UcnSchar'
+    }
 
     method gist(:$treemark=False) {
         $.universalcharactername.gist(:$treemark)
@@ -84,6 +112,10 @@ class CharacterLiteralPrefixU    does ICharacterLiteralPrefix is export {
 
     has $.text;
 
+    method name {
+        'CharacterLiteralPrefixU'
+    }
+
     method gist(:$treemark=False) {
         'u'
     }
@@ -93,6 +125,10 @@ class CharacterLiteralPrefixBigU does ICharacterLiteralPrefix is export {
 
     has $.text;
 
+    method name {
+        'CharacterLiteralPrefixBigU'
+    }
+
     method gist(:$treemark=False) {
         'U'
     }
@@ -101,6 +137,10 @@ class CharacterLiteralPrefixBigU does ICharacterLiteralPrefix is export {
 class CharacterLiteralPrefixL    does ICharacterLiteralPrefix is export { 
 
     has $.text;
+
+    method name {
+        'CharacterLiteralPrefixL'
+    }
 
     method gist(:$treemark=False) {
         'L'
@@ -116,6 +156,10 @@ does IInitializerClause is export {
     has ICchar                  @.cchar;
 
     has $.text;
+
+    method name {
+        'CharacterLiteral'
+    }
 
     method gist(:$treemark=False) {
 
@@ -165,7 +209,7 @@ package CharacterLiteralGrammar is export {
 
         # token universalcharactername:sym<one> { '\\u' <hexquad> }
         method universalcharactername:sym<one>($/) {
-            make Universalcharactername.new(
+            make UniversalCharacterName.new(
                 first => $<first>.made,
                 text  => ~$/,
             )
@@ -173,7 +217,7 @@ package CharacterLiteralGrammar is export {
 
         # token universalcharactername:sym<two> { '\\U' <hexquad> <hexquad> } 
         method universalcharactername:sym<two>($/) {
-            make Universalcharactername.new(
+            make UniversalCharacterName.new(
                 first  => $<first>.made,
                 second => $<second>.made,
                 text   => ~$/,

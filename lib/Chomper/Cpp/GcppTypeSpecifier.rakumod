@@ -19,6 +19,10 @@ package TrailingTypeSpecifier is export {
 
         has $.text;
 
+        method name {
+            'TrailingTypeSpecifier::CvQualifier'
+        }
+
         method gist(:$treemark=False) {
             if $treemark {
                 "T"
@@ -38,6 +42,10 @@ class TypeSpecifierSeq does ITypeSpecifierSeq is export {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
 
     has $.text;
+
+    method name {
+        'TypeSpecifierSeq'
+    }
 
     method gist(:$treemark=False) {
 
@@ -59,6 +67,10 @@ class TrailingTypeSpecifierSeq is export {
 
     has $.text;
 
+    method name {
+        'TrailingTypeSpecifierSeq'
+    }
+
     method gist(:$treemark=False) {
         my $builder = @.trailing-type-specifiers>>.gist(:$treemark).join(" ");
 
@@ -71,6 +83,10 @@ class TrailingTypeSpecifierSeq is export {
 class TypeSpecifier 
 does IDeclSpecifierSeq is export {
     has $.value is required;
+
+    method name {
+        'TypeSpecifier'
+    }
 
     method gist(:$treemark=False) {
         if $treemark {

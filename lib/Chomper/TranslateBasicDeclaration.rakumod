@@ -7,6 +7,11 @@ use Chomper::ToRustIdent;
 use Chomper::ToRustParams;
 use Chomper::ToRustPathInExpression;
 
+use Chomper::TranslateConditionalExpression;
+use Chomper::TranslateExpression;
+use Chomper::TranslateIndexExpressionSuffix;
+use Chomper::TranslateSuffixedExpression;
+
 use Data::Dump::Tree;
 
 proto sub translate-basic-declaration-to-rust(
@@ -73,106 +78,6 @@ multi sub translate-basic-declaration-to-rust(
     ddt $item;
 }
 
-#-----------------------
-proto sub translate-conditional-expression($item) is export { * }
-
-multi sub translate-conditional-expression($item where Cpp::IntegerLiteral::Oct) {  
-    Rust::IntegerLiteral.new(
-        value => $item.octal-literal.value
-    )
-}
-
-multi sub translate-conditional-expression($item where Cpp::IntegerLiteral::Dec) {  
-    Rust::IntegerLiteral.new(
-        value => $item.decimal-literal.value
-    )
-}
-
-multi sub translate-conditional-expression($item) {  
-    die "need write hook for \
-    translate-conditional-expression! {$item.WHAT.^name}";
-}
-
-#-----------------------
-proto sub to-rust-expression($item) is export { * }
-
-multi sub to-rust-expression($item where Cpp::ConstantExpression)
-{
-    translate-conditional-expression($item.conditional-expression)
-}
-
-multi sub to-rust-expression($item)
-{
-    die "need write hook for expression! {$item.WHAT.^name}";
-}
-
-#-----------------------
-proto sub to-rust-index-expression-suffix($item) is export { * }
-
-multi sub to-rust-index-expression-suffix(
-    $item where Cpp::NoPointerDeclaratorTail::Bracketed)
-{
-    my $constant-expr = $item.constant-expression;
-    my @attribs       = $item.attribute-specifier-seq.List;
-
-    #TODO may need to check @attribs to see what
-    #is going on there...
-    die "may need to check this" and ddt @attribs if @attribs[0];
-
-    Rust::IndexExpressionSuffix.new(
-        expression => to-rust-expression($constant-expr),
-    )
-
-}
-
-multi sub to-rust-index-expression-suffix(
-    $item)
-{
-    die "need write hook for index-expression-suffix! {$item.WHAT.^name}";
-}
-
-#-----------------------
-proto sub to-rust-suffixed-expression($item) is export { * }
-
-multi sub to-rust-suffixed-expression($item where Cpp::NoPointerDeclarator) {  
-
-    given $item.token-types {
-        when ["Identifier", "Bracketed"] {
-
-            my Rust::PathInExpression $expression-item 
-            = to-rust-path-in-expression($item.no-pointer-declarator-base);
-
-            my $bracketed     = $item.no-pointer-declarator-tail[0];
-
-            Rust::SuffixedExpression.new(
-                base-expression => Rust::BaseExpression.new(
-                    expression-item => $expression-item,
-                ),
-                suffixed-expression-suffix => [
-                    to-rust-index-expression-suffix($bracketed)
-                ],
-            )
-        }
-        default {
-            die "need to consider token-types: $_";
-        }
-    }
-}
-
-multi sub to-rust-suffixed-expression($item where Cpp::IntegerLiteral::Dec) {  
-    Rust::SuffixedExpression.new(
-        base-expression => Rust::BaseExpression.new(
-            expression-item => Rust::IntegerLiteral.new(
-                value => $item.decimal-literal.value
-            )
-        ),
-    )
-}
-
-multi sub to-rust-suffixed-expression($item) {  
-    die "need write hook for suffixed-expression! {$item.WHAT.^name}";
-}
-
 multi sub translate-basic-declaration-to-rust(
     "I[N] = N;",
     $item where Cpp::BasicDeclaration) 
@@ -217,4 +122,12 @@ multi sub translate-basic-declaration-to-rust(
         let {$rust-ident.gist}: {$rust-type.gist} = {$rust-type.gist}::new({$rust-params.gist});
         END
     }
+}
+
+multi sub translate-basic-declaration-to-rust(
+    "T I(P, P);",
+    $item where Cpp::BasicDeclaration) 
+{
+    debug "mask T I(P, P);";
+    exit;
 }

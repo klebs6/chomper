@@ -20,6 +20,10 @@ is export {
 
     has $.text;
 
+    method name {
+        'SimpleIntTypeSpecifier'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = "";
@@ -45,6 +49,10 @@ is export {
 
     has $.text;
 
+    method name {
+        'SimpleCharTypeSpecifier'
+    }
+
     method gist(:$treemark=False) {
         my $builder = "";
         $builder = $builder.&maybe-extend(:$treemark,$.simple-type-signedness-modifier, padr => True);
@@ -62,6 +70,10 @@ is export {
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
 
     has $.text;
+
+    method name {
+        'SimpleChar16TypeSpecifier'
+    }
 
     method gist(:$treemark=False) {
         my $builder = "";
@@ -81,6 +93,10 @@ is export {
 
     has $.text;
 
+    method name {
+        'SimpleChar32TypeSpecifier'
+    }
+
     method gist(:$treemark=False) {
         my $builder = "";
         $builder = $builder.&maybe-extend(:$treemark,$.simple-type-signedness-modifier, padr => True);
@@ -98,6 +114,10 @@ is export {
     has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier;
 
     has $.text;
+
+    method name {
+        'SimpleWcharTypeSpecifier'
+    }
 
     method gist(:$treemark=False) {
         my $builder = "";
@@ -117,6 +137,10 @@ is export {
 
     has $.text;
 
+    method name {
+        'SimpleDoubleTypeSpecifier'
+    }
+
     method gist(:$treemark=False) {
         my $builder = "";
         $builder = $builder.&maybe-extend(:$treemark,$.simple-type-signedness-modifier, padr => True);
@@ -134,6 +158,10 @@ package SimpleTypeSpecifier is export {
 
         has $.text;
 
+        method name {
+            'SimpleTypeSpecifier::Int'
+        }
+
         method gist(:$treemark=False) {
             $.simple-int-type-specifier.gist(:$treemark)
         }
@@ -144,6 +172,10 @@ package SimpleTypeSpecifier is export {
         has FullTypeName $.full-type-name is required;
 
         has $.text;
+
+        method name {
+            'SimpleTypeSpecifier::Full'
+        }
 
         method gist(:$treemark=False) {
             $.full-type-name.gist(:$treemark)
@@ -156,6 +188,10 @@ package SimpleTypeSpecifier is export {
 
         has $.text;
 
+        method name {
+            'SimpleTypeSpecifier::Scoped'
+        }
+
         method gist(:$treemark=False) {
             $.scoped-template-id.gist(:$treemark)
         }
@@ -166,6 +202,10 @@ package SimpleTypeSpecifier is export {
         has ISimpleTypeSignednessModifier $.simple-type-signedness-modifier is required;
 
         has $.text;
+
+        method name {
+            'SimpleTypeSpecifier::SignednessMod'
+        }
 
         method gist(:$treemark=False) {
             $.simple-type-signedness-modifier.gist(:$treemark)
@@ -178,6 +218,10 @@ package SimpleTypeSpecifier is export {
         has ISimpleTypeLengthModifier     @.simple-type-length-modifier is required;
 
         has $.text;
+
+        method name {
+            'SimpleTypeSpecifier::SignednessModLength'
+        }
 
         method gist(:$treemark=False) {
             my $builder = "";
@@ -198,6 +242,10 @@ package SimpleTypeSpecifier is export {
 
         has $.text;
 
+        method name {
+            'SimpleTypeSpecifier::Char'
+        }
+
         method gist(:$treemark=False) {
             $.simple-char-type-specifier.gist(:$treemark)
         }
@@ -208,6 +256,10 @@ package SimpleTypeSpecifier is export {
         has SimpleChar16TypeSpecifier $.simple-char16-type-specifier is required;
 
         has $.text;
+
+        method name {
+            'SimpleTypeSpecifier::Char16'
+        }
 
         method gist(:$treemark=False) {
             $.simple-char16-type-specifier.gist(:$treemark)
@@ -220,6 +272,10 @@ package SimpleTypeSpecifier is export {
 
         has $.text;
 
+        method name {
+            'SimpleTypeSpecifier::Char32'
+        }
+
         method gist(:$treemark=False) {
             $.simple-char32-type-specifier.gist(:$treemark)
         }
@@ -231,6 +287,10 @@ package SimpleTypeSpecifier is export {
 
         has $.text;
 
+        method name {
+            'SimpleTypeSpecifier::Wchar'
+        }
+
         method gist(:$treemark=False) {
             $.simple-wchar-type-specifier.gist(:$treemark)
         }
@@ -240,6 +300,10 @@ package SimpleTypeSpecifier is export {
     our class Bool_ does ISimpleTypeSpecifier {
 
         has $.text;
+
+        method name {
+            'SimpleTypeSpecifier::Bool'
+        }
 
         method gist(:$treemark=False) {
             if $treemark {
@@ -254,6 +318,10 @@ package SimpleTypeSpecifier is export {
     our class Float_ does ISimpleTypeSpecifier { 
 
         has $.text;
+
+        method name {
+            'SimpleTypeSpecifier::Float'
+        }
 
         method gist(:$treemark=False) {
             if $treemark {
@@ -270,6 +338,10 @@ package SimpleTypeSpecifier is export {
 
         has $.text;
 
+        method name {
+            'SimpleTypeSpecifier::Double'
+        }
+
         method gist(:$treemark=False) {
             $.simple-double-type-specifier.gist(:$treemark)
         }
@@ -279,6 +351,10 @@ package SimpleTypeSpecifier is export {
     our class Void_ does ISimpleTypeSpecifier { 
 
         has $.text;
+
+        method name {
+            'SimpleTypeSpecifier::Void'
+        }
 
         method gist(:$treemark=False) {
             if $treemark {
@@ -293,6 +369,10 @@ package SimpleTypeSpecifier is export {
     our class Auto_ does ISimpleTypeSpecifier { 
 
         has $.text;
+
+        method name {
+            'SimpleTypeSpecifier::Auto'
+        }
 
         method gist(:$treemark=False) {
             if $treemark {
@@ -309,6 +389,10 @@ package SimpleTypeSpecifier is export {
     our class Decltype_ does ISimpleTypeSpecifier {
         has DecltypeSpecifier $.decltype-specifier is required;
         has $.text;
+
+        method name {
+            'SimpleTypeSpecifier::Decltype'
+        }
 
         method gist(:$treemark=False) {
             $.decltype-specifier.gist(:$treemark)

@@ -6,26 +6,34 @@ use Chomper::Cpp::GcppRoles;
 
 # rule balanced-token-seq { <balancedrule>+ }
 class BalancedTokenSeq is export { 
-    has IBalancedrule @.balancedrules is required;
+    has IBalancedRule @.balancedrules is required;
 
     has $.text;
+
+    method name {
+        'BalancedTokenSeq'
+    }
 
     method gist(:$treemark=False) {
         @.balancedrules>>.gist(:$treemark).join(" ")
     }
 }
 
-package Balancedrule is export {
+package BalancedRule is export {
 
     # rule balancedrule:sym<parens> { 
     #   <.left-paren> 
     #   <balanced-token-seq> 
     #   <.right-paren> 
     # }
-    our class Parens does IBalancedrule {
+    our class Parens does IBalancedRule {
         has BalancedTokenSeq $.balanced-token-seq is required;
 
         has $.text;
+
+        method name {
+            'BalancedRule::Parens'
+        }
 
         method gist(:$treemark=False) {
             "(" ~ $.balanced-token-seq.gist(:$treemark) ~ ")"
@@ -37,10 +45,14 @@ package Balancedrule is export {
     #   <balanced-token-seq> 
     #   <.right-bracket> 
     # }
-    our class Brackets does IBalancedrule {
+    our class Brackets does IBalancedRule {
         has BalancedTokenSeq $.balanced-token-seq is required;
 
         has $.text;
+
+        method name {
+            'BalancedRule::Brackets'
+        }
 
         method gist(:$treemark=False) {
             "[" ~ $.balanced-token-seq ~ "]"
@@ -52,10 +64,14 @@ package Balancedrule is export {
     #   <balanced-token-seq> 
     #   <.right-brace> 
     # } 
-    our class Braces does IBalancedrule {
+    our class Braces does IBalancedRule {
         has BalancedTokenSeq $.balanced-token-seq is required;
 
         has $.text;
+
+        method name {
+            'BalancedRule::Braces'
+        }
 
         method gist(:$treemark=False) {
             "{" ~ $.balanced-token-seq ~ "}"

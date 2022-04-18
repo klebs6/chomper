@@ -4,43 +4,62 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-# rule relational-operator:sym<less> { <.less> }
-class RelationalOperator::Less does IRelationalOperator is export {
+package RelationalOperator is export {
 
-    has $.text;
+    # rule relational-operator:sym<less> { <.less> }
+    class Less does IRelationalOperator {
 
-    method gist(:$treemark=False) {
-        "<"
+        has $.text;
+
+        method name {
+            'RelationalOperator::Less'
+        }
+
+        method gist(:$treemark=False) {
+            "<"
+        }
     }
-}
 
-# rule relational-operator:sym<greater> { <.greater> }
-class RelationalOperator::Greater does IRelationalOperator is export {
+    # rule relational-operator:sym<greater> { <.greater> }
+    class Greater does IRelationalOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        ">"
+        method name {
+            'RelationalOperator::Greater'
+        }
+
+        method gist(:$treemark=False) {
+            ">"
+        }
     }
-}
 
-# rule relational-operator:sym<less-eq> { <.less-equal> }
-class RelationalOperator::LessEq does IRelationalOperator is export {
+    # rule relational-operator:sym<less-eq> { <.less-equal> }
+    class LessEq does IRelationalOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "<="
+        method name {
+            'RelationalOperator::LessEq'
+        }
+
+        method gist(:$treemark=False) {
+            "<="
+        }
     }
-}
 
-# rule relational-operator:sym<greater-eq> { <.greater-equal> }
-class RelationalOperator::GreaterEq does IRelationalOperator is export {
+    # rule relational-operator:sym<greater-eq> { <.greater-equal> }
+    class GreaterEq does IRelationalOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        ">="
+        method name {
+            'RelationalOperator::GreaterEq'
+        }
+
+        method gist(:$treemark=False) {
+            ">="
+        }
     }
 }
 
@@ -55,6 +74,10 @@ class RelationalExpressionTail is export {
     has IShiftExpression     $.shift-expression    is required;
 
     has $.text;
+
+    method name {
+        'RelationalExpressionTail'
+    }
 
     method gist(:$treemark=False) {
         " " 
@@ -73,6 +96,10 @@ class RelationalExpression does IRelationalExpression is export {
     has RelationalExpressionTail @.relational-expression-tail;
 
     has $.text;
+
+    method name {
+        'RelationalExpression'
+    }
 
     method gist(:$treemark=False) {
         $.shift-expression.gist(:$treemark) 

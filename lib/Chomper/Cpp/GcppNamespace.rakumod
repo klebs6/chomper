@@ -12,6 +12,10 @@ class NamespaceAlias is export {
 
     has $.text;
 
+    method name {
+        'NamespaceAlias'
+    }
+
     method gist(:$treemark=False) {
         $.identifier.gist(:$treemark)
     }
@@ -22,6 +26,10 @@ class OriginalNamespaceName is export {
     has Identifier $.identifier is required;
 
     has $.text;
+
+    method name {
+        'OriginalNamespaceName'
+    }
 
     method gist(:$treemark=False) {
         $.identifier.gist(:$treemark)
@@ -36,6 +44,10 @@ package NamespaceName is export {
 
         has $.text;
 
+        method name {
+            'NamespaceName::Original'
+        }
+
         method gist(:$treemark=False) {
             $.original-namespace-name.gist(:$treemark)
         }
@@ -46,6 +58,10 @@ package NamespaceName is export {
         has NamespaceAlias $.namespace-alias is required;
 
         has $.text;
+
+        method name {
+            'NamespaceName::Alias'
+        }
 
         method gist(:$treemark=False) {
             $.namespace-alias.gist(:$treemark)
@@ -61,6 +77,10 @@ package NamespaceTag is export {
 
         has $.text;
 
+        method name {
+            'NamespaceTag::Ident'
+        }
+
         method gist(:$treemark=False) {
             $.identifier.gist(:$treemark)
         }
@@ -71,6 +91,10 @@ package NamespaceTag is export {
         has OriginalNamespaceName $.original-namespace-name is required;
 
         has $.text;
+
+        method name {
+            'NamespaceTag::NsName'
+        }
 
         method gist(:$treemark=False) {
             $.original-namespace-name.gist(:$treemark)
@@ -89,9 +113,13 @@ package NamespaceTag is export {
 class NamespaceDefinition is export { 
     has Bool           $.inline is required;
     has INamespaceTag   $.namespace-tag;
-    has IDeclarationseq $.namespace-body;
+    has IDeclarationSeq $.namespace-body;
 
     has $.text;
+
+    method name {
+        'NamespaceDefinition'
+    }
 
     method gist(:$treemark=False) {
 
@@ -121,11 +149,15 @@ class NamespaceDefinition is export {
 #   <nested-name-specifier>? 
 #   <namespace-name> 
 # } 
-class Qualifiednamespacespecifier is export { 
+class QualifiedNamespaceSpecifier is export { 
     has INestedNameSpecifier $.nested-name-specifier;
     has INamespaceName       $.namespace-name is required;
 
     has $.text;
+
+    method name {
+        'QualifiedNamespaceSpecifier'
+    }
 
     method gist(:$treemark=False) {
         my $builder = "";
@@ -150,9 +182,13 @@ class Qualifiednamespacespecifier is export {
 class NamespaceAliasDefinition is export { 
     has IComment                    $.comment;
     has Identifier                  $.identifier is required;
-    has Qualifiednamespacespecifier $.qualifiednamespacespecifier is required;
+    has QualifiedNamespaceSpecifier $.qualifiednamespacespecifier is required;
 
     has $.text;
+
+    method name {
+        'NamespaceAliasDefinition'
+    }
 
     method gist(:$treemark=False) {
 
@@ -241,7 +277,7 @@ package NamespaceGrammar is export {
             my $body   = $<namespace-name>.made;
 
             if $prefix {
-                make Qualifiednamespacespecifier.new(
+                make QualifiedNamespaceSpecifier.new(
                     nested-name-specifier => $prefix,
                     namespace-name        => $body,
                     text                  => ~$/,

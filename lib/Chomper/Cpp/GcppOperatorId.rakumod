@@ -15,33 +15,50 @@ class OperatorFunctionId is export {
     has ITheOperator $.the-operator is required;
     has $.text;
 
+    method name {
+        'OperatorFunctionId'
+    }
+
     method gist(:$treemark=False) {
         "operator " ~ $.the-operator.gist(:$treemark)
     }
 }
 
 
-# rule literal-operator-id:sym<string-lit> { <operator> <string-literal> <identifier> }
-class LiteralOperatorId::StringLit does ILiteralOperatorId is export {
-    has StringLiteral $.string-literal is required;
-    has Identifier    $.identifier     is required;
-    has $.text;
+package LiteralOperatorId is export {
 
-    method gist(:$treemark=False) {
-        "operator " ~ $.string-literal.gist(:$treemark) ~ $.identifier.gist(:$treemark)
+    # rule literal-operator-id:sym<string-lit> { <operator> <string-literal> <identifier> }
+    class StringLit does ILiteralOperatorId {
+
+        has StringLiteral $.string-literal is required;
+        has Identifier    $.identifier     is required;
+        has $.text;
+
+        method name {
+            'LiteralOperatorId::StringLit'
+        }
+
+        method gist(:$treemark=False) {
+            "operator " ~ $.string-literal.gist(:$treemark) ~ $.identifier.gist(:$treemark)
+        }
     }
-}
 
-# rule literal-operator-id:sym<user-defined> { 
-#   <operator> 
-#   <user-defined-string-literal> 
-# }
-class LiteralOperatorId::UserDefined does ILiteralOperatorId is export {
-    has UserDefinedStringLiteral $.user-defined-string-literal is required;
-    has $.text;
+    # rule literal-operator-id:sym<user-defined> { 
+    #   <operator> 
+    #   <user-defined-string-literal> 
+    # }
+    class UserDefined does ILiteralOperatorId {
 
-    method gist(:$treemark=False) {
-        "operator " ~ $.user-defined-string-literal.gist(:$treemark)
+        has UserDefinedStringLiteral $.user-defined-string-literal is required;
+        has $.text;
+
+        method name {
+            'LiteralOperatorId::UserDefined'
+        }
+
+        method gist(:$treemark=False) {
+            "operator " ~ $.user-defined-string-literal.gist(:$treemark)
+        }
     }
 }
 

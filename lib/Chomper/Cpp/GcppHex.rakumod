@@ -9,37 +9,56 @@ class HexadecimalLiteral is export {
 
     has $.text;
 
+    method name {
+        'HexadecimalLiteral'
+    }
+
     method gist(:$treemark=False) {
         $.value
     }
 }
 
-class Hexadecimaldigit is export { 
+class HexadecimalDigit is export { 
     has Str $.value is required; 
 
     has $.text;
 
+    method name {
+        'HexadecimalDigit'
+    }
+
     method gist(:$treemark=False) {
         $.value
     }
 }
 
+#--------------------------
 our subset Quad of List is export where (HexadecimalLiteral, HexadecimalLiteral, HexadecimalLiteral, HexadecimalLiteral);
 
-class Hexquad is export { 
+#--------------------------
+class HexQuad is export { 
     has Quad @.hexadecimaldigit is required;
 
     has $.text;
+
+    method name {
+        'HexQuad'
+    }
 
     method gist(:$treemark=False) {
         @.hexadecimaldigit>>.gist(:$treemark).join("")
     }
 }
 
-class Hexadecimalescapesequence is export {
-    has Hexadecimaldigit @.digits is required;
+class HexadecimalEscapeSequence is export {
+
+    has HexadecimalDigit @.digits is required;
 
     has $.text;
+
+    method name {
+        'HexadecimalEscapeSequence'
+    }
 
     method gist(:$treemark=False) {
         @.digits>>.gist(:$treemark).join("")
@@ -52,7 +71,7 @@ package HexGrammar is export {
 
         # token hexquad { <hexadecimaldigit> ** 4 }
         method hexquad($/) {
-            make Hexquad.new(
+            make HexQuad.new(
                 hexadecimaldigit => $<hexadecimaldigit>>>.made,
                 text             => ~$/,
             )
@@ -67,7 +86,7 @@ package HexGrammar is export {
 
         # token hexadecimaldigit { <[ 0 .. 9 ]> }
         method hexadecimaldigit($/) {
-            make Hexadecimaldigit.new(
+            make HexadecimalDigit.new(
                 value => ~$/,
             )
         }

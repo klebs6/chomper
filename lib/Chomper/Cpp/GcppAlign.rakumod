@@ -7,10 +7,14 @@ use Chomper::Cpp::GcppRoles;
 our role IAlignmentSpecifier is export {  }
 
 # rule alignmentspecifierbody:sym<type-id> { <the-type-id> }
-class Alignmentspecifierbody::TypeId 
-does IAlignmentspecifierbody is export {
+class AlignmentSpecifierBody::TypeId 
+does IAlignmentSpecifierBody is export {
 
     has ITheTypeId $.the-type-id is required;
+
+    method name {
+        'AlignmentSpecifierBody::TypeId'
+    }
 
     method gist(:$treemark=False) {
         $.the-type-id.gist(:$treemark)
@@ -18,10 +22,14 @@ does IAlignmentspecifierbody is export {
 }
 
 # rule alignmentspecifierbody:sym<const-expr> { <constant-expression> }
-class Alignmentspecifierbody::ConstExpr 
-does IAlignmentspecifierbody is export {
+class AlignmentSpecifierBody::ConstExpr 
+does IAlignmentSpecifierBody is export {
 
     has IConstantExpression $.constant-expression is required;
+
+    method name {
+        'AlignmentSpecifierBody::ConstExpr'
+    }
 
     method gist(:$treemark=False) {
         $.constant-expression.gist(:$treemark)
@@ -35,11 +43,15 @@ does IAlignmentspecifierbody is export {
 #   <ellipsis>? 
 #   <.right-paren> 
 # }
-class Alignmentspecifier 
+class AlignmentSpecifier 
 does IAttributeSpecifier is export {
 
-    has IAlignmentspecifierbody $.alignmentspecifierbody is required;
+    has IAlignmentSpecifierBody $.alignmentspecifierbody is required;
     has Bool                    $.has-ellipsis is required;
+
+    method name {
+        'AlignmentSpecifier'
+    }
 
     method gist(:$treemark=False) {
 
@@ -69,7 +81,7 @@ package AlignGrammar is export {
 
         # rule alignmentspecifier { <alignas> <.left-paren> <alignmentspecifierbody> <ellipsis>? <.right-paren> }
         method alignmentspecifier($/) {
-            make Alignmentspecifier.new(
+            make AlignmentSpecifier.new(
                 alignmentspecifierbody => $<alignmentspecifierbody>.made,
                 has-ellipsis           => $<has-ellipsis>.made,
                 text                   => ~$/,

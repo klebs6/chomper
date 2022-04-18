@@ -14,6 +14,10 @@ class CastExpression does ICastExpression is export {
 
     has $.text;
 
+    method name {
+        'CastExpression'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = "";
@@ -33,6 +37,10 @@ package CastToken is export {
 
         has $.text;
 
+        method name {
+            'CastToken::Dyn'
+        }
+
         method gist(:$treemark=False) {
             "dynamic_cast"
         }
@@ -42,6 +50,10 @@ package CastToken is export {
     our class Static does ICastToken { 
 
         has $.text;
+
+        method name {
+            'CastToken::Static'
+        }
 
         method gist(:$treemark=False) {
             "static_cast"
@@ -53,6 +65,10 @@ package CastToken is export {
 
         has $.text;
 
+        method name {
+            'CastToken::Reinterpret'
+        }
+
         method gist(:$treemark=False) {
             "reinterpret_cast"
         }
@@ -62,6 +78,10 @@ package CastToken is export {
     our class Const does ICastToken { 
 
         has $.text;
+
+        method name {
+            'CastToken::Const'
+        }
 
         method gist(:$treemark=False) {
             "const_cast"

@@ -18,6 +18,10 @@ class AsmDefinition is export {
 
     has $.text;
 
+    method name {
+        'AsmDefinition'
+    }
+
     method gist(:$treemark=False) {
         "asm(" ~ $.string-literal.gist(:$treemark) ~ ");"
     }

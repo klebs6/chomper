@@ -15,6 +15,10 @@ class BaseSpecifierList is export {
 
     has $.text;
 
+    method name {
+        'BaseSpecifierList'
+    }
+
     method gist(:$treemark=False) {
         @.base-specifiers>>.gist(:$treemark).join(", ")
     }
@@ -29,6 +33,10 @@ class BaseClause is export {
 
     has $.text;
 
+    method name {
+        'BaseClause'
+    }
+
     method gist(:$treemark=False) {
         ":" ~ $.base-specifier-list.gist(:$treemark)
     }
@@ -39,6 +47,10 @@ class BaseClause is export {
 # }
 class BaseTypeSpecifier is export { 
     has IClassOrDeclType $.class-or-decl-type is required;
+
+    method name {
+        'BaseTypeSpecifier'
+    }
 
     method gist(:$treemark=False) {
         $.class-or-decl-type.gist(:$treemark)
@@ -56,6 +68,10 @@ package BaseSpecifier is export {
         has BaseTypeSpecifier $.base-type-specifier is required;
 
         has $.text;
+
+        method name {
+            'BaseSpecifier::BaseType'
+        }
 
         method gist(:$treemark=False) {
 
@@ -80,6 +96,10 @@ package BaseSpecifier is export {
         has BaseTypeSpecifier $.base-type-specifier is required;
 
         has $.text;
+
+        method name {
+            'BaseSpecifier::Virtual'
+        }
 
         method gist(:$treemark=False) {
 
@@ -113,6 +133,10 @@ package BaseSpecifier is export {
         has BaseTypeSpecifier      $.base-type-specifier is required;
 
         has $.text;
+
+        method name {
+            'BaseSpecifier::Access'
+        }
 
         method gist(:$treemark=False) {
 

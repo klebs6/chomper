@@ -18,6 +18,10 @@ package Condition is export {
 
         has $.text;
 
+        method name {
+            'Condition::Expr'
+        }
+
         method gist(:$treemark=False) {
             $.expression.gist(:$treemark)
         }
@@ -36,6 +40,10 @@ package Condition is export {
         has IConditionDeclTail    $.condition-decl-tail is required;
 
         has $.text;
+
+        method name {
+            'Condition::Decl'
+        }
 
         method gist(:$treemark=False) {
 
@@ -67,6 +75,10 @@ package ConditionDeclTail is export {
 
         has $.text;
 
+        method name {
+            'ConditionDeclTail::AssignInit'
+        }
+
         method gist(:$treemark=False) {
             " = " ~ $.initializer-clause.gist(:$treemark)
         }
@@ -79,6 +91,10 @@ package ConditionDeclTail is export {
         has BracedInitList $.braced-init-list is required;
 
         has $.text;
+
+        method name {
+            'ConditionDeclTail::BracedInit'
+        }
 
         method gist(:$treemark=False) {
             $.braced-init-list.gist(:$treemark)

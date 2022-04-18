@@ -11,6 +11,10 @@ package StorageClassSpecifier is export {
 
         has $.text;
 
+        method name {
+            'StorageClassSpecifier::Extern'
+        }
+
         method gist(:$treemark=False) {
             "extern"
         }
@@ -20,6 +24,10 @@ package StorageClassSpecifier is export {
     our class Mutable does IStorageClassSpecifier { 
 
         has $.text;
+
+        method name {
+            'StorageClassSpecifier::Mutable'
+        }
 
         method gist(:$treemark=False) {
             "mutable"
@@ -31,6 +39,10 @@ package StorageClassSpecifier is export {
 
         has $.text;
 
+        method name {
+            'StorageClassSpecifier::Register'
+        }
+
         method gist(:$treemark=False) {
             "register"
         }
@@ -41,15 +53,23 @@ package StorageClassSpecifier is export {
 
         has $.text;
 
+        method name {
+            'StorageClassSpecifier::Static'
+        }
+
         method gist(:$treemark=False) {
             "static"
         }
     }
 
     # rule storage-class-specifier:sym<thread_local> { <.thread_local> }
-    our class Thread_local does IStorageClassSpecifier { 
+    our class ThreadLocal does IStorageClassSpecifier { 
 
         has $.text;
+
+        method name {
+            'StorageClassSpecifier::ThreadLocal'
+        }
 
         method gist(:$treemark=False) {
             "thread_local"
@@ -73,7 +93,7 @@ package StorageClassGrammar is export {
 
         # rule storage-class-specifier:sym<thread_local> { <.thread_local> }
         method storage-class-specifier:sym<thread_local>($/) {
-            make StorageClassSpecifier::Thread_local.new
+            make StorageClassSpecifier::ThreadLocal.new
         }
 
         # rule storage-class-specifier:sym<extern> { <.extern> }

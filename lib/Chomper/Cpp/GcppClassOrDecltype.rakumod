@@ -16,6 +16,10 @@ package ClassOrDeclType is export {
         has IClassName           $.class-name is required;
         has $.text;
 
+        method name {
+            'ClassOrDeclType::Class'
+        }
+
         method gist(:$treemark=False) {
 
             my $builder = "";
@@ -34,6 +38,10 @@ package ClassOrDeclType is export {
     our class Decltype does IClassOrDeclType {
         has DecltypeSpecifier $.decltype-specifier is required;
         has $.text;
+
+        method name {
+            'ClassOrDeclType::Decltype'
+        }
 
         method gist(:$treemark=False) {
             $.decltype-specifier.gist(:$treemark)

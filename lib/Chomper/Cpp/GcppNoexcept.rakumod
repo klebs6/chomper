@@ -4,33 +4,43 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-# token noe-except-specification:sym<full> { 
-#   <noexcept> 
-#   <.left-paren> 
-#   <constant-expression> 
-#   <.right-paren> 
-# }
-class NoeExceptSpecification::Full 
-does INoeExceptSpecification is export {
-    has IConstantExpression $.constant-expression is required;
+package NoExceptSpecification is export {
 
-    has $.text;
+    # token no-except-specification:sym<full> { 
+    #   <noexcept> 
+    #   <.left-paren> 
+    #   <constant-expression> 
+    #   <.right-paren> 
+    # }
+    class Full does INoExceptSpecification {
 
-    method gist(:$treemark=False) {
-        "noexcept(" ~ $.constant-expression.gist(:$treemark) ~ ")"
+        has IConstantExpression $.constant-expression is required;
+
+        has $.text;
+
+        method name {
+            'NoExceptSpecification::Full'
+        }
+
+        method gist(:$treemark=False) {
+            "noexcept(" ~ $.constant-expression.gist(:$treemark) ~ ")"
+        }
     }
-}
 
-# token noe-except-specification:sym<keyword-only> { 
-#   <noexcept> 
-# }
-class NoeExceptSpecification::KeywordOnly 
-does INoeExceptSpecification is export { 
+    # token no-except-specification:sym<keyword-only> { 
+    #   <noexcept> 
+    # }
+    class KeywordOnly does INoExceptSpecification { 
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "noexcept"
+        method name {
+            'NoExceptSpecification::KeywordOnly'
+        }
+
+        method gist(:$treemark=False) {
+            "noexcept"
+        }
     }
 }
 
@@ -44,6 +54,10 @@ class NoExceptExpression is export {
     has IExpression $.expression is required;
 
     has $.text;
+
+    method name {
+        'NoExceptExpression'
+    }
 
     method gist(:$treemark=False) {
         "noexcept(" ~ $.expression.gist(:$treemark) ~ ")"
@@ -67,24 +81,24 @@ package NoExceptExpressionGrammar is export {
             )
         }
 
-        # token noe-except-specification:sym<full> { 
+        # token no-except-specification:sym<full> { 
         #   <noexcept> 
         #   <.left-paren> 
         #   <constant-expression> 
         #   <.right-paren> 
         # }
-        method noe-except-specification:sym<full>($/) {
-            make NoeExceptSpecification::Full.new(
+        method no-except-specification:sym<full>($/) {
+            make NoExceptSpecification::Full.new(
                 constant-expression => $<constant-expression>.made,
                 text                => ~$/,
             )
         }
 
-        # token noe-except-specification:sym<keyword-only> { 
+        # token no-except-specification:sym<keyword-only> { 
         #   <noexcept> 
         # }
-        method noe-except-specification:sym<keyword-only>($/) {
-            make NoeExceptSpecification::KeywordOnly.new
+        method no-except-specification:sym<keyword-only>($/) {
+            make NoExceptSpecification::KeywordOnly.new
         }
     }
 
@@ -97,16 +111,16 @@ package NoExceptExpressionGrammar is export {
             <right-paren>
         }
 
-        proto token noe-except-specification { * }
+        proto token no-except-specification { * }
 
-        token noe-except-specification:sym<full> { 
+        token no-except-specification:sym<full> { 
             <noexcept> 
             <left-paren> 
             <constant-expression> 
             <right-paren> 
         }
 
-        token noe-except-specification:sym<keyword-only> { 
+        token no-except-specification:sym<keyword-only> { 
             <noexcept> 
         }
     }

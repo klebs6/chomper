@@ -15,6 +15,10 @@ class StatementSeq is export {
 
     has $.text;
 
+    method name {
+        'StatementSeq'
+    }
+
     method gist(:$treemark=False) {
         @.statements>>.gist(:$treemark).join("\n")
     }
@@ -29,6 +33,10 @@ class CompoundStatement does IStatement is export {
     has $.statement-seq;
 
     has $.text;
+
+    method name {
+        'CompoundStatement'
+    }
 
     method gist(:$treemark=False) {
         my $builder = "\{\n";
@@ -49,6 +57,10 @@ package Statement is export {
         has LabeledStatement $.labeled-statement is required;
 
         has $.text;
+
+        method name {
+            'Statement::Labeled'
+        }
 
         method gist(:$treemark=False) {
 
@@ -72,6 +84,10 @@ package Statement is export {
 
         has $.text;
 
+        method name {
+            'Statement::Declaration'
+        }
+
         method gist(:$treemark=False) {
 
             my $builder = "";
@@ -93,6 +109,10 @@ class DeclarationStatement does IDeclarationStatement is export {
 
     has $.text;
 
+    method name {
+        'DeclarationStatement'
+    }
+
     method gist(:$treemark=False) {
         $.block-declaration.gist(:$treemark)
     }
@@ -107,6 +127,10 @@ class ExpressionStatement does IStatement is export {
     has IExpression $.expression;
 
     has $.text;
+
+    method name {
+        'ExpressionStatement'
+    }
 
     method gist(:$treemark=False) {
         my $builder = "";

@@ -17,6 +17,10 @@ package TheTypeName is export {
         has SimpleTemplateId $.simple-template-id is required;
         has $.text;
 
+        method name {
+            'TheTypeName::SimpleTemplateId'
+        }
+
         method gist(:$treemark=False) {
             $.simple-template-id.gist(:$treemark)
         }
@@ -28,6 +32,10 @@ package TheTypeName is export {
 
         has $.text;
 
+        method name {
+            'TheTypeName::Class'
+        }
+
         method gist(:$treemark=False) {
             $.class-name.gist(:$treemark)
         }
@@ -38,6 +46,10 @@ package TheTypeName is export {
         has EnumName $.enum-name is required;
 
         has $.text;
+
+        method name {
+            'TheTypeName::Enum'
+        }
 
         method gist(:$treemark=False) {
             $.enum-name.gist(:$treemark)
@@ -51,6 +63,10 @@ package TheTypeName is export {
         has TypedefName $.typedef-name is required;
 
         has $.text;
+
+        method name {
+            'TheTypeName::Typedef'
+        }
 
         method gist(:$treemark=False) {
             $.typedef-name.gist(:$treemark)
@@ -71,6 +87,10 @@ is export {
     has ITheTypeName         $.the-type-name is required;
 
     has $.text;
+
+    method name {
+        'FullTypeName'
+    }
 
     method gist(:$treemark=False) {
 

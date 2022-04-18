@@ -13,86 +13,114 @@ class TemplateParameterList is export {
     has ITemplateParameter @.template-parameters is required;
     has $.text;
 
+    method name {
+        'TemplateParameterList'
+    }
+
     method gist(:$treemark=False) {
         @.template-parameters>>.gist(:$treemark).join(", ")
     }
 }
 
-# rule type-parameter-base:sym<basic> { 
-#   [ <template> <less> <templateparameter-list> <greater> ]? 
-#   <class_> 
-# }
-class TypeParameterBase::Basic does ITypeParameterBase is export {
-    has TemplateParameterList $.templateparameter-list;
-    has $.text;
+package TypeParameterBase is export {
 
-    method gist(:$treemark=False) {
+    # rule type-parameter-base:sym<basic> { 
+    #   [ <template> <less> <templateparameter-list> <greater> ]? 
+    #   <class_> 
+    # }
+    class Basic does ITypeParameterBase {
+        has TemplateParameterList $.templateparameter-list;
+        has $.text;
 
-        if $.templateparameter-list {
-            "template<" ~ $.templateparameter-list.gist(:$treemark) ~ "> " ~ "class"
-        } else {
-            "class"
+        method name {
+            'TypeParameterBase::Basic'
+        }
+
+        method gist(:$treemark=False) {
+
+            if $.templateparameter-list {
+                "template<" ~ $.templateparameter-list.gist(:$treemark) ~ "> " ~ "class"
+            } else {
+                "class"
+            }
+        }
+    }
+
+    # rule type-parameter-base:sym<typename> { 
+    #   <typename_> 
+    # }
+    class Typename does ITypeParameterBase {
+
+        has $.text;
+
+        method name {
+            'TypeParameterBase::Typename'
+        }
+
+        method gist(:$treemark=False) {
+            "typename"
         }
     }
 }
 
-# rule type-parameter-base:sym<typename> { 
-#   <typename_> 
-# }
-class TypeParameterBase::Typename does ITypeParameterBase is export {
+package TypeParameterSuffix is export {
 
-    has $.text;
+    # rule type-parameter-suffix:sym<maybe-ident> { 
+    #   <ellipsis>? 
+    #   <identifier>? 
+    # }
+    class MaybeIdent does ITypeParameterSuffix {
 
-    method gist(:$treemark=False) {
-        "typename"
+        has Bool       $.has-ellipsis;
+        has Identifier $.identifier;
+
+        has $.text;
+
+        method name {
+            'TypeParameterSuffix::MaybeIdent'
+        }
+
+        method gist(:$treemark=False) {
+
+            my $builder = "";
+
+            if $.has-ellipsis {
+                $builder ~= "...";
+            }
+
+            if $.identifier {
+                $builder ~= $.identifier.gist(:$treemark);
+            }
+
+            $builder
+        }
     }
-}
 
-# rule type-parameter-suffix:sym<maybe-ident> { 
-#   <ellipsis>? 
-#   <identifier>? 
-# }
-class TypeParameterSuffix::MaybeIdent does ITypeParameterSuffix is export {
-    has Bool       $.has-ellipsis;
-    has Identifier $.identifier;
+    # rule type-parameter-suffix:sym<assign-type-id> { 
+    #   <identifier>? 
+    #   <assign> 
+    #   <the-type-id>  
+    # }
+    class AssignTypeId does ITypeParameterSuffix {
 
-    has $.text;
+        has Identifier $.identifier;
+        has ITheTypeId $.the-type-id is required;
 
-    method gist(:$treemark=False) {
+        has $.text;
 
-        my $builder = "";
-
-        if $.has-ellipsis {
-            $builder ~= "...";
+        method name {
+            'TypeParameterSuffix::AssignTypeId'
         }
 
-        if $.identifier {
-            $builder ~= $.identifier.gist(:$treemark);
+        method gist(:$treemark=False) {
+            my $builder = "";
+
+            if $.identifer {
+                $builder ~= $.identifier.gist(:$treemark) ~ " ";
+            }
+
+            $builder ~ " = " ~ $.the-type-id.gist(:$treemark)
         }
-
-        $builder
-    }
-}
-
-# rule type-parameter-suffix:sym<assign-type-id> { 
-#   <identifier>? 
-#   <assign> 
-#   <the-type-id>  
-# }
-class TypeParameterSuffix::AssignTypeId does ITypeParameterSuffix is export {
-    has Identifier $.identifier;
-    has ITheTypeId $.the-type-id is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        my $builder = "";
-
-        if $.identifer {
-            $builder ~= $.identifier.gist(:$treemark) ~ " ";
-        }
-
-        $builder ~ " = " ~ $.the-type-id.gist(:$treemark)
     }
 }
 
@@ -105,6 +133,10 @@ class TypeParameter is export {
     has ITypeParameterSuffix $.type-parameter-suffix is required;
 
     has $.text;
+
+    method name {
+        'TypeParameter'
+    }
 
     method gist(:$treemark=False) {
         $.type-parameter-base.gist(:$treemark) ~ $.type-parameter-suffix.gist(:$treemark)

@@ -19,6 +19,10 @@ class ForRangeDeclaration is export {
 
     has $.text;
 
+    method name {
+        'ForRangeDeclaration'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = "";
@@ -45,6 +49,10 @@ package ForRangeInitializer is export {
 
         has $.text;
 
+        method name {
+            'ForRangeInitializer::Expression'
+        }
+
         method gist(:$treemark=False) {
             $.expression.gist(:$treemark)
         }
@@ -58,6 +66,10 @@ package ForRangeInitializer is export {
         has BracedInitList $.braced-init-list is required;
 
         has $.text;
+
+        method name {
+            'ForRangeInitializer::BracedInitList'
+        }
 
         method gist(:$treemark=False) {
             $.braced-init-list.gist(:$treemark)

@@ -12,30 +12,45 @@ class VirtualSpecifierSeq is export {
 
     has $.text;
 
+    method name {
+        'VirtualSpecifierSeq'
+    }
+
     method gist(:$treemark=False) {
         @.virtual-specifiers>>.gist(:$treemark).join(" ")
     }
 }
 
-# rule virtual-specifier:sym<override> { 
-#   <override> 
-# }
-class VirtualSpecifier::Override does IVirtualSpecifier is export { 
+package VirtualSpecifier is export {
 
-    has $.text;
+    # rule virtual-specifier:sym<override> { 
+    #   <override> 
+    # }
+    class Override does IVirtualSpecifier { 
 
-    method gist(:$treemark=False) {
-        "override"
+        has $.text;
+
+        method name {
+            'VirtualSpecifier::Override'
+        }
+
+        method gist(:$treemark=False) {
+            "override"
+        }
     }
-}
 
-# rule virtual-specifier:sym<final> { <final> }
-class VirtualSpecifier::Final does IVirtualSpecifier is export {
+    # rule virtual-specifier:sym<final> { <final> }
+    class Final does IVirtualSpecifier {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "final"
+        method name {
+            'VirtualSpecifier::Final'
+        }
+
+        method gist(:$treemark=False) {
+            "final"
+        }
     }
 }
 

@@ -27,6 +27,10 @@ package SelectionStatement is export {
 
         has $.text;
 
+        method name {
+            'SelectionStatement::If'
+        }
+
         method gist(:$treemark=False) {
 
             my $builder = "if (";
@@ -82,6 +86,10 @@ package SelectionStatement is export {
         has IStatement $.statement is required;
 
         has $.text;
+
+        method name {
+            'SelectionStatement::Switch'
+        }
 
         method gist(:$treemark=False) {
             "switch (" ~ $.condition.gist(:$treemark) ~ ") " ~ $.statement.gist(:$treemark)

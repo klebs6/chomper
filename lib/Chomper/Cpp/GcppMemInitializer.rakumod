@@ -15,6 +15,10 @@ class MemInitializerList is export {
     has IMemInitializer @.mem-initializers is required;
     has $.text;
 
+    method name {
+        'MemInitializerList'
+    }
+
     method gist(:$treemark=False) {
         @.mem-initializers>>.gist(:$treemark).join(", ")
     }
@@ -29,9 +33,13 @@ package MemInitializer is export {
     #   <.right-paren> 
     # }
     our class ExprList does IMemInitializer {
-        has IMeminitializerid $.meminitializerid is required;
+        has IMemInitializerId $.meminitializerid is required;
         has ExpressionList    $.expression-list;
         has $.text;
+
+        method name {
+            'MemInitializer::ExprList'
+        }
 
         method gist(:$treemark=False) {
             my $builder = $.meminitializerid.gist(:$treemark);
@@ -51,9 +59,13 @@ package MemInitializer is export {
     #   <braced-init-list> 
     # }
     our class Braced does IMemInitializer {
-        has IMeminitializerid $.meminitializerid is required;
+        has IMemInitializerId $.meminitializerid is required;
         has BracedInitList    $.braced-init-list is required;
         has $.text;
+
+        method name {
+            'MemInitializer::Braced'
+        }
 
         method gist(:$treemark=False) {
             $.meminitializerid.gist(:$treemark) ~ " " ~ $.braced-init-list.gist(:$treemark)
@@ -62,12 +74,16 @@ package MemInitializer is export {
 }
 
 
-package Meminitializerid is export {
+package MemInitializerId is export {
 
     # rule meminitializerid:sym<class-or-decl> { <class-or-decl-type> }
-    our class ClassOrDecl does IMeminitializerid {
+    our class ClassOrDecl does IMemInitializerId {
         has IClassOrDeclType $.class-or-decl-type is required;
         has $.text;
+
+        method name {
+            'MemInitializerId::ClassOrDecl'
+        }
 
         method gist(:$treemark=False) {
             $.class-or-decl-type.gist(:$treemark)
@@ -75,9 +91,13 @@ package Meminitializerid is export {
     }
 
     # rule meminitializerid:sym<ident> { <identifier> }
-    our class Ident does IMeminitializerid {
+    our class Ident does IMemInitializerId {
         has Identifier $.identifier is required;
         has $.text;
+
+        method name {
+            'MemInitializerId::Ident'
+        }
 
         method gist(:$treemark=False) {
             $.identifier.gist(:$treemark)

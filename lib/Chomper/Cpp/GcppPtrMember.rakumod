@@ -14,6 +14,10 @@ class PointerMemberOperator::Dot does IPointerMemberOperator is export {
 
     has $.text;
 
+    method name {
+        'PointerMemberOperator::Dot'
+    }
+
     method gist(:$treemark=False) {
         ".*"
     }
@@ -25,6 +29,10 @@ class PointerMemberOperator::Dot does IPointerMemberOperator is export {
 class PointerMemberOperator::Arrow does IPointerMemberOperator is export { 
 
     has $.text;
+
+    method name {
+        'PointerMemberOperator::Arrow'
+    }
 
     method gist(:$treemark=False) {
         "->*"
@@ -41,6 +49,10 @@ class PointerMemberExpression does IPointerMemberExpression is export {
 
     has $.text;
 
+    method name {
+        'PointerMemberExpression'
+    }
+
     method gist(:$treemark=False) {
         $.cast-expression.gist(:$treemark) 
         ~ @.pointer-member-expression-tail>>.gist(:$treemark).join(" ")
@@ -56,6 +68,10 @@ class PointerMemberExpressionTail is export {
     has ICastExpression        $.cast-expression is required;
 
     has $.text;
+
+    method name {
+        'PointerMemberExpressionTail'
+    }
 
     method gist(:$treemark=False) {
         $.pointer-member-operator.gist(:$treemark) ~ " " ~ $.cast-expression.gist(:$treemark)

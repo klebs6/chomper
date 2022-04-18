@@ -20,6 +20,10 @@ class EnumName is export {
 
     has $.text;
 
+    method name {
+        'EnumName'
+    }
+
     method gist(:$treemark=False) {
         $.identifier.gist(:$treemark)
     }
@@ -36,6 +40,10 @@ class EnumSpecifier is export {
     has EnumeratorList $.enumerator-list;
 
     has $.text;
+
+    method name {
+        'EnumSpecifier'
+    }
 
     method gist(:$treemark=False) {
 
@@ -63,6 +71,10 @@ class EnumHead is export {
     has IEnumBase              $.enum-base;
 
     has $.text;
+
+    method name {
+        'EnumHead'
+    }
 
     method gist(:$treemark=False) {
 
@@ -111,6 +123,10 @@ class OpaqueEnumDeclaration is export {
 
     has $.text;
 
+    method name {
+        'OpaqueEnumDeclaration'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = $.enum-key.gist(:$treemark);
@@ -145,6 +161,10 @@ class EnumKey is export {
     has Bool $.has-modifier is required;
     has Bool $.is-class;
 
+    method name {
+        'EnumKey'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = "enum";
@@ -165,11 +185,15 @@ class EnumKey is export {
 #   <colon> 
 #   <type-specifier-seq> 
 # }
-class Enumbase is export { 
+class EnumBase is export { 
 
     has ITypeSpecifierSeq $.type-specifier-seq is required;
 
     has $.text;
+
+    method name {
+        'EnumBase'
+    }
 
     method gist(:$treemark=False) {
         ": " ~ $.type-specifier-seq.gist(:$treemark)
@@ -186,6 +210,10 @@ class EnumeratorList is export {
 
     has $.text;
 
+    method name {
+        'EnumeratorList'
+    }
+
     method gist(:$treemark=False) {
         @.enumerator-definitions>>.gist(:$treemark).join(", ")
     }
@@ -200,6 +228,10 @@ class EnumeratorDefinition is export {
     has IConstantExpression $.constant-expression;
 
     has $.text;
+
+    method name {
+        'EnumeratorDefinition'
+    }
 
     method gist(:$treemark=False) {
 
@@ -222,6 +254,10 @@ class Enumerator is export {
     has Identifier $.identifier is required;
 
     has $.text;
+
+    method name {
+        'Enumerator'
+    }
 
     method gist(:$treemark=False) {
         $.identifier.gist(:$treemark)
@@ -274,7 +310,7 @@ package EnumGrammar is export {
 
         # rule enumbase { <colon> <type-specifier-seq> }
         method enumbase($/) {
-            make Enumbase.new(
+            make EnumBase.new(
                 type-specifier-seq => $<type-specifier-seq>.made,
                 text               => ~$/,
             )

@@ -11,6 +11,10 @@ package RefQualifier is export {
 
         has $.text;
 
+        method name {
+            'RefQualifier::And'
+        }
+
         method gist(:$treemark=False) {
             "&"
         }
@@ -20,6 +24,10 @@ package RefQualifier is export {
     our class AndAnd does IRefQualifier {
 
         has $.text;
+
+        method name {
+            'RefQualifier::AndAnd'
+        }
 
         method gist(:$treemark=False) {
             "&&"

@@ -9,6 +9,10 @@ class DecimalLiteral is export {
 
     has $.text;
 
+    method name {
+        'DecimalLiteral'
+    }
+
     method gist(:$treemark=False) {
 
         if $treemark { 

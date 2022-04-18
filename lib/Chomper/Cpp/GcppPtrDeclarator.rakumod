@@ -19,6 +19,10 @@ does IDeclarator is export {
 
     has $.text;
 
+    method name {
+        'PointerDeclarator'
+    }
+
     method gist(:$treemark=False) {
         @.augmented-pointer-operators>>.gist(:$treemark).join(" ") 
         ~ $.no-pointer-declarator.gist(:$treemark)

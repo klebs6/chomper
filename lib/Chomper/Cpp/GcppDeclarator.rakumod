@@ -18,6 +18,10 @@ class InitDeclarator does IInitDeclarator is export {
 
     has $.text;
 
+    method name {
+        'InitDeclarator'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = $.declarator.gist(:$treemark);
@@ -31,35 +35,46 @@ class InitDeclarator does IInitDeclarator is export {
 }
 
 
-# rule declarator:sym<ptr> { <pointer-declarator> }
-class Declarator::Ptr does IDeclarator is export {
-    has PointerDeclarator $.pointer-declarator is required;
+package Declarator is export {
 
-    has $.text;
+    # rule declarator:sym<ptr> { <pointer-declarator> }
+    class Ptr does IDeclarator {
+        has PointerDeclarator $.pointer-declarator is required;
 
-    method gist(:$treemark=False) {
-        $.pointer-declarator.gist(:$treemark)
+        has $.text;
+
+        method name {
+            'Declarator::Ptr'
+        }
+
+        method gist(:$treemark=False) {
+            $.pointer-declarator.gist(:$treemark)
+        }
     }
-}
 
-# rule declarator:sym<no-ptr> { 
-#   <no-pointer-declarator> 
-#   <parameters-and-qualifiers> 
-#   <trailing-return-type> 
-# }
-class Declarator::NoPtr does IDeclarator is export {
-    has INoPointerDeclarator    $.no-pointer-declarator     is required;
-    has ParametersAndQualifiers $.parameters-and-qualifiers is required;
-    has TrailingReturnType      $.trailing-return-type      is required;
+    # rule declarator:sym<no-ptr> { 
+    #   <no-pointer-declarator> 
+    #   <parameters-and-qualifiers> 
+    #   <trailing-return-type> 
+    # }
+    class NoPtr does IDeclarator {
+        has INoPointerDeclarator    $.no-pointer-declarator     is required;
+        has ParametersAndQualifiers $.parameters-and-qualifiers is required;
+        has TrailingReturnType      $.trailing-return-type      is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.no-pointer-declarator.gist(:$treemark)
-        ~ " "
-        ~ $.parameters-and-qualifiers.gist(:$treemark)
-        ~ " "
-        ~ $.trailing-return-type.gist(:$treemark)
+        method name {
+            'Declarator::NoPtr'
+        }
+
+        method gist(:$treemark=False) {
+            $.no-pointer-declarator.gist(:$treemark)
+            ~ " "
+            ~ $.parameters-and-qualifiers.gist(:$treemark)
+            ~ " "
+            ~ $.trailing-return-type.gist(:$treemark)
+        }
     }
 }
 
@@ -67,13 +82,17 @@ class Declarator::NoPtr does IDeclarator is export {
 #   <ellipsis>? 
 #   <id-expression> 
 # }
-class Declaratorid 
+class DeclaratorId 
 does INoPointerDeclaratorBase is export { 
 
     has Bool          $.has-ellipsis  is required;
     has IIdExpression $.id-expression is required;
 
     has $.text;
+
+    method name {
+        'DeclaratorId'
+    }
 
     method gist(:$treemark=False) {
 
@@ -93,6 +112,10 @@ package SomeDeclarator is export {
 
         has $.text;
 
+        method name {
+            'SomeDeclarator::Basic'
+        }
+
         method gist(:$treemark=False) {
             $.declarator.gist(:$treemark)
         }
@@ -105,6 +128,10 @@ package SomeDeclarator is export {
         has IAbstractDeclarator $.abstract-declarator is required;
 
         has $.text;
+
+        method name {
+            'SomeDeclarator::Abstract'
+        }
 
         method gist(:$treemark=False) {
             $.abstract-declarator.gist(:$treemark)
@@ -163,7 +190,7 @@ package DeclaratorGrammar is export {
             my $body         = $<id-expression>.made;
 
             if $has-ellipsis {
-                make Declaratorid.new(
+                make DeclaratorId.new(
                     has-ellipsis  => $has-ellipsis,
                     id-expression => $body,
                     text          => ~$/,

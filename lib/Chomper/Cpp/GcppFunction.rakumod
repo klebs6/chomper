@@ -21,6 +21,10 @@ class TrailingReturnType is export {
 
     has $.text;
 
+    method name {
+        'TrailingReturnType'
+    }
+
     method gist(:$treemark=False) {
         my $builder = '-> ' ~ $.trailing-type-specifier.gist(:$treemark);
 
@@ -47,6 +51,10 @@ class FunctionDefinition is export {
     has IFunctionBody          $.function-body is required;
 
     has $.text;
+
+    method name {
+        'FunctionDefinition'
+    }
 
     method gist(:$treemark=False) {
         my $builder = "";
@@ -83,6 +91,10 @@ class FunctionBody::Compound does IFunctionBody is export {
 
     has $.text;
 
+    method name {
+        'FunctionBody::Compound'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = "";
@@ -103,6 +115,10 @@ class FunctionBody::Try does IFunctionBody is export {
 
     has $.text;
 
+    method name {
+        'FunctionBody::Try'
+    }
+
     method gist(:$treemark=False) {
         $.function-try-block.gist(:$treemark)
     }
@@ -117,6 +133,10 @@ class FunctionBody::AssignDefault does IFunctionBody is export {
     has IComment $.comment;
 
     has $.text;
+
+    method name {
+        'FunctionBody::AssignDefault'
+    }
 
     method gist(:$treemark=False) {
         " = default;"
@@ -133,6 +153,10 @@ class FunctionBody::AssignDelete does IFunctionBody is export {
 
     has $.text;
 
+    method name {
+        'FunctionBody::AssignDelete'
+    }
+
     method gist(:$treemark=False) {
         " = delete;"
     }
@@ -142,6 +166,10 @@ class FunctionBody::AssignDelete does IFunctionBody is export {
 class FunctionSpecifier::Inline does IFunctionSpecifier is export { 
 
     has $.text;
+
+    method name {
+        'FunctionSpecifier::Inline'
+    }
 
     method gist(:$treemark=False) {
         "inline"
@@ -153,6 +181,10 @@ class FunctionSpecifier::Virtual does IFunctionSpecifier is export {
 
     has $.text;
 
+    method name {
+        'FunctionSpecifier::Virtual'
+    }
+
     method gist(:$treemark=False) {
         "virtual"
     }
@@ -162,6 +194,10 @@ class FunctionSpecifier::Virtual does IFunctionSpecifier is export {
 class FunctionSpecifier::Explicit does IFunctionSpecifier is export { 
 
     has $.text;
+
+    method name {
+        'FunctionSpecifier::Explicit'
+    }
 
     method gist(:$treemark=False) {
         "explicit"

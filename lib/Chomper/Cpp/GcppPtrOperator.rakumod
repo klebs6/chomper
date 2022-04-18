@@ -16,6 +16,10 @@ class AugmentedPointerOperator does IAugmentedPointerOperator is export {
 
     has $.text;
 
+    method name {
+        'AugmentedPointerOperator'
+    }
+
     method gist(:$treemark=False) {
         $.pointer-operator.gist(:$treemark).&maybe-extend(:$treemark,$.const)
     }
@@ -34,6 +38,10 @@ package PointerOperator is export {
 
         has $.text;
 
+        method name {
+            'PointerOperator::Ref'
+        }
+
         method gist(:$treemark=False) {
             "&".&maybe-extend(:$treemark,$.attribute-specifier-seq)
         }
@@ -49,6 +57,10 @@ package PointerOperator is export {
 
         has $.text;
 
+        method name {
+            'PointerOperator::RefRef'
+        }
+
         method gist(:$treemark=False) {
             "&&".&maybe-extend(:$treemark,$.attribute-specifier-seq)
         }
@@ -63,9 +75,13 @@ package PointerOperator is export {
     our class Star does IPointerOperator {
         has INestedNameSpecifier   $.nested-name-specifier;
         has IAttributeSpecifierSeq $.attribute-specifier-seq;
-        has Cvqualifierseq        $.cvqualifierseq;
+        has CvQualifierSeq         $.cvqualifierseq;
 
         has $.text;
+
+        method name {
+            'PointerOperator::Star'
+        }
 
         method gist(:$treemark=False) {
             my $builder = "";

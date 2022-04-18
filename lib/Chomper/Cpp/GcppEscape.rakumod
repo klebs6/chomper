@@ -13,15 +13,23 @@ package EscapeSequence is export {
 
         has $.text;
 
+        method name {
+            'EscapeSequence::Simple'
+        }
+
         method gist(:$treemark=False) {
             $.simpleescapesequence.gist(:$treemark)
         }
     }
 
     our class Octal does IEscapeSequence {
-        has Octalescapesequence $.octalescapesequence is required;
+        has OctalEscapeSequence $.octalescapesequence is required;
 
         has $.text;
+
+        method name {
+            'EscapeSequence::Octal'
+        }
 
         method gist(:$treemark=False) {
             $.octalescapesequence.gist(:$treemark)
@@ -29,9 +37,13 @@ package EscapeSequence is export {
     }
 
     our class Hex does IEscapeSequence {
-        has Hexadecimalescapesequence $.hexadecimalescapesequence is required;
+        has HexadecimalEscapeSequence $.hexadecimalescapesequence is required;
 
         has $.text;
+
+        method name {
+            'EscapeSequence::Hex'
+        }
 
         method gist(:$treemark=False) {
             $.hexadecimalescapesequence.gist(:$treemark)
@@ -44,6 +56,10 @@ package SimpleEscapeSequence is export {
     our class Slash does ISimpleEscapeSequence { 
         has $.text;
 
+        method name {
+            'SimpleEscapeSequence::Slash'
+        }
+
         method gist(:$treemark=False) {
             '\\\''
         }
@@ -51,6 +67,10 @@ package SimpleEscapeSequence is export {
 
     our class Quote does ISimpleEscapeSequence { 
         has $.text;
+
+        method name {
+            'SimpleEscapeSequence::Quote'
+        }
 
         method gist(:$treemark=False) {
             '\\"'
@@ -60,6 +80,10 @@ package SimpleEscapeSequence is export {
     our class Question does ISimpleEscapeSequence { 
         has $.text;
 
+        method name {
+            'SimpleEscapeSequence::Question'
+        }
+
         method gist(:$treemark=False) {
             '\\?'
         }
@@ -67,6 +91,10 @@ package SimpleEscapeSequence is export {
 
     our class DoubleSlash does ISimpleEscapeSequence { 
         has $.text;
+
+        method name {
+            'SimpleEscapeSequence::DoubleSlash'
+        }
 
         method gist(:$treemark=False) {
             '\\\\'
@@ -76,6 +104,10 @@ package SimpleEscapeSequence is export {
     our class A does ISimpleEscapeSequence { 
         has $.text;
 
+        method name {
+            'SimpleEscapeSequence::A'
+        }
+
         method gist(:$treemark=False) {
             '\\a'
         }
@@ -83,6 +115,10 @@ package SimpleEscapeSequence is export {
 
     our class B does ISimpleEscapeSequence { 
         has $.text;
+
+        method name {
+            'SimpleEscapeSequence::B'
+        }
 
         method gist(:$treemark=False) {
             '\\b'
@@ -92,6 +128,10 @@ package SimpleEscapeSequence is export {
     our class F does ISimpleEscapeSequence { 
         has $.text;
 
+        method name {
+            'SimpleEscapeSequence::F'
+        }
+
         method gist(:$treemark=False) {
             '\\f'
         }
@@ -99,6 +139,10 @@ package SimpleEscapeSequence is export {
 
     our class N does ISimpleEscapeSequence { 
         has $.text;
+
+        method name {
+            'SimpleEscapeSequence::N'
+        }
 
         method gist(:$treemark=False) {
             '\\n'
@@ -108,6 +152,10 @@ package SimpleEscapeSequence is export {
     our class R does ISimpleEscapeSequence { 
         has $.text;
 
+        method name {
+            'SimpleEscapeSequence::R'
+        }
+
         method gist(:$treemark=False) {
             '\\r'
         }
@@ -115,6 +163,10 @@ package SimpleEscapeSequence is export {
 
     our class T does ISimpleEscapeSequence { 
         has $.text;
+
+        method name {
+            'SimpleEscapeSequence::T'
+        }
 
         method gist(:$treemark=False) {
             '\\t'
@@ -124,6 +176,10 @@ package SimpleEscapeSequence is export {
     our class V does ISimpleEscapeSequence { 
         has $.text;
 
+        method name {
+            'SimpleEscapeSequence::V'
+        }
+
         method gist(:$treemark=False) {
             '\\v'
         }
@@ -131,6 +187,10 @@ package SimpleEscapeSequence is export {
 
     our class RnN does ISimpleEscapeSequence { 
         has $.text;
+
+        method name {
+            'SimpleEscapeSequence::RnN'
+        }
 
         method gist(:$treemark=False) {
             '\\\n'
@@ -219,7 +279,7 @@ package EscapeGrammar is export {
 
         # token octalescapesequence { '\\' [<octaldigit> ** 1..3] }
         method octalescapesequence($/) {
-            make Octalescapesequence.new(
+            make OctalEscapeSequence.new(
                 digits => $<octaldigit>>>.made,
                 text   => ~$/,
             )
@@ -227,7 +287,7 @@ package EscapeGrammar is export {
 
         # token hexadecimalescapesequence { '\\x' <hexadecimaldigit>+ }
         method hexadecimalescapesequence($/) {
-            make Hexadecimalescapesequence.new(
+            make HexadecimalEscapeSequence.new(
                 digits => $<hexadecimaldigit>>>.made,
                 text   => ~$/,
             )

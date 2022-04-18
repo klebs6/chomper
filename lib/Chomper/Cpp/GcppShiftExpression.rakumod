@@ -11,6 +11,10 @@ class ShiftExpressionTail is export {
 
     has $.text;
 
+    method name {
+        'ShiftExpressionTail'
+    }
+
     method gist(:$treemark=False) {
         $.shift-operator.gist(:$treemark) ~ " " ~ $.additive-expression.gist(:$treemark)
     }
@@ -23,28 +27,43 @@ class ShiftExpression does IShiftExpression is export {
 
     has $.text;
 
+    method name {
+        'ShiftExpression'
+    }
+
     method gist(:$treemark=False) {
         $.additive-expression.gist(:$treemark) ~ " " ~ @.shift-expression-tail>>.gist(:$treemark).join(" ")
     }
 }
 
-# rule shift-operator:sym<right> { <.greater> <.greater> }
-class ShiftOperator::Right does IShiftOperator is export {
+package ShiftOperator is export {
 
-    has $.text;
+    # rule shift-operator:sym<right> { <.greater> <.greater> }
+    class Right does IShiftOperator {
 
-    method gist(:$treemark=False) {
-        ">>"
+        has $.text;
+
+        method name {
+            'ShiftOperator::Right'
+        }
+
+        method gist(:$treemark=False) {
+            ">>"
+        }
     }
-}
 
-# rule shift-operator:sym<left> { <.less> <.less> } #-----------------------
-class ShiftOperator::Left does IShiftOperator is export {
+    # rule shift-operator:sym<left> { <.less> <.less> } #-----------------------
+    class Left does IShiftOperator {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "<<"
+        method name {
+            'ShiftOperator::Left'
+        }
+
+        method gist(:$treemark=False) {
+            "<<"
+        }
     }
 }
 

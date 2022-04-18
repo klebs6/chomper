@@ -5,10 +5,14 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 
 # rule cvqualifierseq { <cv-qualifier>+ }
-class Cvqualifierseq is export { 
+class CvQualifierSeq is export { 
     has ICvQualifier @.cv-qualifiers;
 
     has $.text;
+
+    method name {
+        'CvQualifierSeq'
+    }
 
     method gist(:$treemark=False) {
         @.cv_qualifiers>>.gist(:$treemark).join(" ")
@@ -22,6 +26,10 @@ package CvQualifier is export {
 
         has $.text;
 
+        method name {
+            'CvQualifier::Const'
+        }
+
         method gist(:$treemark=False) {
             "const"
         }
@@ -31,6 +39,10 @@ package CvQualifier is export {
     our class Volatile_ does ICvQualifier {
 
         has $.text;
+
+        method name {
+            'CvQualifier::Volatile'
+        }
 
         method gist(:$treemark=False) {
             "volatile"
@@ -44,7 +56,7 @@ package CVGrammar is export {
 
         # rule cvqualifierseq { <cv-qualifier>+ } 
         method cvqualifierseq($/) {
-            make Cvqualifierseq.new(
+            make CvQualifierSeq.new(
                 cv-qualifiers => $<cv-qualifier>>>.made,
                 text          => ~$/,
             )

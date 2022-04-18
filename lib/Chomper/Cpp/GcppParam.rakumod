@@ -25,12 +25,16 @@ does IParameterDeclarationBody
 does INoPointerDeclaratorTail is export {
 
     has ParameterDeclarationClause $.parameter-declaration-clause;
-    has Cvqualifierseq             $.cvqualifierseq;
+    has CvQualifierSeq             $.cvqualifierseq;
     has IRefQualifier               $.refqualifier;
     has IExceptionSpecification     $.exception-specification;
     has IAttributeSpecifierSeq      $.attribute-specifier-seq;
 
     has $.text;
+
+    method name {
+        'ParametersAndQualifiers'
+    }
 
     method gist(:$treemark=False) {
 
@@ -63,6 +67,10 @@ class ParameterDeclarationClause is export {
 
     has $.text;
 
+    method name {
+        'ParameterDeclarationClause'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = @.parameter-declaration-list>>.gist(:$treemark).join(", ");
@@ -83,6 +91,10 @@ package ParameterDeclarationBody is export {
 
         has $.text;
 
+        method name {
+            'ParameterDeclarationBody::Decl'
+        }
+
         method gist(:$treemark=False) {
             $.declarator.gist(:$treemark)
         }
@@ -93,6 +105,10 @@ package ParameterDeclarationBody is export {
         has IAbstractDeclarator $.abstract-declarator;
 
         has $.text;
+
+        method name {
+            'ParameterDeclarationBody::Abst'
+        }
 
         method gist(:$treemark=False) {
             if $.abstract-declarator {
@@ -117,6 +133,10 @@ class ParameterDeclaration is export {
     has IInitializerClause        $.initializer-clause;
 
     has $.text;
+
+    method name {
+        'ParameterDeclaration'
+    }
 
     method gist(:$treemark=False) {
 

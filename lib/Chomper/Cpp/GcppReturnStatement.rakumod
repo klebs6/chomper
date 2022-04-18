@@ -13,6 +13,10 @@ package ReturnStatementBody is export {
 
         has $.text;
 
+        method name {
+            'ReturnStatementBody::Expr'
+        }
+
         method gist(:$treemark=False) {
             say "need write gist!";
             ddt self;
@@ -25,6 +29,10 @@ package ReturnStatementBody is export {
         has BracedInitList $.braced-init-list is required;
 
         has $.text;
+
+        method name {
+            'ReturnStatementBody::BracedInitList'
+        }
 
         method gist(:$treemark=False) {
             say "need write gist!";

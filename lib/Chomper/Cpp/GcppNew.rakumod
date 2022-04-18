@@ -29,6 +29,10 @@ package NewExpression is export {
 
         has $.text;
 
+        method name {
+            'NewExpression::NewTypeId'
+        }
+
         method gist(:$treemark=False) {
 
             my $builder = "new ";
@@ -63,6 +67,10 @@ package NewExpression is export {
 
         has $.text;
 
+        method name {
+            'NewExpression::TheTypeId'
+        }
+
         method gist(:$treemark=False) {
 
             my $builder = "new ";
@@ -92,6 +100,10 @@ class NewPlacement is export {
 
     has $.text;
 
+    method name {
+        'NewPlacement'
+    }
+
     method gist(:$treemark=False) {
         "(" ~ $.expression-list.gist(:$treemark) ~ ")"
     }
@@ -106,6 +118,10 @@ class NewTypeId does INewTypeId is export {
     has NewDeclarator    $.new-declarator     is required;
 
     has $.text;
+
+    method name {
+        'NewTypeId'
+    }
 
     method gist(:$treemark=False) {
         my $builder = $.type-specifier-seq.gist(:$treemark);
@@ -127,6 +143,10 @@ class NewDeclarator is export {
     has NoPointerNewDeclarator $.no-pointer-new-declarator;
 
     has $.text;
+
+    method name {
+        'NewDeclarator'
+    }
 
     method gist(:$treemark=False) {
         my $builder = @.pointer-operators>>.gist(:$treemark).join(" ");
@@ -153,6 +173,10 @@ class NoPointerNewDeclarator is export {
 
     has $.text;
 
+    method name {
+        'NoPointerNewDeclarator'
+    }
+
     method gist(:$treemark=False) {
 
         my $builder = "[" ~ $.expression.gist(:$treemark) ~ "]";
@@ -177,6 +201,10 @@ class NoPointerNewDeclaratorTail is export {
 
     has $.text;
 
+    method name {
+        'NoPointerNewDeclaratorTail'
+    }
+
     method gist(:$treemark=False) {
         my $builder = "[" ~ $.constant-expression.gist(:$treemark) ~ "]";
 
@@ -200,6 +228,10 @@ package NewInitializer is export {
 
         has $.text;
 
+        method name {
+            'NewInitializer::ExprList'
+        }
+
         method gist(:$treemark=False) {
 
             my $builder = "(";
@@ -221,6 +253,10 @@ package NewInitializer is export {
         has BracedInitList $.braced-init-list is required;
 
         has $.text;
+
+        method name {
+            'NewInitializer::Braced'
+        }
 
         method gist(:$treemark=False) {
             $.braced-init-list.gist(:$treemark)

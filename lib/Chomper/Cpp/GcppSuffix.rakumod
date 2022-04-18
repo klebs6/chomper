@@ -4,103 +4,140 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-class Unsignedsuffix { ... }
-class Longsuffix     { ... }
+class UnsignedSuffix { ... }
+class LongSuffix     { ... }
 
-class Integersuffix::Ul 
-does IIntegersuffix is export {
+package IntegerSuffix is export {
 
-    has Unsignedsuffix $.unsignedsuffix is required;
-    has Longsuffix     $.longsuffix;
+    class Ul does IIntegerSuffix {
 
-    has $.text;
+        has UnsignedSuffix $.unsignedsuffix is required;
+        has LongSuffix     $.longsuffix;
 
-    method gist(:$treemark=False) {
-        $.unsignedsuffix.gist(:$treemark).&maybe-extend(:$treemark,$.longsuffix)
+        has $.text;
+
+        method name {
+            'IntegerSuffix::Ul'
+        }
+
+        method gist(:$treemark=False) {
+            $.unsignedsuffix.gist(:$treemark).&maybe-extend(:$treemark,$.longsuffix)
+        }
+    }
+
+    class Ull does IIntegerSuffix {
+
+        has UnsignedSuffix $.unsignedsuffix is required;
+        has ILongLongSuffix $.longlongsuffix;
+
+        has $.text;
+
+        method name {
+            'IntegerSuffix::Ull'
+        }
+
+        method gist(:$treemark=False) {
+            $.unsignedsuffix.gist(:$treemark).&maybe-extend(:$treemark,$.longlongsuffix)
+        }
+    }
+
+    class Lu does IIntegerSuffix {
+
+        has LongSuffix     $.longsuffix is required;
+        has UnsignedSuffix $.unsignedsuffix;
+
+        has $.text;
+
+        method name {
+            'IntegerSuffix::Lu'
+        }
+
+        method gist(:$treemark=False) {
+            $.longsuffix.gist(:$treemark).&maybe-extend(:$treemark,$.unsignedsuffix)
+        }
+    }
+
+    class Llu does IIntegerSuffix {
+
+        has ILongLongSuffix $.longsuffix is required;
+        has UnsignedSuffix $.unsignedsuffix;
+
+        has $.text;
+
+        method name {
+            'IntegerSuffix::Llu'
+        }
+
+        method gist(:$treemark=False) {
+            $.longsuffix.gist(:$treemark).&maybe-extend(:$treemark,$.unsignedsuffix)
+        }
     }
 }
 
-class Integersuffix::Ull 
-does IIntegersuffix is export {
-
-    has Unsignedsuffix $.unsignedsuffix is required;
-    has ILonglongsuffix $.longlongsuffix;
+class UnsignedSuffix is export { 
 
     has $.text;
 
-    method gist(:$treemark=False) {
-        $.unsignedsuffix.gist(:$treemark).&maybe-extend(:$treemark,$.longlongsuffix)
+    method name {
+        'UnsignedSuffix'
     }
-}
-
-class Integersuffix::Lu 
-does IIntegersuffix is export {
-
-    has Longsuffix     $.longsuffix is required;
-    has Unsignedsuffix $.unsignedsuffix;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        $.longsuffix.gist(:$treemark).&maybe-extend(:$treemark,$.unsignedsuffix)
-    }
-}
-
-class Integersuffix::Llu 
-does IIntegersuffix is export {
-
-    has ILonglongsuffix $.longsuffix is required;
-    has Unsignedsuffix $.unsignedsuffix;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        $.longsuffix.gist(:$treemark).&maybe-extend(:$treemark,$.unsignedsuffix)
-    }
-}
-
-class Unsignedsuffix is export { 
-
-    has $.text;
 
     method gist(:$treemark=False) {
         "u"
     }
 }
 
-class Longsuffix is export { 
+class LongSuffix is export { 
 
     has $.text;
+
+    method name {
+        'LongSuffix'
+    }
 
     method gist(:$treemark=False) {
         "l"
     }
 }
 
-class Longlongsuffix::Ll 
-does ILonglongsuffix is export {
+package LongLongSuffix is export {
 
-    has $.text;
+    class Ll does ILongLongSuffix {
 
-    method gist(:$treemark=False) {
-        "ll"
+        has $.text;
+
+        method name {
+            'LongLongSuffix::Ll'
+        }
+
+        method gist(:$treemark=False) {
+            "ll"
+        }
     }
-}
 
-class Longlongsuffix::LL 
-does ILonglongsuffix is export {
+    class LL does ILongLongSuffix {
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        "LL"
+        method name {
+            'LongLongSuffix::LL'
+        }
+
+        method gist(:$treemark=False) {
+            "LL"
+        }
     }
+
 }
 
 # token udsuffix { <identifier> }
-class Udsuffix is export { 
+class UdSuffix is export { 
     has Str $.value is required;
     has $.text;
+
+    method name {
+        'UdSuffix'
+    }
 
     method gist(:$treemark=False) {
         $.value
@@ -113,7 +150,7 @@ package SuffixGrammar is export {
 
         # token integersuffix:sym<ul> { <unsignedsuffix> <longsuffix>? }
         method integersuffix:sym<ul>($/) {
-            make Integersuffix::Ul.new(
+            make IntegerSuffix::Ul.new(
                 unsignedsuffix => $<unsignedsuffix>.made,
                 longsuffix     => $<longsuffix>.made,
                 text           => ~$/,
@@ -122,7 +159,7 @@ package SuffixGrammar is export {
 
         # token integersuffix:sym<ull> { <unsignedsuffix> <longlongsuffix>? }
         method integersuffix:sym<ull>($/) {
-            make Integersuffix::Ull.new(
+            make IntegerSuffix::Ull.new(
                 unsignedsuffix => $<unsignedsuffix>.made,
                 longlongsuffix => $<longlongsuffix>.made,
                 text           => ~$/,
@@ -131,7 +168,7 @@ package SuffixGrammar is export {
 
         # token integersuffix:sym<lu> { <longsuffix> <unsignedsuffix>? }
         method integersuffix:sym<lu>($/) {
-            make Integersuffix::Lu.new(
+            make IntegerSuffix::Lu.new(
                 longsuffix     => $<longsuffix>.made,
                 unsignedsuffix => $<unsignedsuffix>.made,
                 text           => ~$/,
@@ -140,7 +177,7 @@ package SuffixGrammar is export {
 
         # token integersuffix:sym<llu> { <longlongsuffix> <unsignedsuffix>? } 
         method integersuffix:sym<llu>($/) {
-            make Integersuffix::Llu.new(
+            make IntegerSuffix::Llu.new(
                 longsuffix     => $<longlongsuffix>.made,
                 unsignedsuffix => $<unsignedsuffix>.made,
                 text           => ~$/,
@@ -149,22 +186,22 @@ package SuffixGrammar is export {
 
         # token unsignedsuffix { <[ u U ]> }
         method unsignedsuffix($/) {
-            make Unsignedsuffix.new
+            make UnsignedSuffix.new
         }
 
         # token longsuffix { <[ l L ]> } 
         method longsuffix($/) {
-            make Longsuffix.new
+            make LongSuffix.new
         }
 
         # token longlongsuffix:sym<ll> { 'll' }
         method longlongsuffix:sym<ll>($/) {
-            make Longlongsuffix::Ll.new
+            make LongLongSuffix::Ll.new
         }
 
         # token longlongsuffix:sym<LL> { 'LL' } 
         method longlongsuffix:sym<LL>($/) {
-            make Longlongsuffix::LL.new
+            make LongLongSuffix::LL.new
         }
     }
 

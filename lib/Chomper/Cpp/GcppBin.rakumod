@@ -9,15 +9,23 @@ class BinaryLiteral is export {
 
     has $.text;
 
+    method name {
+        'BinaryLiteral'
+    }
+
     method gist(:$treemark=False) {
         $.value
     }
 }
 
-class Binarydigit is export { 
+class BinaryDigit is export { 
     has Str $.value is required; 
 
     has $.text;
+
+    method name {
+        'BinaryDigit'
+    }
 
     method gist(:$treemark=False) {
         $.value
@@ -37,7 +45,7 @@ package BinGrammar is export {
 
         # token binarydigit { <[ 0 1 ]> } 
         method binarydigit($/) {
-            make Binarydigit.new(
+            make BinaryDigit.new(
                 value => ~$/,
             )
         }

@@ -18,6 +18,10 @@ package LabeledStatementLabelBody is export {
 
         has $.text;
 
+        method name {
+            'LabeledStatementLabelBody::Id'
+        }
+
         method gist(:$treemark=False) {
             $.identifier.gist(:$treemark)
         }
@@ -34,6 +38,10 @@ package LabeledStatementLabelBody is export {
 
         has $.text;
 
+        method name {
+            'LabeledStatementLabelBody::CaseExpr'
+        }
+
         method gist(:$treemark=False) {
             "case " ~ $.constant-expression.gist(:$treemark)
         }
@@ -45,6 +53,10 @@ package LabeledStatementLabelBody is export {
     our class Default_ does ILabeledStatementLabelBody {
 
         has $.text;
+
+        method name {
+            'LabeledStatementLabelBody::Default'
+        }
 
         method gist(:$treemark=False) {
             "default"
@@ -62,6 +74,10 @@ class LabeledStatementLabel is export {
     has ILabeledStatementLabelBody $.labeled-statement-label-body is required;
 
     has $.text;
+
+    method name {
+        'LabeledStatementLabel'
+    }
 
     method gist(:$treemark=False) {
 
@@ -88,6 +104,10 @@ class LabeledStatement does IStatement is export {
     has IStatement            $.statement is required;
 
     has $.text;
+
+    method name {
+        'LabeledStatement'
+    }
 
     method gist(:$treemark=False) {
         $.labeled-statement-label.gist(:$treemark) ~ " " ~ $.statement.gist(:$treemark)

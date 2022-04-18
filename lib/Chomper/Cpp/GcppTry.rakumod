@@ -21,6 +21,10 @@ class Handler is export {
 
     has $.text;
 
+    method name {
+        'Handler'
+    }
+
     method gist(:$treemark=False) {
         my $builder = "catch(";
 
@@ -52,6 +56,10 @@ class HandlerSeq is export {
 
     has $.text;
 
+    method name {
+        'HandlerSeq'
+    }
+
     method gist(:$treemark=False) {
         @.handlers>>.gist(:$treemark).join("\n")
     }
@@ -67,6 +75,10 @@ class TryBlock does IStatement is export {
     has @.handler-seq is required;
 
     has $.text;
+
+    method name {
+        'TryBlock'
+    }
 
     method gist(:$treemark=False) {
 
@@ -99,6 +111,10 @@ class FunctionTryBlock is export {
     has                        @.handler-seq is required;
 
     has $.text;
+
+    method name {
+        'FunctionTryBlock'
+    }
 
     method gist(:$treemark=False) {
 

@@ -11,6 +11,10 @@ class AccessSpecifier::Private does IAccessSpecifier is export {
 
     has $.text;
 
+    method name {
+        'AccessSpecifier::Private'
+    }
+
     method gist(:$treemark=False) {
         "private"
     }
@@ -23,6 +27,10 @@ class AccessSpecifier::Protected does IAccessSpecifier is export {
 
     has $.text;
 
+    method name {
+        'AccessSpecifier::Protected'
+    }
+
     method gist(:$treemark=False) {
         "protected"
     }
@@ -34,6 +42,10 @@ class AccessSpecifier::Protected does IAccessSpecifier is export {
 class AccessSpecifier::Public does IAccessSpecifier is export { 
 
     has $.text;
+
+    method name {
+        'AccessSpecifier::Public'
+    }
 
     method gist(:$treemark=False) {
         "public"

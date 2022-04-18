@@ -11,6 +11,10 @@ package EqualityOperator is export {
 
         has $.text;
 
+        method name {
+            'EqualityOperator::Eq'
+        }
+
         method gist(:$treemark=False) {
             "=="
         }
@@ -20,6 +24,10 @@ package EqualityOperator is export {
     our class Neq does IEqualityOperator {
 
         has $.text;
+
+        method name {
+            'EqualityOperator::Neq'
+        }
 
         method gist(:$treemark=False) {
             "!="
@@ -38,6 +46,10 @@ is export {
     has IRelationalExpression $.relational-expression is required;
 
     has $.text;
+
+    method name {
+        'EqualityExpressionTail'
+    }
 
     method gist(:$treemark=False) {
         $.equality-operator.gist(:$treemark) 
@@ -58,6 +70,10 @@ is export {
     has EqualityExpressionTail @.equality-expression-tail;
 
     has $.text;
+
+    method name {
+        'EqualityExpression'
+    }
 
     method gist(:$treemark=False) {
 

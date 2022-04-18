@@ -21,6 +21,10 @@ package IterationStatement is export {
 
         has $.text;
 
+        method name {
+            'IterationStatement::While'
+        }
+
         method gist(:$treemark=False) {
 
             my $builder = "while(";
@@ -67,6 +71,10 @@ package IterationStatement is export {
 
         has $.text;
 
+        method name {
+            'IterationStatement::Do'
+        }
+
         method gist(:$treemark=False) {
             my $builder = "";
 
@@ -97,6 +105,10 @@ package IterationStatement is export {
         has IStatement        @.statements is required;
 
         has $.text;
+
+        method name {
+            'IterationStatement::For'
+        }
 
         method gist(:$treemark=False) {
 
@@ -137,6 +149,10 @@ package IterationStatement is export {
         has IStatement           @.statements is required;
 
         has $.text;
+
+        method name {
+            'IterationStatement::ForRange'
+        }
 
         method gist(:$treemark=False) {
 

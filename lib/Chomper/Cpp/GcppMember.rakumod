@@ -21,6 +21,10 @@ class MemberDeclaratorList is export {
 
     has $.text;
 
+    method name {
+        'MemberDeclaratorList'
+    }
+
     method gist(:$treemark=False) {
         @.member-declarators>>.gist(:$treemark).join(",")
     }
@@ -32,8 +36,12 @@ package MemberSpecificationBase is export {
     #   <memberdeclaration> 
     # }
     our class Decl does IMemberSpecificationBase {
-        has IMemberdeclaration $.memberdeclaration is required;
+        has IMemberDeclaration $.memberdeclaration is required;
         has $.text;
+
+        method name {
+            'MemberSpecificationBase::Decl'
+        }
 
         method gist(:$treemark=False) {
             $.memberdeclaration.gist(:$treemark)
@@ -48,6 +56,10 @@ package MemberSpecificationBase is export {
         has IAccessSpecifier $.access-specifier is required;
         has $.text;
 
+        method name {
+            'MemberSpecificationBase::Access'
+        }
+
         method gist(:$treemark=False) {
             $.access-specifier.gist(:$treemark) ~ ":"
         }
@@ -60,6 +72,10 @@ package MemberSpecificationBase is export {
 class MemberSpecification is export { 
     has IMemberSpecificationBase @.member-specification-bases is required;
     has $.text;
+
+    method name {
+        'MemberSpecification'
+    }
 
     method gist(:$treemark=False) {
         @.member-specification-bases.join(" ")
@@ -74,12 +90,16 @@ package MemberDeclaration is export {
     #   <member-declarator-list>? 
     #   <semi> 
     # }
-    our class Basic does IMemberdeclaration {
+    our class Basic does IMemberDeclaration {
         has IComment               $.comment;
         has IAttributeSpecifierSeq $.attribute-specifier-seq;
         has IDeclSpecifierSeq      $.decl-specifier-seq;
         has MemberDeclaratorList   $.member-declarator-list;
         has $.text;
+
+        method name {
+            'MemberDeclaration::Basic'
+        }
 
         method gist(:$treemark=False) {
 
@@ -114,9 +134,13 @@ package MemberDeclaration is export {
     # rule memberdeclaration:sym<func> { 
     #   <function-definition> 
     # }
-    our class Func does IMemberdeclaration {
+    our class Func does IMemberDeclaration {
         has FunctionDefinition $.function-definition is required;
         has $.text;
+
+        method name {
+            'MemberDeclaration::Func'
+        }
 
         method gist(:$treemark=False) {
             $.function-definition.gist(:$treemark)
@@ -126,9 +150,13 @@ package MemberDeclaration is export {
     # rule memberdeclaration:sym<using> { 
     #   <using-declaration> 
     # }
-    our class Using does IMemberdeclaration {
+    our class Using does IMemberDeclaration {
         has UsingDeclaration $.using-declaration is required;
         has $.text;
+
+        method name {
+            'MemberDeclaration::Using'
+        }
 
         method gist(:$treemark=False) {
             $.using-declaration.gist(:$treemark)
@@ -138,9 +166,13 @@ package MemberDeclaration is export {
     # rule memberdeclaration:sym<static-assert> { 
     #   <static-assert-declaration> 
     # }
-    our class StaticAssert does IMemberdeclaration {
+    our class StaticAssert does IMemberDeclaration {
         has StaticAssertDeclaration $.static-assert-declaration is required;
         has $.text;
+
+        method name {
+            'MemberDeclaration::StaticAssert'
+        }
 
         method gist(:$treemark=False) {
             $.static-assert-declaration.gist(:$treemark)
@@ -150,9 +182,13 @@ package MemberDeclaration is export {
     # rule memberdeclaration:sym<template> { 
     #   <template-declaration> 
     # }
-    our class Template does IMemberdeclaration {
+    our class Template does IMemberDeclaration {
         has TemplateDeclaration $.template-declaration is required;
         has $.text;
+
+        method name {
+            'MemberDeclaration::Template'
+        }
 
         method gist(:$treemark=False) {
             $.template-declaration.gist(:$treemark)
@@ -162,9 +198,13 @@ package MemberDeclaration is export {
     # rule memberdeclaration:sym<alias> { 
     #   <alias-declaration> 
     # }
-    our class Alias does IMemberdeclaration {
+    our class Alias does IMemberDeclaration {
         has AliasDeclaration $.alias-declaration is required;
         has $.text;
+
+        method name {
+            'MemberDeclaration::Alias'
+        }
 
         method gist(:$treemark=False) {
             $.alias-declaration.gist(:$treemark)
@@ -174,9 +214,13 @@ package MemberDeclaration is export {
     # rule memberdeclaration:sym<empty> { 
     #   <empty-declaration> 
     # }
-    our class Empty does IMemberdeclaration { 
+    our class Empty does IMemberDeclaration { 
 
         has $.text;
+
+        method name {
+            'MemberDeclaration::Empty'
+        }
 
         method gist(:$treemark=False) {
             ""
@@ -197,6 +241,10 @@ package MemberDeclarator is export {
         has PureSpecifier       $.pure-specifier;
 
         has $.text;
+
+        method name {
+            'MemberDeclarator::Virt'
+        }
 
         method gist(:$treemark=False) {
             my $buffer = $.declarator.gist(:$treemark);
@@ -227,6 +275,10 @@ package MemberDeclarator is export {
 
         has $.text;
 
+        method name {
+            'MemberDeclarator::BraceOrEq'
+        }
+
         method gist(:$treemark=False) {
 
             my $buffer = $.declarator.gist(:$treemark);
@@ -253,6 +305,10 @@ package MemberDeclarator is export {
         has IConstantExpression    $.constant-expression is required;
 
         has $.text;
+
+        method name {
+            'MemberDeclarator::Ident'
+        }
 
         method gist(:$treemark=False) {
 
@@ -300,7 +356,7 @@ package MemberGrammar is export {
         #   <semi> 
         # }
         method memberdeclaration:sym<basic>($/) {
-            make Memberdeclaration::Basic.new(
+            make MemberDeclaration::Basic.new(
                 comment                 => $<semi>.made,
                 attribute-specifier-seq => $<attribute-specifier-seq>.made,
                 decl-specifier-seq      => $<decl-specifier-seq>.made,
@@ -336,7 +392,7 @@ package MemberGrammar is export {
 
         # rule memberdeclaration:sym<empty> { <empty-declaration> } 
         method memberdeclaration:sym<empty>($/) {
-            make Memberdeclaration::Empty.new
+            make MemberDeclaration::Empty.new
         }
 
         # rule member-declarator-list { <member-declarator> [ <.comma> <member-declarator> ]* } 

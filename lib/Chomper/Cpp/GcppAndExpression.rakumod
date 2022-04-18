@@ -13,6 +13,10 @@ class AndExpression does IAndExpression is export {
 
     has $.text;
 
+    method name {
+        'AndExpression'
+    }
+
     method gist(:$treemark=False) {
         @.equality-expressions>>.gist(:$treemark).join(" & ")
     }

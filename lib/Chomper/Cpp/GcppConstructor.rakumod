@@ -13,6 +13,10 @@ class ConstructorInitializer is export {
     has MemInitializerList $.mem-initializer-list is required;
     has $.text;
 
+    method name {
+        'ConstructorInitializer'
+    }
+
     method gist(:$treemark=False) {
         ":" ~ $.mem-initializer-list.gist(:$treemark)
     }

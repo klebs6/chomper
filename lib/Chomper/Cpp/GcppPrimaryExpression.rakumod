@@ -13,6 +13,10 @@ package PrimaryExpression is export {
 
         has $.text;
 
+        method name {
+            'PrimaryExpression::Literal'
+        }
+
         method gist(:$treemark=False) {
             @.literal>>.gist(:$treemark).join(" ")
         }
@@ -22,6 +26,10 @@ package PrimaryExpression is export {
     our class This does IPrimaryExpression { 
 
         has $.text;
+
+        method name {
+            'PrimaryExpression::This'
+        }
 
         method gist(:$treemark=False) {
             "this"
@@ -38,6 +46,10 @@ package PrimaryExpression is export {
 
         has $.text;
 
+        method name {
+            'PrimaryExpression::Expr'
+        }
+
         method gist(:$treemark=False) {
             "(" ~ $.expression.gist(:$treemark) ~ ")"
         }
@@ -50,6 +62,10 @@ package PrimaryExpression is export {
         has IIdExpression $.id-expression is required;
 
         has $.text;
+
+        method name {
+            'PrimaryExpression::Id'
+        }
 
         method gist(:$treemark=False) {
 
@@ -64,6 +80,10 @@ package PrimaryExpression is export {
         has LambdaExpression $.lambda-expression is required;
 
         has $.text;
+
+        method name {
+            'PrimaryExpression::Lambda'
+        }
 
         method gist(:$treemark=False) {
             $.lambda-expression.gist(:$treemark)

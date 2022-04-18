@@ -15,6 +15,10 @@ class ExplicitSpecialization is export {
 
     has $.text;
 
+    method name {
+        'ExplicitSpecialization'
+    }
+
     method gist(:$treemark=False) {
         "template<>" ~ $.declaration.gist(:$treemark)
     }

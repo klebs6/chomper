@@ -12,105 +12,129 @@ use Chomper::Cpp::GcppChar;
 use Chomper::Cpp::GcppStr;
 use Chomper::Cpp::GcppIdent;
 
-# token user-defined-integer-literal:sym<dec> { 
-#   <decimal-literal> 
-#   <udsuffix> 
-# }
-class UserDefinedIntegerLiteral::Dec 
-does IUserDefinedIntegerLiteral is export {
+package UserDefinedIntegerLiteral is export {
 
-    has DecimalLiteral $.decimal-literal is required;
-    has Identifier     $.suffix is required;
+    # token user-defined-integer-literal:sym<dec> { 
+    #   <decimal-literal> 
+    #   <udsuffix> 
+    # }
+    class Dec does IUserDefinedIntegerLiteral {
 
-    has $.text;
+        has DecimalLiteral $.decimal-literal is required;
+        has Identifier     $.suffix is required;
 
-    method gist(:$treemark=False) {
-        $.decimal-literal.gist(:$treemark) ~ $.suffix.gist(:$treemark)
+        has $.text;
+
+        method name {
+            'UserDefinedIntegerLiteral::Dec'
+        }
+
+        method gist(:$treemark=False) {
+            $.decimal-literal.gist(:$treemark) ~ $.suffix.gist(:$treemark)
+        }
+    }
+
+    # token user-defined-integer-literal:sym<oct> { 
+    #   <octal-literal> 
+    #   <udsuffix> 
+    # }
+    class Oct does IUserDefinedIntegerLiteral {
+
+        has OctalLiteral $.octal-literal is required;
+        has Identifier   $.suffix is required;
+
+        has $.text;
+
+        method name {
+            'UserDefinedIntegerLiteral::Oct'
+        }
+
+        method gist(:$treemark=False) {
+            $.octal-literal.gist(:$treemark) ~ $.suffix.gist(:$treemark)
+        }
+    }
+
+    # token user-defined-integer-literal:sym<hex> { 
+    #   <hexadecimal-literal> 
+    #   <udsuffix> 
+    # }
+    class Hex does IUserDefinedIntegerLiteral {
+
+        has HexadecimalLiteral $.hexadecimal-literal is required;
+        has Identifier         $.suffix is required;
+
+        has $.text;
+
+        method name {
+            'UserDefinedIntegerLiteral::Hex'
+        }
+
+        method gist(:$treemark=False) {
+            $.hexadecimal-literal.gist(:$treemark) ~ $.suffix.gist(:$treemark)
+        }
+    }
+
+    # token user-defined-integer-literal:sym<bin> { 
+    #   <binary-literal> 
+    #   <udsuffix> 
+    # }
+    class Bin does IUserDefinedIntegerLiteral {
+
+        has BinaryLiteral $.binary-literal is required;
+        has Identifier         $.suffix is required;
+
+        has $.text;
+
+        method name {
+            'UserDefinedIntegerLiteral::Bin'
+        }
+
+        method gist(:$treemark=False) {
+            $.binary-literal.gist(:$treemark) ~ $.suffix.gist(:$treemark)
+        }
     }
 }
 
-# token user-defined-integer-literal:sym<oct> { 
-#   <octal-literal> 
-#   <udsuffix> 
-# }
-class UserDefinedIntegerLiteral::Oct 
-does IUserDefinedIntegerLiteral is export {
+package UserDefinedFloatingLiteral is export {
 
-    has OctalLiteral $.octal-literal is required;
-    has Identifier   $.suffix is required;
+    # token user-defined-floating-literal:sym<frac> { 
+    #   <fractionalconstant> 
+    #   <exponentpart>?  
+    #   <udsuffix> 
+    # }
+    class Frac does IUserDefinedFloatingLiteral {
 
-    has $.text;
+        has IFractionalConstant $.fractionalconstant is required;
+        has ExponentPart        $.exponentpart;
+        has Identifier          $.suffix is required;
 
-    method gist(:$treemark=False) {
-        $.octal-literal.gist(:$treemark) ~ $.suffix.gist(:$treemark)
+        has $.text;
+
+        method name {
+            'UserDefinedFloatingLiteral::Frac'
+        }
+
+        method gist(:$treemark=False) {
+            $.fractionalconstant.gist(:$treemark).maybe-extend(:$treemark,$.exponentpart) ~ $.suffix.gist(:$treemark)
+        }
     }
-}
 
-# token user-defined-integer-literal:sym<hex> { 
-#   <hexadecimal-literal> 
-#   <udsuffix> 
-# }
-class UserDefinedIntegerLiteral::Hex 
-does IUserDefinedIntegerLiteral is export {
+    # token user-defined-floating-literal:sym<digi> { 
+    #   <digitsequence> 
+    #   <exponentpart> 
+    #   <udsuffix> 
+    # }
+    class Digi does IUserDefinedFloatingLiteral {
 
-    has HexadecimalLiteral $.hexadecimal-literal is required;
-    has Identifier         $.suffix is required;
+        has Str $.value is required;
 
-    has $.text;
+        method name {
+            'UserDefinedFloatingLiteral::Digi'
+        }
 
-    method gist(:$treemark=False) {
-        $.hexadecimal-literal.gist(:$treemark) ~ $.suffix.gist(:$treemark)
-    }
-}
-
-# token user-defined-integer-literal:sym<bin> { 
-#   <binary-literal> 
-#   <udsuffix> 
-# }
-class UserDefinedIntegerLiteral::Bin 
-does IUserDefinedIntegerLiteral is export {
-
-    has BinaryLiteral $.binary-literal is required;
-    has Identifier         $.suffix is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        $.binary-literal.gist(:$treemark) ~ $.suffix.gist(:$treemark)
-    }
-}
-
-# token user-defined-floating-literal:sym<frac> { 
-#   <fractionalconstant> 
-#   <exponentpart>?  
-#   <udsuffix> 
-# }
-class UserDefinedFloatingLiteral::Frac
-does IUserDefinedFloatingLiteral is export {
-
-    has IFractionalConstant $.fractionalconstant is required;
-    has Exponentpart        $.exponentpart;
-    has Identifier          $.suffix is required;
-
-    has $.text;
-
-    method gist(:$treemark=False) {
-        $.fractionalconstant.gist(:$treemark).maybe-extend(:$treemark,$.exponentpart) ~ $.suffix.gist(:$treemark)
-    }
-}
-
-# token user-defined-floating-literal:sym<digi> { 
-#   <digitsequence> 
-#   <exponentpart> 
-#   <udsuffix> 
-# }
-class UserDefinedFloatingLiteral::Digi 
-does IUserDefinedFloatingLiteral is export {
-
-    has Str $.value is required;
-
-    method gist(:$treemark=False) {
-        $.value
+        method gist(:$treemark=False) {
+            $.value
+        }
     }
 }
 
@@ -121,6 +145,10 @@ does IUserDefinedFloatingLiteral is export {
 class UserDefinedStringLiteral is export {
 
     has Str $.value is required;
+
+    method name {
+        'UserDefinedStringLiteral'
+    }
 
     method gist(:$treemark=False) {
         $.value
@@ -134,50 +162,71 @@ class UserDefinedStringLiteral is export {
 class UserDefinedCharacterLiteral is export {
     has Str $.value is required;
 
+    method name {
+        'UserDefinedCharacterLiteral'
+    }
+
     method gist(:$treemark=False) {
         $.value
     }
 }
 
-class UserDefinedLiteral::Int is export {
-    has IUserDefinedIntegerLiteral   $.user-defined-integer-literal is required;
+package UserDefinedLiteral is export {
 
-    method gist(:$treemark=False) {
-        $.user-defined-integer-literal.gist(:$treemark)
+    class Int_ is export {
+
+        has IUserDefinedIntegerLiteral   $.user-defined-integer-literal is required;
+
+        method name {
+            'UserDefinedLiteral::Int'
+        }
+
+        method gist(:$treemark=False) {
+            $.user-defined-integer-literal.gist(:$treemark)
+        }
     }
-}
 
-class UserDefinedLiteral::Float 
-does IUserDefinedLiteral is export {
+    class Float_ does IUserDefinedLiteral {
 
-    has IUserDefinedFloatingLiteral  $.user-defined-floating-literal is required;
+        has IUserDefinedFloatingLiteral  $.user-defined-floating-literal is required;
 
-    method gist(:$treemark=False) {
-        $.user-defined-floating-literal.gist(:$treemark)
+        method name {
+            'UserDefinedLiteral::Float'
+        }
+
+        method gist(:$treemark=False) {
+            $.user-defined-floating-literal.gist(:$treemark)
+        }
     }
-}
 
-class UserDefinedLiteral::Str 
-does IUserDefinedLiteral is export {
+    class Str_ does IUserDefinedLiteral {
 
-    has UserDefinedStringLiteral    $.user-defined-string-literal is required;
+        has UserDefinedStringLiteral    $.user-defined-string-literal is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.user-defined-string-literal.gist(:$treemark)
+        method name {
+            'UserDefinedLiteral::Str'
+        }
+
+        method gist(:$treemark=False) {
+            $.user-defined-string-literal.gist(:$treemark)
+        }
     }
-}
 
-class UserDefinedLiteral::Char 
-does IUserDefinedLiteral is export {
+    class Char_ does IUserDefinedLiteral {
 
-    has UserDefinedCharacterLiteral $.user-defined-character-literal is required;
+        has UserDefinedCharacterLiteral $.user-defined-character-literal is required;
 
-    has $.text;
+        has $.text;
 
-    method gist(:$treemark=False) {
-        $.user-defined-character-literal.gist(:$treemark)
+        method name {
+            'UserDefinedLiteral::Char'
+        }
+
+        method gist(:$treemark=False) {
+            $.user-defined-character-literal.gist(:$treemark)
+        }
     }
 }
 

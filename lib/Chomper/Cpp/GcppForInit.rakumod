@@ -17,6 +17,10 @@ package ForInitStatement is export {
 
         has $.text;
 
+        method name {
+            'ForInitStatement::ExpressionStatement'
+        }
+
         method gist(:$treemark=False) {
             $.expression-statement.gist(:$treemark)
         }
@@ -29,6 +33,10 @@ package ForInitStatement is export {
         has ISimpleDeclaration $.simple-declaration is required;
 
         has $.text;
+
+        method name {
+            'ForInitStatement::SimpleDeclaration'
+        }
 
         method gist(:$treemark=False) {
             $.simple-declaration.gist(:$treemark)

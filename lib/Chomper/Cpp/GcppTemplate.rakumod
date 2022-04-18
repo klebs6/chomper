@@ -18,6 +18,10 @@ package TemplateParameter is export {
         has TypeParameter $.type-parameter is required;
         has $.text;
 
+        method name {
+            'TemplateParameter::Type'
+        }
+
         method gist(:$treemark=False) {
             $.type-parameter.gist(:$treemark)
         }
@@ -29,6 +33,10 @@ package TemplateParameter is export {
     our class Param does ITemplateParameter {
         has ParameterDeclaration $.parameter-declaration is required;
         has $.text;
+
+        method name {
+            'TemplateParameter::Param'
+        }
 
         method gist(:$treemark=False) {
             $.parameter-declaration.gist(:$treemark)
@@ -47,6 +55,10 @@ class TemplateArgumentList is export {
 
     has $.text;
 
+    method name {
+        'TemplateArgumentList'
+    }
+
     method gist(:$treemark=False) {
         @.template-arguments>>.gist(:$treemark).join(", ")
     }
@@ -60,6 +72,10 @@ package TemplateArgument is export {
 
         has $.text;
 
+        method name {
+            'TemplateArgument::TypeId'
+        }
+
         method gist(:$treemark=False) {
             $.the-type-id.gist(:$treemark)
         }
@@ -70,6 +86,10 @@ package TemplateArgument is export {
         has IConstantExpression $.constant-expression is required;
         has $.text;
 
+        method name {
+            'TemplateArgument::ConstExpr'
+        }
+
         method gist(:$treemark=False) {
             $.constant-expression.gist(:$treemark)
         }
@@ -79,6 +99,10 @@ package TemplateArgument is export {
     our class IdExpr does ITemplateArgument {
         has IIdExpression $.id-expression is required;
         has $.text;
+
+        method name {
+            'TemplateArgument::IdExpr'
+        }
 
         method gist(:$treemark=False) {
             $.id-expression.gist(:$treemark)
@@ -104,6 +128,10 @@ does IPostListHead is export {
 
     has $.text;
 
+    method name {
+        'SimpleTemplateId'
+    }
+
     method gist(:$treemark=False) {
 
         if $treemark {
@@ -124,6 +152,10 @@ package TemplateId is export {
 
         has $.text;
 
+        method name {
+            'TemplateId::Simple'
+        }
+
         method gist(:$treemark=False) {
             $.simple-template-id.gist(:$treemark)
         }
@@ -140,6 +172,10 @@ package TemplateId is export {
         has TemplateArgumentList $.template-argument-list;
 
         has $.text;
+
+        method name {
+            'TemplateId::OperatorFunctionId'
+        }
 
         method gist(:$treemark=False) {
             my $maybe-args = $.template-argument-list ?? $.template-argument-list.gist(:$treemark) !! "";
@@ -158,6 +194,10 @@ package TemplateId is export {
         has TemplateArgumentList $.template-argument-list;
 
         has $.text;
+
+        method name {
+            'TemplateId::LiteralOperatorId'
+        }
 
         method gist(:$treemark=False) {
             my $maybe-args = $.template-argument-list ?? $.template-argument-list.gist(:$treemark) !! "";
@@ -178,6 +218,10 @@ class TemplateDeclaration is export {
     has IDeclaration          $.declaration            is required;
     has $.text;
 
+    method name {
+        'TemplateDeclaration'
+    }
+
     method gist(:$treemark=False) {
         "template<" ~ $.templateparameter-list.gist(:$treemark) ~ ">" ~ $.declaration.gist(:$treemark)
     }
@@ -193,6 +237,10 @@ class ScopedTemplateId is export {
     has SimpleTemplateId    $.simple-template-id is required;
 
     has $.text;
+
+    method name {
+        'ScopedTemplateId'
+    }
 
     method gist(:$treemark=False) {
         $.nested-name-specifier.gist(:$treemark) ~ " template " ~ $.simple-template-id.gist(:$treemark)

@@ -36,13 +36,13 @@ our role IAndAnd                                  is export { }
 our role IOrOr                                    is export { }
 our role IIdentifierStart                         is export { }
 our role IIdentifierContinue                      is export { }
-our role IIntegersuffix                           is export { }
-our role ILonglongsuffix                          is export { }
+our role IIntegerSuffix                           is export { }
+our role ILongLongSuffix                          is export { }
 our role ICchar                                   is export { }
 our role IEscapeSequence                          is export { }
 our role ISimpleEscapeSequence                    is export { }
 our role IFractionalConstant                      is export { }
-our role IEncodingprefix                          is export { }
+our role IEncodingPrefix                          is export { }
 our role ISchar                                   is export { }
 our role IUserDefinedIntegerLiteral does ILiteral is export { }
 our role IUserDefinedFloatingLiteral              is export { }
@@ -132,8 +132,8 @@ our role INamespaceTag                                  is export { }
 our role IUsingDeclarationPrefix                        is export { }
 our role ILinkageSpecificationBody                      is export { }
 our role IAttributeSpecifier                            is export { }
-our role IAlignmentspecifierbody                        is export { }
-our role IBalancedrule                                  is export { }
+our role IAlignmentSpecifierBody                        is export { }
+our role IBalancedRule                                  is export { }
 our role IDeclarator                                    is export { }
 our role INoPointerDeclaratorBase                       is export { }
 our role INoPointerDeclaratorTail                       is export { }
@@ -159,14 +159,14 @@ our role IClassName                                     is export { }
 our role IClassHead                                     is export { }
 our role IClassKey                                      is export { }
 our role IMemberSpecificationBase                       is export { }
-our role IMemberdeclaration                             is export { }
+our role IMemberDeclaration                             is export { }
 our role IMemberDeclarator                              is export { }
 our role IVirtualSpecifier                              is export { }
 our role IBaseSpecifier                                 is export { }
 our role IClassOrDeclType                               is export { }
 our role IAccessSpecifier                               is export { }
 our role IMemInitializer                                is export { }
-our role IMeminitializerid                              is export { }
+our role IMemInitializerId                              is export { }
 our role ILiteralOperatorId                             is export { }
 our role ITemplateParameter                             is export { }
 our role ITypeParameterBase                             is export { }
@@ -177,7 +177,7 @@ our role ITypeNameSpecifier                             is export { }
 our role ISomeDeclarator                                is export { }
 our role IExceptionDeclaration                          is export { }
 our role IExceptionSpecification                        is export { }
-our role INoeExceptSpecification                        is export { }
+our role INoExceptSpecification                        is export { }
 our role ITheOperator                                   is export { }
 
 our role IConditionalExpression    does IAssignmentExpression     is export { }
@@ -214,7 +214,7 @@ our role ICharacterLiteralPrefix is export { }
 
 # token literal:sym<int> { <integer-literal> }
 our role IIntegerLiteral  
-does IAlignmentspecifierbody
+does IAlignmentSpecifierBody
 does ILiteral is export { }
 
 # token literal:sym<float> { <floating-literal> }

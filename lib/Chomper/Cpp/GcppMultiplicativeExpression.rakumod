@@ -13,6 +13,10 @@ package MultiplicativeOperator is export {
 
         has $.text;
 
+        method name {
+            'MultiplicativeOperator::Star'
+        }
+
         method gist(:$treemark=False) {
             "*"
         }
@@ -23,6 +27,10 @@ package MultiplicativeOperator is export {
 
         has $.text;
 
+        method name {
+            'MultiplicativeOperator::Slash'
+        }
+
         method gist(:$treemark=False) {
             "/"
         }
@@ -32,6 +40,10 @@ package MultiplicativeOperator is export {
     our class Mod does IMultiplicativeOperator {
 
         has $.text;
+
+        method name {
+            'MultiplicativeOperator::Mod'
+        }
 
         method gist(:$treemark=False) {
             "%"
@@ -48,6 +60,10 @@ class MultiplicativeExpression does IMultiplicativeExpression is export {
     has MultiplicativeExpressionTail @.multiplicative-expression-tail is required;
 
     has $.text;
+
+    method name {
+        'MultiplicativeExpression'
+    }
 
     method gist(:$treemark=False) {
         my $b = $.pointer-member-expression;
@@ -72,6 +88,10 @@ class MultiplicativeExpressionTail is export {
     has IPointerMemberExpression $.pointer-member-expression is required;
 
     has $.text;
+
+    method name {
+        'MultiplicativeExpressionTail'
+    }
 
     method gist(:$treemark=False) {
         $.multiplicative-operator.gist(:$treemark) 

@@ -16,6 +16,10 @@ package IdentifierStart is export {
 
         has $.text;
 
+        method name {
+            'IdentifierStart::Nondigit'
+        }
+
         method gist(:$treemark=False) {
             $.nondigit.gist(:$treemark)
         }
@@ -23,9 +27,13 @@ package IdentifierStart is export {
 
     our class Ucn does IIdentifierStart {
 
-        has Universalcharactername $.universalcharactername is required;
+        has UniversalCharacterName $.universalcharactername is required;
 
         has $.text;
+
+        method name {
+            'IdentifierStart::Ucn'
+        }
 
         method gist(:$treemark=False) {
             $.universalcharactername.gist(:$treemark)
@@ -41,6 +49,10 @@ package IdentifierContinue is export {
 
         has $.text;
 
+        method name {
+            'IdentifierContinue::Digit'
+        }
+
         method gist(:$treemark=False) {
             $.digit.gist(:$treemark)
         }
@@ -52,6 +64,10 @@ package IdentifierContinue is export {
 
         has $.text;
 
+        method name {
+            'IdentifierContinue::Nondigit'
+        }
+
         method gist(:$treemark=False) {
             $.nondigit.gist(:$treemark)
         }
@@ -59,9 +75,13 @@ package IdentifierContinue is export {
 
     our class Ucn does IIdentifierContinue {
 
-        has Universalcharactername $.universalcharactername is required;
+        has UniversalCharacterName $.universalcharactername is required;
 
         has $.text;
+
+        method name {
+            'IdentifierContinue::Ucn'
+        }
 
         method gist(:$treemark=False) {
             $.universalcharactername.gist(:$treemark)
@@ -93,6 +113,10 @@ does INoPointerDeclaratorBase
 does IPointerDeclarator
 does ITheTypeName is export { 
     has Str $.value is required; 
+
+    method name {
+        'Identifier'
+    }
 
     method gist(:$treemark=False) {
 

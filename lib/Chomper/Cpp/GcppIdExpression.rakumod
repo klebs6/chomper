@@ -24,6 +24,10 @@ does IIdExpression is export {
 
     has $.text;
 
+    method name {
+        'QualifiedId'
+    }
+
     method gist(:$treemark=False) {
 
         if $treemark {
@@ -50,6 +54,10 @@ package IdExpression is export {
 
         has $.text;
 
+        method name {
+            'IdExpression::Qualified'
+        }
+
         method gist(:$treemark=False) {
             $.qualified-id.gist(:$treemark)
         }
@@ -60,6 +68,10 @@ package IdExpression is export {
         has IUnqualifiedId $.unqualified-id is required;
 
         has $.text;
+
+        method name {
+            'IdExpression::Unqualified'
+        }
 
         method gist(:$treemark=False) {
             $.unqualified-id.gist(:$treemark)
@@ -79,6 +91,10 @@ package UnqualifiedId is export {
 
         has $.text;
 
+        method name {
+            'UnqualifiedId::Ident'
+        }
+
         method gist(:$treemark=False) {
             $.identifier.gist(:$treemark)
         }
@@ -91,6 +107,10 @@ package UnqualifiedId is export {
         has OperatorFunctionId $.operator-function-id is required;
 
         has $.text;
+
+        method name {
+            'UnqualifiedId::OpFuncId'
+        }
 
         method gist(:$treemark=False) {
             $.operator-function-id.gist(:$treemark)
@@ -105,6 +125,10 @@ package UnqualifiedId is export {
 
         has $.text;
 
+        method name {
+            'UnqualifiedId::ConversionFuncId'
+        }
+
         method gist(:$treemark=False) {
             $.conversion-function-id.gist(:$treemark)
         }
@@ -117,6 +141,10 @@ package UnqualifiedId is export {
         has ILiteralOperatorId $.literal-operator-id is required;
 
         has $.text;
+
+        method name {
+            'UnqualifiedId::LiteralOperatorId'
+        }
 
         method gist(:$treemark=False) {
             $.literal-operator-id.gist(:$treemark)
@@ -132,6 +160,10 @@ package UnqualifiedId is export {
 
         has $.text;
 
+        method name {
+            'UnqualifiedId::TildeClassname'
+        }
+
         method gist(:$treemark=False) {
             "~" ~ $.class-name.gist(:$treemark)
         }
@@ -146,6 +178,10 @@ package UnqualifiedId is export {
 
         has $.text;
 
+        method name {
+            'UnqualifiedId::TildeDecltype'
+        }
+
         method gist(:$treemark=False) {
             "~" ~ $.decltype-specifier.gist(:$treemark)
         }
@@ -158,6 +194,10 @@ package UnqualifiedId is export {
         has ITemplateId $.template-id is required;
 
         has $.text;
+
+        method name {
+            'UnqualifiedId::TemplateId'
+        }
 
         method gist(:$treemark=False) {
             $.template-id.gist(:$treemark)

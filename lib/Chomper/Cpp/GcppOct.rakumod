@@ -7,6 +7,10 @@ use Chomper::Cpp::GcppRoles;
 class OctalLiteral is export { 
     has Str $.value is required; 
 
+    method name {
+        'OctalLiteral'
+    }
+
     method gist(:$treemark=False) {
 
         if $treemark { 
@@ -17,18 +21,28 @@ class OctalLiteral is export {
     }
 }
 
-class Octaldigit is export { 
+class OctalDigit is export { 
+
     has Str $.value is required; 
+
+    method name {
+        'OctalDigit'
+    }
 
     method gist(:$treemark=False) {
         $.value
     }
 }
 
-class Octalescapesequence is export {
-    has Octaldigit @.digits is required;
+class OctalEscapeSequence is export {
+
+    has OctalDigit @.digits is required;
 
     has $.text;
+
+    method name {
+        'OctalEscapeSequence'
+    }
 
     method gist(:$treemark=False) {
         @.digits>>.gist(:$treemark).join("")
@@ -48,7 +62,7 @@ package OctGrammar is export {
 
         # token octaldigit { <[ 0 .. 7 ]> }
         method octaldigit($/) {
-            make Octaldigit.new(
+            make OctalDigit.new(
                 value => ~$/,
             )
         }

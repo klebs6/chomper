@@ -14,9 +14,13 @@ package IntegerLiteral is export {
     our class Oct does IIntegerLiteral {
 
         has OctalLiteral    $.octal-literal is required;
-        has IIntegersuffix  $.integersuffix;
+        has IIntegerSuffix  $.integersuffix;
 
         has $.text;
+
+        method name {
+            'IntegerLiteral::Oct'
+        }
 
         method gist(:$treemark=False) {
 
@@ -31,9 +35,13 @@ package IntegerLiteral is export {
     our class Hex does IIntegerLiteral {
 
         has HexadecimalLiteral $.hexadecimal-literal is required;
-        has IIntegersuffix      $.integersuffix;
+        has IIntegerSuffix      $.integersuffix;
 
         has $.text;
+
+        method name {
+            'IntegerLiteral::Hex'
+        }
 
         method gist(:$treemark=False) {
 
@@ -54,9 +62,13 @@ package IntegerLiteral is export {
     our class Dec does IConstantExpression does IIntegerLiteral {
 
         has DecimalLiteral $.decimal-literal is required;
-        has IIntegersuffix $.integersuffix;
+        has IIntegerSuffix $.integersuffix;
 
         has $.text;
+
+        method name {
+            'IntegerLiteral::Dec'
+        }
 
         method gist(:$treemark=False) {
 
@@ -75,9 +87,13 @@ package IntegerLiteral is export {
     our class Bin does IIntegerLiteral {
 
         has BinaryLiteral  $.binary-literal is required;
-        has IIntegersuffix $.integersuffix;
+        has IIntegerSuffix $.integersuffix;
 
         has $.text;
+
+        method name {
+            'IntegerLiteral::Bin'
+        }
 
         method gist(:$treemark=False) {
 
@@ -138,7 +154,7 @@ package IntegerLiteralGrammar is export {
 
         # token nonzerodigit { <[ 1 .. 9 ]> }
         method nonzerodigit($/) {
-            make Nonzerodigit.new(
+            make NonzeroDigit.new(
                 value => ~$/,
             )
         }

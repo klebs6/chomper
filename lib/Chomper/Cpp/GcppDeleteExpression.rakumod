@@ -17,6 +17,10 @@ class DeleteExpression is export {
 
     has $.text;
 
+    method name {
+        'DeleteExpression'
+    }
+
     method gist(:$treemark=False) {
         my $builder = "";
 

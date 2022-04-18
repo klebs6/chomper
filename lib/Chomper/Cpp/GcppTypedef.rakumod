@@ -10,6 +10,10 @@ class TypedefName is export {
 
     has $.text;
 
+    method name {
+        'TypedefName'
+    }
+
     method gist(:$treemark=False) {
         $.identifier.gist(:$treemark)
     }

@@ -16,6 +16,10 @@ package JumpStatement is export {
 
         has $.text;
 
+        method name {
+            'JumpStatement::Break'
+        }
+
         method gist(:$treemark=False) {
 
             my $builder = "";
@@ -36,6 +40,10 @@ package JumpStatement is export {
         has IComment $.comment;
 
         has $.text;
+
+        method name {
+            'JumpStatement::Continue'
+        }
 
         method gist(:$treemark=False) {
             my $builder = "";
@@ -61,6 +69,10 @@ package JumpStatement is export {
         has IReturnStatementBody $.return-statement-body;
 
         has $.text;
+
+        method name {
+            'JumpStatement::Return'
+        }
 
         method gist(:$treemark=False) {
 
@@ -90,6 +102,10 @@ package JumpStatement is export {
         has Identifier $.identifier is required;
 
         has $.text;
+
+        method name {
+            'JumpStatement::Goto'
+        }
 
         method gist(:$treemark=False) {
 

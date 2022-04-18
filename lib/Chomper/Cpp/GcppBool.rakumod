@@ -10,6 +10,10 @@ package BooleanLiteral is export {
 
         has $.text;
 
+        method name {
+            'BooleanLiteral::F'
+        }
+
         method gist(:$treemark=False) {
             "false"
         }
@@ -18,6 +22,10 @@ package BooleanLiteral is export {
     our class T does IBooleanLiteral { 
 
         has $.text;
+
+        method name {
+            'BooleanLiteral::T'
+        }
 
         method gist(:$treemark=False) {
             "true"
