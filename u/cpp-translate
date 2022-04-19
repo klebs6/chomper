@@ -19,7 +19,7 @@ sub MAIN(:$stdin = Nil) {
     $in = $in.subst(/^\s+/,"");
 
     my $rule = "statement-seq";
-    #my $rule = "postfix-expression";
+    #my $rule = "parameter-declaration-body";
 
     my $actions = CppActions.new;
 

@@ -58,6 +58,9 @@ multi sub translate-postfix-expression-list(
         $item.post-list-head, 
         snake-case => True);
 
+    ddt $item;
+    die "need check this path for items in parens";
+
     my $rust = Rust::SuffixedExpression.new(
         base-expression => Rust::BaseExpression.new(
             outer-attributes => [ ],

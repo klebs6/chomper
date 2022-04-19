@@ -16,6 +16,10 @@ class ConditionalExpressionTail is export {
 
     has $.text;
 
+    method name {
+        'ConditionalExpressionTail'
+    }
+
     method gist(:$treemark=False) {
         "? " ~ $.question-expression.gist(:$treemark) ~ ": " ~ $.assignment-expression.gist(:$treemark)
     }
@@ -30,6 +34,10 @@ class ConditionalExpression does IMultiplicativeExpression does IConditionalExpr
     has ConditionalExpressionTail $.conditional-expression-tail;
 
     has $.text;
+
+    method name {
+        'ConditionalExpression'
+    }
 
     method gist(:$treemark=False) {
 

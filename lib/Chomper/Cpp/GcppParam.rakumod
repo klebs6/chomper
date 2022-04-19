@@ -138,6 +138,15 @@ class ParameterDeclaration is export {
         'ParameterDeclaration'
     }
 
+    method token-types {
+        [
+            $.attribute-specifier-seq.name,
+            $.decl-specifier-seq.name,
+            $.parameter-declaration-body.name,
+            $.initializer-clause.name,
+        ]
+    }
+
     method gist(:$treemark=False) {
 
         if $treemark {
@@ -237,7 +246,9 @@ package ParametersGrammar is export {
         #-----------------------------
         proto rule parameter-declaration-body { * }
         rule parameter-declaration-body:sym<decl> { <declarator> }
-        rule parameter-declaration-body:sym<abst> { <abstract-declarator>? }
+
+        #this one used to have a postfix ?
+        rule parameter-declaration-body:sym<abst> { <abstract-declarator> }
 
         rule parameter-declaration {
             <attribute-specifier-seq>?

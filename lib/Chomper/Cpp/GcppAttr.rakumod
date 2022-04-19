@@ -10,10 +10,10 @@ use Chomper::Cpp::GcppBalanced;
 our class AttributeList { ... }
 our class Attrib     { ... }
 
-our role IAttributeSpecifierSeq is export {  }
-
 # rule attribute-specifier-seq { <attribute-specifier>+ }
-class AttributeSpecifierSeq is export { 
+class AttributeSpecifierSeq 
+does IAttributeSpecifierSeq
+is export { 
     has IAttributeSpecifier @.attribute-specifier is required;
 
     has $.text;
@@ -27,48 +27,53 @@ class AttributeSpecifierSeq is export {
     }
 }
 
-# rule attribute-specifier:sym<double-braced> { 
-#   <.left-bracket> 
-#   <.left-bracket> 
-#   <attribute-list>? 
-#   <.right-bracket> 
-#   <.right-bracket> 
-# }
-class AttributeSpecifier::DoubleBraced does IAttributeSpecifier is export {
-    has AttributeList $.attribute-list;
+package AttributeSpecifier is export {
 
-    has $.text;
+    # rule attribute-specifier:sym<double-braced> { 
+    #   <.left-bracket> 
+    #   <.left-bracket> 
+    #   <attribute-list>? 
+    #   <.right-bracket> 
+    #   <.right-bracket> 
+    # }
+    class DoubleBraced does IAttributeSpecifier {
 
-    method name {
-        'AttributeSpecifier::DoubleBraced'
-    }
+        has AttributeList $.attribute-list;
 
-    method gist(:$treemark=False) {
+        has $.text;
 
-        my $builder = "[[";
-
-        if $.attribute-list {
-            $builder ~= $.attribute-list.gist(:$treemark);
+        method name {
+            'AttributeSpecifier::DoubleBraced'
         }
 
-        $builder ~ "]]"
-    }
-}
+        method gist(:$treemark=False) {
 
-# rule attribute-specifier:sym<alignment> { 
-#   <alignmentspecifier> 
-# }
-class AttributeSpecifier::Alignment does IAttributeSpecifier is export {
-    has IAlignmentSpecifier $.alignmentspecifier is required;
+            my $builder = "[[";
 
-    has $.text;
+            if $.attribute-list {
+                $builder ~= $.attribute-list.gist(:$treemark);
+            }
 
-    method name {
-        'AttributeSpecifier::Alignment'
+            $builder ~ "]]"
+        }
     }
 
-    method gist(:$treemark=False) {
-        $.alignmentspecifier.gist(:$treemark)
+    # rule attribute-specifier:sym<alignment> { 
+    #   <alignmentspecifier> 
+    # }
+    class Alignment does IAttributeSpecifier {
+
+        has IAlignmentSpecifier $.alignmentspecifier is required;
+
+        has $.text;
+
+        method name {
+            'AttributeSpecifier::Alignment'
+        }
+
+        method gist(:$treemark=False) {
+            $.alignmentspecifier.gist(:$treemark)
+        }
     }
 }
 

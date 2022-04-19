@@ -1,6 +1,7 @@
 use Chomper::TranslateIo;
 use Chomper::Cpp;
 use Chomper::ToRust;
+use Chomper::ToRustIdent;
 use Chomper::TranslateCondition;
 
 use Data::Dump::Tree;
@@ -35,9 +36,30 @@ multi sub to-rust(
     }.join("\n")
 }
 
+multi sub to-rust(
+    $item where Cpp::PointerLiteral)
+{
+    'std::ptr::null_mut()'
+}
+
 multi sub to-rust($item where Cpp::EqualityExpression) {
-    ddt $item;
-    exit;
+
+    my $relational-expr = $item.relational-expression;
+    my @tail            = $item.equality-expression-tail;
+    my $translation     = to-rust($relational-expr).gist;
+
+    for @tail {
+        $translation ~= " " ~ ~$_.equality-operator.gist ~ " ";
+        $translation ~= to-rust($_.relational-expression).gist;
+    }
+
+    $translation
+}
+
+multi sub to-rust(
+    $item where Cpp::Identifier)
+{
+    to-rust-ident($item).gist
 }
 
 multi sub to-rust(
@@ -92,12 +114,29 @@ multi sub to-rust(
     $item where Cpp::ExpressionStatement)
 {
     debug "will translate ExpressionStatement to Rust!";
+    to-rust($item.expression) ~ ";"
 }
 
 multi sub to-rust(
     $item where Cpp::LogicalAndExpression)
 {
     debug "will translate LogicalAndExpression to Rust!";
+}
+
+multi sub to-rust(
+    $item where Cpp::SimpleTemplateId)
+{
+    debug "will translate SimpleTemplateId to Rust!";
+    my $name = to-rust-ident($item.template-name).gist;
+    my $args = $item.template-arguments>>.&to-rust>>.gist.join(", ");
+    $name ~ "<" ~ $args ~ ">"
+}
+
+multi sub to-rust(
+    $item where Cpp::TypeSpecifier)
+{
+    debug "will translate TypeSpecifier to Rust!";
+    to-rust-ident($item.value)
 }
 
 multi sub to-rust(

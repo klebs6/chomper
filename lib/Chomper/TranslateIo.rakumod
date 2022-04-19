@@ -1,5 +1,9 @@
 use Data::Dump::Tree;
 
+our $all-caps = token {
+    <[A..Z]>+
+};
+
 our enum TranslationSource<LangCpp LangPython>;
 our enum TranslationTarget<LangRust>;
 

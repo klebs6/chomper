@@ -22,6 +22,10 @@ package AbstractDeclarator is export {
 
         has $.text;
 
+        method name {
+            'AbstractDeclarator::Base'
+        }
+
         method gist(:$treemark=False) {
             $.pointer-abstract-declarator.gist(:$treemark)
         }
@@ -38,6 +42,10 @@ package AbstractDeclarator is export {
         has TrailingReturnType          $.trailing-return-type is required;
 
         has $.text;
+
+        method name {
+            'AbstractDeclarator::Aug'
+        }
 
         method gist(:$treemark=False) {
 
@@ -62,6 +70,10 @@ package AbstractDeclarator is export {
 
         has $.text;
 
+        method name {
+            'AbstractPack'
+        }
+
         method gist(:$treemark=False) {
             $.abstract-pack-declarator.gist(:$treemark)
         }
@@ -78,6 +90,10 @@ package PointerAbstractDeclarator is export {
 
         has $.text;
 
+        method name {
+            'PointerAbstractDeclarator::NoPtr'
+        }
+
         method gist(:$treemark=False) {
             $.no-pointer-abstract-declarator.gist(:$treemark)
         }
@@ -92,6 +108,10 @@ package PointerAbstractDeclarator is export {
         has NoPointerAbstractDeclarator $.no-pointer-abstract-declarator;
 
         has $.text;
+
+        method name {
+            'PointerAbstractDeclarator::Ptr'
+        }
 
         method gist(:$treemark=False) {
 
@@ -117,6 +137,10 @@ package NoPointerAbstractDeclaratorBody is export {
 
         has $.text;
 
+        method name {
+            'NoPointerAbstractDeclaratorBody::Base'
+        }
+
         method gist(:$treemark=False) {
             $.parameters-and-qualifiers.gist(:$treemark)
         }
@@ -130,6 +154,10 @@ package NoPointerAbstractDeclaratorBody is export {
 
         has NoPointerAbstractDeclarator              $.no-pointer-abstract-declarator is required;
         has NoPointerAbstractDeclaratorBracketedBase $.no-pointer-abstract-declarator-bracketed-base is required;
+
+        method name {
+            'NoPointerAbstractDeclaratorBody::Brack'
+        }
 
         has $.text;
 
@@ -151,6 +179,10 @@ class NoPointerAbstractDeclarator is export {
 
     has $.text;
 
+    method name {
+        'NoPointerAbstractDeclarator'
+    }
+
     method gist(:$treemark=False) {
         $.no-pointer-abstract-declarator-base.gist(:$treemark)
         ~ " "
@@ -169,6 +201,10 @@ package NoPointerAbstractDeclaratorBase is export {
 
         has $.text;
 
+        method name {
+            'NoPointerAbstractDeclaratorBase::Basic'
+        }
+
         method gist(:$treemark=False) {
             $.parameters-and-qualifiers.gist(:$treemark)
         }
@@ -182,6 +218,10 @@ package NoPointerAbstractDeclaratorBase is export {
         has NoPointerAbstractDeclaratorBracketedBase $.no-pointer-abstract-declarator-bracketed-base is required;
 
         has $.text;
+
+        method name {
+            'NoPointerAbstractDeclaratorBase::Bracketed'
+        }
 
         method gist(:$treemark=False) {
             $.no-pointer-abstract-declarator-bracketed-base.gist(:$treemark)
@@ -198,6 +238,10 @@ package NoPointerAbstractDeclaratorBase is export {
         has IPointerAbstractDeclarator $.pointer-abstract-declarator is required;
 
         has $.text;
+
+        method name {
+            'NoPointerAbstractDeclaratorBase::Parenthesized'
+        }
 
         method gist(:$treemark=False) {
             "(" ~ $.pointer-abstract-declarator.gist(:$treemark) ~ ")"
@@ -219,6 +263,10 @@ does IAbstractDeclarator is export {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
 
     has $.text;
+
+    method name {
+        'NoPointerAbstractDeclaratorBracketedBase'
+    }
 
     method gist(:$treemark=False) {
         my $builder = "";
@@ -249,6 +297,10 @@ class AbstractPackDeclarator is export {
 
     has $.text;
 
+    method name {
+        'AbstractPackDeclarator'
+    }
+
     method gist(:$treemark=False) {
         @.pointer-operators>>.gist(:$treemark).join(" ") ~ $.no-pointer-abstract-pack-declarator.gist(:$treemark)
     }
@@ -261,6 +313,10 @@ class NoPointerAbstractPackDeclaratorBasic is export {
     has ParametersAndQualifiers $.parameters-and-qualifiers is required;
 
     has $.text;
+
+    method name {
+        'NoPointerAbstractPackDeclaratorBase'
+    }
 
     method gist(:$treemark=False) {
         $.parameters-and-qualifiers.gist(:$treemark)
@@ -278,6 +334,10 @@ class NoPointerAbstractPackDeclaratorBrackets is export {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
 
     has $.text;
+
+    method name {
+        'NoPointerAbstractPackDeclaratorBrackets'
+    }
 
     method gist(:$treemark=False) {
 
@@ -308,6 +368,10 @@ package NoPointerAbstractPackDeclaratorBody is export {
 
         has $.text;
 
+        method name {
+            'NoPointerAbstractPackDeclaratorBody::Basic'
+        }
+
         method gist(:$treemark=False) {
             $.no-pointer-abstract-pack-declarator-basic.gist(:$treemark)
         }
@@ -321,6 +385,10 @@ package NoPointerAbstractPackDeclaratorBody is export {
         has NoPointerAbstractPackDeclaratorBrackets $.no-pointer-abstract-pack-declarator-brackets is required;
 
         has $.text;
+
+        method name {
+            'NoPointerAbstractPackDeclaratorBody::Brack'
+        }
 
         method gist(:$treemark=False) {
             $.no-pointer-abstract-pack-declarator-brackets.gist(:$treemark)
@@ -336,6 +404,10 @@ class NoPointerAbstractPackDeclarator is export {
     has INoPointerAbstractPackDeclaratorBody @.no-pointer-abstract-pack-declarator-bodies is required;
 
     has $.text;
+
+    method name {
+        'NoPointerAbstractPackDeclarator'
+    }
 
     method gist(:$treemark=False) {
         "..." ~ @.no-pointer-abstract-pack-declarator-bodies>>.gist(:$treemark).join(" ")

@@ -1,5 +1,6 @@
 use Chomper::Cpp;
 use Chomper::Rust;
+use Chomper::SnakeCase;
 use Chomper::ToRust;
 use Chomper::TranslateIo;
 use Chomper::ToRustType;
@@ -40,10 +41,12 @@ multi sub translate-basic-declaration-to-rust(
     my $type = to-rust-type($item.decl-specifier-seq);
     my $name = to-rust-ident($item.init-declarator-list[0].no-pointer-declarator-base);
     my $params = to-rust-params($item.init-declarator-list[0].no-pointer-declarator-tail[0]);
-    ddt $type;
-    ddt $name;
-    ddt $params;
-    ddt $item;
+    ddt %(
+        :$type,
+        :$name,
+        :$params,
+        :$item,
+    );
     exit;
 }
 
@@ -59,8 +62,29 @@ multi sub translate-basic-declaration-to-rust(
     $item where Cpp::BasicDeclaration) 
 {
     debug "mask I(Es);";
-    ddt $item;
-    exit;
+
+    my $rust-ident = 
+    to-rust-ident($item.init-declarator-list[0].declarator).gist;
+
+    my $expression-list = $item.init-declarator-list[0]
+    .initializer
+    .expression-list;
+
+    my $rust-params = to-rust-params($expression-list)>>.gist.join(", ");
+
+    if $rust-ident ~~ $all-caps {
+
+        #consider all caps function call as
+        #actaully a macro invocation.
+        #
+        #this isnt the case in all circumstances
+        #of course, but it is usually a pretty
+        #safe bet
+        "{snake-case($rust-ident.lc)}!({$rust-params});"
+
+    } else {
+        "{snake-case($rust-ident)}({$rust-params});"
+    }
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -102,6 +126,40 @@ multi sub translate-basic-declaration-to-rust(
     ).gist
 }
 
+our class RustBasicCreationEvent {
+    has $.rust-ident  is required;
+    has $.rust-type   is required;
+    has $.rust-params is required;
+
+    method gist {
+
+        my @params = $.rust-params.List;
+        my $params = @params>>.gist.join(", ");
+        my $ident  = $.rust-ident.gist;
+        my $type   = $.rust-type.gist;
+
+        if $.rust-type.gist ~~ /^^ Vec/ {
+
+            if @params.elems eq 1 {
+
+                qq:to/END/
+                let $ident: $type = {$type}::with_capacity($params);
+                END
+
+            } else {
+                qq:to/END/
+                let $ident: $type = {$type}::new($params);
+                END
+            }
+
+        } else {
+            qq:to/END/
+            let $ident: $type = {$type}::new($params);
+            END
+        }
+    }
+}
+
 multi sub translate-basic-declaration-to-rust(
     "T I(Es);",
     $item where Cpp::BasicDeclaration) 
@@ -109,18 +167,22 @@ multi sub translate-basic-declaration-to-rust(
     debug "mask T I(Es);";
 
     my $rust-type   = to-rust-type($item.decl-specifier-seq);
-    my $rust-ident  = to-rust-ident($item.init-declarator-list[0].declarator);
-    my $rust-params = to-rust-params($item.init-declarator-list[0].initializer);
+    my $declarator0 = $item.init-declarator-list[0];
 
-    if $rust-type.gist ~~ /^^ Vec/ {
-        qq:to/END/
-        let {$rust-ident.gist}: {$rust-type.gist} = vec![{$rust-params.gist}];
-        END
+    do given $declarator0 {
+        when Cpp::InitDeclarator {
+            my $rust-ident  = to-rust-ident($declarator0.declarator);
+            my $rust-params = to-rust-params($declarator0.initializer);
 
-    } else {
-        qq:to/END/
-        let {$rust-ident.gist}: {$rust-type.gist} = {$rust-type.gist}::new({$rust-params.gist});
-        END
+            RustBasicCreationEvent.new(
+                :$rust-ident,
+                :$rust-type,
+                :$rust-params,
+            ).gist
+        }
+        default {
+            die "need implement for {$declarator0.WHAT.^name}";
+        }
     }
 }
 
@@ -129,5 +191,24 @@ multi sub translate-basic-declaration-to-rust(
     $item where Cpp::BasicDeclaration) 
 {
     debug "mask T I(P, P);";
-    exit;
+
+    my $rust-type   = to-rust-type($item.decl-specifier-seq);
+    my $declarator0 = $item.init-declarator-list[0];
+
+    do given $declarator0 {
+
+        when Cpp::NoPointerDeclarator {
+            my $rust-ident  = to-rust-ident($declarator0.no-pointer-declarator-base);
+            my $rust-params = to-rust-params($declarator0.no-pointer-declarator-tail[0]);
+
+            RustBasicCreationEvent.new(
+                :$rust-ident,
+                :$rust-type,
+                :$rust-params,
+            ).gist
+        }
+        default {
+            die "need implement for {$declarator0.WHAT.^name}";
+        }
+    }
 }

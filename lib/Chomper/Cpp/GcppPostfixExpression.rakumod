@@ -204,6 +204,13 @@ does IUnaryExpression is export {
         'PostfixExpression'
     }
 
+    method token-types {
+        [
+            $.postfix-expression-body.name, 
+            |$.postfix-expression-tail>>.name
+        ]
+    }
+
     method gist(:$treemark=False) {
 
         if $treemark {
