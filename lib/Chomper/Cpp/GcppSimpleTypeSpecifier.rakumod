@@ -378,7 +378,7 @@ package SimpleTypeSpecifier is export {
             if $treemark {
                 "T"
             } else {
-                "void"
+                "auto"
             }
         }
     }

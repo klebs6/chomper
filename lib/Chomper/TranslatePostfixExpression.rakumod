@@ -36,11 +36,15 @@ multi sub translate-postfix-expression(
 
     my $indirection-id = @tail[0];
     my $expr-list      = @tail[1].expression-list;
-    my $params         = $expr-list ?? to-rust-params($expr-list)>>.gist.join(", ") !! "";
 
-    my $ident = snake-case(to-rust-ident($body).gist);
+    my $params 
+    = $expr-list ?? to-rust-params($expr-list)>>.gist.join(", ") !! "";
 
-    my $func = to-rust($indirection-id.id-expression).gist;
+    my $ident 
+    = snake-case(to-rust-ident($body).gist);
+
+    my $func 
+    = to-rust($indirection-id.id-expression).gist;
 
     my Bool $indirect = $indirection-id.indirect;
 

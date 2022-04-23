@@ -24,7 +24,7 @@ returns Rust::Identifier
     )
 }
 
-multi sub to-rust-ident($x, Bool :$snake-case) {  
+multi sub to-rust-ident($x, Bool :$snake-case) {
     ddt $x;
     die "need to write method for type: " ~ $x.WHAT.^name;
 }
