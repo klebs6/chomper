@@ -12,6 +12,7 @@ use Chomper::TranslateConditionalExpression;
 use Chomper::TranslateExpression;
 use Chomper::TranslateIndexExpressionSuffix;
 use Chomper::TranslateSuffixedExpression;
+use Chomper::TranslateNoPointerDeclarator;
 
 use Data::Dump::Tree;
 
@@ -34,12 +35,67 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
+     "I = L;",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask I = L;";
+    ddt $item;
+    exit;
+}
+
+multi sub translate-basic-declaration-to-rust(
      "I[N] = N * N * N;",
     $item where Cpp::BasicDeclaration:D) 
 {
     debug "mask I[N] = N * N * N;";
-    ddt $item;
-    exit;
+
+    my $lhs = to-rust($item.init-declarator-list[0].declarator);
+
+    my Cpp::MultiplicativeExpression $multiplicative-expr 
+    = $item.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause;
+
+    my @pointer-member-expressions = [
+        $multiplicative-expr.pointer-member-expression,
+        |$multiplicative-expr.multiplicative-expression-tail>>.pointer-member-expression
+    ];
+
+    my @expression-items = @pointer-member-expressions>>.&to-rust;
+
+    my $rhs = Rust::MultiplicativeExpression.new(
+        division-expressions => [
+            Rust::SuffixedExpression.new(
+                base-expression => Rust::BaseExpression.new(
+                    outer-attributes => [],
+                    expression-item => @expression-items[0],
+                ),
+                suffixed-expression-suffix => [],
+            ),
+            Rust::SuffixedExpression.new(
+                base-expression => Rust::BaseExpression.new(
+                    outer-attributes => [],
+                    expression-item => @expression-items[1],
+                ),
+                suffixed-expression-suffix => [],
+            ),
+            Rust::SuffixedExpression.new(
+                base-expression => Rust::BaseExpression.new(
+                    outer-attributes => [],
+                    expression-item => @expression-items[2],
+                ),
+                suffixed-expression-suffix => [],
+            ),
+        ]
+    );
+
+    Rust::ExpressionStatementNoBlock.new(
+        maybe-comment      => Nil,
+        expression-noblock => Rust::AssignExpression.new(
+            addeq-expressions => [
+                $lhs,
+                $rhs
+            ]
+        )
+    ).gist
 }
 
 multi sub translate-basic-declaration-to-rust(

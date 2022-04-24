@@ -1,8 +1,11 @@
 use Chomper::TranslateIo;
 use Chomper::Cpp;
+use Chomper::Rust;
 use Chomper::ToRust;
 use Chomper::ToRustIdent;
 use Chomper::TranslateCondition;
+use Chomper::TranslateNoPointerDeclarator;
+use Chomper::TranslateConditionalExpression;
 
 use Data::Dump::Tree;
 
@@ -40,6 +43,19 @@ multi sub to-rust(
     $item where Cpp::PointerLiteral)
 {
     'std::ptr::null_mut()'
+}
+
+multi sub to-rust(
+    $item where Cpp::ConstantExpression)
+{
+    translate-conditional-expression($item.conditional-expression)
+}
+
+multi sub to-rust(
+    $item where Cpp::NoPointerDeclarator)
+{
+    debug "will translate NoPointerDeclarator to Rust!";
+    translate-no-pointer-declarator($item, $item.token-types)
 }
 
 multi sub to-rust($item where Cpp::EqualityExpression) {
@@ -90,6 +106,22 @@ multi sub to-rust(
 }
 
 multi sub to-rust(
+    $item where Cpp::IntegerLiteral::Dec)
+{
+    Rust::IntegerLiteral.new(
+        value => $item.decimal-literal.value
+    )
+}
+
+multi sub to-rust(
+    $item where Cpp::IntegerLiteral::Oct)
+{
+    Rust::IntegerLiteral.new(
+        value => $item.octal-literal.value
+    )
+}
+
+multi sub to-rust(
     $item where Cpp::PrimaryExpression::Id:D)
 {
     $item.gist
@@ -121,6 +153,28 @@ multi sub to-rust(
     $item where Cpp::LogicalAndExpression)
 {
     debug "will translate LogicalAndExpression to Rust!";
+    ddt $item;
+    exit;
+}
+
+multi sub to-rust(
+    $item where Cpp::AssignmentExpression::Basic)
+{
+    debug "will translate AssignmentExpression::Basic to Rust!";
+
+    my $lhs = to-rust($item.logical-or-expression);
+    my $rhs = to-rust($item.initializer-clause);
+
+    given $item.assignment-operator {
+        when Cpp::AssignmentOperator::Assign {
+            say "need implement case for $item.assignment-operator";
+            exit;
+        }
+        default {
+            say "need implement case for $item.assignment-operator";
+            exit;
+        }
+    }
 }
 
 multi sub to-rust(

@@ -54,3 +54,26 @@ multi sub translate-postfix-expression(
         "{$ident}.{$func}({$params})"
     }
 }
+
+multi sub translate-postfix-expression(
+    $item, 
+    [
+        'PrimaryExpression::Id',
+        'PostfixExpressionTail::Bracket',
+    ]) 
+{ 
+    my $base 
+    = to-rust($item.postfix-expression-body.id-expression);
+
+    my $bracketed-expr 
+    = to-rust($item.postfix-expression-tail[0].bracket-tail.expression);
+
+    Rust::SuffixedExpression.new(
+        base-expression            => $base,
+        suffixed-expression-suffix => [
+            Rust::IndexExpressionSuffix.new(
+                expression => $bracketed-expr,
+            )
+        ]
+    )
+}
