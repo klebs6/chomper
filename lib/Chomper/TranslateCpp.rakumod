@@ -165,10 +165,9 @@ multi sub to-rust(
     my $lhs = to-rust($item.logical-or-expression);
     my $rhs = to-rust($item.initializer-clause);
 
-    given $item.assignment-operator {
+    do given $item.assignment-operator {
         when Cpp::AssignmentOperator::Assign {
-            say "need implement case for $item.assignment-operator";
-            exit;
+            "{$lhs.gist} = {$rhs.gist}"
         }
         default {
             say "need implement case for $item.assignment-operator";
@@ -190,7 +189,14 @@ multi sub to-rust(
     $item where Cpp::TypeSpecifier)
 {
     debug "will translate TypeSpecifier to Rust!";
-    to-rust-ident($item.value)
+    to-rust($item.value)
+}
+
+multi sub to-rust(
+    $item where Cpp::SimpleTypeSpecifier::Float_)
+{
+    debug "will translate SimpleTypeSpecifier::Float_ to Rust!";
+    "f32"
 }
 
 multi sub to-rust(
@@ -217,41 +223,24 @@ multi sub to-rust(
     $item where Cpp::IterationStatement::ForRange)
 {
     debug "will translate IterationStatement::ForRange to Rust!";
-
+    ddt $item;
+    exit;
 }
 
 multi sub to-rust(
     $item where Cpp::IterationStatement::For)
 {
     debug "will translate IterationStatement::For to Rust!";
-
+    use Chomper::TranslateForLoop;
+    translate-for-loop($item, $item.token-types)
 }
 
 multi sub to-rust(
     $item where Cpp::IterationStatement::While)
 {
     debug "will translate IterationStatement::While to Rust!";
-
-}
-
-multi sub to-rust(
-    $item where Cpp::IterationStatement::ForRange)
-{
-    debug "will translate IterationStatement::ForRange to Rust!";
-
-}
-
-multi sub to-rust(
-    $item where Cpp::IterationStatement::For)
-{
-    debug "will translate IterationStatement::For to Rust!";
-
-}
-
-multi sub to-rust(
-    $item where Cpp::IterationStatement::While)
-{
-    debug "will translate IterationStatement::While to Rust!";
+    ddt $item;
+    exit;
 }
 
 multi sub to-rust(

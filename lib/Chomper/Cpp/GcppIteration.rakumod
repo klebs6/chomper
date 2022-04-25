@@ -110,6 +110,14 @@ package IterationStatement is export {
             'IterationStatement::For'
         }
 
+        method token-types {
+            [
+                $.for-init-statement.name,
+                $.condition.name,
+                $.expression.name,
+            ]
+        }
+
         method gist(:$treemark=False) {
 
             my $builder = "for(" ~ $.for-init-statement.gist(:$treemark);

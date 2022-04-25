@@ -77,3 +77,38 @@ multi sub translate-postfix-expression(
         ]
     )
 }
+
+multi sub translate-postfix-expression(
+    $item, 
+    [
+        'PrimaryExpression::Id',
+        'PostfixExpressionTail::IndirectionId',
+        'PostfixExpressionTail::Parens',
+        'PostfixExpressionTail::Bracket',
+    ]) 
+{ 
+    my $body = $item.postfix-expression-body.id-expression;
+    my @tail = $item.postfix-expression-tail;
+
+    my $indirection-id    = @tail[0];
+    my $expr-list         = @tail[1].expression-list;
+
+    my $rust-bracket-expr = to-rust(@tail[2].bracket-tail.expression);
+
+    my $params 
+    = $expr-list ?? to-rust-params($expr-list)>>.gist.join(", ") !! "";
+
+    my $ident 
+    = snake-case(to-rust-ident($body).gist);
+
+    my $func 
+    = to-rust($indirection-id.id-expression).gist;
+
+    my Bool $indirect = $indirection-id.indirect;
+
+    if $indirect {
+        "(*{$ident}).{$func}({$params})[$rust-bracket-expr]"
+    } else {
+        "{$ident}.{$func}({$params})[$rust-bracket-expr]"
+    }
+}

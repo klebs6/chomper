@@ -1,0 +1,97 @@
+use Data::Dump::Tree;
+use Chomper::ToRustIdent;
+use Chomper::ToRustParams;
+use Chomper::ToRust;
+use Chomper::ToRustType;
+use Chomper::SnakeCase;
+use Chomper::Cpp;
+use Chomper::Rust;
+
+proto sub translate-for-loop(
+    $item where Cpp::IterationStatement::For, 
+    Positional $token-types) 
+is export { * }
+
+multi sub translate-for-loop(
+    $item, 
+    Positional $token-types) 
+{ 
+    say "need write translate-for-loop for 
+    token-types: {$item.token-types()}";
+    ddt $item;
+    exit;
+}
+
+multi sub translate-for-loop(
+    $item, 
+    [
+        'BasicDeclaration',
+        'RelationalExpression',
+        'UnaryExpressionCase::PlusPlus',
+    ]) 
+{ 
+    say "translate-for-loop for 
+    token-types: {$item.token-types()}";
+
+    #I want to know what our loop variable is
+    #called, and what its bounds are
+    my Cpp::BasicDeclaration              $basic-declaration = $item.for-init-statement;
+    my Cpp::RelationalExpression          $relational-expr   = $item.condition;
+    my Cpp::UnaryExpressionCase::PlusPlus $increment-expr    = $item.expression;
+
+    my $loop-ident-type = to-rust-type($basic-declaration.decl-specifier-seq.value);
+    my $loop-ident      = to-rust-ident($basic-declaration.init-declarator-list[0].declarator);
+
+    die if not $loop-ident-type.gist eq "i32";
+
+    my $min-bound = to-rust($basic-declaration.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause); #TODO
+    my $max-bound = to-rust($relational-expr.relational-expression-tail[0].shift-expression); #TODO
+
+    my $operator = $relational-expr.relational-expression-tail[0].relational-operator;
+
+    my $t = do given $operator {
+        when Cpp::RelationalOperator::Less {
+            Rust::RangeExpressionFull.new
+        }
+        when Cpp::RelationalOperator::LessEq {
+            Rust::RangeExpressionFullEq.new
+        }
+        default {
+            die "bug!";
+        }
+    };
+
+    $t.binary-oror-expressions = [
+        Rust::SuffixedExpression.new(
+            base-expression => Rust::BaseExpression.new(
+                expression-item => $min-bound,
+            )
+        ),
+        Rust::SuffixedExpression.new(
+            base-expression => Rust::BaseExpression.new(
+                expression-item => $max-bound,
+            )
+        ),
+    ];
+
+    my @statements = $item.statements>>.&to-rust;
+
+    Rust::LoopExpressionIterator.new(
+        maybe-loop-label => Nil,
+        pattern => Rust::Pattern.new(
+            pattern-no-top-alts => [
+                Rust::IdentifierPattern.new(
+                    ref        => False,
+                    mutable    => False,
+                    identifier => $loop-ident,
+                )
+            ],
+        ),
+        expression-nostruct => $t,
+        block-expression => Rust::BlockExpression.new(
+            statements => Rust::Statements.new(
+                statements => @statements,
+            )
+        )
+    )
+}
