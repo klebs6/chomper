@@ -6,6 +6,7 @@ use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppAttr;
 use Chomper::Cpp::GcppSimpleTypeSpecifier;
 use Chomper::Cpp::GcppAttr;
+use Chomper::Cpp::GcppCv;
 
 package TrailingTypeSpecifier is export {
 
@@ -86,6 +87,18 @@ does IDeclSpecifierSeq is export {
 
     method name {
         'TypeSpecifier'
+    }
+
+    method is-mutable {
+
+        if $.value ~~ TrailingTypeSpecifier::CvQualifier {
+
+            return $.value.cv-qualifier.is-mutable()
+
+        } else {
+
+            return True;
+        }
     }
 
     method gist(:$treemark=False) {

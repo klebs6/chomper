@@ -6,9 +6,9 @@ use Data::Dump::Tree;
 
 proto sub to-rust-type($x) is export { * }
 
-sub to-rust-generic-args(@cpp-template-arguments) {
+sub to-rust-generic-args($x where Cpp::TemplateArgumentList) {
 
-    my @args = do for @cpp-template-arguments {
+    my @args = do for $x.template-arguments {
         to-rust-type($_)
     };
 
@@ -38,9 +38,10 @@ multi sub to-rust-type($x where Cpp::SimpleTemplateId) {
 multi sub to-rust-type($x where Cpp::Identifier) {  
 
     my %typemap = %(
-        "vector" => "Vec",
-        "int"    => "i32",
-        "Tensor" => "Tensor",
+        "vector"        => "Vec",
+        "int"           => "i32",
+        "unsigned char" => "u8",
+        "Tensor"        => "Tensor",
     );
 
     Rust::Identifier.new(
@@ -52,7 +53,44 @@ multi sub to-rust-type($x where Cpp::TypeSpecifier) {
     to-rust-type($x.value)
 }
 
+multi sub to-rust-type(Array $x) {  
+
+    my %typemap = %(
+        "unsigned char" => "u8",
+    );
+
+    my $name = $x.List>>.gist.join(" ");
+
+    Rust::Identifier.new(
+        value => %typemap{$name}
+    )
+}
+
+multi sub to-rust-type($x where Cpp::SimpleTypeSpecifier::Bool_) {  
+    Rust::Identifier.new(
+        value => "bool"
+    )
+}
+
+multi sub to-rust-type($x where Cpp::TrailingTypeSpecifier::CvQualifier) {  
+
+    #in rust, the CvQualifier is not part of the
+    #type
+
+    to-rust-type($x.simple-type-specifier)
+}
+
+multi sub to-rust-type($x where Cpp::FullTypeName) {  
+
+    #should we drop the nested name specifier?
+    #
+    #i do here because i dont think using
+    #namespaces is good
+
+    to-rust-type($x.the-type-name)
+}
+
 multi sub to-rust-type($x) {  
     ddt $x;
-    die "need to write method for type: " ~ $x.WHAT;
+    die "need to write method for type: " ~ $x.WHAT.^name;
 }

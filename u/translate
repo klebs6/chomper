@@ -10,7 +10,7 @@ use Chomper::BlockComment;
 use Chomper::LineCommentToBlockComment;
 use Chomper::Typemap;
 use Chomper::Locations;
-use Chomper::Translate::Translator;
+use Chomper::Translator;
 use Chomper::SnakeCase;
 
 our sub get-hook($hookname) {

@@ -435,7 +435,7 @@ our sub get-rfunction-name($template-header, $default-prefix = "") {
     my $old     = $template-header<function-name><identifier>.Str;
     my $new     = "{$prefix}{snake-case($old)}";
     my $mapping = $priv ?? "_{$old} $new" !! "{$old} $new";
-    spurt %*ENV<WORK> ~ "/repo/translator/raku/function-mappings", "$mapping\n", :append;
+    spurt %*ENV<WORK> ~ "/repo/translator/txt/function-mappings", "$mapping\n", :append;
     $new
 }
 

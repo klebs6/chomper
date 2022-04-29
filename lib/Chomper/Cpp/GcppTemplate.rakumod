@@ -51,7 +51,7 @@ package TemplateParameter is export {
 #   [ <.comma> <template-argument> <ellipsis>? ]* 
 # }
 class TemplateArgumentList is export { 
-    has ITemplateArgument @.template-arguments is required;
+    has @.template-arguments is required;
 
     has $.text;
 
@@ -123,8 +123,8 @@ does ITheTypeId
 does IIdExpression
 does IPostListHead is export {
 
-    has Identifier $.template-name is required;
-    has @.template-arguments;
+    has Identifier           $.template-name is required;
+    has TemplateArgumentList $.template-arguments;
 
     has $.text;
 
@@ -138,7 +138,10 @@ does IPostListHead is export {
             return sigil(TreeMark::<_TemplateId>) 
         }
 
-        $.template-name.gist(:$treemark) ~ "<"  ~ @.template-arguments>>.gist(:$treemark).join(", ") ~ ">"
+        $.template-name.gist(:$treemark) 
+        ~ "<"  
+        ~ $.template-arguments.gist(:$treemark) 
+        ~ ">"
     }
 }
 
@@ -234,7 +237,7 @@ class TemplateDeclaration is export {
 # }
 class ScopedTemplateId is export { 
     has INestedNameSpecifier $.nested-name-specifier is required;
-    has SimpleTemplateId    $.simple-template-id is required;
+    has SimpleTemplateId     $.simple-template-id is required;
 
     has $.text;
 
@@ -251,7 +254,11 @@ package TemplateGrammar is export {
 
     our role Actions {
 
-        # rule scoped-template-id { <nested-name-specifier> <.template> <simple-template-id> }
+        # rule scoped-template-id { 
+        #   <nested-name-specifier> 
+        #   <.template> 
+        #   <simple-template-id> 
+        # }
         method scoped-template-id($/) {
             make ScopedTemplateId.new(
                 nested-name-specifier => $<nested-name-specifier>.made,
@@ -260,7 +267,13 @@ package TemplateGrammar is export {
             )
         }
 
-        # rule template-declaration { <template> <less> <templateparameter-list> <greater> <declaration> }
+        # rule template-declaration { 
+        #   <template> 
+        #   <less> 
+        #   <templateparameter-list> 
+        #   <greater> 
+        #   <declaration> 
+        # }
         method template-declaration($/) {
             make TemplateDeclaration.new(
                 templateparameter-list => $<templateparameter-list>.made,
@@ -269,9 +282,14 @@ package TemplateGrammar is export {
             )
         }
 
-        # rule templateparameter-list { <template-parameter> [ <.comma> <template-parameter> ]* } 
+        # rule templateparameter-list { 
+        #   <template-parameter> 
+        #   [ <.comma> <template-parameter> ]* 
+        # }
         method templateparameter-list($/) {
-            make @<template-parameter>>>.made
+            make TemplateParameterList.new(
+                template-parameters => $<template-parameter>>>.made
+            )
         }
 
         # rule template-parameter:sym<type> { <type-parameter> }
@@ -288,7 +306,7 @@ package TemplateGrammar is export {
         method simple-template-id($/) {
             make SimpleTemplateId.new(
                 template-name      => $<template-name>.made,
-                template-arguments => $<template-argument-list>.made.List,
+                template-arguments => $<template-argument-list>.made,
                 text               => ~$/,
             )
         }
@@ -323,7 +341,9 @@ package TemplateGrammar is export {
 
         # rule template-argument-list { <template-argument> <ellipsis>? [ <.comma> <template-argument> <ellipsis>? ]* } 
         method template-argument-list($/) {
-            make $<template-argument>>>.made
+            make TemplateArgumentList.new(
+                template-arguments => $<template-argument>>>.made
+            )
         }
 
         # token template-argument:sym<type-id> { <the-type-id> }

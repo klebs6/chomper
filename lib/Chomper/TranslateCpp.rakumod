@@ -6,6 +6,7 @@ use Chomper::ToRustIdent;
 use Chomper::TranslateCondition;
 use Chomper::TranslateNoPointerDeclarator;
 use Chomper::TranslateConditionalExpression;
+use Chomper::TranslateAdditiveExpression;
 
 use Data::Dump::Tree;
 
@@ -34,9 +35,9 @@ multi sub to-rust(
 {
     debug "will translate CompoundStatement to Rust!";
 
-    do for $item.statement-seq.List {
-        to-rust($_)
-    }.join("\n")
+    Rust::Statements.new(
+        statements => $item.statement-seq.List>>.&to-rust,
+    ).gist
 }
 
 multi sub to-rust(
@@ -153,8 +154,54 @@ multi sub to-rust(
     $item where Cpp::LogicalAndExpression)
 {
     debug "will translate LogicalAndExpression to Rust!";
-    ddt $item;
-    exit;
+
+    my @exprs = $item.inclusive-or-expressions>>.&to-rust;
+
+    @exprs.join(" && ")
+}
+
+multi sub to-rust(
+    $item where Cpp::RelationalExpression)
+{
+    debug "will translate RelationalExpression to Rust!";
+
+    die "unhandled" if $item.relational-expression-tail.elems gt 1;
+
+    my $lhs = to-rust($item.shift-expression);
+    my $rhs = to-rust($item.relational-expression-tail[0].shift-expression);
+
+    do given $item.relational-expression-tail[0].relational-operator {
+        when Cpp::RelationalOperator::Greater {
+            Rust::BinaryGtExpression.new(
+                binary-lt-expressions => [
+                    $lhs,
+                    $rhs,
+                ]
+            ).gist
+        }
+        default {
+            die "need handle this case!";
+        }
+    }
+}
+
+multi sub to-rust(
+    $item where Cpp::UnaryOperator::Star)
+{
+    Rust::UnaryPrefixStar.new
+}
+
+multi sub to-rust(
+    $item where Cpp::UnaryExpressionCase::UnaryOp)
+{
+    debug "will translate UnaryOp to Rust!";
+
+    Rust::UnaryExpression.new(
+        unary-prefixes => [
+            to-rust($item.unary-operator)
+        ],
+        suffixed-expression => to-rust($item.unary-expression)
+    ).gist
 }
 
 multi sub to-rust(
@@ -206,6 +253,13 @@ multi sub to-rust(
 }
 
 multi sub to-rust(
+    $item where Cpp::AdditiveExpression)
+{
+    debug "will translate AdditiveExpression to Rust!";
+    translate-additive-expression($item)
+}
+
+multi sub to-rust(
     $item where Cpp::PostfixExpression)
 {
     use Chomper::TranslatePostfixExpression;
@@ -239,8 +293,18 @@ multi sub to-rust(
     $item where Cpp::IterationStatement::While)
 {
     debug "will translate IterationStatement::While to Rust!";
-    ddt $item;
-    exit;
+
+    my $rust-condition  = to-rust($item.condition);
+    my @rust-statements = $item.statements.List>>.&to-rust;
+
+    Rust::LoopExpressionPredicate.new(
+        expression-nostruct => $rust-condition,
+        block-expression => Rust::BlockExpression.new(
+            statements => Rust::Statements.new(
+                statements => @rust-statements,
+            )
+        ),
+    ).gist
 }
 
 multi sub to-rust(

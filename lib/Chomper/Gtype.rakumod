@@ -6,11 +6,11 @@ our role Types {
     }
 
     token unique-ptr {
-        [ 'std::' ]? 'unique_ptr' '<' <kw-type> '>'
+        [ 'std::' ]? 'unique_ptr' '<' <type> '>'
     }
 
     token unordered-set {
-        [ 'std::' ]? 'unordered_set' '<' <kw-type> '>'
+        [ 'std::' ]? 'unordered_set' '<' <type> '>'
     }
 
     regex std-function {
@@ -30,15 +30,15 @@ our role Types {
         | <type-or-arg>+ %% ","
     }
     regex type-or-arg {
-        <kw-type> | <arg>
+        <type> | <arg>
     }
 
     token std-atomic {
-        [ 'std::' ]? 'atomic' '<' <kw-type> '>'
+        [ 'std::' ]? 'atomic' '<' <type> '>'
     }
 
     token std-queue {
-        [ 'std::' ]? 'queue' '<' <kw-type> '>'
+        [ 'std::' ]? 'queue' '<' <type> '>'
     }
 
     rule unordered-map {
@@ -48,51 +48,51 @@ our role Types {
             | 'CaffeMap'
             | 'map'
         ]
-        '<' <kw-type> ',' <kw-type> '>'
+        '<' <type> ',' <type> '>'
     }
 
     token bit-set {
-        [ 'std::' ]? 'bitset' '<' <kw-type> '>'
+        [ 'std::' ]? 'bitset' '<' <type> '>'
     }
 
     token std-vector {
-        [ 'std::' ]? 'vector' '<' <kw-type> '>'
+        [ 'std::' ]? 'vector' '<' <type> '>'
     }
 
     token std-tuple {
-        [ 'std::' ]? 'tuple' '<' [<kw-type>+ %% ', '] '>'
+        [ 'std::' ]? 'tuple' '<' [<type>+ %% ', '] '>'
     }
 
     token c10-optional {
-        [ 'c10::' ]? 'optional' '<' <kw-type> '>'
+        [ 'c10::' ]? 'optional' '<' <type> '>'
     }
 
     token std-deque {
-        [ 'std::' ]? 'deque' '<' <kw-type> '>'
+        [ 'std::' ]? 'deque' '<' <type> '>'
     }
 
     token std-list {
-        [ 'std::' ]? 'list' '<' <kw-type> '>'
+        [ 'std::' ]? 'list' '<' <type> '>'
     }
 
     token shared-ptr {
-        [ 'std::' ]? 'shared_ptr' '<' <kw-type> '>'
+        [ 'std::' ]? 'shared_ptr' '<' <type> '>'
     }
 
     rule std-pair {
         [ 'std::' ]? 'pair' '<' 
-        <kw-type> ',' 
-        <kw-type> 
+        <type> ',' 
+        <type> 
         '>'
     }
 
     token std-set {
-        [ 'std::' ]? 'set' '<' <kw-type> '>'
+        [ 'std::' ]? 'set' '<' <type> '>'
     }
 
     token type {
         [<mutable> <.ws>]?
-        [[<kw-struct> | <class>] <.ws>]?
+        [[<struct> | <class>] <.ws>]?
         [
             | <typename> <.ws> [<parent=type> '::'[<template> <.ws>]?]+ <child=type>
             | [

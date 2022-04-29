@@ -10,7 +10,7 @@ use Chomper::Cpp::GcppIdent;
 #   [ <.comma> <template-parameter> ]* 
 # }
 class TemplateParameterList is export { 
-    has ITemplateParameter @.template-parameters is required;
+    has @.template-parameters is required;
     has $.text;
 
     method name {

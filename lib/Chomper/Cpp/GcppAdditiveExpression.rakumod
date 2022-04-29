@@ -4,31 +4,34 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-# token additive-operator:sym<plus> { <plus> }
-class AdditiveOperator::Plus does IAdditiveOperator is export {
+package AdditiveOperator is export {
 
-    has $.text;
+    # token additive-operator:sym<plus> { <plus> }
+    our class Plus does IAdditiveOperator {
 
-    method name {
-        'AdditiveOperator::Plus'
+        has $.text;
+
+        method name {
+            'AdditiveOperator::Plus'
+        }
+
+        method gist(:$treemark=False) {
+            "+"
+        }
     }
 
-    method gist(:$treemark=False) {
-        "+"
-    }
-}
+    # token additive-operator:sym<minus> { <minus> }
+    our class Minus does IAdditiveOperator {
 
-# token additive-operator:sym<minus> { <minus> }
-class AdditiveOperator::Minus does IAdditiveOperator is export {
+        has $.text;
 
-    has $.text;
+        method name {
+            'AdditiveOperator::Minus'
+        }
 
-    method name {
-        'AdditiveOperator::Minus'
-    }
-
-    method gist(:$treemark=False) {
-        "-"
+        method gist(:$treemark=False) {
+            "-"
+        }
     }
 }
 

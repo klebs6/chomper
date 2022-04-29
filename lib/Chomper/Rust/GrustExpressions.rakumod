@@ -223,83 +223,253 @@ class CastExpression is export {
     }
 }
 
-class ModuloExpression is export {
-    has @.cast-expressions;
+#-----------------------------------
+package MultiplicativeOperator is export {
 
-    has $.text;
+    # token multiplicative-operator:sym<*> { <star> }
+    our class Star {
 
-    method gist {
-        @.cast-expressions>>.gist.join(" % ")
+        has $.text;
+
+        method name {
+            'MultiplicativeOperator::Star'
+        }
+
+        method gist(:$treemark=False) {
+            "*"
+        }
+    }
+
+    # token multiplicative-operator:sym</> { <div_> }
+    our class Slash {
+
+        has $.text;
+
+        method name {
+            'MultiplicativeOperator::Slash'
+        }
+
+        method gist(:$treemark=False) {
+            "/"
+        }
+    }
+
+    # token multiplicative-operator:sym<%> { <mod_> }
+    our class Mod {
+
+        has $.text;
+
+        method name {
+            'MultiplicativeOperator::Mod'
+        }
+
+        method gist(:$treemark=False) {
+            "%"
+        }
     }
 }
 
-class DivisionExpression is export {
-    has @.modulo-expressions;
-
-    has $.text;
-
-    method gist {
-        @.modulo-expressions>>.gist.join(" / ")
-    }
-}
-
+# rule multiplicative-expression { 
+#   <cast-expression> 
+#   <multiplicative-expression-tail>* 
+# }
 class MultiplicativeExpression is export {
-    has @.division-expressions;
+    has $.cast-expression is required;
+    has @.multiplicative-expression-tail is required;
 
     has $.text;
 
-    method gist {
-        @.division-expressions>>.gist.join(" * ")
+    method name {
+        'MultiplicativeExpression'
+    }
+
+    method gist(:$treemark=False) {
+        my $b = $.cast-expression;
+        my @t = @.multiplicative-expression-tail;
+
+        my $buffer = $b.gist(:$treemark);
+
+        for @t {
+            $buffer ~= " " ~ $_.gist(:$treemark);
+        }
+
+        $buffer
     }
 }
 
-class SubtractiveExpression is export {
-    has @.multiplicative-expressions;
+# rule multiplicative-expression-tail { 
+#   <multiplicative-operator> 
+#   <cast-expression> 
+# }
+class MultiplicativeExpressionTail is export {
+
+    has $.multiplicative-operator is required;
+    has $.cast-expression         is required;
 
     has $.text;
 
-    method gist {
-        @.multiplicative-expressions>>.gist.join(" - ")
+    method name {
+        'MultiplicativeExpressionTail'
+    }
+
+    method gist(:$treemark=False) {
+        $.multiplicative-operator.gist(:$treemark) 
+        ~ " " 
+        ~ $.cast-expression.gist(:$treemark)
     }
 }
 
+#------------------------------------------
+package AdditiveOperator is export {
+
+    # token additive-operator:sym<plus> { <plus> }
+    our class Plus {
+
+        has $.text;
+
+        method name {
+            'AdditiveOperator::Plus'
+        }
+
+        method gist(:$treemark=False) {
+            "+"
+        }
+    }
+
+    # token additive-operator:sym<minus> { <minus> }
+    our class Minus {
+
+        has $.text;
+
+        method name {
+            'AdditiveOperator::Minus'
+        }
+
+        method gist(:$treemark=False) {
+            "-"
+        }
+    }
+}
+
+# rule additive-expression-tail { 
+#   <additive-operator> 
+#   <multiplicative-expression> 
+# }
+class AdditiveExpressionTail is export {
+    has $.additive-operator         is required;
+    has $.multiplicative-expression is required;
+
+    method name {
+        'AdditiveExpressionTail'
+    }
+
+    method gist(:$treemark=False) {
+        $.additive-operator.gist(:$treemark) ~ " " ~ $.multiplicative-expression.gist(:$treemark)
+    }
+}
+
+# rule additive-expression { 
+#   <multiplicative-expression> 
+#   <additive-expression-tail>* 
+# }
 class AdditiveExpression is export {
-    has @.subtractive-expressions;
 
-    has $.text;
+    has $.multiplicative-expression is required;
+    has @.additive-expression-tail;
 
-    method gist {
-        @.subtractive-expressions>>.gist.join(" + ")
+    method name {
+        'AdditiveExpression'
+    }
+
+    method gist(:$treemark=False) {
+        $.multiplicative-expression.gist(:$treemark) 
+        ~ " " 
+        ~ @.additive-expression-tail>>.gist(:$treemark).join(" ")
     }
 }
 
-class BinaryShrExpression is export {
-    has @.additive-expressions;
+#----------------------------------
+# rule binary-shift-expression-tail { 
+#   <binary-shift-operator> 
+#   <additive-expression> 
+# }
+class BinaryShiftExpressionTail is export {
+    has $.binary-shift-operator is required;
+    has $.additive-expression   is required;
 
     has $.text;
 
-    method gist {
-        @.additive-expressions>>.gist.join(" >> ")
+    method name {
+        'BinaryShiftExpressionTail'
+    }
+
+    method gist(:$treemark=False) {
+        $.binary-shift-operator.gist(:$treemark) 
+        ~ " " 
+        ~ $.additive-expression.gist(:$treemark)
     }
 }
 
-class BinaryShlExpression is export {
-    has @.binary-shr-expressions;
+# rule binary-shift-expression { 
+#   <additive-expression> 
+#   <binary-shift-expression-tail>* 
+# }
+class BinaryShiftExpression is export {
+    has $.additive-expression is required;
+    has @.binary-shift-expression-tail is required;
 
     has $.text;
 
-    method gist {
-        @.binary-shr-expressions>>.gist.join(" << ")
+    method name {
+        'BinaryShiftExpression'
+    }
+
+    method gist(:$treemark=False) {
+        $.additive-expression.gist(:$treemark) 
+        ~ " " 
+        ~ @.binary-shift-expression-tail>>.gist(:$treemark).join(" ")
     }
 }
 
+package BinaryShiftOperator is export {
+
+    # rule binary-shift-operator:sym<right> { <.greater> <.greater> }
+    class Right {
+
+        has $.text;
+
+        method name {
+            'BinaryShiftOperator::Right'
+        }
+
+        method gist(:$treemark=False) {
+            ">>"
+        }
+    }
+
+    # rule binary-shift-operator:sym<left> { <.less> <.less> }
+    class Left {
+
+        has $.text;
+
+        method name {
+            'BinaryShiftOperator::Left'
+        }
+
+        method gist(:$treemark=False) {
+            "<<"
+        }
+    }
+}
+
+#----------------------------
 class BinaryAndExpression is export {
-    has @.binary-shl-expressions;
+    has @.binary-shift-expressions;
 
     has $.text;
 
     method gist {
-        @.binary-shl-expressions>>.gist.join(" & ")
+        @.binary-shift-expressions>>.gist.join(" & ")
     }
 }
 
@@ -715,37 +885,54 @@ package ExpressionGrammar is export {
         }
 
         #--------------------
-        rule modulo-expression {
-            <cast-expression>+ %% <tok-percent>
-        }
-
-        rule division-expression {
-            <modulo-expression>+ %% <tok-slash>
-        }
+        proto token multiplicative-operator { * }
+        token multiplicative-operator:sym<*> { <tok-star> }
+        token multiplicative-operator:sym</> { <tok-slash> }
+        token multiplicative-operator:sym<%> { <tok-percent> }
 
         rule multiplicative-expression {
-            <division-expression>+ %% <tok-star>
+            <cast-expression>
+            <multiplicative-expression-tail>*
         }
 
-        rule subtractive-expression {
-            <multiplicative-expression>+ %% <tok-minus>
+        rule multiplicative-expression-tail {
+            <multiplicative-operator> 
+            <cast-expression>
+        }
+
+        #------------------------
+        proto token additive-operator { * }
+        token additive-operator:sym<plus>  {  <tok-plus> }
+        token additive-operator:sym<minus> {  <tok-minus> }
+
+        rule additive-expression-tail {
+            <additive-operator> 
+            <multiplicative-expression>
         }
 
         rule additive-expression {
-            <subtractive-expression>+ %% <tok-plus>
+            <multiplicative-expression>
+            <additive-expression-tail>*
         }
 
-        rule binary-shr-expression {
-            <additive-expression>+ %% <tok-shr>
+        #-----------------
+        rule binary-shift-expression-tail {
+            <binary-shift-operator>
+            <additive-expression>
         }
 
-        rule binary-shl-expression {
-            <binary-shr-expression>+ %% <tok-shl>
+        rule binary-shift-expression {
+            <additive-expression>
+            <binary-shift-expression-tail>*
         }
+
+        proto rule binary-shift-operator { * }
+        rule binary-shift-operator:sym<right> { <tok-shr> }
+        rule binary-shift-operator:sym<left>  { <tok-shl> }
 
         #--------------------
         rule binary-and-expression {
-            <binary-shl-expression>+ %% <tok-and>
+            <binary-shift-expression>+ %% <tok-and>
         }
 
         rule binary-xor-expression {
@@ -1060,151 +1247,134 @@ package ExpressionGrammar is export {
             }
         }
 
-        method modulo-expression($/) {
-
-            my @exprs = $<cast-expression>>>.made;
-
-            die if not @exprs.elems gt 0;
-
-            if @exprs.elems gt 1 {
-
-                make ModuloExpression.new(
-                    cast-expressions => @exprs,
-                    text            => $/.Str,
-                )
-
-            } else {
-
-                make @exprs[0]
-            }
+        #---------------------------------------
+        # token multiplicative-operator:sym<*> { <star> }
+        method multiplicative-operator:sym<*>($/) {
+            make MultiplicativeOperator::Star.new
         }
 
-        method division-expression($/) {
-
-            my @exprs = $<modulo-expression>>>.made;
-
-            die if not @exprs.elems gt 0;
-
-            if @exprs.elems gt 1 {
-
-                make DivisionExpression.new(
-                    modulo-expressions => @exprs,
-                    text               => $/.Str,
-                )
-
-            } else {
-
-                make @exprs[0]
-            }
+        # token multiplicative-operator:sym</> { <div_> }
+        method multiplicative-operator:sym</>($/) {
+            make MultiplicativeOperator::Slash.new
         }
 
+        # token multiplicative-operator:sym<%> { <mod_> }
+        method multiplicative-operator:sym<%>($/) {
+            make MultiplicativeOperator::Mod.new
+        }
+
+        # rule multiplicative-expression { <cast-expression> <multiplicative-expression-tail>* }
         method multiplicative-expression($/) {
+            my $base = $<cast-expression>.made;
+            my @tail = $<multiplicative-expression-tail>>>.made.List;
 
-            my @exprs = $<division-expression>>>.made;
-
-            die if not @exprs.elems gt 0;
-
-            if @exprs.elems gt 1 {
-
+            if @tail.elems gt 0 {
                 make MultiplicativeExpression.new(
-                    division-expressions => @exprs,
-                    text                => $/.Str,
+                    cast-expression                => $base,
+                    multiplicative-expression-tail => @tail,
+                    text                           => ~$/,
                 )
-
             } else {
-
-                make @exprs[0]
-
+                make $base
             }
         }
 
-        method subtractive-expression($/) {
-
-            my @exprs = $<multiplicative-expression>>>.made;
-
-            die if not @exprs.elems gt 0;
-
-            if @exprs.elems gt 1 {
-
-                make SubtractiveExpression.new(
-                    multiplicative-expressions => @exprs,
-                    text => $/.Str,
-                )
-
-            } else {
-
-                make @exprs[0]
-
-            }
+        # rule multiplicative-expression-tail { <multiplicative-operator> <cast-expression> } 
+        method multiplicative-expression-tail($/) {
+            make MultiplicativeExpressionTail.new(
+                multiplicative-operator => $<multiplicative-operator>.made,
+                cast-expression         => $<cast-expression>.made,
+                text                    => ~$/,
+            )
         }
 
+        #---------------------------------------
+        # token additive-operator:sym<plus> { <plus> }
+        method additive-operator:sym<plus>($/) {
+            make AdditiveOperator::Plus.new
+        }
+
+        # token additive-operator:sym<minus> { <minus> } 
+        method additive-operator:sym<minus>($/) {
+            make AdditiveOperator::Minus.new
+        }
+
+        # rule additive-expression-tail { <additive-operator> <multiplicative-expression> }
+        method additive-expression-tail($/) {
+            make AdditiveExpressionTail.new(
+                additive-operator         => $<additive-operator>.made,
+                multiplicative-expression => $<multiplicative-expression>.made,
+                text                      => ~$/,
+            )
+        }
+
+        # rule additive-expression { <multiplicative-expression> <additive-expression-tail>* }
         method additive-expression($/) {
+            my $base = $<multiplicative-expression>.made;
+            my @tail = $<additive-expression-tail>>>.made.List;
 
-            my @exprs = $<subtractive-expression>>>.made;
-
-            die if not @exprs.elems gt 0;
-
-            if @exprs.elems gt 1 {
-
+            if @tail.elems gt 0 {
                 make AdditiveExpression.new(
-                    subtractive-expressions => @exprs,
-                    text => $/.Str,
+                    multiplicative-expression => $base,
+                    additive-expression-tail  => @tail,
+                    text => ~$/,
+                )
+
+            } else {
+                make $base
+            }
+        }
+
+        #---------------------------
+        # rule shift-expression-tail { <binary-shift-operator> <additive-expression> }
+        method binary-shift-expression-tail($/) {
+            make BinaryShiftExpressionTail.new(
+                shift-operator      => $<binary-shift-operator>.made,
+                additive-expression => $<additive-expression>.made,
+                text                => ~$/,
+            )
+        }
+
+        # rule shift-expression { <additive-expression> <binary-shift-expression-tail>* } 
+        method binary-shift-expression($/) {
+
+            my $base = $<additive-expression>.made;
+            my @tail = $<binary-shift-expression-tail>>>.made.List;
+
+            if @tail.elems gt 0 {
+
+                make BinaryShiftExpression.new(
+                    additive-expression   => $base,
+                    shift-expression-tail => @tail,
+                    text                  => ~$/,
                 )
 
             } else {
 
-                make @exprs[0]
-
+                make $base
             }
         }
 
-        method binary-shr-expression($/) {
-
-            my @exprs = $<additive-expression>>>.made;
-
-            die if not @exprs.elems gt 0;
-
-            if @exprs.elems gt 1 {
-
-                make BinaryShrExpression.new(
-                    additive-expressions => @exprs,
-                    text => $/.Str,
-                )
-
-            } else {
-
-                make @exprs[0]
-            }
+        # rule shift-operator:sym<right> { <.greater> <.greater> }
+        method binary-shift-operator:sym<right>($/) {
+            make BinaryShiftOperator::Right.new
         }
 
-        method binary-shl-expression($/) {
-
-            my @exprs = $<binary-shr-expression>>>.made;
-
-            die if not @exprs.elems gt 0;
-
-            if @exprs.elems gt 1 {
-
-                make BinaryShlExpression.new(
-                    binary-shr-expressions => @exprs,
-                    text => $/.Str,
-                )
-
-            } else {
-
-                make @exprs[0]
-            }
+        # rule shift-operator:sym<left> { <.less> <.less> } 
+        method binary-shift-operator:sym<left>($/) {
+            make BinaryShiftOperator::Left.new
         }
 
+        #---------------------------
         method binary-and-expression($/) {
-            my @exprs = $<binary-shl-expression>>>.made;
+            my @exprs = $<binary-shift-expression>>>.made;
 
             die if not @exprs.elems gt 0;
 
             if @exprs.elems gt 1 {
 
                 make BinaryAndExpression.new(
-                    binary-shl-expressions => @exprs,
+                    binary-shift-expressions => @exprs,
                     text => $/.Str,
                 )
 

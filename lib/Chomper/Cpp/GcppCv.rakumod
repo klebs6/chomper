@@ -4,21 +4,6 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-# rule cvqualifierseq { <cv-qualifier>+ }
-class CvQualifierSeq is export { 
-    has ICvQualifier @.cv-qualifiers;
-
-    has $.text;
-
-    method name {
-        'CvQualifierSeq'
-    }
-
-    method gist(:$treemark=False) {
-        @.cv_qualifiers>>.gist(:$treemark).join(" ")
-    }
-}
-
 package CvQualifier is export {
 
     # rule cv-qualifier:sym<const> { <const> }
@@ -28,6 +13,10 @@ package CvQualifier is export {
 
         method name {
             'CvQualifier::Const'
+        }
+
+        method is-mutable {
+            False
         }
 
         method gist(:$treemark=False) {
@@ -44,9 +33,40 @@ package CvQualifier is export {
             'CvQualifier::Volatile'
         }
 
+        method is-mutable {
+            True
+        }
+
         method gist(:$treemark=False) {
             "volatile"
         }
+    }
+}
+
+# rule cvqualifierseq { <cv-qualifier>+ }
+class CvQualifierSeq is export { 
+    has ICvQualifier @.cv-qualifiers;
+
+    has $.text;
+
+    method name {
+        'CvQualifierSeq'
+    }
+
+    method is-mutable {
+
+        for @.cv-qualifiers {
+
+            if $_ ~~ CvQualifier::Const_ {
+                return False;
+            }
+        }
+
+        return True;
+    }
+
+    method gist(:$treemark=False) {
+        @.cv_qualifiers>>.gist(:$treemark).join(" ")
     }
 }
 

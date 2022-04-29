@@ -368,3 +368,106 @@ multi sub translate-basic-declaration-to-rust(
         }
     }
 }
+
+multi sub translate-basic-declaration-to-rust(
+    "I = E;",
+    $item where Cpp::BasicDeclaration) 
+{
+    my $rust-ident = to-rust-ident($item.init-declarator-list[0].declarator);
+    my $rust-rhs   = to-rust($item.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause);
+
+    Rust::ExpressionStatementNoBlock.new(
+        expression-noblock => Rust::AssignExpression.new(
+            addeq-expressions => [
+                $rust-ident,
+                $rust-rhs,
+            ]
+        )
+    ).gist
+}
+
+sub emit-basic-let-statement($item where Cpp::BasicDeclaration) {
+
+    my $rust-type  = to-rust-type($item.decl-specifier-seq);
+    my $rust-ident = to-rust-ident($item.init-declarator-list[0].declarator);
+    my $rust-rhs   = to-rust($item.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause);
+
+    Rust::LetStatement.new(
+        pattern-no-top-alt => Rust::IdentifierPattern.new(
+            ref        => False,
+            mutable    => True,
+            identifier => $rust-ident,
+        ),
+        maybe-type => Rust::TypePath.new(
+            type-path-segments => [
+                Rust::TypePathSegment.new(
+                    path-ident-segment => $rust-type
+                ),
+            ],
+        ),
+        maybe-expression => $rust-rhs
+    ).gist
+}
+
+multi sub translate-basic-declaration-to-rust(
+    "T I = E * N / N + N;",
+    $item where Cpp::BasicDeclaration) 
+{
+    debug "mask T I = E * N / N + N; ";
+
+    emit-basic-let-statement($item)
+}
+
+multi sub translate-basic-declaration-to-rust(
+    "T I = N;",
+    $item where Cpp::BasicDeclaration) 
+{
+    debug "mask T I = N;";
+
+    emit-basic-let-statement($item)
+}
+
+multi sub translate-basic-declaration-to-rust(
+    "T *I = & E;",
+    $item where Cpp::BasicDeclaration) 
+{
+    debug "mask T *I = & E;";
+    #ddt $item;
+
+    my $rust-type = Rust::RawPtrType.new(
+        mutable        => $item.decl-specifier-seq.is-mutable(),
+        type-no-bounds => to-rust-type($item.decl-specifier-seq),
+    );
+
+    my $rust-expr 
+    = to-rust(
+        $item.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause.unary-expression
+    );
+
+    my $rust-ident 
+    = to-rust(
+        $item.init-declarator-list[0].declarator.no-pointer-declarator
+    );
+
+    my $rust-lhs = Rust::BorrowExpression.new(
+        borrow-expression-prefixes => [
+            Rust::BorrowExpressionPrefix.new(
+                borrow-count => 1,
+                mutable      => False,
+            )
+        ],
+        unary-expression => $rust-expr,
+    );
+
+    Rust::LetStatement.new(
+        pattern-no-top-alt => Rust::IdentifierPattern.new(
+            ref     => False,
+            mutable => False,
+            identifier => Rust::Identifier.new(
+                value => $rust-ident,
+            ),
+        ),
+        maybe-type       => $rust-type,
+        maybe-expression => $rust-lhs,
+    )
+}
