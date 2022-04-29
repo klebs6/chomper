@@ -1,34 +1,43 @@
 use Chomper::TranslateIo;
+use Chomper::ToRust;
 use Chomper::Cpp;
 use Chomper::Rust;
 
 use Data::Dump::Tree;
 
-proto sub translate-additive-expression-with-mask(
-    $mask,
-    $item where Cpp::AdditiveExpression) { * }
-
-multi sub translate-additive-expression-with-mask(
-    $mask,
-    $item where Cpp::AdditiveExpression)
-{
-    ddt $item;
-    die "need implement for mask: $mask";
-    exit;
-}
-
-multi sub translate-additive-expression-with-mask(
-    "E + E",
-    $item where Cpp::AdditiveExpression)
-{
-    debug "will translate AdditiveExpression for mask: E + E";
-    ddt $item;
-    exit;
-}
-
 our sub translate-additive-expression(
     $item where Cpp::AdditiveExpression)
 {
-    debug "will translate AdditiveExpression to Rust!";
-    translate-additive-expression-with-mask($item.additive-mask, $item)
+    Rust::AdditiveExpression.new(
+
+        multiplicative-expression => to-rust($item.multiplicative-expression),
+        additive-expression-tail  => $item.additive-expression-tail.List>>.&to-rust,
+    )
 }
+
+our sub translate-additive-expression-tail(
+    $item where Cpp::AdditiveExpressionTail)
+{
+    Rust::AdditiveExpressionTail.new(
+        additive-operator         => to-rust($item.additive-operator),
+        multiplicative-expression => to-rust($item.multiplicative-expression),
+    )
+}
+
+proto sub translate-additive-operator(
+    $item where Cpp::IAdditiveOperator) 
+is export { * }
+
+multi sub translate-additive-operator(
+    $item where Cpp::AdditiveOperator::Plus)
+{
+    Rust::AdditiveOperator::Plus.new
+}
+
+
+multi sub translate-additive-operator(
+    $item where Cpp::AdditiveOperator::Minus)
+{
+    Rust::AdditiveOperator::Minus.new
+}
+

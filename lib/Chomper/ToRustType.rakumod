@@ -38,14 +38,21 @@ multi sub to-rust-type($x where Cpp::SimpleTemplateId) {
 multi sub to-rust-type($x where Cpp::Identifier) {  
 
     my %typemap = %(
-        "vector"        => "Vec",
-        "int"           => "i32",
-        "unsigned char" => "u8",
-        "Tensor"        => "Tensor",
+        "vector"           => "Vec",
+        "int"              => "i32",
+        "unsigned char"    => "u8",
+        "Tensor"           => "Tensor",
+        "reverse_iterator" => "reverse_iterator",
     );
 
+    my $val = to-rust-ident($x).value;
+
+    if not %typemap{$val}:exists {
+        die "$val dne in typemap!";
+    }
+
     Rust::Identifier.new(
-        value => %typemap{to-rust-ident($x).value}
+        value => %typemap{$val}
     )
 }
 
@@ -81,11 +88,14 @@ multi sub to-rust-type($x where Cpp::TrailingTypeSpecifier::CvQualifier) {
 }
 
 multi sub to-rust-type($x where Cpp::FullTypeName) {  
+ 
+    my $nns = $x.nested-name-specifier;
 
+    #TODO:
     #should we drop the nested name specifier?
     #
-    #i do here because i dont think using
-    #namespaces is good
+    #no. this is broken. we need it. consider
+    #vector<char>::iterator
 
     to-rust-type($x.the-type-name)
 }

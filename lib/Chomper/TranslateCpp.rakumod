@@ -7,6 +7,7 @@ use Chomper::TranslateCondition;
 use Chomper::TranslateNoPointerDeclarator;
 use Chomper::TranslateConditionalExpression;
 use Chomper::TranslateAdditiveExpression;
+use Chomper::TranslateMultiplicativeExpression;
 
 use Data::Dump::Tree;
 
@@ -179,6 +180,30 @@ multi sub to-rust(
                 ]
             ).gist
         }
+        when Cpp::RelationalOperator::Less {
+            Rust::BinaryLtExpression.new(
+                binary-ge-expressions => [
+                    $lhs,
+                    $rhs,
+                ]
+            ).gist
+        }
+        when Cpp::RelationalOperator::GreaterEq {
+            Rust::BinaryGeExpression.new(
+                binary-le-expressions => [
+                    $lhs,
+                    $rhs,
+                ]
+            ).gist
+        }
+        when Cpp::RelationalOperator::LessEq {
+            Rust::BinaryLeExpression.new(
+                binary-or-expressions => [
+                    $lhs,
+                    $rhs,
+                ]
+            ).gist
+        }
         default {
             die "need handle this case!";
         }
@@ -216,6 +241,36 @@ multi sub to-rust(
         when Cpp::AssignmentOperator::Assign {
             "{$lhs.gist} = {$rhs.gist}"
         }
+        when Cpp::AssignmentOperator::StarAssign {
+            "{$lhs.gist} *= {$rhs.gist}"
+        }
+        when Cpp::AssignmentOperator::DivAssign {
+            "{$lhs.gist} /= {$rhs.gist}"
+        }
+        when Cpp::AssignmentOperator::ModAssign {
+            "{$lhs.gist} %= {$rhs.gist}"
+        }
+        when Cpp::AssignmentOperator::PlusAssign {
+            "{$lhs.gist} += {$rhs.gist}"
+        }
+        when Cpp::AssignmentOperator::MinusAssign {
+            "{$lhs.gist} -= {$rhs.gist}"
+        }
+        when Cpp::AssignmentOperator::LShiftAssign {
+            "{$lhs.gist} <<= {$rhs.gist}"
+        }
+        when Cpp::AssignmentOperator::RShiftAssign {
+            "{$lhs.gist} >>= {$rhs.gist}"
+        }
+        when Cpp::AssignmentOperator::AndAssign {
+            "{$lhs.gist} &= {$rhs.gist}"
+        }
+        when Cpp::AssignmentOperator::XorAssign {
+            "{$lhs.gist} ^= {$rhs.gist}"
+        }
+        when Cpp::AssignmentOperator::OrAssign {
+            "{$lhs.gist} |= {$rhs.gist}"
+        }
         default {
             say "need implement case for $item.assignment-operator";
             exit;
@@ -250,6 +305,10 @@ multi sub to-rust(
     $item where Cpp::LogicalOrExpression)
 {
     debug "will translate LogicalOrExpression to Rust!";
+
+    my @exprs = $item.logical-and-expressions>>.&to-rust;
+
+    @exprs.join(" || ")
 }
 
 multi sub to-rust(
@@ -257,6 +316,48 @@ multi sub to-rust(
 {
     debug "will translate AdditiveExpression to Rust!";
     translate-additive-expression($item)
+}
+
+multi sub to-rust(
+    $item where Cpp::IAdditiveOperator)
+{
+    debug "will translate AdditiveOperator to Rust!";
+    translate-additive-operator($item)
+}
+
+multi sub to-rust(
+    $item where Cpp::AdditiveExpressionTail)
+{
+    debug "will translate AdditiveExpressionTail to Rust!";
+    translate-additive-expression-tail($item)
+}
+
+multi sub to-rust(
+    $item where Cpp::PrimaryExpression::Expr)
+{
+    debug "will translate PrimaryExpression::Expr to Rust!";
+    "(" ~ to-rust($item.expression) ~ ")"
+}
+
+multi sub to-rust(
+    $item where Cpp::MultiplicativeExpression)
+{
+    debug "will translate MultiplicativeExpression to Rust!";
+    translate-multiplicative-expression($item)
+}
+
+multi sub to-rust(
+    $item where Cpp::IMultiplicativeOperator)
+{
+    debug "will translate MultiplicativeOperator to Rust!";
+    translate-multiplicative-operator($item)
+}
+
+multi sub to-rust(
+    $item where Cpp::MultiplicativeExpressionTail)
+{
+    debug "will translate MultiplicativeExpressionTail to Rust!";
+    translate-multiplicative-expression-tail($item)
 }
 
 multi sub to-rust(

@@ -428,6 +428,25 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
+    "I = I;",
+    $item where Cpp::BasicDeclaration) 
+{
+    debug "mask I = I;";
+
+    my $lhs = to-rust($item.init-declarator-list[0].declarator);
+    my $rhs = to-rust($item.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause);
+
+    Rust::ExpressionStatementNoBlock.new(
+        expression-noblock => Rust::AssignExpression.new(
+            addeq-expressions => [
+                $lhs,
+                $rhs,
+            ]
+        )
+    )
+}
+
+multi sub translate-basic-declaration-to-rust(
     "T *I = & E;",
     $item where Cpp::BasicDeclaration) 
 {
