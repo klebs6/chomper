@@ -12,7 +12,7 @@ our sub translate-additive-expression(
 
         multiplicative-expression => to-rust($item.multiplicative-expression),
         additive-expression-tail  => $item.additive-expression-tail.List>>.&to-rust,
-    )
+    ).gist
 }
 
 our sub translate-additive-expression-tail(

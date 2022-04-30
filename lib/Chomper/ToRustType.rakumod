@@ -35,14 +35,30 @@ multi sub to-rust-type($x where Cpp::SimpleTemplateId) {
     )
 }
 
+multi sub to-rust-type($x where Cpp::TheTypeId) {  
+
+    my $base = to-rust-type($x.type-specifier-seq);
+
+    Rust::RawPtrType.new(
+        mutable        => True,
+        type-no-bounds => $base,
+    )
+}
+
 multi sub to-rust-type($x where Cpp::Identifier) {  
 
     my %typemap = %(
         "vector"           => "Vec",
         "int"              => "i32",
+        "uint8_t"          => "u8",
+        "int8_t"           => "i8",
+        "uint256"          => "u256",
+        "uint16_t"         => "u16",
+        "int16_t"          => "i16",
         "unsigned char"    => "u8",
         "Tensor"           => "Tensor",
         "reverse_iterator" => "reverse_iterator",
+        "iterator"         => "iterator",
     );
 
     my $val = to-rust-ident($x).value;

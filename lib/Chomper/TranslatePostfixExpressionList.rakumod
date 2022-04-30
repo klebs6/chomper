@@ -1,4 +1,5 @@
 use Data::Dump::Tree;
+use Chomper::ToRust;
 use Chomper::ToRustIdent;
 use Chomper::ToRustPathInExpression;
 use Chomper::Cpp;
@@ -27,6 +28,9 @@ multi sub translate-postfix-expression-list(
         $item.post-list-head, 
         snake-case => True);
 
+    my $expr-list 
+    = to-rust($item.post-list-tail.value.initializer-list);
+
     my $rust = Rust::SuffixedExpression.new(
         base-expression => Rust::BaseExpression.new(
             outer-attributes => [ ],
@@ -41,7 +45,7 @@ multi sub translate-postfix-expression-list(
         ),
         suffixed-expression-suffix => [
             Rust::CallExpressionSuffix.new(
-                maybe-call-params => Nil,
+                maybe-call-params => $expr-list,
             )
         ],
     );
@@ -58,8 +62,8 @@ multi sub translate-postfix-expression-list(
         $item.post-list-head, 
         snake-case => True);
 
-    ddt $item;
-    die "need check this path for items in parens";
+    my $expr-list 
+    = to-rust($item.post-list-tail.value.initializer-list);
 
     my $rust = Rust::SuffixedExpression.new(
         base-expression => Rust::BaseExpression.new(
@@ -68,7 +72,7 @@ multi sub translate-postfix-expression-list(
         ),
         suffixed-expression-suffix => [
             Rust::CallExpressionSuffix.new(
-                maybe-call-params => Nil,
+                maybe-call-params => $expr-list,
             )
         ],
     );

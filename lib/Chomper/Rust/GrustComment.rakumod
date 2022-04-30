@@ -22,11 +22,11 @@ class Comment is export {
 
             my @lines = $.text.split("\n");
 
-            @lines.map: {
+            @lines.map({
 
                 "// " ~ $_
 
-            }.join("\n")
+            }).join("\n")
 
         } else {
             "/* " ~ $.text ~ " */"

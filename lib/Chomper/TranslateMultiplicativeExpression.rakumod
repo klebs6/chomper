@@ -11,7 +11,7 @@ our sub translate-multiplicative-expression(
     Rust::MultiplicativeExpression.new(
         cast-expression                => to-rust($item.pointer-member-expression),
         multiplicative-expression-tail => $item.multiplicative-expression-tail.List>>.&to-rust,
-    )
+    ).gist
 }
 
 our sub translate-multiplicative-expression-tail(

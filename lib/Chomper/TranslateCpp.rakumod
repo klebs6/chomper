@@ -3,6 +3,8 @@ use Chomper::Cpp;
 use Chomper::Rust;
 use Chomper::ToRust;
 use Chomper::ToRustIdent;
+use Chomper::ToRustType;
+use Chomper::ToRustParams;
 use Chomper::TranslateCondition;
 use Chomper::TranslateNoPointerDeclarator;
 use Chomper::TranslateConditionalExpression;
@@ -13,10 +15,11 @@ use Data::Dump::Tree;
 
 our sub translate-cpp-ir-to-rust($typename, $item where Cpp::IStatement)
 {
-    given $item.name {
+    my $rust = do given $item.name {
         when "TryBlock"                     { to-rust($item) }
         when "ExpressionStatement"          { to-rust($item) }
         when "CompoundStatement"            { to-rust($item) }
+        when "Statement::Declaration"       { to-rust($item) }
         when "JumpStatement::Return"        { to-rust($item) }
         when "JumpStatement::Continue"      { to-rust($item) }
         when "IterationStatement::ForRange" { to-rust($item) }
@@ -28,7 +31,62 @@ our sub translate-cpp-ir-to-rust($typename, $item where Cpp::IStatement)
         default {
             die "need to add {$item.name} to translate-cpp-ir-to-rust";
         }
-    }
+    };
+
+    $rust.gist
+}
+
+multi sub to-rust(
+    $item where Cpp::Statement::Declaration)
+{
+    debug "will translate Statement::Declaration to Rust!";
+    my $comment = to-rust($item.comment);
+    my $stmt = to-rust($item.declaration-statement);
+
+    Rust::ExpressionStatementNoBlock.new(
+        maybe-comment      => $comment,
+        expression-noblock => $stmt,
+    )
+}
+
+multi sub to-rust(
+    $item where Cpp::UnaryOperator::Minus)
+{
+    Rust::UnaryPrefixMinus.new
+}
+
+multi sub to-rust(
+    $item where Cpp::UnaryOperator::Not)
+{
+    Rust::UnaryPrefixBang.new
+}
+
+multi sub to-rust(
+    $item where Cpp::UnaryOperator::Star)
+{
+    Rust::UnaryPrefixStar.new
+}
+
+multi sub to-rust(
+    $item where Cpp::MultiLineComment)
+{
+    debug "will translate MultiLineComment to Rust!";
+
+    Rust::Comment.new(
+        line => True,
+        text => $item.line-comments>>.value.join("\n"),
+    )
+}
+
+multi sub to-rust(
+    $item where Cpp::AttributedStatement)
+{
+    debug "will translate AttributedStatement to Rust!";
+
+    Rust::ExpressionStatementNoBlock.new(
+        maybe-comment      => to-rust($item.comment),
+        expression-noblock => to-rust($item.attributed-statement-body),
+    )
 }
 
 multi sub to-rust(
@@ -38,7 +96,7 @@ multi sub to-rust(
 
     Rust::Statements.new(
         statements => $item.statement-seq.List>>.&to-rust,
-    ).gist
+    )
 }
 
 multi sub to-rust(
@@ -48,9 +106,31 @@ multi sub to-rust(
 }
 
 multi sub to-rust(
+    $item where Cpp::CharacterLiteral)
+{
+    to-rust-param($item)
+}
+
+multi sub to-rust(
+    $item where Cpp::InitializerList)
+{
+    $item.clauses>>.&to-rust-param
+}
+
+multi sub to-rust(
     $item where Cpp::ConstantExpression)
 {
     translate-conditional-expression($item.conditional-expression)
+}
+
+multi sub to-rust(
+    $item where Cpp::CastExpression)
+{
+    debug "will translate CastExpression to Rust!";
+    Rust::CastExpression.new(
+        borrow-expression => to-rust($item.unary-expression),
+        cast-targets      => $item.the-type-ids>>.&to-rust-type,
+    )
 }
 
 multi sub to-rust(
@@ -92,13 +172,14 @@ multi sub to-rust(
         $condition.gist(treemark => True)
     );
 
-    my $statements = @statements>>.&to-rust.join("\n");
-
-    qq:to/END/
-    if $rust-condition \{
-    $statements.indent(4)
-    \}
-    END
+    Rust::IfExpression.new(
+        expression-nostruct => $rust-condition,
+        block-expression    => Rust::BlockExpression.new(
+            statements => Rust::Statements.new(
+                statements => @statements>>.&to-rust,
+            )
+        )
+    )
 }
 
 multi sub to-rust(
@@ -217,16 +298,55 @@ multi sub to-rust(
 }
 
 multi sub to-rust(
+    $item where Cpp::UnaryExpressionCase::PlusPlus)
+{
+    debug "will translate UnaryExpressioncase::PlusPlus to Rust!";
+
+    my $m1 = Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            expression-item => Rust::IntegerLiteral.new(
+                value => 1,
+            )
+        )
+    );
+
+    Rust::ExpressionStatementNoBlock.new(
+        expression-noblock => Rust::AddEqExpression.new(
+            minuseq-expressions => [
+                to-rust($item.unary-expression),
+                $m1
+            ]
+        )
+    ).gist
+}
+
+multi sub to-rust(
     $item where Cpp::UnaryExpressionCase::UnaryOp)
 {
     debug "will translate UnaryOp to Rust!";
 
-    Rust::UnaryExpression.new(
-        unary-prefixes => [
-            to-rust($item.unary-operator)
-        ],
-        suffixed-expression => to-rust($item.unary-expression)
-    ).gist
+    my $expr = to-rust($item.unary-expression);
+
+    if ($item.unary-operator ~~ Cpp::UnaryOperator::And) {
+
+        Rust::BorrowExpression.new(
+            borrow-expression-prefixes => [
+                Rust::BorrowExpressionPrefix.new(
+                    borrow-count => 1,
+                    mutable      => False,
+                )
+            ],
+            unary-expression => $expr,
+        )
+
+    } else {
+        Rust::UnaryExpression.new(
+            unary-prefixes => [
+                to-rust($item.unary-operator)
+            ],
+            suffixed-expression => $expr
+        )
+    }
 }
 
 multi sub to-rust(
@@ -414,7 +534,7 @@ multi sub to-rust(
     debug "will translate JumpStatement::Return to Rust!";
 
     if $item.return-statement-body {
-        "return " ~ to-rust($item.return-statement-body) ~ ";"
+        "return " ~ to-rust($item.return-statement-body)
 
     } else {
         "return;"

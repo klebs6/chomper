@@ -13,6 +13,14 @@ our sub octal-to-int($octal-value) {
     }
 }
 
+our sub hex-to-int($hex-value) {
+    if $hex-value.Num ne 0 {
+        die "need handle this!";
+    } else {
+        0
+    }
+}
+
 proto sub to-rust-param($x) is export { * }
 
 multi sub to-rust-param($x where Cpp::IntegerLiteral::Dec) {  
@@ -27,9 +35,31 @@ multi sub to-rust-param($x where Cpp::IntegerLiteral::Oct) {
     )
 }
 
+multi sub to-rust-param($x where Cpp::IntegerLiteral::Hex) {  
+    Rust::IntegerLiteral.new(
+        value => hex-to-int($x.hexadecimal-literal.value),
+    )
+}
+
+multi sub to-rust-param($x where Cpp::CharacterLiteral) {  
+    Rust::CharLiteral.new(
+        value => $x.gist,
+    )
+}
+
 multi sub to-rust-param($x where Cpp::PostfixExpression) {  
     #translate-postfix-expression($x, $x.token-types)
     to-rust($x)
+}
+
+multi sub to-rust-param($x where Cpp::UnaryExpressionCase::UnaryOp) {  
+    to-rust($x)
+}
+
+multi sub to-rust-param($x where Cpp::StringLiteral) {  
+    Rust::StringLiteral.new(
+        value => $x.value
+    )
 }
 
 multi sub to-rust-param($x where Cpp::PrimaryExpression::Id) {  
@@ -38,6 +68,26 @@ multi sub to-rust-param($x where Cpp::PrimaryExpression::Id) {
 
 multi sub to-rust-param($x where Cpp::EqualityExpression) {  
     to-rust($x)
+}
+
+multi sub to-rust-param($x where Cpp::AdditiveExpression) {  
+    to-rust($x)
+}
+
+multi sub to-rust-param($x where Cpp::CastExpression) {  
+    to-rust($x)
+}
+
+multi sub to-rust-param($x where Cpp::MultiplicativeExpression) {  
+    to-rust($x)
+}
+
+multi sub to-rust-param(
+    $item where Cpp::ConditionalExpression)
+{
+    debug "to-param: ConditionalExpression!";
+    ddt $item;
+    exit;
 }
 
 multi sub to-rust-param($x where Cpp::ParameterDeclaration) {  

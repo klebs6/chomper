@@ -8,6 +8,30 @@ multi sub translate-condition($condition, "! I") {
     $condition.gist
 }
 
+multi sub translate-condition($condition, "I == - N") {
+    to-rust($condition)
+}
+
+multi sub translate-condition($condition, "I  > I") {
+    to-rust($condition)
+}
+
+multi sub translate-condition($condition, "I + I  > I") {
+    to-rust($condition)
+}
+
+multi sub translate-condition($condition, "* I != N") {
+    to-rust($condition)
+}
+
+multi sub translate-condition($condition, "! I(Es)") {
+    to-rust($condition)
+}
+
+multi sub translate-condition($condition, "! I(Es) || (E  < N)") {
+    to-rust($condition)
+}
+
 multi sub translate-condition($condition, "! E") {
     "!" ~ to-rust($condition.unary-expression)
 }
@@ -44,5 +68,3 @@ multi sub translate-condition($condition, $treemark) {
     say "treemark => $treemark";
     die "<program terminated>";
 }
-
-

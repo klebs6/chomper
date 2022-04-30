@@ -32,6 +32,38 @@ multi sub translate-basic-declaration-to-rust(
     $item where Cpp::BasicDeclaration:D) 
 {
     debug "mask I I = T(Es);";
+    ddt $item;
+    exit;
+}
+
+multi sub translate-basic-declaration-to-rust(
+     "T I = E + (I - I);",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask T I = E + (I - I);";
+
+    #re-mask
+    translate-basic-declaration-to-rust("T I = E;", $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
+     "T I = I(Es);",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask T I = I(Es);";
+
+    #re-mask
+    translate-basic-declaration-to-rust("T I = E;", $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
+     "T I = I(Es) * N / N + N;",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask T I = I(Es) * N / N + N;";
+
+    #re-mask
+    translate-basic-declaration-to-rust("T I = E;", $item)
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -95,7 +127,7 @@ multi sub translate-basic-declaration-to-rust(
                 $rhs
             ]
         )
-    ).gist
+    )
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -132,7 +164,7 @@ multi sub translate-basic-declaration-to-rust(
         ),
         maybe-type       => $rust-type,
         maybe-expression => Nil,
-    ).gist
+    )
 }
 
 
@@ -200,7 +232,7 @@ multi sub translate-basic-declaration-to-rust(
         pattern-no-top-alt => $rust-ident,
         maybe-type         => $rust-type,
         maybe-expression   => $rust-expr,
-    ).gist
+    )
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -255,7 +287,7 @@ multi sub translate-basic-declaration-to-rust(
         )
     };
 
-    $rust-let-stmt.gist
+    $rust-let-stmt
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -279,7 +311,7 @@ multi sub translate-basic-declaration-to-rust(
                 to-rust-suffixed-expression($rhs),
             ]
         )
-    ).gist
+    )
 }
 
 our class RustBasicCreationEvent {
@@ -383,7 +415,7 @@ multi sub translate-basic-declaration-to-rust(
                 $rust-rhs,
             ]
         )
-    ).gist
+    )
 }
 
 sub emit-basic-let-statement($item where Cpp::BasicDeclaration) {
@@ -406,7 +438,7 @@ sub emit-basic-let-statement($item where Cpp::BasicDeclaration) {
             ],
         ),
         maybe-expression => $rust-rhs
-    ).gist
+    )
 }
 
 multi sub translate-basic-declaration-to-rust(

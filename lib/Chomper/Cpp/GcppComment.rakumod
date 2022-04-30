@@ -30,20 +30,20 @@ class LineComment does IComment is export {
     }
 
     method gist(:$treemark=False) {
-        $.value
+        '// ' ~ $.value.gist
     }
 }
 
 # regex comment:sym<line> { 
 #   [<line-comment> <.ws>?]+ 
 # }
-class Comment::Line does IComment is export {
+class MultiLineComment does IComment is export {
     has LineComment @.line-comments is required;
 
     has $.text;
 
     method name {
-        'Comment::Line'
+        'MultiLineComment'
     }
 
     method gist(:$treemark=False) {
@@ -62,16 +62,20 @@ package CommentGrammar is export {
             )
         }
 
+        method line-comment-body($/) {
+            make ~$/
+        }
+
         # token line-comment { '//' <-[ \r \n ]>* }
         method line-comment($/) {
             make LineComment.new(
-                value => ~$/,
+                value => $<line-comment-body>.made,
             )
         }
 
         # regex comment:sym<line> { [<line-comment> <.ws>?]+ }
         method comment:sym<line>($/) {
-            make Comment::Line.new(
+            make MultiLineComment.new(
                 line-comments => $<line-comment>>>.made,
                 text          => ~$/,
             )
@@ -89,8 +93,12 @@ package CommentGrammar is export {
             '/*' .*?  '*/'
         }
 
+        token line-comment-body {
+            <-[ \r \n ]>*
+        }
+
         token line-comment {
-            '//' <-[ \r \n ]>*
+            '//' <line-comment-body>
         }
 
         proto rule comment { * }
