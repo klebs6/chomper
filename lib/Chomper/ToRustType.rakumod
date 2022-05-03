@@ -47,28 +47,14 @@ multi sub to-rust-type($x where Cpp::TheTypeId) {
 
 multi sub to-rust-type($x where Cpp::Identifier) {  
 
-    my %typemap = %(
-        "vector"           => "Vec",
-        "int"              => "i32",
-        "uint8_t"          => "u8",
-        "int8_t"           => "i8",
-        "uint256"          => "u256",
-        "uint16_t"         => "u16",
-        "int16_t"          => "i16",
-        "unsigned char"    => "u8",
-        "Tensor"           => "Tensor",
-        "reverse_iterator" => "reverse_iterator",
-        "iterator"         => "iterator",
-    );
-
     my $val = to-rust-ident($x).value;
 
-    if not %typemap{$val}:exists {
+    if not %*typemap{$val}:exists {
         die "$val dne in typemap!";
     }
 
     Rust::Identifier.new(
-        value => %typemap{$val}
+        value => %*typemap{$val}
     )
 }
 
@@ -76,16 +62,16 @@ multi sub to-rust-type($x where Cpp::TypeSpecifier) {
     to-rust-type($x.value)
 }
 
-multi sub to-rust-type(Array $x) {  
+multi sub to-rust-type($x where Cpp::DeclSpecifierSeq) {  
+    to-rust-type($x.decl-specifiers);
+}
 
-    my %typemap = %(
-        "unsigned char" => "u8",
-    );
+multi sub to-rust-type(Array $x) {  
 
     my $name = $x.List>>.gist.join(" ");
 
     Rust::Identifier.new(
-        value => %typemap{$name}
+        value => %*typemap{$name}
     )
 }
 

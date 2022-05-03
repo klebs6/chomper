@@ -73,7 +73,7 @@ class MatchArmsInnerItemWithBlock is export {
         }
 
         $builder ~= $.match-arm.gist;
-        $builder ~= " => " ~ $.expression-with-block.gist;
+        $builder ~= " => " ~ $.expression-with-block.gist ~ ",\n";
 
         $builder
     }

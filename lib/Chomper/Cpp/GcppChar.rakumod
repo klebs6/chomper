@@ -34,6 +34,7 @@ class BasicCchar does ICchar is export {
     }
 
     method gist(:$treemark=False) {
+
         $.value
     }
 }
@@ -162,6 +163,10 @@ does IInitializerClause is export {
     }
 
     method gist(:$treemark=False) {
+
+        if $treemark {
+            return "L";
+        }
 
         my $builder = "";
 

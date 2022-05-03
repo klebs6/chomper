@@ -62,8 +62,14 @@ multi sub translate-postfix-expression-list(
         $item.post-list-head, 
         snake-case => True);
 
-    my $expr-list 
-    = to-rust($item.post-list-tail.value.initializer-list);
+    my $expr-list = do if $item.post-list-tail.value {
+
+        to-rust($item.post-list-tail.value.initializer-list)
+
+    } else {
+
+        Nil
+    };
 
     my $rust = Rust::SuffixedExpression.new(
         base-expression => Rust::BaseExpression.new(

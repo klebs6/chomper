@@ -2,7 +2,7 @@ unit module Chomper::Rust::GrustMacros;
 
 use Data::Dump::Tree;
 
-our class MacroExpression is export {
+class MacroExpression is export {
     has $.simple-path;
     has $.delim-token-tree;
 
@@ -13,9 +13,9 @@ our class MacroExpression is export {
     }
 }
 
-our enum DelimKind<Brack Brace Paren>;
+enum DelimKind is export <Brack Brace Paren>;
 
-our class DelimTokenTree is export {
+class DelimTokenTree is export {
     has @.token-trees;
     has DelimKind $.kind;
 
@@ -36,7 +36,7 @@ our class DelimTokenTree is export {
     }
 }
 
-our class TokenTreeLeaf is export {
+class TokenTreeLeaf is export {
     has $.rust-token-no-delim;
 
     method gist {
@@ -44,7 +44,7 @@ our class TokenTreeLeaf is export {
     }
 }
 
-our class TokenTree is export {
+class TokenTree is export {
     has $.delim-token-tree;
 
     has $.text;
@@ -54,7 +54,7 @@ our class TokenTree is export {
     }
 }
 
-our class MacroInvocation is export {
+class MacroInvocation is export {
     has $.maybe-comment;
     has $.simple-path;
     has @.token-trees;
@@ -99,7 +99,7 @@ our class MacroInvocation is export {
     }
 }
 
-our class MacroRulesDefinition is export {
+class MacroRulesDefinition is export {
     has $.identifier;
     has $.macro-rules-def;
 
@@ -116,7 +116,7 @@ our class MacroRulesDefinition is export {
     }
 }
 
-our class MacroRulesDef is export {
+class MacroRulesDef is export {
     has $.maybe-comment;
     has $.macro-rules;
 
@@ -138,7 +138,7 @@ our class MacroRulesDef is export {
     }
 }
 
-our class MacroRule is export {
+class MacroRule is export {
 
     has $.macro-matcher;
     has $.macro-transcriber;
@@ -150,7 +150,7 @@ our class MacroRule is export {
     }
 }
 
-our class MacroMatcher is export {
+class MacroMatcher is export {
     has @.macro-matches;
 
     has $.text;
@@ -160,7 +160,7 @@ our class MacroMatcher is export {
     }
 }
 
-our class MacroMatchToken is export {
+class MacroMatchToken is export {
     has $.token;
 
     has $.text;
@@ -170,7 +170,7 @@ our class MacroMatchToken is export {
     }
 }
 
-our class MacroMatchMatcher is export {
+class MacroMatchMatcher is export {
     has $.macro-matcher;
 
     has $.text;
@@ -180,7 +180,7 @@ our class MacroMatchMatcher is export {
     }
 }
 
-our class MacroMatchSingle is export {
+class MacroMatchSingle is export {
     has $.identifier;
     has $.macro-frag-spec;
 
@@ -191,7 +191,7 @@ our class MacroMatchSingle is export {
     }
 }
 
-our class MacroMatchPlural is export {
+class MacroMatchPlural is export {
     has @.macro-matches;
     has $.maybe-macro-rep-sep;
     has $.macro-rep-op;
@@ -218,7 +218,7 @@ our class MacroMatchPlural is export {
     }
 }
 
-our class MacroRepSep is export {
+class MacroRepSep is export {
     has $.token;
 
     has $.text;
@@ -228,11 +228,11 @@ our class MacroRepSep is export {
     }
 }
 
-our class MacroRepOpStar  is export { method gist { "*" } }
-our class MacroRepOpPlus  is export { method gist { "+" } }
-our class MacroRepOpQmark is export { method gist { "?" } }
+class MacroRepOpStar  is export { method gist { "*" } }
+class MacroRepOpPlus  is export { method gist { "+" } }
+class MacroRepOpQmark is export { method gist { "?" } }
 
-our class MacroTranscriber is export {
+class MacroTranscriber is export {
     has $.delim-token-tree;
 
     has $.text;

@@ -328,6 +328,8 @@ package UserDefinedLiteralGrammar is export {
 
     our role Rules {
 
+        #turning these off because we dont see
+        #many of them and they suck
         proto token user-defined-literal { * }
         token user-defined-literal:sym<int>   { <user-defined-integer-literal> }
         token user-defined-literal:sym<float> { <user-defined-floating-literal> }
@@ -336,9 +338,9 @@ package UserDefinedLiteralGrammar is export {
 
         proto token user-defined-integer-literal { * }
         token user-defined-integer-literal:sym<dec> { <decimal-literal> <udsuffix> }
-        token user-defined-integer-literal:sym<oct> { <octal-literal> <udsuffix> }
         token user-defined-integer-literal:sym<hex> { <hexadecimal-literal> <udsuffix> }
         token user-defined-integer-literal:sym<bin> { <binary-literal> <udsuffix> }
+        token user-defined-integer-literal:sym<oct> { <octal-literal> <udsuffix> }
 
         proto token user-defined-floating-literal { * }
         token user-defined-floating-literal:sym<frac> { <fractionalconstant> <exponentpart>?  <udsuffix> }

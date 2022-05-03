@@ -6,19 +6,13 @@ use Chomper::ToRust;
 use Data::Dump::Tree;
 
 our sub octal-to-int($octal-value) {
-    if $octal-value.Num ne 0 {
-        die "need handle this!";
-    } else {
-        0
-    }
+    $octal-value.Num
 }
 
 our sub hex-to-int($hex-value) {
-    if $hex-value.Num ne 0 {
-        die "need handle this!";
-    } else {
-        0
-    }
+    say $hex-value.gist;
+    exit;
+    $hex-value.Num
 }
 
 proto sub to-rust-param($x) is export { * }
@@ -26,25 +20,26 @@ proto sub to-rust-param($x) is export { * }
 multi sub to-rust-param($x where Cpp::IntegerLiteral::Dec) {  
     Rust::IntegerLiteral.new(
         value => $x.decimal-literal.value,
-    )
+    ).gist
 }
 
 multi sub to-rust-param($x where Cpp::IntegerLiteral::Oct) {  
     Rust::IntegerLiteral.new(
-        value => octal-to-int($x.octal-literal.value),
-    )
+        #value => octal-to-int($x.octal-literal.value),
+        value => $x.octal-literal.value,
+    ).gist
 }
 
 multi sub to-rust-param($x where Cpp::IntegerLiteral::Hex) {  
     Rust::IntegerLiteral.new(
-        value => hex-to-int($x.hexadecimal-literal.value),
-    )
+        value => $x.hexadecimal-literal.value,
+    ).gist
 }
 
 multi sub to-rust-param($x where Cpp::CharacterLiteral) {  
     Rust::CharLiteral.new(
         value => $x.gist,
-    )
+    ).gist
 }
 
 multi sub to-rust-param($x where Cpp::PostfixExpression) {  
@@ -59,7 +54,7 @@ multi sub to-rust-param($x where Cpp::UnaryExpressionCase::UnaryOp) {
 multi sub to-rust-param($x where Cpp::StringLiteral) {  
     Rust::StringLiteral.new(
         value => $x.value
-    )
+    ).gist
 }
 
 multi sub to-rust-param($x where Cpp::PrimaryExpression::Id) {  
@@ -85,9 +80,31 @@ multi sub to-rust-param($x where Cpp::MultiplicativeExpression) {
 multi sub to-rust-param(
     $item where Cpp::ConditionalExpression)
 {
-    debug "to-param: ConditionalExpression!";
-    ddt $item;
-    exit;
+    to-rust($item)
+}
+
+multi sub to-rust-param(
+    $item where Cpp::PostfixExpressionList)
+{
+    to-rust($item)
+}
+
+multi sub to-rust-param(
+    $item where Cpp::BracedInitList)
+{
+    to-rust($item)
+}
+
+multi sub to-rust-param(
+    $item where Cpp::InclusiveOrExpression)
+{
+    to-rust($item)
+}
+
+multi sub to-rust-param(
+    $item where Cpp::BooleanLiteral::T)
+{
+    to-rust($item)
 }
 
 multi sub to-rust-param($x where Cpp::ParameterDeclaration) {  

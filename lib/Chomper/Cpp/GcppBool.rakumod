@@ -15,6 +15,11 @@ package BooleanLiteral is export {
         }
 
         method gist(:$treemark=False) {
+
+            if $treemark {
+                return "L";
+            }
+
             "false"
         }
     }
@@ -28,6 +33,11 @@ package BooleanLiteral is export {
         }
 
         method gist(:$treemark=False) {
+
+            if $treemark {
+                return "L";
+            }
+
             "true"
         }
     }

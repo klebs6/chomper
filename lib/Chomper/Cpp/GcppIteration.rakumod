@@ -162,6 +162,13 @@ package IterationStatement is export {
             'IterationStatement::ForRange'
         }
 
+        method token-types {
+            [
+                $.for-range-declaration.name,
+                $.for-range-initializer.name,
+            ]
+        }
+
         method gist(:$treemark=False) {
 
             my $builder = "for(";

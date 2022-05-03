@@ -4,6 +4,7 @@ use Chomper::Rust;
 use Chomper::ToRust;
 use Chomper::ToRustIdent;
 use Chomper::ToRustType;
+use Chomper::ToRustMatchArm;
 use Chomper::ToRustParams;
 use Chomper::TranslateCondition;
 use Chomper::TranslateNoPointerDeclarator;
@@ -28,6 +29,7 @@ our sub translate-cpp-ir-to-rust($typename, $item where Cpp::IStatement)
         when "IterationStatement::Do"       { to-rust($item) }
         when "BasicDeclaration"             { to-rust($item) }
         when "SelectionStatement::If"       { to-rust($item) }
+        when "SelectionStatement::Switch"   { to-rust($item) }
         default {
             die "need to add {$item.name} to translate-cpp-ir-to-rust";
         }
@@ -124,6 +126,47 @@ multi sub to-rust(
 }
 
 multi sub to-rust(
+    $item where Cpp::IntegerLiteral::Hex)
+{
+    to-rust-param($item)
+}
+
+multi sub to-rust(
+    $item where Cpp::NestedNameSpecifierPrefix::Type)
+{
+    to-rust($item.the-type-name)
+}
+
+multi sub to-rust(
+    $item where Cpp::ConditionalExpression)
+{
+    debug "will translate ConditionalExpression to Rust!";
+
+    my $expr-a = to-rust($item.conditional-expression-tail.question-expression);
+    my $expr-b = to-rust($item.conditional-expression-tail.assignment-expression);
+
+    Rust::MatchExpression.new(
+        scrutinee => to-rust($item.logical-or-expression),
+        maybe-match-arms => Rust::MatchArms.new(
+            items => [
+                Rust::MatchArmsInnerItemWithoutBlock.new(
+                    match-arm => Rust::MatchArm.new(
+                        pattern => "true ",
+                    ),
+                    expression-noblock => $expr-a,
+                ),
+                Rust::MatchArmsOuterItem.new(
+                    match-arm => Rust::MatchArm.new(
+                        pattern => "false",
+                    ),
+                    expression => $expr-b,
+                ),
+            ],
+        )
+    ).gist
+}
+
+multi sub to-rust(
     $item where Cpp::CastExpression)
 {
     debug "will translate CastExpression to Rust!";
@@ -161,16 +204,118 @@ multi sub to-rust(
 }
 
 multi sub to-rust(
+    $item where Cpp::SimpleTypeSpecifier::Bool_)
+{
+    to-rust-type($item)
+}
+
+multi sub to-rust(
+    $item where Cpp::BooleanLiteral::T)
+{
+    Rust::BooleanLiteral.new(
+        value => "true"
+    ).gist
+}
+
+multi sub to-rust(
+    $item where Cpp::BooleanLiteral::F)
+{
+    Rust::BooleanLiteral.new(
+        value => "false"
+    ).gist
+}
+
+multi sub to-rust(
+    $item where Cpp::StringLiteral)
+{
+    Rust::StringLiteral.new(
+        value => $item.value
+    ).gist
+}
+
+our sub rust-match-catchall-arm {
+
+    Rust::MatchArmsOuterItem.new(
+        match-arm => Rust::MatchArm.new(
+            pattern => Rust::Pattern.new(
+                pattern-no-top-alts => [
+                    Rust::PathInExpression.new(
+                        path-expr-segments => [
+                            Rust::PathExprSegment.new(
+                                path-ident-segment => Rust::Identifier.new(
+                                    value => "_",
+                                )
+                            )
+                        ]
+                    )
+                ]
+            )
+        ),
+        expression => Rust::BlockExpression.new(
+            statements => Rust::Statements.new(
+                statements => [],
+            )
+        )
+    )
+}
+
+multi sub to-rust(
+    $item where Cpp::SelectionStatement::Switch)
+{
+    debug "will translate SelectionStatement::Switch to Rust!";
+
+    my $condition 
+    = to-rust($item.condition);
+
+    my @arms 
+    = $item.statement.statement-seq.List>>.&to-rust-match-arm-item;
+
+    my $match-arms = Rust::MatchArms.new(
+        items => [
+            @arms,
+           rust-match-catchall-arm() 
+        ]
+    );
+
+    my $match-expression = Rust::MatchExpression.new(
+        scrutinee        => $condition,
+        maybe-match-arms => $match-arms,
+    );
+
+    Rust::ExpressionStatementBlock.new(
+        expression-with-block => $match-expression
+    )
+}
+
+multi sub to-rust(
     $item where Cpp::SelectionStatement::If)
 {
     debug "will translate SelectionStatement::If to Rust!";
+
     my $condition  = $item.condition;
     my @statements = $item.statements;
 
-    my $rust-condition = translate-condition(
-        $condition,
-        $condition.gist(treemark => True)
-    );
+    my $rust-condition = to-rust($condition);
+
+    my $cpp-else = $item.else-statements[0];
+
+    my $maybe-else-clause = do if $cpp-else {
+
+        my $rust-else = to-rust($cpp-else);
+
+        if $rust-else.WHAT.^name ~~ /Statements/ {
+            $rust-else = Rust::BlockExpression.new(
+                statements => $rust-else,
+            );
+        }
+
+        Rust::ElseClause.new(
+            else-clause-variant => $rust-else,
+        )
+
+    } else {
+        Nil
+    };
 
     Rust::IfExpression.new(
         expression-nostruct => $rust-condition,
@@ -178,7 +323,8 @@ multi sub to-rust(
             statements => Rust::Statements.new(
                 statements => @statements>>.&to-rust,
             )
-        )
+        ),
+        maybe-else-clause => $maybe-else-clause,
     )
 }
 
@@ -193,7 +339,7 @@ multi sub to-rust(
 {
     Rust::IntegerLiteral.new(
         value => $item.decimal-literal.value
-    )
+    ).gist
 }
 
 multi sub to-rust(
@@ -201,7 +347,7 @@ multi sub to-rust(
 {
     Rust::IntegerLiteral.new(
         value => $item.octal-literal.value
-    )
+    ).gist
 }
 
 multi sub to-rust(
@@ -240,6 +386,70 @@ multi sub to-rust(
     my @exprs = $item.inclusive-or-expressions>>.&to-rust;
 
     @exprs.join(" && ")
+}
+
+multi sub to-rust(
+    $item where Cpp::ShiftExpression)
+{
+    debug "will translate ShiftExpression to Rust!";
+
+    Rust::BinaryShiftExpression.new(
+        additive-expression => to-rust($item.additive-expression),
+        binary-shift-expression-tail => $item.shift-expression-tail>>.&to-rust,
+    ).gist
+}
+
+multi sub to-rust(
+    $item where Cpp::ShiftOperator::Right)
+{
+    Rust::BinaryShiftOperator::Right.new
+}
+
+multi sub to-rust(
+    $item where Cpp::ShiftOperator::Left)
+{
+    Rust::BinaryShiftOperator::Left.new
+}
+
+multi sub to-rust(
+    $item where Cpp::ShiftExpressionTail)
+{
+    debug "will translate ShiftExpressionTail to Rust!";
+
+    Rust::BinaryShiftExpressionTail.new(
+        binary-shift-operator => to-rust($item.shift-operator),
+        additive-expression   => to-rust($item.additive-expression),
+    ).gist
+}
+
+multi sub to-rust(
+    $item where Cpp::AndExpression)
+{
+    debug "will translate AndExpression to Rust!";
+
+    my @exprs = $item.equality-expressions>>.&to-rust;
+
+    @exprs.join(" & ")
+}
+
+multi sub to-rust(
+    $item where Cpp::ExclusiveOrExpression)
+{
+    debug "will translate ExclusiveOrExpression to Rust!";
+
+    my @exprs = $item.and-expressions>>.&to-rust;
+
+    @exprs.join(" ^ ")
+}
+
+multi sub to-rust(
+    $item where Cpp::InclusiveOrExpression)
+{
+    debug "will translate InclusiveOrExpression to Rust!";
+
+    my @exprs = $item.exclusive-or-expressions>>.&to-rust;
+
+    @exprs.join(" | ")
 }
 
 multi sub to-rust(
@@ -300,7 +510,7 @@ multi sub to-rust(
 multi sub to-rust(
     $item where Cpp::UnaryExpressionCase::PlusPlus)
 {
-    debug "will translate UnaryExpressioncase::PlusPlus to Rust!";
+    debug "will translate UnaryExpressionCase::PlusPlus to Rust!";
 
     my $m1 = Rust::SuffixedExpression.new(
         base-expression => Rust::BaseExpression.new(
@@ -345,7 +555,7 @@ multi sub to-rust(
                 to-rust($item.unary-operator)
             ],
             suffixed-expression => $expr
-        )
+        ).gist
     }
 }
 
@@ -498,8 +708,8 @@ multi sub to-rust(
     $item where Cpp::IterationStatement::ForRange)
 {
     debug "will translate IterationStatement::ForRange to Rust!";
-    ddt $item;
-    exit;
+    use Chomper::TranslateForRangeLoop;
+    translate-for-range-loop($item, $item.token-types)
 }
 
 multi sub to-rust(
@@ -508,6 +718,18 @@ multi sub to-rust(
     debug "will translate IterationStatement::For to Rust!";
     use Chomper::TranslateForLoop;
     translate-for-loop($item, $item.token-types)
+}
+
+multi sub to-rust(
+    $item where Cpp::BracedInitList)
+{
+    debug "will translate BracedInitList to Rust!";
+
+    Rust::MacroInvocation.new(
+        simple-path => "vec",
+        delim-kind  => Rust::DelimKind::<Brace>,
+        token-trees => [],
+    )
 }
 
 multi sub to-rust(
@@ -534,7 +756,7 @@ multi sub to-rust(
     debug "will translate JumpStatement::Return to Rust!";
 
     if $item.return-statement-body {
-        "return " ~ to-rust($item.return-statement-body)
+        "return " ~ to-rust($item.return-statement-body) ~ ";"
 
     } else {
         "return;"

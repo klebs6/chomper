@@ -32,11 +32,35 @@ multi sub translate-condition($condition, "! I(Es) || (E  < N)") {
     to-rust($condition)
 }
 
+multi sub translate-condition($condition, "I(Es) != N") {
+    to-rust($condition)
+}
+
+multi sub translate-condition($condition, "I == I(Es)") {
+    to-rust($condition)
+}
+
+multi sub translate-condition($condition, "I") {
+    to-rust($condition)
+}
+
+multi sub translate-condition($condition, "I  >= L && I  <= L") {
+    to-rust($condition)
+}
+
 multi sub translate-condition($condition, "! E") {
     "!" ~ to-rust($condition.unary-expression)
 }
 
 multi sub translate-condition($condition, "E == E") {
+    to-rust($condition)
+}
+
+multi sub translate-condition($condition, "I(Es)") {
+    to-rust($condition)
+}
+
+multi sub translate-condition($condition, "E  >= E") {
     to-rust($condition)
 }
 

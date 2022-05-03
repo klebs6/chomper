@@ -18,7 +18,7 @@ class IfExpression is export {
         ~ $.block-expression.gist;
 
         if $.maybe-else-clause {
-            $builder ~= $.maybe-else-clause.gist;
+            $builder ~= " " ~ $.maybe-else-clause.gist;
         }
 
         $builder
@@ -41,7 +41,7 @@ class IfLetExpression is export {
         $builder ~= $.block-expression.gist;
 
         if $.maybe-else-clause {
-            $builder ~= $.maybe-else-clause.gist;
+            $builder ~= " " ~ $.maybe-else-clause.gist;
         }
 
         $builder

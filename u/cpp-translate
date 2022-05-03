@@ -3,6 +3,8 @@ use Chomper::Cpp::CppActions;
 use Chomper::Cpp::Gcpp;
 use Chomper::TranslateIr;
 use Chomper::TranslateIo;
+use Chomper::Typemap;
+use Chomper::Locations;
 use Data::Dump::Tree;
 
 grammar G does CppParser {}
@@ -11,6 +13,23 @@ use Grammar::Tracer;
 grammar GD does CppParser {}
 
 sub MAIN(:$stdin = Nil) {
+
+    #this makes it so we don't have to recompile
+    #every time we want to change the typemap
+    my %*typemap = %typemap;
+
+    #add whitelisted types to typemap
+    #a whitelisted type is the same in Rust as it is in c++
+    for $whitelist-file.IO.slurp.lines {
+        %*typemap{$_} = $_;
+    }
+
+    for $text-typemap-file.IO.slurp.lines {
+        my @tokens = $_.split(" ");
+        my $head = @tokens[0];
+        my $tail = @tokens[1..*].join(" ");
+        %*typemap{$head} = $tail;
+    }
 
     my $in = $stdin 
         ?? $stdin.IO.slurp.chomp 

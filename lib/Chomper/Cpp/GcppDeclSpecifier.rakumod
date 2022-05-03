@@ -5,24 +5,27 @@ use Data::Dump::Tree;
 use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppAttr;
 
-class DeclSpecifier::Friend    does IDeclSpecifier is export { 
+package DeclSpecifier is export {
 
-    method name {
-        'DeclSpecifier::Friend'
+    our class Friend does IDeclSpecifier { 
+
+        method name {
+            'DeclSpecifier::Friend'
+        }
     }
-}
 
-class DeclSpecifier::Typedef   does IDeclSpecifier is export { 
+    our class Typedef does IDeclSpecifier { 
 
-    method name {
-        'DeclSpecifier::Typedef'
+        method name {
+            'DeclSpecifier::Typedef'
+        }
     }
-}
 
-class DeclSpecifier::Constexpr does IDeclSpecifier is export { 
+    our class Constexpr does IDeclSpecifier { 
 
-    method name {
-        'DeclSpecifier::Constexpr'
+        method name {
+            'DeclSpecifier::Constexpr'
+        }
     }
 }
 

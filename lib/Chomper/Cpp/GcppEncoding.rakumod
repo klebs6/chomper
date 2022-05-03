@@ -70,12 +70,12 @@ package EncodingGrammar is export {
 
         # token encodingprefix:sym<u> { 'u' }
         method encodingprefix:sym<u>($/) {
-            make EncodingPrefix::U.new
+            make EncodingPrefix::SmallU.new
         }
 
         # token encodingprefix:sym<U> { 'U' }
         method encodingprefix:sym<U>($/) {
-            make EncodingPrefix::U.new
+            make EncodingPrefix::BigU.new
         }
 
         # token encodingprefix:sym<L> { 'L' } 

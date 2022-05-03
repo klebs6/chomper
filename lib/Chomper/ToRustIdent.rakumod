@@ -1,6 +1,7 @@
 use Chomper::TranslateIo;
 use Chomper::Rust;
 use Chomper::Cpp;
+use Chomper::ToRust;
 use Chomper::SnakeCase;
 use Data::Dump::Tree;
 
@@ -21,6 +22,23 @@ returns Rust::Identifier
 
     Rust::Identifier.new(
         value => $value
+    )
+}
+
+multi sub to-rust-ident(
+    $x where Cpp::QualifiedId, 
+    Bool :$snake-case) 
+returns Rust::PathInExpression 
+{
+    Rust::PathInExpression.new(
+        path-expr-segments => [
+            Rust::PathExprSegment.new(
+                path-ident-segment => to-rust($x.nested-name-specifier),
+            ),
+            Rust::PathExprSegment.new(
+                path-ident-segment => to-rust($x.unqualified-id),
+            ),
+        ]
     )
 }
 

@@ -99,11 +99,11 @@ package HexGrammar is export {
         }
 
         token hexadecimal-literal {
-            [ '0x' || '0X' ] <hexadecimaldigit> [ '\''?  <hexadecimaldigit> ]*
+            [ '0x' || '0X' ] <hexadecimaldigit> [ "'"?  <hexadecimaldigit> ]*
         }
 
         token hexadecimaldigit {
-            <[ 0 .. 9 ]>
+            <[ 0 .. 9 a .. f A .. F ]>
         }
     }
 }
