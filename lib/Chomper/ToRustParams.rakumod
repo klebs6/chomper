@@ -102,6 +102,12 @@ multi sub to-rust-param(
 }
 
 multi sub to-rust-param(
+    $item where Cpp::AndExpression)
+{
+    to-rust($item)
+}
+
+multi sub to-rust-param(
     $item where Cpp::BooleanLiteral::T)
 {
     to-rust($item)

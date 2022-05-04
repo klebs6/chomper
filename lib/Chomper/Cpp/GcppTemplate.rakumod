@@ -118,6 +118,7 @@ package TemplateArgument is export {
 # }
 class SimpleTemplateId 
 does IDeclSpecifierSeq 
+does IUnqualifiedId
 does ITheTypeName
 does ITheTypeId
 does IIdExpression

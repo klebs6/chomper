@@ -40,9 +40,11 @@ class CompoundStatement does IStatement is export {
 
     method gist(:$treemark=False) {
         my $builder = "\{\n";
-        $builder = $builder.&maybe-extend(:$treemark,$.statement-seq>>.gist(:$treemark)>>.indent(4).join("\n"));
+
+        $builder 
+        = $builder.&maybe-extend(:$treemark,$.statement-seq>>.gist(:$treemark)>>.indent(4).join("\n"));
+
         $builder ~ "\n}"
-        
     }
 }
 
@@ -201,6 +203,29 @@ package StatementGrammar is export {
                     comment               => $comment,
                     declaration-statement => $body,
                     text                  => ~$/,
+                )
+            }
+        }
+
+        # token statement:sym<labeled> { 
+        #   <comment>? 
+        #   <labeled-statement> 
+        # }
+        method statement:sym<labeled>($/) {
+
+            my $comment = $<comment>.made;
+            my $body    = $<labeled-statement>.made;
+
+            if not $comment {
+
+                make $body
+
+            } else {
+
+                make Statement::Labeled.new(
+                    comment           => $comment,
+                    labeled-statement => $body,
+                    text              => ~$/,
                 )
             }
         }

@@ -635,3 +635,55 @@ multi sub translate-postfix-expression(
         }
     }
 }
+
+multi sub translate-postfix-expression(
+    $item, 
+    [
+        'PrimaryExpression::Id',
+        'PostfixExpressionTail::IndirectionId',
+        'PostfixExpressionTail::Parens',
+        'PostfixExpressionTail::IndirectionId',
+    ]) 
+{ 
+    #this one is basically a run of the mill
+    #function call on an identifier
+
+    my $body = $item.postfix-expression-body.id-expression;
+    my @tail = $item.postfix-expression-tail;
+
+    my $indirection-id-a = @tail[0];
+    my $expr-list        = @tail[1].expression-list;
+    my $indirection-id-b = @tail[2];
+
+    my $params 
+    = $expr-list ?? to-rust-params($expr-list)>>.gist.join(", ") !! "";
+
+    my $ident 
+    = snake-case(to-rust-ident($body).gist);
+
+    my $func-a 
+    = snake-case(to-rust($indirection-id-a.id-expression).gist);
+
+    my $func-b 
+    = snake-case(to-rust($indirection-id-b.id-expression).gist);
+
+    my Bool $indirect-a = $indirection-id-a.indirect;
+    my Bool $indirect-b = $indirection-id-b.indirect;
+
+    if $indirect-a {
+        if $indirect-b {
+            "(*(*{$ident}).{$func-a}({$params})).{$func-b}"
+        } else {
+            "(*{$ident}).{$func-a}({$params}).{$func-b}"
+        }
+
+    } else {
+
+        if $indirect-b {
+            "(*{$ident}.{$func-a}({$params})).{$func-b}"
+        } else {
+            "{$ident}.{$func-a}({$params}).{$func-b}"
+        }
+    }
+}
+

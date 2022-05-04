@@ -19,8 +19,29 @@ returns Rust::PathInExpression
     my $nns = $x.nested-name-specifier;
     my $ttn = $x.the-type-name;
 
-    @segments.push: to-rust-path-expr-segment($nns, :$snake-case);
-    @segments.push: to-rust-path-expr-segment($ttn, :$snake-case);
+    my $rust-nns 
+    = to-rust-path-expr-segment($nns, :$snake-case);
+
+    if $rust-nns ~~ Rust::PathInExpression {
+
+        for $rust-nns.path-expr-segments {
+
+            #we remove std namespace
+            if $_.path-ident-segment.value !~~ "std" {
+                @segments.push: $_.path-ident-segment;
+            }
+        }
+
+    } else {
+
+        #we remove std namespace
+        if $rust-nns.path-ident-segment.value !~~ "std" {
+            @segments.push: $rust-nns;
+        }
+    }
+
+    @segments.push: 
+    to-rust-path-expr-segment($ttn, :$snake-case);
 
     Rust::PathInExpression.new(
         path-expr-segments => @segments,

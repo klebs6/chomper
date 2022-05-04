@@ -4,6 +4,7 @@ use Chomper::Rust;
 use Chomper::ToRust;
 use Chomper::ToRustIdent;
 use Chomper::ToRustType;
+use Chomper::ToRustPathInExpression;
 use Chomper::ToRustMatchArm;
 use Chomper::ToRustParams;
 use Chomper::TranslateCondition;
@@ -20,9 +21,11 @@ our sub translate-cpp-ir-to-rust($typename, $item where Cpp::IStatement)
         when "TryBlock"                     { to-rust($item) }
         when "ExpressionStatement"          { to-rust($item) }
         when "CompoundStatement"            { to-rust($item) }
+        when "AttributedStatement"          { to-rust($item) }
         when "Statement::Declaration"       { to-rust($item) }
         when "JumpStatement::Return"        { to-rust($item) }
         when "JumpStatement::Continue"      { to-rust($item) }
+        when "JumpStatement::Break"         { to-rust($item) }
         when "IterationStatement::ForRange" { to-rust($item) }
         when "IterationStatement::While"    { to-rust($item) }
         when "IterationStatement::For"      { to-rust($item) }
@@ -36,6 +39,20 @@ our sub translate-cpp-ir-to-rust($typename, $item where Cpp::IStatement)
     };
 
     $rust.gist
+}
+
+multi sub to-rust(
+    $item where Cpp::AttributedStatement)
+{
+    debug "will translate AttributedStatement to Rust!";
+
+    my $comment = to-rust($item.comment);
+    my $body    = to-rust($item.attributed-statement-body);
+
+    Rust::CommentWrapped.new(
+        maybe-comment => $comment,
+        wrapped       => $body,
+    )
 }
 
 multi sub to-rust(
@@ -233,7 +250,7 @@ multi sub to-rust(
     ).gist
 }
 
-our sub rust-match-catchall-arm {
+our sub rust-match-catchall-arm(@statements) {
 
     Rust::MatchArmsOuterItem.new(
         match-arm => Rust::MatchArm.new(
@@ -253,7 +270,7 @@ our sub rust-match-catchall-arm {
         ),
         expression => Rust::BlockExpression.new(
             statements => Rust::Statements.new(
-                statements => [],
+                statements => @statements,
             )
         )
     )
@@ -271,10 +288,7 @@ multi sub to-rust(
     = $item.statement.statement-seq.List>>.&to-rust-match-arm-item;
 
     my $match-arms = Rust::MatchArms.new(
-        items => [
-            @arms,
-           rust-match-catchall-arm() 
-        ]
+        items => @arms,
     );
 
     my $match-expression = Rust::MatchExpression.new(
@@ -372,10 +386,51 @@ multi sub to-rust(
 }
 
 multi sub to-rust(
+    $item where Cpp::ThrowExpression)
+{
+    debug "will translate ThrowExpression to Rust!";
+
+    my @err-params = [
+        to-rust($item.assignment-expression)
+    ];
+
+    my $err = Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            expression-item => Rust::PathInExpression.new(
+                path-expr-segments => [
+                    Rust::Identifier.new(
+                        value => "Err",
+                    )
+                ],
+            )
+        ),
+        suffixed-expression-suffix => [
+            Rust::CallExpressionSuffix.new(
+                maybe-call-params => @err-params
+            )
+        ]
+    );
+
+    Rust::ReturnExpression.new(
+        maybe-expression => $err,
+    )
+}
+
+multi sub to-rust(
+    $item where Cpp::AssignmentExpression::Throw)
+{
+    debug "will translate AssignmentExpression::Throw to Rust!";
+    to-rust($item.throw-expression)
+}
+
+multi sub to-rust(
     $item where Cpp::ExpressionStatement)
 {
     debug "will translate ExpressionStatement to Rust!";
-    to-rust($item.expression) ~ ";"
+
+    Rust::ExpressionStatementNoBlock.new(
+        expression-noblock => to-rust($item.expression),
+    )
 }
 
 multi sub to-rust(
@@ -508,6 +563,12 @@ multi sub to-rust(
 }
 
 multi sub to-rust(
+    $item where Cpp::UnaryOperator::Tilde)
+{
+    Rust::UnaryPrefixBang.new
+}
+
+multi sub to-rust(
     $item where Cpp::UnaryExpressionCase::PlusPlus)
 {
     debug "will translate UnaryExpressionCase::PlusPlus to Rust!";
@@ -609,11 +670,18 @@ multi sub to-rust(
 }
 
 multi sub to-rust(
+    $item where Cpp::TemplateArgumentList)
+{
+    debug "will translate TemplateArgumentList to Rust!";
+    $item.template-arguments>>.&to-rust-type>>.gist.join(",")
+}
+
+multi sub to-rust(
     $item where Cpp::SimpleTemplateId)
 {
     debug "will translate SimpleTemplateId to Rust!";
     my $name = to-rust-ident($item.template-name).gist;
-    my $args = $item.template-arguments>>.&to-rust>>.gist.join(", ");
+    my $args = to-rust($item.template-arguments).gist;
     $name ~ "<" ~ $args ~ ">"
 }
 
@@ -622,6 +690,13 @@ multi sub to-rust(
 {
     debug "will translate TypeSpecifier to Rust!";
     to-rust($item.value)
+}
+
+multi sub to-rust(
+    $item where Cpp::FullTypeName)
+{
+    debug "will translate FullTypeName to Rust!";
+    to-rust-path-in-expression($item)
 }
 
 multi sub to-rust(
@@ -748,6 +823,16 @@ multi sub to-rust(
             )
         ),
     ).gist
+}
+
+multi sub to-rust(
+    $item where Cpp::JumpStatement::Break)
+{
+    debug "will translate JumpStatement::Break to Rust!";
+
+    die "impl this" if so $item.comment;
+
+    "break;"
 }
 
 multi sub to-rust(

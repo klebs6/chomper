@@ -47,7 +47,7 @@ package PunctuationGrammar is export {
         token question           { '?'                 }
         token colon              { ':' <!before ':'>   }
         token doublecolon        { '::'                }
-        rule semi                { ';' <comment>?      }
+        token semi               { ';' \h* <comment>?  }
         token dot                { '.'                 } 
         token dot-star           { '.*'                } 
         token ellipsis           { '...'               } 

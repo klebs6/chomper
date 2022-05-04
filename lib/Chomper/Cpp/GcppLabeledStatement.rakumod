@@ -118,29 +118,6 @@ package LabeledStatementGrammar is export {
 
     our role Actions {
 
-        # token statement:sym<labeled> { 
-        #   <comment>? 
-        #   <labeled-statement> 
-        # }
-        method statement:sym<labeled>($/) {
-
-            my $comment = $<comment>.made;
-            my $body    = $<labeled-statement>.made;
-
-            if not $comment {
-
-                make $body
-
-            } else {
-
-                make Statement::Labeled.new(
-                    comment           => $comment,
-                    labeled-statement => $body,
-                    text              => ~$/,
-                )
-            }
-        }
-
         # rule labeled-statement-label-body:sym<id> { <identifier> }
         method labeled-statement-label-body:sym<id>($/) {
             make $<identifier>.made

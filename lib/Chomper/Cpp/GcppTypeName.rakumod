@@ -13,7 +13,7 @@ use Chomper::TreeMark;
 package TheTypeName is export {
 
     # rule the-type-name:sym<simple-template-id> { <simple-template-id> }
-    our class SimpleTemplateId does ITheTypeName {
+    our class SimpleTemplateId does ITheTypeName does IUnqualifiedId {
         has SimpleTemplateId $.simple-template-id is required;
         has $.text;
 

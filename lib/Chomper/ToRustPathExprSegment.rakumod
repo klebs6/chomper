@@ -28,6 +28,23 @@ returns Rust::PathExprSegment
 }
 
 multi sub to-rust-path-expr-segment(
+    $x where Cpp::NestedNameSpecifierSuffix::Id, 
+    Bool :$snake-case) 
+returns Rust::PathExprSegment 
+{
+    my Rust::Identifier $identifier =
+    to-rust-ident(
+        $x.identifier, 
+        :$snake-case
+    );
+
+    Rust::PathExprSegment.new(
+        path-ident-segment => $identifier,
+        maybe-generic-args => Nil,
+    )
+}
+
+multi sub to-rust-path-expr-segment(
     $x where Cpp::Identifier, 
     Bool :$snake-case) 
 returns Rust::PathExprSegment 
@@ -69,22 +86,44 @@ returns Rust::PathExprSegment
 }
 
 multi sub to-rust-path-expr-segment(
+    $x where Cpp::SimpleTemplateId, 
+    Bool :$snake-case) 
+{
+    use Chomper::ToRustType;
+    to-rust-type($x)
+}
+
+multi sub to-rust-path-expr-segment(
     $x where Cpp::QualifiedId, 
     Bool :$snake-case) 
 returns Rust::PathInExpression 
 {
+    my @segments;
+
+    my $nns = $x.nested-name-specifier;
+
+    my $rust-nns 
+    = to-rust-path-expr-segment($nns, :$snake-case);
+
+    #we remove std namespace
+    my $std-namespace 
+    = $rust-nns.path-ident-segment.value cmp "std";
+
+    if not $std-namespace {
+        @segments.push: $rust-nns;
+    }
+
+    @segments.push: to-rust-path-expr-segment($x.unqualified-id);
+
     Rust::PathInExpression.new(
-        path-expr-segments => [
-            to-rust-path-expr-segment($x.nested-name-specifier),
-            to-rust-path-expr-segment($x.unqualified-id),
-        ]
+        path-expr-segments => @segments
     )
 }
 
 multi sub to-rust-path-expr-segment(
     $x where Cpp::PrimaryExpression::Id, 
     Bool :$snake-case) 
-returns Rust::PathInExpression 
+returns Rust::PathExprSegment 
 {
     to-rust-path-expr-segment($x.id-expression)
 }
@@ -92,7 +131,7 @@ returns Rust::PathInExpression
 multi sub to-rust-path-expr-segment(
     $x where Cpp::ConstantExpression, 
     Bool :$snake-case) 
-returns Rust::PathInExpression 
+returns Rust::PathExprSegment 
 {
     to-rust-path-expr-segment($x.conditional-expression)
 }
