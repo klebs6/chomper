@@ -249,6 +249,7 @@ package BracketTail is export {
     }
 
     our class BracedInitList 
+    does IInitializerList
     does IBracketTail
     does IPostfixExpressionTail {
 

@@ -17,11 +17,22 @@ class BlockExpression is export {
             \}
             END
         } else {
-            qq:to/END/.chomp.trim
-            \{
-            {$.statements.gist.indent(4)}
-            \}
-            END
+
+            my $body = $.statements.gist.indent(4);
+
+            if $body.chomp.trim {
+
+                qq:to/END/.chomp.trim
+                \{
+                {$body}
+                \}
+                END
+
+            } else {
+                qq:to/END/.chomp.trim
+                \{ \}
+                END
+            }
         }
     }
 }

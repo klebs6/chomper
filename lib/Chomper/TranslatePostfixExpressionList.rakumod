@@ -1,6 +1,7 @@
 use Data::Dump::Tree;
 use Chomper::ToRust;
 use Chomper::ToRustIdent;
+use Chomper::ToRustType;
 use Chomper::ToRustPathInExpression;
 use Chomper::Cpp;
 use Chomper::Rust;
@@ -57,10 +58,8 @@ multi sub translate-postfix-expression-list(
     $item, 
     ["FullTypeName","Parens"]) 
 {  
-    my Rust::PathInExpression $expr-item 
-    = to-rust-path-in-expression(
-        $item.post-list-head, 
-        snake-case => True);
+    my $expr-item 
+    = to-rust-type($item.post-list-head);
 
     my $expr-list = do if $item.post-list-tail.value {
 
@@ -84,4 +83,14 @@ multi sub translate-postfix-expression-list(
     );
 
     $rust.gist
+}
+
+multi sub translate-postfix-expression-list(
+    $item, 
+    [
+        'SimpleTemplateId', 
+        'Parens',
+    ]) 
+{ 
+    translate-postfix-expression-list($item, ["FullTypeName", "Parens"])
 }

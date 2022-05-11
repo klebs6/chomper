@@ -804,7 +804,7 @@ multi sub to-rust(
         simple-path => "vec",
         delim-kind  => Rust::DelimKind::<Brace>,
         token-trees => [],
-    )
+    ).gist
 }
 
 multi sub to-rust(
@@ -852,11 +852,294 @@ multi sub to-rust(
     $item where Cpp::JumpStatement::Continue)
 {
     debug "will translate JumpStatement::Continue to Rust!";
-
+    ddt $item;
+    exit;
 }
 
 multi sub to-rust($item where Cpp::TryBlock)
 {
     debug "will translate TryBlock to Rust!";
 
+    die "try block with more than one handler unimplemented" 
+    if not $item.handler-seq.List.elems eq 1;
+
+    my @try-these        = $item.compound-statement.statement-seq.List>>.&to-rust;
+    my @do-these-if-fail = $item.handler-seq[0].compound-statement.statement-seq.List>>.&to-rust;
+
+    my $declarator = $item.handler-seq[0].exception-declaration.some-declarator;
+
+    my $catch-variable = $declarator !~~ Cpp::PointerOperator::Ref 
+    ?? $declarator.no-pointer-declarator.&to-rust
+    !! "e"; 
+
+    my $inferred-type = Rust::InferredType.new;
+
+    my $static-lifetime = Rust::Lifetime.new(
+        lifetime-or-label => Rust::LifetimeOrLabel.new(
+            non-keyword-identifier => "static",
+        )
+    );
+
+    my $str-type = Rust::TypePath.new(
+        type-path-segments => [
+            Rust::TypePathSegment.new(
+                path-ident-segment => Rust::Identifier.new(
+                    value => "str",
+                )
+            )
+        ],
+    );
+
+    my $static-string-ref = Rust::ReferenceType.new(
+        maybe-lifetime => $static-lifetime,
+        mutable        => False,
+        type-no-bounds => $str-type,
+    );
+
+    my $closure-return-type = Rust::TypePath.new(
+        type-path-segments => [
+            Rust::TypePathSegment.new(
+                path-ident-segment => Rust::Identifier.new(
+                    value => "TryBlockResult",
+                ),
+                maybe-type-path-segment-suffix => Rust::TypePathSegmentSuffixGeneric.new(
+                    generic-args => Rust::GenericArgs.new(
+                        args => [
+                            $inferred-type,
+                            $static-string-ref,
+                        ],
+                    ),
+                ),
+            )
+        ],
+    );
+
+    my $success = Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            expression-item => Rust::PathInExpression.new(
+                path-expr-segments => [
+                    Rust::PathExprSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => "TryBlockResult",
+                        )
+                    ),
+                    Rust::PathExprSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => "Success",
+                        )
+                    )
+                ]
+            )
+        )
+    );
+
+    my $closure-block = Rust::BlockExpression.new(
+        statements => Rust::Statements.new(
+            statements               => @try-these,
+            maybe-expression-noblock => $success
+        )
+    );
+
+    my $possible-failure-statement = Rust::LetStatement.new(
+        pattern-no-top-alt => Rust::IdentifierPattern.new(
+            ref     => False,
+            mutable => False,
+            identifier => Rust::Identifier.new(
+                value => "try_block",
+            ),
+        ),
+        maybe-expression => Rust::SuffixedExpression.new(
+            base-expression => Rust::BaseExpression.new(
+                expression-item => Rust::ClosureExpression.new(
+                    move             => False,
+                    maybe-parameters => Nil,
+                    body             => Rust::ClosureBodyWithReturnTypeAndBlock.new(
+                        return-type      => $closure-return-type,
+                        block-expression => $closure-block,
+                    ),
+                )
+            )
+        )
+    );
+
+    my $recovery-scrutinee = Rust::Scrutinee.new(
+        expression-nostruct => Rust::SuffixedExpression.new(
+            base-expression => Rust::BaseExpression.new(
+                expression-item => Rust::PathInExpression.new(
+                    path-expr-segments => [
+                        Rust::PathExprSegment.new(
+                            path-ident-segment => Rust::Identifier.new(
+                                value => "try_block",
+                            )
+                        )
+                    ]
+                )
+            ),
+            suffixed-expression-suffix => [
+                Rust::CallExpressionSuffix.new(
+                    maybe-call-params => Nil,
+                )
+            ]
+        ),
+    );
+
+    my $recovery-block = Rust::BlockExpression.new(
+        statements => Rust::Statements.new(
+            statements => @do-these-if-fail,
+        ),
+    );
+
+    my $v = Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            expression-item => Rust::PathInExpression.new(
+                path-expr-segments => [
+                    Rust::PathExprSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => "v",
+                        )
+                    )
+                ]
+            )
+        )
+    );
+
+    my $return-v = Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            expression-item => Rust::ReturnExpression.new(
+                maybe-expression => $v
+            )
+        )
+    );
+
+    my $match-arm-return-pattern = Rust::TupleStructPattern.new(
+        path-in-expression => Rust::PathInExpression.new(
+            path-expr-segments => [
+                Rust::PathExprSegment.new(
+                    path-ident-segment => Rust::Identifier.new(
+                        value => "TryBlockResult",
+                    )
+                ),
+                Rust::PathExprSegment.new(
+                    path-ident-segment => Rust::Identifier.new(
+                        value => "Return",
+                    )
+                ),
+            ]
+        ),
+        maybe-tuple-struct-items => [
+            Rust::Pattern.new(
+                pattern-no-top-alts => [
+                    Rust::IdentifierPattern.new(
+                        ref     => False,
+                        mutable => False,
+                        identifier => Rust::Identifier.new(
+                            value => "v",
+                        )
+                    )
+                ]
+            )
+        ]
+    );
+
+    my $match-arm-return = Rust::MatchArmsInnerItemWithoutBlock.new(
+        match-arm => Rust::MatchArm.new(
+            pattern => Rust::Pattern.new(
+                pattern-no-top-alts => [
+                    $match-arm-return-pattern
+                ]
+            )
+        ),
+        expression-noblock => $return-v
+    );
+
+    my $match-arm-error-pattern = Rust::TupleStructPattern.new(
+        path-in-expression => Rust::PathInExpression.new(
+            path-expr-segments => [
+                Rust::PathExprSegment.new(
+                    path-ident-segment => Rust::Identifier.new(
+                        value => "TryBlockResult",
+                    )
+                ),
+                Rust::PathExprSegment.new(
+                    path-ident-segment => Rust::Identifier.new(
+                        value => "Err",
+                    )
+                ),
+            ]
+        ),
+        maybe-tuple-struct-items => [
+            Rust::Pattern.new(
+                pattern-no-top-alts => [
+                    Rust::IdentifierPattern.new(
+                        ref     => False,
+                        mutable => False,
+                        identifier => Rust::Identifier.new(
+                            value => "e",
+                        )
+                    )
+                ]
+            )
+        ]
+    );
+
+    my $match-arm-error = Rust::MatchArmsInnerItemWithBlock.new(
+        match-arm => Rust::MatchArm.new(
+            pattern => Rust::Pattern.new(
+                pattern-no-top-alts => [
+                    $match-arm-error-pattern
+                ]
+            )
+        ),
+        expression-with-block => $recovery-block,
+    );
+
+    my $match-arm-success = Rust::MatchArmsOuterItem.new(
+        match-arm => Rust::MatchArm.new(
+            pattern => Rust::Pattern.new(
+                pattern-no-top-alts => [
+                    Rust::PathInExpression.new(
+                        path-expr-segments => [
+                            Rust::PathExprSegment.new(
+                                path-ident-segment => Rust::Identifier.new(
+                                    value => "TryBlockResult",
+                                )
+                            ),
+                            Rust::PathExprSegment.new(
+                                path-ident-segment => Rust::Identifier.new(
+                                    value => "Success",
+                                )
+                            )
+                        ]
+                    ),
+                ]
+            )
+        ),
+        expression => Rust::BlockExpression.new(
+            statements => Rust::Statements.new(
+                statements => []
+            )
+        )
+    );
+
+    my $maybe-match-arms = Rust::MatchArms.new(
+        items => [
+            $match-arm-return,
+            $match-arm-error,
+            $match-arm-success,
+        ]
+    );
+
+    my $recovery-statement = Rust::ExpressionStatementBlock.new(
+        expression-with-block => Rust::MatchExpression.new(
+            scrutinee        => $recovery-scrutinee,
+            maybe-match-arms => $maybe-match-arms,
+        ),
+    );
+
+    Rust::Statements.new(
+        statements => [
+            $possible-failure-statement,
+            $recovery-statement,
+        ]
+    )
 }

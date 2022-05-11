@@ -77,8 +77,7 @@ multi sub to-rust-param($x where Cpp::MultiplicativeExpression) {
     to-rust($x)
 }
 
-multi sub to-rust-param(
-    $item where Cpp::ConditionalExpression)
+multi sub to-rust-param($item where Cpp::ConditionalExpression)
 {
     to-rust($item)
 }
@@ -116,9 +115,25 @@ multi sub to-rust-param(
 multi sub to-rust-param($x where Cpp::ParameterDeclaration) {  
     do given $x.token-types {
         when [Nil,'TypeSpecifier',Nil,Nil] {
-            ddt $x;
-            say "here";
-            exit;
+
+            my $ident = to-rust-ident($x.decl-specifier-seq.value, snake-case => True);
+
+            Rust::SuffixedExpression.new(
+                base-expression => Rust::BaseExpression.new(
+                    expression-item => Rust::PathInExpression.new(
+                        path-expr-segments => [
+                            Rust::PathExprSegment.new(
+                                path-ident-segment => $ident,
+                            )
+                        ]
+                    )
+                ),
+                suffixed-expression-suffix => [
+                    Rust::CallExpressionSuffix.new(
+                        maybe-call-params => Nil,
+                    )
+                ]
+            )
         }
         default {
             die "need implement for token-types: {$x.token-types}";

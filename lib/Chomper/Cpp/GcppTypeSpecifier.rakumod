@@ -84,6 +84,7 @@ class TrailingTypeSpecifierSeq is export {
 class TypeSpecifier 
 does ITheTypeId
 does IDeclSpecifier
+does ITypeSpecifierSeq
 does IDeclSpecifierSeq is export {
     has $.value is required;
 

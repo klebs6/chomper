@@ -25,7 +25,9 @@ package ReturnStatementBody is export {
     }
 
     # rule return-statement-body:sym<braced-init-list> { <braced-init-list> }
-    our class BracedInitList does IReturnStatementBody {
+    our class BracedInitList 
+    does IInitializerList
+    does IReturnStatementBody {
         has BracedInitList $.braced-init-list is required;
 
         has $.text;

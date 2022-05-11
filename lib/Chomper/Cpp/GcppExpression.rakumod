@@ -51,6 +51,7 @@ does IPostfixExpressionTail is export {
 #   <.right-brace> 
 # } #-----------------------------
 class BracedInitList 
+does IInitializerList
 does IBraceOrEqualInitializer
 does IReturnStatementBody 
 does IInitializerClause is export {
@@ -218,7 +219,9 @@ package BraceOrEqualInitializer is export {
     # rule brace-or-equal-initializer:sym<braced-init-list> { 
     #   <braced-init-list> 
     # }
-    our class BracedInitList does IBraceOrEqualInitializer {
+    our class BracedInitList 
+    does IInitializerList
+    does IBraceOrEqualInitializer {
 
         has BracedInitList $.braced-init-list is required;
 

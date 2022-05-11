@@ -61,7 +61,9 @@ package ForRangeInitializer is export {
     # rule for-range-initializer:sym<braced-init-list> { 
     #   <braced-init-list> 
     # }
-    our class BracedInitList does IForRangeInitializer {
+    our class BracedInitList 
+    does IInitializerList
+    does IForRangeInitializer {
 
         has BracedInitList $.braced-init-list is required;
 
