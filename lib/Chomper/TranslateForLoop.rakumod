@@ -27,6 +27,23 @@ multi sub translate-for-loop(
     [
         'BasicDeclaration',
         'RelationalExpression',
+        'PostfixExpression',
+    ]) 
+{ 
+    translate-for-loop(
+        $item, 
+        [
+            'BasicDeclaration',
+            'RelationalExpression',
+            'UnaryExpressionCase::PlusPlus',
+        ])
+}
+
+multi sub translate-for-loop(
+    $item, 
+    [
+        'BasicDeclaration',
+        'RelationalExpression',
         'UnaryExpressionCase::PlusPlus',
     ]) 
 { 
@@ -37,10 +54,11 @@ multi sub translate-for-loop(
     #called, and what its bounds are
     my Cpp::BasicDeclaration              $basic-declaration = $item.for-init-statement;
     my Cpp::RelationalExpression          $relational-expr   = $item.condition;
-    my Cpp::UnaryExpressionCase::PlusPlus $increment-expr    = $item.expression;
+
+    my  $increment-expr = $item.expression;
 
     my $loop-ident-type = to-rust-type($basic-declaration.decl-specifier-seq.value);
-    my $loop-ident      = to-rust-ident($basic-declaration.init-declarator-list[0].declarator);
+    my $loop-ident      = to-rust-ident($basic-declaration.init-declarator-list[0].declarator, snake-case => True);
 
     die if not $loop-ident-type.gist (elem) ["i32","usize"];
 

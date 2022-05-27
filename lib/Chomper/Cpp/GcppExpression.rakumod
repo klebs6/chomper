@@ -359,7 +359,7 @@ package ExpressionGrammar is export {
         # rule brace-or-equal-initializer:sym<braced-init-list> { <braced-init-list> } 
         method brace-or-equal-initializer:sym<braced-init-list>($/) {
             make BracedInitList.new(
-                initializer-list => $<braced-init-list>.made
+                initializer-list => $<braced-init-list><initializer-list>.made
             )
         }
 

@@ -36,6 +36,7 @@ multi sub translate-basic-declaration-to-rust(
     exit;
 }
 
+
 multi sub translate-basic-declaration-to-rust(
      "I = T(Es);",
     $item where Cpp::BasicDeclaration:D) 
@@ -73,7 +74,7 @@ multi sub translate-basic-declaration-to-rust(
     = to-rust-type($item.decl-specifier-seq);
 
     my $rust-ident  
-    = to-rust-ident($idl.no-pointer-declarator-base);
+    = to-rust-ident($idl.no-pointer-declarator-base, snake-case => True);
 
     my $array-count 
     = to-rust($idl.no-pointer-declarator-tail[0].constant-expression);
@@ -149,6 +150,14 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
+     "T &I = * I;",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask T &I = * I;";
+    translate-basic-declaration-to-rust("T &I = E;", $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
      "T &I = * I(Es);",
     $item where Cpp::BasicDeclaration:D) 
 {
@@ -210,7 +219,7 @@ multi sub translate-basic-declaration-to-rust(
     my $is-const-type = is-const-type($decl-specifier-seq);
 
     my $rust-ident 
-    = to-rust-ident($declarator.no-pointer-declarator);
+    = to-rust-ident($declarator.no-pointer-declarator, snake-case => True);
 
     #this is the big difference from T I = E;
     my $rust-type  = Rust::ReferenceType.new(
@@ -315,7 +324,7 @@ multi sub translate-basic-declaration-to-rust(
     debug "mask T I(P);";
 
     my $rust-type   = to-rust-type($item.decl-specifier-seq);
-    my $rust-ident  = to-rust-ident($item.init-declarator-list[0].no-pointer-declarator-base);
+    my $rust-ident  = to-rust-ident($item.init-declarator-list[0].no-pointer-declarator-base, snake-case => True);
     my $rust-params = to-rust-params($item.init-declarator-list[0].no-pointer-declarator-tail[0]);
 
     my $rust-initializer = create-type-initializer($rust-type,$rust-params);
@@ -358,6 +367,10 @@ sub create-default-initializer($rust-type)
 
 sub create-type-initializer($rust-type,$rust-params) 
 {
+    if not $rust-type {
+        return $rust-params;
+    }
+
     my $initializer-name = "new";
 
     Rust::SuffixedExpression.new(
@@ -390,7 +403,7 @@ multi sub translate-basic-declaration-to-rust(
     debug "mask T I;";
 
     my $rust-type  = to-rust($item.decl-specifier-seq);
-    my $rust-ident = to-rust-ident($item.init-declarator-list[0]);
+    my $rust-ident = to-rust-ident($item.init-declarator-list[0], snake-case => True);
 
     my $default-initializer = create-default-initializer($rust-type);
 
@@ -413,7 +426,7 @@ multi sub translate-basic-declaration-to-rust(
     debug "mask I(Es);";
 
     my $rust-ident = 
-    to-rust-ident($item.init-declarator-list[0].declarator).gist;
+    to-rust-ident($item.init-declarator-list[0].declarator, snake-case => True).gist;
 
     my $expression-list = $item.init-declarator-list[0]
     .initializer
@@ -488,6 +501,111 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
+    'T &I{E};',
+    $item where Cpp::BasicDeclaration) 
+{
+    debug 'mask T &I{E};';
+
+    my $idl = $item.init-declarator-list[0];
+
+    #in cpp, here is where the reference is
+    #in rust, we want it in a different place
+    my $declarator 
+    = $idl.declarator;
+
+    my $initializer
+    = $idl.initializer;
+
+    my $decl-specifier-seq 
+    = $item.decl-specifier-seq;
+
+    my Bool $mutable = do if ($decl-specifier-seq.value ~~ Cpp::TrailingTypeSpecifier::CvQualifier).Bool {
+        $decl-specifier-seq.value.cv-qualifier !~~ Cpp::CvQualifier::Const_ 
+    } else {
+        False
+    };
+
+    my $rust-ident = to-rust-ident(
+
+        #we pull off the reference from c++ and
+        #manually insert it below
+        $declarator.no-pointer-declarator, 
+
+        snake-case => True
+    );
+
+    my $rust-type  = to-rust-type($decl-specifier-seq);
+
+    my $type-initializer
+    = to-rust-params($initializer.brace-or-equal-initializer);
+
+    Rust::LetStatement.new(
+        pattern-no-top-alt => $rust-ident,
+        maybe-type         => Rust::ReferenceType.new(
+            mutable        => $mutable,
+            type-no-bounds => $rust-type
+        ),
+        maybe-expression   => $type-initializer,
+    )
+}
+
+multi sub translate-basic-declaration-to-rust(
+    'T I{E};',
+    $item where Cpp::BasicDeclaration) 
+{
+    debug 'mask T I{E};';
+
+    my $idl = $item.init-declarator-list[0];
+
+    my $declarator 
+    = $idl.declarator;
+
+    my $initializer
+    = $idl.initializer;
+
+    my $decl-specifier-seq 
+    = $item.decl-specifier-seq;
+
+    my $rust-ident = to-rust-ident($declarator, snake-case => True);
+    my $rust-type  = to-rust-type($decl-specifier-seq);
+
+    my $rust-params  
+    = to-rust-params($initializer.brace-or-equal-initializer);
+
+    my $type-initializer = create-type-initializer($rust-type,$rust-params);
+
+    Rust::LetStatement.new(
+        pattern-no-top-alt => $rust-ident,
+        maybe-type         => $rust-type,
+        maybe-expression   => $type-initializer,
+    )
+}
+
+multi sub translate-basic-declaration-to-rust(
+    'T I{};',
+    $item where Cpp::BasicDeclaration) 
+{
+    debug 'mask T I{};';
+    translate-basic-declaration-to-rust('T I{E};', $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
+    'T I{I()};',
+    $item where Cpp::BasicDeclaration) 
+{
+    debug 'mask T I{I()};';
+    translate-basic-declaration-to-rust('T I{E};', $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
+    'T I{N};',
+    $item where Cpp::BasicDeclaration) 
+{
+    debug 'mask T I{N};';
+    translate-basic-declaration-to-rust('T I{E};', $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
     "T I = E;",
     $item where Cpp::BasicDeclaration) 
 {
@@ -504,17 +622,41 @@ multi sub translate-basic-declaration-to-rust(
     my $decl-specifier-seq 
     = $item.decl-specifier-seq;
 
-    my $rust-ident = to-rust-ident($declarator);
+    my $rust-ident = to-rust-ident($declarator, snake-case => True);
     my $rust-type  = to-rust-type($decl-specifier-seq);
 
     my $rust-expr  
-    = to-rust($initializer.brace-or-equal-initializer.initializer-clause);
+    = to-rust($initializer.brace-or-equal-initializer);
 
     Rust::LetStatement.new(
         pattern-no-top-alt => $rust-ident,
         maybe-type         => $rust-type,
         maybe-expression   => $rust-expr,
     )
+}
+
+multi sub translate-basic-declaration-to-rust(
+     "T *I = I(Es);",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask T *I = I(Es);";
+    translate-basic-declaration-to-rust("T *I = E;", $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
+     "I = I * I / N;",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask I = I * I / N;";
+    to-rust($item.init-declarator-list[0]);
+}
+
+multi sub translate-basic-declaration-to-rust(
+     "I[I][I] = - N;",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask I[I][I] = - N;";
+    to-rust($item.init-declarator-list[0])
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -535,7 +677,7 @@ multi sub translate-basic-declaration-to-rust(
     my $initializer
     = $idl.initializer;
 
-    my $rust-ident = to-rust-ident($declarator.no-pointer-declarator);
+    my $rust-ident = to-rust-ident($declarator.no-pointer-declarator, snake-case => True);
 
     my $rust-expr  
     = to-rust($initializer.brace-or-equal-initializer.initializer-clause);
@@ -641,7 +783,7 @@ multi sub translate-basic-declaration-to-rust(
 
     do given $declarator0 {
         when Cpp::InitDeclarator {
-            my $rust-ident  = to-rust-ident($declarator0.declarator);
+            my $rust-ident  = to-rust-ident($declarator0.declarator, snake-case => True);
             my $rust-params = to-rust-params($declarator0.initializer);
 
             RustBasicCreationEvent.new(
@@ -668,7 +810,7 @@ multi sub translate-basic-declaration-to-rust(
     do given $declarator0 {
 
         when Cpp::NoPointerDeclarator {
-            my $rust-ident  = to-rust-ident($declarator0.no-pointer-declarator-base);
+            my $rust-ident  = to-rust-ident($declarator0.no-pointer-declarator-base, snake-case => True);
             my $rust-params = to-rust-params($declarator0.no-pointer-declarator-tail[0]);
 
             RustBasicCreationEvent.new(
@@ -744,6 +886,14 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
+    "T I = E + I;",
+    $item where Cpp::BasicDeclaration) 
+{
+    #remask
+    translate-basic-declaration-to-rust("T I = E;", $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
     "I[E] = E;",
     $item where Cpp::BasicDeclaration) 
 {
@@ -764,7 +914,7 @@ multi sub translate-basic-declaration-to-rust(
     "I = E;",
     $item where Cpp::BasicDeclaration) 
 {
-    my $rust-ident = to-rust-ident($item.init-declarator-list[0].declarator);
+    my $rust-ident = to-rust-ident($item.init-declarator-list[0].declarator, snake-case => True);
     my $rust-rhs   = to-rust($item.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause);
 
     Rust::ExpressionStatementNoBlock.new(
@@ -780,7 +930,7 @@ multi sub translate-basic-declaration-to-rust(
 sub emit-basic-let-statement($item where Cpp::BasicDeclaration) {
 
     my $rust-type  = to-rust-type($item.decl-specifier-seq);
-    my $rust-ident = to-rust-ident($item.init-declarator-list[0].declarator);
+    my $rust-ident = to-rust-ident($item.init-declarator-list[0].declarator, snake-case => True);
     my $rust-rhs   = to-rust($item.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause);
 
     Rust::LetStatement.new(
@@ -874,6 +1024,7 @@ multi sub translate-basic-declaration-to-rust(
     debug "mask T T I = E;";
     translate-basic-declaration-to-rust("T I = E;", $item)
 }
+
 
 multi sub translate-basic-declaration-to-rust(
     "I[I] = I >> N;",

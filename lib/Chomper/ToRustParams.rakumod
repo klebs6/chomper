@@ -51,6 +51,10 @@ multi sub to-rust-param($x where Cpp::UnaryExpressionCase::UnaryOp) {
     to-rust($x)
 }
 
+multi sub to-rust-param($x where Cpp::RelationalExpression) {  
+    to-rust($x)
+}
+
 multi sub to-rust-param($x where Cpp::StringLiteral) {  
     Rust::StringLiteral.new(
         value => $x.value
@@ -58,7 +62,7 @@ multi sub to-rust-param($x where Cpp::StringLiteral) {
 }
 
 multi sub to-rust-param($x where Cpp::PrimaryExpression::Id) {  
-    to-rust-ident($x.id-expression)
+    to-rust-ident($x.id-expression, snake-case => True)
 }
 
 multi sub to-rust-param($x where Cpp::EqualityExpression) {  
@@ -88,14 +92,21 @@ multi sub to-rust-param(
     to-rust($item)
 }
 
+
 multi sub to-rust-param(
-    $item where Cpp::BracedInitList)
+    $item where Cpp::InclusiveOrExpression)
 {
     to-rust($item)
 }
 
 multi sub to-rust-param(
-    $item where Cpp::InclusiveOrExpression)
+    $item where Cpp::LogicalAndExpression)
+{
+    to-rust($item)
+}
+
+multi sub to-rust-param(
+    $item where Cpp::LogicalOrExpression)
 {
     to-rust($item)
 }
@@ -112,11 +123,21 @@ multi sub to-rust-param(
     to-rust($item)
 }
 
+multi sub to-rust-param(
+    $item where Cpp::BooleanLiteral::F)
+{
+    to-rust($item)
+}
+
 multi sub to-rust-param($x where Cpp::ParameterDeclaration) {  
     do given $x.token-types {
         when [Nil,'TypeSpecifier',Nil,Nil] {
 
-            my $ident = to-rust-ident($x.decl-specifier-seq.value, snake-case => True);
+            my $ident 
+            = to-rust-ident(
+                $x.decl-specifier-seq.value, 
+                snake-case => True
+            );
 
             Rust::SuffixedExpression.new(
                 base-expression => Rust::BaseExpression.new(
@@ -153,6 +174,16 @@ multi sub to-rust-params($x where Cpp::Initializer::ParenExprList) {
     do for $x.expression-list.initializer-list.clauses {
         to-rust-param($_)
     }
+}
+
+multi sub to-rust-params(
+    $item where Cpp::BracedInitList)
+{
+    my @list = $item.initializer-list.Bool 
+    ?? $item.initializer-list.clauses>>.&to-rust-param 
+    !! [];
+
+    @list.join(",")
 }
 
 multi sub to-rust-params($x where Cpp::ParametersAndQualifiers) {  

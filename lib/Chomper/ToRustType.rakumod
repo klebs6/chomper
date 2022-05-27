@@ -63,9 +63,9 @@ multi sub to-rust-type($x where Cpp::TheTypeId) {
     )
 }
 
-multi sub to-rust-type($x where Cpp::Identifier) {  
+multi sub to-rust-type($x where Cpp::Identifier) {
 
-    my $val = to-rust-ident($x).value;
+    my $val = to-rust-ident($x, snake-case => False).value;
 
     if not %*typemap{$val}:exists {
         die "$val dne in typemap!";
@@ -78,6 +78,10 @@ multi sub to-rust-type($x where Cpp::Identifier) {
 
 multi sub to-rust-type($x where Cpp::TypeSpecifier) {  
     to-rust-type($x.value)
+}
+
+multi sub to-rust-type($x where Cpp::SimpleTypeSpecifier::Auto_) {  
+    Nil
 }
 
 multi sub to-rust-type($x where Cpp::DeclSpecifierSeq) {  

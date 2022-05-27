@@ -18,6 +18,7 @@ our %typemap =
 
     #from USD
     'signed short'                      => 'i16',
+    'unordered_set'                     => 'HashSet',
     'signed long'                       => 'i32',
     'signed long long'                  => 'i64',
     'signed int'                        => 'i32',

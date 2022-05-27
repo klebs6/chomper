@@ -41,7 +41,7 @@ multi sub translate-postfix-expression(
     = $expr-list ?? to-rust-params($expr-list)>>.gist.join(", ") !! "";
 
     my $ident 
-    = snake-case(to-rust-ident($body).gist);
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
 
     my $func 
     = snake-case(to-rust($indirection-id.id-expression).gist);
@@ -52,6 +52,62 @@ multi sub translate-postfix-expression(
         "(*{$ident}).{$func}({$params})"
     } else {
         "{$ident}.{$func}({$params})"
+    }
+}
+
+multi sub translate-postfix-expression(
+    $item, 
+    [
+        'PrimaryExpression::Id',
+        'PostfixExpressionTail::IndirectionId',
+        'PostfixExpressionTail::PlusPlus',
+    ]) 
+{ 
+    my $body = $item.postfix-expression-body.id-expression;
+    my @tail = $item.postfix-expression-tail;
+
+    my $indirection-id = @tail[0];
+
+    my $id1 
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
+
+    my $id2 
+    = snake-case(to-rust($indirection-id.id-expression).gist);
+
+    my Bool $indirect = $indirection-id.indirect;
+
+    if $indirect {
+        "(*{$id1}).{$id2} += 1"
+    } else {
+        "{$id1}.{$id2} += 1"
+    }
+}
+
+multi sub translate-postfix-expression(
+    $item, 
+    [
+        'PrimaryExpression::Id',
+        'PostfixExpressionTail::IndirectionId',
+        'PostfixExpressionTail::MinusMinus',
+    ]) 
+{ 
+    my $body = $item.postfix-expression-body.id-expression;
+    my @tail = $item.postfix-expression-tail;
+
+    my $indirection-id = @tail[0];
+
+    my $id1 
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
+
+    my $id2 
+    = snake-case(to-rust($indirection-id.id-expression).gist);
+
+    my Bool $indirect = $indirection-id.indirect;
+
+    if $indirect {
+        "(*{$id1}).{$id2} -= 1"
+    } else {
+        "{$id1}.{$id2} -= 1"
     }
 }
 
@@ -82,6 +138,36 @@ multi sub translate-postfix-expression(
     $item, 
     [
         'PrimaryExpression::Id',
+        'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::Bracket',
+    ]) 
+{ 
+    my $base 
+    = to-rust($item.postfix-expression-body.id-expression);
+
+    my $bracketed-expr1
+    = to-rust($item.postfix-expression-tail[0].bracket-tail.expression);
+
+    my $bracketed-expr2
+    = to-rust($item.postfix-expression-tail[1].bracket-tail.expression);
+
+    Rust::SuffixedExpression.new(
+        base-expression            => $base,
+        suffixed-expression-suffix => [
+            Rust::IndexExpressionSuffix.new(
+                expression => $bracketed-expr1,
+            ),
+            Rust::IndexExpressionSuffix.new(
+                expression => $bracketed-expr2,
+            )
+        ]
+    )
+}
+
+multi sub translate-postfix-expression(
+    $item, 
+    [
+        'PrimaryExpression::Id',
         'PostfixExpressionTail::IndirectionId',
         'PostfixExpressionTail::Bracket',
     ]) 
@@ -94,7 +180,7 @@ multi sub translate-postfix-expression(
     my $rust-bracket-expr = to-rust(@tail[1].bracket-tail.expression);
 
     my $ident 
-    = snake-case(to-rust-ident($body).gist);
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
 
     my $func 
     = snake-case(to-rust($indirection-id.id-expression).gist);
@@ -129,7 +215,7 @@ multi sub translate-postfix-expression(
     = $expr-list ?? to-rust-params($expr-list)>>.gist.join(", ") !! "";
 
     my $ident 
-    = snake-case(to-rust-ident($body).gist);
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
 
     my $func 
     = snake-case(to-rust($indirection-id.id-expression).gist);
@@ -163,7 +249,7 @@ multi sub translate-postfix-expression(
     = $expr-list ?? to-rust-params($expr-list)>>.gist.join(", ") !! "";
 
     my $ident 
-    = snake-case(to-rust-ident($body).gist);
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
 
     my $func 
     = snake-case(to-rust($indirection-id.id-expression).gist);
@@ -202,7 +288,7 @@ multi sub translate-postfix-expression(
     = $expr-listB ?? to-rust-params($expr-listB)>>.gist.join(", ") !! "";
 
     my $ident 
-    = snake-case(to-rust-ident($body).gist);
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
 
     my $funcA 
     = snake-case(to-rust($indirection-idA.id-expression).gist);
@@ -241,7 +327,7 @@ multi sub translate-postfix-expression(
     my $body = $item.postfix-expression-body.id-expression;
 
     my $ident 
-    = snake-case(to-rust-ident($body).gist);
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
 
     Rust::AddEqExpression.new(
         minuseq-expressions => [
@@ -306,7 +392,7 @@ multi sub translate-postfix-expression(
     = $expr-list ?? to-rust-params($expr-list)>>.gist.join(", ") !! "";
 
     my $ident 
-    = snake-case(to-rust-ident($body).gist);
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
 
     my $func-a 
     = snake-case(to-rust($indirection-id-a.id-expression).gist);
@@ -360,7 +446,7 @@ multi sub translate-postfix-expression(
     = $expr-list ?? to-rust-params($expr-list)>>.gist.join(", ") !! "";
 
     my $ident 
-    = snake-case(to-rust-ident($body).gist);
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
 
     my $func-a 
     = snake-case(to-rust($indirection-id-a.id-expression).gist);
@@ -424,7 +510,7 @@ multi sub translate-postfix-expression(
     my $indirection-id = @tail[0];
 
     my $ident 
-    = snake-case(to-rust-ident($body).gist);
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
 
     my $func 
     = snake-case(to-rust($indirection-id.id-expression).gist);
@@ -455,7 +541,7 @@ multi sub translate-postfix-expression(
     my $indirection-id-b  = @tail[2];
 
     my $ident 
-    = snake-case(to-rust-ident($body).gist);
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
 
     my $func-a 
     = snake-case(to-rust($indirection-id-a.id-expression).gist);
@@ -498,7 +584,7 @@ multi sub translate-postfix-expression(
     my $rust-bracket-expr = to-rust(@tail[2].bracket-tail.expression);
 
     my $ident 
-    = snake-case(to-rust-ident($body).gist);
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
 
     my $func-a 
     = snake-case(to-rust($indirection-id-a.id-expression).gist);
@@ -543,7 +629,7 @@ multi sub translate-postfix-expression(
     my $indirection-id-c  = @tail[3];
 
     my $ident 
-    = snake-case(to-rust-ident($body).gist);
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
 
     my $func-a 
     = snake-case(to-rust($indirection-id-a.id-expression).gist);
@@ -607,7 +693,7 @@ multi sub translate-postfix-expression(
     my $indirection-id-b = @tail[1];
 
     my $ident 
-    = snake-case(to-rust-ident($body).gist);
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
 
     my $func-a 
     = snake-case(to-rust($indirection-id-a.id-expression).gist);
@@ -659,7 +745,7 @@ multi sub translate-postfix-expression(
     = $expr-list ?? to-rust-params($expr-list)>>.gist.join(", ") !! "";
 
     my $ident 
-    = snake-case(to-rust-ident($body).gist);
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
 
     my $func-a 
     = snake-case(to-rust($indirection-id-a.id-expression).gist);

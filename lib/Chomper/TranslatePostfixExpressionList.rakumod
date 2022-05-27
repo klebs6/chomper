@@ -30,7 +30,10 @@ multi sub translate-postfix-expression-list(
         snake-case => True);
 
     my $expr-list 
-    = to-rust($item.post-list-tail.value.initializer-list);
+    = 
+    $item.post-list-tail.value.Bool 
+    ?? to-rust($item.post-list-tail.value.initializer-list)
+    !! "";
 
     my $rust = Rust::SuffixedExpression.new(
         base-expression => Rust::BaseExpression.new(

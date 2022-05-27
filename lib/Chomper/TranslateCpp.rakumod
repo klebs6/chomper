@@ -217,7 +217,7 @@ multi sub to-rust($item where Cpp::EqualityExpression) {
 multi sub to-rust(
     $item where Cpp::Identifier)
 {
-    to-rust-ident($item).gist
+    to-rust-ident($item, snake-case => True).gist
 }
 
 multi sub to-rust(
@@ -367,7 +367,7 @@ multi sub to-rust(
 multi sub to-rust(
     $item where Cpp::PrimaryExpression::Id:D)
 {
-    $item.gist
+    to-rust($item.id-expression)
 }
 
 multi sub to-rust(
@@ -796,14 +796,62 @@ multi sub to-rust(
 }
 
 multi sub to-rust(
+    $item where Cpp::AssignInit)
+{
+    debug "will translate AssignInit to Rust!";
+    to-rust($item.initializer-clause)
+}
+
+multi sub to-rust(
+    $item where Cpp::InitDeclarator)
+{
+    debug "will translate InitDeclarator to Rust!";
+
+    my $lhs  = $item.declarator;
+    my $rhs = $item.initializer;
+
+    Rust::AssignExpression.new(
+        addeq-expressions => [
+            to-rust($lhs),
+            to-rust($rhs),
+        ]
+    )
+}
+
+multi sub to-rust(
+    $item where Cpp::Initializer::BraceOrEq)
+{
+    debug "will translate Initializer::BraceOrEq to Rust!";
+    to-rust($item.brace-or-equal-initializer)
+}
+
+multi sub to-rust(
+    $item where Cpp::QualifiedId)
+{
+    debug "will translate QualifiedId to Rust!";
+
+    if $item.gist ~~ "std::nullopt" {
+        return "None";
+    } else {
+        say "TODO:";
+        ddt $item;
+        exit;
+    }
+}
+
+multi sub to-rust(
     $item where Cpp::BracedInitList)
 {
     debug "will translate BracedInitList to Rust!";
 
+    my $init-list = $item.initializer-list;
+
+    my $maybe-rust-init-list = $init-list ?? to-rust($init-list) !! "";
+
     Rust::MacroInvocation.new(
         simple-path => "vec",
         delim-kind  => Rust::DelimKind::<Brace>,
-        token-trees => [],
+        token-trees => [$maybe-rust-init-list],
     ).gist
 }
 
@@ -852,8 +900,20 @@ multi sub to-rust(
     $item where Cpp::JumpStatement::Continue)
 {
     debug "will translate JumpStatement::Continue to Rust!";
-    ddt $item;
-    exit;
+
+    Rust::Statements.new(
+        statements => [
+            Rust::ExpressionStatementNoBlock.new(
+                expression-noblock => Rust::SuffixedExpression.new(
+                    base-expression => Rust::BaseExpression.new(
+                        expression-item => Rust::ContinueExpression.new(
+                            maybe-lifetime-or-label => Nil,
+                        )
+                    )
+                )
+            )
+        ]
+    )
 }
 
 multi sub to-rust($item where Cpp::TryBlock)
