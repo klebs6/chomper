@@ -434,6 +434,12 @@ multi sub to-rust(
 }
 
 multi sub to-rust(
+    $item where Cpp::FloatingLiteral::Frac)
+{
+    $item.gist
+}
+
+multi sub to-rust(
     $item where Cpp::LogicalAndExpression)
 {
     debug "will translate LogicalAndExpression to Rust!";
@@ -581,14 +587,79 @@ multi sub to-rust(
         )
     );
 
-    Rust::ExpressionStatementNoBlock.new(
-        expression-noblock => Rust::AddEqExpression.new(
-            minuseq-expressions => [
-                to-rust($item.unary-expression),
-                $m1
-            ]
+    my $base = to-rust($item.unary-expression);
+
+    Rust::BlockExpression.new(
+        statements => Rust::Statements.new(
+            statements => [
+                Rust::ExpressionStatementNoBlock.new(
+                    expression-noblock => Rust::AddEqExpression.new(
+                        minuseq-expressions => [
+                            $base,
+                            $m1
+                        ]
+                    )
+                ).gist
+            ],
+            maybe-expression-noblock => $base
         )
-    ).gist
+    )
+
+}
+
+multi sub to-rust(
+    $item where Cpp::ParametersAndQualifiers)
+{
+    debug "will translate Cpp::ParametersAndQualifiers to Rust!";
+
+    if [
+        $item.parameter-declaration-clause,
+        $item.cvqualifierseq,
+        $item.refqualifier,
+        $item.exception-specification,
+        $item.attribute-specifier-seq,
+    ].any {
+
+        die "handle this";
+
+    } else {
+
+        Rust::CallExpressionSuffix.new(
+            maybe-call-params => Nil,
+        )
+    }
+}
+
+multi sub to-rust(
+    $item where Cpp::UnaryExpressionCase::MinusMinus)
+{
+    debug "will translate UnaryExpressionCase::MinusMinus to Rust!";
+
+    my $m1 = Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            expression-item => Rust::IntegerLiteral.new(
+                value => 1,
+            )
+        )
+    );
+
+    my $base = to-rust($item.unary-expression);
+
+    Rust::BlockExpression.new(
+        statements => Rust::Statements.new(
+            statements => [
+                Rust::ExpressionStatementNoBlock.new(
+                    expression-noblock => Rust::MinusEqExpression.new(
+                        stareq-expressions => [
+                            $base,
+                            $m1
+                        ]
+                    )
+                ).gist
+            ],
+            maybe-expression-noblock => $base
+        )
+    )
 }
 
 multi sub to-rust(
@@ -889,7 +960,7 @@ multi sub to-rust(
     debug "will translate JumpStatement::Return to Rust!";
 
     if $item.return-statement-body {
-        "return " ~ to-rust($item.return-statement-body) ~ ";"
+        "return " ~ to-rust($item.return-statement-body).gist ~ ";"
 
     } else {
         "return;"

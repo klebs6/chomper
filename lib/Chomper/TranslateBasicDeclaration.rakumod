@@ -550,6 +550,25 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
+    'I();',
+    $item where Cpp::BasicDeclaration) 
+{
+    debug 'mask I();';
+
+    Rust::ExpressionStatementNoBlock.new(
+        expression-noblock => to-rust($item.init-declarator-list[0])
+    )
+}
+
+multi sub translate-basic-declaration-to-rust(
+    'T I{(I + I) % I};',
+    $item where Cpp::BasicDeclaration) 
+{
+    debug 'mask T I{(I + I) % I};';
+    translate-basic-declaration-to-rust('T I{E};', $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
     'T I{E};',
     $item where Cpp::BasicDeclaration) 
 {
@@ -582,6 +601,14 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
+    'I[I] = I(Es);',
+    $item where Cpp::BasicDeclaration) 
+{
+    debug 'mask I[I] = I(Es);';
+    to-rust($item.init-declarator-list[0])
+}
+
+multi sub translate-basic-declaration-to-rust(
     'T I{};',
     $item where Cpp::BasicDeclaration) 
 {
@@ -603,6 +630,14 @@ multi sub translate-basic-declaration-to-rust(
 {
     debug 'mask T I{N};';
     translate-basic-declaration-to-rust('T I{E};', $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
+    "T I = I();",
+    $item where Cpp::BasicDeclaration) 
+{
+    debug "mask T I = I();";
+    translate-basic-declaration-to-rust("T I = E;", $item)
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -861,6 +896,14 @@ multi sub translate-basic-declaration-to-rust(
             ]
         )
     )
+}
+
+multi sub translate-basic-declaration-to-rust(
+    "I[I][I] = I;",
+    $item where Cpp::BasicDeclaration) 
+{
+    debug "mask I[I][I] = I;";
+    translate-basic-declaration-to-rust("I[I] = I;", $item)
 }
 
 multi sub translate-basic-declaration-to-rust(

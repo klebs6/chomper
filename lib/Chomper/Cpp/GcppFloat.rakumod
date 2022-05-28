@@ -122,6 +122,11 @@ package FloatingLiteral is export {
         }
 
         method gist(:$treemark=False) {
+
+            if $treemark {
+                return "N";
+            }
+
             my $builder = $.fractionalconstant.gist;
 
             if $.exponentpart {

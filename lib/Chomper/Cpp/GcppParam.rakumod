@@ -180,7 +180,7 @@ package ParametersGrammar is export {
         #   <refqualifier>? 
         #   <exception-specification>? 
         #   <attribute-specifier-seq>? 
-        # j}
+        # }
         method parameters-and-qualifiers($/) {
             make ParametersAndQualifiers.new(
                 parameter-declaration-clause => $<parameter-declaration-clause>.made,
@@ -192,7 +192,10 @@ package ParametersGrammar is export {
             )
         }
 
-        # rule parameter-declaration-clause { <parameter-declaration-list> [ <.comma>? <ellipsis> ]? }
+        # rule parameter-declaration-clause { 
+        #   <parameter-declaration-list> 
+        #   [ <.comma>? <ellipsis> ]? 
+        # }
         method parameter-declaration-clause($/) {
             make ParameterDeclarationClause.new(
                 parameter-declaration-list => $<parameter-declaration-list>.made,

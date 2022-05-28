@@ -198,6 +198,36 @@ multi sub translate-postfix-expression(
     $item, 
     [
         'PrimaryExpression::Id',
+        'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::IndirectionId',
+    ]) 
+{ 
+    my $body = $item.postfix-expression-body.id-expression;
+    my @tail = $item.postfix-expression-tail;
+
+    my $rust-bracket-expr = to-rust(@tail[0].bracket-tail.expression);
+
+    my $indirection-id    = @tail[1];
+
+    my $ident 
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
+
+    my $func 
+    = snake-case(to-rust($indirection-id.id-expression).gist);
+
+    my Bool $indirect = $indirection-id.indirect;
+
+    if $indirect {
+        "(*{$ident}).{$func}[$rust-bracket-expr]"
+    } else {
+        "{$ident}.{$func}[$rust-bracket-expr]"
+    }
+}
+
+multi sub translate-postfix-expression(
+    $item, 
+    [
+        'PrimaryExpression::Id',
         'PostfixExpressionTail::IndirectionId',
         'PostfixExpressionTail::Parens',
         'PostfixExpressionTail::Bracket',
@@ -329,15 +359,136 @@ multi sub translate-postfix-expression(
     my $ident 
     = snake-case(to-rust-ident($body, snake-case => True).gist);
 
-    Rust::AddEqExpression.new(
+    my $increment-x = Rust::AddEqExpression.new(
         minuseq-expressions => [
             $ident,
             Rust::IntegerLiteral.new(
                 value => 1
             )
         ]
+    );
+
+    my $old = Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            expression-item => Rust::PathInExpression.new(
+                path-expr-segments => [
+                    Rust::PathExprSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => "old"
+                        )
+                    )
+                ]
+            )
+        )
+    );
+
+    my $store-x-to-old = Rust::LetStatement.new(
+        pattern-no-top-alt => Rust::IdentifierPattern.new(
+            ref        => False,
+            mutable    => False,
+            identifier => Rust::Identifier.new(
+                value => "old",
+            )
+        ),
+        maybe-expression => Rust::SuffixedExpression.new(
+            base-expression => Rust::BaseExpression.new(
+                expression-item => Rust::PathInExpression.new(
+                    path-expr-segments => [
+                        Rust::PathExprSegment.new(
+                            path-ident-segment => Rust::Identifier.new(
+                                value => $ident
+                            )
+                        )
+                    ]
+                )
+            )
+        )
+    );
+
+    Rust::BlockExpression.new(
+        statements => Rust::Statements.new(
+            statements => [
+                $store-x-to-old,
+                Rust::ExpressionStatementNoBlock.new(
+                    expression-noblock => $increment-x,
+                )
+            ],
+            maybe-expression-noblock => $old
+        )
     ).gist
 }
+
+multi sub translate-postfix-expression(
+    $item, 
+    [
+        'PrimaryExpression::Id',
+        'PostfixExpressionTail::MinusMinus',
+    ]) 
+{ 
+    my $body = $item.postfix-expression-body.id-expression;
+
+    my $ident 
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
+
+    my $increment-x = Rust::MinusEqExpression.new(
+        stareq-expressions => [
+            $ident,
+            Rust::IntegerLiteral.new(
+                value => 1
+            )
+        ]
+    );
+
+    my $old = Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            expression-item => Rust::PathInExpression.new(
+                path-expr-segments => [
+                    Rust::PathExprSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => "old"
+                        )
+                    )
+                ]
+            )
+        )
+    );
+
+    my $store-x-to-old = Rust::LetStatement.new(
+        pattern-no-top-alt => Rust::IdentifierPattern.new(
+            ref        => False,
+            mutable    => False,
+            identifier => Rust::Identifier.new(
+                value => "old",
+            )
+        ),
+        maybe-expression => Rust::SuffixedExpression.new(
+            base-expression => Rust::BaseExpression.new(
+                expression-item => Rust::PathInExpression.new(
+                    path-expr-segments => [
+                        Rust::PathExprSegment.new(
+                            path-ident-segment => Rust::Identifier.new(
+                                value => $ident
+                            )
+                        )
+                    ]
+                )
+            )
+        )
+    );
+
+    Rust::BlockExpression.new(
+        statements => Rust::Statements.new(
+            statements => [
+                $store-x-to-old,
+                Rust::ExpressionStatementNoBlock.new(
+                    expression-noblock => $increment-x,
+                )
+            ],
+            maybe-expression-noblock => $old
+        )
+    ).gist
+}
+
 
 multi sub translate-postfix-expression(
     $item, 

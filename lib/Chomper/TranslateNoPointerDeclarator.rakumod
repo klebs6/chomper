@@ -73,3 +73,24 @@ multi sub translate-no-pointer-declarator(
         ]
     )
 }
+
+multi sub translate-no-pointer-declarator(
+    $item, 
+    [
+        'Identifier', 
+        'ParametersAndQualifiers'
+    ]) 
+{ 
+    say "will translate-no-pointer-declarator for 
+    token-types: {$item.token-types()}";
+
+    my $params-and-qualifiers =
+    to-rust($item.no-pointer-declarator-tail[0]);
+
+    Rust::SuffixedExpression.new(
+        base-expression            => to-rust($item.no-pointer-declarator-base),
+        suffixed-expression-suffix => [
+            $params-and-qualifiers
+        ]
+    )
+}

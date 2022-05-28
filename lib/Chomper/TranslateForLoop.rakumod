@@ -57,10 +57,14 @@ multi sub translate-for-loop(
 
     my  $increment-expr = $item.expression;
 
-    my $loop-ident-type = to-rust-type($basic-declaration.decl-specifier-seq.value);
     my $loop-ident      = to-rust-ident($basic-declaration.init-declarator-list[0].declarator, snake-case => True);
 
-    die if not $loop-ident-type.gist (elem) ["i32","usize"];
+    #do we even need this check?
+    if $basic-declaration.decl-specifier-seq {
+        my $loop-ident-type = to-rust-type($basic-declaration.decl-specifier-seq.value);
+
+        die if not $loop-ident-type.gist (elem) ["i32","usize"];
+    }
 
     my $min-bound = to-rust($basic-declaration.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause); #TODO
     my $max-bound = to-rust($relational-expr.relational-expression-tail[0].shift-expression); #TODO
