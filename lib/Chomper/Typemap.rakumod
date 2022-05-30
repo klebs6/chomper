@@ -18,6 +18,8 @@ our %typemap =
 
     #from USD
     'signed short'                      => 'i16',
+    'c_void'                            => 'libc::c_void',
+    'LocaleIndependentAtoi'             => 'locale_independent_atoi',
     'unordered_set'                     => 'HashSet',
     'signed long'                       => 'i32',
     'signed long long'                  => 'i64',

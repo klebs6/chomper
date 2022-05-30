@@ -126,6 +126,8 @@ package PostListHead is export {
 
 package PostListTail is export {
 
+    use Chomper::Cpp::GcppExpression;
+
     our class Parens does IPostListTail {
         has $.value is required;
         has $.text;
@@ -152,7 +154,13 @@ package PostListTail is export {
         }
 
         method gist(:$treemark=False) {
-            "\{" ~ $.value.gist(:$treemark) ~ "}"
+
+            if ($.value ~~ BracedInitList).Bool {
+                $.value.gist(:$treemark)
+
+            } else {
+                "\{" ~ $.value.gist(:$treemark) ~ "}"
+            }
         }
     }
 }

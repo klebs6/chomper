@@ -904,9 +904,7 @@ multi sub to-rust(
     if $item.gist ~~ "std::nullopt" {
         return "None";
     } else {
-        say "TODO:";
-        ddt $item;
-        exit;
+        to-rust-ident($item).gist
     }
 }
 

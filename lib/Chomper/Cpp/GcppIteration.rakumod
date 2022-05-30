@@ -111,11 +111,20 @@ package IterationStatement is export {
         }
 
         method token-types {
+            my @builder = 
             [
                 $.for-init-statement.name,
-                $.condition.name,
-                $.expression.name,
-            ]
+            ];
+
+            if $.condition {
+                @builder.push: $.condition.name;
+            }
+
+            if $.expression {
+                @builder.push: $.expression.name;
+            }
+
+            @builder
         }
 
         method gist(:$treemark=False) {

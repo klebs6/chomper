@@ -56,6 +56,11 @@ class LambdaExpression is export {
     }
 
     method gist(:$treemark=False) {
+
+        if $treemark {
+            return "L";
+        }
+
         my $builder = $.lambda-introducer.gist(:$treemark);
 
         if $.lambda-declarator {

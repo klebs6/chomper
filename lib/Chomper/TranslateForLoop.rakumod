@@ -150,3 +150,32 @@ multi sub translate-for-loop(
         ]
     )
 }
+
+multi sub translate-for-loop(
+    $item, 
+    [
+        'BasicDeclaration',
+        'EqualityExpression',
+    ]) 
+{ 
+    my @statements = $item.statements>>.&to-rust;
+
+    my $for-init-stmt = to-rust($item.for-init-statement);
+
+    Rust::Statements.new(
+        statements => [
+            $for-init-stmt,
+            Rust::LoopExpressionPredicate.new(
+                maybe-loop-label => Nil,
+                expression-nostruct => to-rust($item.condition),
+                block-expression => Rust::BlockExpression.new(
+                    statements => Rust::Statements.new(
+                        statements => [
+                            |@statements,
+                        ],
+                    )
+                )
+            )
+        ]
+    )
+}

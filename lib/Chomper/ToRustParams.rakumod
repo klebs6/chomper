@@ -99,6 +99,42 @@ multi sub to-rust-param(
     to-rust($item)
 }
 
+our sub rust-default-default {
+    Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            expression-item => Rust::PathInExpression.new(
+                path-expr-segments => [
+                    Rust::PathExprSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => "Default",
+                        )
+                    ),
+                    Rust::PathExprSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => "default",
+                        )
+                    ),
+                ]
+            )
+        ),
+        suffixed-expression-suffix => [
+            Rust::CallExpressionSuffix.new(
+                maybe-call-params => Nil,
+            )
+        ]
+    )
+}
+
+multi sub to-rust-param(
+    $item where Cpp::BracedInitList)
+{
+    if not $item.initializer-list.Bool {
+        rust-default-default()
+    } else {
+        to-rust($item)
+    }
+}
+
 multi sub to-rust-param(
     $item where Cpp::LogicalAndExpression)
 {
