@@ -73,12 +73,10 @@ multi sub translate-condition($condition, "E == I") {
 }
 
 multi sub translate-condition($condition, "! I()") {
-
     "!" ~ to-rust($condition.unary-expression)
 }
 
 multi sub translate-condition($condition, "! T()") {
-
     "!" ~ to-rust($condition.unary-expression)
 }
 

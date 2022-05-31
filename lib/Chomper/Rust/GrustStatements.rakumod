@@ -66,15 +66,25 @@ class LetStatement is export {
 class CommentWrapped is export {
     has $.maybe-comment;
     has $.wrapped;
+    has Bool $.chomp = False;
 
     has $.text;
 
     method gist {
         do if $.maybe-comment {
-            qq:to/END/.chomp
-            {$.maybe-comment.gist}
-            {$.wrapped.gist}
-            END
+
+            if $.chomp {
+
+                qq:to/END/.chomp
+                {$.maybe-comment.gist} {$.wrapped.gist}
+                END
+
+            } else {
+                qq:to/END/.chomp
+                {$.maybe-comment.gist}
+                {$.wrapped.gist}
+                END
+            }
         } else {
             qq:to/END/.chomp
             {$.wrapped.gist}

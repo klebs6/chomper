@@ -26,6 +26,14 @@ returns Rust::Identifier
 }
 
 multi sub to-rust-ident(
+    $x where Cpp::PointerDeclarator, 
+    Bool :$snake-case) 
+returns Rust::Identifier 
+{
+    to-rust-ident($x.no-pointer-declarator, :$snake-case)
+}
+
+multi sub to-rust-ident(
     $x where Cpp::QualifiedId, 
     Bool :$snake-case) 
 returns Rust::PathInExpression 

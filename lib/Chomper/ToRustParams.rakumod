@@ -99,6 +99,19 @@ multi sub to-rust-param(
     to-rust($item)
 }
 
+multi sub to-rust-param(
+    $item where Cpp::InitializerClause::Assignment)
+{
+    my $comment = to-rust($item.comment);
+    my $body    = to-rust($item.assignment-expression);
+
+    Rust::CommentWrapped.new(
+        maybe-comment => $comment,
+        wrapped       => $body,
+        chomp         => True,
+    )
+}
+
 our sub rust-default-default {
     Rust::SuffixedExpression.new(
         base-expression => Rust::BaseExpression.new(

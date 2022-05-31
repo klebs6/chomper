@@ -12,6 +12,7 @@ use Chomper::TranslateNoPointerDeclarator;
 use Chomper::TranslateConditionalExpression;
 use Chomper::TranslateAdditiveExpression;
 use Chomper::TranslateMultiplicativeExpression;
+use Chomper::TranslateLambda;
 
 use Data::Dump::Tree;
 
@@ -39,6 +40,22 @@ our sub translate-cpp-ir-to-rust($typename, $item where Cpp::IStatement)
     };
 
     $rust.gist
+}
+
+multi sub to-rust(
+    $item where Cpp::PrimaryExpression::Lambda)
+{
+    debug "will translate PrimaryExpression::Lambda to Rust!";
+
+    translate-lambda-expression($item.lambda-expression)
+}
+
+multi sub to-rust(
+    $item where Cpp::LambdaExpression)
+{
+    debug "will translate LambdaExpression to Rust!";
+
+    translate-lambda-expression($item)
 }
 
 multi sub to-rust(
@@ -95,6 +112,21 @@ multi sub to-rust(
         line => True,
         text => $item.line-comments>>.value.join("\n"),
     )
+}
+
+multi sub to-rust(
+    $item where Cpp::BlockComment)
+{
+    debug "will translate BlockComment to Rust!";
+
+=begin comment
+    Rust::Comment.new(
+        line => False,
+        text => $item.gist,
+    )
+=end comment
+
+    $item.gist
 }
 
 multi sub to-rust(
@@ -310,6 +342,8 @@ multi sub to-rust(
     my @statements = $item.statements;
 
     my $rust-condition = to-rust($condition);
+    ddt $rust-condition;
+    exit;
 
     my $cpp-else = $item.else-statements[0];
 

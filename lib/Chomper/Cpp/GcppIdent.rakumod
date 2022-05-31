@@ -7,6 +7,7 @@ use Chomper::TreeMark;
 use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppChar;
 use Chomper::Cpp::GcppDigit;
+use Chomper::Cpp::GcppKeywords;
 
 package IdentifierStart is export {
 
@@ -191,8 +192,12 @@ package IdentifierGrammar is export {
         token identifier-continue:sym<ucn>      { <universalcharactername> }
 
         token identifier {
-            <.identifier-start>
-            <.identifier-continue>*
+            (
+                <.identifier-start>
+                <.identifier-continue>*
+            )
+
+            <?{is-not-cpp-keyword($0)}>
         }
 
         token nondigit {
