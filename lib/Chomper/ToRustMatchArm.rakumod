@@ -1,6 +1,7 @@
 use Chomper::TranslateIo;
 use Chomper::ToRust;
 use Chomper::ToRustPathExprSegment;
+use Chomper::ToRustPathInExpression;
 use Chomper::Cpp;
 use Chomper::Rust;
 
@@ -31,9 +32,8 @@ multi sub to-rust-match-arm-item(
         .labeled-statement-label-body
         .constant-expression;
 
-        to-rust-path-expr-segment($cpp)
+        to-rust-path-in-expression($cpp)
     };
-
 
     my $match-arm = Rust::MatchArm.new(
         pattern => Rust::Pattern.new(

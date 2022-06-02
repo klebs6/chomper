@@ -45,8 +45,8 @@ our role IIdentifierContinue         does CppBase is export { }
 our role IIntegerSuffix              does CppBase is export { }
 our role ILongLongSuffix             does CppBase is export { }
 our role ICchar                      does CppBase is export { }
-our role IEscapeSequence             does CppBase is export { }
-our role ISimpleEscapeSequence       does CppBase is export { }
+our role IEscapeSequence             does ICchar does CppBase is export { }
+our role ISimpleEscapeSequence       does ICchar does CppBase is export { }
 our role IFractionalConstant         does CppBase is export { }
 our role IEncodingPrefix             does CppBase is export { }
 our role ISchar                      does CppBase is export { }

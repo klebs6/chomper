@@ -4,10 +4,93 @@ use Data::Dump::Tree;
 
 use Chomper::Cpp::GcppRoles;
 
-our sub is-not-cpp-keyword($token) returns Bool is export {
-    my $kw   = $KeywordGrammar::Rules::keyword;
+sub is-cpp-keyword($token) returns Bool is export {
 
-    $token.Str !~~ /^^ $kw $$/
+    #need be a better way
+    #
+    #is it possible to access tokens from Rules
+    #below?
+    my @keywords = [
+        'alignas',
+        'alignof',
+        'asm',
+        'auto',
+        'bool',
+        'break',
+        'case',
+        'catch',
+        'char',
+        'char16_t',
+        'char32_t',
+        'class',
+        'const',
+        'constexpr',
+        'const_cast',
+        'continue',
+        'decltype',
+        'default',
+        'delete',
+        'do',
+        'double',
+        'dynamic_cast',
+        'else',
+        'enum',
+        'explicit',
+        'export',
+        'extern',
+        'false',
+        'final',
+        'float',
+        'for',
+        'friend',
+        'goto',
+        'if',
+        'inline',
+        'int',
+        'long',
+        'mutable',
+        'namespace',
+        'new',
+        'noexcept',
+        'nullptr',
+        'operator',
+        'override',
+        'private',
+        'protected',
+        'public',
+        'register',
+        'reinterpret_cast',
+        'return',
+        'short',
+        'signed',
+        'sizeof',
+        'static',
+        'static_assert',
+        'static_cast',
+        'struct',
+        'switch',
+        'template',
+        'this',
+        'thread_local',
+        'throw',
+        'true',
+        'try',
+        'typedef',
+        'typeid',
+        'typename',
+        'union',
+        'unsigned',
+        'using',
+        'virtual',
+        'void',
+        'volatile',
+        'wchar_t',
+        'while',
+    ];
+
+    my $match = $token.Str ~~ /^^ @keywords $$/;
+
+    so $match
 }
 
 package KeywordGrammar is export {

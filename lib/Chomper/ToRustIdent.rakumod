@@ -34,6 +34,14 @@ returns Rust::Identifier
 }
 
 multi sub to-rust-ident(
+    $condition where Cpp::Condition::Decl,
+    Bool :$snake-case) 
+returns Rust::Identifier 
+{
+    to-rust-ident($condition.declarator.no-pointer-declarator)
+}
+
+multi sub to-rust-ident(
     $x where Cpp::QualifiedId, 
     Bool :$snake-case) 
 returns Rust::PathInExpression 

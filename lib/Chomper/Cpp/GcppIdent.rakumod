@@ -197,7 +197,7 @@ package IdentifierGrammar is export {
                 <.identifier-continue>*
             )
 
-            <?{is-not-cpp-keyword($0)}>
+            <?{not is-cpp-keyword($0)}>
         }
 
         token nondigit {

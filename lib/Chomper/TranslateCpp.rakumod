@@ -119,13 +119,6 @@ multi sub to-rust(
 {
     debug "will translate BlockComment to Rust!";
 
-=begin comment
-    Rust::Comment.new(
-        line => False,
-        text => $item.gist,
-    )
-=end comment
-
     $item.gist
 }
 
@@ -333,6 +326,40 @@ multi sub to-rust(
     )
 }
 
+sub to-basic-declaration($item where Cpp::Condition::Decl) 
+returns Cpp::BasicDeclaration 
+{
+    my $initializer-clause = $item.condition-decl-tail.initializer-clause;
+
+    Cpp::BasicDeclaration.new(
+        decl-specifier-seq => $item.decl-specifier-seq,
+        init-declarator-list => [
+            Cpp::InitDeclarator.new(
+                declarator  => $item.declarator,
+                initializer => Cpp::Initializer::BraceOrEq.new(
+                    brace-or-equal-initializer => Cpp::AssignInit.new(
+                        initializer-clause => $initializer-clause
+                    )
+                ),
+            )
+        ]
+    )
+}
+
+multi sub to-rust(
+    $item where Cpp::Condition::Decl)
+{
+    debug "will translate Condition::Decl to Rust!";
+
+    use Chomper::TranslateBasicDeclaration;
+
+    my $bd = to-basic-declaration($item);
+
+    my $mask = $bd.gist(treemark => True);
+
+    translate-basic-declaration-to-rust($mask, $bd)
+}
+
 multi sub to-rust(
     $item where Cpp::SelectionStatement::If)
 {
@@ -341,9 +368,12 @@ multi sub to-rust(
     my $condition  = $item.condition;
     my @statements = $item.statements;
 
-    my $rust-condition = to-rust($condition);
-    ddt $rust-condition;
-    exit;
+    #this is a weird construct, but
+    #
+    my ($rust-condition, $maybe-cond-decl) 
+        = $condition ~~ Cpp::Condition::Decl 
+        ?? (to-rust-ident($condition), to-rust($condition)) 
+        !! (to-rust($condition), Nil);
 
     my $cpp-else = $item.else-statements[0];
 
@@ -365,6 +395,7 @@ multi sub to-rust(
         Nil
     };
 
+    my $if-expression = 
     Rust::IfExpression.new(
         expression-nostruct => $rust-condition,
         block-expression    => Rust::BlockExpression.new(
@@ -373,6 +404,19 @@ multi sub to-rust(
             )
         ),
         maybe-else-clause => $maybe-else-clause,
+    );
+
+    #----------------------
+    my @output-statements = [];
+
+    if $maybe-cond-decl {
+        @output-statements.push: $maybe-cond-decl;
+    }
+
+    @output-statements.push: $if-expression;
+
+    Rust::Statements.new(
+        statements => @output-statements
     )
 }
 

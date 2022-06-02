@@ -70,7 +70,9 @@ package ConditionDeclTail is export {
     #   <assign> 
     #   <initializer-clause> 
     # }
-    our class AssignInit does IConditionDeclTail {
+    our class AssignInit 
+    does IInitializer
+    does IConditionDeclTail {
         has IInitializerClause $.initializer-clause is required;
 
         has $.text;
@@ -87,7 +89,9 @@ package ConditionDeclTail is export {
     # rule condition-decl-tail:sym<braced-init> { 
     #   <braced-init-list> 
     # }
-    our class BracedInit does IConditionDeclTail {
+    our class BracedInit 
+    does IInitializer
+    does IConditionDeclTail {
         has BracedInitList $.braced-init-list is required;
 
         has $.text;
