@@ -53,6 +53,24 @@ multi sub to-rust-type($x where Cpp::SimpleIntTypeSpecifier) {
     )
 }
 
+multi sub to-rust-type($x where Cpp::SimpleCharTypeSpecifier) {  
+
+    my Bool $unsigned 
+    = $x.simple-type-signedness-modifier ~~ Cpp::SimpleTypeSignednessModifier::Unsigned;
+
+    my $value = $unsigned ?? "u8" !! "i8";
+
+    Rust::TypePath.new(
+        type-path-segments => [
+            Rust::TypePathSegment.new(
+                path-ident-segment => Rust::Identifier.new(
+                    value => $value,
+                )
+            )
+        ]
+    )
+}
+
 multi sub to-rust-type($x where Cpp::TheTypeId) {  
 
     my $base = to-rust-type($x.type-specifier-seq);

@@ -3,6 +3,7 @@ use Chomper::Cpp;
 use Chomper::Rust;
 use Chomper::ToRust;
 use Chomper::ToRustIdent;
+use Chomper::ToRustBlockExpression;
 use Chomper::ToRustType;
 use Chomper::ToRustPathInExpression;
 use Chomper::ToRustMatchArm;
@@ -138,8 +139,10 @@ multi sub to-rust(
 {
     debug "will translate CompoundStatement to Rust!";
 
-    Rust::Statements.new(
-        statements => $item.statement-seq.List>>.&to-rust,
+    Rust::BlockExpression.new(
+        statements => Rust::Statements.new(
+            statements => $item.statement-seq.List>>.&to-rust,
+        )
     )
 }
 
@@ -347,6 +350,12 @@ returns Cpp::BasicDeclaration
 }
 
 multi sub to-rust(
+    $item where Cpp::PrimaryExpression::This)
+{
+    Rust::PathExpressionGrammar::IdentSelfValue.new
+}
+
+multi sub to-rust(
     $item where Cpp::Condition::Decl)
 {
     debug "will translate Condition::Decl to Rust!";
@@ -355,9 +364,7 @@ multi sub to-rust(
 
     my $bd = to-basic-declaration($item);
 
-    my $mask = $bd.gist(treemark => True);
-
-    translate-basic-declaration-to-rust($mask, $bd)
+    to-rust($bd)
 }
 
 multi sub to-rust(
@@ -365,8 +372,8 @@ multi sub to-rust(
 {
     debug "will translate SelectionStatement::If to Rust!";
 
-    my $condition  = $item.condition;
-    my @statements = $item.statements;
+    my $condition        = $item.condition;
+    my $block-expression = to-rust-block-expression($item.statements);
 
     #this is a weird construct, but
     #
@@ -398,11 +405,7 @@ multi sub to-rust(
     my $if-expression = 
     Rust::IfExpression.new(
         expression-nostruct => $rust-condition,
-        block-expression    => Rust::BlockExpression.new(
-            statements => Rust::Statements.new(
-                statements => @statements>>.&to-rust,
-            )
-        ),
+        block-expression    => $block-expression,
         maybe-else-clause => $maybe-else-clause,
     );
 
@@ -667,18 +670,20 @@ multi sub to-rust(
 
     my $base = to-rust($item.unary-expression);
 
+    my @statements = [
+        Rust::ExpressionStatementNoBlock.new(
+            expression-noblock => Rust::AddEqExpression.new(
+                minuseq-expressions => [
+                    $base,
+                    $m1
+                ]
+            )
+        ).gist
+    ];
+
     Rust::BlockExpression.new(
         statements => Rust::Statements.new(
-            statements => [
-                Rust::ExpressionStatementNoBlock.new(
-                    expression-noblock => Rust::AddEqExpression.new(
-                        minuseq-expressions => [
-                            $base,
-                            $m1
-                        ]
-                    )
-                ).gist
-            ],
+            statements => @statements,
             maybe-expression-noblock => $base
         )
     )
@@ -723,21 +728,23 @@ multi sub to-rust(
 
     my $base = to-rust($item.unary-expression);
 
+    my @statements = [
+        Rust::ExpressionStatementNoBlock.new(
+            expression-noblock => Rust::MinusEqExpression.new(
+                stareq-expressions => [
+                    $base,
+                    $m1
+                ]
+            )
+        ).gist
+    ];
+
     Rust::BlockExpression.new(
         statements => Rust::Statements.new(
-            statements => [
-                Rust::ExpressionStatementNoBlock.new(
-                    expression-noblock => Rust::MinusEqExpression.new(
-                        stareq-expressions => [
-                            $base,
-                            $m1
-                        ]
-                    )
-                ).gist
-            ],
+            statements => @statements,
             maybe-expression-noblock => $base
         )
-    )
+    ).gist
 }
 
 multi sub to-rust(
@@ -1008,15 +1015,10 @@ multi sub to-rust(
     debug "will translate IterationStatement::While to Rust!";
 
     my $rust-condition  = to-rust($item.condition);
-    my @rust-statements = $item.statements.List>>.&to-rust;
 
     Rust::LoopExpressionPredicate.new(
         expression-nostruct => $rust-condition,
-        block-expression => Rust::BlockExpression.new(
-            statements => Rust::Statements.new(
-                statements => @rust-statements,
-            )
-        ),
+        block-expression => to-rust-block-expression($item.statements),
     ).gist
 }
 

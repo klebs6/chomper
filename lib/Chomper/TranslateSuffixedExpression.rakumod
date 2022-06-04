@@ -48,6 +48,19 @@ multi sub to-rust-suffixed-expression($item where Cpp::IntegerLiteral::Dec) {
     )
 }
 
+multi sub to-rust-suffixed-expression($item where Cpp::CharacterLiteral) {  
+    Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            expression-item => Rust::CharLiteral.new(
+
+                #it is possible we want to do more
+                #than just take the gist here...
+                value => $item.gist
+            )
+        ),
+    )
+}
+
 multi sub to-rust-suffixed-expression($item) {  
     die "need write hook for suffixed-expression! {$item.WHAT.^name}";
 }

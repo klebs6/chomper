@@ -1,6 +1,7 @@
 use Data::Dump::Tree;
 use Chomper::ToRustIdent;
 use Chomper::ToRustParams;
+use Chomper::ToRustBlockExpression;
 use Chomper::ToRust;
 use Chomper::ToRustType;
 use Chomper::SnakeCase;
@@ -41,8 +42,6 @@ multi sub translate-for-range-loop(
         $item.for-range-initializer.expression
     );
 
-    my @statements = $item.statements>>.&to-rust;
-
     Rust::LoopExpressionIterator.new(
         pattern => Rust::Pattern.new(
             pattern-no-top-alts => [
@@ -73,11 +72,7 @@ multi sub translate-for-range-loop(
                 )
             ]
         ),
-        block-expression => Rust::BlockExpression.new(
-            statements => Rust::Statements.new(
-                statements => @statements,
-            )
-        )
+        block-expression => to-rust-block-expression($item.statements)
     )
 }
 

@@ -65,6 +65,14 @@ multi sub to-rust-param($x where Cpp::PrimaryExpression::Id) {
     to-rust-ident($x.id-expression, snake-case => True)
 }
 
+multi sub to-rust-param($x where Cpp::LambdaExpression) {  
+    to-rust($x)
+}
+
+multi sub to-rust-param($x where Cpp::PrimaryExpression::Lambda) {  
+    to-rust($x)
+}
+
 multi sub to-rust-param($x where Cpp::EqualityExpression) {  
     to-rust($x)
 }

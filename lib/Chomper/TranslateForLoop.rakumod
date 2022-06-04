@@ -2,6 +2,7 @@ use Data::Dump::Tree;
 use Chomper::ToRustIdent;
 use Chomper::ToRustParams;
 use Chomper::ToRust;
+use Chomper::ToRustBlockExpression;
 use Chomper::ToRustType;
 use Chomper::SnakeCase;
 use Chomper::Cpp;
@@ -96,8 +97,6 @@ multi sub translate-for-loop(
         ),
     ];
 
-    my @statements = $item.statements>>.&to-rust;
-
     Rust::LoopExpressionIterator.new(
         maybe-loop-label => Nil,
         pattern => Rust::Pattern.new(
@@ -110,11 +109,7 @@ multi sub translate-for-loop(
             ],
         ),
         expression-nostruct => $t,
-        block-expression => Rust::BlockExpression.new(
-            statements => Rust::Statements.new(
-                statements => @statements,
-            )
-        )
+        block-expression => to-rust-block-expression($item.statements) 
     )
 }
 
@@ -126,9 +121,11 @@ multi sub translate-for-loop(
         'Expression',
     ]) 
 { 
-    my @statements = $item.statements>>.&to-rust;
+    my $block-expression = to-rust-block-expression($item.statements);
 
     my @loop-continue = $item.expression.assignment-expressions>>.&to-rust;
+
+    $block-expression.statements.statements.push: |@loop-continue;
 
     my $for-init-stmt = to-rust($item.for-init-statement);
 
@@ -138,14 +135,7 @@ multi sub translate-for-loop(
             Rust::LoopExpressionPredicate.new(
                 maybe-loop-label => Nil,
                 expression-nostruct => to-rust($item.condition),
-                block-expression => Rust::BlockExpression.new(
-                    statements => Rust::Statements.new(
-                        statements => [
-                            |@statements,
-                            |@loop-continue
-                        ],
-                    )
-                )
+                block-expression => $block-expression 
             )
         ]
     )
@@ -158,23 +148,15 @@ multi sub translate-for-loop(
         'EqualityExpression',
     ]) 
 { 
-    my @statements = $item.statements>>.&to-rust;
-
     my $for-init-stmt = to-rust($item.for-init-statement);
 
     Rust::Statements.new(
         statements => [
             $for-init-stmt,
             Rust::LoopExpressionPredicate.new(
-                maybe-loop-label => Nil,
+                maybe-loop-label    => Nil,
                 expression-nostruct => to-rust($item.condition),
-                block-expression => Rust::BlockExpression.new(
-                    statements => Rust::Statements.new(
-                        statements => [
-                            |@statements,
-                        ],
-                    )
-                )
+                block-expression    => to-rust-block-expression($item.statements) 
             )
         ]
     )
