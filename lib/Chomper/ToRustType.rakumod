@@ -76,10 +76,17 @@ multi sub to-rust-type($x where Cpp::TheTypeId) {
 
     my $base = to-rust-type($x.type-specifier-seq);
 
-    Rust::RawPtrType.new(
-        mutable        => not is-const-type($x.type-specifier-seq),
-        type-no-bounds => $base,
-    )
+    if $x.abstract-declarator {
+
+        Rust::RawPtrType.new(
+            mutable        => not is-const-type($x.type-specifier-seq),
+            type-no-bounds => $base,
+        )
+
+    } else {
+
+        $base
+    }
 }
 
 multi sub to-rust-type($x where Cpp::Identifier) {

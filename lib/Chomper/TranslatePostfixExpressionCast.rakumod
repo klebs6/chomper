@@ -34,10 +34,12 @@ multi sub translate-postfix-expression-cast(
         }
     }
 
-    Rust::CastExpression.new(
+    my $expr = Rust::CastExpression.new(
         borrow-expression => $rust-expr,
         cast-targets => [
             $rust-type
         ]
-    ).gist
+    );
+
+    $expr
 }

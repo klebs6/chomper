@@ -34,6 +34,16 @@ returns Rust::Identifier
 }
 
 multi sub to-rust-ident(
+    $x where Str, 
+    Bool :$snake-case) 
+returns Rust::Identifier 
+{
+    Rust::Identifier.new(
+        value => snake-case($x)
+    )
+}
+
+multi sub to-rust-ident(
     $condition where Cpp::Condition::Decl,
     Bool :$snake-case) 
 returns Rust::Identifier 

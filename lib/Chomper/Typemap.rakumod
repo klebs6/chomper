@@ -18,6 +18,7 @@ our %typemap =
 
     #from USD
     'signed short'                      => 'i16',
+    'unsigned __int128'                 => 'u128',
     'c_void'                            => 'libc::c_void',
     'LocaleIndependentAtoi'             => 'locale_independent_atoi',
     'unordered_set'                     => 'HashSet',

@@ -5,6 +5,8 @@ use Chomper::ToRust;
 use Chomper::IsConst;
 use Chomper::TranslateIo;
 use Chomper::ToRustType;
+use Chomper::TokenTree;
+use Chomper::LazyStatic;
 use Chomper::ToRustIdent;
 use Chomper::ToRustParams;
 use Chomper::ToRustPathInExpression;
@@ -516,6 +518,38 @@ sub create-type-initializer($rust-type,$rust-params)
             )
         ],
     )
+}
+
+multi sub translate-basic-declaration-to-rust(
+    "static T I = L;",
+    $item where Cpp::BasicDeclaration) 
+{
+    debug "mask static T I = L;";
+    my $type-specifier  = $item.decl-specifier-seq.decl-specifiers[1];
+    my $init-declarator = $item.init-declarator-list[0].declarator;
+    my $initializer     = $item.init-declarator-list[0].initializer;
+
+    my $rust-type        = to-rust-type($type-specifier);
+    my $rust-ident       = to-rust-ident($init-declarator);
+    my $rust-initializer = to-rust($initializer.brace-or-equal-initializer);
+
+    create-lazy-static($rust-type,$rust-ident,$rust-initializer)
+}
+
+multi sub translate-basic-declaration-to-rust(
+    "static T I;",
+    $item where Cpp::BasicDeclaration) 
+{
+    debug "mask static T I;";
+
+    my $type-specifier  = $item.decl-specifier-seq.decl-specifiers[1];
+    my $init-declarator = $item.init-declarator-list[0];
+
+    my $rust-type           = to-rust-type($type-specifier);
+    my $rust-ident          = to-rust-ident($init-declarator);
+    my $default-initializer = create-default-initializer($rust-type);
+
+    create-lazy-static($rust-type,$rust-ident,$default-initializer)
 }
 
 multi sub translate-basic-declaration-to-rust(

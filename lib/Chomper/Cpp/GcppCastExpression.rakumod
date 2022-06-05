@@ -20,6 +20,10 @@ class CastExpression does ICastExpression is export {
 
     method gist(:$treemark=False) {
 
+        if $treemark {
+            return "E";
+        }
+
         my $builder = "";
 
         for @.the-type-ids {
@@ -56,6 +60,7 @@ package CastToken is export {
         }
 
         method gist(:$treemark=False) {
+
             "static_cast"
         }
     }

@@ -33,6 +33,11 @@ does IPostfixExpressionBody is export {
     }
 
     method gist(:$treemark=False) {
+
+        if $treemark {
+            return "E";
+        }
+
         $.cast-token.gist(:$treemark) 
         ~ "<" ~ $.the-type-id.gist(:$treemark) ~ ">" 
         ~ "(" ~ $.expression.gist(:$treemark) ~ ")"
