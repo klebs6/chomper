@@ -148,7 +148,11 @@ package TypeIdGrammar is export {
                     text                => ~$/,
                 )
             } else {
-                make $body
+                make TheTypeId.new(
+                    type-specifier-seq  => $body,
+                    abstract-declarator => Nil,
+                    text                => ~$/,
+                )
             }
         }
 

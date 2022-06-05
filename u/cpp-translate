@@ -12,7 +12,7 @@ grammar G does CppParser {}
 use Grammar::Tracer;
 grammar GD does CppParser {}
 
-sub MAIN(:$stdin = Nil) {
+sub MAIN(:$stdin = Nil, Str :$rule="statement-seq") {
 
     #this makes it so we don't have to recompile
     #every time we want to change the typemap
@@ -37,8 +37,8 @@ sub MAIN(:$stdin = Nil) {
 
     $in = $in.subst(/^\s+/,"");
 
-    my $rule = "statement-seq";
     #my $rule = "parameter-declaration-body";
+    #my $rule = "statement-seq"; #usually want this one
 
     my $actions = CppActions.new;
 

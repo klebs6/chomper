@@ -17,11 +17,13 @@ use Chomper::TranslateLambda;
 
 use Data::Dump::Tree;
 
-our sub translate-cpp-ir-to-rust($typename, $item where Cpp::IStatement)
+#our sub translate-cpp-ir-to-rust($typename, $item where Cpp::IStatement)
+our sub translate-cpp-ir-to-rust($typename, $item)
 {
     my $rust = do given $item.name {
         when "TryBlock"                     { to-rust($item) }
         when "ExpressionStatement"          { to-rust($item) }
+        when "ConstructorInitializer"       { to-rust($item) }
         when "CompoundStatement"            { to-rust($item) }
         when "AttributedStatement"          { to-rust($item) }
         when "Statement::Declaration"       { to-rust($item) }
@@ -41,6 +43,14 @@ our sub translate-cpp-ir-to-rust($typename, $item where Cpp::IStatement)
     };
 
     $rust.gist
+}
+
+multi sub to-rust(
+    $item where Cpp::ConstructorInitializer)
+{
+    debug "will translate ConstructorInitializer to Rust!";
+    ddt $item;
+    exit;
 }
 
 multi sub to-rust(
@@ -926,6 +936,13 @@ multi sub to-rust(
 {
     use Chomper::TranslatePostfixExpression;
     translate-postfix-expression($item, $item.token-types)
+}
+
+multi sub to-rust(
+    $item where Cpp::PostfixExpressionCast)
+{
+    use Chomper::TranslatePostfixExpressionCast;
+    translate-postfix-expression-cast($item)
 }
 
 multi sub to-rust(

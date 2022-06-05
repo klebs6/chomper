@@ -2,6 +2,7 @@ use Chomper::Cpp;
 use Chomper::Rust;
 use Chomper::SnakeCase;
 use Chomper::ToRust;
+use Chomper::IsConst;
 use Chomper::TranslateIo;
 use Chomper::ToRustType;
 use Chomper::ToRustIdent;
@@ -154,6 +155,36 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
+     "T I = I & N;",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask T I = I & N;";
+
+    #re-mask
+    translate-basic-declaration-to-rust("T I = E;", $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
+     "T I = I + (I >> N) + (I >> N) + (I >> N);",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask T I = I + (I >> N) + (I >> N) + (I >> N);";
+
+    #re-mask
+    translate-basic-declaration-to-rust("T I = E;", $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
+     "T I = (I >> N) + (I & N) + (I & N);",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask T I = (I >> N) + (I & N) + (I & N);";
+
+    #re-mask
+    translate-basic-declaration-to-rust("T I = E;", $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
      "T I = T(Es);",
     $item where Cpp::BasicDeclaration:D) 
 {
@@ -208,6 +239,14 @@ multi sub translate-basic-declaration-to-rust(
     $item where Cpp::BasicDeclaration:D) 
 {
     debug "mask T &I = * E;";
+    translate-basic-declaration-to-rust("T &I = E;", $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
+     "T &I = I();",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask T &I = I();";
     translate-basic-declaration-to-rust("T &I = E;", $item)
 }
 
@@ -268,15 +307,6 @@ multi sub translate-basic-declaration-to-rust(
     )
 }
 
-sub is-const-type($x where Cpp::TypeSpecifier) 
-{
-    if $x.value ~~ Cpp::TrailingTypeSpecifier::CvQualifier {
-        return $x.value.cv-qualifier ~~ Cpp::CvQualifier::Const_;
-    }
-
-    False
-}
-
 multi sub translate-basic-declaration-to-rust(
      "T &I = E;",
     $item where Cpp::BasicDeclaration:D) 
@@ -320,6 +350,13 @@ multi sub translate-basic-declaration-to-rust(
     $item where Cpp::BasicDeclaration:D) 
 {
     translate-basic-declaration-to-rust("I = L;", $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
+     "I = (I ? E: I());",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    translate-basic-declaration-to-rust("I = E;", $item)
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -574,6 +611,14 @@ multi sub translate-basic-declaration-to-rust(
     $item where Cpp::BasicDeclaration) 
 {
     debug "mask T I = * I;";
+    translate-basic-declaration-to-rust("T I = E;", $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
+    "T I = (T) I + I;",
+    $item where Cpp::BasicDeclaration) 
+{
+    debug "mask T I = (T) I + I;";
     translate-basic-declaration-to-rust("T I = E;", $item)
 }
 
@@ -1314,6 +1359,14 @@ multi sub translate-basic-declaration-to-rust(
     $item where Cpp::BasicDeclaration) 
 {
     debug "mask T I = I;";
+    translate-basic-declaration-to-rust("T I = E;", $item)
+}
+
+multi sub translate-basic-declaration-to-rust(
+    "T I = (T) I(Es);",
+    $item where Cpp::BasicDeclaration) 
+{
+    debug "mask T I = (T) I(Es);";
     translate-basic-declaration-to-rust("T I = E;", $item)
 }
 

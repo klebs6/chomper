@@ -111,7 +111,9 @@ package MemInitializerGrammar is export {
 
         # rule mem-initializer-list { <mem-initializer> <ellipsis>? [ <.comma> <mem-initializer> <ellipsis>? ]* } 
         method mem-initializer-list($/) {
-            make $<mem-initializer>>>.made;
+            make MemInitializerList.new(
+                mem-initializers => $<mem-initializer>>>.made
+            )
         }
 
         # rule mem-initializer:sym<expr-list> { <meminitializerid> <.left-paren> <expression-list>? <.right-paren> }

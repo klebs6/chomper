@@ -112,6 +112,7 @@ does IDeclarator
 does IDeclSpecifierSeq
 does INoPointerDeclaratorBase
 does IPointerDeclarator
+does IMemInitializerId
 does ITheTypeName is export { 
     has Str $.value is required; 
 

@@ -2,6 +2,7 @@ use Chomper::TranslateIo;
 use Chomper::ToRust;
 use Chomper::ToRustPathExprSegment;
 use Chomper::ToRustPathInExpression;
+use Chomper::ToRustBlockExpression;
 use Chomper::Cpp;
 use Chomper::Rust;
 
@@ -43,14 +44,8 @@ multi sub to-rust-match-arm-item(
         )
     );
 
-    my @statements = $item.statement.List>>.&to-rust;
-
     my $expression-with-block 
-    = Rust::BlockExpression.new(
-        statements => Rust::Statements.new(
-            statements => @statements,
-        )
-    );
+    = to-rust-block-expression($item.statement);
 
     Rust::MatchArmsInnerItemWithBlock.new(
         :$match-arm,

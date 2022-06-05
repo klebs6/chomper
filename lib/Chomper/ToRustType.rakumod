@@ -1,6 +1,7 @@
 use Chomper::Cpp;
 use Chomper::Rust;
 use Chomper::ToRustIdent;
+use Chomper::IsConst;
 use Chomper::TranslateIo;
 use Data::Dump::Tree;
 
@@ -76,7 +77,7 @@ multi sub to-rust-type($x where Cpp::TheTypeId) {
     my $base = to-rust-type($x.type-specifier-seq);
 
     Rust::RawPtrType.new(
-        mutable        => True,
+        mutable        => not is-const-type($x.type-specifier-seq),
         type-no-bounds => $base,
     )
 }

@@ -6,7 +6,7 @@ use Data::Dump::Tree;
 my $do-made       = True;
 my $do-round-trip = False;
 
-sub MAIN(:$stdin = Nil) {
+sub MAIN(:$stdin = Nil, Str :$rule = "statements") {
 
     my $in = $stdin 
         ?? $stdin.IO.slurp.chomp 
@@ -15,7 +15,6 @@ sub MAIN(:$stdin = Nil) {
     $in = $in.subst(/^\s+/,"");
 
     #my $rule = "crate";
-    my $rule = "statements";
 
     my $actions = Rust::Actions.new;
 
