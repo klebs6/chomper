@@ -54,6 +54,19 @@ multi sub to-rust-type($x where Cpp::SimpleIntTypeSpecifier) {
     )
 }
 
+multi sub to-rust-type($x where Cpp::SimpleDoubleTypeSpecifier) {  
+
+    Rust::TypePath.new(
+        type-path-segments => [
+            Rust::TypePathSegment.new(
+                path-ident-segment => Rust::Identifier.new(
+                    value => "f64",
+                )
+            )
+        ]
+    )
+}
+
 multi sub to-rust-type($x where Cpp::SimpleCharTypeSpecifier) {  
 
     my Bool $unsigned 
@@ -114,7 +127,7 @@ multi sub to-rust-type($x where Cpp::DeclSpecifierSeq) {
     to-rust-type($x.decl-specifiers);
 }
 
-multi sub to-rust-type(Array $x) {  
+multi sub to-rust-type(Positional $x) {  
 
     my $name = $x.List>>.gist.join(" ");
 

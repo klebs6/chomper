@@ -147,148 +147,11 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
-     "T I = E + (I - I);",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T I = E + (I - I);";
-
-    #re-mask
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T I = I & N;",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T I = I & N;";
-
-    #re-mask
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T I = I + (I >> N) + (I >> N) + (I >> N);",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T I = I + (I >> N) + (I >> N) + (I >> N);";
-
-    #re-mask
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T I = (I >> N) + (I & N) + (I & N);",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T I = (I >> N) + (I & N) + (I & N);";
-
-    #re-mask
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T I = T(Es);",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T I = T(Es);";
-
-    #re-mask
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T I = I - I;",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T I = I - I;";
-
-    #re-mask
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T I = I(Es);",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T I = I(Es);";
-
-    #re-mask
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T I = I(Es) ^ I(Es);",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T I = I(Es) ^ I(Es);";
-
-    #re-mask
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T I = I(Es) * N / N + N;",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T I = I(Es) * N / N + N;";
-
-    #re-mask
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T &I = * E;",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T &I = * E;";
-    translate-basic-declaration-to-rust("T &I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T &I = I();",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T &I = I();";
-    translate-basic-declaration-to-rust("T &I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T &I = I ? I: I;",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T &I = I ? I: I;";
-    translate-basic-declaration-to-rust("T &I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T &I = I;",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T &I = I;";
-    translate-basic-declaration-to-rust("T &I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T &I = * I;",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T &I = * I;";
-    translate-basic-declaration-to-rust("T &I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T &I = * I(Es);",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T &I = * I(Es);";
-    translate-basic-declaration-to-rust("T &I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
      "I = * E;",
     $item where Cpp::BasicDeclaration:D) 
 {
     debug "mask I = * E;";
+    die "check this dispatch";
 
     my $lhs = to-rust($item.init-declarator-list[0].declarator);
 
@@ -348,23 +211,11 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
-     "I = (I & ~ I) | I;",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    translate-basic-declaration-to-rust("I = L;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "I = (I ? E: I());",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    translate-basic-declaration-to-rust("I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
      "I = L;",
     $item where Cpp::BasicDeclaration:D) 
 {
+    die "check this dispatch";
+
     my $lhs 
     = to-rust(
         $item.init-declarator-list[0].declarator
@@ -391,6 +242,8 @@ multi sub translate-basic-declaration-to-rust(
     $item where Cpp::BasicDeclaration:D) 
 {
     debug "mask I[N] = N * N * N;";
+
+    die "check this dispatch";
 
     my $lhs = to-rust($item.init-declarator-list[0].declarator);
 
@@ -517,7 +370,7 @@ sub create-type-initializer($rust-type,$rust-params)
                 maybe-call-params => $rust-params,
             )
         ],
-    )
+    ).gist
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -558,7 +411,7 @@ multi sub translate-basic-declaration-to-rust(
 {
     debug "mask T I;";
 
-    my $rust-type  = to-rust($item.decl-specifier-seq);
+    my $rust-type  = to-rust-type($item.decl-specifier-seq);
     my $rust-ident = to-rust-ident($item.init-declarator-list[0], snake-case => True);
 
     my $default-initializer = create-default-initializer($rust-type);
@@ -641,35 +494,37 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
-    "T I = * I;",
+    "T (&I);",
     $item where Cpp::BasicDeclaration) 
 {
-    debug "mask T I = * I;";
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
+    debug "mask T (&I);";
 
-multi sub translate-basic-declaration-to-rust(
-    "T I = (T) I + I;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask T I = (T) I + I;";
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
+    my $path-in-expr = to-rust-path-in-expression($item.decl-specifier-seq.value);
 
-multi sub translate-basic-declaration-to-rust(
-    "T I = L;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask T I = L;";
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
+    my $rust-param = Rust::BorrowExpression.new(
+        borrow-expression-prefixes => [
+            Rust::BorrowExpressionPrefix.new(
+                borrow-count => 1,
+                mutable      => False,
+            )
+        ],
+        unary-expression => to-rust($item.init-declarator-list[0].pointer-declarator.no-pointer-declarator)
+    );
 
-multi sub translate-basic-declaration-to-rust(
-    "T I = L + E;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask T I = L + E;";
-    translate-basic-declaration-to-rust("T I = E;", $item)
+    Rust::ExpressionStatementNoBlock.new(
+        expression-noblock => Rust::SuffixedExpression.new(
+            base-expression => Rust::BaseExpression.new(
+                expression-item => $path-in-expr
+            ),
+            suffixed-expression-suffix => [
+                Rust::CallExpressionSuffix.new(
+                    maybe-call-params => [
+                        $rust-param
+                    ]
+                )
+            ]
+        )
+    )
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -797,59 +652,42 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
-    'I[I] = I(Es);',
+    "constexpr T I = E;",
     $item where Cpp::BasicDeclaration) 
 {
-    debug 'mask I[I] = I(Es);';
-    to-rust($item.init-declarator-list[0])
-}
+    debug "mask constexpr T I = E;";
 
-multi sub translate-basic-declaration-to-rust(
-    'T I{};',
-    $item where Cpp::BasicDeclaration) 
-{
-    debug 'mask T I{};';
-    translate-basic-declaration-to-rust('T I{E};', $item)
-}
+    my $idl = $item.init-declarator-list[0];
 
-multi sub translate-basic-declaration-to-rust(
-    'T I{I()};',
-    $item where Cpp::BasicDeclaration) 
-{
-    debug 'mask T I{I()};';
-    translate-basic-declaration-to-rust('T I{E};', $item)
-}
+    my $declarator 
+    = $idl.declarator;
 
-multi sub translate-basic-declaration-to-rust(
-    'T I{N};',
-    $item where Cpp::BasicDeclaration) 
-{
-    debug 'mask T I{N};';
-    translate-basic-declaration-to-rust('T I{E};', $item)
-}
+    my $initializer
+    = $idl.initializer;
 
-multi sub translate-basic-declaration-to-rust(
-    "T I = I();",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask T I = I();";
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
+    my $decl-specifier-seq 
+    = $item.decl-specifier-seq;
 
-multi sub translate-basic-declaration-to-rust(
-    "T I = E ? L: L + I + L;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask T I = E ? L: L + I + L; ";
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
+    my $rust-ident = to-rust-ident($declarator, snake-case => True);
+    my $rust-type  = to-rust-type($decl-specifier-seq.decl-specifiers[1..*]);
 
-multi sub translate-basic-declaration-to-rust(
-    "T I = (* I & I) ? L: E;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask T I = (* I & I) ? L: E;";
-    translate-basic-declaration-to-rust("T I = E;", $item)
+    my $rust-expr  
+    = to-rust($initializer.brace-or-equal-initializer);
+
+    Rust::CrateItem.new(
+        maybe-comment    => Nil,
+        outer-attributes => [],
+        item-variant => Rust::VisItem.new(
+            maybe-visibility => Rust::VisibilityPublic.new,
+            vis-item-variant => Rust::ConstantItem.new(
+                identifier-or-underscore => $rust-ident,
+                type                     => $rust-type,
+                maybe-init-expression    => Rust::InitExpression.new(
+                    expression => $rust-expr
+                ),
+            )
+        )
+    )
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -883,115 +721,26 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
-     "T *I = I(Es);",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T *I = I(Es);";
-    translate-basic-declaration-to-rust("T *I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "T *I = this;",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask T *I = this;";
-    translate-basic-declaration-to-rust("T *I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "I = I * I / N;",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask I = I * I / N;";
-    to-rust($item.init-declarator-list[0]);
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "I = - N;",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask I = - N;";
-    to-rust($item.init-declarator-list[0]);
-}
-
-multi sub translate-basic-declaration-to-rust(
-     "I[I][I] = - N;",
-    $item where Cpp::BasicDeclaration:D) 
-{
-    debug "mask I[I][I] = - N;";
-    to-rust($item.init-declarator-list[0])
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "T *I = E;",
+    "T I[E] = E;",
     $item where Cpp::BasicDeclaration) 
 {
-    debug "mask T *I = E;";
-    ddt $item;
+    my $arr-len     = to-rust($item.init-declarator-list[0].declarator.no-pointer-declarator-tail[0].constant-expression);
 
-    my Bool $do-type-deduction 
-    = $item.decl-specifier-seq.value ~~ Cpp::SimpleTypeSpecifier::Auto_;
+    my $rust-type = Rust::ArrayType.new(
+        type       => to-rust-type($item.decl-specifier-seq),
+        expression => $arr-len,
+    );
 
-    my $idl = $item.init-declarator-list[0];
+    my $rust-ident = to-rust($item.init-declarator-list[0].declarator.no-pointer-declarator-base);
+    my $rust-expr  = to-rust($item.init-declarator-list[0].initializer);
 
-    my $declarator 
-    = $idl.declarator;
-
-    my $initializer
-    = $idl.initializer;
-
-    my $rust-ident = to-rust-ident($declarator.no-pointer-declarator, snake-case => True);
-
-    my $rust-expr  
-    = to-rust($initializer.brace-or-equal-initializer.initializer-clause);
-
-    my $rust-let-stmt = do if $do-type-deduction {
-
-        debug "do type deduction";
-
-        Rust::LetStatement.new(
-            pattern-no-top-alt => $rust-ident,
-            maybe-type         => Nil,
-            maybe-expression   => $rust-expr,
-        )
-
-    } else {
-
-        debug "no type deduction";
-
-        my $decl-specifier-seq 
-        = $item.decl-specifier-seq;
-
-        my $rust-type  = to-rust-type($decl-specifier-seq);
-
-        Rust::LetStatement.new(
-            pattern-no-top-alt => $rust-ident,
-            maybe-type         => Rust::RawPtrType.new(
-                mutable        => True,
-                type-no-bounds => $rust-type,
-            ),
-            maybe-expression   => $rust-expr,
-        )
-    };
-
-    $rust-let-stmt
+    Rust::LetStatement.new(
+        pattern-no-top-alt => $rust-ident,
+        maybe-type         => $rust-type,
+        maybe-expression   => $rust-expr,
+    )
 }
 
-multi sub translate-basic-declaration-to-rust(
-    "I[N] = N;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask I[N] = N;";
-    translate-basic-declaration-to-rust("I[N] = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "I[N] = L;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask I[N] = L;";
-    translate-basic-declaration-to-rust("I[N] = E;", $item)
-}
 
 multi sub translate-basic-declaration-to-rust(
     "I[N] = E;",
@@ -1002,16 +751,20 @@ multi sub translate-basic-declaration-to-rust(
     my $lhs = $item.init-declarator-list[0]
     .declarator;
 
-    my $rhs = $item.init-declarator-list[0]
-    .initializer
-    .brace-or-equal-initializer
-    .initializer-clause;
-
     Rust::ExpressionStatementNoBlock.new(
         expression-noblock => Rust::AssignExpression.new(
             addeq-expressions => [
+
+                #lhs
                 to-rust-suffixed-expression($lhs),
-                to-rust-suffixed-expression($rhs),
+
+                #rhs
+                to-rust(
+                    $item.init-declarator-list[0]
+                    .initializer
+                    .brace-or-equal-initializer
+                    .initializer-clause
+                ),
             ]
         )
     )
@@ -1103,27 +856,13 @@ multi sub translate-basic-declaration-to-rust(
         }
     }
 }
-multi sub translate-basic-declaration-to-rust(
-    "I = I();",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask I = I();";
-    translate-basic-declaration-to-rust("I = I(Es);", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-    'I = {};',
-    $item where Cpp::BasicDeclaration) 
-{
-    debug 'mask I = {};';
-    translate-basic-declaration-to-rust("I = E;", $item)
-}
 
 multi sub translate-basic-declaration-to-rust(
     "I = I(Es);",
     $item where Cpp::BasicDeclaration) 
 {
     debug "mask I = I(Es);";
+    die "check this dispatch";
 
     my $lhs = to-rust($item.init-declarator-list[0].declarator);
     my $rhs = to-rust($item.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause);
@@ -1136,33 +875,6 @@ multi sub translate-basic-declaration-to-rust(
             ]
         )
     )
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "I[I] = I;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask I[I] = I;";
-
-    my $lhs = to-rust($item.init-declarator-list[0].declarator);
-    my $rhs = to-rust($item.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause);
-
-    Rust::ExpressionStatementNoBlock.new(
-        expression-noblock => Rust::AssignExpression.new(
-            addeq-expressions => [
-                $lhs,
-                $rhs,
-            ]
-        )
-    )
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "I[I][I] = I;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask I[I][I] = I;";
-    translate-basic-declaration-to-rust("I[I] = I;", $item)
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -1180,41 +892,6 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
-    "T I = I >> N;",
-    $item where Cpp::BasicDeclaration) 
-{
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "T I = (E + I - N) / I;",
-    $item where Cpp::BasicDeclaration) 
-{
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "T I = I * I;",
-    $item where Cpp::BasicDeclaration) 
-{
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "T I = (E + I + I - N) / I;",
-    $item where Cpp::BasicDeclaration) 
-{
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "T I = E + I;",
-    $item where Cpp::BasicDeclaration) 
-{
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
     "I[E] = E;",
     $item where Cpp::BasicDeclaration) 
 {
@@ -1229,48 +906,6 @@ multi sub translate-basic-declaration-to-rust(
             ]
         )
     )
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "I = L + I;",
-    $item where Cpp::BasicDeclaration) 
-{
-    translate-basic-declaration-to-rust("I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "I = L + E;",
-    $item where Cpp::BasicDeclaration) 
-{
-    translate-basic-declaration-to-rust("I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "I = I + L;",
-    $item where Cpp::BasicDeclaration) 
-{
-    translate-basic-declaration-to-rust("I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "I = I + N;",
-    $item where Cpp::BasicDeclaration) 
-{
-    translate-basic-declaration-to-rust("I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "I = N;",
-    $item where Cpp::BasicDeclaration) 
-{
-    translate-basic-declaration-to-rust("I = E;", $item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "I = E + E;",
-    $item where Cpp::BasicDeclaration) 
-{
-    translate-basic-declaration-to-rust("I = E;", $item)
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -1314,43 +949,6 @@ sub emit-basic-let-statement($item where Cpp::BasicDeclaration) {
 }
 
 multi sub translate-basic-declaration-to-rust(
-    "T I = E * N / N + N;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask T I = E * N / N + N; ";
-
-    emit-basic-let-statement($item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "T I = N;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask T I = N;";
-
-    emit-basic-let-statement($item)
-}
-
-multi sub translate-basic-declaration-to-rust(
-    "I = I;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask I = I;";
-
-    my $lhs = to-rust($item.init-declarator-list[0].declarator);
-    my $rhs = to-rust($item.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause);
-
-    Rust::ExpressionStatementNoBlock.new(
-        expression-noblock => Rust::AssignExpression.new(
-            addeq-expressions => [
-                $lhs,
-                $rhs,
-            ]
-        )
-    )
-}
-
-multi sub translate-basic-declaration-to-rust(
     "I[I] = E;",
     $item where Cpp::BasicDeclaration) 
 {
@@ -1364,60 +962,70 @@ multi sub translate-basic-declaration-to-rust(
         $item.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause
     );
 
-    Rust::AssignExpression.new(
-        addeq-expressions => [
-            $rust-lhs,
-            $rust-rhs,
-        ]
+    Rust::ExpressionStatementNoBlock.new(
+        expression-noblock => Rust::AssignExpression.new(
+            addeq-expressions => [
+                $rust-lhs,
+                $rust-rhs,
+            ]
+        )
     )
 }
 
+#--------------------------------
 multi sub translate-basic-declaration-to-rust(
-    "I[I] = (I >> (N * (N - I))) & N;",
+    "T *I = E;",
     $item where Cpp::BasicDeclaration) 
 {
-    debug "mask I[I] = (I >> (N * (N - I))) & N;";
-    translate-basic-declaration-to-rust("I[I] = E;", $item)
-}
+    debug "mask T *I = E;";
+    ddt $item;
 
-multi sub translate-basic-declaration-to-rust(
-    "T T I = E;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask T T I = E;";
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
+    my Bool $do-type-deduction 
+    = $item.decl-specifier-seq.value ~~ Cpp::SimpleTypeSpecifier::Auto_;
 
-multi sub translate-basic-declaration-to-rust(
-    "T I = I;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask T I = I;";
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
+    my $idl = $item.init-declarator-list[0];
 
-multi sub translate-basic-declaration-to-rust(
-    "T I = (T) I(Es);",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask T I = (T) I(Es);";
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
+    my $declarator 
+    = $idl.declarator;
 
-multi sub translate-basic-declaration-to-rust(
-    "T I = I + I(Es);",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask T I = I + I(Es);";
-    translate-basic-declaration-to-rust("T I = E;", $item)
-}
+    my $initializer
+    = $idl.initializer;
 
-multi sub translate-basic-declaration-to-rust(
-    "I[I] = I >> N;",
-    $item where Cpp::BasicDeclaration) 
-{
-    debug "mask I[I] = I >> N;";
-    translate-basic-declaration-to-rust("I[I] = E;", $item)
+    my $rust-ident = to-rust-ident($declarator.no-pointer-declarator, snake-case => True);
+
+    my $rust-expr  
+    = to-rust($initializer.brace-or-equal-initializer.initializer-clause);
+
+    my $rust-let-stmt = do if $do-type-deduction {
+
+        debug "do type deduction";
+
+        Rust::LetStatement.new(
+            pattern-no-top-alt => $rust-ident,
+            maybe-type         => Nil,
+            maybe-expression   => $rust-expr,
+        )
+
+    } else {
+
+        debug "no type deduction";
+
+        my $decl-specifier-seq 
+        = $item.decl-specifier-seq;
+
+        my $rust-type  = to-rust-type($decl-specifier-seq);
+
+        Rust::LetStatement.new(
+            pattern-no-top-alt => $rust-ident,
+            maybe-type         => Rust::RawPtrType.new(
+                mutable        => True,
+                type-no-bounds => $rust-type,
+            ),
+            maybe-expression   => $rust-expr,
+        )
+    };
+
+    $rust-let-stmt
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -1426,6 +1034,8 @@ multi sub translate-basic-declaration-to-rust(
 {
     debug "mask T *I = & E;";
     #ddt $item;
+
+    die "check this dispatch";
 
     my $rust-type = Rust::RawPtrType.new(
         mutable        => $item.decl-specifier-seq.is-mutable(),

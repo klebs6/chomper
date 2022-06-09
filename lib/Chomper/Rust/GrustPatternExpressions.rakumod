@@ -79,6 +79,7 @@ package PatternGrammar is export {
 
         #---------------------
         proto rule pattern-without-range { * }
+        rule pattern-without-range:sym<struct>           { <struct-pattern>       } 
         rule pattern-without-range:sym<tuple-struct>     { <tuple-struct-pattern> } 
         rule pattern-without-range:sym<identifier>       { <identifier-pattern>   } 
         rule pattern-without-range:sym<path>             { <path-pattern>         } 
@@ -86,7 +87,15 @@ package PatternGrammar is export {
         rule pattern-without-range:sym<wildcard>         { <wildcard-pattern>     } 
         rule pattern-without-range:sym<rest>             { <rest-pattern>         } 
         rule pattern-without-range:sym<ref>              { <reference-pattern>    } 
-        rule pattern-without-range:sym<struct>           { <struct-pattern>       } 
+
+        #struct pattern *was* here (after
+        #reference-pattern, before
+        #tuple-pattern). i dont quite remember
+        #whether or not this will break anything.
+        #at the moment it is now at the highest
+        #position because of a bug in the rust
+        #match-arm processing
+
         rule pattern-without-range:sym<tuple>            { <tuple-pattern>        } 
         rule pattern-without-range:sym<grouped>          { <grouped-pattern>      } 
         rule pattern-without-range:sym<slice>            { <slice-pattern>        } 

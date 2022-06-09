@@ -291,7 +291,7 @@ package InitializerClause is export {
 
             if $c {
 
-                $c.gist(:$treemark) ~ "\n" ~ $.x.gist(:$treemark)
+                $c.gist(:$treemark) ~ "\n" ~ $x.gist(:$treemark)
 
             } else {
 

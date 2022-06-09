@@ -36,6 +36,12 @@ multi sub to-rust-param($x where Cpp::IntegerLiteral::Hex) {
     ).gist
 }
 
+multi sub to-rust-param($x where Cpp::FloatingLiteral::Frac) {  
+    Rust::FloatLiteral.new(
+        value => $x.fractionalconstant.value,
+    ).gist
+}
+
 multi sub to-rust-param($x where Cpp::CharacterLiteral) {  
     Rust::CharLiteral.new(
         value => $x.gist,
@@ -47,7 +53,22 @@ multi sub to-rust-param($x where Cpp::PostfixExpression) {
     to-rust($x)
 }
 
+multi sub to-rust-param($x where Cpp::InitializerClause::Braced) {
+
+    my $body    = to-rust-param($x.braced-init-list);
+    my $comment = to-rust($x.comment);
+
+    Rust::CommentWrapped.new(
+        maybe-comment => $comment,
+        wrapped       => $body,
+    )
+}
+
 multi sub to-rust-param($x where Cpp::UnaryExpressionCase::UnaryOp) {  
+    to-rust($x)
+}
+
+multi sub to-rust-param($x where Cpp::ShiftExpression) {  
     to-rust($x)
 }
 
@@ -62,7 +83,7 @@ multi sub to-rust-param($x where Cpp::StringLiteral) {
 }
 
 multi sub to-rust-param($x where Cpp::PrimaryExpression::Id) {  
-    to-rust-ident($x.id-expression, snake-case => True)
+    to-rust-ident($x.id-expression, snake-case => True).gist
 }
 
 multi sub to-rust-param($x where Cpp::LambdaExpression) {  
@@ -146,14 +167,24 @@ our sub rust-default-default {
     )
 }
 
+multi sub to-rust-param($item where Cpp::DecimalLiteral) {
+    to-rust($item)
+}
+
+multi sub to-rust-param($item where Cpp::UserDefinedIntegerLiteral::Dec) {
+    to-rust($item)
+}
+
 multi sub to-rust-param(
     $item where Cpp::BracedInitList)
 {
-    if not $item.initializer-list.Bool {
+    my $res = do if not $item.initializer-list.Bool {
         rust-default-default()
     } else {
         to-rust($item)
-    }
+    };
+
+    $res.gist
 }
 
 multi sub to-rust-param(

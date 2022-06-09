@@ -12,6 +12,10 @@ package DeclSpecifier is export {
         method name {
             'DeclSpecifier::Friend'
         }
+
+        method gist {
+            "friend"
+        }
     }
 
     our class Typedef does IDeclSpecifier { 
@@ -19,12 +23,20 @@ package DeclSpecifier is export {
         method name {
             'DeclSpecifier::Typedef'
         }
+
+        method gist {
+            "typedef"
+        }
     }
 
     our class Constexpr does IDeclSpecifier { 
 
         method name {
             'DeclSpecifier::Constexpr'
+        }
+
+        method gist {
+            "constexpr"
         }
     }
 }

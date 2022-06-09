@@ -5,6 +5,10 @@ use Chomper::ToRust;
 use Chomper::SnakeCase;
 use Data::Dump::Tree;
 
+our sub is-all-caps($id) returns Bool {
+    $id eq $id.uc
+}
+
 proto sub to-rust-ident(
     $x, 
     Bool :$snake-case) is export { * }
@@ -16,7 +20,7 @@ returns Rust::Identifier
 {
     my $value = $x.value;
 
-    if $snake-case {
+    if $snake-case and not is-all-caps($value) {
         $value = snake-case($value);
     }
 

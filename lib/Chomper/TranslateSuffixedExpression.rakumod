@@ -8,6 +8,7 @@ use Chomper::ToRustParams;
 use Chomper::ToRustPathInExpression;
 
 use Chomper::TranslateIndexExpressionSuffix;
+use Chomper::TranslatePostfixExpression;
 
 use Data::Dump::Tree;
 
@@ -36,6 +37,15 @@ multi sub to-rust-suffixed-expression($item where Cpp::NoPointerDeclarator) {
             die "need to consider token-types: $_";
         }
     }
+}
+
+multi sub to-rust-suffixed-expression($item where Cpp::PostfixExpression) {  
+    translate-postfix-expression($item, $item.token-types)
+}
+
+multi sub to-rust-suffixed-expression($item where Cpp::InclusiveOrExpression) {  
+    ddt $item;
+    exit;
 }
 
 multi sub to-rust-suffixed-expression($item where Cpp::IntegerLiteral::Dec) {  

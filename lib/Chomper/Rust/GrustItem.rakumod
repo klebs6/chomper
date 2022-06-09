@@ -64,7 +64,7 @@ class InitExpression is export {
     has $.text;
 
     method gist {
-        "= " ~ $.expression.gist
+        " = " ~ $.expression.gist
     }
 }
 

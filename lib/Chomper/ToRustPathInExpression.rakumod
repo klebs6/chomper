@@ -108,6 +108,20 @@ returns Rust::PathInExpression
 }
 
 multi sub to-rust-path-in-expression(
+    $x where Cpp::IntegerLiteral::Hex, 
+    Bool :$snake-case) 
+returns Rust::PathInExpression 
+{
+    my @segments;
+
+    @segments.push: to-rust-path-expr-segment($x, :$snake-case);
+
+    Rust::PathInExpression.new(
+        path-expr-segments => @segments,
+    )
+}
+
+multi sub to-rust-path-in-expression(
     $x where Cpp::ConstantExpression, 
     Bool :$snake-case) 
 returns Rust::PathInExpression 

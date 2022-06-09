@@ -5,6 +5,12 @@ use Chomper::SegmentRemoveDuplicates;
 use Chomper::Locations;
 
 our sub snake-case($name, $remove-dup = False) {
+
+    #this is what we want most of the time
+    if $name eq $name.uc {
+        return $name;
+    }
+
     my $input = $name;
 
     my $result = $name;

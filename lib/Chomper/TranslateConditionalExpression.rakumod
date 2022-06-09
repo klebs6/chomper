@@ -31,6 +31,14 @@ multi sub translate-conditional-expression($item where Cpp::AdditiveExpression) 
     to-rust($item)
 }
 
+multi sub translate-conditional-expression($item where Cpp::InclusiveOrExpression) {  
+    to-rust($item)
+}
+
+multi sub translate-conditional-expression($item where Cpp::AndExpression) {  
+    to-rust($item)
+}
+
 multi sub translate-conditional-expression($item) {  
     die "need write hook for \
     translate-conditional-expression! {$item.WHAT.^name}";

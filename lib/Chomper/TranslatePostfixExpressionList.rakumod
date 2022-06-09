@@ -132,6 +132,37 @@ multi sub translate-postfix-expression-list(
 
 multi sub translate-postfix-expression-list(
     $item, 
+    ["FullTypeName","Braces"]) 
+{  
+    my $expr-item 
+    = to-rust-type($item.post-list-head);
+
+    my $expr-list = do if $item.post-list-tail.value {
+
+        to-rust($item.post-list-tail.value.initializer-list)
+
+    } else {
+
+        Nil
+    };
+
+    my $rust = Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            outer-attributes => [ ],
+            expression-item  => $expr-item,
+        ),
+        suffixed-expression-suffix => [
+            Rust::CallExpressionSuffix.new(
+                maybe-call-params => $expr-list,
+            )
+        ],
+    );
+
+    $rust.gist
+}
+
+multi sub translate-postfix-expression-list(
+    $item, 
     [
         'SimpleTemplateId', 
         'Parens',

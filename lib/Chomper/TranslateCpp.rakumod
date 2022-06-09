@@ -228,7 +228,7 @@ multi sub to-rust(
     Rust::CastExpression.new(
         borrow-expression => to-rust($item.unary-expression),
         cast-targets      => $item.the-type-ids>>.&to-rust-type,
-    )
+    ).gist
 }
 
 multi sub to-rust(
@@ -472,7 +472,67 @@ multi sub to-rust(
 {
     use Chomper::TranslateBasicDeclaration;
     debug "will translate BasicDeclaration to Rust!";
+
     my $mask = $item.gist(treemark => True);
+
+    given $mask {
+        when /^^ 'T I = ' / {
+            $mask = "T I = E;";
+        }
+
+        when /^^ 'constexpr T I = ' / {
+            $mask = "constexpr T I = E;";
+        }
+
+        when /^^ 'I = ' / {
+            $mask = "I = E;";
+        }
+
+        when /^^ 'T T I = ' / {
+            $mask = "T I = E;";
+        }
+
+        when /^^ 'T &I = ' / {
+            $mask = "T &I = E;";
+        }
+
+        when /^^ 'T *I = ' / {
+            $mask = "T *I = E;";
+        }
+
+        when /^^ 'I[I] = ' / {
+            $mask = "I[I] = E;";
+        }
+
+        when /^^ 'I[I][I] = ' / {
+            $mask = "I[I][I] = E;";
+        }
+
+        when /^^ 'I[N] = ' / {
+            $mask = "I[N] = E;";
+        }
+
+        when /^^ 'I[I + N] = ' / {
+            $mask = "I[E] = E;";
+        }
+
+        when /^^ 'I[I | N] = ' / {
+            $mask = "I[E] = E;";
+        }
+
+        when /^^ 'I[I & ~ N] = ' / {
+            $mask = "I[E] = E;";
+        }
+
+        when /^^ 'T T I[N] = ' / {
+            $mask = "T I[E] = E;";
+        }
+
+        when /^^ 'T I{' .* '};' / {
+            $mask = 'T I{E};';
+        }
+    }
+
     translate-basic-declaration-to-rust($mask, $item)
 }
 
@@ -1082,23 +1142,7 @@ multi sub to-rust(
     )
 }
 
-multi sub to-rust($item where Cpp::TryBlock)
-{
-    debug "will translate TryBlock to Rust!";
-
-    die "try block with more than one handler unimplemented" 
-    if not $item.handler-seq.List.elems eq 1;
-
-    my @try-these        = $item.compound-statement.statement-seq.List>>.&to-rust;
-    my @do-these-if-fail = $item.handler-seq[0].compound-statement.statement-seq.List>>.&to-rust;
-
-    my $declarator = $item.handler-seq[0].exception-declaration.some-declarator;
-
-    my $catch-variable = $declarator !~~ Cpp::PointerOperator::Ref 
-    ?? $declarator.no-pointer-declarator.&to-rust
-    !! "e"; 
-
-    my $inferred-type = Rust::InferredType.new;
+our sub create-static-str-ref {
 
     my $static-lifetime = Rust::Lifetime.new(
         lifetime-or-label => Rust::LifetimeOrLabel.new(
@@ -1122,6 +1166,88 @@ multi sub to-rust($item where Cpp::TryBlock)
         type-no-bounds => $str-type,
     );
 
+    $static-string-ref
+}
+
+our sub create-closure-throwable-error {
+    create-static-str-ref()
+}
+
+our sub construct-new-object(:$typename, :$initializer, :$ctor-name = "new") {
+
+    Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            outer-attributes => [],
+            expression-item => Rust::PathInExpression.new(
+                path-expr-segments => [
+                    Rust::PathExprSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => $typename,
+                        )
+                    ),
+                    Rust::PathExprSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => $ctor-name,
+                        )
+                    ),
+                ]
+            ),
+        ),
+        suffixed-expression-suffix => [
+            Rust::CallExpressionSuffix.new(
+                maybe-call-params => [
+                    Rust::SuffixedExpression.new(
+                        base-expression => Rust::BaseExpression.new(
+                            expression-item => $initializer
+                        )
+                    )
+                ]
+            )
+        ]
+    )
+}
+
+multi sub to-rust($item where Cpp::DecimalLiteral) {
+    Rust::IntegerLiteral.new(
+        value => $item.value
+    )
+}
+
+multi sub to-rust($item where Cpp::UserDefinedIntegerLiteral::Dec) {
+    my $decimal-literal = to-rust($item.decimal-literal);
+    my $suffix          = $item.suffix.value;
+
+    given $suffix {
+        when "s" {
+            construct-new-object(typename => "Seconds", initializer => $decimal-literal)
+        }
+        default {
+            die "unknown userdefined integer literal suffix! $suffix";
+        }
+    }
+
+}
+
+multi sub to-rust($item where Cpp::TryBlock)
+{
+    debug "will translate TryBlock to Rust!";
+
+    die "try block with more than one handler unimplemented" 
+    if not $item.handler-seq.List.elems eq 1;
+
+    my @try-these        = $item.compound-statement.statement-seq.List>>.&to-rust;
+    my @do-these-if-fail = $item.handler-seq[0].compound-statement.statement-seq.List>>.&to-rust;
+
+    my $declarator = $item.handler-seq[0].exception-declaration.some-declarator;
+
+    my $catch-variable = $declarator !~~ Cpp::PointerOperator::Ref 
+    ?? $declarator.no-pointer-declarator.&to-rust
+    !! "e"; 
+
+    my $inferred-type = Rust::InferredType.new;
+
+    my $closure-throwable-error = create-closure-throwable-error();
+
     my $closure-return-type = Rust::TypePath.new(
         type-path-segments => [
             Rust::TypePathSegment.new(
@@ -1132,7 +1258,7 @@ multi sub to-rust($item where Cpp::TryBlock)
                     generic-args => Rust::GenericArgs.new(
                         args => [
                             $inferred-type,
-                            $static-string-ref,
+                            $closure-throwable-error,
                         ],
                     ),
                 ),
