@@ -545,9 +545,41 @@ multi sub to-rust(
             $mask = 'T I{E};';
         }
 
+        when /^^ 'T &I{' .* '};' / {
+            $mask = 'T &I{E};';
+        }
+
     }
 
     translate-basic-declaration-to-rust($mask, $item)
+}
+
+multi sub to-rust($x where Cpp::NewExpression::NewTypeId) {
+
+    my $rust-type = to-rust-type($x.new-type-id);
+
+    Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            outer-attributes => [],
+            expression-item => Rust::PathInExpression.new(
+                path-expr-segments => [
+                    Rust::PathExprSegment.new(
+                        path-ident-segment => $rust-type,
+                    ),
+                    Rust::PathExprSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => "new",
+                        )
+                    ),
+                ]
+            )
+        ),
+        suffixed-expression-suffix => [
+            Rust::CallExpressionSuffix.new(
+                maybe-call-params => Nil,
+            )
+        ]
+    )
 }
 
 multi sub to-rust($item where Cpp::UnaryExpressionCase::Sizeof)
@@ -1289,17 +1321,25 @@ multi sub to-rust($item where Cpp::UserDefinedIntegerLiteral::Dec) {
             die "unknown userdefined integer literal suffix! $suffix";
         }
     }
+}
 
+our sub create-rust-recovery-block-from-cpp-exception-handler-seq(@handler-seq) {
+
+    Rust::BlockExpression.new(
+        statements => Rust::Statements.new(
+            statements => @recovery-block-stmts,
+        ),
+    )
 }
 
 multi sub to-rust($item where Cpp::TryBlock)
 {
     debug "will translate TryBlock to Rust!";
 
-    die "try block with more than one handler unimplemented" 
-    if not $item.handler-seq.List.elems eq 1;
+    #die "try block with more than one handler unimplemented" if not $item.handler-seq.List.elems eq 1;
 
     my @try-these        = $item.compound-statement.statement-seq.List>>.&to-rust;
+
     my @do-these-if-fail = $item.handler-seq[0].compound-statement.statement-seq.List>>.&to-rust;
 
     my $declarator = $item.handler-seq[0].exception-declaration.some-declarator;
@@ -1307,6 +1347,8 @@ multi sub to-rust($item where Cpp::TryBlock)
     my $catch-variable = $declarator !~~ Cpp::PointerOperator::Ref 
     ?? $declarator.no-pointer-declarator.&to-rust
     !! "e"; 
+
+    my $recovery-block = create-rust-recovery-block-from-cpp-exception-handler-seq($item.handler-seq);
 
     my $inferred-type = Rust::InferredType.new;
 
@@ -1396,12 +1438,6 @@ multi sub to-rust($item where Cpp::TryBlock)
                     maybe-call-params => Nil,
                 )
             ]
-        ),
-    );
-
-    my $recovery-block = Rust::BlockExpression.new(
-        statements => Rust::Statements.new(
-            statements => @do-these-if-fail,
         ),
     );
 

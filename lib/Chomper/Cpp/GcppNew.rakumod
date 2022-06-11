@@ -43,9 +43,13 @@ package NewExpression is export {
 
             $builder ~= $.new-type-id.gist(:$treemark);
 
+            $builder ~= " (";
+
             if $.new-initializer {
-                $builder ~= " (" ~ $.new-initializer.gist(:$treemark) ~ ")";
+                $builder ~= $.new-initializer.gist(:$treemark);
             }
+
+            $builder ~= ")";
 
             $builder
         }

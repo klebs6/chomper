@@ -85,6 +85,7 @@ class TypeSpecifier
 does ITheTypeId
 does IDeclSpecifier
 does ITypeSpecifierSeq
+does INewTypeId
 does IDeclSpecifierSeq is export {
     has $.value is required;
 

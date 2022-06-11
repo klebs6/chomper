@@ -40,6 +40,10 @@ multi sub to-rust-param($x where Cpp::UnaryExpressionCase::Sizeof) {
     to-rust($x)
 }
 
+multi sub to-rust-param($x where Cpp::NewExpression::NewTypeId) {
+    to-rust($x)
+}
+
 multi sub to-rust-param($x where Cpp::IntegerLiteral::Hex) {  
     Rust::IntegerLiteral.new(
         value => $x.hexadecimal-literal.value,
