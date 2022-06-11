@@ -4,6 +4,8 @@ use Chomper::Rust;
 use Chomper::DefaultInitializer;
 use Chomper::ToRust;
 use Chomper::ToRustIdent;
+use Chomper::SuffixedExpression;
+use Chomper::MatchArms;
 use Chomper::ToRustBlockExpression;
 use Chomper::ToRustType;
 use Chomper::ToRustPathInExpression;
@@ -142,6 +144,14 @@ multi sub to-rust(
     Rust::ExpressionStatementNoBlock.new(
         maybe-comment      => to-rust($item.comment),
         expression-noblock => to-rust($item.attributed-statement-body),
+    )
+}
+
+our sub empty-block {
+    Rust::BlockExpression.new(
+        statements => Rust::Statements.new(
+            statements => [],
+        )
     )
 }
 
@@ -1323,13 +1333,74 @@ multi sub to-rust($item where Cpp::UserDefinedIntegerLiteral::Dec) {
     }
 }
 
+proto sub extract-varname($declarator) { * }
+
+multi sub extract-varname($declarator where Cpp::PointerDeclarator) {
+    $declarator.no-pointer-declarator.value
+}
+
+our sub match-on-filtered-error-list(@handler-seq) {
+
+    #we will build this from the input list
+    my $match-arms = Rust::MatchArms.new(
+        items => [],
+    );
+
+    my Bool $added-default-case = False;
+
+    for @handler-seq -> $handler {
+        my $exception-declaration = $handler.exception-declaration;
+        my $block                 = to-rust($handler.compound-statement);
+
+        if $exception-declaration ~~ Cpp::ExceptionDeclaration::Ellipsis {
+
+            $match-arms.items.push: create-default-match-arm(:$block);
+            $added-default-case = True;
+
+        } else {
+            die "handle this" if not $exception-declaration ~~ Cpp::BasicExceptionDeclaration;
+            ddt $exception-declaration;
+            my $rust-type    = to-rust-type($exception-declaration.type-specifier-seq);
+            my $what-varname = extract-varname($exception-declaration.some-declarator);
+            $match-arms.items.push: create-exception-unpacking-match-arm(:$rust-type,:$what-varname,:$block);
+        }
+    }
+
+    if not $added-default-case {
+        $match-arms.items.push: create-default-match-arm(block => empty-block());
+        $added-default-case = True;
+    }
+
+    Rust::MatchExpression.new(
+        scrutinee        => create-basic-match-scrutinee(single-variable => "e"),
+        inner-attributes => [],
+        maybe-match-arms => $match-arms,
+    )
+}
+
+#need rewrite this for multiple catch blocks
 our sub create-rust-recovery-block-from-cpp-exception-handler-seq(@handler-seq) {
 
-    Rust::BlockExpression.new(
-        statements => Rust::Statements.new(
-            statements => @recovery-block-stmts,
-        ),
-    )
+    if @handler-seq.elems eq 1 {
+
+        my @do-these-if-fail = @handler-seq[0].compound-statement.statement-seq.List>>.&to-rust;
+
+        Rust::BlockExpression.new(
+            statements => Rust::Statements.new(
+                statements => @do-these-if-fail,
+            ),
+        )
+
+    } else {
+
+        Rust::BlockExpression.new(
+            statements => Rust::Statements.new(
+                statements => [
+                    match-on-filtered-error-list(@handler-seq),
+                ],
+            ),
+        )
+    }
 }
 
 multi sub to-rust($item where Cpp::TryBlock)
@@ -1339,14 +1410,6 @@ multi sub to-rust($item where Cpp::TryBlock)
     #die "try block with more than one handler unimplemented" if not $item.handler-seq.List.elems eq 1;
 
     my @try-these        = $item.compound-statement.statement-seq.List>>.&to-rust;
-
-    my @do-these-if-fail = $item.handler-seq[0].compound-statement.statement-seq.List>>.&to-rust;
-
-    my $declarator = $item.handler-seq[0].exception-declaration.some-declarator;
-
-    my $catch-variable = $declarator !~~ Cpp::PointerOperator::Ref 
-    ?? $declarator.no-pointer-declarator.&to-rust
-    !! "e"; 
 
     my $recovery-block = create-rust-recovery-block-from-cpp-exception-handler-seq($item.handler-seq);
 
