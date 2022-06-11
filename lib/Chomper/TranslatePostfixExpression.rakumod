@@ -273,6 +273,42 @@ multi sub translate-postfix-expression(
     [
         'PrimaryExpression::Id',
         'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::IndirectionId',
+        'PostfixExpressionTail::Parens',
+    ]) 
+{ 
+    my $body = $item.postfix-expression-body.id-expression;
+    my @tail = $item.postfix-expression-tail;
+
+    my $rust-bracket-expr-a = to-rust(@tail[0].bracket-tail.expression);
+    my $rust-bracket-expr-b = to-rust(@tail[1].bracket-tail.expression);
+    my $indirection-id      = @tail[2];
+    my $expr-list           = @tail[3].expression-list;
+
+    my $params 
+    = $expr-list ?? to-rust-params($expr-list)>>.gist.join(", ") !! "";
+
+    my $ident 
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
+
+    my $func 
+    = snake-case(to-rust($indirection-id.id-expression).gist);
+
+    my Bool $indirect = $indirection-id.indirect;
+
+    if $indirect {
+        "(*{$ident}[$rust-bracket-expr-a][$rust-bracket-expr-b]).{$func}({$params})"
+    } else {
+        "{$ident}[$rust-bracket-expr-a][$rust-bracket-expr-b].{$func}({$params})"
+    }
+}
+
+multi sub translate-postfix-expression(
+    $item, 
+    [
+        'PrimaryExpression::Id',
+        'PostfixExpressionTail::Bracket',
         'PostfixExpressionTail::IndirectionId',
         'PostfixExpressionTail::Parens',
     ]) 
@@ -684,7 +720,6 @@ multi sub translate-postfix-expression(
     ).gist
 }
 
-
 multi sub translate-postfix-expression(
     $item, 
     [
@@ -713,6 +748,161 @@ multi sub translate-postfix-expression(
     } else {
         "{$list}.{$func}({$params})"
     }
+}
+
+multi sub translate-postfix-expression(
+    $item, 
+    [
+        'PostfixExpressionList',
+        'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::Bracket',
+    ]) 
+{ 
+    my $list = to-rust($item.postfix-expression-body).gist;
+
+    my @tail = $item.postfix-expression-tail;
+
+    my $rust-bracket-expr-a = to-rust(@tail[0].bracket-tail.expression);
+    my $rust-bracket-expr-b = to-rust(@tail[1].bracket-tail.expression);
+
+    "{$list}.[{$rust-bracket-expr-a}][{$rust-bracket-expr-b}]"
+}
+
+multi sub translate-postfix-expression(
+    $item, 
+    [
+        'PrimaryExpression::Id',
+        'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::Bracket',
+    ]) 
+{ 
+    my $body = to-rust($item.postfix-expression-body).gist;
+
+    my $ident 
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
+
+    my @tail = $item.postfix-expression-tail;
+
+    my $rust-bracket-expr-a = to-rust(@tail[0].bracket-tail.expression);
+    my $rust-bracket-expr-b = to-rust(@tail[1].bracket-tail.expression);
+    my $rust-bracket-expr-c = to-rust(@tail[2].bracket-tail.expression);
+
+    "{$ident}.[{$rust-bracket-expr-a}][{$rust-bracket-expr-b}][{$rust-bracket-expr-c}]"
+}
+
+multi sub translate-postfix-expression(
+    $item, 
+    [
+        'PrimaryExpression::Id',
+        'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::Bracket',
+    ]) 
+{ 
+    my $body = to-rust($item.postfix-expression-body).gist;
+
+    my $ident 
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
+
+    my @tail = $item.postfix-expression-tail;
+
+    my $rust-bracket-expr-a = to-rust(@tail[0].bracket-tail.expression);
+    my $rust-bracket-expr-b = to-rust(@tail[1].bracket-tail.expression);
+    my $rust-bracket-expr-c = to-rust(@tail[2].bracket-tail.expression);
+    my $rust-bracket-expr-d = to-rust(@tail[3].bracket-tail.expression);
+
+    "{$ident}[{$rust-bracket-expr-a}][{$rust-bracket-expr-b}][{$rust-bracket-expr-c}][{$rust-bracket-expr-d}]"
+}
+
+multi sub translate-postfix-expression(
+    $item, 
+    [
+        'PrimaryExpression::Id',
+        'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::IndirectionId',
+        'PostfixExpressionTail::Parens',
+    ]) 
+{ 
+    my $body = to-rust($item.postfix-expression-body).gist;
+
+    my $ident 
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
+
+    my @tail = $item.postfix-expression-tail;
+
+    my $rust-bracket-expr-a = to-rust(@tail[0].bracket-tail.expression);
+    my $rust-bracket-expr-b = to-rust(@tail[1].bracket-tail.expression);
+    my $rust-bracket-expr-c = to-rust(@tail[2].bracket-tail.expression);
+
+    my $indirection-id = @tail[3];
+    my $expr-list      = @tail[4].expression-list;
+
+    my $params 
+    = $expr-list ?? to-rust-params($expr-list)>>.gist.join(", ") !! "";
+
+    my $func 
+    = snake-case(to-rust($indirection-id.id-expression).gist);
+
+    my Bool $indirect = $indirection-id.indirect;
+
+    my $builder = $ident;
+    $builder = "{$builder}[{$rust-bracket-expr-a}][{$rust-bracket-expr-b}][{$rust-bracket-expr-c}]";
+    $builder = postfix-expr-append-func($builder,$func,$params,$indirect);
+    $builder
+}
+
+multi sub translate-postfix-expression(
+    $item, 
+    [
+        'PrimaryExpression::Id',
+        'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::IndirectionId',
+        'PostfixExpressionTail::Parens',
+        'PostfixExpressionTail::IndirectionId',
+        'PostfixExpressionTail::Parens',
+    ]) 
+{ 
+    my $body = to-rust($item.postfix-expression-body).gist;
+
+    my $ident 
+    = snake-case(to-rust-ident($body, snake-case => True).gist);
+
+    my @tail = $item.postfix-expression-tail;
+
+    my $rust-bracket-expr-a = to-rust(@tail[0].bracket-tail.expression);
+    my $rust-bracket-expr-b = to-rust(@tail[1].bracket-tail.expression);
+
+    my $indirection-id-a = @tail[2];
+    my $expr-list-a      = @tail[3].expression-list;
+
+    my $indirection-id-b = @tail[4];
+    my $expr-list-b      = @tail[5].expression-list;
+
+    my $params-a 
+    = $expr-list-a ?? to-rust-params($expr-list-a)>>.gist.join(", ") !! "";
+
+    my $params-b 
+    = $expr-list-b ?? to-rust-params($expr-list-b)>>.gist.join(", ") !! "";
+
+    my $func-a 
+    = snake-case(to-rust($indirection-id-a.id-expression).gist);
+
+    my $func-b 
+    = snake-case(to-rust($indirection-id-b.id-expression).gist);
+
+    my Bool $indirect-a = $indirection-id-a.indirect;
+    my Bool $indirect-b = $indirection-id-b.indirect;
+
+    my $builder = $ident;
+    $builder = "{$builder}.[{$rust-bracket-expr-a}][{$rust-bracket-expr-b}]";
+    $builder = postfix-expr-append-func($builder,$func-a,$params-a,$indirect-a);
+    $builder = postfix-expr-append-func($builder,$func-b,$params-b,$indirect-b);
+    $builder
 }
 
 multi sub translate-postfix-expression(
@@ -1280,10 +1470,10 @@ multi sub translate-postfix-expression(
     $item, 
     [
         'PrimaryExpression::Id',
-        'PostfixExpressionTail::IndirectionId',
-        'PostfixExpressionTail::Parens',
 
         'PostfixExpressionTail::Bracket',
+        'PostfixExpressionTail::IndirectionId',
+        'PostfixExpressionTail::Parens',
         'PostfixExpressionTail::IndirectionId',
         'PostfixExpressionTail::Parens',
     ]) 
@@ -1293,10 +1483,10 @@ multi sub translate-postfix-expression(
 
     my @tail = $item.postfix-expression-tail;
 
-    my $indirection-idA = @tail[0];
-    my $expr-listA      = @tail[1].expression-list;
+    my $bracketed-expr  = to-rust(@tail[0].bracket-tail.expression);
 
-    my $bracketed-expr  = to-rust(@tail[2].bracket-tail.expression);
+    my $indirection-idA = @tail[1];
+    my $expr-listA      = @tail[2].expression-list;
 
     my $indirection-idB = @tail[3];
     my $expr-listB      = @tail[4].expression-list;
@@ -1320,8 +1510,8 @@ multi sub translate-postfix-expression(
     my Bool $indirectB = $indirection-idB.indirect;
 
     my $builder = $ident;
-    $builder = postfix-expr-append-func($builder,$funcA,$paramsA,$indirectA);
     $builder = "{$builder}[{$bracketed-expr}]";
+    $builder = postfix-expr-append-func($builder,$funcA,$paramsA,$indirectA);
     $builder = postfix-expr-append-func($builder,$funcB,$paramsB,$indirectB);
     $builder
 }

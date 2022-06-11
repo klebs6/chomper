@@ -10,6 +10,7 @@ use Chomper::LazyStatic;
 use Chomper::ToRustIdent;
 use Chomper::ToRustParams;
 use Chomper::ToRustPathInExpression;
+use Chomper::DefaultInitializer;
 
 use Chomper::TranslateConditionalExpression;
 use Chomper::TranslateExpression;
@@ -317,31 +318,6 @@ multi sub translate-basic-declaration-to-rust(
     )
 }
 
-sub create-default-initializer($rust-type) 
-{
-    Rust::SuffixedExpression.new(
-        base-expression => Rust::BaseExpression.new(
-            expression-item => Rust::PathInExpression.new(
-                path-expr-segments => [
-                    Rust::PathExprSegment.new(
-                        path-ident-segment => $rust-type,
-                    ),
-                    Rust::PathExprSegment.new(
-                        path-ident-segment => Rust::Identifier.new(
-                            value => "default"
-                        )
-                    ),
-                ],
-            )
-        ),
-        suffixed-expression-suffix => [
-            Rust::CallExpressionSuffix.new(
-                maybe-call-params => Nil,
-            )
-        ],
-    )
-}
-
 sub create-type-initializer($rust-type,$rust-params) 
 {
     if not $rust-type {
@@ -403,6 +379,61 @@ multi sub translate-basic-declaration-to-rust(
     my $default-initializer = create-default-initializer($rust-type);
 
     create-lazy-static($rust-type,$rust-ident,$default-initializer)
+}
+
+multi sub translate-basic-declaration-to-rust(
+    'static T I{E};',
+    $item where Cpp::BasicDeclaration) 
+{
+    debug 'mask static T I{E};';
+
+    debug 'mask T I{E};';
+
+    my $idl = $item.init-declarator-list[0];
+
+    my $declarator 
+    = $idl.declarator;
+
+    my $initializer
+    = $idl.initializer;
+
+    my $decl-specifier-seq 
+    = $item.decl-specifier-seq;
+
+    my $rust-ident = to-rust-ident($declarator, snake-case => True);
+    my $rust-type  = to-rust-type($decl-specifier-seq);
+
+    my $rust-params  
+    = to-rust-params($initializer.brace-or-equal-initializer);
+
+    my $type-initializer = create-type-initializer($rust-type,$rust-params);
+
+    if is-const-type($decl-specifier-seq.decl-specifiers) {
+
+        create-pub-const($rust-type,$rust-ident,$type-initializer)
+
+    } else {
+
+        create-lazy-static($rust-type,$rust-ident,$type-initializer)
+    }
+}
+
+our sub create-pub-const($rust-type,$rust-ident,$rust-initializer) {
+
+    Rust::CrateItem.new(
+        maybe-comment    => Nil,
+        outer-attributes => [],
+        item-variant => Rust::VisItem.new(
+            maybe-visibility => Rust::VisibilityPublic.new,
+            vis-item-variant => Rust::ConstantItem.new(
+                identifier-or-underscore => $rust-ident,
+                type                     => $rust-type,
+                maybe-init-expression    => Rust::InitExpression.new(
+                    expression => $rust-initializer
+                ),
+            )
+        )
+    )
 }
 
 multi sub translate-basic-declaration-to-rust(
@@ -669,25 +700,38 @@ multi sub translate-basic-declaration-to-rust(
     = $item.decl-specifier-seq;
 
     my $rust-ident = to-rust-ident($declarator, snake-case => True);
-    my $rust-type  = to-rust-type($decl-specifier-seq.decl-specifiers[1..*]);
+    my $rust-type  = to-rust-type($decl-specifier-seq.decl-specifiers.List);
 
     my $rust-expr  
     = to-rust($initializer.brace-or-equal-initializer);
 
-    Rust::CrateItem.new(
-        maybe-comment    => Nil,
-        outer-attributes => [],
-        item-variant => Rust::VisItem.new(
-            maybe-visibility => Rust::VisibilityPublic.new,
-            vis-item-variant => Rust::ConstantItem.new(
-                identifier-or-underscore => $rust-ident,
-                type                     => $rust-type,
-                maybe-init-expression    => Rust::InitExpression.new(
-                    expression => $rust-expr
-                ),
-            )
-        )
-    )
+    create-pub-const($rust-type,$rust-ident,$rust-expr)
+}
+
+multi sub translate-basic-declaration-to-rust(
+    'constexpr T I{E};',
+    $item where Cpp::BasicDeclaration) 
+{
+    debug 'mask constexpr T I{E};';
+
+    my $idl = $item.init-declarator-list[0];
+
+    my $declarator 
+    = $idl.declarator;
+
+    my $initializer
+    = $idl.initializer;
+
+    my $decl-specifier-seq 
+    = $item.decl-specifier-seq;
+
+    my $rust-ident = to-rust-ident($declarator, snake-case => True);
+    my $rust-type  = to-rust-type($decl-specifier-seq.decl-specifiers.List);
+
+    my $rust-expr  
+    = to-rust($initializer.brace-or-equal-initializer);
+
+    create-pub-const($rust-type,$rust-ident,$rust-expr)
 }
 
 multi sub translate-basic-declaration-to-rust(

@@ -1,6 +1,7 @@
 use Chomper::TranslateIo;
 use Chomper::Cpp;
 use Chomper::Rust;
+use Chomper::DefaultInitializer;
 use Chomper::ToRust;
 use Chomper::ToRustIdent;
 use Chomper::ToRustBlockExpression;
@@ -171,7 +172,7 @@ multi sub to-rust(
 multi sub to-rust(
     $item where Cpp::InitializerList)
 {
-    $item.clauses>>.&to-rust-param
+    $item.clauses.List>>.&to-rust-param
 }
 
 multi sub to-rust(
@@ -484,6 +485,14 @@ multi sub to-rust(
             $mask = "constexpr T I = E;";
         }
 
+        when /^^ 'static constexpr T I{' .* '};' / {
+            $mask = 'constexpr T I{E};';
+        }
+
+        when /^^ 'static T I{' .* '};' / {
+            $mask = 'static T I{E};';
+        }
+
         when /^^ 'I = ' / {
             $mask = "I = E;";
         }
@@ -524,16 +533,56 @@ multi sub to-rust(
             $mask = "I[E] = E;";
         }
 
-        when /^^ 'T T I[N] = ' / {
+        when /^^ 'T T I[' .* '] = ' / {
+            $mask = "T I[E] = E;";
+        }
+
+        when /^^ 'T I[' .* '] = ' / {
             $mask = "T I[E] = E;";
         }
 
         when /^^ 'T I{' .* '};' / {
             $mask = 'T I{E};';
         }
+
     }
 
     translate-basic-declaration-to-rust($mask, $item)
+}
+
+multi sub to-rust($item where Cpp::UnaryExpressionCase::Sizeof)
+{
+    my $body = to-rust($item.unary-expression.expression);
+
+    Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            outer-attributes => [],
+            expression-item => Rust::PathInExpression.new(
+                path-expr-segments => [
+                    Rust::PathExprSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => "size_of_val",
+                        )
+                    )
+                ]
+            )
+        ),
+        suffixed-expression-suffix => [
+            Rust::CallExpressionSuffix.new(
+                maybe-call-params => [
+                    Rust::BorrowExpression.new(
+                        borrow-expression-prefixes => [
+                            Rust::BorrowExpressionPrefix.new(
+                                borrow-count => 1,
+                                mutable      => False,
+                            )
+                        ],
+                        unary-expression => $body
+                    ),
+                ]
+            )
+        ]
+    )
 }
 
 multi sub to-rust(
@@ -1077,13 +1126,28 @@ multi sub to-rust(
 
     my $init-list = $item.initializer-list;
 
-    my $maybe-rust-init-list = $init-list ?? to-rust($init-list) !! "";
+    my $initializer = do if $init-list {
 
-    Rust::MacroInvocation.new(
-        simple-path => "vec",
-        delim-kind  => Rust::DelimKind::<Brace>,
-        token-trees => [$maybe-rust-init-list],
-    ).gist
+        if $init-list.clauses.elems gt 1 {
+
+            Rust::MacroInvocation.new(
+                simple-path => "vec",
+                delim-kind  => Rust::DelimKind::<Brace>,
+                token-trees => [to-rust($init-list)>>.chomp.join(",")],
+            ).gist
+
+        } else {
+            to-rust($init-list.clauses[0])
+        }
+
+    } else {
+        #empty braced-init-list means default
+        #construct default-construct
+
+        create-default-initializer("Default")
+    }
+
+    $initializer
 }
 
 multi sub to-rust(

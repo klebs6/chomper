@@ -23,11 +23,21 @@ multi sub to-rust-param($x where Cpp::IntegerLiteral::Dec) {
     ).gist
 }
 
+multi sub to-rust-param($x where Cpp::PointerLiteral) {  
+    Rust::Identifier.new(
+        value => "None",
+    ).gist
+}
+
 multi sub to-rust-param($x where Cpp::IntegerLiteral::Oct) {  
     Rust::IntegerLiteral.new(
         #value => octal-to-int($x.octal-literal.value),
         value => $x.octal-literal.value,
     ).gist
+}
+
+multi sub to-rust-param($x where Cpp::UnaryExpressionCase::Sizeof) {
+    to-rust($x)
 }
 
 multi sub to-rust-param($x where Cpp::IntegerLiteral::Hex) {  

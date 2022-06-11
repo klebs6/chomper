@@ -37,7 +37,7 @@ our subset Quad of List is export where (HexadecimalLiteral, HexadecimalLiteral,
 
 #--------------------------
 class HexQuad is export { 
-    has Quad @.hexadecimaldigit is required;
+    has HexadecimalDigit @.hexadecimaldigit is required;
 
     has $.text;
 

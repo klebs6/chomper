@@ -11,5 +11,15 @@ multi sub is-const-type($x where Cpp::TypeSpecifier) {
 }
 
 multi sub is-const-type($x where Positional)  {
-    so $x.List.grep: /const/
+
+    my @list = $x.List.grep: {
+        my Bool $matches-static    = $_ ~~ Cpp::StorageClassSpecifier::Static;
+        my Bool $matches-constexpr = $_ ~~ Cpp::DeclSpecifier::Constexpr;
+
+        not [$matches-static, $matches-constexpr].any
+    };
+
+    die "need implement" if @list.elems gt 1;
+
+    is-const-type(@list[0])
 }

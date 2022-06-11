@@ -129,10 +129,19 @@ multi sub to-rust-type($x where Cpp::DeclSpecifierSeq) {
 
 multi sub to-rust-type(Positional $x) {  
 
-    my $name = $x.List>>.gist.join(" ");
+    my @list = $x.List.grep: {
+        my Bool $matches-static    = $_ ~~ Cpp::StorageClassSpecifier::Static;
+        my Bool $matches-constexpr = $_ ~~ Cpp::DeclSpecifier::Constexpr;
+
+        not [$matches-static, $matches-constexpr].any
+    };
+
+    my $name = @list>>.gist.join(" ");
+
+    $name ~~ s:g/const //;
 
     Rust::Identifier.new(
-        value => %*typemap{$name}
+        value => %*typemap{$name.chomp.trim}
     )
 }
 
