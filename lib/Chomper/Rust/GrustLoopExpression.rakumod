@@ -37,7 +37,7 @@ class LoopExpressionPredicate is export {
             $builder ~= $.maybe-loop-label.gist ~ " ";
         }
 
-        $builder ~= "while " ~ $.expression-nostruct.gist;
+        $builder ~= "while " ~ $.expression-nostruct.gist ~ " ";
         $builder ~= $.block-expression.gist;
         $builder
     }
@@ -59,7 +59,7 @@ class LoopExpressionPredicatePattern is export {
             $builder ~= $.maybe-loop-label.gist ~ " ";
         }
 
-        $builder ~= "whlie let " ~ $.pattern.gist;
+        $builder ~= "whlie let " ~ $.pattern.gist ~ " ";
 
         $builder ~= " = " ~ $.scrutinee.gist;
 

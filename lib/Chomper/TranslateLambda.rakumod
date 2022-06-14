@@ -114,6 +114,20 @@ multi sub extract-lambda-parameter-initializer($item where Cpp::ParameterDeclara
     }
 }
 
+multi sub extract-lambda-parameter-initializer($item where Cpp::Capture::Init) {  
+
+    my $id   = to-rust-ident($item.initcapture.identifier, snake-case => True);
+    my $init = to-rust($item.initcapture.initializer);
+
+    Rust::LetStatement.new(
+        maybe-comment      => Nil,
+        outer-attributes   => [],
+        pattern-no-top-alt => $id,
+        maybe-type         => Nil,
+        maybe-expression   => $init,
+    )
+}
+
 proto sub translate-lambda-expression($item) is export { * }
 
 multi sub translate-lambda-expression($item where Cpp::LambdaExpression) {  
@@ -125,14 +139,42 @@ multi sub translate-lambda-expression($item where Cpp::LambdaExpression) {
     my $lambda-introducer = $item.lambda-introducer;
     my $lambda-declarator = $item.lambda-declarator;
 
-    my Bool $move = $lambda-introducer.lambda-capture ~~ Cpp::CaptureDefault::Assign;
+    my $parameter-declaration-clause = $lambda-declarator 
+    ?? $lambda-declarator.parameter-declaration-clause
+    !! Nil;
 
-    my @cpp-params = $lambda-declarator
-        .parameter-declaration-clause
-        .parameter-declaration-list;
+    my $lambda-capture = $lambda-introducer.lambda-capture;
+
+    my Bool $move = False;
+    my @captures = [];
+
+    given $lambda-capture {
+        when Cpp::CaptureDefault::Assign {
+            $move = True;
+        }
+        when Cpp::LambdaCapture::List {
+            @captures = $lambda-capture.capture-list.captures;
+        }
+        default {
+
+        }
+    }
+
+    my @cpp-params = $parameter-declaration-clause 
+    ?? $parameter-declaration-clause.parameter-declaration-list 
+    !! [];
 
     my @closure-parameters = @cpp-params>>.&translate-lambda-parameter;
     my @maybe-closure-param-initializers = @cpp-params>>.&extract-lambda-parameter-initializer.flat;
+
+    for @captures -> $capture {
+        given $capture {
+            when Cpp::Capture::Init {
+                @maybe-closure-param-initializers.push: 
+                extract-lambda-parameter-initializer($capture);
+            }
+        }
+    }
 
     my $closure-body = Rust::SuffixedExpression.new(
         base-expression => Rust::BaseExpression.new(

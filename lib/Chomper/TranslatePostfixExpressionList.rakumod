@@ -2,6 +2,7 @@ use Data::Dump::Tree;
 use Chomper::ToRust;
 use Chomper::ToRustIdent;
 use Chomper::ToRustType;
+use Chomper::ToRustBaseExpression;
 use Chomper::ToRustPathInExpression;
 use Chomper::Cpp;
 use Chomper::Rust;
@@ -67,7 +68,7 @@ multi sub translate-postfix-expression-list(
 
     my $expr-list 
     = 
-    $item.post-list-tail.value.Bool 
+    $item.post-list-tail.value.initializer-list 
     ?? to-rust($item.post-list-tail.value.initializer-list)
     !! "";
 
@@ -103,8 +104,8 @@ multi sub translate-postfix-expression-list(
     $item, 
     ["FullTypeName","Parens"]) 
 {  
-    my $expr-item 
-    = to-rust-type($item.post-list-head);
+    my $base-expr 
+    = to-rust-base-expression($item.post-list-head);
 
     my $expr-list = do if $item.post-list-tail.value {
 
@@ -116,10 +117,7 @@ multi sub translate-postfix-expression-list(
     };
 
     my $rust = Rust::SuffixedExpression.new(
-        base-expression => Rust::BaseExpression.new(
-            outer-attributes => [ ],
-            expression-item  => $expr-item,
-        ),
+        base-expression => $base-expr,
         suffixed-expression-suffix => [
             Rust::CallExpressionSuffix.new(
                 maybe-call-params => $expr-list,

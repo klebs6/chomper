@@ -77,6 +77,52 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
+     "T I, I, I;",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask T I, I;";
+
+    my $rust-type = to-rust-type($item.decl-specifier-seq);
+    my $id0 = to-rust-ident($item.init-declarator-list[0]);
+    my $id1 = to-rust-ident($item.init-declarator-list[1]);
+    my $id2 = to-rust-ident($item.init-declarator-list[2]);
+
+    my $default-initializer = create-default-initializer($rust-type);
+
+    Rust::Statements.new(
+        statements => [
+            Rust::LetStatement.new(
+                pattern-no-top-alt => Rust::IdentifierPattern.new(
+                    ref        => False,
+                    mutable    => True,
+                    identifier => $id0,
+                ),
+                maybe-type       => $rust-type,
+                maybe-expression => $default-initializer,
+            ),
+            Rust::LetStatement.new(
+                pattern-no-top-alt => Rust::IdentifierPattern.new(
+                    ref        => False,
+                    mutable    => True,
+                    identifier => $id1,
+                ),
+                maybe-type       => $rust-type,
+                maybe-expression => $default-initializer,
+            ),
+            Rust::LetStatement.new(
+                pattern-no-top-alt => Rust::IdentifierPattern.new(
+                    ref        => False,
+                    mutable    => True,
+                    identifier => $id2,
+                ),
+                maybe-type       => $rust-type,
+                maybe-expression => $default-initializer,
+            ),
+        ]
+    )
+}
+
+multi sub translate-basic-declaration-to-rust(
      "I = T(Es);",
     $item where Cpp::BasicDeclaration:D) 
 {
@@ -854,22 +900,42 @@ multi sub translate-basic-declaration-to-rust(
 {
     debug "mask T I(Es);";
 
+    my Bool $do-type-deduction 
+    = $item.decl-specifier-seq.value ~~ Cpp::SimpleTypeSpecifier::Auto_;
+
     my $rust-type   = to-rust-type($item.decl-specifier-seq);
+
     my $declarator0 = $item.init-declarator-list[0];
 
-    do given $declarator0 {
-        when Cpp::InitDeclarator {
-            my $rust-ident  = to-rust-ident($declarator0.declarator, snake-case => True);
-            my $rust-params = to-rust-params($declarator0.initializer);
+    if $do-type-deduction {
 
-            RustBasicCreationEvent.new(
-                :$rust-ident,
-                :$rust-type,
-                :$rust-params,
-            ).gist
-        }
-        default {
-            die "need implement for {$declarator0.WHAT.^name}";
+        my $rust-ident = to-rust-ident($declarator0.declarator, snake-case => True);
+        my @rust-exprs = to-rust-params($declarator0.initializer.expression-list).List;
+
+        die if not @rust-exprs.elems eq 1;
+
+        Rust::LetStatement.new(
+            pattern-no-top-alt => $rust-ident,
+            maybe-type         => Nil,
+            maybe-expression   => @rust-exprs[0],
+        )
+
+    } else {
+
+        do given $declarator0 {
+            when Cpp::InitDeclarator {
+                my $rust-ident  = to-rust-ident($declarator0.declarator, snake-case => True);
+                my $rust-params = to-rust-params($declarator0.initializer);
+
+                RustBasicCreationEvent.new(
+                    :$rust-ident,
+                    :$rust-type,
+                    :$rust-params,
+                ).gist
+            }
+            default {
+                die "need implement for {$declarator0.WHAT.^name}";
+            }
         }
     }
 }

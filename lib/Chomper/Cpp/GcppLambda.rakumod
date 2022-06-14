@@ -178,7 +178,7 @@ package Capture is export {
 
     # rule capture:sym<init> { <initcapture> } 
     our class Init does ICapture {
-        has InitCapture $.init-capture is required;
+        has InitCapture $.initcapture is required;
 
         has $.text;
 
@@ -187,7 +187,7 @@ package Capture is export {
         }
 
         method gist(:$treemark=False) {
-            $.init-capture.gist(:$treemark)
+            $.initcapture.gist(:$treemark)
         }
     }
 
@@ -421,8 +421,8 @@ package LambdaExpressionGrammar is export {
         # rule capture:sym<init> { <initcapture> } 
         method capture:sym<init>($/) {
             make Capture::Init.new(
-                init-capture => $<init-capture>.made,
-                text         => ~$/,
+                initcapture => $<initcapture>.made,
+                text        => ~$/,
             )
         }
 
@@ -433,13 +433,13 @@ package LambdaExpressionGrammar is export {
             my $has-and = so $/<and_>:exists;
 
             if $has-and {
-                make SimpleCapture::Id.new(
+                make Capture::Id.new(
                     has-and_   => True,
                     identifier => $id,
                     text       => ~$/,
                 )
             } else {
-                make SimpleCapture::Id.new(
+                make Capture::Id.new(
                     has-and_   => False,
                     identifier => $id,
                     text       => ~$/,
@@ -449,7 +449,7 @@ package LambdaExpressionGrammar is export {
 
         # rule simple-capture:sym<this> { <this> } 
         method simple-capture:sym<this>($/) {
-            make SimpleCapture::This.new
+            make Capture::This.new
         }
 
         # rule initcapture { <and_>? <identifier> <initializer> } 
@@ -510,8 +510,8 @@ package LambdaExpressionGrammar is export {
 
         #-------------------------------
         proto rule capture { * }
-        rule capture:sym<simple> { <simple-capture> }
         rule capture:sym<init>   { <initcapture> }
+        rule capture:sym<simple> { <simple-capture> }
 
         #-------------------------------
         proto rule simple-capture { * }

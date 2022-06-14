@@ -499,6 +499,10 @@ multi sub to-rust(
             $mask = 'constexpr T I{E};';
         }
 
+        when /^^ 'static constexpr T I = NI;' / {
+            $mask = 'constexpr T I = E;';
+        }
+
         when /^^ 'static T I{' .* '};' / {
             $mask = 'static T I{E};';
         }
@@ -557,6 +561,10 @@ multi sub to-rust(
 
         when /^^ 'T &I{' .* '};' / {
             $mask = 'T &I{E};';
+        }
+
+        when /^^ 'I[' .* '] =' / {
+            $mask = 'I[E] = E;';
         }
 
     }
@@ -627,14 +635,50 @@ multi sub to-rust($item where Cpp::UnaryExpressionCase::Sizeof)
     )
 }
 
+multi sub to-rust($item where Cpp::UnaryExpressionCase::SizeofTypeId)
+{
+    my $rust-type = to-rust-type($item.the-type-id);
+
+    Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            outer-attributes => [],
+            expression-item => Rust::PathInExpression.new(
+                path-expr-segments => [
+                    Rust::PathExprSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => "size_of",
+                        ),
+                        maybe-generic-args => Rust::GenericArgs.new(
+                            args => [
+                                Rust::TypePath.new(
+                                    type-path-segments => [
+                                        Rust::TypePathSegment.new(
+                                            path-ident-segment => $rust-type,
+                                        )
+                                    ]
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        ),
+        suffixed-expression-suffix => [
+            Rust::CallExpressionSuffix.new(
+                maybe-call-params => Nil,
+            )
+        ]
+    )
+}
+
 multi sub to-rust(
     $item where Cpp::ThrowExpression)
 {
     debug "will translate ThrowExpression to Rust!";
 
-    my @err-params = [
+    my @err-params = $item.assignment-expression ?? [
         to-rust($item.assignment-expression)
-    ];
+    ] !! Rust::Identifier.new(value => "e");
 
     my $err = Rust::SuffixedExpression.new(
         base-expression => Rust::BaseExpression.new(
@@ -670,9 +714,14 @@ multi sub to-rust(
 {
     debug "will translate ExpressionStatement to Rust!";
 
-    Rust::ExpressionStatementNoBlock.new(
-        expression-noblock => to-rust($item.expression),
-    )
+    if $item.expression {
+        Rust::ExpressionStatementNoBlock.new(
+            expression-noblock => to-rust($item.expression),
+        )
+
+    } else {
+        Nil
+    }
 }
 
 multi sub to-rust(
@@ -1205,6 +1254,62 @@ multi sub to-rust(
     ).gist
 }
 
+our sub invert-condition($rust-condition) {
+    Rust::UnaryExpression.new(
+        unary-prefixes => [
+            Rust::UnaryPrefixBang.new,
+        ],
+        suffixed-expression => $rust-condition,
+    )
+}
+
+our sub break-if-not($rust-condition) {
+
+    my $block-expression = Rust::BlockExpression.new(
+        statements => Rust::Statements.new(
+            statements => [
+                Rust::ExpressionStatementNoBlock.new(
+                    expression-noblock => Rust::BreakExpression.new(
+                        maybe-lifetime-or-label => Nil,
+                        maybe-expression        => Nil,
+                    )
+                )
+            ]
+        )
+    );
+
+    Rust::IfExpression.new(
+
+        expression-nostruct => invert-condition($rust-condition),
+
+        block-expression => $block-expression,
+    )
+}
+
+multi sub to-rust(
+    $item where Cpp::ElaboratedTypeSpecifier::ClassIdent)
+{
+    to-rust($item.identifier)
+}
+
+multi sub to-rust(
+    $item where Cpp::IterationStatement::Do)
+{
+    debug "will translate IterationStatement::Do to Rust!";
+
+    my $loop-expression  = to-rust($item.expression);
+
+    my $statement = to-rust($item.statement);
+
+    $statement.statements.statements.push: 
+    break-if-not($loop-expression);
+
+    Rust::LoopExpressionInfinite.new(
+        maybe-loop-label => Nil,
+        block-expression => $statement,
+    ).gist
+}
+
 multi sub to-rust(
     $item where Cpp::JumpStatement::Break)
 {
@@ -1276,7 +1381,10 @@ our sub create-static-str-ref {
 }
 
 our sub create-closure-throwable-error {
-    create-static-str-ref()
+    #create-static-str-ref()
+    Rust::Identifier.new(
+        value => "StdException",
+    )
 }
 
 our sub construct-new-object(:$typename, :$initializer, :$ctor-name = "new") {
@@ -1319,6 +1427,12 @@ multi sub to-rust($item where Cpp::DecimalLiteral) {
     )
 }
 
+multi sub to-rust($item where Cpp::OctalLiteral) {
+    Rust::IntegerLiteral.new(
+        value => $item.value
+    )
+}
+
 multi sub to-rust($item where Cpp::UserDefinedIntegerLiteral::Dec) {
     my $decimal-literal = to-rust($item.decimal-literal);
     my $suffix          = $item.suffix.value;
@@ -1326,6 +1440,26 @@ multi sub to-rust($item where Cpp::UserDefinedIntegerLiteral::Dec) {
     given $suffix {
         when "s" {
             construct-new-object(typename => "Seconds", initializer => $decimal-literal)
+        }
+        when "min" {
+            construct-new-object(typename => "Minutes", initializer => $decimal-literal)
+        }
+        default {
+            die "unknown userdefined integer literal suffix! $suffix";
+        }
+    }
+}
+
+multi sub to-rust($item where Cpp::UserDefinedIntegerLiteral::Oct) {
+    my $octal-literal = to-rust($item.octal-literal);
+    my $suffix          = $item.suffix.value;
+
+    given $suffix {
+        when "s" {
+            construct-new-object(typename => "Seconds", initializer => $octal-literal)
+        }
+        when "min" {
+            construct-new-object(typename => "Minutes", initializer => $octal-literal)
         }
         default {
             die "unknown userdefined integer literal suffix! $suffix";

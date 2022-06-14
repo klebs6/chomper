@@ -40,6 +40,10 @@ multi sub to-rust-param($x where Cpp::UnaryExpressionCase::Sizeof) {
     to-rust($x)
 }
 
+multi sub to-rust-param($x where Cpp::UnaryExpressionCase::SizeofTypeId) {
+    to-rust($x)
+}
+
 multi sub to-rust-param($x where Cpp::NewExpression::NewTypeId) {
     to-rust($x)
 }
@@ -100,6 +104,10 @@ multi sub to-rust-param($x where Cpp::PrimaryExpression::Id) {
     to-rust-ident($x.id-expression, snake-case => True).gist
 }
 
+multi sub to-rust-param($x where Cpp::PrimaryExpression::Expr) {  
+    to-rust($x)
+}
+
 multi sub to-rust-param($x where Cpp::LambdaExpression) {  
     to-rust($x)
 }
@@ -135,6 +143,11 @@ multi sub to-rust-param(
     to-rust($item)
 }
 
+multi sub to-rust-param(
+    $item where Cpp::PostfixExpressionCast)
+{
+    to-rust($item)
+}
 
 multi sub to-rust-param(
     $item where Cpp::InclusiveOrExpression)
@@ -186,6 +199,10 @@ multi sub to-rust-param($item where Cpp::DecimalLiteral) {
 }
 
 multi sub to-rust-param($item where Cpp::UserDefinedIntegerLiteral::Dec) {
+    to-rust($item)
+}
+
+multi sub to-rust-param($item where Cpp::UserDefinedIntegerLiteral::Oct) {
     to-rust($item)
 }
 

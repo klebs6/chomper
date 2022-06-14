@@ -43,6 +43,147 @@ our sub create-default-match-arm(:$block) {
     )
 }
 
+our sub exception-unpacking-match-pattern(:@exception-nest,:$what-varname) {
+
+    our sub create-struct-pattern-elements(:$what-varname) {
+        Rust::StructPatternElementsBasic.new(
+            struct-pattern-fields => [
+                Rust::StructPatternField.new(
+                    outer-attributes => [],
+                    struct-pattern-field-variant => Rust::StructPatternFieldVariantId.new(
+                        identifier => Rust::Identifier.new(value => "what"),
+                        pattern    => Rust::Pattern.new(
+                            pattern-no-top-alts => [
+                                Rust::IdentifierPattern.new(
+                                    ref        => False,
+                                    mutable    => False,
+                                    identifier => Rust::Identifier.new(value => $what-varname),
+                                )
+                            ]
+                        )
+                    )
+                )
+            ],
+            maybe-struct-pattern-etc => Nil,
+        )
+    }
+
+    our sub create-path-in-expression(@pair) {
+
+        die if not @pair.elems eq 2;
+
+        Rust::PathInExpression.new(
+            path-expr-segments => [
+                Rust::PathExprSegment.new(
+                    path-ident-segment => Rust::Identifier.new(
+                        value => @pair[0],
+                    )
+                ),
+                Rust::PathExprSegment.new(
+                    path-ident-segment => Rust::Identifier.new(
+                        value => @pair[1],
+                    )
+                ),
+            ]
+        )
+    }
+
+    proto sub create-pattern(@exception-nest, $sig) { * }
+
+    multi sub create-pattern(@exception-nest, [1]) {
+        die "need implement";
+    }
+
+    multi sub create-pattern(@exception-nest, [2]) {
+
+        my $outer = shift @exception-nest;
+
+        Rust::StructPattern.new(
+            path-in-expression            => create-path-in-expression($outer),
+            maybe-struct-pattern-elements => create-struct-pattern-elements(:$what-varname)
+        )
+    }
+
+    multi sub create-pattern(@exception-nest, [2,1]) {
+        my $outer = shift @exception-nest;
+
+        Rust::TupleStructPattern.new(
+            path-in-expression => create-path-in-expression($outer),
+            maybe-tuple-struct-items => [
+                Rust::Pattern.new(
+                    pattern-no-top-alts => [
+                        create-pattern(@exception-nest,[1]),
+                    ]
+                )
+            ]
+        )
+    }
+
+    multi sub create-pattern(@exception-nest, [2,2]) {
+
+        my $outer = shift @exception-nest;
+
+        Rust::TupleStructPattern.new(
+            path-in-expression => create-path-in-expression($outer),
+            maybe-tuple-struct-items => [
+                Rust::Pattern.new(
+                    pattern-no-top-alts => [
+                        create-pattern(@exception-nest,[2]),
+                    ]
+                )
+            ]
+        )
+    }
+
+    multi sub create-pattern(@exception-nest, [2,2,1]) {
+        my $outer = shift @exception-nest;
+
+        Rust::TupleStructPattern.new(
+            path-in-expression => create-path-in-expression($outer),
+            maybe-tuple-struct-items => [
+                Rust::Pattern.new(
+                    pattern-no-top-alts => [
+                        create-pattern(@exception-nest,[2,1]),
+                    ]
+                )
+            ]
+        )
+    }
+
+    multi sub create-pattern(@exception-nest, [2,2,2]) {
+        my $outer = shift @exception-nest;
+
+        Rust::TupleStructPattern.new(
+            path-in-expression => create-path-in-expression($outer),
+            maybe-tuple-struct-items => [
+                Rust::Pattern.new(
+                    pattern-no-top-alts => [
+                        create-pattern(@exception-nest,[2,2]),
+                    ]
+                )
+            ]
+        )
+    }
+
+    multi sub create-pattern(@exception-nest, [1,1]) {
+
+        my List $p = (@exception-nest[0], @exception-nest[1]);
+
+        Rust::StructPattern.new(
+            path-in-expression            => create-path-in-expression($p),
+            maybe-struct-pattern-elements => create-struct-pattern-elements(:$what-varname)
+        )
+    }
+
+    my $sig = @exception-nest>>.elems;
+
+    Rust::Pattern.new(
+        pattern-no-top-alts => [
+            create-pattern(@exception-nest, $sig)
+        ]
+    )
+}
+
 our sub create-exception-unpacking-match-arm(:$rust-type, :$what-varname, :$block) {
 
     #this should handle *most*
@@ -80,6 +221,14 @@ our sub create-exception-unpacking-match-arm(:$rust-type, :$what-varname, :$bloc
 
     my $exception-key = $rust-type.gist.lc.subst(:g, "_", "");
     my @exception-nest = %exception-map{$exception-key}.List;
-    ddt %(:$exception-key, :@exception-nest);
-    exit;
+
+    Rust::MatchArmsOuterItem.new(
+        maybe-comment => Nil,
+        match-arm => Rust::MatchArm.new(
+            outer-attributes      => [],
+            pattern               => exception-unpacking-match-pattern(:@exception-nest,:$what-varname),
+            maybe-match-arm-guard => Nil,
+        ),
+        expression => $block,
+    )
 }

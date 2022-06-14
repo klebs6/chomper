@@ -17,6 +17,7 @@ use Chomper::TreeMark;
 # }
 class QualifiedId 
 does INoPointerDeclaratorBase
+does IPointerDeclarator
 does IIdExpression is export { 
     has INestedNameSpecifier $.nested-name-specifier is required;
     has Bool                $.template              is required;

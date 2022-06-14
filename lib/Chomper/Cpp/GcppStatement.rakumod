@@ -124,9 +124,11 @@ class DeclarationStatement does IDeclarationStatement is export {
 #   <expression>? 
 #   <semi> 
 # }
-class ExpressionStatement does IStatement is export { 
+class ExpressionStatement 
+does IForInitStatement
+does IStatement is export { 
     has IComment    $.comment;
-    has IExpression $.expression;
+    has             $.expression;
 
     has $.text;
 
@@ -141,7 +143,11 @@ class ExpressionStatement does IStatement is export {
             $builder ~= $.comment.gist(:$treemark) ~ "\n";
         }
 
-        $builder ~ $.expression.gist(:$treemark) ~ ";"
+        if $.expression {
+            $builder ~= $.expression.gist(:$treemark);
+        }
+
+        $builder ~ ";"
     }
 }
 
@@ -159,6 +165,10 @@ package StatementGrammar is export {
 
             my $comment = $<semi>.made;
             my $body    = $<expression>.made;
+
+            if not $body {
+                make Nil;
+            }
 
             if $comment {
                 make ExpressionStatement.new(

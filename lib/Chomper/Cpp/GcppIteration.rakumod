@@ -99,7 +99,7 @@ package IterationStatement is export {
     #   <statement> 
     # }
     our class For does IIterationStatement {
-        has IForInitStatement $.for-init-statement is required;
+        has IForInitStatement $.for-init-statement;
         has ICondition        $.condition;
         has IExpression       $.expression;
         has IStatement        @.statements is required;
@@ -259,9 +259,12 @@ package IterationStatementGrammar is export {
         #   <statement> 
         # }
         method iteration-statement:sym<for>($/) {
+
+            my $for-init-statement = $<for-init-statement>.made;
+
             make IterationStatement::For.new(
                 comment            => $<semi>.made,
-                for-init-statement => $<for-init-statement>.made,
+                for-init-statement => $for-init-statement,
                 condition          => $<condition>.made,
                 expression         => $<expression>.made,
                 statements         => $<statement>.made.List,

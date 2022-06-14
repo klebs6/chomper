@@ -400,7 +400,7 @@ package UnaryExpressionGrammar is export {
 
         # rule unary-expression-case:sym<sizeof-typeid> { <sizeof> <.left-paren> <the-type-id> <.right-paren> }
         method unary-expression-case:sym<sizeof-typeid>($/) {
-            make UnaryExpressionCase::SizeofTypeid.new(
+            make UnaryExpressionCase::SizeofTypeId.new(
                 the-type-id => $<the-type-id>.made,
                 text        => ~$/,
             )

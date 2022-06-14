@@ -127,6 +127,12 @@ multi sub to-rust-type($x where Cpp::DeclSpecifierSeq) {
     to-rust-type($x.decl-specifiers);
 }
 
+multi sub to-rust-type(
+    $item where Cpp::ElaboratedTypeSpecifier::ClassIdent)
+{
+    to-rust-type($item.identifier)
+}
+
 multi sub to-rust-type(Positional $x) {  
 
     my @list = $x.List.grep: {
@@ -161,7 +167,7 @@ multi sub to-rust-type($x where Cpp::TrailingTypeSpecifier::CvQualifier) {
 
 multi sub to-rust-type($x where Cpp::FullTypeName) {  
  
-    my $nns = $x.nested-name-specifier;
+    my $nns = $x.nested-name-specifier.gist;
 
     #TODO:
     #should we drop the nested name specifier?
@@ -169,7 +175,7 @@ multi sub to-rust-type($x where Cpp::FullTypeName) {
     #no. this is broken. we need it. consider
     #vector<char>::iterator
 
-    to-rust-type($x.the-type-name)
+    $nns ~ to-rust-type($x.the-type-name).gist
 }
 
 multi sub to-rust-type($x) {  

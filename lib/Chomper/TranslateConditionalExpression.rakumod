@@ -23,11 +23,25 @@ multi sub translate-conditional-expression($item where Cpp::IntegerLiteral::Dec)
     )
 }
 
+multi sub translate-conditional-expression($item where Cpp::IntegerLiteral::Hex) {  
+    Rust::IntegerLiteral.new(
+        value => $item.hexadecimal-literal.value
+    )
+}
+
 multi sub translate-conditional-expression($item where Cpp::PrimaryExpression::Id) {  
     to-rust-ident($item.id-expression, snake-case => True)
 }
 
 multi sub translate-conditional-expression($item where Cpp::AdditiveExpression) {  
+    to-rust($item)
+}
+
+multi sub translate-conditional-expression($item where Cpp::PostfixExpression) {  
+    to-rust($item)
+}
+
+multi sub translate-conditional-expression($item where Cpp::PostfixExpressionList) {  
     to-rust($item)
 }
 

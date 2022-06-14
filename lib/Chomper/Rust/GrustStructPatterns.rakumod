@@ -13,10 +13,11 @@ class StructPattern is export {
         my $builder = "";
 
         $builder ~= $.path-in-expression.gist;
-        $builder ~= '{';
+        $builder ~= ' {';
 
         if $.maybe-struct-pattern-elements {
-            $builder ~= $.maybe-struct-pattern-elements.gist.indent(4);
+
+            $builder ~= " " ~ $.maybe-struct-pattern-elements.gist ~ " ";
         }
 
         $builder ~= '}';
