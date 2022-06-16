@@ -255,6 +255,33 @@ multi sub translate-for-loop(
     $item, 
     [
         'BasicDeclaration',
+        'EqualityExpression',
+        'UnaryExpressionCase::PlusPlus',
+    ]) 
+{ 
+    my $for-init-stmt    = to-rust($item.for-init-statement);
+    my $block-expression = to-rust-block-expression($item.statements);
+
+    my $loop-continue = to-rust($item.expression);
+
+    $block-expression.statements.statements.push: $loop-continue;
+
+    Rust::Statements.new(
+        statements => [
+            $for-init-stmt,
+            Rust::LoopExpressionPredicate.new(
+                maybe-loop-label    => Nil,
+                expression-nostruct => to-rust($item.condition),
+                block-expression    => $block-expression
+            )
+        ]
+    )
+}
+
+multi sub translate-for-loop(
+    $item, 
+    [
+        'BasicDeclaration',
         'RelationalExpression',
         'AssignmentExpression::Basic',
     ]) 
