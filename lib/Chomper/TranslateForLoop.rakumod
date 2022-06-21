@@ -28,7 +28,7 @@ multi sub translate-for-loop(
     [
         'BasicDeclaration',
         'RelationalExpression',
-        'PostfixExpression',
+        'UnaryExpressionCase::PlusPlus',
     ]) 
 { 
     translate-for-loop(
@@ -36,7 +36,7 @@ multi sub translate-for-loop(
         [
             'BasicDeclaration',
             'RelationalExpression',
-            'UnaryExpressionCase::PlusPlus',
+            'PostfixExpression',
         ])
 }
 
@@ -80,7 +80,7 @@ multi sub translate-for-loop(
     [
         'BasicDeclaration',
         'RelationalExpression',
-        'UnaryExpressionCase::PlusPlus',
+        'PostfixExpression',
     ]) 
 { 
     say "translate-for-loop for 
@@ -92,6 +92,9 @@ multi sub translate-for-loop(
     my Cpp::RelationalExpression          $relational-expr   = $item.condition;
 
     my  $increment-expr = $item.expression;
+    ddt $increment-expr;
+
+    my $rev = False; #until set True
 
     my $loop-ident      = to-rust-ident($basic-declaration.init-declarator-list[0].declarator, snake-case => True);
 
@@ -114,6 +117,24 @@ multi sub translate-for-loop(
         when Cpp::RelationalOperator::LessEq {
             Rust::RangeExpressionFullEq.new
         }
+        when Cpp::RelationalOperator::Greater {
+
+            ($min-bound, $max-bound) = ($max-bound, $min-bound);
+
+            $min-bound = "({$min-bound} + 1)";
+
+            $rev = True;
+
+            Rust::RangeExpressionFullEq.new
+        }
+        when Cpp::RelationalOperator::GreaterEq {
+
+            ($min-bound, $max-bound) = ($max-bound, $min-bound);
+
+            $rev = True;
+
+            Rust::RangeExpressionFullEq.new
+        }
         default {
             die "bug!";
         }
@@ -131,6 +152,25 @@ multi sub translate-for-loop(
             )
         ),
     ];
+
+    if $rev {
+        $t = Rust::SuffixedExpression.new(
+            base-expression => Rust::BaseExpression.new(
+                expression-item => Rust::GroupedExpression.new(
+                    expression => $t,
+                )
+            ),
+            suffixed-expression-suffix => [
+                Rust::MethodCallExpressionSuffix.new(
+                    path-expr-segment => Rust::PathExprSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => "rev"
+                        )
+                    )
+                )
+            ]
+        )
+    }
 
     Rust::LoopExpressionIterator.new(
         maybe-loop-label => Nil,

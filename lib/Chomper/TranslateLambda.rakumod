@@ -153,7 +153,14 @@ multi sub translate-lambda-expression($item where Cpp::LambdaExpression) {
             $move = True;
         }
         when Cpp::LambdaCapture::List {
-            @captures = $lambda-capture.capture-list.captures;
+            given $lambda-capture.capture-list {
+                when Cpp::Capture::Simple {
+                    @captures = [ $lambda-capture.capture-list ];
+                }
+                default {
+                    @captures = $lambda-capture.capture-list.captures;
+                }
+            }
         }
         default {
 

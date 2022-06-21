@@ -204,6 +204,12 @@ multi sub to-rust(
 }
 
 multi sub to-rust(
+    $item where Cpp::NestedNameSpecifierPrefix::Null)
+{
+    ""
+}
+
+multi sub to-rust(
     $item where Cpp::ConditionalExpression)
 {
     debug "will translate ConditionalExpression to Rust!";
@@ -507,6 +513,10 @@ multi sub to-rust(
             $mask = 'static T I{E};';
         }
 
+        when /^^ 'static T I = ' .* ';' / {
+            $mask = 'static T I = E;';
+        }
+
         when /^^ 'I = ' / {
             $mask = "I = E;";
         }
@@ -632,7 +642,7 @@ multi sub to-rust($item where Cpp::UnaryExpressionCase::Sizeof)
                 ]
             )
         ]
-    )
+    ).gist
 }
 
 multi sub to-rust($item where Cpp::UnaryExpressionCase::SizeofTypeId)
@@ -974,7 +984,7 @@ multi sub to-rust(
                 )
             ],
             unary-expression => $expr,
-        )
+        ).gist
 
     } else {
         Rust::UnaryExpression.new(
@@ -1444,6 +1454,9 @@ multi sub to-rust($item where Cpp::UserDefinedIntegerLiteral::Dec) {
         when "min" {
             construct-new-object(typename => "Minutes", initializer => $decimal-literal)
         }
+        when "us" {
+            construct-new-object(typename => "Microseconds", initializer => $decimal-literal)
+        }
         default {
             die "unknown userdefined integer literal suffix! $suffix";
         }
@@ -1460,6 +1473,9 @@ multi sub to-rust($item where Cpp::UserDefinedIntegerLiteral::Oct) {
         }
         when "min" {
             construct-new-object(typename => "Minutes", initializer => $octal-literal)
+        }
+        when "us" {
+            construct-new-object(typename => "Microseconds", initializer => $octal-literal)
         }
         default {
             die "unknown userdefined integer literal suffix! $suffix";

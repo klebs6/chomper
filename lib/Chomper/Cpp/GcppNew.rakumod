@@ -22,6 +22,7 @@ package NewExpression is export {
     #   <new-initializer>? 
     # }
     our class NewTypeId 
+    does IExpression
     does INewExpression {
         has NewPlacement    $.new-placement;
         has INewTypeId      $.new-type-id is required;

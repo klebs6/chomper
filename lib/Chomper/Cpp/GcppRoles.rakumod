@@ -76,7 +76,7 @@ our role IPostListTail              does CppBase is export { }
 our role IPseudoDestructorName      does CppBase is export { }
 
 our role IUnaryOperator             does CppBase is export { }
-our role INewExpression             does CppBase does IInitializerClause is export { }
+our role INewExpression             does CppBase does IExpression does IInitializerClause is export { }
 our role INewInitializer            does CppBase is export { }
 our role IPointerMemberOperator     does CppBase is export { }
 our role IMultiplicativeOperator    does CppBase is export { }

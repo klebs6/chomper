@@ -434,13 +434,13 @@ package LambdaExpressionGrammar is export {
 
             if $has-and {
                 make Capture::Id.new(
-                    has-and_   => True,
+                    has-and   => True,
                     identifier => $id,
                     text       => ~$/,
                 )
             } else {
                 make Capture::Id.new(
-                    has-and_   => False,
+                    has-and   => False,
                     identifier => $id,
                     text       => ~$/,
                 )

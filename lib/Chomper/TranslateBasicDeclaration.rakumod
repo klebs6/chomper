@@ -396,10 +396,10 @@ sub create-type-initializer($rust-type,$rust-params)
 }
 
 multi sub translate-basic-declaration-to-rust(
-    "static T I = L;",
+    "static T I = E;",
     $item where Cpp::BasicDeclaration) 
 {
-    debug "mask static T I = L;";
+    debug "mask static T I = E;";
     my $type-specifier  = $item.decl-specifier-seq.decl-specifiers[1];
     my $init-declarator = $item.init-declarator-list[0].declarator;
     my $initializer     = $item.init-declarator-list[0].initializer;
@@ -489,6 +489,32 @@ multi sub translate-basic-declaration-to-rust(
     debug "mask T I;";
 
     my $rust-type  = to-rust-type($item.decl-specifier-seq);
+    my $rust-ident = to-rust-ident($item.init-declarator-list[0], snake-case => True);
+
+    my $default-initializer = create-default-initializer($rust-type);
+
+    Rust::LetStatement.new(
+        pattern-no-top-alt => Rust::IdentifierPattern.new(
+            ref        => False,
+            mutable    => True,
+            identifier => $rust-ident,
+        ),
+        maybe-type       => Nil,
+        maybe-expression => $default-initializer,
+    )
+}
+
+multi sub translate-basic-declaration-to-rust(
+    "T *I;",
+    $item where Cpp::BasicDeclaration) 
+{
+    debug "mask T *I;";
+
+    my $rust-type  = Rust::RawPtrType.new(
+        type-no-bounds => to-rust-type($item.decl-specifier-seq),
+        mutable       => True,
+    );
+
     my $rust-ident = to-rust-ident($item.init-declarator-list[0], snake-case => True);
 
     my $default-initializer = create-default-initializer($rust-type);
