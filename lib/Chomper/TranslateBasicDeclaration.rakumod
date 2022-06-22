@@ -1165,6 +1165,60 @@ multi sub translate-basic-declaration-to-rust(
 }
 
 multi sub translate-basic-declaration-to-rust(
+    'T *I{E};',
+    $item where Cpp::BasicDeclaration) 
+{
+    debug 'mask T *I{E};';
+
+    my Bool $do-type-deduction 
+    = $item.decl-specifier-seq.value ~~ Cpp::SimpleTypeSpecifier::Auto_;
+
+    my $idl = $item.init-declarator-list[0];
+
+    my $declarator 
+    = $idl.declarator;
+
+    my $initializer
+    = $idl.initializer;
+
+    my $rust-ident = to-rust-ident($declarator.no-pointer-declarator, snake-case => True);
+
+    my $rust-expr  
+    = to-rust($initializer.brace-or-equal-initializer.initializer-clause);
+
+    my $rust-let-stmt = do if $do-type-deduction {
+
+        debug "do type deduction";
+
+        Rust::LetStatement.new(
+            pattern-no-top-alt => $rust-ident,
+            maybe-type         => Nil,
+            maybe-expression   => $rust-expr,
+        )
+
+    } else {
+
+        debug "no type deduction";
+
+        my $decl-specifier-seq 
+        = $item.decl-specifier-seq;
+
+        my $rust-type  = to-rust-type($decl-specifier-seq);
+
+        Rust::LetStatement.new(
+            pattern-no-top-alt => $rust-ident,
+            maybe-type         => Rust::RawPtrType.new(
+                mutable        => True,
+                type-no-bounds => $rust-type,
+            ),
+            maybe-expression   => $rust-expr,
+        )
+    };
+
+    $rust-let-stmt
+}
+
+multi sub translate-basic-declaration-to-rust(
     "T *I = & E;",
     $item where Cpp::BasicDeclaration) 
 {

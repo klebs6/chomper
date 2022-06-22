@@ -533,6 +533,10 @@ multi sub to-rust(
             $mask = "T *I = E;";
         }
 
+        when /^^ 'T *I{' .* '}' / {
+            $mask = 'T *I{E};';
+        }
+
         when /^^ 'I[I] = ' / {
             $mask = "I[I] = E;";
         }
