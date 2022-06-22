@@ -10,7 +10,7 @@ our sub current-project-needs-strip-hungarian {
     my $hungarian-projects = token {
         | "h264-rs"
         | "cry-rs"
-        | "bitcoin-rs"
+        | "surge-rs"
     };
     so $*CWD.Str.split("/")[*-1] ~~ $hungarian-projects;
 
@@ -18,8 +18,8 @@ our sub current-project-needs-strip-hungarian {
     #old version
     my $h264    = $*CWD.Str.split("/")[*-1] ~~ "h264-rs";
     my $cry     = $*CWD.Str.split("/")[*-1] ~~ "cry-rs";
-    my $bitcoin = $*CWD.Str.split("/")[*-1] ~~ "bitcoin-rs";
-    $cry or $bitcoin or $h264
+    my $surge = $*CWD.Str.split("/")[*-1] ~~ "surge-rs";
+    $cry or $surge or $h264
 =end comment
 
 }

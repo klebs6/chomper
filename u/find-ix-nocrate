@@ -3,7 +3,7 @@ use Chomper::IxBang;
 
 sub MAIN(Bool :$write) {
 
-    my @found = find-files-without-use-crate-star-below-ix-bang(source_dir => "bitcoin/src");
+    my @found = find-files-without-use-crate-star-below-ix-bang(source_dir => "surge/src");
 
     if @found.elems {
         for @found {
