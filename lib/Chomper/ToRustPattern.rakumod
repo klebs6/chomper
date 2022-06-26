@@ -37,15 +37,13 @@ multi sub to-rust-pattern(
     my Bool $calc-is-ref = $x.refqualifier ~~ Cpp::RefQualifier::And;
     my Bool $calc-is-mutable = $x.is-mutable();
 
-    Rust::Pattern.new(
-        pattern-no-top-alts => [
-            Rust::IdentifierPattern.new(
-                ref              => $calc-is-ref,
-                mutable          => $calc-is-mutable,
-                identifier       => to-rust-ident($x, snake-case => True),
-                maybe-at-pattern => Nil,
-            )
-        ]
+    my @pats = $x.identifier-list.List>>.&to-rust-pattern(
+        is-ref     => $calc-is-ref, 
+        is-mutable => $calc-is-mutable
+    );
+
+    Rust::TupleStructItems.new(
+        patterns => @pats
     )
 }
 

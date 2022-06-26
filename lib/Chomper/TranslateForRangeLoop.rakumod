@@ -27,13 +27,50 @@ multi sub translate-for-range-loop(
 multi sub translate-for-range-loop(
     $item, 
     [
+        'StructuredBindingBody',
+        'ForRangeInitializer::Expression'
+    ]) 
+{ 
+    my $rust-source
+    = to-rust(
+        $item.for-range-initializer.expression
+    );
+
+    my $pat = to-rust-pattern($item.for-range-declaration);
+
+    Rust::LoopExpressionIterator.new(
+        pattern => $pat,
+        expression-nostruct => Rust::SuffixedExpression.new(
+            base-expression => Rust::BaseExpression.new(
+                expression-item => Rust::PathInExpression.new(
+                    path-expr-segments => [
+                        Rust::PathExprSegment.new(
+                            path-ident-segment => $rust-source,
+                        )
+                    ]
+                )
+            ),
+            suffixed-expression-suffix => [
+                Rust::MethodCallExpressionSuffix.new(
+                    path-expr-segment => Rust::PathExprSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => "iter",
+                        )
+                    )
+                )
+            ]
+        ),
+        block-expression => to-rust-block-expression($item.statements)
+    )
+}
+
+multi sub translate-for-range-loop(
+    $item, 
+    [
         'ForRangeDeclaration',
         'ForRangeInitializer::Expression'
     ]) 
 { 
-    my Bool $is-structured-binding = 
-    $item.for-range-declaration ~~ Cpp::StructuredBindingBody;
-
     my $is-ptr-declarator = $item.for-range-declaration.declarator ~~ Cpp::PointerDeclarator;
 
     my $rust-iter
@@ -46,9 +83,7 @@ multi sub translate-for-range-loop(
         $item.for-range-initializer.expression
     );
 
-    my $pat = $is-structured-binding 
-    ?? to-rust-pattern($item.for-range-declaration)
-    !! Rust::Pattern.new(
+    my $pat = Rust::Pattern.new(
         pattern-no-top-alts => [
             Rust::IdentifierPattern.new(
                 ref        => False,

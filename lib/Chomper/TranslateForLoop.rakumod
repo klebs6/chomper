@@ -174,7 +174,7 @@ multi sub translate-for-loop(
     if $basic-declaration.decl-specifier-seq {
         my $loop-ident-type = to-rust-type($basic-declaration.decl-specifier-seq.value);
 
-        die if not $loop-ident-type.gist (elem) ["i32","usize"];
+        die if not $loop-ident-type.gist (elem) ["i32","usize", "u32"];
     }
 
     my $min-bound = to-rust($basic-declaration.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause); #TODO
@@ -415,3 +415,4 @@ multi sub translate-for-loop(
         ]
     )
 }
+
