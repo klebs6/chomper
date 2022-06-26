@@ -86,6 +86,7 @@ use Chomper::Cpp::GcppSpecialize;
 use Chomper::Cpp::GcppStatement;
 use Chomper::Cpp::GcppStorageClass;
 use Chomper::Cpp::GcppStr;
+use Chomper::Cpp::GcppStructuredBinding;
 use Chomper::Cpp::GcppSuffix;
 use Chomper::Cpp::GcppTemplate;
 use Chomper::Cpp::GcppToken;
@@ -187,6 +188,7 @@ does ShiftExpressionGrammar::Rules
 does SpecializeGrammar::Rules
 does StatementGrammar::Rules
 does StorageClassGrammar::Rules
+does StructuredBindingGrammar::Rules
 does StringLiteralGrammar::Rules
 does SuffixGrammar::Rules
 does TemplateGrammar::Rules

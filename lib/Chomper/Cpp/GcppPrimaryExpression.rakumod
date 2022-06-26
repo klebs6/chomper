@@ -58,7 +58,9 @@ package PrimaryExpression is export {
     # token primary-expression:sym<id> { 
     #   <id-expression> 
     # }
-    our class Id does IPrimaryExpression {
+    our class Id 
+    does ITheTypeId
+    does IPrimaryExpression {
         has IIdExpression $.id-expression is required;
 
         has $.text;

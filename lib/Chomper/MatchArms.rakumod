@@ -91,6 +91,7 @@ our sub exception-unpacking-match-pattern(:@exception-nest,:$what-varname) {
     proto sub create-pattern(@exception-nest, $sig) { * }
 
     multi sub create-pattern(@exception-nest, [1]) {
+
         die "need implement";
     }
 
@@ -219,7 +220,7 @@ our sub create-exception-unpacking-match-arm(:$rust-type, :$what-varname, :$bloc
         'exception'            => [ ( 'StdException', 'Default'           ) ],
     );
 
-    my $exception-key = $rust-type.gist.lc.subst(:g, "_", "");
+    my $exception-key = $rust-type.gist.lc.subst(:g, "_", "").subst("std::","");
     my @exception-nest = %exception-map{$exception-key}.List;
 
     Rust::MatchArmsOuterItem.new(

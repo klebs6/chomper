@@ -112,28 +112,9 @@ package TypeNameSpecifier is export {
     }
 }
 
-# rule type-id-of-the-type-id { <typeid_> }
-class TypeIdOfTheTypeId is export {
-    has $.typeid is required;
-    has $.text;
-
-    method name {
-        'TypeIdOfTheTypeId'
-    }
-
-    method gist(:$treemark=False) {
-        $.typeid.gist(:$treemark)
-    }
-}
-
 package TypeIdGrammar is export {
 
     our role Actions {
-
-        # rule type-id-of-the-type-id { <typeid_> }
-        method type-id-of-the-type-id($/) {
-            make $<typeid>.made
-        }
 
         # rule the-type-id { <type-specifier-seq> <abstract-declarator>? } 
         method the-type-id($/) {

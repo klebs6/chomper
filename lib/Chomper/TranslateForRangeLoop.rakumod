@@ -4,6 +4,7 @@ use Chomper::ToRustParams;
 use Chomper::ToRustBlockExpression;
 use Chomper::ToRust;
 use Chomper::ToRustType;
+use Chomper::ToRustPattern;
 use Chomper::SnakeCase;
 use Chomper::Cpp;
 use Chomper::Rust;
@@ -30,6 +31,9 @@ multi sub translate-for-range-loop(
         'ForRangeInitializer::Expression'
     ]) 
 { 
+    my Bool $is-structured-binding = 
+    $item.for-range-declaration ~~ Cpp::StructuredBindingBody;
+
     my $is-ptr-declarator = $item.for-range-declaration.declarator ~~ Cpp::PointerDeclarator;
 
     my $rust-iter
@@ -42,16 +46,20 @@ multi sub translate-for-range-loop(
         $item.for-range-initializer.expression
     );
 
+    my $pat = $is-structured-binding 
+    ?? to-rust-pattern($item.for-range-declaration)
+    !! Rust::Pattern.new(
+        pattern-no-top-alts => [
+            Rust::IdentifierPattern.new(
+                ref        => False,
+                mutable    => False,
+                identifier => $rust-iter,
+            )
+        ],
+    );
+
     Rust::LoopExpressionIterator.new(
-        pattern => Rust::Pattern.new(
-            pattern-no-top-alts => [
-                Rust::IdentifierPattern.new(
-                    ref        => False,
-                    mutable    => False,
-                    identifier => $rust-iter,
-                )
-            ],
-        ),
+        pattern => $pat,
         expression-nostruct => Rust::SuffixedExpression.new(
             base-expression => Rust::BaseExpression.new(
                 expression-item => Rust::PathInExpression.new(

@@ -90,6 +90,7 @@ my package EXPORT::DEFAULT {
         use Chomper::Cpp::GcppStatement;
         use Chomper::Cpp::GcppStorageClass;
         use Chomper::Cpp::GcppStr;
+        use Chomper::Cpp::GcppStructuredBinding;
         use Chomper::Cpp::GcppSuffix;
         use Chomper::Cpp::GcppTemplate;
         use Chomper::Cpp::GcppToken;
@@ -195,6 +196,7 @@ my package EXPORT::DEFAULT {
             %(Chomper::Cpp::GcppStatement::EXPORT::DEFAULT::),
             %(Chomper::Cpp::GcppStorageClass::EXPORT::DEFAULT::),
             %(Chomper::Cpp::GcppStr::EXPORT::DEFAULT::),
+            %(Chomper::Cpp::GcppStructuredBinding::EXPORT::DEFAULT::),
             %(Chomper::Cpp::GcppSuffix::EXPORT::DEFAULT::),
             %(Chomper::Cpp::GcppTemplate::EXPORT::DEFAULT::),
             %(Chomper::Cpp::GcppToken::EXPORT::DEFAULT::),

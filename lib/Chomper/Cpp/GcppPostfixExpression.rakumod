@@ -44,55 +44,31 @@ does IPostfixExpressionBody is export {
     }
 }
 
-package PostfixExpressionTypeId is export {
+# rule postfix-expression-typeid { 
+# <type-id-of-the-type-id> 
+# <.left-paren> 
+# [ <expression> || <the-type-id>] 
+# <.right-paren> 
+# } 
+class PostfixExpressionTypeId 
+does IPostfixExpressionBody
+is export { 
+    has ITheTypeId $.the-type-id is required;
 
-    # rule postfix-expression-typeid { 
-    # <type-id-of-the-type-id> 
-    # <.left-paren> 
-    # [ <expression> || <the-type-id>] 
-    # <.right-paren> 
-    # } 
-    our class Expr { 
-        has TypeIdOfTheTypeId $.type-id-of-the-type-id is required;
-        has IExpression       $.expression             is required;
+    has $.text;
 
-        has $.text;
-
-        method name {
-            'PostfixExpressionTypeId::Expr'
-        }
-
-        method gist(:$treemark=False) {
-
-            my $builder = $.type-id-of-the-type-id.gist(:$treemark);
-
-            $builder ~= "(";
-            $builder ~= $.expression.gist(:$treemark);
-            $builder ~= ")";
-
-            $builder
-        }
+    method name {
+        'PostfixExpressionTypeId'
     }
 
-    our class TypeId { 
-        has TypeIdOfTheTypeId $.type-id-of-the-type-id is required;
-        has ITheTypeId        $.the-type-id            is required;
+    method gist(:$treemark=False) {
+        my $builder = "typeid";
 
-        has $.text;
+        $builder ~= "(";
+        $builder ~= $.the-type-id.gist(:$treemark);
+        $builder ~= ")";
 
-        method name {
-            'PostfixExpressionTypeId::TypeId'
-        }
-
-        method gist(:$treemark=False) {
-            my $builder = $.type-id-of-the-type-id.gist(:$treemark);
-
-            $builder ~= "(";
-            $builder ~= $.the-type-id.gist(:$treemark);
-            $builder ~= ")";
-
-            $builder
-        }
+        $builder
     }
 }
 
@@ -499,7 +475,6 @@ package PostfixExpressionGrammar is export {
         #   || <primary-expression> 
         # } 
         method postfix-expression-body($/) {
-
             given $/.keys[0] {
                 when "postfix-expression-list" {
                     make $<postfix-expression-list>.made
@@ -508,7 +483,7 @@ package PostfixExpressionGrammar is export {
                     make $<postfix-expression-cast>.made
                 }
                 when "postfix-expression-typeid" {
-                    make $<postfix-expression-type-id>.made
+                    make $<postfix-expression-typeid>.made
                 }
                 when "primary-expression" {
                     make $<primary-expression>.made
@@ -544,18 +519,16 @@ package PostfixExpressionGrammar is export {
         #   <.right-paren> 
         # } 
         method postfix-expression-typeid:sym<expr>($/) {
-            make PostfixExpressionTypeid::Expr.new(
-                type-id-of-the-type-id => $<type-id-of-the-type-id>.made,
-                expression             => $<expression>.made,
-                text                   => ~$/,
+            make PostfixExpressionTypeId.new(
+                the-type-id => $<expression>.made,
+                text        => ~$/,
             )
         }
 
         method postfix-expression-typeid:sym<type-id>($/) {
-            make PostfixExpressionTypeid::TypeId.new(
-                type-id-of-the-type-id => $<type-id-of-the-type-id>.made,
-                the-type-id            => $<the-type-id>.made,
-                text                   => ~$/,
+            make PostfixExpressionTypeId.new(
+                the-type-id => $<the-type-id>.made,
+                text        => ~$/,
             )
         }
 
@@ -666,10 +639,19 @@ package PostfixExpressionGrammar is export {
             <right-paren>
         }
 
-        rule postfix-expression-typeid {
+        proto rule postfix-expression-typeid { * }
+
+        rule postfix-expression-typeid:sym<expr> {
             <type-id-of-the-type-id> 
             <left-paren> 
-            [ <expression> ||  <the-type-id>] 
+            <expression>
+            <right-paren>
+        }
+
+        rule postfix-expression-typeid:sym<type-id> {
+            <type-id-of-the-type-id> 
+            <left-paren> 
+            <the-type-id>
             <right-paren>
         }
 

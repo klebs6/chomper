@@ -6,6 +6,7 @@ use Chomper::Cpp::GcppRoles;
 use Chomper::Cpp::GcppIdent;
 use Chomper::Cpp::GcppAttr;
 use Chomper::Cpp::GcppStr;
+use Chomper::Cpp::GcppStructuredBinding;
 
 our role IDeclarationSeq is export { }
 
@@ -295,6 +296,11 @@ package DeclarationGrammar is export {
             make $<attribute-declaration>.made
         }
 
+        # rule block-declaration:sym<structured-binding> { <structured-binding> }
+        method block-declaration:sym<structured-binding>($/) {
+            make $<structured-binding>.made
+        }
+
         # rule block-declaration:sym<simple> { <simple-declaration> }
         method block-declaration:sym<simple>($/) {
             make $<simple-declaration>.made
@@ -367,6 +373,7 @@ package DeclarationGrammar is export {
             )
         }
 
+
         # rule static-assert-declaration { 
         #   <static_assert> 
         #   <.left-paren> 
@@ -432,14 +439,15 @@ package DeclarationGrammar is export {
         rule declaration:sym<attribute-declaration>   { <attribute-declaration>     } 
 
         proto rule block-declaration { * }
-        rule block-declaration:sym<simple>            { <simple-declaration>        } 
-        rule block-declaration:sym<asm>               { <asm-definition>            } 
-        rule block-declaration:sym<namespace-alias>   { <namespace-alias-definition> } 
-        rule block-declaration:sym<using-decl>        { <using-declaration>         } 
-        rule block-declaration:sym<using-directive>   { <using-directive>           } 
-        rule block-declaration:sym<static-assert>     { <static-assert-declaration>  } 
-        rule block-declaration:sym<alias>             { <alias-declaration>         } 
-        rule block-declaration:sym<opaque-enum-decl>  { <opaque-enum-declaration>    } 
+        rule block-declaration:sym<structured-binding> { <structured-binding>        } 
+        rule block-declaration:sym<simple>             { <simple-declaration>        } 
+        rule block-declaration:sym<asm>                { <asm-definition>            } 
+        rule block-declaration:sym<namespace-alias>    { <namespace-alias-definition> } 
+        rule block-declaration:sym<using-decl>         { <using-declaration>         } 
+        rule block-declaration:sym<using-directive>    { <using-directive>           } 
+        rule block-declaration:sym<static-assert>      { <static-assert-declaration>  } 
+        rule block-declaration:sym<alias>              { <alias-declaration>         } 
+        rule block-declaration:sym<opaque-enum-decl>   { <opaque-enum-declaration>    } 
 
         rule alias-declaration {
             <using>
@@ -466,6 +474,7 @@ package DeclarationGrammar is export {
             <semi> 
         }
 
+        #-------------------------------
         rule static-assert-declaration {
             <static_assert>
             <left-paren>

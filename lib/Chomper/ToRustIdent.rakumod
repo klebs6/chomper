@@ -3,6 +3,7 @@ use Chomper::Rust;
 use Chomper::Cpp;
 use Chomper::ToRust;
 use Chomper::SnakeCase;
+
 use Data::Dump::Tree;
 
 our sub is-all-caps($id) returns Bool {
@@ -35,6 +36,16 @@ multi sub to-rust-ident(
 returns Rust::Identifier 
 {
     to-rust-ident($x.no-pointer-declarator, :$snake-case)
+}
+
+multi sub to-rust-ident(
+    $x where Cpp::PrimaryExpression::This, 
+    Bool :$snake-case) 
+returns Rust::Identifier 
+{
+    Rust::Identifier.new(
+        value => "self"
+    )
 }
 
 multi sub to-rust-ident(

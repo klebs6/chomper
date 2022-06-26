@@ -43,9 +43,43 @@ multi sub translate-for-loop(
 multi sub translate-for-loop(
     $item, 
     [
+        'BasicDeclaration',
+        'EqualityExpression',
+        'PostfixExpression',
+    ]) 
+{ 
+    translate-for-loop(
+        $item, 
+        [
+            'ExpressionStatement',
+            'EqualityExpression',
+            'PostfixExpression',
+        ])
+}
+
+multi sub translate-for-loop(
+    $item, 
+    [
         'ExpressionStatement',
         'EqualityExpression',
         'UnaryExpressionCase::PlusPlus',
+    ]) 
+{ 
+    translate-for-loop(
+        $item, 
+        [
+            'ExpressionStatement',
+            'EqualityExpression',
+            'PostfixExpression',
+        ])
+}
+
+multi sub translate-for-loop(
+    $item, 
+    [
+        'ExpressionStatement',
+        'EqualityExpression',
+        'PostfixExpression',
     ]) 
 { 
     my $rust-initializer   = to-rust($item.for-init-statement);
@@ -66,6 +100,44 @@ multi sub translate-for-loop(
         block-expression => Rust::BlockExpression.new(
             statements => Rust::Statements.new(
                 statements => @rust-statements,
+            )
+        )
+    );
+
+    Rust::Statements.new(
+        statements => @outer-statements
+    )
+}
+
+multi sub translate-for-loop(
+    $item, 
+    [
+        'ExpressionStatement',
+        'PrimaryExpression::Id',
+        'AssignmentExpression::Basic',
+    ]) 
+{ 
+    my $rust-initializer   = to-rust($item.for-init-statement);
+    my $rust-condition     = to-rust($item.condition);
+    my $rust-continue-expr = to-rust($item.expression);
+    my @rust-statements    = $item.statements>>.&to-rust;
+    my $rust-statements    = @rust-statements[0].statements;
+
+    $rust-statements.statements.push: Rust::ExpressionStatementNoBlock.new(
+        expression-noblock => $rust-continue-expr
+    );
+
+    my @outer-statements;
+
+    if $rust-initializer {
+        @outer-statements.push: $rust-initializer;
+    }
+
+    @outer-statements.push: Rust::LoopExpressionPredicate.new(
+        expression-nostruct => $rust-condition,
+        block-expression => Rust::BlockExpression.new(
+            statements => Rust::Statements.new(
+                statements => $rust-statements,
             )
         )
     );

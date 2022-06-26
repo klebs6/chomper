@@ -81,6 +81,7 @@ use Chomper::Cpp::GcppSelection;
 use Chomper::Cpp::GcppShiftExpression;
 use Chomper::Cpp::GcppSpecialize;
 use Chomper::Cpp::GcppStatement;
+use Chomper::Cpp::GcppStructuredBinding;
 use Chomper::Cpp::GcppStorageClass;
 use Chomper::Cpp::GcppStr;
 use Chomper::Cpp::GcppSuffix;
@@ -182,6 +183,7 @@ does ShiftExpressionGrammar::Actions
 does SpecializeGrammar::Actions
 does StatementGrammar::Actions
 does StorageClassGrammar::Actions
+does StructuredBindingGrammar::Actions
 does StringLiteralGrammar::Actions
 does SuffixGrammar::Actions
 does TemplateGrammar::Actions

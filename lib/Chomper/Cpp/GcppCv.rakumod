@@ -66,7 +66,7 @@ class CvQualifierSeq is export {
     }
 
     method gist(:$treemark=False) {
-        @.cv_qualifiers>>.gist(:$treemark).join(" ")
+        @.cv-qualifiers>>.gist(:$treemark).join(" ")
     }
 }
 

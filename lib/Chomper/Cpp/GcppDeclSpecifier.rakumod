@@ -70,6 +70,38 @@ class DeclSpecifierSeq does IDeclSpecifierSeq is export {
     }
 }
 
+class CvAuto is export {
+    has $.cvqualifierseq;
+    has $.storage-class-specifier;
+
+    method name {
+        'CvAuto'
+    }
+
+    method is-mutable {
+        if $.cvqualifierseq {
+            $.cvqualifierseq.is-mutable()
+        } else {
+            True
+        }
+    }
+
+    method gist(:$treemark=False) {
+
+        my $builder;
+
+        if $.cvqualifierseq {
+            $builder ~= $.cvqualifierseq.gist(:$treemark) ~ " ";
+        }
+
+        if $.storage-class-specifier {
+            $builder ~= $.storage-class-specifier.gist(:$treemark) ~ " ";
+        }
+
+        $builder ~ "auto"
+    }
+}
+
 package DeclSpecifierGrammar is export {
 
     our role Actions {
@@ -94,7 +126,6 @@ package DeclSpecifierGrammar is export {
         method decl-specifier:sym<func>($/) {
             make $<function-specifier>.made
         }
-
 
         # token decl-specifier:sym<friend> { 
         #   <.friend> 
@@ -136,6 +167,13 @@ package DeclSpecifierGrammar is export {
                 make @specifiers[0]
             }
         }
+
+        method cv-auto($/) {
+            make CvAuto.new(
+                cvqualifierseq          => $<cvqualifierseq>.made,
+                storage-class-specifier => $<storage-class-specifier>.made,
+            )
+        }
     }
 
     our role Rules {
@@ -149,6 +187,10 @@ package DeclSpecifierGrammar is export {
             <left-paren>
             <decltype-specifier-body>
             <right-paren>
+        }
+
+        rule cv-auto {
+            <cvqualifierseq>? <storage-class-specifier>? <auto>
         }
 
         proto token decl-specifier { * }

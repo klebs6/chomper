@@ -55,6 +55,9 @@ our role IUserDefinedFloatingLiteral does CppBase is export { }
 
 our role IPostfixExpressionTail does CppBase is export { }
 
+our role IStructuredBinding does CppBase is export {}
+our role IForRangeDeclaration does CppBase is export {}
+
 # token postfix-expression-body { 
 #   || <postfix-expression-list> 
 #   || <postfix-expression-cast> 

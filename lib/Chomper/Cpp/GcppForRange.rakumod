@@ -12,7 +12,9 @@ use Chomper::Cpp::GcppAttr;
 #   <decl-specifier-seq> 
 #   <declarator> 
 # }
-class ForRangeDeclaration is export {
+class ForRangeDeclaration 
+does IForRangeDeclaration
+is export {
     has IAttributeSpecifierSeq $.attribute-specifier-seq;
     has IDeclSpecifierSeq      $.decl-specifier-seq is required;
     has IDeclarator            $.declarator is required;
@@ -84,13 +86,17 @@ package ForRangeGrammar is export {
     our role Actions {
 
         # rule for-range-declaration { <attribute-specifier-seq>? <decl-specifier-seq> <declarator> }
-        method for-range-declaration($/) {
+        method for-range-declaration:sym<standard>($/) {
             make ForRangeDeclaration.new(
                 attribute-specifier-seq => $<attribute-specifier-seq>.made,
                 decl-specifier-seq      => $<decl-specifier-seq>.made,
                 declarator              => $<declarator>.made,
                 text                    => ~$/,
             )
+        }
+
+        method for-range-declaration:sym<binding>($/) {
+            make $<structured-binding-body>.made
         }
 
         # rule for-range-initializer:sym<expression> { <expression> }
@@ -109,14 +115,20 @@ package ForRangeGrammar is export {
 
     our role Rules {
 
-        rule for-range-declaration {
+        proto rule for-range-declaration { * }
+
+        rule for-range-declaration:sym<standard> {
             <attribute-specifier-seq>?
             <decl-specifier-seq>
             <declarator>
         }
 
+        rule for-range-declaration:sym<binding> {
+            <structured-binding-body>
+        }
+
         proto rule for-range-initializer { * }
-        rule for-range-initializer:sym<expression>     { <expression> }
+        rule for-range-initializer:sym<expression>       { <expression> }
         rule for-range-initializer:sym<braced-init-list> { <braced-init-list> }
     }
 }

@@ -179,6 +179,10 @@ package IdentifierGrammar is export {
                 value => ~$/,
             )
         }
+
+        method identifier-list($/) {
+            make $<identifier>>>.made
+        }
     }
 
     our role Rules {
@@ -199,6 +203,10 @@ package IdentifierGrammar is export {
             )
 
             <?{not is-cpp-keyword($0)}>
+        }
+
+        rule identifier-list {
+            <identifier>+ %% <comma>
         }
 
         token nondigit {

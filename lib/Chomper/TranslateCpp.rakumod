@@ -8,6 +8,7 @@ use Chomper::SuffixedExpression;
 use Chomper::MatchArms;
 use Chomper::ToRustBlockExpression;
 use Chomper::ToRustType;
+use Chomper::ToRustPattern;
 use Chomper::ToRustPathInExpression;
 use Chomper::ToRustMatchArm;
 use Chomper::ToRustParams;
@@ -40,6 +41,9 @@ our sub translate-cpp-ir-to-rust($typename, $item)
         when "BasicDeclaration"             { to-rust($item) }
         when "SelectionStatement::If"       { to-rust($item) }
         when "SelectionStatement::Switch"   { to-rust($item) }
+        when "StructuredBinding::Eq"        { to-rust($item) }
+        when "StructuredBinding::Braces"    { to-rust($item) }
+        when "StructuredBinding::Parens"    { to-rust($item) }
         default {
             die "need to add {$item.name} to translate-cpp-ir-to-rust";
         }
@@ -577,6 +581,10 @@ multi sub to-rust(
             $mask = 'T &I{E};';
         }
 
+        when /^^ 'T &I(' .* ');' / {
+            $mask = 'T &I(E);';
+        }
+
         when /^^ 'I[' .* '] =' / {
             $mask = 'I[E] = E;';
         }
@@ -584,6 +592,62 @@ multi sub to-rust(
     }
 
     translate-basic-declaration-to-rust($mask, $item)
+}
+
+multi sub to-rust($x where Cpp::PostfixExpressionTypeId) {
+
+    debug "will translate PostfixExpressionTypeId to Rust!";
+
+    my $type-id = to-rust($x.the-type-id);
+
+    Rust::SuffixedExpression.new(
+        base-expression => Rust::BaseExpression.new(
+            expression-item => $type-id 
+        ),
+        suffixed-expression-suffix => [
+            Rust::MethodCallExpressionSuffix.new(
+                path-expr-segment => Rust::PathExprSegment.new(
+                    path-ident-segment => Rust::Identifier.new(
+                        value => "type_id"
+                    )
+                )
+            )
+        ]
+    )
+}
+
+multi sub to-rust($x where Cpp::StructuredBinding::Eq) {
+    debug "will translate StructuredBinding::Eq to Rust!";
+
+    my $rust-expr = to-rust($x.expression);
+
+    my Bool $is-ref = $x.structured-binding-body.refqualifier ~~ Cpp::RefQualifier::And;
+
+    my Bool $is-mutable = $x.structured-binding-body.is-mutable();
+
+    my @pats = $x.structured-binding-body.identifier-list.List>>.&to-rust-pattern(:$is-ref, :$is-mutable);
+
+    Rust::LetStatement.new(
+        maybe-comment    => Nil,
+        outer-attributes => [],
+        pattern-no-top-alt => Rust::TupleStructItems.new(
+            patterns => @pats,
+        ),
+        maybe-type       => Nil,
+        maybe-expression => $rust-expr,
+    )
+}
+
+multi sub to-rust($x where Cpp::StructuredBinding::Braces) {
+    debug "will translate StructuredBinding::Braces to Rust!";
+    ddt $x;
+    exit;
+}
+
+multi sub to-rust($x where Cpp::StructuredBinding::Parens) {
+    debug "will translate StructuredBinding::Parens to Rust!";
+    ddt $x;
+    exit;
 }
 
 multi sub to-rust($x where Cpp::NewExpression::NewTypeId) {

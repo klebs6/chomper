@@ -161,7 +161,7 @@ package IterationStatement is export {
     #   <statement> 
     # } #-----------------------------
     our class ForRange does IIterationStatement {
-        has ForRangeDeclaration  $.for-range-declaration is required;
+        has IForRangeDeclaration  $.for-range-declaration is required;
         has IForRangeInitializer $.for-range-initializer is required;
         has IStatement           @.statements is required;
 
