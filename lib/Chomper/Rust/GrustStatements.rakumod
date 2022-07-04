@@ -16,7 +16,7 @@ class Statements is export {
             @res.push: $.maybe-expression-noblock.gist;
         }
 
-        @res.join("\n")
+        @res.join("\n\n")
     }
 }
 

@@ -33,5 +33,7 @@ our sub translate-ir(
     };
 
     say "----------------[translation]";
-    .say for @rust-snippets;
+    for @rust-snippets {
+        say "{$_}\n";
+    }
 }

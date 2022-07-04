@@ -77,24 +77,7 @@ our sub glob-import-from-crates($name, @crates) {
 #----------------------------------------------
 our sub add-starter-lib-file-for-crate($name) {
     my $starter = q:to/END/;
-    #![feature(test)]
-    extern crate test;
-
-    macro_rules! x { ($x:ident) => { mod $x; pub use $x::*; } }
-
-    #[macro_use] macro_rules! ix { 
-        () => { 
-            use crate::{ 
-                imports::* , 
-            };
-        } 
-    }
-
-
-    #[macro_use] extern crate lazy_static;
-    #[macro_use] extern crate static_assertions;
-
-    mod imports;
+    #[macro_use] mod imports; use imports::*;
 
     //x!{modfile}
     END
