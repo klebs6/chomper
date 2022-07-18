@@ -261,10 +261,11 @@ multi sub translate-postfix-expression(
 
     my Bool $indirect = $indirection-id.indirect;
 
+    #NOTE: made a change here
     if $indirect {
-        "(*{$ident}).{$func}[$rust-bracket-expr]"
+        "(*{$ident}[$rust-bracket-expr]).{$func}"
     } else {
-        "{$ident}.{$func}[$rust-bracket-expr]"
+        "{$ident}[$rust-bracket-expr].{$func}"
     }
 }
 
