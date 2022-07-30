@@ -10,10 +10,15 @@ RUSTFLAGS := -Awarnings
 
 BUILD     := build --verbose
 
+ACTIVE := chomper-oneshot
+
 default: build
 
+build_all:
+	RUSTFLAGS=$(RUSTFLAGS) $(CARGO) $(BUILD)
+
 build:
-	RUSTFLAGS=$(RUSTFLAGS) $(CARGO) $(BUILD) 
+	RUSTFLAGS=$(RUSTFLAGS) $(CARGO) $(BUILD) -p $(ACTIVE)
 
 init: hooks install
 

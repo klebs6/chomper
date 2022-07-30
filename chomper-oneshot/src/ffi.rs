@@ -1,22 +1,4 @@
-#![feature(test)]
-extern crate test;
-
-macro_rules! x { ($x:ident) => { mod $x; pub use $x::*; } }
-
-#[macro_use] macro_rules! ix { 
-    () => { 
-        use crate::{ 
-            imports::* , 
-        };
-    } 
-}
-
-#[macro_use] extern crate lazy_static;
-#[macro_use] extern crate static_assertions;
-
-mod imports;
-
-x!{function}
+crate::ix!();
 
 #[no_mangle] pub extern "C" fn get_rust_fname(
     crate_json_db: *const libc::c_char,

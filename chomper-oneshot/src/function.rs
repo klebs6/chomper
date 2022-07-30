@@ -1,7 +1,6 @@
-ix!();
+crate::ix!();
 
-use crate::*;
-
+/*
 pub unsafe fn to_str<'a>(x: *const libc::c_char) -> &'a str {
     let c_str: &CStr = CStr::from_ptr(x);
     c_str.to_str().unwrap()
@@ -83,3 +82,4 @@ pub fn get_current_function_span(
         None      => None,
     }
 }
+*/

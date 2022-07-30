@@ -1,25 +1,21 @@
-use clap::Parser;
-
-pub const EXAMPLE_TEXT: &'static str = r#"
-for source_i in 0..NUM_SOURCES {
-    addrman.add(g_addresses[source_i], g_sources[source_i]);
-}
-"#;
+crate::ix!();
 
 /// takes the translated cpp -> rust text from
 /// raku and runs it through some rust-analyzer
 /// code
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
-struct Args {
+pub struct Args {
 
     #[clap(short, long, value_parser, default_value_t = EXAMPLE_TEXT.to_string())]
-    text: String,
-}
+    pub text: String,
 
-fn main() {
+    #[clap(short, long, value_parser)]
+    pub file: Option<String>,
 
-    let text = Args::parse().text;
+    #[clap(long, value_parser, default_value_t = 0)]
+    pub first: u16,
 
-    println!("{}", text);
+    #[clap(long, value_parser, default_value_t = 0)]
+    pub last: u16,
 }
