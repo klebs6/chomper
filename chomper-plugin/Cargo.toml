@@ -1,0 +1,17 @@
+[package]
+name = "chomper-plugin"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+libloading      = "*"
+
+[dependencies.text-edit]
+version = "*"
+path = "../rust-analyzer/crates/text-edit"
+
+[dependencies.syntax]
+version = "*"
+path = "../rust-analyzer/crates/syntax"

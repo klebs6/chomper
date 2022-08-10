@@ -1,0 +1,6 @@
+[submodule "rust-analyzer"]
+	path = rust-analyzer
+	url = https://github.com/klebz/rust-analyzer
+[submodule "rust-tools.nvim"]
+	path = rust-tools.nvim
+	url = https://github.com/klebz/rust-tools.nvim

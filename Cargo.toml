@@ -1,2 +1,2 @@
 [workspace]
-members = [ "chomper-derive", "chomper-imports", "chomper-oneshot" ]
+members = [ "chomper2", "chomper-derive", "chomper-imports", "chomper-oneshot", "chomper-plugin" ]

@@ -17,6 +17,7 @@ default: build
 build_all:
 	RUSTFLAGS=$(RUSTFLAGS) $(CARGO) $(BUILD)
 
+
 build:
 	RUSTFLAGS=$(RUSTFLAGS) $(CARGO) $(BUILD) -p $(ACTIVE)
 
