@@ -9,7 +9,12 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-tracing         = "*"
+tracing            = "*"
+tracing-subscriber = "*"
+log                = "*"
+ctor               = "*"
+tracing-log        = "*"
+lazy_static        = "*"
 
 [dependencies.text-edit]
 version = "*"

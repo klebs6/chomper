@@ -6,7 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-libloading      = "*"
+libloading = "*"
+tracing    = "0.1.35"
 
 [dependencies.text-edit]
 version = "*"
