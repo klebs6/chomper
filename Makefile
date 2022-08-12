@@ -10,13 +10,12 @@ RUSTFLAGS := -Awarnings
 
 BUILD     := build --verbose
 
-ACTIVE := chomper2
+ACTIVE    := chomper2
 
 default: build
 
 build_all:
 	RUSTFLAGS=$(RUSTFLAGS) $(CARGO) $(BUILD)
-
 
 build:
 	RUSTFLAGS=$(RUSTFLAGS) $(CARGO) $(BUILD) -p $(ACTIVE)

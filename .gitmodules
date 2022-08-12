@@ -4,3 +4,6 @@
 [submodule "rust-tools.nvim"]
 	path = rust-tools.nvim
 	url = https://github.com/klebz/rust-tools.nvim
+[submodule "hotlib"]
+	path = hotlib
+	url = https://github.com/klebz/hotlib

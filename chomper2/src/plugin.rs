@@ -1,7 +1,7 @@
 crate::ix!();
 
 #[derive(Debug)]
-struct KlebsFix {
+pub struct KlebsFix {
 
 }
 
@@ -34,7 +34,7 @@ impl KlebsFixBabyRustPlugin for KlebsFix {
         tracing::debug!("config: {:?}", config);
         tracing::debug!("range:  {:?}", range);
         tracing::debug!("file:   {:?}", file);
-        tracing::debug!("yess!!!!!!!");
+        tracing::debug!("yess!!!!");
 
         let range = if range.is_empty() {
 

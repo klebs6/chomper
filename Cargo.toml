@@ -1,2 +1,3 @@
 [workspace]
 members = [ "chomper2", "chomper-imports", "chomper-plugin" ]
+exclude = [ "hotlib" ]

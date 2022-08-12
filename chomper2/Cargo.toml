@@ -9,6 +9,9 @@ edition = "2021"
 crate-type = ["dylib"]
 
 [dependencies]
+tracing            = "*"
+tracing-log        = "*"
+tracing-subscriber = { version = "*", features = [ "env-filter" ] }
 
 [dependencies.chomper-plugin]
 version = "*"
