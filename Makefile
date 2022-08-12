@@ -10,7 +10,7 @@ RUSTFLAGS := -Awarnings
 
 BUILD     := build --verbose
 
-ACTIVE := chomper-oneshot
+ACTIVE := chomper2
 
 default: build
 

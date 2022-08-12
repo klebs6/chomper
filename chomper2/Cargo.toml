@@ -6,28 +6,15 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
-crate-type = ["cdylib"]
+crate-type = ["dylib"]
 
 [dependencies]
-tracing            = "*"
-tracing-subscriber = "*"
-log                = "*"
-ctor               = "*"
-tracing-log        = "*"
-lazy_static        = "*"
-
-[dependencies.text-edit]
-version = "*"
-path = "../rust-analyzer/crates/text-edit"
 
 [dependencies.chomper-plugin]
 version = "*"
 path = "../chomper-plugin"
 
-[dependencies.syntax]
+[dependencies.chomper-imports]
 version = "*"
-path = "../rust-analyzer/crates/syntax"
+path = "../chomper-imports"
 
-[dependencies.ide]
-version = "*"
-path = "../rust-analyzer/crates/ide"
