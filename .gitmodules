@@ -7,3 +7,9 @@
 [submodule "hotlib"]
 	path = hotlib
 	url = https://github.com/klebz/hotlib
+[submodule "hot-reloader"]
+	path = hot-reloader
+	url = https://github.com/klebz/hot-reloader
+[submodule "dynamic_reload"]
+	path = dynamic_reload
+	url = https://github.com/klebz/dynamic_reload

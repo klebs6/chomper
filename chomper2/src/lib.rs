@@ -5,11 +5,12 @@ x!{plugin}
 x!{setup_logging}
 
 #[no_mangle]
+#[allow(improper_ctypes_definitions)]
 pub extern "C" fn create_klebs_fix_baby_rust_plugin() -> *mut dyn KlebsFixBabyRustPlugin {
 
-    write_stupid_file("/tmp/foo-did-this-hit", Some("yes-6"));
+    write_stupid_file("/tmp/chomper2-create-klebs-fix-baby-rust-plugin-count", None);
 
-    let mut b = Box::new(KlebsFix::default());
+    let b = Box::new(KlebsFix::default());
 
     Box::<KlebsFix>::into_raw(b)
 }

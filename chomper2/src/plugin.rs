@@ -28,17 +28,18 @@ impl KlebsFixBabyRustPlugin for KlebsFix {
         range: TextRange,
     ) -> TextEdit {
 
-        write_stupid_file("/tmp/foo", None);
+        write_stupid_file("/tmp/chomper2-entrypoint-count", None);
 
-        tracing::debug!("klebs_fix_baby_rust");
-        tracing::debug!("config: {:?}", config);
-        tracing::debug!("range:  {:?}", range);
-        tracing::debug!("file:   {:?}", file);
-        tracing::debug!("yess!!!!");
+        tracing::info!("klebs_fix_baby_rust");
+        tracing::info!("config: {:?}", config);
+        tracing::info!("range:  {:?}", range);
+        tracing::info!("file:   {:?}", file);
+        tracing::info!("yess!!!");
+        tracing::info!("ddd message");
 
         let range = if range.is_empty() {
 
-            tracing::debug!("range.is_empty() is true");
+            tracing::info!("range.is_empty() is true");
 
             let syntax = file.syntax();
             let text   = syntax.text().slice(range.start()..);
@@ -54,28 +55,29 @@ impl KlebsFixBabyRustPlugin for KlebsFix {
             range
         };
 
-        tracing::debug!("range:  {:?}", range);
+        tracing::info!("range:  {:?}", range);
 
         let syntax = file.syntax();
         let text   = syntax.text().slice(range.start()..range.end());
 
-        tracing::debug!("syntax: {:?}", syntax);
-        tracing::debug!("text:   {:?}",   text);
+        tracing::info!("syntax: {:?}", syntax);
+        tracing::info!("text:   {:?}",   text);
 
-        let mut edit = TextEdit::builder();
+        let edit = TextEdit::builder();
 
-        match file.syntax().covering_element(range) {
+        let elem = file.syntax().covering_element(range);
+
+        tracing::info!("elem: {:?}", elem);
+
+        match elem {
             NodeOrToken::Node(node) => {
-                for token in node.descendants_with_tokens().filter_map(|it| it.into_token()) {
-                    /*
-                    remove_newlines(config, &mut edit, &token, range)
-                    */
+                tracing::info!("-node-");
+                for _token in node.descendants_with_tokens().filter_map(|it| it.into_token()) {
+                    //tracing::info!("token: {:?}", token);
                 }
             }
             NodeOrToken::Token(token) => {
-                /*
-                remove_newlines(config, &mut edit, &token, range)
-                */
+                tracing::info!("token: {:?}", token);
             },
         };
 

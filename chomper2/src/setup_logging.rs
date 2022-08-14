@@ -1,6 +1,6 @@
 crate::ix!();
 
-#[ctor] fn setup_logging() {
+pub fn setup_logging() {
 
     let logpath = std::env::var("RA_PLUGIN_LOG_FILE").ok();
     let logflag = std::env::var("RA_PLUGIN_LOG").ok();
@@ -11,17 +11,17 @@ crate::ix!();
         logflag.as_ref().unwrap(),
     };
 
-    write_stupid_file("/tmp/foo-setup-logging", Some(msg.as_str()));
+    write_stupid_file("/tmp/chomper2-setup-logging-env", Some(msg.as_str()));
 
     let file = match logpath {
         Some(p) => match File::create(p) {
             Ok(f)  => Some(f),
-            Err(e) => None,
+            Err(_e) => None,
         },
         None    => None,
     };
 
-    write_stupid_file("/tmp/foo-check-file", Some(format!("{:#?}", file).as_str()));
+    write_stupid_file("/tmp/chomper2-logfile-info", Some(format!("{:#?}", file).as_str()));
 
     let writer = match file {
         Some(file) => BoxMakeWriter::new(Arc::new(file)),
@@ -32,7 +32,7 @@ crate::ix!();
     let subscriber = FmtSubscriber::builder()
         // all spans/events with a level higher than TRACE (e.g, debug, info, warn, etc.)
         // will be written to stdout.
-        .with_max_level(Level::TRACE)
+        .with_max_level(Level::INFO)
         .with_env_filter(EnvFilter::from_env("RA_PLUGIN_LOG"))
         .with_writer(writer)
         // completes the builder.
@@ -42,4 +42,12 @@ crate::ix!();
         .expect("setting default subscriber failed");
 
     tracing::info!("test trace info from chomper2!");
+}
+
+
+#[ctor] fn ctor_setup_logging() {
+
+    write_stupid_file("/tmp/chomper2-ctor-count", None);
+
+    setup_logging();
 }
