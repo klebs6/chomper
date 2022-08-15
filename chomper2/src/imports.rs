@@ -1,5 +1,3 @@
-#![feature(io_read_to_string)]
-
 #[macro_export] macro_rules! x { 
     ($x:ident) => { 
         mod $x; 
@@ -57,10 +55,6 @@ pub use anyhow;
 pub use rustc_hash::{FxHashSet,FxHashMap};
 
 pub use libc;
-
-pub use clap::{
-    Parser,
-};
 
 pub use std::path::*;
 pub use std::collections::*;

@@ -35,7 +35,7 @@ impl KlebsFixBabyRustPlugin for KlebsFix {
         tracing::info!("range:  {:?}", range);
         tracing::info!("file:   {:?}", file);
         tracing::info!("yess!!!");
-        tracing::info!("ddd message");
+        tracing::info!("xxx message");
 
         let range = if range.is_empty() {
 
