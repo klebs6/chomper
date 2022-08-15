@@ -1,0 +1,75 @@
+#!/usr/bin/env raku
+
+use File::Find;
+
+my $outfile = "out.txt";
+
+if $outfile.IO.e {
+    $outfile.IO.unlink;
+}
+
+#----------------------
+my $camelcase  = regex { ^^ [<[A..Z]> <[a..z]>+]+ };
+
+my $punc-or-ws = regex {
+    | <punct>
+    | <.ws>
+};
+
+class FileDoneMsg {
+    has $.file;
+}
+
+class Tok {
+    has $.value;
+}
+ 
+#----------------------
+my @files = find(dir => "vendor-lite", name => /\.rs/);
+
+my $supplier = Supplier.new;
+my $supply   = $supplier.Supply;
+my $channel  = $supply.Channel;
+
+my $seen = SetHash.new;
+
+my $p = start {
+
+    react  {
+
+        whenever $channel -> $item {
+
+            given $item {
+
+                when Str {
+                    $outfile.IO.spurt: "$item\n", :append;
+                }
+
+                when FileDoneMsg {
+                    say  "file done: {$_.file}";
+                }
+            }
+        }
+    }
+}
+
+for @files -> $file {
+
+    my @lines = $file.IO.slurp.lines;
+
+    for @lines -> $line {
+
+        for $line.split($punc-or-ws) -> $tok {
+
+            if $tok ~~ $camelcase {
+                $supplier.emit($tok);
+            }
+        }
+    }
+
+    $supplier.emit(FileDoneMsg.new(file => $file));
+}
+ 
+$supplier.done;
+
+await $p;
