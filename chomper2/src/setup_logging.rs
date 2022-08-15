@@ -11,8 +11,6 @@ pub fn setup_logging() {
         logflag.as_ref().unwrap(),
     };
 
-    write_stupid_file("/tmp/chomper2-setup-logging-env", Some(msg.as_str()));
-
     let file = match logpath {
         Some(p) => match File::create(p) {
             Ok(f)  => Some(f),
@@ -20,8 +18,6 @@ pub fn setup_logging() {
         },
         None    => None,
     };
-
-    write_stupid_file("/tmp/chomper2-logfile-info", Some(format!("{:#?}", file).as_str()));
 
     let writer = match file {
         Some(file) => BoxMakeWriter::new(Arc::new(file)),
@@ -44,10 +40,7 @@ pub fn setup_logging() {
     tracing::info!("test trace info from chomper2!");
 }
 
-
 #[ctor] fn ctor_setup_logging() {
-
-    write_stupid_file("/tmp/chomper2-ctor-count", None);
 
     setup_logging();
 }

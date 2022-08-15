@@ -1,18 +1,8 @@
 crate::ix!();
 
-#[derive(Debug)]
+#[derive(Default,Debug)]
 pub struct KlebsFix {
 
-}
-
-impl Default for KlebsFix {
-
-    fn default() -> Self {
-
-        Self { 
-
-        }
-    }
 }
 
 impl KlebsFixBabyRustPlugin for KlebsFix {
@@ -31,11 +21,9 @@ impl KlebsFixBabyRustPlugin for KlebsFix {
         write_stupid_file("/tmp/chomper2-entrypoint-count", None);
 
         tracing::info!("klebs_fix_baby_rust");
-        tracing::info!("config: {:?}", config);
         tracing::info!("range:  {:?}", range);
+        tracing::info!("config: {:?}", config);
         tracing::info!("file:   {:?}", file);
-        tracing::info!("yess!!!");
-        tracing::info!("xxx message");
 
         let range = if range.is_empty() {
 
