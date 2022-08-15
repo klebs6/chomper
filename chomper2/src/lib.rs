@@ -2,7 +2,6 @@
 
 #[macro_use] mod imports; use imports::*;
 
-x!{util}
 x!{plugin}
 x!{setup_logging}
 
@@ -13,4 +12,25 @@ pub extern "C" fn create_klebs_fix_baby_rust_plugin() -> *mut dyn KlebsFixBabyRu
     let b = Box::new(KlebsFix::default());
 
     Box::<KlebsFix>::into_raw(b)
+}
+
+#[derive(Default,Debug)]
+pub struct KlebsFix {
+
+}
+
+impl KlebsFixBabyRustPlugin for KlebsFix {
+
+    // Feature: Klebs Fix Baby Rust
+    //
+    // chomper integrations!
+    //
+    fn klebs_fix_baby_rust(
+        &self,
+        config: &KlebsFixBabyRustConfig,
+        file: &SourceFile,
+        range: TextRange,
+    ) -> TextEdit {
+        klebs_fix_baby_rust(config,file,range)
+    }
 }
