@@ -18,6 +18,23 @@ sub to-rust-generic-args($x where Cpp::TemplateArgumentList) {
     )
 }
 
+multi sub to-rust-type($x where Cpp::SimpleTypeSpecifier::Void_) {  
+    Rust::TraitObjectTypeOneBound.new(
+        dyn         => True,
+        trait-bound => Rust::TraitBound.new(
+            type-path => Rust::TypePath.new(
+                type-path-segments => [
+                    Rust::TypePathSegment.new(
+                        path-ident-segment => Rust::Identifier.new(
+                            value => "Any",
+                        )
+                    )
+                ]
+            )
+        )
+    )
+}
+
 multi sub to-rust-type($x where Cpp::SimpleTemplateId) {  
 
     my Rust::Identifier $template-name = to-rust-type($x.template-name);

@@ -41,6 +41,7 @@ multi sub translate-basic-declaration-to-rust(
     exit;
 }
 
+
 multi sub translate-basic-declaration-to-rust(
      "T I, I;",
     $item where Cpp::BasicDeclaration:D) 
@@ -537,20 +538,26 @@ multi sub translate-basic-declaration-to-rust(
 
     my $default-initializer = create-default-initializer($rust-type);
 
+    my $maybe-type = do if %known-default-map{$rust-type}:exists {
+        Nil
+    } else {
+        $rust-type
+    };
+
     Rust::LetStatement.new(
         pattern-no-top-alt => Rust::IdentifierPattern.new(
             ref        => False,
             mutable    => True,
             identifier => $rust-ident,
         ),
-        maybe-type       => Nil,
+        maybe-type       => $maybe-type,
         maybe-expression => $default-initializer,
     )
 }
 
 multi sub translate-basic-declaration-to-rust(
-    "T *I;",
-    $item where Cpp::BasicDeclaration) 
+     "T *I;",
+    $item where Cpp::BasicDeclaration:D) 
 {
     debug "mask T *I;";
 
@@ -559,21 +566,36 @@ multi sub translate-basic-declaration-to-rust(
         mutable       => True,
     );
 
-    my $rust-ident = to-rust-ident($item.init-declarator-list[0], snake-case => True);
+    my @let-statements = do for $item.init-declarator-list.List -> $declarator {
 
-    my $default-initializer = create-default-initializer($rust-type);
+        my $rust-ident = to-rust-ident($declarator, snake-case => True);
 
-    Rust::LetStatement.new(
-        pattern-no-top-alt => Rust::IdentifierPattern.new(
-            ref        => False,
-            mutable    => True,
-            identifier => $rust-ident,
-        ),
-        maybe-type       => Nil,
-        maybe-expression => $default-initializer,
+        my $default-initializer = create-default-initializer($rust-type);
+
+        my $init-type = do if $rust-type ~~ Rust::RawPtrType {
+
+            $rust-type
+
+        } else {
+
+            Nil
+        };
+
+        Rust::LetStatement.new(
+            pattern-no-top-alt => Rust::IdentifierPattern.new(
+                ref        => False,
+                mutable    => True,
+                identifier => $rust-ident,
+            ),
+            maybe-type       => $init-type,
+            maybe-expression => $default-initializer,
+        )
+    };
+
+    Rust::Statements.new(
+        statements => @let-statements
     )
 }
-
 
 multi sub translate-basic-declaration-to-rust(
     "I(Es);",
@@ -1208,6 +1230,7 @@ multi sub translate-basic-declaration-to-rust(
     "T *I = E;",
     $item where Cpp::BasicDeclaration) 
 {
+
     debug "mask T *I = E;";
     ddt $item;
 

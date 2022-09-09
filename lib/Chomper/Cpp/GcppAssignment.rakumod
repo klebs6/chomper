@@ -290,12 +290,12 @@ package AssignmentExpressionGrammar is export {
 
         # token assignment-operator:sym<rshift-assign> { <.right-shift-assign> }
         method assignment-operator:sym<rshift-assign>($/) {
-            make AssignmentOperator::RshiftAssign.new
+            make AssignmentOperator::RShiftAssign.new
         }
 
         # token assignment-operator:sym<lshift-assign> { <.left-shift-assign> }
         method assignment-operator:sym<lshift-assign>($/) {
-            make AssignmentOperator::LshiftAssign.new
+            make AssignmentOperator::LShiftAssign.new
         }
 
         # token assignment-operator:sym<and-assign> { <.and-assign> }

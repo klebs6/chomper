@@ -1,37 +1,38 @@
 crate::ix!();
 
+pub fn maybe_debug_header(config: &KlebsFixBabyRustConfig, file: &SourceFile, range: TextRange)
+{
+    const TRACE_FUNCTION_ARGS: bool = true;
+
+    if TRACE_FUNCTION_ARGS {
+
+        tracing::info!("klebs_fix_baby_rust");
+        tracing::info!("range:  {:?}", range);
+        tracing::info!("config: {:?}", config);
+        tracing::info!("file:   {:?}", file);
+    }
+}
+
 pub fn klebs_fix_baby_rust(
-        config: &KlebsFixBabyRustConfig,
-        file: &SourceFile,
-        range: TextRange,
-    ) -> TextEdit 
+    db:     &RootDatabase,
+    config: &KlebsFixBabyRustConfig,
+    file: &SourceFile,
+    range: TextRange,
+) -> TextEdit 
 {
     write_stupid_file("/tmp/chomper2-entrypoint-count", None);
 
-    tracing::info!("klebs_fix_baby_rust");
-    tracing::info!("range:  {:?}", range);
-    tracing::info!("config: {:?}", config);
-    tracing::info!("file:   {:?}", file);
+    maybe_debug_header(config,file,range);
 
-    let range = if range.is_empty() {
+    let maybe_range = maybe_adjust_range(file,range);
 
-        tracing::info!("range.is_empty() is true");
+    if maybe_range.is_none() {
+        return TextEdit::builder().finish();
+    }
 
-        let syntax = file.syntax();
-        let text   = syntax.text().slice(range.start()..);
+    let range = maybe_range.unwrap();
 
-        let pos = match text.find_char('\n') {
-            None => return TextEdit::builder().finish(),
-            Some(pos) => pos,
-        };
-
-        TextRange::at(range.start(), pos)
-
-    } else {
-        range
-    };
-
-    tracing::info!("range:  {:?}", range);
+    tracing::info!("range: {:?}", range);
 
     let syntax = file.syntax();
     let text   = syntax.text().slice(range.start()..range.end());
@@ -43,17 +44,30 @@ pub fn klebs_fix_baby_rust(
 
     let elem = file.syntax().covering_element(range);
 
-    tracing::info!("elem: {:?}", elem);
+    tracing::info!("elem: {:?}",      elem);
+    tracing::info!("elem_kind: {:?}", elem.kind());
 
     match elem {
+
         NodeOrToken::Node(node) => {
-            tracing::info!("-node-");
-            for _token in node.descendants_with_tokens().filter_map(|it| it.into_token()) {
-                //tracing::info!("token: {:?}", token);
+
+            if let Some(stmt_list) = ast::StmtList::cast(node) {
+
+                for stmt in stmt_list.statements() {
+
+                    let maybe_fixed_stmt = 
+                    maybe_fix_errors_in_statement(db,&stmt);
+
+                    tracing::info!("maybe_fixed_stmt: {:?}", maybe_fixed_stmt);
+
+                    //once we know it works, can
+                    //apply it to the edit
+                }
             }
         }
+
         NodeOrToken::Token(token) => {
-            tracing::info!("token: {:?}", token);
+            tracing::warn!("token: {:?}", token);
         },
     };
 
