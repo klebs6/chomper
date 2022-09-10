@@ -51,9 +51,16 @@ pub fn klebs_fix_baby_rust(
 
         NodeOrToken::Node(node) => {
 
-            if let Some(stmt_list) = ast::StmtList::cast(node) {
+            tracing::info!("--node--");
+            tracing::info!("{:?}", node);
+
+            if let Some(stmt_list) = ast::StmtList::cast(node.clone()) {
+
+                tracing::info!("got stmt_list");
 
                 for stmt in stmt_list.statements() {
+
+                    tracing::info!("wtf again?");
 
                     let maybe_fixed_stmt = 
                     maybe_fix_errors_in_statement(db,&stmt);
@@ -63,6 +70,17 @@ pub fn klebs_fix_baby_rust(
                     //once we know it works, can
                     //apply it to the edit
                 }
+
+            } else if let Some(expr_stmt) = ast::ExprStmt::cast(node.clone()) {
+
+                let maybe_fixed_expr_stmt = 
+                maybe_fix_errors_in_expr_statement(db,&expr_stmt);
+
+                tracing::info!("maybe_fixed_expr_stmt: {:?}", maybe_fixed_expr_stmt);
+
+            } else {
+
+                tracing::warn!("no stmt_list -- why?");
             }
         }
 

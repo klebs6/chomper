@@ -35,6 +35,10 @@ path = "../rust-analyzer/crates/text-edit"
 version = "*"
 path = "../rust-analyzer/crates/syntax"
 
+[dependencies.parser]
+version = "*"
+path = "../rust-analyzer/crates/parser"
+
 [dependencies.ide]
 version = "*"
 path = "../rust-analyzer/crates/ide"

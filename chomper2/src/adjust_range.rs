@@ -2,6 +2,8 @@ crate::ix!();
 
 pub fn maybe_adjust_range(file: &SourceFile, range: TextRange) -> Option<TextRange> {
 
+    tracing::info!("wtf?");
+
     let syntax = file.syntax();
     let text   = syntax.text().slice(range.start()..);
 
