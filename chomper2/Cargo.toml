@@ -35,6 +35,18 @@ path = "../rust-analyzer/crates/text-edit"
 version = "*"
 path = "../rust-analyzer/crates/syntax"
 
+[dependencies.base-db]
+version = "*"
+path = "../rust-analyzer/crates/base-db"
+
+[dependencies.hir-ty]
+version = "*"
+path = "../rust-analyzer/crates/hir-ty"
+
+[dependencies.hir-def]
+version = "*"
+path = "../rust-analyzer/crates/hir-def"
+
 [dependencies.parser]
 version = "*"
 path = "../rust-analyzer/crates/parser"

@@ -14,7 +14,7 @@ pub fn maybe_debug_header(config: &KlebsFixBabyRustConfig, file: &SourceFile, ra
 }
 
 pub fn klebs_fix_baby_rust(
-    db:     &RootDatabase,
+    db:     RASnapshot,
     config: &KlebsFixBabyRustConfig,
     file: &SourceFile,
     range: TextRange,
@@ -63,7 +63,7 @@ pub fn klebs_fix_baby_rust(
                     tracing::info!("wtf again?");
 
                     let maybe_fixed_stmt = 
-                    maybe_fix_errors_in_statement(db,&stmt);
+                    maybe_fix_errors_in_statement(&db,&stmt);
 
                     tracing::info!("maybe_fixed_stmt: {:?}", maybe_fixed_stmt);
 
@@ -74,7 +74,7 @@ pub fn klebs_fix_baby_rust(
             } else if let Some(expr_stmt) = ast::ExprStmt::cast(node.clone()) {
 
                 let maybe_fixed_expr_stmt = 
-                maybe_fix_errors_in_expr_statement(db,&expr_stmt);
+                maybe_fix_errors_in_expr_stmt(&db,&expr_stmt);
 
                 tracing::info!("maybe_fixed_expr_stmt: {:?}", maybe_fixed_expr_stmt);
 

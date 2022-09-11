@@ -5,6 +5,12 @@ lib/.precomp/*
 
 # Added by cargo
 
+target/
+vendor/
+target/**
+vendor/**
+*/target/**
+*/vendor/**
 /target
 /*/target/*
 /vendor

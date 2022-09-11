@@ -19,6 +19,10 @@ path = "../rust-analyzer/crates/text-edit"
 version = "*"
 path = "../rust-analyzer/crates/syntax"
 
+[dependencies.base-db]
+version = "*"
+path = "../rust-analyzer/crates/base-db"
+
 [dependencies.ide-db]
 version = "*"
 path = "../rust-analyzer/crates/ide-db"

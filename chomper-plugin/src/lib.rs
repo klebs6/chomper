@@ -6,6 +6,7 @@ use syntax::{
     TextRange
 };
 
+use base_db::salsa;
 use ide_db::RootDatabase;
 
 use text_edit::TextEdit;
@@ -25,7 +26,7 @@ pub type CreateKlebsFixBabyRustPlugin = unsafe fn() -> *mut dyn KlebsFixBabyRust
 pub trait KlebsFixBabyRustPlugin: Any + Send + Sync + Debug {
 
     fn klebs_fix_baby_rust(&self, 
-        db:     &RootDatabase,
+        db:     salsa::Snapshot<RootDatabase>,
         config: &KlebsFixBabyRustConfig,
         file:   &SourceFile,
         range:  TextRange) -> TextEdit;

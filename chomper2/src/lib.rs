@@ -20,8 +20,10 @@ x!{call_expr}
 x!{cast_expr}
 x!{closure_expr}
 x!{continue_expr}
+x!{expr}
 x!{field_expr}
 x!{for_expr}
+x!{or_eq}
 x!{if_expr}
 x!{index_expr}
 x!{let_expr}
@@ -43,6 +45,8 @@ x!{tuple_expr}
 x!{underscore_expr}
 x!{while_expr}
 x!{yield_expr}
+
+pub type RASnapshot = salsa::Snapshot<RootDatabase>;
 
 #[no_mangle]
 #[allow(improper_ctypes_definitions)]
@@ -66,10 +70,10 @@ impl KlebsFixBabyRustPlugin for KlebsFix {
     //
     fn klebs_fix_baby_rust(
         &self,
-        db:     &RootDatabase,
+        db:     RASnapshot,
         config: &KlebsFixBabyRustConfig,
-        file: &SourceFile,
-        range: TextRange,
+        file:   &SourceFile,
+        range:  TextRange,
     ) -> TextEdit {
         klebs_fix_baby_rust(db,config,file,range)
     }

@@ -20,6 +20,7 @@
 pub use chomper_plugin::*;
 
 pub use ide::*;
+pub use base_db::salsa;
 
 pub use syntax::{
     NodeOrToken,
@@ -70,3 +71,6 @@ pub use std::io::{
 };
 
 pub use syntax::ast;
+pub use syntax::ast::HasName;
+pub use hir_ty::db::HirDatabase;
+pub use hir_def::{DefWithBodyId,FunctionId};
