@@ -27,7 +27,8 @@ pub use syntax::{
     TextSize,
     AstNode,
     SourceFile,
-    TextRange
+    TextRange,
+    ast,
 };
 
 pub use text_edit::TextEdit;
@@ -70,7 +71,6 @@ pub use std::io::{
     read_to_string,
 };
 
-pub use syntax::ast;
 pub use syntax::ast::HasName;
 pub use hir_ty::db::HirDatabase;
 pub use hir_def::{DefWithBodyId,FunctionId};

@@ -7,9 +7,9 @@
 
 x!{plugin}
 x!{setup_logging}
-x!{statement}
 x!{adjust_range}
 
+/*
 x!{array_expr}
 x!{await_expr}
 x!{bin_expr}
@@ -40,18 +40,19 @@ x!{range_expr}
 x!{record_expr}
 x!{ref_expr}
 x!{return_expr}
+x!{statement}
 x!{try_expr}
 x!{tuple_expr}
 x!{underscore_expr}
 x!{while_expr}
 x!{yield_expr}
-
-pub type RASnapshot = salsa::Snapshot<RootDatabase>;
+*/
 
 #[no_mangle]
 #[allow(improper_ctypes_definitions)]
-pub extern "C" fn create_klebs_fix_baby_rust_plugin() -> *mut dyn KlebsFixBabyRustPlugin {
-
+pub extern "C" fn create_klebs_fix_baby_rust_plugin() 
+-> *mut dyn KlebsFixBabyRustPlugin 
+{
     let b = Box::new(KlebsFix::default());
 
     Box::<KlebsFix>::into_raw(b)
@@ -70,11 +71,10 @@ impl KlebsFixBabyRustPlugin for KlebsFix {
     //
     fn klebs_fix_baby_rust(
         &self,
-        db:     RASnapshot,
-        config: &KlebsFixBabyRustConfig,
-        file:   &SourceFile,
-        range:  TextRange,
+        db:               &RootDatabase,
+        inference_result: Arc<hir_ty::InferenceResult>,
+        frange:           FileRange
     ) -> TextEdit {
-        klebs_fix_baby_rust(db,config,file,range)
+        klebs_fix_baby_rust(db,inference_result,frange)
     }
 }

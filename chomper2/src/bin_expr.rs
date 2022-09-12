@@ -2,8 +2,8 @@ crate::ix!();
 
 //#[tracing::instrument(level = "info")]
 pub fn maybe_fix_errors_in_bin_expr(
-    db:   &RASnapshot, 
-    expr: &ast::BinExpr) -> Option<ast::Expr> {
+    world: &KlebsPluginEnv, 
+    expr:  &ast::BinExpr) -> Option<ast::Expr> {
 
     let syntax   = expr.syntax();
     let children = syntax.children();
@@ -30,7 +30,7 @@ pub fn maybe_fix_errors_in_bin_expr(
             },
             parser::SyntaxKind::PIPEEQ => {
                 maybe_fix_oreq_expr(
-                    db,
+                    world,
                     &lhs.unwrap(),
                     &rhs.unwrap()
                 )

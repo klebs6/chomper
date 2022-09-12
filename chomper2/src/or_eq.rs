@@ -1,16 +1,19 @@
 crate::ix!();
 
 pub fn maybe_fix_oreq_expr(
-    db:  &RootDatabase, 
-    lhs: &ast::Expr,
-    rhs: &ast::Expr) -> Option<ast::Expr> {
+    world: &KlebsPluginEnv, 
+    lhs:   &ast::Expr,
+    rhs:   &ast::Expr) -> Option<ast::Expr> {
 
-    tracing::info!("fix oreq");
+    tracing::info!("fix oreq what in the fucking fuck!?");
 
-    let lhs_fixed = maybe_fix_errors_in_expr(db, lhs);
-    let rhs_fixed = maybe_fix_errors_in_expr(db, rhs);
+    tracing::info!("inference: {:#?}", world.type_inference);
 
-    let semantics = Semantics::new(db);
+    let lhs_fixed = maybe_fix_errors_in_expr(world, lhs);
+    let rhs_fixed = maybe_fix_errors_in_expr(world, rhs);
+
+    /*
+    let semantics = world.semantics;
 
     tracing::info!("semantics: {:#?}", semantics);
 
@@ -56,7 +59,7 @@ pub fn maybe_fix_oreq_expr(
 
         tracing::warn!("couldn't get func_def");
     }
-
+    */
 
     None
 }

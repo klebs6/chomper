@@ -5,6 +5,28 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[profile.dev]
+
+#changed this
+split-debuginfo = "packed"
+
+#default settings
+opt-level = 0
+
+# Disabling debug info speeds up builds a bunch,
+# and we don't rely on it for debugging that much.
+#
+# however I (klebs) turned it back on for my own
+# amusement muahahah
+debug            = true
+debug-assertions = true
+overflow-checks  = true
+lto              = false
+panic            = 'unwind'
+incremental      = true
+codegen-units    = 256
+rpath            = false
+
 [dependencies]
 libloading      = "*"
 valuable        = "*"
@@ -14,6 +36,18 @@ tracing         = "0.1.35"
 [dependencies.text-edit]
 version = "*"
 path = "../rust-analyzer/crates/text-edit"
+
+[dependencies.hir]
+version = "*"
+path = "../rust-analyzer/crates/hir"
+
+[dependencies.hir-ty]
+version = "*"
+path = "../rust-analyzer/crates/hir-ty"
+
+[dependencies.hir-def]
+version = "*"
+path = "../rust-analyzer/crates/hir-def"
 
 [dependencies.syntax]
 version = "*"
