@@ -145,6 +145,8 @@ our sub get-maybe-self-args($header) {
 our sub rparse-hasher-mock($header) {
     ('//here is a comment'),
     'MyClass',
+    '#[inline] ',
+    ('#[cfg(target_arch = "cuda")]')
 }
 
 our sub rparse-hasher($header) {
@@ -152,6 +154,7 @@ our sub rparse-hasher($header) {
     get-rcomments-list($header),
     get-roperand($header,0),
     get-rinline($header),
+    get-rtags($header),
 }
 
 our sub rparse-function-header-mock($header) {
@@ -162,7 +165,8 @@ our sub rparse-function-header-mock($header) {
         ('x: T', 'y: T'),
         ('let x: f64 = x.unwrap_or(54.0)'),
         '&mut self',
-        ('//here is a comment')
+        ('//here is a comment'),
+        ('#[cfg(target_arch = "cuda")]')
 }
 
 our sub rparse-function-header($header) {
@@ -174,6 +178,7 @@ our sub rparse-function-header($header) {
     get-option-defaults-initlist($header),
     get-maybe-self-args($header),
     get-rcomments-list($header),
+    get-rtags($header),
 }
 
 our sub rparse-operator-ostream-mock($header) {
@@ -188,12 +193,13 @@ our sub rparse-operator-ostream($header, $user_class) {
 }
 
 our sub rparse-operator-mul-mock($header) {
-        ('//here is a comment'), 
-        '#[inline] ',
-        'MyType',
-        'f64',
-        'f32',
-        ('x: T', 'y: T'),
+    ('//here is a comment'), 
+    '#[inline] ',
+    'MyType',
+    'f64',
+    'f32',
+    ('x: T', 'y: T'),
+    ('#[cfg(target_arch = "cuda")]')
 }
 
 our sub rparse-operator-mul($header, $user_class) {
@@ -203,21 +209,24 @@ our sub rparse-operator-mul($header, $user_class) {
     get-rust-return-type($header, augment => False),
     $user_class ?? $user_class             !! get-roperand($header,0),
     $user_class ?? get-roperand($header,0) !! get-roperand($header,1),
+    get-rtags($header),
 }
 
 our sub rparse-operator-mock($header) {
-        ('//here is a comment'), 
-        '#[inline] ',
-        'MyType',
-        'f64',
-        'f32',
-        ('x: T', 'y: T'),
+    ('//here is a comment'), 
+    '#[inline] ',
+    'MyType',
+    'f64',
+    'f32',
+    ('x: T', 'y: T'),
+    ('#[cfg(target_arch = "cuda")]')
 }
 
 our sub rparse-operator-compare($header,$user_class) {
     get-rcomments-list($header),
     get-rinline($header),
     get-rust-return-type($header, augment => False),
+    get-rtags($header),
 }
 
 our sub rparse-operator($header,$user_class) {
@@ -227,12 +236,14 @@ our sub rparse-operator($header,$user_class) {
     get-rust-return-type($header, augment => False),
     $user_class ?? $user_class             !! get-roperand($header,0),
     $user_class ?? get-roperand($header,0) !! get-roperand($header,1),
+    get-rtags($header),
 }
 
 our sub rparse-operator-into-bool($header) {
     get-rcomments-list($header),
     get-rinline($header),
     get-rust-return-type($header, augment => False),
+    get-rtags($header),
 }
 
 our sub rparse-operator-index-mock($header) {
@@ -243,6 +254,7 @@ our sub rparse-operator-index-mock($header) {
         'MyType',
         'usize',
         ('x: T', 'y: T'),
+        ('#[cfg(target_arch = "cuda")]')
 }
 
 our sub rparse-operator-index($header,$user_class) {
@@ -253,30 +265,34 @@ our sub rparse-operator-index($header,$user_class) {
     get-rust-return-type($header, augment => False),
     $user_class ?? $user_class             !! get-roperand($header,0),
     $user_class ?? get-roperand($header,0) !! get-roperand($header,1),
-    get-rfunction-args-list($header)
+    get-rfunction-args-list($header),
+    get-rtags($header),
 }
 
 our sub rparse-operator-negate-mock($header) {
-        ('//here is a comment'), 
-        '#[inline] ',
-        'MyType',
-        'f64',
-        ('x: T', 'y: T'),
+    ('//here is a comment'), 
+    '#[inline] ',
+    'MyType',
+    'f64',
+    ('x: T', 'y: T'),
+    ('#[cfg(target_arch = "cuda")]')
 }
 
 our sub rparse-operator-negate($header) {
 #rparse-operator-negate-mock($header)
     get-rcomments-list($header),
     get-rinline($header),
-    get-rust-return-type($header, augment => False)
+    get-rust-return-type($header, augment => False),
+    get-rtags($header),
 }
 
 our sub rparse-operator-assign-mock($header) {
-        ('//here is a comment'), 
-        '#[inline] ',
-        'MyType',
-        'f64',
-        ('x: T', 'y: T'),
+    ('//here is a comment'), 
+    '#[inline] ',
+    'MyType',
+    'f64',
+    ('x: T', 'y: T'),
+    ('#[cfg(target_arch = "cuda")]')
 }
 
 our sub rparse-operator-assign($header) {
@@ -285,29 +301,32 @@ our sub rparse-operator-assign($header) {
     get-rinline($header),
     get-rust-return-type($header, augment => False),
     get-roperand($header,0),
-    get-rfunction-args-list($header)
+    get-rfunction-args-list($header),
+    get-rtags($header),
 }
 
 
 #we expect this sort of output in this order
 our sub rparse-template-header-mock($header) {
-        ('T'), 
-        ('//here is a comment'), 
-        '#[inline] ',
-        'T',
-        'my_rust_function',
-        ('x: T', 'y: T'),
+    ('T'), 
+    ('//here is a comment'), 
+    '#[inline] ',
+    'T',
+    'my_rust_function',
+    ('x: T', 'y: T'),
+    ('#[cfg(target_arch = "cuda")]')
 }
 
 our sub rparse-template-header($template-header) {
     get-rtemplate-args-list($template-header),
-        get-rcomments-list($template-header),
-        get-rinline($template-header),
-        get-return-string($template-header),
-        get-rfunction-name($template-header),
-        get-rfunction-args-list($template-header),
-        get-option-defaults-initlist($template-header),
-        get-maybe-self-args($template-header),
+    get-rcomments-list($template-header),
+    get-rinline($template-header),
+    get-return-string($template-header),
+    get-rfunction-name($template-header),
+    get-rfunction-args-list($template-header),
+    get-option-defaults-initlist($template-header),
+    get-maybe-self-args($template-header),
+    get-rtags($template-header),
 }
 
 our sub format-rust-comments($rcomments-list) {
@@ -382,6 +401,19 @@ our sub get-rinline($template-header) {
     } else {
         ''
     }
+}
+
+use Data::Dump::Tree;
+
+our sub get-rtags(Match $m) {
+
+    my @tags = ();
+
+    if $m<cuda-device-tag>:exists {
+        @tags.push: "#[cfg(target_arch = \"cuda\")]";
+    }
+
+    @tags
 }
 
 our sub get-rinline-b(Match $m) {

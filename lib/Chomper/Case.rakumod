@@ -10,6 +10,14 @@ our sub is-screaming-snake-case($input) {
     so Screamer.parse($input)
 }
 
+our sub is-lower-snake-case($input) {
+    grammar LowerSnake {
+        token TOP { <segment>+ %% "_" }
+        token segment { <[a..z 0..9]>+ }
+    }
+    so LowerSnake.parse($input)
+}
+
 our sub snake-to-camel($input) {
 
     my $type-stripped = $input.subst(/_t$/, "");

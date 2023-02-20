@@ -13,6 +13,7 @@ our role Operator does CanGetDocComments {
     has $.fn     is required;
 
     has Bool $.inline = False;
+    has Str $.tags = "";
     has Str  $.out is required;
     has ParenthesizedArgs $.args is required;
     has Str $.namespace;
@@ -26,8 +27,9 @@ our role Operator does CanGetDocComments {
         :$trait,
         :$fn) {
 
-            self.init-can-get-doc-comments(:$submatch);
+        self.init-can-get-doc-comments(:$submatch);
         $!inline        = so get-rinline($submatch);
+        $!tags          = get-rtags($submatch);
         $!out           = get-rust-return-type($submatch, augment => False);
         $!args          = ParenthesizedArgs.new(
             parenthesized-args => $submatch<parenthesized-args>,
@@ -43,7 +45,6 @@ our role Operator does CanGetDocComments {
         self.stamp($!trait,$!fn, $!assign)
     }
 
-
     method stamp($trait, $fn, Bool $assign) {
 
         my $rinline = $!inline ?? '#[inline]' !! '';
@@ -55,6 +56,7 @@ our role Operator does CanGetDocComments {
 
             {$assign ?? "" !! "type Output = $!out;"}
             {self.get-doc-comments}
+            {$!tags}
             {$rinline}fn {$fn}($self, other: &$rhs) -> Self::Output \{
                 {wrap-body-todo($!body)}
             \}

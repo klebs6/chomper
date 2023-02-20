@@ -1,4 +1,7 @@
+use Data::Dump::Tree;
 use Chomper::SnakeCase;
+use Chomper::Locations;
+use Chomper::Case;
 use Chomper::Rust::IndentRustNamedTypeList;
 
 our class TypeAux {
@@ -163,9 +166,14 @@ sub extract-unordered-map($type) {
     )
 }
 
-sub extract-default(Match:D $type) {
+multi sub extract-default(Match:D $type) {
 
     $type.Str, |()
+}
+
+multi sub extract-default(Str:D $type) {
+
+    $type, |()
 }
 
 role TypeInfo {
@@ -221,11 +229,14 @@ our class ParenthesizedArgs {
     has Bool $.trailing-elipsis = False;
 
     multi submethod BUILD(
-        :@!maybe-unnamed-args!,
-        :$!trailing-elipsis!
+        :@maybe-unnamed-args!,
+        Bool :$trailing-elipsis!
     ) {
         #binding takes care of attribute
-        #assignment
+        #assignment -- (edit: does it?)
+        #
+        @!maybe-unnamed-args = @maybe-unnamed-args;
+        $!trailing-elipsis   = $trailing-elipsis;
     }
 
     multi submethod BUILD(Match :$parenthesized-args!) {
@@ -347,7 +358,7 @@ our sub get-rust-args-from-function-like(Bool $void-body, @args) {
 
         #TODO: wtf is going on with construction
         my $p-args = ParenthesizedArgs.new(
-            maybe-unnamed-args => @args,
+            maybe-unnamed-args => |@args,
             trailing-elipsis   =>  False,
         );
 
@@ -393,9 +404,9 @@ our class FunctionPtrTypeInfo does TypeInfo {
 our class FunctionTypeInfo does TypeInfo {
 
     #these are match objects
-    has Bool $.mutable             is required;
-    has $.std-function-return-type is required;
-    has ParenthesizedArgs $.parenthesized-args       is required;
+    has Bool $.mutable                         is required;
+    has $.std-function-return-type             is required;
+    has ParenthesizedArgs $.parenthesized-args is required;
 
     method get-return-type {
         if $!std-function-return-type {
@@ -442,6 +453,14 @@ our class BasicTypeInfo does TypeInfo {
 
         my $outer = 
         %mini-typemap{$!cpp-parent} // %*typemap{$!cpp-parent} ;
+
+        if not $outer {
+
+            if is-lower-snake-case($!cpp-parent) {
+                $outer = snake-to-camel($!cpp-parent);
+                text-typemap($!cpp-parent, $outer);
+            }
+        }
 
         my @inner;
 
@@ -556,15 +575,35 @@ our sub populate-typeinfo($type) {
         #TODO: ensure this doesnt catch anything 
         #else unwanted
         
-        my $func = $type; #function-sig-type
+        if $type<function-ptr-marker>:exists {
 
-        return FunctionPtrTypeInfo.new(
-            mutable            => $mutable,
-            return-type        => $func<return-type>,
-            parenthesized-args => ParenthesizedArgs.new(
-                parenthesized-args => $func<parenthesized-args>
-            ),
-        );
+            my $func = $type; #function-sig-type
+
+            my $args = ParenthesizedArgs.new(
+                maybe-unnamed-args => |$func<maybe-unnamed-args><maybe-unnamed-arg>,
+                trailing-elipsis   => False,
+            );
+
+            my $result = FunctionPtrTypeInfo.new(
+                mutable            => $mutable,
+                return-type        => $func<return-type>,
+                parenthesized-args => $args,
+            );
+
+            return $result;
+
+        } else {
+
+            my $func = $type; #function-sig-type
+
+            return FunctionPtrTypeInfo.new(
+                mutable            => $mutable,
+                return-type        => $func<return-type>,
+                parenthesized-args => ParenthesizedArgs.new(
+                    parenthesized-args => $func<parenthesized-args>
+                ),
+            );
+        }
     }
 
     for [

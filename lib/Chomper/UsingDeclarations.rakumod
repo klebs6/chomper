@@ -1,3 +1,4 @@
+use Data::Dump::Tree;
 use Chomper::Util;
 use Chomper::Typemap;
 use Chomper::TypeInfo;
@@ -19,7 +20,7 @@ our sub translate-using-declarations( $submatch, $body, $rclass)
 {
     my @rust-declarations = do for $submatch<using-declaration>.List -> $declaration {
 
-        my $name          = $declaration<lhs>;
+        my $name          = get-rust-type($declaration<lhs>);
 
         my $maybe-comment = $declaration<line-comment> // "";
 
@@ -39,7 +40,7 @@ our sub translate-using-declarations( $submatch, $body, $rclass)
         "pub type $name = $rtype;{$maybe-comment}"
     };
 
-    @rust-declarations.join("\n")
+    @rust-declarations.join("\n\n")
 }
 
 

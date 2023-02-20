@@ -5,6 +5,16 @@ our role Types {
         '(' <maybe-unnamed-args>  ')'
     }
 
+    rule function-ptr-marker {
+        '(' '*' ')'
+    }
+
+    rule function-ptr-sig-type {
+        <return-type> 
+        <function-ptr-marker>
+        '(' <maybe-unnamed-args>  ')'
+    }
+
     token unique-ptr {
         [ 'std::' ]? 'unique_ptr' '<' <type> '>'
     }

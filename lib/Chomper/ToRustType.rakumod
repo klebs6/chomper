@@ -7,7 +7,7 @@ use Data::Dump::Tree;
 
 proto sub to-rust-type($x) is export { * }
 
-sub to-rust-generic-args($x where Cpp::TemplateArgumentList) {
+sub to-rust-generic-args($x where Cpp::TemplateArgumentList) is export {
 
     my @args = do for $x.template-arguments {
         to-rust-type($_)

@@ -12,7 +12,8 @@ our sub translate-operator-indirect($submatch, $body, $rclass) {
     my (
         $rcomments-list,
         $rinline, 
-        $rtype 
+        $rtype,
+        $tags
     ) = rparse-operator-indirect($submatch);
 
     my $rcomment       = format-rust-comments($rcomments-list);
@@ -22,6 +23,7 @@ our sub translate-operator-indirect($submatch, $body, $rclass) {
         type Target = {get-naked($rtype)};
 
         $rcomment
+        {$tags}
         {$rinline}fn deref(self) -> &Self::Target \{
             {wrap-body-todo($body)}
         \}

@@ -1,5 +1,30 @@
 use Config::TOML;
 
+our sub create-workspace-crate(
+    Str   $name, 
+    :@imports,
+    Bool :$write) 
+{
+    my $prefix = $name.split("-")[0];
+
+    add-workspace-crate($name, :$write);
+
+    my @imports-dash = @imports>>.subst(:g, "_", "-");
+
+    for @imports-dash -> $crate {
+
+        add-workspace-crate-to-neighbor-cargo-toml(
+            workspace-crate => $crate, 
+            neighbor        => $name,
+            write => True
+        );
+    }
+
+    add-starter-lib-file-for-crate($name);
+
+    glob-import-from-crates($name, @imports);
+}
+
 our sub add-neighbor-dependency(
     :$src, 
     :$dst, 

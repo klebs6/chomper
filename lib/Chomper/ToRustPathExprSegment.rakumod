@@ -77,6 +77,36 @@ returns Rust::PathExprSegment
 }
 
 multi sub to-rust-path-expr-segment(
+    $x where Cpp::IntegerLiteral::Oct, 
+    Bool :$snake-case) 
+returns Rust::PathExprSegment 
+{
+    use Chomper::ToRust;
+
+    my $rust-oct = to-rust($x);
+
+    Rust::PathExprSegment.new(
+        path-ident-segment => $rust-oct,
+        maybe-generic-args => Nil,
+    )
+}
+
+multi sub to-rust-path-expr-segment(
+    $x where Cpp::IntegerLiteral::Dec, 
+    Bool :$snake-case) 
+returns Rust::PathExprSegment 
+{
+    use Chomper::ToRust;
+
+    my $rust-dec = to-rust($x);
+
+    Rust::PathExprSegment.new(
+        path-ident-segment => $rust-dec,
+        maybe-generic-args => Nil,
+    )
+}
+
+multi sub to-rust-path-expr-segment(
     $x where Cpp::NestedNameSpecifierSuffix::Template, 
     Bool :$snake-case) 
 returns Rust::PathExprSegment 

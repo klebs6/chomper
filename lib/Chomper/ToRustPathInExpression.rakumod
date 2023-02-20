@@ -122,11 +122,56 @@ returns Rust::PathInExpression
 }
 
 multi sub to-rust-path-in-expression(
+    $x where Cpp::IntegerLiteral::Oct, 
+    Bool :$snake-case) 
+returns Rust::PathInExpression 
+{
+    my @segments;
+
+    @segments.push: to-rust-path-expr-segment($x, :$snake-case);
+
+    Rust::PathInExpression.new(
+        path-expr-segments => @segments,
+    )
+}
+
+multi sub to-rust-path-in-expression(
+    $x where Cpp::IntegerLiteral::Dec, 
+    Bool :$snake-case) 
+returns Rust::PathInExpression 
+{
+    my @segments;
+
+    @segments.push: to-rust-path-expr-segment($x, :$snake-case);
+
+    Rust::PathInExpression.new(
+        path-expr-segments => @segments,
+    )
+}
+
+multi sub to-rust-path-in-expression(
     $x where Cpp::ConstantExpression, 
     Bool :$snake-case) 
 returns Rust::PathInExpression 
 {
     to-rust-path-in-expression($x.conditional-expression)
+}
+
+multi sub to-rust-path-in-expression(
+    $x where Cpp::SimpleTemplateId, 
+    Bool :$snake-case) 
+returns Rust::PathInExpression 
+{
+    use Chomper::ToRustType;
+    my $name      = to-rust-path-expr-segment($x.template-name);
+    my $arguments = to-rust-generic-args($x.template-arguments);
+
+    Rust::PathInExpression.new(
+        path-expr-segments => [
+            $name,
+            $arguments
+        ],
+    )
 }
 
 multi sub to-rust-path-in-expression(

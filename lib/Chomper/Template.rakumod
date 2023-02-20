@@ -4,15 +4,18 @@ use Chomper::WrapBodyTodo;
 
 our sub translate-freestanding-template-function($submatch, $body, $rclass) {
 
-    my ( $rtemplate-args-list, 
-            $rcomments-list,
-            $rinline, 
-            $rreturn-string, 
-            $rfunction-name, 
-            $rfunction-args-list,
-            $option-defaults-initlist,
-            $maybe-self-args) = 
-        rparse-template-header($submatch);
+    my ( 
+        $rtemplate-args-list, 
+        $rcomments-list,
+        $rinline, 
+        $rreturn-string, 
+        $rfunction-name, 
+        $rfunction-args-list,
+        $option-defaults-initlist,
+        $maybe-self-args, 
+        $tags
+    ) 
+    = rparse-template-header($submatch);
 
     my Str $api = get-api-tag($submatch<plugin-api>:exists);
 
@@ -28,6 +31,7 @@ our sub translate-freestanding-template-function($submatch, $body, $rclass) {
         impl $rclass \{
             $rcomment
             $api
+            {$tags}
             {$rinline}pub fn {$rfunction-name}<{$rtemplate-args}>({$maybe-self-args}{$rfunction-args}) $rreturn-string \{
             {$optionals.trim.chomp.indent(4)}
                 {wrap-body-todo($body)}
@@ -40,6 +44,7 @@ our sub translate-freestanding-template-function($submatch, $body, $rclass) {
         qq:to/END/;
         $rcomment
         $api
+        {$tags}
         {$rinline}pub fn {$rfunction-name}<{$rtemplate-args}>({$rfunction-args}) $rreturn-string \{
         {$optionals.trim.chomp.indent(4)}
             {wrap-body-todo($body)}

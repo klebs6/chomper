@@ -10,8 +10,10 @@ our sub translate-function($submatch, $body, $rclass) {
         $rfunction-args-list, 
         $roptional-initializers,
         $rmaybe-self-args,
-        $rcomments-list ) =
-        rparse-function-header($submatch);
+        $rcomments-list,
+        $tags
+    ) 
+    = rparse-function-header($submatch);
 
     my $rcomment       = format-rust-comments($rcomments-list);
     my $rfunction-args = format-rust-function-args($rfunction-args-list);
@@ -21,6 +23,7 @@ our sub translate-function($submatch, $body, $rclass) {
         qq:to/END/
         impl $rclass \{
             $rcomment
+            {$tags}
             {$rinline}pub fn {$rfunction-name}({$rmaybe-self-args}{$rfunction-args}) $return-string \{
                 {$roptional-initializers}
                 {wrap-body-todo($body)}
@@ -31,6 +34,7 @@ our sub translate-function($submatch, $body, $rclass) {
         #take this branch if we are freestanding function
         qq:to/END/
         $rcomment
+        {$tags}
         {$rinline}pub fn {$rfunction-name}({$rfunction-args}) $return-string \{
             {$roptional-initializers}
             {wrap-body-todo($body)}

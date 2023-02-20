@@ -3,14 +3,17 @@ use Chomper::WrapBodyTodo;
 
 our sub translate-op-index($submatch, $body, $rclass) {
 
-    my ( $rcomments-list,
-            $rinline, 
-            $rconst,
-            $rtype, 
-            $roperand0,
-            $roperand1,
-            $rfunction-args-list) = 
-        rparse-operator-index($submatch,$rclass);
+    my ( 
+        $rcomments-list,
+        $rinline, 
+        $rconst,
+        $rtype, 
+        $roperand0,
+        $roperand1,
+        $rfunction-args-list, 
+        $tags
+    ) 
+    = rparse-operator-index($submatch,$rclass);
 
     my $rcomment       = format-rust-comments($rcomments-list);
     my $rfunction-args = format-rust-function-args($rfunction-args-list);
@@ -20,6 +23,7 @@ our sub translate-op-index($submatch, $body, $rclass) {
         impl Index<{$roperand1}> for $roperand0 \{
             type Output = $rtype;
             $rcomment
+            {$tags}
             {$rinline}fn index(&self, {$rfunction-args-list}) -> &Self::Output \{
                 {wrap-body-todo($body)}
             \}
@@ -29,6 +33,7 @@ our sub translate-op-index($submatch, $body, $rclass) {
         qq:to/END/;
         impl IndexMut<{$roperand1}> for $roperand0 \{
             $rcomment
+            {$tags}
             {$rinline}fn index_mut(&mut self, {$rfunction-args-list}) -> &mut Self::Output \{
                 {wrap-body-todo($body)}
             \}

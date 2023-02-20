@@ -12,8 +12,10 @@ our sub translate-operator-not($submatch, $body, $rclass) {
     my (
         $rcomments-list,
         $rinline, 
-        $rtype 
-    ) = rparse-operator-not($submatch);
+        $rtype, 
+        $tags, 
+    ) 
+    = rparse-operator-not($submatch);
 
     my $rcomment       = format-rust-comments($rcomments-list);
 
@@ -22,6 +24,7 @@ our sub translate-operator-not($submatch, $body, $rclass) {
         type Output = {get-naked($rtype)};
 
         $rcomment
+        {$tags}
         {$rinline}fn not(self) -> Self::Output \{
             {wrap-body-todo($body)}
         \}

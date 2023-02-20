@@ -23,3 +23,5 @@ Cargo.lock
 /raku/antlr-grammar.rakumod
 /u/ARM*
 ra_log.txt
+ra_log_plugin.txt
+.DS_Store

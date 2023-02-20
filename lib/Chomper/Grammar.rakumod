@@ -25,6 +25,11 @@ does NumericToken
 #does PythonFunctionHeader
 does FunctionHeader {
 
+    token cuda-device-tag {
+        | 'C10_DEVICE'
+        | '__device__'
+    }
+
     rule func-tag {
         | FUNC_ATTR_CONST
         | FUNC_ATTR_ALWAYS_INLINE
@@ -123,6 +128,7 @@ does FunctionHeader {
         [
             | <.using> <lhs=type> '=' <rhs=type> ';'
             | <.using> <lhs=type> '=' <rhs=function-sig-type> ';'
+            | <.using> <lhs=type> '=' <rhs=function-ptr-sig-type> ';'
             | <.typedef> <rhs=unnamed-arg>  <lhs=type> ';'
         ] <line-comment>?
     }

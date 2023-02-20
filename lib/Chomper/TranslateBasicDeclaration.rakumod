@@ -10,6 +10,7 @@ use Chomper::TokenTree;
 use Chomper::LazyStatic;
 use Chomper::ToRustIdent;
 use Chomper::ToRustParams;
+use Chomper::ToRustFunctionCall;
 use Chomper::ToRustPathInExpression;
 use Chomper::DefaultInitializer;
 
@@ -41,6 +42,20 @@ multi sub translate-basic-declaration-to-rust(
     exit;
 }
 
+multi sub translate-basic-declaration-to-rust(
+     "T<Ts>(Es);",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask T<Ts>(Es);";
+
+    my Cpp::InitDeclarator $idl0 = $item.init-declarator-list[0];
+
+    my $expr = to-rust-function-call($idl0);
+
+    Rust::ExpressionStatementNoBlock.new(
+        expression-noblock => $expr
+    )
+}
 
 multi sub translate-basic-declaration-to-rust(
      "T I, I;",
@@ -77,6 +92,134 @@ multi sub translate-basic-declaration-to-rust(
         ]
     )
 }
+
+# ok, seriously you need to figure out a better way
+# to handle this whole source file because what
+# you are doing here is ridiculous
+#
+multi sub translate-basic-declaration-to-rust(
+     "T I, I, I, I, I;",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask T I, I, I, I, I;";
+
+    my $rust-type = to-rust-type($item.decl-specifier-seq);
+    my $id0 = to-rust-ident($item.init-declarator-list[0]);
+    my $id1 = to-rust-ident($item.init-declarator-list[1]);
+    my $id2 = to-rust-ident($item.init-declarator-list[2]);
+    my $id3 = to-rust-ident($item.init-declarator-list[3]);
+    my $id4 = to-rust-ident($item.init-declarator-list[4]);
+
+    my $default-initializer = create-default-initializer($rust-type);
+
+    Rust::Statements.new(
+        statements => [
+            Rust::LetStatement.new(
+                pattern-no-top-alt => Rust::IdentifierPattern.new(
+                    ref        => False,
+                    mutable    => True,
+                    identifier => $id0,
+                ),
+                maybe-type       => $rust-type,
+                maybe-expression => $default-initializer,
+            ),
+            Rust::LetStatement.new(
+                pattern-no-top-alt => Rust::IdentifierPattern.new(
+                    ref        => False,
+                    mutable    => True,
+                    identifier => $id1,
+                ),
+                maybe-type       => $rust-type,
+                maybe-expression => $default-initializer,
+            ),
+            Rust::LetStatement.new(
+                pattern-no-top-alt => Rust::IdentifierPattern.new(
+                    ref        => False,
+                    mutable    => True,
+                    identifier => $id2,
+                ),
+                maybe-type       => $rust-type,
+                maybe-expression => $default-initializer,
+            ),
+            Rust::LetStatement.new(
+                pattern-no-top-alt => Rust::IdentifierPattern.new(
+                    ref        => False,
+                    mutable    => True,
+                    identifier => $id3,
+                ),
+                maybe-type       => $rust-type,
+                maybe-expression => $default-initializer,
+            ),
+            Rust::LetStatement.new(
+                pattern-no-top-alt => Rust::IdentifierPattern.new(
+                    ref        => False,
+                    mutable    => True,
+                    identifier => $id4,
+                ),
+                maybe-type       => $rust-type,
+                maybe-expression => $default-initializer,
+            ),
+        ]
+    )
+}
+
+multi sub translate-basic-declaration-to-rust(
+     "T I, I, I, I;",
+    $item where Cpp::BasicDeclaration:D) 
+{
+    debug "mask T I, I, I, I;";
+
+    my $rust-type = to-rust-type($item.decl-specifier-seq);
+    my $id0 = to-rust-ident($item.init-declarator-list[0]);
+    my $id1 = to-rust-ident($item.init-declarator-list[1]);
+    my $id2 = to-rust-ident($item.init-declarator-list[2]);
+    my $id3 = to-rust-ident($item.init-declarator-list[3]);
+
+    my $default-initializer = create-default-initializer($rust-type);
+
+    Rust::Statements.new(
+        statements => [
+            Rust::LetStatement.new(
+                pattern-no-top-alt => Rust::IdentifierPattern.new(
+                    ref        => False,
+                    mutable    => True,
+                    identifier => $id0,
+                ),
+                maybe-type       => $rust-type,
+                maybe-expression => $default-initializer,
+            ),
+            Rust::LetStatement.new(
+                pattern-no-top-alt => Rust::IdentifierPattern.new(
+                    ref        => False,
+                    mutable    => True,
+                    identifier => $id1,
+                ),
+                maybe-type       => $rust-type,
+                maybe-expression => $default-initializer,
+            ),
+            Rust::LetStatement.new(
+                pattern-no-top-alt => Rust::IdentifierPattern.new(
+                    ref        => False,
+                    mutable    => True,
+                    identifier => $id2,
+                ),
+                maybe-type       => $rust-type,
+                maybe-expression => $default-initializer,
+            ),
+            Rust::LetStatement.new(
+                pattern-no-top-alt => Rust::IdentifierPattern.new(
+                    ref        => False,
+                    mutable    => True,
+                    identifier => $id3,
+                ),
+                maybe-type       => $rust-type,
+                maybe-expression => $default-initializer,
+            ),
+        ]
+    )
+}
+
+
 
 multi sub translate-basic-declaration-to-rust(
      "T I, I, I;",
@@ -906,12 +1049,25 @@ multi sub translate-basic-declaration-to-rust(
     "T I[E] = E;",
     $item where Cpp::BasicDeclaration) 
 {
-    my $arr-len     = to-rust($item.init-declarator-list[0].declarator.no-pointer-declarator-tail[0].constant-expression);
+    my Bool $has-constant-expression = so $item.init-declarator-list[0].declarator.no-pointer-declarator-tail[0].constant-expression;
 
-    my $rust-type = Rust::ArrayType.new(
-        type       => to-rust-type($item.decl-specifier-seq),
-        expression => $arr-len,
-    );
+    my $rust-type = do if $has-constant-expression {
+
+        my $arr-len     = to-rust(
+           $item.init-declarator-list[0].declarator.no-pointer-declarator-tail[0].constant-expression
+        );
+
+        Rust::ArrayType.new(
+            type       => to-rust-type($item.decl-specifier-seq),
+            expression => $arr-len,
+        )
+
+    } else {
+
+        Rust::SliceType.new(
+            type       => to-rust-type($item.decl-specifier-seq),
+        )
+    };
 
     my $rust-ident = to-rust($item.init-declarator-list[0].declarator.no-pointer-declarator-base);
     my $rust-expr  = to-rust($item.init-declarator-list[0].initializer);
@@ -1206,6 +1362,30 @@ multi sub translate-basic-declaration-to-rust(
     $item where Cpp::BasicDeclaration) 
 {
     debug "mask I[I] = E;";
+
+    my $rust-lhs 
+    = to-rust($item.init-declarator-list[0].declarator);
+
+    my $rust-rhs   
+    = to-rust(
+        $item.init-declarator-list[0].initializer.brace-or-equal-initializer.initializer-clause
+    );
+
+    Rust::ExpressionStatementNoBlock.new(
+        expression-noblock => Rust::AssignExpression.new(
+            addeq-expressions => [
+                $rust-lhs,
+                $rust-rhs,
+            ]
+        )
+    )
+}
+
+multi sub translate-basic-declaration-to-rust(
+    "I[I][I] = E;",
+    $item where Cpp::BasicDeclaration) 
+{
+    debug "mask I[I][I] = E;";
 
     my $rust-lhs 
     = to-rust($item.init-declarator-list[0].declarator);

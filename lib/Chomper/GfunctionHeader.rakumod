@@ -1,11 +1,19 @@
 our role FunctionDeclaration {
+
     rule function-declaration {
         <api-tag>?  
         <inline>? 
         <static>? 
         <inline>?
         <constexpr>? 
+
+        <cuda-device-tag>?
+
         <return-type>?
+
+        #newly added
+        <inline>?
+
         <plugin-api>?
         <function-name> 
         <parenthesized-args>
@@ -28,6 +36,10 @@ our role FreestandingTemplateFunction {
         <inline>? 
         <constexpr>?
         <return-type> 
+
+        #newly added
+        <inline>?
+
         <function-name> 
         <parenthesized-args>
         <func-tags>?

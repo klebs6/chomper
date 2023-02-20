@@ -25,6 +25,15 @@ our sub current-project-needs-strip-hungarian {
 }
 
 our sub avoid-hungarian($in) {
+
+    # these ones will be allowed because usually if
+    # a repository is doing this, they have several
+    # similar identifiers like `a_i`, `b_i`, `c_i`,
+    # etc.
+    if $in ~~ /<[a..z]> _ <[a..z]>/ {
+        return $in;
+    }
+
     my $out = $in.subst(/^m_/, "");
     $out ~~ s/^f_//;
     $out ~~ s/^i_//;

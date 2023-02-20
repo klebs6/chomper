@@ -3,12 +3,15 @@ use Chomper::WrapBodyTodo;
 
 our sub translate-op-mul($submatch, $body, $rclass) {
 
-    my ( $rcomments-list,
-            $rinline, 
-            $return-type, 
-            $roperand0,
-            $roperand1) = 
-        rparse-operator-mul($submatch, $rclass);
+    my ( 
+        $rcomments-list,
+        $rinline, 
+        $return-type, 
+        $roperand0,
+        $roperand1, 
+        $tags
+    ) 
+    = rparse-operator-mul($submatch, $rclass);
 
     my $rcomment = format-rust-comments($rcomments-list);
 
@@ -19,6 +22,7 @@ our sub translate-op-mul($submatch, $body, $rclass) {
         type Output = $return-type;
 
         $rcomment
+        {$tags}
         {$rinline}fn mul(self, other: &$roperand1) -> Self::Output \{
             {wrap-body-todo($body)}
         \}
