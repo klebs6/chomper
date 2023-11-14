@@ -200,6 +200,31 @@ our sub add-dependency-to-cargo-toml(
 }
 
 #----------------------------------------------
+our sub add-dependency-with-features-to-cargo-toml(
+    :$cargo-toml, 
+    :$dep, 
+    :$ver, 
+    :@features, 
+    :$write = False) {
+
+    my $toml = from-toml($cargo-toml.IO.slurp);
+
+    if not $toml<dependencies>{$dep} {
+        $toml<dependencies>{$dep}<version> = $ver;
+        $toml<dependencies>{$dep}<features> = @features;
+    }
+
+    my $contents = to-toml($toml);
+
+    if $write {
+        $cargo-toml.IO.spurt: $contents;
+    } else {
+        say $contents;
+    }
+}
+
+
+#----------------------------------------------
 our sub batch-add-dependency-to-cargo-toml(
     @crates, 
     :$dep, 
@@ -217,6 +242,26 @@ our sub batch-add-dependency-to-cargo-toml(
 }
 
 #----------------------------------------------
+our sub batch-add-dependency-with-features-to-cargo-toml(
+    @crates, 
+    :$dep, 
+    :$ver, 
+    :@features, 
+    :$write = False) {
+
+    for @crates.map: {$_ ~ "/Cargo.toml"} -> $file {
+        add-dependency-with-features-to-cargo-toml(
+            cargo-toml => $file,
+            :$dep,
+            :$ver,
+            :@features,
+            :$write
+        );
+    }
+}
+
+
+#----------------------------------------------
 our sub batch-add-dependencies-to-cargo-toml(
     @crates, 
     :@deps, 
@@ -229,6 +274,26 @@ our sub batch-add-dependencies-to-cargo-toml(
             @crates, 
             :$dep, 
             :$ver, 
+            :$write
+        );
+    }
+}
+
+#----------------------------------------------
+our sub batch-add-dependencies-with-features-to-cargo-toml(
+    @crates, 
+    :@deps, 
+    :$ver, 
+    :@features, 
+    :$write = False) {
+
+    for @deps -> $dep {
+
+        batch-add-dependency-with-features-to-cargo-toml(
+            @crates, 
+            :$dep, 
+            :$ver, 
+            :@features, 
             :$write
         );
     }

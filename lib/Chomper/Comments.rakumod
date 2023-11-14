@@ -11,7 +11,12 @@ our role CanGetDocComments {
 
     method init-can-get-doc-comments(Match :$submatch) {
         $!line-comment  = format-rust-comments(get-rcomments-list($submatch));
-        $!block-comment = ~$submatch<block-comment>;
+
+        if $submatch<block-comment>:exists {
+            $!block-comment = ~$submatch<block-comment>;
+        } else {
+            $!block-comment = "";
+        }
     }
 
     method get-doc-comments {

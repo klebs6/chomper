@@ -10,7 +10,7 @@ our role OperatorCompare does CanGetDocComments {
     has $.namespace;
     has $.body;
     has Bool $.inline;
-    has Str  $.tags;
+    has $.tags = ();
     has Bool $.op-eq;
 
     submethod BUILD(Match :$submatch, Str :$user-class, Str :$body) {
@@ -23,7 +23,7 @@ our role OperatorCompare does CanGetDocComments {
             parenthesized-args => $submatch<parenthesized-args>,
         );
 
-        $!namespace = ($user-class and $user-class !~~ "X")  
+        $!namespace = ($user-class.Bool and $user-class !~~ "X")  
         ?? $user-class 
         !! ~$submatch<namespace><identifier>;
 

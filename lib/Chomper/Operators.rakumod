@@ -13,7 +13,7 @@ our role Operator does CanGetDocComments {
     has $.fn     is required;
 
     has Bool $.inline = False;
-    has Str $.tags = "";
+    has $.tags = ();
     has Str  $.out is required;
     has ParenthesizedArgs $.args is required;
     has Str $.namespace;
@@ -34,7 +34,26 @@ our role Operator does CanGetDocComments {
         $!args          = ParenthesizedArgs.new(
             parenthesized-args => $submatch<parenthesized-args>,
         );
-        $!namespace = ($rclass and $rclass !~~ "X")  ?? $rclass !! ~$submatch<namespace><identifier>;
+
+        my Bool $valid-class = $rclass.Bool and $rclass !~~ "X";
+
+        #has to be a better way...
+        my $ns-id = do {
+
+            my $x = "";
+
+            if $submatch<namespace>:exists {
+
+                if $submatch<namespace><identifier>:exists {
+                    $x = ~$submatch<namespace><identifier>;
+                }
+            }
+
+            $x
+        };
+
+        $!namespace = $valid-class  ?? $rclass !! $ns-id;
+
         $!body   = $body;
         $!assign = $assign;
         $!trait  = $trait;

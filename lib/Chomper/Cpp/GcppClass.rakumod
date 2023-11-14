@@ -195,7 +195,6 @@ package ClassHead is export {
     }
 }
 
-
 package ClassKey is export {
 
     # rule class-key:sym<class> { 
